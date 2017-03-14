@@ -7,7 +7,7 @@
         {%- elif item.startswith('Sn') %}"circle"
         {%- elif item.startswith('S') %}"parallelogram"
         {%- endif %}
-        {%- if item.startswith('C') %}, style="rounded"{%- endif %}, label=< <B>{{item}}</B><BR align="left"/>{{ values[0]|wordwrap(15 if item.startswith('Sn') else 60, True, '<BR align="left"/>') }} >
+        {%- if item.startswith('C') %}, style="rounded"{%- endif %}, label=<<B>{{item}}</B><BR align="left"/>{{ values[0]|wordwrap(15 if item.startswith('Sn') else 60, True, '<BR align="left"/>') }}>
 {%- endmacro %}
 
 digraph "{{filename}}" {
