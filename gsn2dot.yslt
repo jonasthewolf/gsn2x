@@ -1,0 +1,30 @@
+
+{%- macro render_box(item, values) -%}
+  shape={%- if   item.startswith('G') %}"box"
+        {%- elif item.startswith('A') %}"oval", xlabel=< <B>A</B> >
+        {%- elif item.startswith('J') %}"oval", xlabel=< <B>J</B> >
+        {%- elif item.startswith('C') %}"box"
+        {%- elif item.startswith('Sn') %}"circle"
+        {%- elif item.startswith('S') %}"parallelogram"
+        {%- endif %}
+        {%- if item.startswith('C') %}, style="rounded"{%- endif %}, label=< <B>{{item}}</B><BR align="left"/>{{ values[0]|wordwrap(15 if item.startswith('Sn') else 60, True, '<BR align="left"/>') }} >
+{%- endmacro %}
+
+digraph "{{filename}}" {
+  forcelabels=true;
+
+  ## Elements
+  {%- for item, values in context.items() %}
+  "{{item}}" [{{- render_box(item, values) -}}];
+  {%- endfor %}
+
+  ## Relations
+  {%- for item, values in context.items() %}
+    {%- if 'supportedBy' in values[1] %}
+      {%- for target in values[1]['supportedBy'] %}
+  "{{item}}" -> "{{target}}" {% if target.startswith('C') or target.startswith('A') or target.startswith('J') %}[arrowhead="empty"]{% endif %};
+      {%- endfor %}
+    {%- endif %}
+  {%- endfor %}
+}
+
