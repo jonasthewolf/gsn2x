@@ -1,0 +1,22 @@
+## {'G1': ['Goal', {'supportedBy': ['S1', 'C1']}], 'S1': ['Strategy', {'supportedBy': ['A1', 'Sn1', 'J1']}], 'A1': ['Argument'], 'Sn1': ['Solution'], 'J1': ['Justification'], 'C1': ['Context']}
+
+
+digraph "example.gsn.yaml" {
+  forcelabels=true;
+
+  ## Elements
+  "G1" [shape="box", label=<<B>G1</B><BR align="left"/>Goal>];
+  "S1" [shape="parallelogram", label=<<B>S1</B><BR align="left"/>Strategy>];
+  "A1" [shape="oval", xlabel=< <B>A</B> >, label=<<B>A1</B><BR align="left"/>Argument>];
+  "Sn1" [shape="circle", label=<<B>Sn1</B><BR align="left"/>Solution>];
+  "J1" [shape="oval", xlabel=< <B>J</B> >, label=<<B>J1</B><BR align="left"/>Justification>];
+  "C1" [shape="box", style="rounded", label=<<B>C1</B><BR align="left"/>Context>];
+
+  ## Relations
+  "G1" -> "S1" ;
+  "G1" -> "C1" [arrowhead="empty"];
+  "S1" -> "A1" [arrowhead="empty"];
+  "S1" -> "Sn1" ;
+  "S1" -> "J1" [arrowhead="empty"];
+}
+
