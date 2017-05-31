@@ -9,20 +9,20 @@ Moreover, Graphviz dot is required.
 
 On Windows you can just run:
 
-  gsn2x.cmd <yourgsnfile> [<output format, e.g. png]
+    gsn2x.cmd <yourgsnfile> [<output format, e.g. png]
 
 On other systems you can create a PNG like this:
 
-  python yslt.py -s gsn2dot.yslt <yourgsnfile> | dot -Tpng > <yourgsnfile.png>
+    python yslt.py -s gsn2dot.yslt <yourgsnfile> | dot -Tpng > <yourgsnfile.png>
 
 ## Syntax in YAML
 
 The following GSN elements are supported:
 Goals, Argument, Justification, Context, Solution and Strategy.
 
-  G1: 
-   - "Goal"
-   - supportedBy: [S1]
+    G1: 
+     - "Goal"
+     - supportedBy: [S1]
 
-  S1:
-   - "Strategy"
+    S1:
+     - "Strategy"
