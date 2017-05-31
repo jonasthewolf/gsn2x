@@ -9,7 +9,7 @@ Moreover, Graphviz dot is required.
 
 On Windows you can just run:
 
-    gsn2x.cmd <yourgsnfile> [<output format, e.g. png]
+    gsn2x.cmd <yourgsnfile> [<output format, e.g. png>]
 
 On other systems you can create a PNG like this:
 
