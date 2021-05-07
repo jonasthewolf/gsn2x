@@ -4,7 +4,7 @@ This little script converts Goal Structuring Notation in YAML to a graphical rep
 
 Feel free to use it and please let me know.
 
-Python 3 is required with the following modules `pathlib`, `jinja2`, `yaml`.
+Python 3 is required with the following modules `pathlib`, `jinja2`, `pyyaml`.
 Moreover, Graphviz dot is required.
 
 ## Usage
