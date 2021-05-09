@@ -24,7 +24,7 @@ def main():
     else:
         env = Environment(loader=FileSystemLoader(str(stylesheet_path.resolve().parent)))
         template = env.get_template(stylesheet_path.name)
-        context = yaml.load(input_path.read_text())
+        context = yaml.load(input_path.read_text(), Loader=yaml.FullLoader)
         print('## ' + str(context))
         output = template.render(context=context, filename=input_path.name)
         print(output)
