@@ -1,16 +1,36 @@
 G1: 
- - "Goal"
+ - "Goal 1"
+ - supportedBy: [G2, G3, G4]
+
+G2: 
+ - "Goal 2"
  - supportedBy: [S1]
 
+G4: 
+ - "Goal 4"
+ - supportedBy: [Sn2]
+
+G3: 
+ - "Goal 3"
+ - supportedBy: [Sn1]
+ - inContextOf: [C1]
+
+C1:
+ - "Context 1"
+
 S1:
- - "Strategy"
- - supportedBy: [A1, Sn1, J1]
+ - "Strategy 1"
+ - supportedBy: [Sn1]
+ - inContextOf: [A1, J1]
 
 A1: 
- - "Argument"
+ - "Argument 1"
 
 Sn1: 
- - "Solution"
+ - "Solution 1"
+
+Sn2: 
+ - "Solution 2"
 
 J1: 
- - "Justification"
+ - "Justification 1"

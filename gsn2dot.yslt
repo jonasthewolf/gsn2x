@@ -1,8 +1,8 @@
 
 {%- macro render_box(item, values) -%}
   shape={%- if   item.startswith('G') %}"box"
-        {%- elif item.startswith('A') %}"oval", xlabel=< <B>A</B> >
-        {%- elif item.startswith('J') %}"oval", xlabel=< <B>J</B> >
+        {%- elif item.startswith('A') %}"oval"
+        {%- elif item.startswith('J') %}"oval"
         {%- elif item.startswith('C') %}"box"
         {%- elif item.startswith('Sn') %}"circle"
         {%- elif item.startswith('S') %}"parallelogram"
@@ -11,19 +11,41 @@
 {%- endmacro %}
 
 digraph "{{filename}}" {
-  forcelabels=true;
 
   ## Elements
   {%- for item, values in context.items() %}
   "{{item}}" [{{- render_box(item, values) -}}];
+  {%- if item.startswith('A') %}
+  "{{item}}":e -> "{{item}}":e [headlabel=< <B>A</B> >, labeldistance=2.5, penwidth=0, arrowhead=none]; 
+  {%- elif item.startswith('J') %}
+  "{{item}}":e -> "{{item}}":e [headlabel=< <B>J</B> >, labeldistance=2.5, penwidth=0, arrowhead=none]; 
+  {%- endif %}
   {%- endfor %}
 
   ## Relations
   {%- for item, values in context.items() %}
-    {%- if 'supportedBy' in values[1] %}
-      {%- for target in values[1]['supportedBy'] %}
-  "{{item}}" -> "{{target}}" {% if target.startswith('C') or target.startswith('A') or target.startswith('J') %}[arrowhead="empty"]{% endif %};
+    {%- for value in values %}
+      {%- if 'supportedBy' in value %}
+        {%- for target in value['supportedBy'] %}
+  "{{item}}" -> "{{target}}";
+        {%- endfor %}
+      {%- endif %}
+    {%- endfor %}
+
+    {%- if values|selectattr('inContextOf')|list %}
+  subgraph cluster{{loop.index}} {
+    graph[peripheries=0];
+    {
+      rank = same; 
+      {%- for c in values|selectattr('inContextOf')|map(attribute='inContextOf')|first|list %}
+        {%- if loop.cycle('odd', 'even') == 'odd' %}
+      "{{item}}" -> "{{c}}" [arrowhead=empty]; 
+        {%- else %}
+      "{{c}}" -> "{{item}}" [dir=back, arrowtail=empty]; 
+        {%- endif %}
       {%- endfor %}
+    }
+  }
     {%- endif %}
   {%- endfor %}
 }
