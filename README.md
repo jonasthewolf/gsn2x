@@ -20,7 +20,7 @@ On other systems you can create a PNG like this:
 ## Syntax in YAML
 
 The following GSN elements are supported:
- - Goals (G), 
+ - Goal (G), 
  - Argument (A), 
  - Justification (J), 
  - Solution (Sn),
