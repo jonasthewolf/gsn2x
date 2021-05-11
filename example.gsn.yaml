@@ -8,6 +8,7 @@ G2:
 
 G4: 
  - "Goal 4"
+ - inContextOf: [J2]
  - supportedBy: [Sn2]
 
 G3: 
@@ -20,8 +21,21 @@ C1:
 
 S1:
  - "Strategy 1"
- - supportedBy: [Sn1]
+ - supportedBy: [G5, G6]
  - inContextOf: [A1, J1]
+
+G5:
+ - "Goal 5"
+ - inContextOf: [C2, A2]
+ - supportedBy: [Sn3, Sn4]
+
+C2:
+ - "Context 2\n
+    Multiline"
+
+G6: 
+ - "Goal 6"
+ - supportedBy: [Sn3, Sn5]
 
 A1: 
  - "Argument 1"
@@ -32,5 +46,20 @@ Sn1:
 Sn2: 
  - "Solution 2"
 
+Sn3: 
+ - "Solution 3"
+
+Sn4: 
+ - "Solution 4"
+
+Sn5: 
+ - "Solution 5"
+
 J1: 
  - "Justification 1"
+
+J2:
+ - "Justification 2"
+
+A2:
+ - "Assumption 2"

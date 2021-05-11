@@ -20,11 +20,17 @@ On other systems you can create a PNG like this:
 ## Syntax in YAML
 
 The following GSN elements are supported:
-Goals (G), Argument (A), Justification (J), Solution (Sn) and Strategy (S).
+ - Goals (G), 
+ - Argument (A), 
+ - Justification (J), 
+ - Solution (Sn),
+ - Context (C), and
+ - Strategy (S)
 
 Every element is defined by a letter and a number.
 The first line of the element is its text. 
-The `supportedBy` gives a list of the supporting arguments, justifications or assumptions. 
+The `supportedBy` gives a list of the supporting arguments.
+The `inContextOf` links justifications, context or assumptions. 
 
     G1: 
      - "Goal"
@@ -32,3 +38,5 @@ The `supportedBy` gives a list of the supporting arguments, justifications or as
 
     S1:
      - "Strategy"
+
+Please see example.gsn.yaml for an example of the used syntax.
