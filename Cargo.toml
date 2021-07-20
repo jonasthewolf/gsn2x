@@ -1,9 +1,14 @@
 [package]
 name = "gsn2x"
+description = "Tool to create graphical representations of Goal Structuring Notations from YAML."
+authors = "Jonas Wolf <jonas.wolf@jonaswolf.org>"
 version = "0.1.0"
 edition = "2018"
+license-file = "LICENSE.md"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[dev-dependencies]
+assert_cmd = "0.10"
 
 [dependencies]
 anyhow = "1.0"
