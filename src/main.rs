@@ -1,5 +1,3 @@
-#[macro_use]
-extern crate log;
 use anyhow::Result;
 use clap::{crate_authors, crate_description, crate_name, crate_version, App, Arg};
 use std::collections::BTreeMap;
@@ -10,10 +8,9 @@ use tera::Tera;
 
 mod gsn;
 
-use gsn::GsnYamlNode;
+use gsn::GsnNode;
 
 fn main() -> Result<()> {
-    env_logger::init();
     let matches = App::new(crate_name!())
         .version(crate_version!())
         .author(crate_authors!())
@@ -33,13 +30,13 @@ fn main() -> Result<()> {
         .get_matches();
     let input = matches.value_of("INPUT").unwrap();
     let mut reader = BufReader::new(File::open(&input)?);
-    let nodes: BTreeMap<String, GsnYamlNode> = serde_yaml::from_reader(&mut reader)?;
+    let nodes: BTreeMap<String, GsnNode> = serde_yaml::from_reader(&mut reader)?;
     let mut context = Context::new();
     context.insert("filename", input);
     context.insert("nodes", &nodes);
 
     // Validate
-    gsn::validate(&nodes);
+    gsn::validate(&mut std::io::stderr(), &nodes);
 
     // Output either to stdout or to file
     let mut output = if matches.is_present("OUTPUT") {
