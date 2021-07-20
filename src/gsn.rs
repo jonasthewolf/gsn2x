@@ -111,7 +111,8 @@ mod test {
     }
 
     fn init_logger(output: Sender<u8>) {
-        Builder::new()
+        // There can be only one logger, thus, the need for try_init()
+        let _ = Builder::new()
             .filter(None, LevelFilter::Info)
             .write_style(WriteStyle::Always)
             .format_timestamp(None)
@@ -119,7 +120,7 @@ mod test {
                 sender: output,
             })))
             .is_test(true)
-            .init();
+            .try_init();
     }
 
     #[test]
