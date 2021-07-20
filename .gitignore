@@ -1,2 +1,3 @@
 /target/
 example.gsn.test.dot
+*.prof*
