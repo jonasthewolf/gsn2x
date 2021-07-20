@@ -1,4 +1,4 @@
-[![License: CC BY-NC-ND 4.0](https://img.shields.io/badge/License-CC%20BY--NC--ND%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc-nd/4.0/)  ![Build](https://github.com/jonasthewolf/gsn2x/workflows/build/badge.svg)
+[![License: CC0-1.0](https://img.shields.io/badge/License-CC0%201.0-lightgrey.svg)](http://creativecommons.org/publicdomain/zero/1.0/) ![Build](https://github.com/jonasthewolf/gsn2x/workflows/Build/badge.svg)
 
 # gsn2x
 
