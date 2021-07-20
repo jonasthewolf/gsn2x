@@ -1,65 +1,69 @@
-G1: 
- - "Goal 1"
- - supportedBy: [G2, G3, G4]
 
-G2: 
- - "Goal 2"
- - supportedBy: [S1]
+G1:
+ text: "Goal 1"
+ supportedBy: [G2, G3, G4]
+
+G2:
+ text: "Goal 2"
+ supportedBy: [S1]
 
 G4: 
- - "Goal 4"
- - inContextOf: [J2]
- - supportedBy: [Sn2]
+ text: "Goal 4"
+ inContextOf: [J2]
+ supportedBy: [Sn2]
 
 G3: 
- - "Goal 3"
- - supportedBy: [Sn1]
- - inContextOf: [C1]
+ text: "Goal 3"
+ supportedBy: [Sn1]
+ inContextOf: [C1]
 
 C1:
- - "Context 1"
+ text: "Context 1"
 
 S1:
- - "Strategy 1"
- - supportedBy: [G5, G6]
- - inContextOf: [A1, J1]
+ text: "Strategy 1"
+ supportedBy: [G5, G6]
+ inContextOf: [A1, J1]
 
 G5:
- - "Goal 5"
- - inContextOf: [C2, A2]
- - supportedBy: [Sn3, Sn4]
+ text: "Goal 5"
+ inContextOf: [C2, A2]
+ supportedBy: [Sn3, Sn4]
 
-C2:
- - "Context 2\n
-    Multiline"
+C2: 
+ text: |
+        Context 2
+        Multiline
 
 G6: 
- - "Goal 6"
- - supportedBy: [Sn3, Sn5]
+ text: "Goal 6" 
+ supportedBy: [Sn3, Sn5]
 
 A1: 
- - "Argument 1"
+ text: "Argument 1"
 
 Sn1: 
- - "Solution 1"
+ text: "Solution 1"
 
 Sn2: 
- - "Solution 2"
+ text: "Solution 2"
 
 Sn3: 
- - "Solution 3"
+ text: "Solution 3"
 
 Sn4: 
- - "Solution 4"
+ text: "Solution 4"
 
 Sn5: 
- - "Solution 5"
+ text: "Solution 5"
 
 J1: 
- - "Justification 1"
+ text: "Justification 1"
 
 J2:
- - "Justification 2"
+ text: "Justification 2"
 
-A2:
- - "Assumption 2"
+A2: 
+ text: "Assumption 2"
+
+ 

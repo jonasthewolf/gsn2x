@@ -1,0 +1,44 @@
+## {'G1': ['Goal 1', {'supportedBy': ['G2', 'G3', 'G4']}], 'G2': ['Goal 2', {'supportedBy': ['S1']}], 'G4': ['Goal 4', {'supportedBy': ['Sn2']}], 'G3': ['Goal 3', {'supportedBy': ['Sn1']}, {'inContextOf': ['C1']}], 'C1': ['Context 1'], 'S1': ['Strategy 1', {'supportedBy': ['Sn1']}, {'inContextOf': ['A1', 'J1']}], 'A1': ['Argument 1'], 'Sn1': ['Solution 1'], 'Sn2': ['Solution 2'], 'J1': ['Justification 1']}
+
+
+digraph "example.gsn.yaml" {
+
+  ## Elements
+  "G1" [shape="box", label=<<B>G1</B><BR align="left"/>Goal 1>];
+  "G2" [shape="box", label=<<B>G2</B><BR align="left"/>Goal 2>];
+  "G4" [shape="box", label=<<B>G4</B><BR align="left"/>Goal 4>];
+  "G3" [shape="box", label=<<B>G3</B><BR align="left"/>Goal 3>];
+  "C1" [shape="box", style="rounded", label=<<B>C1</B><BR align="left"/>Context 1>];
+  "S1" [shape="parallelogram", label=<<B>S1</B><BR align="left"/>Strategy 1>];
+  "A1" [shape="oval", label=<<B>A1</B><BR align="left"/>Argument 1>];
+  "A1":e -> "A1":e [headlabel=< <B>A</B> >, labeldistance=2.5, penwidth=0, arrowhead=none];
+  "Sn1" [shape="circle", label=<<B>Sn1</B><BR align="left"/>Solution 1>];
+  "Sn2" [shape="circle", label=<<B>Sn2</B><BR align="left"/>Solution 2>];
+  "J1" [shape="oval", label=<<B>J1</B><BR align="left"/>Justification 1>];
+  "J1":e -> "J1":e [headlabel=< <B>J</B> >, labeldistance=2.5, penwidth=0, arrowhead=none];
+
+  ## Relations
+  "G1" -> "G2";
+  "G1" -> "G3";
+  "G1" -> "G4";
+  "G2" -> "S1";
+  "G4" -> "Sn2";
+  "G3" -> "Sn1";
+  subgraph cluster4 {
+    graph[peripheries=0];
+    {
+      rank = same;
+      "G3" -> "C1" [arrowhead=empty];
+    }
+  }
+  "S1" -> "Sn1";
+  subgraph cluster6 {
+    graph[peripheries=0];
+    {
+      rank = same;
+      "S1" -> "A1" [arrowhead=empty];
+      "J1" -> "S1" [dir=back, arrowtail=empty];
+    }
+  }
+}
+

@@ -1,0 +1,42 @@
+
+{% import "macros.dot" as macros %}
+
+
+digraph "{{filename}}" {
+
+  ## Elements
+  {%- for id, node in nodes %}
+  "{{id}}" [{{- macros::render_box(id=id, node=node) -}}];
+  {%- if id is starting_with("A") %}
+  "{{id}}":e -> "{{id}}":e [headlabel=< <B>A</B> >, labeldistance=2.5, penwidth=0, arrowhead=none]; 
+  {%- elif id is starting_with("J") %}
+  "{{id}}":e -> "{{id}}":e [headlabel=< <B>J</B> >, labeldistance=2.5, penwidth=0, arrowhead=none]; 
+  {%- endif %}
+  {%- endfor %}
+
+  ## Relations
+  {%- for id, node in nodes %}
+      {%- if node.supportedBy is iterable %} 
+        {%- for target in node["supportedBy"] %}
+  "{{id}}" -> "{{target}}";
+        {%- endfor %} 
+      {%- endif %} 
+
+    {%- if node.inContextOf is iterable %}
+  subgraph cluster{{loop.index}} {
+    graph[peripheries=0];
+    {
+      rank = same; 
+      {%- for c in node.inContextOf %}
+        {%- if loop.index is odd %}
+      "{{id}}" -> "{{c}}" [arrowhead=empty]; 
+        {%- else %}
+      "{{c}}" -> "{{id}}" [dir=back, arrowtail=empty]; 
+        {%- endif %}
+      {%- endfor %}
+    }
+  }
+    {%- endif %} 
+  {%- endfor %}
+}
+

@@ -1,11 +1,10 @@
 # gsn2x
 
-This little script converts Goal Structuring Notation in YAML to a graphical representation.
+This little program converts Goal Structuring Notation in YAML to a graphical representation.
 
 Feel free to use it and please let me know.
 
-Python 3 is required with the following modules `pathlib`, `jinja2`, `pyyaml`.
-Moreover, Graphviz dot is required.
+Graphviz dot is required.
 
 ## Usage
 
@@ -21,7 +20,7 @@ On other systems you can create a PNG like this:
 
 The following GSN elements are supported:
  - Goal (G), 
- - Argument (A), 
+ - Assumption (A), 
  - Justification (J), 
  - Solution (Sn),
  - Context (C), and

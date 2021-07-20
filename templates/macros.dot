@@ -1,0 +1,11 @@
+{%- macro render_box(id, node) -%}
+  shape={%- if   id is starting_with("G") %}"box"
+        {%- elif id is starting_with("A") %}"oval"
+        {%- elif id is starting_with("J") %}"oval"
+        {%- elif id is starting_with("C") %}"box"
+        {%- elif id is starting_with("Sn") %}"circle"
+        {%- elif id is starting_with("S") %}"parallelogram"
+        {%- endif %}
+        {%- if id is starting_with("C") %}, style="rounded"{%- endif %}, label=<<B>{{id}}</B><BR align="left"/>{{ node.text|trim_end|split(pat='\n')|join(sep='<BR align="left"/>') }}>
+{%- endmacro %}
+
