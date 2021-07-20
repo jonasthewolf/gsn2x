@@ -9,7 +9,7 @@ mod test {
         cmd.arg("example.gsn.yaml").arg("example.gsn.test.dot");
         cmd.assert().success();
         let mut orig = String::new();
-        std::fs::File::open("example.gsn.yaml")?.read_to_string(&mut orig)?;
+        std::fs::File::open("example.gsn.dot")?.read_to_string(&mut orig)?;
         let mut test = String::new();
         std::fs::File::open("example.gsn.test.dot")?.read_to_string(&mut test)?;
         assert_eq!(orig, test);
