@@ -30,9 +30,11 @@ pub fn validate(output: &mut impl Write , nodes: &BTreeMap<String, GsnNode>) {
         }
     }
     if wnodes.len() > 1 {
+        let mut wn = wnodes.iter().map(|s| s.clone()).collect::<Vec<String>>();
+        wn.sort();
         writeln!(output,
             "Error: There is more than one unreferenced element: {}",
-            wnodes.iter().map(|s| s.clone()).collect::<Vec<String>>().join(", ")
+            wn.join(", ")
         ).unwrap();
     }
 }
@@ -225,7 +227,7 @@ mod test {
         validate(&mut output, &nodes);
         assert_eq!(
             std::str::from_utf8(&output).unwrap(),
-            "Error: There is more than one unreferenced element: G1, C1\n"
+            "Error: There is more than one unreferenced element: C1, G1\n"
         );
     }
 }
