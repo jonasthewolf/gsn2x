@@ -30,7 +30,7 @@ pub fn validate(output: &mut impl Write , nodes: &BTreeMap<String, GsnNode>) {
         }
     }
     if wnodes.len() > 1 {
-        let mut wn = wnodes.iter().map(|s| s.clone()).collect::<Vec<String>>();
+        let mut wn = wnodes.iter().cloned().collect::<Vec<String>>();
         wn.sort();
         writeln!(output,
             "Error: There is more than one unreferenced element: {}",
