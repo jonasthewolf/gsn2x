@@ -1,7 +1,7 @@
 [package]
 name = "gsn2x"
 description = "Tool to create graphical representations of Goal Structuring Notations from YAML."
-authors = "Jonas Wolf <jonas.wolf@jonaswolf.org>"
+authors = ["Jonas Wolf <jonas.wolf@jonaswolf.org>"]
 version = "0.1.0"
 edition = "2018"
 license-file = "LICENSE.md"
