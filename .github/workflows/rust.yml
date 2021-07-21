@@ -18,7 +18,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
-    
+
     - name: Annotate commit with clippy warnings
       uses: actions-rs/clippy-check@v1
       with:
@@ -92,11 +92,12 @@ jobs:
       with:
         name: gsn2x
     - uses: "marvinpinto/action-automatic-releases@latest"
-        with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: "latest"
-          prerelease: true
-          title: "Latest Build"
-          files: |
-            gsn2x*
-            templates/
+      with:
+        repo_token: "${{ secrets.GITHUB_TOKEN }}"
+        automatic_release_tag: "latest"
+        prerelease: true
+        title: "Latest Build"
+        files: |
+          gsn2x*
+          templates/
+
