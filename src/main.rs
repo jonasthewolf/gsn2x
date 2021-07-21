@@ -68,15 +68,16 @@ fn gsn_convert(input: &str, output: Option<&str>) -> Result<(), anyhow::Error> {
 #[cfg(test)]
 mod test {
     use crate::gsn_convert;
-    use std::io::Read;
+    use std::io::BufReader;
+    use std::io::BufRead;
     #[test]
     fn example_back_to_back() -> Result<(), Box<dyn std::error::Error>> {
         gsn_convert("example.gsn.yaml", Some("example.gsn.test.dot"))?;
-        let mut orig = String::new();
-        std::fs::File::open("example.gsn.dot")?.read_to_string(&mut orig)?;
-        let mut test = String::new();
-        std::fs::File::open("example.gsn.test.dot")?.read_to_string(&mut test)?;
-        assert_eq!(orig, test);
+        let orig = BufReader::new(std::fs::File::open("example.gsn.dot")?).lines();
+        let test = BufReader::new(std::fs::File::open("example.gsn.test.dot")?).lines();
+        for (o,t) in orig.zip(test) {
+            assert_eq!(o?, t?);
+        }
         Ok(())
     }
 }
