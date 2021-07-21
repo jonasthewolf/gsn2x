@@ -2,25 +2,27 @@
 
 # gsn2x
 
-This little program converts Goal Structuring Notation in YAML to a graphical representation.
+This little program converts [Goal Structuring Notation](https://scsc.uk/gsn) in YAML to the DOT format of [Graphviz](https://graphviz.org).
+Graphviz dot is required to create an image from the output of this tool.
 
 Feel free to use it and please let me know.
 
-Graphviz dot is required.
 
 ## Usage
 
 On Windows you can just run:
 
-    gsn2x.cmd <yourgsnfile> [<output format, e.g. png>]
+    gsn2x.exe <yourgsnfile.yaml> | dot -Tpng > <yourgsnfile.png>
 
 On other systems you can create a PNG like this:
 
-    python yslt.py -s gsn2dot.yslt <yourgsnfile> | dot -Tpng > <yourgsnfile.png>
+    gsn2x <yourgsnfile.yaml> | dot -Tpng > <yourgsnfile.png>
 
+If a second optional argument is provided, the output is not written to stdout, but to the file named by the second argument.
+    
 ## Syntax in YAML
 
-The following GSN elements are supported:
+The following Goal Structuring Notation (GSN) elements are supported:
  - Goal (G), 
  - Assumption (A), 
  - Justification (J), 
@@ -28,16 +30,21 @@ The following GSN elements are supported:
  - Context (C), and
  - Strategy (S)
 
-Every element is defined by a letter and a number.
-The first line of the element is its text. 
-The `supportedBy` gives a list of the supporting arguments.
-The `inContextOf` links justifications, context or assumptions. 
+Every element is defined by a prefix (as shown in the list above) and a number.
+Actually, the number can be an arbitrary identifier then.
+The (optional) `supportedBy` gives a list of the supporting arguments.
+The (optional) `inContextOf` links justifications, context or assumptions. 
 
-    G1: 
-     - "Goal"
-     - supportedBy: [S1]
-
+    G1:
+      text: This is a Goal
+      supportedBy: [S1]
+      inContextOf: [C1]
+    
     S1:
-     - "Strategy"
+      text: This is a Strategy
+    
+    C1: 
+      text: This is a Context
+
 
 Please see example.gsn.yaml for an example of the used syntax.
