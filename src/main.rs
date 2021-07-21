@@ -27,7 +27,15 @@ fn main() -> Result<()> {
                 .index(2),
         )
         .get_matches();
-    let input = matches.value_of("INPUT").unwrap(); // Unwrap is ok, since argument is required
+    gsn_convert(
+        matches.value_of("INPUT").unwrap(),
+        matches.value_of("OUTPUT"),
+    )?;
+
+    Ok(())
+}
+
+fn gsn_convert(input: &str, output: Option<&str>) -> Result<(), anyhow::Error> {
     let mut reader = BufReader::new(
         File::open(&input).with_context(|| format!("Failed to open file {}", input))?,
     );
@@ -40,21 +48,35 @@ fn main() -> Result<()> {
     // Validate
     gsn::validate(&mut std::io::stderr(), &nodes);
 
-    // Output either to stdout or to file
-    let mut output = if matches.is_present("OUTPUT") {
+    // Output
+    let mut output_file = match output {
         // Unwrap is ok here, since the presence of the argument is checked
-        Box::new(
-            File::create(matches.value_of("OUTPUT").unwrap())
+        Some(output) => Box::new(
+            File::create(output)
                 .with_context(|| format!("Failed to open output file {}", input))?,
-        ) as Box<dyn std::io::Write>
-    } else {
-        Box::new(std::io::stdout())
+        ) as Box<dyn std::io::Write>,
+        None => Box::new(std::io::stdout()),
     };
-    // The following errors are considered not to occur during normal usage.
-    // Thus, normal users cannot resolve them even with better error messages.
-    writeln!(output, "## {:?}\n\n", &nodes)?;
+
+    writeln!(output_file, "## {:?}\n\n", &nodes)?;
     let tera = Tera::new("templates/*.dot")?;
-    tera.render_to("gsn2dot.dot", &context, output)?;
-    
+    tera.render_to("gsn2dot.dot", &context, output_file)?;
+
     Ok(())
+}
+
+#[cfg(test)]
+mod test {
+    use crate::gsn_convert;
+    use std::io::Read;
+    #[test]
+    fn example_back_to_back() -> Result<(), Box<dyn std::error::Error>> {
+        gsn_convert("example.gsn.yaml", Some("example.gsn.test.dot"))?;
+        let mut orig = String::new();
+        std::fs::File::open("example.gsn.dot")?.read_to_string(&mut orig)?;
+        let mut test = String::new();
+        std::fs::File::open("example.gsn.test.dot")?.read_to_string(&mut test)?;
+        assert_eq!(orig, test);
+        Ok(())
+    }
 }
