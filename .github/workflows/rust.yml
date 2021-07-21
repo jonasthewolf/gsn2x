@@ -17,6 +17,8 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
+    - uses: actions/checkout@v1
+    
     - name: Annotate commit with clippy warnings
       uses: actions-rs/clippy-check@v1
       with:
@@ -41,6 +43,12 @@ jobs:
     - name: Release build
       run: cargo build --release --verbose
     - uses: Swatinem/rust-cache@v1.3.0
+    - uses: actions/upload-artifact@v2
+      with:
+        name: gsn2x
+        path: |
+          target/release/gsn2x*
+          templates/
 
   test:
     needs: build
@@ -75,3 +83,20 @@ jobs:
     - uses: codecov/codecov-action@v1
       with:
         directory: coverage
+
+
+  deploy:
+    needs: coverage
+    steps:
+    - uses: actions/download-artifact@v2
+      with:
+        name: gsn2x
+    - uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest"
+          prerelease: true
+          title: "Latest Build"
+          files: |
+            gsn2x*
+            templates/
