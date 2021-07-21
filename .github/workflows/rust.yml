@@ -46,7 +46,8 @@ jobs:
       with:
         name: gsn2x-${{ matrix.os }}
         path: |
-          target/release/gsn2x*
+          target/release/gsn2x
+          target/release/gsn2x.exe
           templates/
 
   test:
@@ -93,13 +94,19 @@ jobs:
     - uses: actions/download-artifact@v2
       with:
         name: gsn2x-${{ matrix.os }}
+    - name: Move executable
+      run: mv target/release/gsn2x* .
+    - uses: papeloto/action-zip@v1
+      with:
+        files: templates/ gsn2x*
+        recursive: false
+        dest: gsn2x.zip
+    
     - uses: "marvinpinto/action-automatic-releases@latest"
       with:
         repo_token: "${{ secrets.GITHUB_TOKEN }}"
         automatic_release_tag: "latest"
         prerelease: true
         title: "Latest Build for ${{ matrix.os }}"
-        files: |
-          gsn2x*
-          templates/
+        files: gsn2x.zip
 
