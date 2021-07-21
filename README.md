@@ -32,7 +32,9 @@ The following Goal Structuring Notation (GSN) elements are supported:
 
 Every element is defined by a prefix (as shown in the list above) and a number.
 Actually, the number can be an arbitrary identifier then.
+
 The (optional) `supportedBy` gives a list of the supporting arguments.
+
 The (optional) `inContextOf` links justifications, context or assumptions. 
 
     G1:
