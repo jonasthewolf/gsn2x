@@ -1,9 +1,8 @@
-use anyhow::Result;
+use anyhow::{Context, Result};
 use clap::{crate_authors, crate_description, crate_name, crate_version, App, Arg};
 use std::collections::BTreeMap;
 use std::fs::File;
 use std::io::BufReader;
-use tera::Context;
 use tera::Tera;
 
 mod gsn;
@@ -28,10 +27,13 @@ fn main() -> Result<()> {
                 .index(2),
         )
         .get_matches();
-    let input = matches.value_of("INPUT").unwrap();
-    let mut reader = BufReader::new(File::open(&input)?);
-    let nodes: BTreeMap<String, GsnNode> = serde_yaml::from_reader(&mut reader)?;
-    let mut context = Context::new();
+    let input = matches.value_of("INPUT").unwrap(); // Unwrap is ok, since argument is required
+    let mut reader = BufReader::new(
+        File::open(&input).with_context(|| format!("Failed to open file {}", input))?,
+    );
+    let nodes: BTreeMap<String, GsnNode> = serde_yaml::from_reader(&mut reader)
+        .with_context(|| format!("Failed to parse YAML from file {}", input))?;
+    let mut context = tera::Context::new();
     context.insert("filename", input);
     context.insert("nodes", &nodes);
 
@@ -40,12 +42,19 @@ fn main() -> Result<()> {
 
     // Output either to stdout or to file
     let mut output = if matches.is_present("OUTPUT") {
-        Box::new(File::create(matches.value_of("OUTPUT").unwrap())?) as Box<dyn std::io::Write>
+        // Unwrap is ok here, since the presence of the argument is checked
+        Box::new(
+            File::create(matches.value_of("OUTPUT").unwrap())
+                .with_context(|| format!("Failed to open output file {}", input))?,
+        ) as Box<dyn std::io::Write>
     } else {
         Box::new(std::io::stdout())
     };
+    // The following errors are considered not to occur during normal usage.
+    // Thus, normal users cannot resolve them even with better error messages.
     writeln!(output, "## {:?}\n\n", &nodes)?;
     let tera = Tera::new("templates/*.dot")?;
     tera.render_to("gsn2dot.dot", &context, output)?;
+    
     Ok(())
 }
