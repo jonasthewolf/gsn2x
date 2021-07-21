@@ -45,7 +45,7 @@ jobs:
     - uses: Swatinem/rust-cache@v1.3.0
     - uses: actions/upload-artifact@v2
       with:
-        name: gsn2x
+        name: gsn2x-${{ matrix.os }}
         path: |
           target/release/gsn2x*
           templates/
@@ -95,7 +95,7 @@ jobs:
     steps:
     - uses: actions/download-artifact@v2
       with:
-        name: gsn2x
+        name: gsn2x-${{ matrix.os }}
     - uses: "marvinpinto/action-automatic-releases@latest"
       with:
         repo_token: "${{ secrets.GITHUB_TOKEN }}"
