@@ -48,3 +48,18 @@ The (optional) `inContextOf` links justifications, context or assumptions.
 
 
 Please see example.gsn.yaml for an example of the used syntax.
+
+## Validation checks
+
+The tool automatically performs the following validation checks on the input YAML:
+
+ - There is only one top-level element (G,S,C,J,A,Sn) unreferenced. 
+ - All referenced elements (`supportedBy` and `inContextOf`) exist.
+ - All IDs start with a known prefix.
+
+Error messages are printed to stderr.
+
+## Known issues
+
+The used YAML parser does not detect duplicate keys. 
+That is, you can accidentally declare the same object twice undetected.
