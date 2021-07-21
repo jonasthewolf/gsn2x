@@ -1,4 +1,4 @@
-[![License: CC0-1.0](https://img.shields.io/badge/License-CC0%201.0-lightgrey.svg)](http://creativecommons.org/publicdomain/zero/1.0/) ![Build](https://github.com/jonasthewolf/gsn2x/workflows/Build/badge.svg)
+[![License: CC0-1.0](https://img.shields.io/badge/License-CC0%201.0-lightgrey.svg)](http://creativecommons.org/publicdomain/zero/1.0/) [![Build](https://github.com/jonasthewolf/gsn2x/actions/workflows/rust.yml:build/badge.svg)](https://github.com/jonasthewolf/gsn2x/actions/workflows/rust.yml)
 
 # gsn2x
 
