@@ -87,6 +87,11 @@ jobs:
 
   deploy:
     needs: coverage
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+
     steps:
     - uses: actions/download-artifact@v2
       with:
@@ -96,7 +101,7 @@ jobs:
         repo_token: "${{ secrets.GITHUB_TOKEN }}"
         automatic_release_tag: "latest"
         prerelease: true
-        title: "Latest Build"
+        title: "Latest Build for ${{ matrix.os }}"
         files: |
           gsn2x*
           templates/
