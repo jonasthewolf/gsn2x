@@ -100,7 +100,5 @@ jobs:
         automatic_release_tag: "latest"
         prerelease: true
         title: "Latest Build for ${{ matrix.os }}"
-        files: 
-          - target/release/gsn2x
-          - target/release/gsn2x.exe
+        files: target/release/gsn2x target/release/gsn2x.exe
 
