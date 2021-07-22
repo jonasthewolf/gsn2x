@@ -59,7 +59,11 @@ fn gsn_convert(input: &str, output: Option<&str>) -> Result<(), anyhow::Error> {
     };
 
     writeln!(output_file, "## {:?}\n\n", &nodes)?;
-    let tera = Tera::new("templates/*.dot")?;
+    let mut tera = Tera::default();
+    tera.add_raw_templates(vec![
+        ("macros.dot", include_str!("../templates/macros.dot")),
+        ("gsn2dot.dot", include_str!("../templates/gsn2dot.dot"))
+        ])?;
     tera.render_to("gsn2dot.dot", &context, output_file)?;
 
     Ok(())

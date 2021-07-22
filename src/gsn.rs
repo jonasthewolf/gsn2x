@@ -6,8 +6,8 @@ use std::io::Write;
 #[serde(rename_all = "camelCase")]
 pub struct GsnNode {
     text: String,
-    pub(crate) in_context_of: Option<Vec<String>>,
-    pub(crate) supported_by: Option<Vec<String>>,
+    in_context_of: Option<Vec<String>>,
+    supported_by: Option<Vec<String>>,
 }
 
 pub fn validate(output: &mut impl Write , nodes: &BTreeMap<String, GsnNode>) {
