@@ -33,9 +33,9 @@ The following Goal Structuring Notation (GSN) elements are supported:
 Every element is defined by a prefix (as shown in the list above) and a number.
 Actually, the number can be an arbitrary identifier then.
 
-The (optional) `supportedBy` gives a list of the supporting arguments.
+The (optional) `supportedBy` gives a list of the supporting arguments. Thus, Goal, Strategy and Solution can be listed here.
 
-The (optional) `inContextOf` links justifications, context or assumptions. 
+The (optional) `inContextOf` links justifications, contexts or assumptions. 
 
     G1:
       text: This is a Goal

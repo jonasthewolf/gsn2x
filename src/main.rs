@@ -62,8 +62,8 @@ fn gsn_convert(input: &str, output: Option<&str>) -> Result<(), anyhow::Error> {
     let mut tera = Tera::default();
     tera.add_raw_templates(vec![
         ("macros.dot", include_str!("../templates/macros.dot")),
-        ("gsn2dot.dot", include_str!("../templates/gsn2dot.dot"))
-        ])?;
+        ("gsn2dot.dot", include_str!("../templates/gsn2dot.dot")),
+    ])?;
     tera.render_to("gsn2dot.dot", &context, output_file)?;
 
     Ok(())
@@ -72,14 +72,14 @@ fn gsn_convert(input: &str, output: Option<&str>) -> Result<(), anyhow::Error> {
 #[cfg(test)]
 mod test {
     use crate::gsn_convert;
-    use std::io::BufReader;
     use std::io::BufRead;
+    use std::io::BufReader;
     #[test]
     fn example_back_to_back() -> Result<(), Box<dyn std::error::Error>> {
         gsn_convert("example.gsn.yaml", Some("example.gsn.test.dot"))?;
         let orig = BufReader::new(std::fs::File::open("example.gsn.dot")?).lines();
         let test = BufReader::new(std::fs::File::open("example.gsn.test.dot")?).lines();
-        for (o,t) in orig.zip(test) {
+        for (o, t) in orig.zip(test) {
             assert_eq!(o?, t?);
         }
         Ok(())

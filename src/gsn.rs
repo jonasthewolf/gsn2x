@@ -10,7 +10,7 @@ pub struct GsnNode {
     supported_by: Option<Vec<String>>,
 }
 
-pub fn validate(output: &mut impl Write , nodes: &BTreeMap<String, GsnNode>) {
+pub fn validate(output: &mut impl Write, nodes: &BTreeMap<String, GsnNode>) {
     let mut wnodes: HashSet<String> = nodes.keys().cloned().collect();
     for (key, node) in nodes {
         // Validate if key is one of the known prefixes
@@ -32,10 +32,12 @@ pub fn validate(output: &mut impl Write , nodes: &BTreeMap<String, GsnNode>) {
     if wnodes.len() > 1 {
         let mut wn = wnodes.iter().cloned().collect::<Vec<String>>();
         wn.sort();
-        writeln!(output,
+        writeln!(
+            output,
             "Error: There is more than one unreferenced element: {}",
             wn.join(", ")
-        ).unwrap();
+        )
+        .unwrap();
     }
 }
 
@@ -48,44 +50,88 @@ fn validate_id(output: &mut impl Write, id: &str) {
         || id.starts_with('S')
         || id.starts_with('C'))
     {
-        writeln!(output,
+        writeln!(
+            output,
             "Error: Elememt {} is of unknown type. Please see README for supported types",
             id
-        ).unwrap();
+        )
+        .unwrap();
     }
 }
 
 fn check_references(
-    output: &mut impl Write,
+    mut output: &mut impl Write,
     nodes: &BTreeMap<String, GsnNode>,
     node: &str,
     refs: &[String],
     diag: &str,
+    valid_refs: &[&str],
 ) {
     let mut set = HashSet::with_capacity(refs.len());
     let wrong_refs: Vec<&String> = refs
         .iter()
-        .inspect(|&n| {
-            if !set.insert(n) {
-                writeln!(output,
+        .filter(|&n| {
+            let isself = n == node;
+            if isself {
+                writeln!(
+                    &mut output,
+                    "Error: Element {} references itself in {}.",
+                    node, diag
+                )
+                .unwrap();
+            }
+            let doubled = !set.insert(n);
+            if doubled {
+                writeln!(
+                    &mut output,
                     "Warning: Element {} has duplicate entry {} in {}.",
                     node, n, diag
-                ).unwrap();
+                )
+                .unwrap();
             }
+            let wellformed = valid_refs.iter().any(|&r| n.starts_with(r));
+            if !wellformed {
+                writeln!(
+                    &mut output,
+                    "Error: Element {} has invalid type of reference {} in {}.",
+                    node, n, diag
+                )
+                .unwrap();
+            }
+            !isself && !doubled && wellformed
         })
         .filter(|&n| !nodes.contains_key(n))
         .collect();
     for wref in wrong_refs {
-        writeln!(output, "Error: Element {} has unresolved {}: {}", node, diag, wref).unwrap();
+        writeln!(
+            &mut output,
+            "Error: Element {} has unresolved {}: {}",
+            node, diag, wref
+        )
+        .unwrap();
     }
 }
 
-fn validate_reference(output: &mut impl Write, nodes: &BTreeMap<String, GsnNode>, key: &str, node: &GsnNode) {
+fn validate_reference(
+    output: &mut impl Write,
+    nodes: &BTreeMap<String, GsnNode>,
+    key: &str,
+    node: &GsnNode,
+) {
     if let Some(context) = node.in_context_of.as_ref() {
-        check_references(output, nodes, key, context, "context");
+        let valid_refs = vec!["J", "A", "C"];
+        check_references(output, nodes, key, context, "context", &valid_refs);
     }
     if let Some(support) = node.supported_by.as_ref() {
-        check_references(output, nodes, key, support, "supported by element");
+        let valid_refs = vec!["G", "Sn", "S"];
+        check_references(
+            output,
+            nodes,
+            key,
+            support,
+            "supported by element",
+            &valid_refs,
+        );
     }
 }
 
@@ -106,9 +152,88 @@ mod test {
     fn known_id() {
         let mut output = Vec::<u8>::new();
         validate_id(&mut output, &"Sn1".to_owned());
+        assert_eq!(std::str::from_utf8(&output).unwrap(), "");
+    }
+
+    #[test]
+    fn self_ref_context() {
+        let mut output = Vec::<u8>::new();
+        let mut nodes = BTreeMap::<String, GsnNode>::new();
+        nodes.insert(
+            "C1".to_owned(),
+            GsnNode {
+                text: "".to_owned(),
+                in_context_of: Some(vec!["C1".to_owned()]),
+                supported_by: None,
+            },
+        );
+        validate(&mut output, &nodes);
         assert_eq!(
             std::str::from_utf8(&output).unwrap(),
-            ""
+            "Error: Element C1 references itself in context.\n"
+        );
+    }
+
+    #[test]
+    fn self_ref_support() {
+        let mut output = Vec::<u8>::new();
+        let mut nodes = BTreeMap::<String, GsnNode>::new();
+        nodes.insert(
+            "G1".to_owned(),
+            GsnNode {
+                text: "".to_owned(),
+                in_context_of: None,
+                supported_by: Some(vec!["G1".to_owned()]),
+            },
+        );
+        validate(&mut output, &nodes);
+        assert_eq!(
+            std::str::from_utf8(&output).unwrap(),
+            "Error: Element G1 references itself in supported by element.\n"
+        );
+    }
+
+    #[test]
+    fn self_ref_wrong_context() {
+        let mut output = Vec::<u8>::new();
+        let mut nodes = BTreeMap::<String, GsnNode>::new();
+        nodes.insert(
+            "C1".to_owned(),
+            GsnNode {
+                text: "".to_owned(),
+                in_context_of: None,
+                supported_by: Some(vec!["C1".to_owned()]),
+            },
+        );
+        validate(&mut output, &nodes);
+        assert_eq!(
+            std::str::from_utf8(&output).unwrap(),
+            concat!(
+                "Error: Element C1 references itself in supported by element.\n",
+                "Error: Element C1 has invalid type of reference C1 in supported by element.\n"
+            )
+        );
+    }
+
+    #[test]
+    fn self_ref_wrong_support() {
+        let mut output = Vec::<u8>::new();
+        let mut nodes = BTreeMap::<String, GsnNode>::new();
+        nodes.insert(
+            "G1".to_owned(),
+            GsnNode {
+                text: "".to_owned(),
+                in_context_of: Some(vec!["G1".to_owned()]),
+                supported_by: None,
+            },
+        );
+        validate(&mut output, &nodes);
+        assert_eq!(
+            std::str::from_utf8(&output).unwrap(),
+            concat!(
+                "Error: Element G1 references itself in context.\n",
+                "Error: Element G1 has invalid type of reference G1 in context.\n"
+            )
         );
     }
 
@@ -140,13 +265,13 @@ mod test {
             GsnNode {
                 text: "".to_owned(),
                 in_context_of: None,
-                supported_by: Some(vec!["C1".to_owned()]),
+                supported_by: Some(vec!["G2".to_owned()]),
             },
         );
         validate(&mut output, &nodes);
         assert_eq!(
             std::str::from_utf8(&output).unwrap(),
-            "Error: Element G1 has unresolved supported by element: C1\n"
+            "Error: Element G1 has unresolved supported by element: G2\n"
         );
     }
 
@@ -186,11 +311,11 @@ mod test {
             GsnNode {
                 text: "".to_owned(),
                 in_context_of: None,
-                supported_by: Some(vec!["C1".to_owned(), "C1".to_owned()]),
+                supported_by: Some(vec!["G2".to_owned(), "G2".to_owned()]),
             },
         );
         nodes.insert(
-            "C1".to_owned(),
+            "G2".to_owned(),
             GsnNode {
                 text: "".to_owned(),
                 in_context_of: None,
@@ -200,7 +325,7 @@ mod test {
         validate(&mut output, &nodes);
         assert_eq!(
             std::str::from_utf8(&output).unwrap(),
-            "Warning: Element G1 has duplicate entry C1 in supported by element.\n"
+            "Warning: Element G1 has duplicate entry G2 in supported by element.\n"
         );
     }
 
@@ -228,6 +353,100 @@ mod test {
         assert_eq!(
             std::str::from_utf8(&output).unwrap(),
             "Error: There is more than one unreferenced element: C1, G1\n"
+        );
+    }
+
+    #[test]
+    fn wrong_ref_context() {
+        let mut output = Vec::<u8>::new();
+        let mut nodes = BTreeMap::<String, GsnNode>::new();
+        nodes.insert(
+            "G1".to_owned(),
+            GsnNode {
+                text: "".to_owned(),
+                in_context_of: Some(vec!["G2".to_owned(), "S1".to_owned(), "Sn1".to_owned()]),
+                supported_by: None,
+            },
+        );
+        nodes.insert(
+            "G2".to_owned(),
+            GsnNode {
+                text: "".to_owned(),
+                in_context_of: None,
+                supported_by: None,
+            },
+        );
+        nodes.insert(
+            "S1".to_owned(),
+            GsnNode {
+                text: "".to_owned(),
+                in_context_of: None,
+                supported_by: None,
+            },
+        );
+        nodes.insert(
+            "Sn1".to_owned(),
+            GsnNode {
+                text: "".to_owned(),
+                in_context_of: None,
+                supported_by: None,
+            },
+        );
+        validate(&mut output, &nodes);
+        assert_eq!(
+            std::str::from_utf8(&output).unwrap(),
+            concat!(
+                "Error: Element G1 has invalid type of reference G2 in context.\n",
+                "Error: Element G1 has invalid type of reference S1 in context.\n",
+                "Error: Element G1 has invalid type of reference Sn1 in context.\n"
+            )
+        );
+    }
+
+    #[test]
+    fn wrong_ref_support() {
+        let mut output = Vec::<u8>::new();
+        let mut nodes = BTreeMap::<String, GsnNode>::new();
+        nodes.insert(
+            "G1".to_owned(),
+            GsnNode {
+                text: "".to_owned(),
+                in_context_of: None,
+                supported_by: Some(vec!["C1".to_owned(), "J1".to_owned(), "A1".to_owned()]),
+            },
+        );
+        nodes.insert(
+            "C1".to_owned(),
+            GsnNode {
+                text: "".to_owned(),
+                in_context_of: None,
+                supported_by: None,
+            },
+        );
+        nodes.insert(
+            "J1".to_owned(),
+            GsnNode {
+                text: "".to_owned(),
+                in_context_of: None,
+                supported_by: None,
+            },
+        );
+        nodes.insert(
+            "A1".to_owned(),
+            GsnNode {
+                text: "".to_owned(),
+                in_context_of: None,
+                supported_by: None,
+            },
+        );
+        validate(&mut output, &nodes);
+        assert_eq!(
+            std::str::from_utf8(&output).unwrap(),
+            concat!(
+                "Error: Element G1 has invalid type of reference C1 in supported by element.\n",
+                "Error: Element G1 has invalid type of reference J1 in supported by element.\n",
+                "Error: Element G1 has invalid type of reference A1 in supported by element.\n"
+            )
         );
     }
 }
