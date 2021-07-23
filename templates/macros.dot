@@ -6,6 +6,6 @@
         {%- elif id is starting_with("Sn") %}"circle"
         {%- elif id is starting_with("S") %}"parallelogram"
         {%- endif %}
-        {%- if id is starting_with("C") %}, style="rounded"{%- endif %}, label=<<B>{{id}}</B><BR align="left"/>{{ node.text|trim_end|split(pat='\n')|join(sep='<BR align="left"/>') }}>
+        {%- if id is starting_with("C") %}, style="rounded"{%- endif %}, label=<<B>{{id}}</B><BR align="left"/>{{ node.text|trim_end|wordwrap(width=15,wrapstr='<BR align="left"/>') }}>
 {%- endmacro %}
 

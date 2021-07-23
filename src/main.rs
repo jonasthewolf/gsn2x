@@ -6,8 +6,10 @@ use std::io::BufReader;
 use tera::Tera;
 
 mod gsn;
+mod wordwrap;
 
 use gsn::GsnNode;
+use wordwrap::WordWrap;
 
 fn main() -> Result<()> {
     let matches = App::new(crate_name!())
@@ -60,6 +62,7 @@ fn gsn_convert(input: &str, output: Option<&str>) -> Result<(), anyhow::Error> {
 
     writeln!(output_file, "## {:?}\n\n", &nodes)?;
     let mut tera = Tera::default();
+    tera.register_filter("wordwrap", WordWrap);
     tera.add_raw_templates(vec![
         ("macros.dot", include_str!("../templates/macros.dot")),
         ("gsn2dot.dot", include_str!("../templates/gsn2dot.dot")),
@@ -79,8 +82,8 @@ mod test {
         gsn_convert("example.gsn.yaml", Some("example.gsn.test.dot"))?;
         let orig = BufReader::new(std::fs::File::open("example.gsn.dot")?).lines();
         let test = BufReader::new(std::fs::File::open("example.gsn.test.dot")?).lines();
-        for (o, t) in orig.zip(test) {
-            assert_eq!(o?, t?);
+        for (t, o) in test.zip(orig) {
+            assert_eq!(t?, o?);
         }
         Ok(())
     }
