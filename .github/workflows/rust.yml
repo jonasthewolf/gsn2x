@@ -49,7 +49,7 @@ jobs:
       uses: "marvinpinto/action-automatic-releases@latest"
       with:
         repo_token: "${{ secrets.GITHUB_TOKEN }}"
-        automatic_release_tag: "latest"
+        automatic_release_tag: "latest-${{ matrix.os }}"
         prerelease: true
         title: "Latest Build for ${{ matrix.os }}"
         files: target/release/gsn2x target/release/gsn2x.exe
