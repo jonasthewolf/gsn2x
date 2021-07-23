@@ -45,6 +45,7 @@ jobs:
       run: cargo build --release --verbose
     - name: Test
       run: cargo test --verbose
+    - name: Deploy to github.com
       uses: "marvinpinto/action-automatic-releases@latest"
       with:
         repo_token: "${{ secrets.GITHUB_TOKEN }}"
