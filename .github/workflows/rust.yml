@@ -30,39 +30,31 @@ jobs:
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
 
-  build:
+  build_test_deploy:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
     runs-on: ${{ matrix.os }}
 
     steps:
-    - uses: actions/checkout@v2
+    - name: Checkout 
+      uses: actions/checkout@v2
     - name: Build
       run: cargo build --verbose
     - name: Release build
       run: cargo build --release --verbose
-    - uses: actions/upload-artifact@v2
-      with:
-        name: gsn2x-${{ matrix.os }}
-        path: |
-          target/release/gsn2x
-          target/release/gsn2x.exe
-
-  test:
-    needs: build
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
-    runs-on: ${{ matrix.os }}
-
-    steps:
-    - uses: actions/checkout@v2
     - name: Test
       run: cargo test --verbose
+      uses: "marvinpinto/action-automatic-releases@latest"
+      with:
+        repo_token: "${{ secrets.GITHUB_TOKEN }}"
+        automatic_release_tag: "latest"
+        prerelease: true
+        title: "Latest Build for ${{ matrix.os }}"
+        files: target/release/gsn2x target/release/gsn2x.exe
 
   coverage:
-    needs: test
+    needs: build_test_deploy
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -72,33 +64,11 @@ jobs:
         profile: minimal
         toolchain: nightly
         components: llvm-tools-preview
-    
     # runs cargo with defaults flags, using the default `lcov` output
     - uses: Swatinem/fucov@v1
-    
-    # afterwards, upload the report to codecov
-    - uses: codecov/codecov-action@v1
+    - name: Upload to codecov
+      uses: codecov/codecov-action@v1
       with:
         directory: coverage
 
-
-  deploy:
-    needs: coverage
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
-    runs-on: ${{ matrix.os }}
-
-    steps:
-    - uses: actions/download-artifact@v2
-      with:
-        name: gsn2x-${{ matrix.os }}
-    
-    - uses: "marvinpinto/action-automatic-releases@latest"
-      with:
-        repo_token: "${{ secrets.GITHUB_TOKEN }}"
-        automatic_release_tag: "latest"
-        prerelease: true
-        title: "Latest Build for ${{ matrix.os }}"
-        files: target/release/gsn2x target/release/gsn2x.exe
 
