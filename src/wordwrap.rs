@@ -6,17 +6,10 @@ pub struct WordWrap;
 
 impl Filter for WordWrap {
     fn filter(&self, value: &Value, args: &HashMap<String, Value>) -> Result<Value> {
-        let input = match &value {
-            Value::String(s) => s.to_owned(),
-            Value::Array(a) => a
-                .iter()
-                .map(|v| v.as_str().unwrap())
-                .collect::<Vec<&str>>()
-                .join("\n"),
-            _ => return Err("Wrong input for wordwrap".into()),
-        };
         wordwrap(
-            &input,
+            &value
+                .as_str()
+                .ok_or::<Error>("Value is not a string".into())?,
             args.get("width")
                 .ok_or::<Error>("Parameter width missing".into())?
                 .as_u64()
