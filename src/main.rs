@@ -112,6 +112,7 @@ fn render_result(
 
 #[cfg(test)]
 mod test {
+    use crate::gsn::Diagnostics;
     use crate::*;
     use std::fs::OpenOptions;
     use std::io::BufRead;
@@ -137,5 +138,21 @@ mod test {
             assert_eq!(t?, o?);
         }
         Ok(())
+    }
+    #[test]
+    fn validcheck() {
+        let nodes = BTreeMap::<String, GsnNode>::new();
+        let d = Diagnostics {
+            warnings: 2,
+            errors: 3,
+        };
+        let mut output = Vec::<u8>::new();
+        let res = crate::output("", nodes, true, d, &mut output);
+        assert_eq!(res.is_err(), true);
+        assert_eq!(
+            format!("{:?}", res),
+            "Err(3 errors and 2 warnings detected.)"
+        );
+        assert_eq!(output.len(), 0);
     }
 }
