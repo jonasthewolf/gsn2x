@@ -8,6 +8,7 @@ pub struct GsnNode {
     text: String,
     in_context_of: Option<Vec<String>>,
     supported_by: Option<Vec<String>>,
+    url: Option<String>,
 }
 
 pub fn validate(output: &mut impl Write, nodes: &BTreeMap<String, GsnNode>) {
@@ -165,6 +166,7 @@ mod test {
                 text: "".to_owned(),
                 in_context_of: Some(vec!["C1".to_owned()]),
                 supported_by: None,
+                url: None,
             },
         );
         validate(&mut output, &nodes);
@@ -184,6 +186,7 @@ mod test {
                 text: "".to_owned(),
                 in_context_of: None,
                 supported_by: Some(vec!["G1".to_owned()]),
+                url: None,
             },
         );
         validate(&mut output, &nodes);
@@ -203,6 +206,7 @@ mod test {
                 text: "".to_owned(),
                 in_context_of: None,
                 supported_by: Some(vec!["C1".to_owned()]),
+                url: None,
             },
         );
         validate(&mut output, &nodes);
@@ -225,6 +229,7 @@ mod test {
                 text: "".to_owned(),
                 in_context_of: Some(vec!["G1".to_owned()]),
                 supported_by: None,
+                url: None,
             },
         );
         validate(&mut output, &nodes);
@@ -247,6 +252,7 @@ mod test {
                 text: "".to_owned(),
                 in_context_of: Some(vec!["C1".to_owned()]),
                 supported_by: None,
+                url: None,
             },
         );
         validate(&mut output, &nodes);
@@ -266,6 +272,7 @@ mod test {
                 text: "".to_owned(),
                 in_context_of: None,
                 supported_by: Some(vec!["G2".to_owned()]),
+                url: None,
             },
         );
         validate(&mut output, &nodes);
@@ -285,6 +292,7 @@ mod test {
                 text: "".to_owned(),
                 in_context_of: Some(vec!["C1".to_owned(), "C1".to_owned()]),
                 supported_by: None,
+                url: None,
             },
         );
         nodes.insert(
@@ -293,6 +301,7 @@ mod test {
                 text: "".to_owned(),
                 in_context_of: None,
                 supported_by: None,
+                url: None,
             },
         );
         validate(&mut output, &nodes);
@@ -312,6 +321,7 @@ mod test {
                 text: "".to_owned(),
                 in_context_of: None,
                 supported_by: Some(vec!["G2".to_owned(), "G2".to_owned()]),
+                url: None,
             },
         );
         nodes.insert(
@@ -320,6 +330,7 @@ mod test {
                 text: "".to_owned(),
                 in_context_of: None,
                 supported_by: None,
+                url: None,
             },
         );
         validate(&mut output, &nodes);
@@ -339,6 +350,7 @@ mod test {
                 text: "".to_owned(),
                 in_context_of: None,
                 supported_by: None,
+                url: None,
             },
         );
         nodes.insert(
@@ -347,6 +359,7 @@ mod test {
                 text: "".to_owned(),
                 in_context_of: None,
                 supported_by: None,
+                url: None,
             },
         );
         validate(&mut output, &nodes);
@@ -366,6 +379,7 @@ mod test {
                 text: "".to_owned(),
                 in_context_of: Some(vec!["G2".to_owned(), "S1".to_owned(), "Sn1".to_owned()]),
                 supported_by: None,
+                url: None,
             },
         );
         nodes.insert(
@@ -374,6 +388,7 @@ mod test {
                 text: "".to_owned(),
                 in_context_of: None,
                 supported_by: None,
+                url: None,
             },
         );
         nodes.insert(
@@ -382,6 +397,7 @@ mod test {
                 text: "".to_owned(),
                 in_context_of: None,
                 supported_by: None,
+                url: None,
             },
         );
         nodes.insert(
@@ -390,6 +406,7 @@ mod test {
                 text: "".to_owned(),
                 in_context_of: None,
                 supported_by: None,
+                url: None,
             },
         );
         validate(&mut output, &nodes);
@@ -413,6 +430,7 @@ mod test {
                 text: "".to_owned(),
                 in_context_of: None,
                 supported_by: Some(vec!["C1".to_owned(), "J1".to_owned(), "A1".to_owned()]),
+                url: None,
             },
         );
         nodes.insert(
@@ -421,6 +439,7 @@ mod test {
                 text: "".to_owned(),
                 in_context_of: None,
                 supported_by: None,
+                url: None,
             },
         );
         nodes.insert(
@@ -429,6 +448,7 @@ mod test {
                 text: "".to_owned(),
                 in_context_of: None,
                 supported_by: None,
+                url: None,
             },
         );
         nodes.insert(
@@ -437,6 +457,7 @@ mod test {
                 text: "".to_owned(),
                 in_context_of: None,
                 supported_by: None,
+                url: None,
             },
         );
         validate(&mut output, &nodes);

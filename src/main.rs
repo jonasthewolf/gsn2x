@@ -52,7 +52,6 @@ fn gsn_convert(input: &str, output: Option<&str>) -> Result<(), anyhow::Error> {
 
     // Output
     let mut output_file = match output {
-        // Unwrap is ok here, since the presence of the argument is checked
         Some(output) => Box::new(
             File::create(output)
                 .with_context(|| format!("Failed to open output file {}", input))?,

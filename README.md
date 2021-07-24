@@ -37,6 +37,11 @@ The (optional) `supportedBy` gives a list of the supporting arguments. Thus, Goa
 
 The (optional) `inContextOf` links justifications, contexts or assumptions. 
 
+Every element may have an optional `url` attribute that will be used by Graphviz accordingly for a node in the graph.
+This should support finding information more easily. Please note the supported output formats by Graphviz.
+
+### Example
+
     G1:
       text: This is a Goal
       supportedBy: [S1]

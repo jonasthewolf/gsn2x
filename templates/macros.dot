@@ -8,5 +8,6 @@
         {%- elif id is starting_with("S") %}"parallelogram"
         {%- endif %}
 
-        {%- if id is starting_with("C") %}, style="rounded"{%- endif %}, label=<<B>{{id}}</B><BR align="left"/>{{ node.text|trim_end|wordwrap(width=wrap,wrapstr='<BR align="left"/>') }}>
+        {%- if id is starting_with("C") %}, style="rounded"{%- endif %}{%- if node["url"] %}, URL="{{ node["url"] }}"{%- endif %}, label=<<B>{{id}}</B><BR align="left"/>{{ node.text|trim_end|wordwrap(width=wrap,wrapstr='<BR align="left"/>') }}>
+        
 {%- endmacro %}
