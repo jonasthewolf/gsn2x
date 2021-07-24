@@ -76,19 +76,17 @@ fn output(
     d: gsn::Diagnostics,
     output: &mut impl Write,
 ) -> Result<()> {
-    if validonly {
-        if d.errors == 0 {
-            Ok(())
-        } else {
-            Err(anyhow!(
-                "{} errors and {} warnings detected.",
-                d.errors,
-                d.warnings
-            ))
-        }
-    } else {
+    if !validonly {
         render_result(input, nodes, output)?;
+    }
+    if d.errors == 0 {
         Ok(())
+    } else {
+        Err(anyhow!(
+            "{} errors and {} warnings detected.",
+            d.errors,
+            d.warnings
+        ))
     }
 }
 
