@@ -9,15 +9,15 @@ impl Filter for WordWrap {
         wordwrap(
             &value
                 .as_str()
-                .ok_or::<Error>("Value is not a string".into())?,
+                .ok_or_else(|| Error::msg("Value is not a string"))?,
             args.get("width")
-                .ok_or::<Error>("Parameter width missing".into())?
+                .ok_or_else(|| Error::msg("Parameter width missing"))?
                 .as_u64()
-                .ok_or::<Error>("Parameter width is not an integer".into())?,
+                .ok_or_else(|| Error::msg("Parameter width is not an integer"))?,
             args.get("wrapstr")
-                .ok_or::<Error>("Parameter wrapstr missing".into())?
+                .ok_or_else(|| Error::msg("Parameter wrapstr missing"))?
                 .as_str()
-                .ok_or::<Error>("Parameter wrapstr is not a string".into())?,
+                .ok_or_else(|| Error::msg("Parameter wrapstr is not a string"))?,
         )
     }
 }
