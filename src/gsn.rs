@@ -1,6 +1,7 @@
 use serde::{Deserialize, Serialize};
 use std::collections::{BTreeMap, HashSet};
 use std::io::Write;
+use std::ops::AddAssign;
 
 #[derive(Debug, Default, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -11,13 +12,28 @@ pub struct GsnNode {
     url: Option<String>,
 }
 
-pub fn validate(output: &mut impl Write, nodes: &BTreeMap<String, GsnNode>) {
+#[derive(Debug, Default)]
+pub struct Diagnostics {
+    pub warnings: usize,
+    pub errors: usize,
+}
+
+impl AddAssign for Diagnostics {
+    fn add_assign(&mut self, rhs: Diagnostics) {
+        self.warnings += rhs.warnings;
+        self.errors += rhs.errors;
+    }
+}
+
+/// Returns the number of validation warnings and errors
+pub fn validate(output: &mut impl Write, nodes: &BTreeMap<String, GsnNode>) -> Diagnostics {
     let mut wnodes: HashSet<String> = nodes.keys().cloned().collect();
+    let mut diag = Diagnostics::default();
     for (key, node) in nodes {
         // Validate if key is one of the known prefixes
-        validate_id(output, key);
+        diag += validate_id(output, key);
         // Validate if all references of node exist
-        validate_reference(output, &nodes, key, &node);
+        diag += validate_reference(output, &nodes, key, &node);
         // Remove all keys if they are referenced; used to see if there is more than one top level node
         if let Some(context) = node.in_context_of.as_ref() {
             for cnode in context {
@@ -39,10 +55,12 @@ pub fn validate(output: &mut impl Write, nodes: &BTreeMap<String, GsnNode>) {
             wn.join(", ")
         )
         .unwrap();
+        diag.errors += 1;
     }
+    diag
 }
 
-fn validate_id(output: &mut impl Write, id: &str) {
+fn validate_id(output: &mut impl Write, id: &str) -> Diagnostics {
     // Order is important due to Sn and S
     if !(id.starts_with("Sn")
         || id.starts_with('G')
@@ -57,6 +75,15 @@ fn validate_id(output: &mut impl Write, id: &str) {
             id
         )
         .unwrap();
+        Diagnostics {
+            warnings: 0,
+            errors: 1,
+        }
+    } else {
+        Diagnostics {
+            warnings: 0,
+            errors: 0,
+        }
     }
 }
 
@@ -65,9 +92,10 @@ fn check_references(
     nodes: &BTreeMap<String, GsnNode>,
     node: &str,
     refs: &[String],
-    diag: &str,
+    diag_str: &str,
     valid_refs: &[&str],
-) {
+) -> Diagnostics {
+    let mut diag = Diagnostics::default();
     let mut set = HashSet::with_capacity(refs.len());
     let wrong_refs: Vec<&String> = refs
         .iter()
@@ -77,27 +105,30 @@ fn check_references(
                 writeln!(
                     &mut output,
                     "Error: Element {} references itself in {}.",
-                    node, diag
+                    node, diag_str
                 )
                 .unwrap();
+                diag.errors += 1;
             }
             let doubled = !set.insert(n);
             if doubled {
                 writeln!(
                     &mut output,
                     "Warning: Element {} has duplicate entry {} in {}.",
-                    node, n, diag
+                    node, n, diag_str
                 )
                 .unwrap();
+                diag.warnings += 1;
             }
             let wellformed = valid_refs.iter().any(|&r| n.starts_with(r));
             if !wellformed {
                 writeln!(
                     &mut output,
                     "Error: Element {} has invalid type of reference {} in {}.",
-                    node, n, diag
+                    node, n, diag_str
                 )
                 .unwrap();
+                diag.errors += 1;
             }
             !isself && !doubled && wellformed
         })
@@ -107,10 +138,12 @@ fn check_references(
         writeln!(
             &mut output,
             "Error: Element {} has unresolved {}: {}",
-            node, diag, wref
+            node, diag_str, wref
         )
         .unwrap();
+        diag.errors += 1;
     }
+    diag
 }
 
 fn validate_reference(
@@ -118,14 +151,15 @@ fn validate_reference(
     nodes: &BTreeMap<String, GsnNode>,
     key: &str,
     node: &GsnNode,
-) {
+) -> Diagnostics {
+    let mut diag = Diagnostics::default();
     if let Some(context) = node.in_context_of.as_ref() {
         let valid_refs = vec!["J", "A", "C"];
-        check_references(output, nodes, key, context, "context", &valid_refs);
+        diag += check_references(output, nodes, key, context, "context", &valid_refs);
     }
     if let Some(support) = node.supported_by.as_ref() {
         let valid_refs = vec!["G", "Sn", "S"];
-        check_references(
+        diag += check_references(
             output,
             nodes,
             key,
@@ -134,6 +168,7 @@ fn validate_reference(
             &valid_refs,
         );
     }
+    diag
 }
 
 #[cfg(test)]
@@ -142,18 +177,22 @@ mod test {
     #[test]
     fn unknown_id() {
         let mut output = Vec::<u8>::new();
-        validate_id(&mut output, &"X1".to_owned());
+        let d = validate_id(&mut output, &"X1".to_owned());
         assert_eq!(
             std::str::from_utf8(&output).unwrap(),
             "Error: Elememt X1 is of unknown type. Please see README for supported types\n"
         );
+        assert_eq!(d.errors, 1);
+        assert_eq!(d.warnings, 0);
     }
 
     #[test]
     fn known_id() {
         let mut output = Vec::<u8>::new();
-        validate_id(&mut output, &"Sn1".to_owned());
+        let d = validate_id(&mut output, &"Sn1".to_owned());
         assert_eq!(std::str::from_utf8(&output).unwrap(), "");
+        assert_eq!(d.errors, 0);
+        assert_eq!(d.warnings, 0);
     }
 
     #[test]
@@ -169,11 +208,13 @@ mod test {
                 url: None,
             },
         );
-        validate(&mut output, &nodes);
+        let d = validate(&mut output, &nodes);
         assert_eq!(
             std::str::from_utf8(&output).unwrap(),
             "Error: Element C1 references itself in context.\n"
         );
+        assert_eq!(d.errors, 1);
+        assert_eq!(d.warnings, 0);
     }
 
     #[test]
@@ -189,11 +230,13 @@ mod test {
                 url: None,
             },
         );
-        validate(&mut output, &nodes);
+        let d = validate(&mut output, &nodes);
         assert_eq!(
             std::str::from_utf8(&output).unwrap(),
             "Error: Element G1 references itself in supported by element.\n"
         );
+        assert_eq!(d.errors, 1);
+        assert_eq!(d.warnings, 0);
     }
 
     #[test]
@@ -209,7 +252,7 @@ mod test {
                 url: None,
             },
         );
-        validate(&mut output, &nodes);
+        let d = validate(&mut output, &nodes);
         assert_eq!(
             std::str::from_utf8(&output).unwrap(),
             concat!(
@@ -217,6 +260,8 @@ mod test {
                 "Error: Element C1 has invalid type of reference C1 in supported by element.\n"
             )
         );
+        assert_eq!(d.errors, 2);
+        assert_eq!(d.warnings, 0);
     }
 
     #[test]
@@ -232,7 +277,7 @@ mod test {
                 url: None,
             },
         );
-        validate(&mut output, &nodes);
+        let d = validate(&mut output, &nodes);
         assert_eq!(
             std::str::from_utf8(&output).unwrap(),
             concat!(
@@ -240,6 +285,8 @@ mod test {
                 "Error: Element G1 has invalid type of reference G1 in context.\n"
             )
         );
+        assert_eq!(d.errors, 2);
+        assert_eq!(d.warnings, 0);
     }
 
     #[test]
@@ -255,11 +302,13 @@ mod test {
                 url: None,
             },
         );
-        validate(&mut output, &nodes);
+        let d = validate(&mut output, &nodes);
         assert_eq!(
             std::str::from_utf8(&output).unwrap(),
             "Error: Element G1 has unresolved context: C1\n"
         );
+        assert_eq!(d.errors, 1);
+        assert_eq!(d.warnings, 0);
     }
 
     #[test]
@@ -275,11 +324,13 @@ mod test {
                 url: None,
             },
         );
-        validate(&mut output, &nodes);
+        let d = validate(&mut output, &nodes);
         assert_eq!(
             std::str::from_utf8(&output).unwrap(),
             "Error: Element G1 has unresolved supported by element: G2\n"
         );
+        assert_eq!(d.errors, 1);
+        assert_eq!(d.warnings, 0);
     }
 
     #[test]
@@ -304,11 +355,13 @@ mod test {
                 url: None,
             },
         );
-        validate(&mut output, &nodes);
+        let d = validate(&mut output, &nodes);
         assert_eq!(
             std::str::from_utf8(&output).unwrap(),
             "Warning: Element G1 has duplicate entry C1 in context.\n"
         );
+        assert_eq!(d.errors, 0);
+        assert_eq!(d.warnings, 1);
     }
 
     #[test]
@@ -333,11 +386,13 @@ mod test {
                 url: None,
             },
         );
-        validate(&mut output, &nodes);
+        let d = validate(&mut output, &nodes);
         assert_eq!(
             std::str::from_utf8(&output).unwrap(),
             "Warning: Element G1 has duplicate entry G2 in supported by element.\n"
         );
+        assert_eq!(d.errors, 0);
+        assert_eq!(d.warnings, 1);
     }
 
     #[test]
@@ -362,11 +417,13 @@ mod test {
                 url: None,
             },
         );
-        validate(&mut output, &nodes);
+        let d = validate(&mut output, &nodes);
         assert_eq!(
             std::str::from_utf8(&output).unwrap(),
             "Error: There is more than one unreferenced element: C1, G1\n"
         );
+        assert_eq!(d.errors, 1);
+        assert_eq!(d.warnings, 0);
     }
 
     #[test]
@@ -409,7 +466,7 @@ mod test {
                 url: None,
             },
         );
-        validate(&mut output, &nodes);
+        let d = validate(&mut output, &nodes);
         assert_eq!(
             std::str::from_utf8(&output).unwrap(),
             concat!(
@@ -418,6 +475,8 @@ mod test {
                 "Error: Element G1 has invalid type of reference Sn1 in context.\n"
             )
         );
+        assert_eq!(d.errors, 3);
+        assert_eq!(d.warnings, 0);
     }
 
     #[test]
@@ -460,7 +519,7 @@ mod test {
                 url: None,
             },
         );
-        validate(&mut output, &nodes);
+        let d = validate(&mut output, &nodes);
         assert_eq!(
             std::str::from_utf8(&output).unwrap(),
             concat!(
@@ -469,5 +528,7 @@ mod test {
                 "Error: Element G1 has invalid type of reference A1 in supported by element.\n"
             )
         );
+        assert_eq!(d.errors, 3);
+        assert_eq!(d.warnings, 0);
     }
 }

@@ -1,4 +1,4 @@
-use anyhow::{Context, Result};
+use anyhow::{anyhow, Context, Result};
 use clap::{crate_authors, crate_description, crate_name, crate_version, App, Arg};
 use std::collections::BTreeMap;
 use std::fs::File;
@@ -36,30 +36,28 @@ fn main() -> Result<()> {
                 .required(false),
         )
         .get_matches();
-    
+
     // Read input
     let input = matches.value_of("INPUT").unwrap();
     let nodes = read_input(input)?;
 
     // Validate
-    gsn::validate(&mut std::io::stderr(), &nodes);
+    let d = gsn::validate(&mut std::io::stderr(), &nodes);
 
     // Output
-    if !matches.is_present("VALONLY") {
-        render_result(
-            input,
-            nodes,
-            &mut match matches.value_of("OUTPUT") {
-                Some(output) => Box::new(
-                    File::create(output)
-                        .with_context(|| format!("Failed to open output file {}", output))?,
-                ) as Box<dyn std::io::Write>,
-                None => Box::new(std::io::stdout()) as Box<dyn std::io::Write>,
-            },
-        )?;
-    }
-
-    Ok(())
+    output(
+        input,
+        nodes,
+        matches.is_present("VALONLY"),
+        d,
+        &mut match matches.value_of("OUTPUT") {
+            Some(output) => Box::new(
+                File::create(output)
+                    .with_context(|| format!("Failed to open output file {}", output))?,
+            ) as Box<dyn std::io::Write>,
+            None => Box::new(std::io::stdout()) as Box<dyn std::io::Write>,
+        },
+    )
 }
 
 fn read_input(input: &str) -> Result<BTreeMap<String, GsnNode>, anyhow::Error> {
@@ -69,6 +67,29 @@ fn read_input(input: &str) -> Result<BTreeMap<String, GsnNode>, anyhow::Error> {
     let nodes: BTreeMap<String, GsnNode> = serde_yaml::from_reader(&mut reader)
         .with_context(|| format!("Failed to parse YAML from file {}", input))?;
     Ok(nodes)
+}
+
+fn output(
+    input: &str,
+    nodes: BTreeMap<String, GsnNode>,
+    validonly: bool,
+    d: gsn::Diagnostics,
+    output: &mut impl Write,
+) -> Result<()> {
+    if validonly {
+        if d.errors == 0 {
+            Ok(())
+        } else {
+            Err(anyhow!(
+                "{} errors and {} warnings detected.",
+                d.errors,
+                d.warnings
+            ))
+        }
+    } else {
+        render_result(input, nodes, output)?;
+        Ok(())
+    }
 }
 
 fn render_result(
@@ -107,8 +128,10 @@ mod test {
             .open("example.gsn.test.dot")?;
 
         let nodes = crate::read_input("example.gsn.yaml")?;
-        gsn::validate(&mut std::io::stderr(), &nodes);
-        crate::render_result("example.gsn.yaml", nodes, &mut output)?;
+        let d = gsn::validate(&mut std::io::stderr(), &nodes);
+        assert_eq!(d.errors, 0);
+        assert_eq!(d.warnings, 0);
+        crate::output("example.gsn.yaml", nodes, false, d, &mut output)?;
 
         let orig = BufReader::new(std::fs::File::open("example.gsn.dot")?).lines();
         let test = BufReader::new(&output).lines();
