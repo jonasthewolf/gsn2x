@@ -19,6 +19,7 @@ On other systems you can create a PNG like this:
     gsn2x <yourgsnfile.yaml> | dot -Tpng > <yourgsnfile.png>
 
 If a second optional argument is provided, the output is not written to stdout, but to the file named by the second argument.
+If called with option `-c` or `--check` the input file is only checked for validity, but the resulting graph is not written.
     
 ## Syntax in YAML
 
