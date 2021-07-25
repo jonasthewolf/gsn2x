@@ -1,7 +1,8 @@
+use crate::yaml_fix::MyMap;
 use serde::{Deserialize, Serialize};
-use std::collections::{BTreeMap, HashSet};
+use std::collections::HashSet;
 use std::io::Write;
-use std::ops::AddAssign;
+use std::ops::{AddAssign, Deref};
 
 #[derive(Debug, Default, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -26,14 +27,14 @@ impl AddAssign for Diagnostics {
 }
 
 /// Returns the number of validation warnings and errors
-pub fn validate(output: &mut impl Write, nodes: &BTreeMap<String, GsnNode>) -> Diagnostics {
+pub fn validate(output: &mut impl Write, nodes: &MyMap<String, GsnNode>) -> Diagnostics {
     let mut wnodes: HashSet<String> = nodes.keys().cloned().collect();
     let mut diag = Diagnostics::default();
-    for (key, node) in nodes {
+    for (key, node) in nodes.deref() {
         // Validate if key is one of the known prefixes
-        diag += validate_id(output, key);
+        diag += validate_id(output, &key);
         // Validate if all references of node exist
-        diag += validate_reference(output, &nodes, key, &node);
+        diag += validate_reference(output, &nodes, &key, &node);
         // Remove all keys if they are referenced; used to see if there is more than one top level node
         if let Some(context) = node.in_context_of.as_ref() {
             for cnode in context {
@@ -89,7 +90,7 @@ fn validate_id(output: &mut impl Write, id: &str) -> Diagnostics {
 
 fn check_references(
     mut output: &mut impl Write,
-    nodes: &BTreeMap<String, GsnNode>,
+    nodes: &MyMap<String, GsnNode>,
     node: &str,
     refs: &[String],
     diag_str: &str,
@@ -148,7 +149,7 @@ fn check_references(
 
 fn validate_reference(
     output: &mut impl Write,
-    nodes: &BTreeMap<String, GsnNode>,
+    nodes: &MyMap<String, GsnNode>,
     key: &str,
     node: &GsnNode,
 ) -> Diagnostics {
@@ -198,7 +199,7 @@ mod test {
     #[test]
     fn self_ref_context() {
         let mut output = Vec::<u8>::new();
-        let mut nodes = BTreeMap::<String, GsnNode>::new();
+        let mut nodes = MyMap::<String, GsnNode>::new();
         nodes.insert(
             "C1".to_owned(),
             GsnNode {
@@ -220,7 +221,7 @@ mod test {
     #[test]
     fn self_ref_support() {
         let mut output = Vec::<u8>::new();
-        let mut nodes = BTreeMap::<String, GsnNode>::new();
+        let mut nodes = MyMap::<String, GsnNode>::new();
         nodes.insert(
             "G1".to_owned(),
             GsnNode {
@@ -242,7 +243,7 @@ mod test {
     #[test]
     fn self_ref_wrong_context() {
         let mut output = Vec::<u8>::new();
-        let mut nodes = BTreeMap::<String, GsnNode>::new();
+        let mut nodes = MyMap::<String, GsnNode>::new();
         nodes.insert(
             "C1".to_owned(),
             GsnNode {
@@ -267,7 +268,7 @@ mod test {
     #[test]
     fn self_ref_wrong_support() {
         let mut output = Vec::<u8>::new();
-        let mut nodes = BTreeMap::<String, GsnNode>::new();
+        let mut nodes = MyMap::<String, GsnNode>::new();
         nodes.insert(
             "G1".to_owned(),
             GsnNode {
@@ -292,7 +293,7 @@ mod test {
     #[test]
     fn unresolved_ref_context() {
         let mut output = Vec::<u8>::new();
-        let mut nodes = BTreeMap::<String, GsnNode>::new();
+        let mut nodes = MyMap::<String, GsnNode>::new();
         nodes.insert(
             "G1".to_owned(),
             GsnNode {
@@ -314,7 +315,7 @@ mod test {
     #[test]
     fn unresolved_ref_support() {
         let mut output = Vec::<u8>::new();
-        let mut nodes = BTreeMap::<String, GsnNode>::new();
+        let mut nodes = MyMap::<String, GsnNode>::new();
         nodes.insert(
             "G1".to_owned(),
             GsnNode {
@@ -336,7 +337,7 @@ mod test {
     #[test]
     fn duplicate_ref_context() {
         let mut output = Vec::<u8>::new();
-        let mut nodes = BTreeMap::<String, GsnNode>::new();
+        let mut nodes = MyMap::<String, GsnNode>::new();
         nodes.insert(
             "G1".to_owned(),
             GsnNode {
@@ -367,7 +368,7 @@ mod test {
     #[test]
     fn duplicate_ref_support() {
         let mut output = Vec::<u8>::new();
-        let mut nodes = BTreeMap::<String, GsnNode>::new();
+        let mut nodes = MyMap::<String, GsnNode>::new();
         nodes.insert(
             "G1".to_owned(),
             GsnNode {
@@ -398,7 +399,7 @@ mod test {
     #[test]
     fn unreferenced_id() {
         let mut output = Vec::<u8>::new();
-        let mut nodes = BTreeMap::<String, GsnNode>::new();
+        let mut nodes = MyMap::<String, GsnNode>::new();
         nodes.insert(
             "G1".to_owned(),
             GsnNode {
@@ -429,7 +430,7 @@ mod test {
     #[test]
     fn wrong_ref_context() {
         let mut output = Vec::<u8>::new();
-        let mut nodes = BTreeMap::<String, GsnNode>::new();
+        let mut nodes = MyMap::<String, GsnNode>::new();
         nodes.insert(
             "G1".to_owned(),
             GsnNode {
@@ -482,7 +483,7 @@ mod test {
     #[test]
     fn wrong_ref_support() {
         let mut output = Vec::<u8>::new();
-        let mut nodes = BTreeMap::<String, GsnNode>::new();
+        let mut nodes = MyMap::<String, GsnNode>::new();
         nodes.insert(
             "G1".to_owned(),
             GsnNode {

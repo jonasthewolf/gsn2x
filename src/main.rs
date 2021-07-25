@@ -1,15 +1,16 @@
 use anyhow::{anyhow, Context, Result};
 use clap::{crate_authors, crate_description, crate_name, crate_version, App, Arg};
-use std::collections::BTreeMap;
 use std::fs::File;
-use std::io::{BufReader, Write};
+use std::io::{BufReader, Read, Write};
 use tera::Tera;
 
 mod gsn;
 mod wordwrap;
+mod yaml_fix;
 
 use gsn::GsnNode;
 use wordwrap::WordWrap;
+use yaml_fix::MyMap;
 
 fn main() -> Result<()> {
     let matches = App::new(crate_name!())
@@ -39,7 +40,11 @@ fn main() -> Result<()> {
 
     // Read input
     let input = matches.value_of("INPUT").unwrap();
-    let nodes = read_input(input)?;
+    let mut reader = BufReader::new(
+        File::open(&input).with_context(|| format!("Failed to open file {}", input))?,
+    );
+    let nodes = read_input(&mut reader)
+        .with_context(|| format!("Failed to parse YAML from file {}", input))?;
 
     // Validate
     let d = gsn::validate(&mut std::io::stderr(), &nodes);
@@ -60,18 +65,14 @@ fn main() -> Result<()> {
     )
 }
 
-fn read_input(input: &str) -> Result<BTreeMap<String, GsnNode>, anyhow::Error> {
-    let mut reader = BufReader::new(
-        File::open(&input).with_context(|| format!("Failed to open file {}", input))?,
-    );
-    let nodes: BTreeMap<String, GsnNode> = serde_yaml::from_reader(&mut reader)
-        .with_context(|| format!("Failed to parse YAML from file {}", input))?;
+fn read_input(input: &mut impl Read) -> Result<MyMap<String, GsnNode>, anyhow::Error> {
+    let nodes: MyMap<String, GsnNode> = serde_yaml::from_reader(input)?;
     Ok(nodes)
 }
 
 fn output(
     input: &str,
-    nodes: BTreeMap<String, GsnNode>,
+    nodes: MyMap<String, GsnNode>,
     validonly: bool,
     d: gsn::Diagnostics,
     output: &mut impl Write,
@@ -92,7 +93,7 @@ fn output(
 
 fn render_result(
     input: &str,
-    nodes: BTreeMap<String, GsnNode>,
+    nodes: MyMap<String, GsnNode>,
     output: &mut impl Write,
 ) -> Result<(), anyhow::Error> {
     let mut context = tera::Context::new();
@@ -125,8 +126,8 @@ mod test {
             .truncate(true)
             .read(true)
             .open("example.gsn.test.dot")?;
-
-        let nodes = crate::read_input("example.gsn.yaml")?;
+        let mut reader = BufReader::new(File::open("example.gsn.yaml")?);
+        let nodes = crate::read_input(&mut reader)?;
         let d = gsn::validate(&mut std::io::stderr(), &nodes);
         assert_eq!(d.errors, 0);
         assert_eq!(d.warnings, 0);
@@ -141,18 +142,29 @@ mod test {
     }
     #[test]
     fn validcheck() {
-        let nodes = BTreeMap::<String, GsnNode>::new();
+        let nodes = MyMap::<String, GsnNode>::new();
         let d = Diagnostics {
             warnings: 2,
             errors: 3,
         };
         let mut output = Vec::<u8>::new();
         let res = crate::output("", nodes, true, d, &mut output);
-        assert_eq!(res.is_err(), true);
+        assert!(res.is_err());
         assert_eq!(
             format!("{:?}", res),
             "Err(3 errors and 2 warnings detected.)"
         );
         assert_eq!(output.len(), 0);
+    }
+
+    #[test]
+    fn checkyamlworkaround() {
+        let input = "A:\n text: absd\n\nA:\n text: cdawer\n\nB:\n text: asfas";
+        let res = read_input(&mut input.as_bytes());
+        assert!(res.is_err());
+        assert_eq!(
+            format!("{:?}", res),
+            "Err(Element A is already existing at line 1 column 2)"
+        );
     }
 }

@@ -66,8 +66,3 @@ The tool automatically performs the following validation checks on the input YAM
  - All IDs start with a known prefix.
 
 Error messages are printed to stderr.
-
-## Known issues
-
-The used YAML parser does not detect duplicate keys. 
-That is, you can accidentally declare the same object twice undetected.
