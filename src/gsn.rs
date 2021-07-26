@@ -49,26 +49,33 @@ pub fn validate(output: &mut impl Write, nodes: &MyMap<String, GsnNode>) -> Resu
             }
         }
     }
-    if wnodes.len() > 1 {
-        let mut wn = wnodes.iter().cloned().collect::<Vec<String>>();
-        wn.sort();
-        writeln!(
-            output,
-            "Error: There is more than one unreferenced element: {}.",
-            wn.join(", ")
-        )?;
-        diag.errors += 1;
-    } else if wnodes.len() == 1 {
-        let rootn= wnodes.iter().next().unwrap();
-        if !rootn.starts_with("G") {
+    match wnodes.len() {
+        x if x > 1 => {
+            let mut wn = wnodes.iter().cloned().collect::<Vec<String>>();
+            wn.sort();
             writeln!(
                 output,
-                "Error: The root element should be a goal, but {} was found.",
-                rootn
+                "Error: There is more than one unreferenced element: {}.",
+                wn.join(", ")
             )?;
             diag.errors += 1;
         }
+        x if x == 1 => {
+            let rootn = wnodes.iter().next().unwrap();
+            if !rootn.starts_with('G') {
+                writeln!(
+                    output,
+                    "Error: The root element should be a goal, but {} was found.",
+                    rootn
+                )?;
+                diag.errors += 1;
+            }
+        }
+        _ => {
+            // Ignore empty document.
+        }
     }
+
     Ok(diag)
 }
 
