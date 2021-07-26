@@ -138,7 +138,7 @@ mod test {
 
         let orig = BufReader::new(std::fs::File::open("example.gsn.dot")?).lines();
         let test = BufReader::new(&output).lines();
-        for (t, o) in test.zip(orig) {
+        for (o, t) in orig.zip(test) {
             assert_eq!(t?, o?);
         }
         Ok(())
