@@ -5,7 +5,6 @@ authors = ["Jonas Wolf <jonas.wolf@jonaswolf.org>"]
 version = "0.1.0"
 edition = "2018"
 license = "CC-BY-4.0"
-license-file = "LICENSE.md"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
