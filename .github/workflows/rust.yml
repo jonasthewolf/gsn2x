@@ -45,6 +45,10 @@ jobs:
       run: cargo build --release --verbose
     - name: Test
       run: cargo test --verbose
+    - name: Strip binaries
+      run: | 
+        strip target/release/gsn2x
+        strip target/release/gsn2x.exe
     - name: Deploy to github.com
       uses: "marvinpinto/action-automatic-releases@latest"
       with:
