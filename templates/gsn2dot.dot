@@ -3,6 +3,7 @@
 
 
 digraph "{{filename}}" {
+  bgcolor=transparent;
 
   ## Elements
   {%- for id, node in nodes %}

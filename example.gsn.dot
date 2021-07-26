@@ -2,6 +2,7 @@
 
 
 digraph "example.gsn.yaml" {
+  bgcolor=transparent;
 
   ## Elements
   "A1" [shape="oval", label=<<B>A1</B><BR align="left"/>Argument 1>];
