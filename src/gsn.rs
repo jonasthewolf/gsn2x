@@ -58,6 +58,16 @@ pub fn validate(output: &mut impl Write, nodes: &MyMap<String, GsnNode>) -> Resu
             wn.join(", ")
         )?;
         diag.errors += 1;
+    } else if wnodes.len() == 1 {
+        let rootn= wnodes.iter().next().unwrap();
+        if !rootn.starts_with("G") {
+            writeln!(
+                output,
+                "Error: The root element should be a goal, but {} was found.",
+                rootn
+            )?;
+            diag.errors += 1;
+        }
     }
     Ok(diag)
 }
@@ -658,6 +668,30 @@ mod test {
         );
         assert_eq!(d.errors, 1);
         assert_eq!(d.warnings, 2);
+        Ok(())
+    }
+
+    #[test]
+    fn wrong_root() -> Result<()> {
+        let mut output = Vec::<u8>::new();
+        let mut nodes = MyMap::<String, GsnNode>::new();
+        nodes.insert(
+            "Sn1".to_owned(),
+            GsnNode {
+                text: "".to_owned(),
+                in_context_of: None,
+                supported_by: None,
+                url: None,
+                undeveloped: None,
+            },
+        );
+        let d = validate(&mut output, &nodes)?;
+        assert_eq!(
+            std::str::from_utf8(&output).unwrap(),
+            "Error: The root element should be a goal, but Sn1 was found.\n"
+        );
+        assert_eq!(d.errors, 1);
+        assert_eq!(d.warnings, 0);
         Ok(())
     }
 }
