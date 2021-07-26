@@ -167,4 +167,15 @@ mod test {
             "Err(Element A is already existing at line 1 column 2)"
         );
     }
+
+    #[test]
+    fn checkyamlworkaround_unknownformat() {
+        let input = "- A\n\n- B\n\n- C\n";
+        let res = read_input(&mut input.as_bytes());
+        assert!(res.is_err());
+        assert_eq!(
+            format!("{:?}", res),
+            "Err(invalid type: sequence, expected a map with unique keys at line 1 column 1)"
+        );
+    }
 }
