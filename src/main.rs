@@ -120,6 +120,7 @@ mod test {
     use crate::*;
     use std::fs::OpenOptions;
     use std::io::BufRead;
+    use std::io::{Seek, SeekFrom};
     use std::io::BufReader;
     #[test]
     fn example_back_to_back() -> Result<(), Box<dyn std::error::Error>> {
@@ -135,12 +136,11 @@ mod test {
         assert_eq!(d.errors, 0);
         assert_eq!(d.warnings, 0);
         crate::output("example.gsn.yaml", nodes, false, d, &mut output)?;
-
+        output.flush()?;
+        output.seek(SeekFrom::Start(0))?;
         let orig = BufReader::new(std::fs::File::open("example.gsn.dot")?).lines();
         let test = BufReader::new(&output).lines();
-        for (o, t) in orig.zip(test) {
-            assert_eq!(t?, o?);
-        }
+        assert!(orig.map(|x| x.unwrap()).eq(test.map(|x| x.unwrap())));
         Ok(())
     }
     #[test]
