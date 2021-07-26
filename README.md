@@ -2,7 +2,10 @@
 
 # gsn2x
 
-This little program converts [Goal Structuring Notation](https://scsc.uk/gsn) in YAML to the DOT format of [Graphviz](https://graphviz.org).
+This little program converts [Goal Structuring Notation](https://scsc.uk/gsn) in a YAML notation to the DOT format of [Graphviz](https://graphviz.org). From there it can be rendered to different graphic formats.
+
+![Example](example.gsn.svg "Example")
+
 Graphviz dot is required to create an image from the output of this tool.
 
 Feel free to use it and please let me know.
