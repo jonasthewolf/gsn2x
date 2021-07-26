@@ -81,6 +81,9 @@ fn output(
         render_result(input, nodes, output)?;
     }
     if d.errors == 0 {
+        if d.warnings > 0 {
+            eprintln!("Warning: {} warnings detected.", d.warnings);
+        }
         Ok(())
     } else {
         Err(anyhow!(
