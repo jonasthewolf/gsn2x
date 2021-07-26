@@ -65,4 +65,6 @@ The tool automatically performs the following validation checks on the input YAM
  - All referenced elements (`supportedBy` and `inContextOf`) exist.
  - All IDs start with a known prefix.
 
+Uniqueness of keys is automatically enforced by the YAML format.
+
 Error messages are printed to stderr.
