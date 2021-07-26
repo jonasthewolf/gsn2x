@@ -39,10 +39,13 @@ Actually, the number can be an arbitrary identifier then.
 
 The (optional) `supportedBy` gives a list of the supporting arguments. Thus, Goal, Strategy and Solution can be listed here.
 
-The (optional) `inContextOf` links justifications, contexts or assumptions. 
+The (optional) `inContextOf` links Justifications, Contexts or Assumptions. 
 
 Every element may have an optional `url` attribute that will be used by Graphviz accordingly for a node in the graph.
 This should support finding information more easily. Please note the supported output formats by Graphviz.
+
+Goals and Strategies can be undeveloped i.e., without supporting Goals, Strategies or Solutions.
+These elements should marked with `undeveloped: true`, otherwise validation will emit warnings.
 
 ### Example
 
@@ -67,6 +70,7 @@ The tool automatically performs the following validation checks on the input YAM
  - There is only one top-level element (G,S,C,J,A,Sn) unreferenced. 
  - All referenced elements (`supportedBy` and `inContextOf`) exist.
  - All IDs start with a known prefix.
+ - All Goals and Strategies are either marked with `undeveloped: true` or have supporting Goals, Strategies or Solutions.
 
 Uniqueness of keys is automatically enforced by the YAML format.
 

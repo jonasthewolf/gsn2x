@@ -12,6 +12,9 @@ digraph "{{filename}}" {
   {%- elif id is starting_with("J") %}
   "{{id}}":e -> "{{id}}":e [headlabel=< <B>J</B> >, labeldistance=2.5, penwidth=0, arrowhead=none]; 
   {%- endif %}
+  {%- if node["undeveloped"] and node["undeveloped"] == true %}
+  "{{id}}":s -> "{{id}}":s [taillabel=<<br/><b>&#9826;</b>>,color=transparent,arrowhead=none,labeldistance=0.1]
+  {%- endif %}
   {%- endfor %}
 
   ## Relations

@@ -1,4 +1,4 @@
-## {"A1": GsnNode { text: "Argument 1", in_context_of: None, supported_by: None, url: None, undeveloped: None }, "A2": GsnNode { text: "Assumption 2", in_context_of: None, supported_by: None, url: None, undeveloped: None }, "C1": GsnNode { text: "Context 1", in_context_of: None, supported_by: None, url: None, undeveloped: None }, "C2": GsnNode { text: "Context 2\nMultiline\n", in_context_of: None, supported_by: None, url: None, undeveloped: None }, "G1": GsnNode { text: "Goal 1", in_context_of: None, supported_by: Some(["G2", "G3", "G4"]), url: None, undeveloped: None }, "G2": GsnNode { text: "Goal 2", in_context_of: None, supported_by: Some(["S1"]), url: None, undeveloped: None }, "G3": GsnNode { text: "Goal 3", in_context_of: Some(["C1"]), supported_by: Some(["Sn1"]), url: None, undeveloped: None }, "G4": GsnNode { text: "Goal 4", in_context_of: Some(["J2"]), supported_by: Some(["Sn2"]), url: None, undeveloped: None }, "G5": GsnNode { text: "Goal 5", in_context_of: Some(["C2", "A2"]), supported_by: Some(["Sn3", "Sn4"]), url: None, undeveloped: None }, "G6": GsnNode { text: "Goal 6", in_context_of: None, supported_by: Some(["Sn3", "Sn5"]), url: None, undeveloped: None }, "J1": GsnNode { text: "Justification 1", in_context_of: None, supported_by: None, url: None, undeveloped: None }, "J2": GsnNode { text: "Justification 2", in_context_of: None, supported_by: None, url: None, undeveloped: None }, "S1": GsnNode { text: "Strategy 1", in_context_of: Some(["A1", "J1"]), supported_by: Some(["G5", "G6"]), url: None, undeveloped: None }, "Sn1": GsnNode { text: "Solution 1", in_context_of: None, supported_by: None, url: Some("https://github.com/jonasthewolf/gsn2x"), undeveloped: None }, "Sn2": GsnNode { text: "Solution 2", in_context_of: None, supported_by: None, url: None, undeveloped: None }, "Sn3": GsnNode { text: "Solution 3", in_context_of: None, supported_by: None, url: None, undeveloped: None }, "Sn4": GsnNode { text: "Solution 4", in_context_of: None, supported_by: None, url: None, undeveloped: None }, "Sn5": GsnNode { text: "Solution 5", in_context_of: None, supported_by: None, url: None, undeveloped: None }}
+## {"A1": GsnNode { text: "Argument 1", in_context_of: None, supported_by: None, url: None, undeveloped: None }, "A2": GsnNode { text: "Assumption 2", in_context_of: None, supported_by: None, url: None, undeveloped: None }, "C1": GsnNode { text: "Context 1", in_context_of: None, supported_by: None, url: None, undeveloped: None }, "C2": GsnNode { text: "Context 2\nMultiline\n", in_context_of: None, supported_by: None, url: None, undeveloped: None }, "G1": GsnNode { text: "Goal 1", in_context_of: None, supported_by: Some(["G2", "G3", "S2"]), url: None, undeveloped: None }, "G2": GsnNode { text: "Goal 2", in_context_of: None, supported_by: Some(["S1"]), url: None, undeveloped: None }, "G3": GsnNode { text: "Goal 3", in_context_of: Some(["C1"]), supported_by: Some(["Sn1"]), url: None, undeveloped: None }, "G4": GsnNode { text: "Goal 4", in_context_of: Some(["J2"]), supported_by: Some(["Sn2"]), url: None, undeveloped: None }, "G5": GsnNode { text: "Goal 5", in_context_of: Some(["C2", "A2"]), supported_by: Some(["Sn3", "Sn4"]), url: None, undeveloped: None }, "G6": GsnNode { text: "Goal 6", in_context_of: None, supported_by: Some(["Sn3", "Sn5"]), url: None, undeveloped: None }, "G7": GsnNode { text: "Undeveloped Goal", in_context_of: None, supported_by: None, url: None, undeveloped: Some(true) }, "J1": GsnNode { text: "Justification 1", in_context_of: None, supported_by: None, url: None, undeveloped: None }, "J2": GsnNode { text: "Justification 2", in_context_of: None, supported_by: None, url: None, undeveloped: None }, "S1": GsnNode { text: "Strategy 1", in_context_of: Some(["A1", "J1"]), supported_by: Some(["G5", "G6"]), url: None, undeveloped: None }, "S2": GsnNode { text: "Solution 2", in_context_of: None, supported_by: Some(["G4", "G7"]), url: None, undeveloped: None }, "Sn1": GsnNode { text: "Solution 1", in_context_of: None, supported_by: None, url: Some("https://github.com/jonasthewolf/gsn2x"), undeveloped: None }, "Sn2": GsnNode { text: "Solution 2", in_context_of: None, supported_by: None, url: None, undeveloped: None }, "Sn3": GsnNode { text: "Solution 3", in_context_of: None, supported_by: None, url: None, undeveloped: None }, "Sn4": GsnNode { text: "Solution 4", in_context_of: None, supported_by: None, url: None, undeveloped: None }, "Sn5": GsnNode { text: "Solution 5", in_context_of: None, supported_by: None, url: None, undeveloped: None }}
 
 
 digraph "example.gsn.yaml" {
@@ -16,11 +16,14 @@ digraph "example.gsn.yaml" {
   "G4" [shape="box", label=<<B>G4</B><BR align="left"/>Goal 4>];
   "G5" [shape="box", label=<<B>G5</B><BR align="left"/>Goal 5>];
   "G6" [shape="box", label=<<B>G6</B><BR align="left"/>Goal 6>];
+  "G7" [shape="box", label=<<B>G7</B><BR align="left"/>Undeveloped Goal>];
+  "G7":s -> "G7":s [taillabel=<<br/><b>&#9826;</b>>,color=transparent,arrowhead=none,labeldistance=0.1]
   "J1" [shape="oval", label=<<B>J1</B><BR align="left"/>Justification 1>];
   "J1":e -> "J1":e [headlabel=< <B>J</B> >, labeldistance=2.5, penwidth=0, arrowhead=none];
   "J2" [shape="oval", label=<<B>J2</B><BR align="left"/>Justification 2>];
   "J2":e -> "J2":e [headlabel=< <B>J</B> >, labeldistance=2.5, penwidth=0, arrowhead=none];
   "S1" [shape="parallelogram", label=<<B>S1</B><BR align="left"/>Strategy 1>];
+  "S2" [shape="parallelogram", label=<<B>S2</B><BR align="left"/>Solution 2>];
   "Sn1" [shape="circle", URL="https://github.com/jonasthewolf/gsn2x", label=<<B>Sn1</B><BR align="left"/>Solution 1>];
   "Sn2" [shape="circle", label=<<B>Sn2</B><BR align="left"/>Solution 2>];
   "Sn3" [shape="circle", label=<<B>Sn3</B><BR align="left"/>Solution 3>];
@@ -30,7 +33,7 @@ digraph "example.gsn.yaml" {
   ## Relations
   "G1" -> "G2";
   "G1" -> "G3";
-  "G1" -> "G4";
+  "G1" -> "S2";
   "G2" -> "S1";
   "G3" -> "Sn1";
   subgraph cluster7 {
@@ -62,7 +65,7 @@ digraph "example.gsn.yaml" {
   "G6" -> "Sn5";
   "S1" -> "G5";
   "S1" -> "G6";
-  subgraph cluster13 {
+  subgraph cluster14 {
     graph[peripheries=0];
     {
       rank = same;
@@ -70,5 +73,7 @@ digraph "example.gsn.yaml" {
       "J1" -> "S1" [dir=back, arrowtail=empty];
     }
   }
+  "S2" -> "G4";
+  "S2" -> "G7";
 }
 
