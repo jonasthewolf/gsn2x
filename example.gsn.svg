@@ -8,21 +8,18 @@
  viewBox="0.00 0.00 1064.00 573.96" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 <g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 569.96)">
 <title>example.gsn.yaml</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-569.96 1060,-569.96 1060,4 -4,4"/>
+<g id="clust5" class="cluster">
+<title>cluster9</title>
+</g>
 <g id="clust7" class="cluster">
 <title>cluster14</title>
-<polygon fill="transparent" stroke="transparent" points="8,-289.63 8,-377.63 502,-377.63 502,-289.63 8,-289.63"/>
 </g>
 <g id="clust1" class="cluster">
 <title>cluster7</title>
-<polygon fill="transparent" stroke="transparent" points="501,-431.96 501,-483.96 661,-483.96 661,-431.96 501,-431.96"/>
 </g>
 <g id="clust3" class="cluster">
 <title>cluster8</title>
-<polygon fill="transparent" stroke="transparent" points="684,-300.17 684,-367.09 924,-367.09 924,-300.17 684,-300.17"/>
-</g>
-<g id="clust5" class="cluster">
-<title>cluster9</title>
-<polygon fill="transparent" stroke="transparent" points="33,-159.52 33,-226.43 363,-226.43 363,-159.52 33,-159.52"/>
 </g>
 <!-- A1 -->
 <g id="node1" class="node">
