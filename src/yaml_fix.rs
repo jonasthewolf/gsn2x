@@ -1,8 +1,8 @@
 use serde::de::{Deserialize, Deserializer, MapAccess, Visitor};
 use serde::Serialize;
 use std::collections::BTreeMap;
-use std::marker::PhantomData;
 use std::fmt::Debug;
+use std::marker::PhantomData;
 
 // Copied and adapted from https://serde.rs/deserialize-map.html
 
@@ -12,9 +12,9 @@ where
     K: Ord;
 
 impl<K: Ord + Debug, V: Debug> Debug for MyMap<K, V> {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> Result<(), std::fmt::Error> { 
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> Result<(), std::fmt::Error> {
         self.0.fmt(f)
-     }
+    }
 }
 
 impl<K: Ord, V> MyMap<K, V> {

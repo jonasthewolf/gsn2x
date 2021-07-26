@@ -1,4 +1,5 @@
 use crate::yaml_fix::MyMap;
+use anyhow::Result;
 use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
 use std::io::Write;
@@ -11,6 +12,7 @@ pub struct GsnNode {
     in_context_of: Option<Vec<String>>,
     supported_by: Option<Vec<String>>,
     url: Option<String>,
+    undeveloped: Option<bool>,
 }
 
 #[derive(Debug, Default)]
@@ -27,14 +29,14 @@ impl AddAssign for Diagnostics {
 }
 
 /// Returns the number of validation warnings and errors
-pub fn validate(output: &mut impl Write, nodes: &MyMap<String, GsnNode>) -> Diagnostics {
+pub fn validate(output: &mut impl Write, nodes: &MyMap<String, GsnNode>) -> Result<Diagnostics> {
     let mut wnodes: HashSet<String> = nodes.keys().cloned().collect();
     let mut diag = Diagnostics::default();
     for (key, node) in nodes.deref() {
         // Validate if key is one of the known prefixes
-        diag += validate_id(output, &key);
+        diag += validate_id(output, &key)?;
         // Validate if all references of node exist
-        diag += validate_reference(output, &nodes, &key, &node);
+        diag += validate_reference(output, &nodes, &key, &node)?;
         // Remove all keys if they are referenced; used to see if there is more than one top level node
         if let Some(context) = node.in_context_of.as_ref() {
             for cnode in context {
@@ -52,16 +54,15 @@ pub fn validate(output: &mut impl Write, nodes: &MyMap<String, GsnNode>) -> Diag
         wn.sort();
         writeln!(
             output,
-            "Error: There is more than one unreferenced element: {}",
+            "Error: There is more than one unreferenced element: {}.",
             wn.join(", ")
-        )
-        .unwrap();
+        )?;
         diag.errors += 1;
     }
-    diag
+    Ok(diag)
 }
 
-fn validate_id(output: &mut impl Write, id: &str) -> Diagnostics {
+fn validate_id(output: &mut impl Write, id: &str) -> Result<Diagnostics> {
     // Order is important due to Sn and S
     if !(id.starts_with("Sn")
         || id.starts_with('G')
@@ -74,17 +75,16 @@ fn validate_id(output: &mut impl Write, id: &str) -> Diagnostics {
             output,
             "Error: Elememt {} is of unknown type. Please see README for supported types",
             id
-        )
-        .unwrap();
-        Diagnostics {
+        )?;
+        Ok(Diagnostics {
             warnings: 0,
             errors: 1,
-        }
+        })
     } else {
-        Diagnostics {
+        Ok(Diagnostics {
             warnings: 0,
             errors: 0,
-        }
+        })
     }
 }
 
@@ -95,7 +95,7 @@ fn check_references(
     refs: &[String],
     diag_str: &str,
     valid_refs: &[&str],
-) -> Diagnostics {
+) -> Result<Diagnostics> {
     let mut diag = Diagnostics::default();
     let mut set = HashSet::with_capacity(refs.len());
     let wrong_refs: Vec<&String> = refs
@@ -144,7 +144,7 @@ fn check_references(
         .unwrap();
         diag.errors += 1;
     }
-    diag
+    Ok(diag)
 }
 
 fn validate_reference(
@@ -152,14 +152,22 @@ fn validate_reference(
     nodes: &MyMap<String, GsnNode>,
     key: &str,
     node: &GsnNode,
-) -> Diagnostics {
+) -> Result<Diagnostics> {
     let mut diag = Diagnostics::default();
     if let Some(context) = node.in_context_of.as_ref() {
-        let valid_refs = vec!["J", "A", "C"];
-        diag += check_references(output, nodes, key, context, "context", &valid_refs);
+        let mut valid_refs = vec![];
+        // Only goals and strategies can have contexts, assumptions and goals
+        if key.starts_with('S') || key.starts_with('G') {
+            valid_refs.append(&mut vec!["J", "A", "C"]);
+        }
+        diag += check_references(output, nodes, key, context, "context", &valid_refs)?;
     }
     if let Some(support) = node.supported_by.as_ref() {
-        let valid_refs = vec!["G", "Sn", "S"];
+        let mut valid_refs = vec![];
+        // Only goals and strategies can have other goals, strategies and solutions
+        if key.starts_with('S') || key.starts_with('G') {
+            valid_refs.append(&mut vec!["G", "Sn", "S"]);
+        }
         diag += check_references(
             output,
             nodes,
@@ -167,37 +175,48 @@ fn validate_reference(
             support,
             "supported by element",
             &valid_refs,
-        );
+        )?;
+    } else if (key.starts_with('S') && !key.starts_with("Sn") || key.starts_with('G'))
+        && (Some(false) == node.undeveloped || node.undeveloped.is_none())
+    {
+        // No "supported by" entries, but Strategy and Goal => undeveloped
+        writeln!(output, "Warning: Element {} is undeveloped.", key)?;
+        diag += Diagnostics {
+            errors: 0,
+            warnings: 1,
+        };
     }
-    diag
+    Ok(diag)
 }
 
 #[cfg(test)]
 mod test {
     use super::*;
     #[test]
-    fn unknown_id() {
+    fn unknown_id() -> Result<()> {
         let mut output = Vec::<u8>::new();
-        let d = validate_id(&mut output, &"X1".to_owned());
+        let d = validate_id(&mut output, &"X1".to_owned())?;
         assert_eq!(
             std::str::from_utf8(&output).unwrap(),
             "Error: Elememt X1 is of unknown type. Please see README for supported types\n"
         );
         assert_eq!(d.errors, 1);
         assert_eq!(d.warnings, 0);
+        Ok(())
     }
 
     #[test]
-    fn known_id() {
+    fn known_id() -> Result<()> {
         let mut output = Vec::<u8>::new();
-        let d = validate_id(&mut output, &"Sn1".to_owned());
+        let d = validate_id(&mut output, &"Sn1".to_owned())?;
         assert_eq!(std::str::from_utf8(&output).unwrap(), "");
         assert_eq!(d.errors, 0);
         assert_eq!(d.warnings, 0);
+        Ok(())
     }
 
     #[test]
-    fn self_ref_context() {
+    fn self_ref_context() -> Result<()> {
         let mut output = Vec::<u8>::new();
         let mut nodes = MyMap::<String, GsnNode>::new();
         nodes.insert(
@@ -207,19 +226,21 @@ mod test {
                 in_context_of: Some(vec!["C1".to_owned()]),
                 supported_by: None,
                 url: None,
+                undeveloped: None,
             },
         );
-        let d = validate(&mut output, &nodes);
+        let d = validate(&mut output, &nodes)?;
         assert_eq!(
             std::str::from_utf8(&output).unwrap(),
-            "Error: Element C1 references itself in context.\n"
+            "Error: Element C1 references itself in context.\nError: Element C1 has invalid type of reference C1 in context.\n"
         );
-        assert_eq!(d.errors, 1);
+        assert_eq!(d.errors, 2);
         assert_eq!(d.warnings, 0);
+        Ok(())
     }
 
     #[test]
-    fn self_ref_support() {
+    fn self_ref_support() -> Result<()> {
         let mut output = Vec::<u8>::new();
         let mut nodes = MyMap::<String, GsnNode>::new();
         nodes.insert(
@@ -229,19 +250,21 @@ mod test {
                 in_context_of: None,
                 supported_by: Some(vec!["G1".to_owned()]),
                 url: None,
+                undeveloped: None,
             },
         );
-        let d = validate(&mut output, &nodes);
+        let d = validate(&mut output, &nodes)?;
         assert_eq!(
             std::str::from_utf8(&output).unwrap(),
             "Error: Element G1 references itself in supported by element.\n"
         );
         assert_eq!(d.errors, 1);
         assert_eq!(d.warnings, 0);
+        Ok(())
     }
 
     #[test]
-    fn self_ref_wrong_context() {
+    fn self_ref_wrong_context() -> Result<()> {
         let mut output = Vec::<u8>::new();
         let mut nodes = MyMap::<String, GsnNode>::new();
         nodes.insert(
@@ -251,9 +274,10 @@ mod test {
                 in_context_of: None,
                 supported_by: Some(vec!["C1".to_owned()]),
                 url: None,
+                undeveloped: None,
             },
         );
-        let d = validate(&mut output, &nodes);
+        let d = validate(&mut output, &nodes)?;
         assert_eq!(
             std::str::from_utf8(&output).unwrap(),
             concat!(
@@ -263,10 +287,11 @@ mod test {
         );
         assert_eq!(d.errors, 2);
         assert_eq!(d.warnings, 0);
+        Ok(())
     }
 
     #[test]
-    fn self_ref_wrong_support() {
+    fn self_ref_wrong_support() -> Result<()> {
         let mut output = Vec::<u8>::new();
         let mut nodes = MyMap::<String, GsnNode>::new();
         nodes.insert(
@@ -276,9 +301,10 @@ mod test {
                 in_context_of: Some(vec!["G1".to_owned()]),
                 supported_by: None,
                 url: None,
+                undeveloped: Some(true),
             },
         );
-        let d = validate(&mut output, &nodes);
+        let d = validate(&mut output, &nodes)?;
         assert_eq!(
             std::str::from_utf8(&output).unwrap(),
             concat!(
@@ -288,10 +314,11 @@ mod test {
         );
         assert_eq!(d.errors, 2);
         assert_eq!(d.warnings, 0);
+        Ok(())
     }
 
     #[test]
-    fn unresolved_ref_context() {
+    fn unresolved_ref_context() -> Result<()> {
         let mut output = Vec::<u8>::new();
         let mut nodes = MyMap::<String, GsnNode>::new();
         nodes.insert(
@@ -301,19 +328,21 @@ mod test {
                 in_context_of: Some(vec!["C1".to_owned()]),
                 supported_by: None,
                 url: None,
+                undeveloped: Some(true),
             },
         );
-        let d = validate(&mut output, &nodes);
+        let d = validate(&mut output, &nodes)?;
         assert_eq!(
             std::str::from_utf8(&output).unwrap(),
             "Error: Element G1 has unresolved context: C1\n"
         );
         assert_eq!(d.errors, 1);
         assert_eq!(d.warnings, 0);
+        Ok(())
     }
 
     #[test]
-    fn unresolved_ref_support() {
+    fn unresolved_ref_support() -> Result<()> {
         let mut output = Vec::<u8>::new();
         let mut nodes = MyMap::<String, GsnNode>::new();
         nodes.insert(
@@ -323,19 +352,21 @@ mod test {
                 in_context_of: None,
                 supported_by: Some(vec!["G2".to_owned()]),
                 url: None,
+                undeveloped: None,
             },
         );
-        let d = validate(&mut output, &nodes);
+        let d = validate(&mut output, &nodes)?;
         assert_eq!(
             std::str::from_utf8(&output).unwrap(),
             "Error: Element G1 has unresolved supported by element: G2\n"
         );
         assert_eq!(d.errors, 1);
         assert_eq!(d.warnings, 0);
+        Ok(())
     }
 
     #[test]
-    fn duplicate_ref_context() {
+    fn duplicate_ref_context() -> Result<()> {
         let mut output = Vec::<u8>::new();
         let mut nodes = MyMap::<String, GsnNode>::new();
         nodes.insert(
@@ -343,119 +374,9 @@ mod test {
             GsnNode {
                 text: "".to_owned(),
                 in_context_of: Some(vec!["C1".to_owned(), "C1".to_owned()]),
-                supported_by: None,
+                supported_by: Some(vec!["Sn1".to_owned()]),
                 url: None,
-            },
-        );
-        nodes.insert(
-            "C1".to_owned(),
-            GsnNode {
-                text: "".to_owned(),
-                in_context_of: None,
-                supported_by: None,
-                url: None,
-            },
-        );
-        let d = validate(&mut output, &nodes);
-        assert_eq!(
-            std::str::from_utf8(&output).unwrap(),
-            "Warning: Element G1 has duplicate entry C1 in context.\n"
-        );
-        assert_eq!(d.errors, 0);
-        assert_eq!(d.warnings, 1);
-    }
-
-    #[test]
-    fn duplicate_ref_support() {
-        let mut output = Vec::<u8>::new();
-        let mut nodes = MyMap::<String, GsnNode>::new();
-        nodes.insert(
-            "G1".to_owned(),
-            GsnNode {
-                text: "".to_owned(),
-                in_context_of: None,
-                supported_by: Some(vec!["G2".to_owned(), "G2".to_owned()]),
-                url: None,
-            },
-        );
-        nodes.insert(
-            "G2".to_owned(),
-            GsnNode {
-                text: "".to_owned(),
-                in_context_of: None,
-                supported_by: None,
-                url: None,
-            },
-        );
-        let d = validate(&mut output, &nodes);
-        assert_eq!(
-            std::str::from_utf8(&output).unwrap(),
-            "Warning: Element G1 has duplicate entry G2 in supported by element.\n"
-        );
-        assert_eq!(d.errors, 0);
-        assert_eq!(d.warnings, 1);
-    }
-
-    #[test]
-    fn unreferenced_id() {
-        let mut output = Vec::<u8>::new();
-        let mut nodes = MyMap::<String, GsnNode>::new();
-        nodes.insert(
-            "G1".to_owned(),
-            GsnNode {
-                text: "".to_owned(),
-                in_context_of: None,
-                supported_by: None,
-                url: None,
-            },
-        );
-        nodes.insert(
-            "C1".to_owned(),
-            GsnNode {
-                text: "".to_owned(),
-                in_context_of: None,
-                supported_by: None,
-                url: None,
-            },
-        );
-        let d = validate(&mut output, &nodes);
-        assert_eq!(
-            std::str::from_utf8(&output).unwrap(),
-            "Error: There is more than one unreferenced element: C1, G1\n"
-        );
-        assert_eq!(d.errors, 1);
-        assert_eq!(d.warnings, 0);
-    }
-
-    #[test]
-    fn wrong_ref_context() {
-        let mut output = Vec::<u8>::new();
-        let mut nodes = MyMap::<String, GsnNode>::new();
-        nodes.insert(
-            "G1".to_owned(),
-            GsnNode {
-                text: "".to_owned(),
-                in_context_of: Some(vec!["G2".to_owned(), "S1".to_owned(), "Sn1".to_owned()]),
-                supported_by: None,
-                url: None,
-            },
-        );
-        nodes.insert(
-            "G2".to_owned(),
-            GsnNode {
-                text: "".to_owned(),
-                in_context_of: None,
-                supported_by: None,
-                url: None,
-            },
-        );
-        nodes.insert(
-            "S1".to_owned(),
-            GsnNode {
-                text: "".to_owned(),
-                in_context_of: None,
-                supported_by: None,
-                url: None,
+                undeveloped: None,
             },
         );
         nodes.insert(
@@ -465,9 +386,142 @@ mod test {
                 in_context_of: None,
                 supported_by: None,
                 url: None,
+                undeveloped: None,
             },
         );
-        let d = validate(&mut output, &nodes);
+        nodes.insert(
+            "C1".to_owned(),
+            GsnNode {
+                text: "".to_owned(),
+                in_context_of: None,
+                supported_by: None,
+                url: None,
+                undeveloped: None,
+            },
+        );
+        let d = validate(&mut output, &nodes)?;
+        assert_eq!(
+            std::str::from_utf8(&output).unwrap(),
+            "Warning: Element G1 has duplicate entry C1 in context.\n"
+        );
+        assert_eq!(d.errors, 0);
+        assert_eq!(d.warnings, 1);
+        Ok(())
+    }
+
+    #[test]
+    fn duplicate_ref_support() -> Result<()> {
+        let mut output = Vec::<u8>::new();
+        let mut nodes = MyMap::<String, GsnNode>::new();
+        nodes.insert(
+            "G1".to_owned(),
+            GsnNode {
+                text: "".to_owned(),
+                in_context_of: None,
+                supported_by: Some(vec!["G2".to_owned(), "G2".to_owned()]),
+                url: None,
+                undeveloped: None,
+            },
+        );
+        nodes.insert(
+            "G2".to_owned(),
+            GsnNode {
+                text: "".to_owned(),
+                in_context_of: None,
+                supported_by: None,
+                url: None,
+                undeveloped: Some(true),
+            },
+        );
+        let d = validate(&mut output, &nodes)?;
+        assert_eq!(
+            std::str::from_utf8(&output).unwrap(),
+            "Warning: Element G1 has duplicate entry G2 in supported by element.\n"
+        );
+        assert_eq!(d.errors, 0);
+        assert_eq!(d.warnings, 1);
+        Ok(())
+    }
+
+    #[test]
+    fn unreferenced_id() -> Result<()> {
+        let mut output = Vec::<u8>::new();
+        let mut nodes = MyMap::<String, GsnNode>::new();
+        nodes.insert(
+            "G1".to_owned(),
+            GsnNode {
+                text: "".to_owned(),
+                in_context_of: None,
+                supported_by: None,
+                url: None,
+                undeveloped: Some(true),
+            },
+        );
+        nodes.insert(
+            "C1".to_owned(),
+            GsnNode {
+                text: "".to_owned(),
+                in_context_of: None,
+                supported_by: None,
+                url: None,
+                undeveloped: None,
+            },
+        );
+        let d = validate(&mut output, &nodes)?;
+        assert_eq!(
+            std::str::from_utf8(&output).unwrap(),
+            "Error: There is more than one unreferenced element: C1, G1.\n"
+        );
+        assert_eq!(d.errors, 1);
+        assert_eq!(d.warnings, 0);
+        Ok(())
+    }
+
+    #[test]
+    fn wrong_ref_context() -> Result<()> {
+        let mut output = Vec::<u8>::new();
+        let mut nodes = MyMap::<String, GsnNode>::new();
+        nodes.insert(
+            "G1".to_owned(),
+            GsnNode {
+                text: "".to_owned(),
+                in_context_of: Some(vec!["G2".to_owned(), "S1".to_owned(), "Sn1".to_owned()]),
+                supported_by: None,
+                url: None,
+                undeveloped: Some(true),
+            },
+        );
+        nodes.insert(
+            "G2".to_owned(),
+            GsnNode {
+                text: "".to_owned(),
+                in_context_of: None,
+                supported_by: None,
+                url: None,
+                undeveloped: Some(true),
+            },
+        );
+        nodes.insert(
+            "S1".to_owned(),
+            GsnNode {
+                text: "".to_owned(),
+                in_context_of: None,
+                supported_by: None,
+                url: None,
+                undeveloped: Some(true),
+            },
+        );
+        nodes.insert(
+            "Sn1".to_owned(),
+            GsnNode {
+                text: "".to_owned(),
+                in_context_of: None,
+                supported_by: None,
+                url: None,
+                undeveloped: None,
+            },
+        );
+        let d = validate(&mut output, &nodes)?;
         assert_eq!(
             std::str::from_utf8(&output).unwrap(),
             concat!(
@@ -478,10 +532,11 @@ mod test {
         );
         assert_eq!(d.errors, 3);
         assert_eq!(d.warnings, 0);
+        Ok(())
     }
 
     #[test]
-    fn wrong_ref_support() {
+    fn wrong_ref_support() -> Result<()> {
         let mut output = Vec::<u8>::new();
         let mut nodes = MyMap::<String, GsnNode>::new();
         nodes.insert(
@@ -491,6 +546,7 @@ mod test {
                 in_context_of: None,
                 supported_by: Some(vec!["C1".to_owned(), "J1".to_owned(), "A1".to_owned()]),
                 url: None,
+                undeveloped: Some(true),
             },
         );
         nodes.insert(
@@ -500,6 +556,7 @@ mod test {
                 in_context_of: None,
                 supported_by: None,
                 url: None,
+                undeveloped: None,
             },
         );
         nodes.insert(
@@ -509,6 +566,7 @@ mod test {
                 in_context_of: None,
                 supported_by: None,
                 url: None,
+                undeveloped: None,
             },
         );
         nodes.insert(
@@ -518,9 +576,10 @@ mod test {
                 in_context_of: None,
                 supported_by: None,
                 url: None,
+                undeveloped: None,
             },
         );
-        let d = validate(&mut output, &nodes);
+        let d = validate(&mut output, &nodes)?;
         assert_eq!(
             std::str::from_utf8(&output).unwrap(),
             concat!(
@@ -531,5 +590,74 @@ mod test {
         );
         assert_eq!(d.errors, 3);
         assert_eq!(d.warnings, 0);
+        Ok(())
+    }
+
+    #[test]
+    fn undeveloped_goal() -> Result<()> {
+        let mut output = Vec::<u8>::new();
+        let mut nodes = MyMap::<String, GsnNode>::new();
+        nodes.insert(
+            "G1".to_owned(),
+            GsnNode {
+                text: "".to_owned(),
+                in_context_of: None,
+                supported_by: None,
+                url: None,
+                undeveloped: None,
+            },
+        );
+        nodes.insert(
+            "G2".to_owned(),
+            GsnNode {
+                text: "".to_owned(),
+                in_context_of: None,
+                supported_by: None,
+                url: None,
+                undeveloped: Some(false),
+            },
+        );
+        let d = validate(&mut output, &nodes)?;
+        assert_eq!(
+            std::str::from_utf8(&output).unwrap(),
+            "Warning: Element G1 is undeveloped.\nWarning: Element G2 is undeveloped.\nError: There is more than one unreferenced element: G1, G2.\n"
+        );
+        assert_eq!(d.errors, 1);
+        assert_eq!(d.warnings, 2);
+        Ok(())
+    }
+
+    #[test]
+    fn undeveloped_strategy() -> Result<()> {
+        let mut output = Vec::<u8>::new();
+        let mut nodes = MyMap::<String, GsnNode>::new();
+        nodes.insert(
+            "S1".to_owned(),
+            GsnNode {
+                text: "".to_owned(),
+                in_context_of: None,
+                supported_by: None,
+                url: None,
+                undeveloped: None,
+            },
+        );
+        nodes.insert(
+            "S2".to_owned(),
+            GsnNode {
+                text: "".to_owned(),
+                in_context_of: None,
+                supported_by: None,
+                url: None,
+                undeveloped: Some(false),
+            },
+        );
+        let d = validate(&mut output, &nodes)?;
+        assert_eq!(
+            std::str::from_utf8(&output).unwrap(),
+            "Warning: Element S1 is undeveloped.\nWarning: Element S2 is undeveloped.\nError: There is more than one unreferenced element: S1, S2.\n"
+        );
+        assert_eq!(d.errors, 1);
+        assert_eq!(d.warnings, 2);
+        Ok(())
     }
 }

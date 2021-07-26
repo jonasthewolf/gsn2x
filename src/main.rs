@@ -47,7 +47,7 @@ fn main() -> Result<()> {
         .with_context(|| format!("Failed to parse YAML from file {}", input))?;
 
     // Validate
-    let d = gsn::validate(&mut std::io::stderr(), &nodes);
+    let d = gsn::validate(&mut std::io::stderr(), &nodes)?;
 
     // Output
     output(
@@ -120,8 +120,8 @@ mod test {
     use crate::*;
     use std::fs::OpenOptions;
     use std::io::BufRead;
-    use std::io::{Seek, SeekFrom};
     use std::io::BufReader;
+    use std::io::{Seek, SeekFrom};
     #[test]
     fn example_back_to_back() -> Result<(), Box<dyn std::error::Error>> {
         let mut output = OpenOptions::new()
@@ -132,7 +132,7 @@ mod test {
             .open("example.gsn.test.dot")?;
         let mut reader = BufReader::new(File::open("example.gsn.yaml")?);
         let nodes = crate::read_input(&mut reader)?;
-        let d = gsn::validate(&mut std::io::stderr(), &nodes);
+        let d = gsn::validate(&mut std::io::stderr(), &nodes)?;
         assert_eq!(d.errors, 0);
         assert_eq!(d.warnings, 0);
         crate::output("example.gsn.yaml", nodes, false, d, &mut output)?;
