@@ -193,6 +193,17 @@ fn validate_reference(
             "supported by element",
             &valid_refs,
         )?;
+        if Some(true) == node.undeveloped {
+            writeln!(
+                output,
+                "Error: Undeveloped element {} has supporting arguments.",
+                key
+            )?;
+            diag += Diagnostics {
+                errors: 1,
+                warnings: 0,
+            };
+        }
     } else if (key.starts_with('S') && !key.starts_with("Sn") || key.starts_with('G'))
         && (Some(false) == node.undeveloped || node.undeveloped.is_none())
     {
@@ -563,7 +574,7 @@ mod test {
                 in_context_of: None,
                 supported_by: Some(vec!["C1".to_owned(), "J1".to_owned(), "A1".to_owned()]),
                 url: None,
-                undeveloped: Some(true),
+                undeveloped: None,
             },
         );
         nodes.insert(
@@ -675,6 +686,40 @@ mod test {
         );
         assert_eq!(d.errors, 1);
         assert_eq!(d.warnings, 2);
+        Ok(())
+    }
+
+    #[test]
+    fn wrong_undeveloped() -> Result<()> {
+        let mut output = Vec::<u8>::new();
+        let mut nodes = MyMap::<String, GsnNode>::new();
+        nodes.insert(
+            "G1".to_owned(),
+            GsnNode {
+                text: "".to_owned(),
+                in_context_of: None,
+                supported_by: Some(vec!["Sn2".to_owned()]),
+                url: None,
+                undeveloped: Some(true),
+            },
+        );
+        nodes.insert(
+            "Sn2".to_owned(),
+            GsnNode {
+                text: "".to_owned(),
+                in_context_of: None,
+                supported_by: None,
+                url: None,
+                undeveloped: None,
+            },
+        );
+        let d = validate(&mut output, &nodes)?;
+        assert_eq!(
+            std::str::from_utf8(&output).unwrap(),
+            "Error: Undeveloped element G1 has supporting arguments.\n"
+        );
+        assert_eq!(d.errors, 1);
+        assert_eq!(d.warnings, 0);
         Ok(())
     }
 

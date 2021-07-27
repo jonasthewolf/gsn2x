@@ -68,9 +68,12 @@ Please see example.gsn.yaml for an example of the used syntax.
 The tool automatically performs the following validation checks on the input YAML:
 
  - There is only one top-level element (G,S,C,J,A,Sn) unreferenced. 
- - All referenced elements (`supportedBy` and `inContextOf`) exist.
- - All IDs start with a known prefix.
+ - The top-level element is a Goal.
+ - All referenced elements (`supportedBy` and `inContextOf`) exist and only reference valid elements 
+   (e.g. a Justification cannot be listed under `supportedBy`).
+ - All IDs start with a known prefix, i.e. there are only known elements.
  - All Goals and Strategies are either marked with `undeveloped: true` or have supporting Goals, Strategies or Solutions.
+ - Goals and Strategies marked as undeveloped, must have no supporting arguments.
 
 Uniqueness of keys is automatically enforced by the YAML format.
 
