@@ -34,9 +34,9 @@ pub fn validate(output: &mut impl Write, nodes: &MyMap<String, GsnNode>) -> Resu
     let mut diag = Diagnostics::default();
     for (key, node) in nodes.deref() {
         // Validate if key is one of the known prefixes
-        diag += validate_id(output, &key)?;
+        diag += validate_id(output, key)?;
         // Validate if all references of node exist
-        diag += validate_reference(output, &nodes, &key, &node)?;
+        diag += validate_reference(output, nodes, key, node)?;
         // Remove all keys if they are referenced; used to see if there is more than one top level node
         if let Some(context) = node.in_context_of.as_ref() {
             for cnode in context {

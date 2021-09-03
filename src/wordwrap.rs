@@ -7,7 +7,7 @@ pub struct WordWrap;
 impl Filter for WordWrap {
     fn filter(&self, value: &Value, args: &HashMap<String, Value>) -> Result<Value> {
         wordwrap(
-            &value
+            value
                 .as_str()
                 .ok_or_else(|| Error::msg("Value is not a string"))?,
             args.get("width")
