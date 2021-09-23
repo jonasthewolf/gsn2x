@@ -65,6 +65,8 @@ jobs:
   coverage:
     needs: build_test_deploy
     runs-on: ubuntu-latest
+    env:
+      RUSTUP_TOOLCHAIN: nightly
     steps:
     - uses: actions/checkout@v2
     # the action needs a nightly toolchain with llvm-tools

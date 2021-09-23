@@ -79,4 +79,4 @@ The tool automatically performs the following validation checks on the input YAM
 
 Uniqueness of keys is automatically enforced by the YAML format.
 
-Error messages are printed to stderr.
+Error messages and warnings are printed to stderr.
