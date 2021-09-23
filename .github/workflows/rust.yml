@@ -65,15 +65,13 @@ jobs:
   coverage:
     needs: build_test_deploy
     runs-on: ubuntu-latest
-    env:
-      RUSTUP_TOOLCHAIN: nightly
     steps:
     - uses: actions/checkout@v2
     # the action needs a nightly toolchain with llvm-tools
     - uses: actions-rs/toolchain@v1
       with:
         profile: minimal
-        toolchain: nightly
+        toolchain: nightly-2021-07-27
         components: llvm-tools-preview
     # runs cargo with defaults flags, using the default `lcov` output
     - uses: Swatinem/fucov@v1
