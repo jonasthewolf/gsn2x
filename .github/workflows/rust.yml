@@ -71,12 +71,14 @@ jobs:
     - uses: actions-rs/toolchain@v1
       with:
         profile: minimal
-        toolchain: nightly-2021-07-27
-        default: true
-        override: true
+        toolchain: nightly
         components: llvm-tools-preview
     # runs cargo with defaults flags, using the default `lcov` output
-    - uses: Swatinem/fucov@v1
+    #- uses: Swatinem/fucov@v1
+    - name: 
+      run: |
+         cargo +nightly install cargo-llvm-cov
+         cargo +nightly llvm-cov --lcov --tests --output-path=coverage
     - name: Upload to codecov
       uses: codecov/codecov-action@v1
       with:
