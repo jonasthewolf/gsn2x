@@ -73,6 +73,7 @@ jobs:
         profile: minimal
         toolchain: nightly-2021-07-27
         default: true
+        override: true
         components: llvm-tools-preview
     # runs cargo with defaults flags, using the default `lcov` output
     - uses: Swatinem/fucov@v1
