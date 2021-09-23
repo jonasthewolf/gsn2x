@@ -78,7 +78,7 @@ jobs:
     - name: 
       run: |
          cargo +nightly install cargo-llvm-cov
-         cargo +nightly llvm-cov --lcov --tests --output-path=coverage
+         cargo +nightly llvm-cov --lcov --tests --output-path=coverage/coverage.lcov
     - name: Upload to codecov
       uses: codecov/codecov-action@v1
       with:
