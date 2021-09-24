@@ -75,11 +75,15 @@ jobs:
         components: llvm-tools-preview
     # runs cargo with defaults flags, using the default `lcov` output
     #- uses: Swatinem/fucov@v1
-    - name: 
+    - name: Coverage measurement
       run: |
          mkdir coverage
          cargo +nightly install cargo-llvm-cov
-         cargo +nightly llvm-cov --lcov --tests --output-path=coverage/coverage.lcov
+         cargo +nightly llvm-cov --no-report --tests
+         cargo +nightly llvm-cov run --no-report -- example.gsn.yaml
+         cargo +nightly llvm-cov run --no-report -- a.gsn.yaml
+         cargo +nightly llvm-cov run --no-report -- README.md
+         cargo +nightly llvm-cov --no-run --lcov --output-path=coverage/coverage.lcov
     - name: Upload to codecov
       uses: codecov/codecov-action@v1
       with:
