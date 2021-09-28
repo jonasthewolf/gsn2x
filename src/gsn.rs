@@ -257,7 +257,7 @@ mod test {
                 supported_by: None,
                 url: None,
                 undeveloped: None,
-                additional: MyMap::<String,String>::new(),
+                additional: MyMap::<String, String>::new(),
             },
         );
         let d = validate(&mut output, &nodes)?;
@@ -282,7 +282,7 @@ mod test {
                 supported_by: Some(vec!["G1".to_owned()]),
                 url: None,
                 undeveloped: None,
-                additional: MyMap::<String,String>::new(),
+                additional: MyMap::<String, String>::new(),
             },
         );
         let d = validate(&mut output, &nodes)?;
@@ -307,7 +307,7 @@ mod test {
                 supported_by: Some(vec!["C1".to_owned()]),
                 url: None,
                 undeveloped: None,
-                additional: MyMap::<String,String>::new(),
+                additional: MyMap::<String, String>::new(),
             },
         );
         let d = validate(&mut output, &nodes)?;
@@ -335,7 +335,7 @@ mod test {
                 supported_by: None,
                 url: None,
                 undeveloped: Some(true),
-                additional: MyMap::<String,String>::new(),
+                additional: MyMap::<String, String>::new(),
             },
         );
         let d = validate(&mut output, &nodes)?;
@@ -363,7 +363,7 @@ mod test {
                 supported_by: None,
                 url: None,
                 undeveloped: Some(true),
-                additional: MyMap::<String,String>::new(),
+                additional: MyMap::<String, String>::new(),
             },
         );
         let d = validate(&mut output, &nodes)?;
@@ -388,7 +388,7 @@ mod test {
                 supported_by: Some(vec!["G2".to_owned()]),
                 url: None,
                 undeveloped: None,
-                additional: MyMap::<String,String>::new(),
+                additional: MyMap::<String, String>::new(),
             },
         );
         let d = validate(&mut output, &nodes)?;
@@ -413,7 +413,7 @@ mod test {
                 supported_by: Some(vec!["Sn1".to_owned()]),
                 url: None,
                 undeveloped: None,
-                additional: MyMap::<String,String>::new(),
+                additional: MyMap::<String, String>::new(),
             },
         );
         nodes.insert(
@@ -424,7 +424,7 @@ mod test {
                 supported_by: None,
                 url: None,
                 undeveloped: None,
-                additional: MyMap::<String,String>::new(),
+                additional: MyMap::<String, String>::new(),
             },
         );
         nodes.insert(
@@ -435,7 +435,7 @@ mod test {
                 supported_by: None,
                 url: None,
                 undeveloped: None,
-                additional: MyMap::<String,String>::new(),
+                additional: MyMap::<String, String>::new(),
             },
         );
         let d = validate(&mut output, &nodes)?;
@@ -460,7 +460,7 @@ mod test {
                 supported_by: Some(vec!["G2".to_owned(), "G2".to_owned()]),
                 url: None,
                 undeveloped: None,
-                additional: MyMap::<String,String>::new(),
+                additional: MyMap::<String, String>::new(),
             },
         );
         nodes.insert(
@@ -471,7 +471,7 @@ mod test {
                 supported_by: None,
                 url: None,
                 undeveloped: Some(true),
-                additional: MyMap::<String,String>::new(),
+                additional: MyMap::<String, String>::new(),
             },
         );
         let d = validate(&mut output, &nodes)?;
@@ -496,7 +496,7 @@ mod test {
                 supported_by: None,
                 url: None,
                 undeveloped: Some(true),
-                additional: MyMap::<String,String>::new(),
+                additional: MyMap::<String, String>::new(),
             },
         );
         nodes.insert(
@@ -507,7 +507,7 @@ mod test {
                 supported_by: None,
                 url: None,
                 undeveloped: None,
-                additional: MyMap::<String,String>::new(),
+                additional: MyMap::<String, String>::new(),
             },
         );
         let d = validate(&mut output, &nodes)?;
@@ -532,7 +532,7 @@ mod test {
                 supported_by: None,
                 url: None,
                 undeveloped: Some(true),
-                additional: MyMap::<String,String>::new(),
+                additional: MyMap::<String, String>::new(),
             },
         );
         nodes.insert(
@@ -543,7 +543,7 @@ mod test {
                 supported_by: None,
                 url: None,
                 undeveloped: Some(true),
-                additional: MyMap::<String,String>::new(),
+                additional: MyMap::<String, String>::new(),
             },
         );
         nodes.insert(
@@ -554,7 +554,7 @@ mod test {
                 supported_by: None,
                 url: None,
                 undeveloped: Some(true),
-                additional: MyMap::<String,String>::new(),
+                additional: MyMap::<String, String>::new(),
             },
         );
         nodes.insert(
@@ -565,7 +565,7 @@ mod test {
                 supported_by: None,
                 url: None,
                 undeveloped: None,
-                additional: MyMap::<String,String>::new(),
+                additional: MyMap::<String, String>::new(),
             },
         );
         let d = validate(&mut output, &nodes)?;
@@ -594,7 +594,7 @@ mod test {
                 supported_by: Some(vec!["C1".to_owned(), "J1".to_owned(), "A1".to_owned()]),
                 url: None,
                 undeveloped: None,
-                additional: MyMap::<String,String>::new(),
+                additional: MyMap::<String, String>::new(),
             },
         );
         nodes.insert(
@@ -605,7 +605,7 @@ mod test {
                 supported_by: None,
                 url: None,
                 undeveloped: None,
-                additional: MyMap::<String,String>::new(),
+                additional: MyMap::<String, String>::new(),
             },
         );
         nodes.insert(
@@ -616,7 +616,7 @@ mod test {
                 supported_by: None,
                 url: None,
                 undeveloped: None,
-                additional: MyMap::<String,String>::new(),
+                additional: MyMap::<String, String>::new(),
             },
         );
         nodes.insert(
@@ -627,7 +627,7 @@ mod test {
                 supported_by: None,
                 url: None,
                 undeveloped: None,
-                additional: MyMap::<String,String>::new(),
+                additional: MyMap::<String, String>::new(),
             },
         );
         let d = validate(&mut output, &nodes)?;
@@ -656,7 +656,7 @@ mod test {
                 supported_by: None,
                 url: None,
                 undeveloped: None,
-                additional: MyMap::<String,String>::new(),
+                additional: MyMap::<String, String>::new(),
             },
         );
         nodes.insert(
@@ -667,7 +667,7 @@ mod test {
                 supported_by: None,
                 url: None,
                 undeveloped: Some(false),
-                additional: MyMap::<String,String>::new(),
+                additional: MyMap::<String, String>::new(),
             },
         );
         let d = validate(&mut output, &nodes)?;
@@ -692,7 +692,7 @@ mod test {
                 supported_by: None,
                 url: None,
                 undeveloped: None,
-                additional: MyMap::<String,String>::new(),
+                additional: MyMap::<String, String>::new(),
             },
         );
         nodes.insert(
@@ -703,7 +703,7 @@ mod test {
                 supported_by: None,
                 url: None,
                 undeveloped: Some(false),
-                additional: MyMap::<String,String>::new(),
+                additional: MyMap::<String, String>::new(),
             },
         );
         let d = validate(&mut output, &nodes)?;
@@ -728,7 +728,7 @@ mod test {
                 supported_by: Some(vec!["Sn2".to_owned()]),
                 url: None,
                 undeveloped: Some(true),
-                additional: MyMap::<String,String>::new(),
+                additional: MyMap::<String, String>::new(),
             },
         );
         nodes.insert(
@@ -739,7 +739,7 @@ mod test {
                 supported_by: None,
                 url: None,
                 undeveloped: None,
-                additional: MyMap::<String,String>::new(),
+                additional: MyMap::<String, String>::new(),
             },
         );
         let d = validate(&mut output, &nodes)?;
@@ -764,7 +764,7 @@ mod test {
                 supported_by: None,
                 url: None,
                 undeveloped: None,
-                additional: MyMap::<String,String>::new(),
+                additional: MyMap::<String, String>::new(),
             },
         );
         let d = validate(&mut output, &nodes)?;

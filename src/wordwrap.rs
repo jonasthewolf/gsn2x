@@ -125,7 +125,9 @@ mod test {
         let ww = WordWrap {};
         let mut map = HashMap::<String, Value>::new();
         map.insert("width".to_owned(), Value::String("xyz".to_owned()));
-        assert!(matches!(ww.filter(&Value::String("Test".to_owned()), &map).err().unwrap().kind, ErrorKind::Msg(t) if t == "Parameter width is not an integer"));
+        assert!(
+            matches!(ww.filter(&Value::String("Test".to_owned()), &map).err().unwrap().kind, ErrorKind::Msg(t) if t == "Parameter width is not an integer")
+        );
     }
 
     #[test]
@@ -134,7 +136,9 @@ mod test {
         let mut map = HashMap::<String, Value>::new();
         map.insert("width".to_owned(), Value::Number(tera::Number::from(42u64)));
         // wrapstr is missing
-        assert!(matches!(dbg!(ww.filter(&Value::String("Test".to_owned()), &map)).err().unwrap().kind, ErrorKind::Msg(t) if t == "Parameter wrapstr missing"));
+        assert!(
+            matches!(dbg!(ww.filter(&Value::String("Test".to_owned()), &map)).err().unwrap().kind, ErrorKind::Msg(t) if t == "Parameter wrapstr missing")
+        );
     }
 
     #[test]
@@ -143,6 +147,8 @@ mod test {
         let mut map = HashMap::<String, Value>::new();
         map.insert("width".to_owned(), Value::Number(tera::Number::from(42u64)));
         map.insert("wrapstr".to_owned(), Value::Null);
-        assert!(matches!(dbg!(ww.filter(&Value::String("Test".to_owned()), &map)).err().unwrap().kind, ErrorKind::Msg(t) if t == "Parameter wrapstr is not a string"));
+        assert!(
+            matches!(dbg!(ww.filter(&Value::String("Test".to_owned()), &map)).err().unwrap().kind, ErrorKind::Msg(t) if t == "Parameter wrapstr is not a string")
+        );
     }
 }
