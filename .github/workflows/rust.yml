@@ -30,6 +30,11 @@ jobs:
       uses: actions-rs/audit-check@v1
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
+  
+  license_check:
+    runs-on: ubuntu-latest
+
+    steps:
     - name: License check
       run: |
         cargo install cargo-lichking
@@ -80,6 +85,7 @@ jobs:
     needs: build_test_deploy
     runs-on: ubuntu-latest
     if: ${{ startsWith(github.ref, 'refs/tags/') }}
+
     steps:
     - name: Get the version
       id: get_version
@@ -101,6 +107,7 @@ jobs:
   coverage:
     needs: build_test_deploy
     runs-on: ubuntu-latest
+    
     steps:
     - uses: actions/checkout@v2
     # coverage measurement needs a nightly toolchain with llvm-tools
