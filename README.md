@@ -2,29 +2,29 @@
 
 # gsn2x
 
-This little program converts [Goal Structuring Notation](https://scsc.uk/gsn) in a YAML notation to the DOT format of [Graphviz](https://graphviz.org). From there it can be rendered to different graphic formats.
+This little program converts [Goal Structuring Notation](https://scsc.uk/gsn) in a YAML format to the DOT format of [Graphviz](https://graphviz.org). From there it can be rendered to different graphic formats.
 
 ![Example](example.gsn.svg "Example")
 
-Graphviz dot is required to create an image from the output of this tool.
+Graphviz is required to create an image from the output of this tool.
 
-Feel free to use it and please let me know.
+Feel free to use it and please let me know. Same applies if you have feature requests, bug reports or contributions.
 
 
 ## Usage
 
 On Windows you can just run:
 
-    gsn2x.exe <yourgsnfile.yaml> | dot -Tpng > <yourgsnfile.png>
+    gsn2x.exe <yourgsnfile.yaml> | dot -Tsvg > <yourgsnfile.svg>
 
 On other systems you can create a PNG like this:
 
-    gsn2x <yourgsnfile.yaml> | dot -Tpng > <yourgsnfile.png>
+    gsn2x <yourgsnfile.yaml> | dot -Tsvg > <yourgsnfile.svg>
 
 If a second optional argument is provided, the output is not written to stdout, but to the file named by the second argument.
 If called with option `-c` or `--check` the input file is only checked for validity, but the resulting graph is not written.
     
-**You can find prebuilt binaries for Windows, Linux and MacOS on the [releases page](https://github.com/jonasthewolf/gsn2x/releases).**
+**You can find pre-built binaries for Windows, Linux and MacOS on the [releases page](https://github.com/jonasthewolf/gsn2x/releases).**
 
 ## Syntax in YAML
 
@@ -103,7 +103,7 @@ Using this feature, different views on the GSN can be generated.
       text: This is a Context
       layer1: This is additional information for C1.
 
-In this example, a call to `gsn2x -l layer1` will show the additional information to each element prefixed with `LAYER1: `.
+In this example, a call to `gsn2x -l layer1` will show the additional information to each element prefixed with _`LAYER1: `_.
 
 It is intentional that information is only added for a view, but not hidden to ensure consistency of the GSN in all variants.
 
@@ -111,7 +111,7 @@ It is intentional that information is only added for a view, but not hidden to e
 
 You can provide a custom stylesheet for SVG via the `-s` or `--stylesheet` options.
 
-Please see https://graphviz.org/docs/attrs/stylesheet/ and https://graphviz.org/docs/attrs/class/ for more details.
+Please see [Graphviz stylesheet](https://graphviz.org/docs/attrs/stylesheet/) and [Graphviz class](https://graphviz.org/docs/attrs/class/) for more details.
 
 Elements are assigned `gsnelem` class, edges are assigned `gsnedge` class.
 

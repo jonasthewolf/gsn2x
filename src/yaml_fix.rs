@@ -107,3 +107,14 @@ where
         deserializer.deserialize_map(MyMapVisitor::new())
     }
 }
+
+#[cfg(test)]
+mod test {
+    use super::*;
+    #[test]
+    fn format() {
+        let btm = BTreeMap::<String, String>::new();
+        let mm = MyMap(btm.clone());
+        assert_eq!(format!("{:?}", mm), format!("{:?}", btm));
+    }
+}
