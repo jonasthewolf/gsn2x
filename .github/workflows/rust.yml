@@ -3,10 +3,11 @@ name: CI/CD
 on:
   push:
     branches: [ master ]
+    tags:
+      - v[0-9]+\.[0-9]+\.[0-9]+
   pull_request:
     branches: [ master ]
-  tags:
-    branches: [ master ]
+
 
 env:
   CARGO_TERM_COLOR: always
