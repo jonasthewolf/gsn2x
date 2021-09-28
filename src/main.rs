@@ -36,6 +36,16 @@ fn main() -> Result<()> {
                 .long("check")
                 .required(false),
         )
+        .arg(
+            Arg::with_name("LAYERS")
+                .help("Output additional layers.")
+                .short("l")
+                .long("layers")
+                .takes_value(true)
+                .multiple(true)
+                .use_delimiter(true)
+                .required(false),
+        )
         .get_matches();
 
     // Read input
@@ -53,6 +63,7 @@ fn main() -> Result<()> {
     output(
         input,
         nodes,
+        matches.values_of("LAYERS").map(|x| x.collect()),
         matches.is_present("VALONLY"),
         d,
         &mut match matches.value_of("OUTPUT") {
@@ -73,12 +84,13 @@ fn read_input(input: &mut impl Read) -> Result<MyMap<String, GsnNode>, anyhow::E
 fn output(
     input: &str,
     nodes: MyMap<String, GsnNode>,
+    layers: Option<Vec<&str>>,
     validonly: bool,
     d: gsn::Diagnostics,
     output: &mut impl Write,
 ) -> Result<()> {
     if !validonly {
-        render_result(input, nodes, output)?;
+        render_result(input, nodes, layers, output)?;
     }
     if d.errors == 0 {
         if d.warnings > 0 {
@@ -97,12 +109,13 @@ fn output(
 fn render_result(
     input: &str,
     nodes: MyMap<String, GsnNode>,
+    layers: Option<Vec<&str>>,
     output: &mut impl Write,
 ) -> Result<(), anyhow::Error> {
     let mut context = tera::Context::new();
     context.insert("filename", input);
     context.insert("nodes", &nodes);
-    writeln!(output, "## {:?}\n\n", &nodes).with_context(|| "Failed to write to output.")?;
+    context.insert("layers", &layers);
     let mut tera = Tera::default();
     tera.register_filter("wordwrap", WordWrap);
     tera.add_raw_templates(vec![
@@ -135,7 +148,7 @@ mod test {
         let d = gsn::validate(&mut std::io::stderr(), &nodes)?;
         assert_eq!(d.errors, 0);
         assert_eq!(d.warnings, 0);
-        crate::output("example.gsn.yaml", nodes, false, d, &mut output)?;
+        crate::output("example.gsn.yaml", nodes, None, false, d, &mut output)?;
         output.flush()?;
         output.seek(SeekFrom::Start(0))?;
         let orig = BufReader::new(std::fs::File::open("example.gsn.dot")?).lines();
@@ -151,7 +164,7 @@ mod test {
             errors: 3,
         };
         let mut output = Vec::<u8>::new();
-        let res = crate::output("", nodes, true, d, &mut output);
+        let res = crate::output("", nodes, None, true, d, &mut output);
         assert!(res.is_err());
         assert_eq!(
             format!("{:?}", res),

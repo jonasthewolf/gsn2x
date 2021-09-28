@@ -48,9 +48,12 @@ Sn1:
 
 Sn2: 
  text: "Solution 2"
+ layer1: "Additional information on layer 1"
+ layer2: "Additional information on layer 2"
 
 Sn3: 
  text: "Solution 3"
+ layer2: "Additional information on layer 2"
 
 Sn4: 
  text: "Solution 4"

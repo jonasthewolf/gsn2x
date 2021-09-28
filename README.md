@@ -80,3 +80,29 @@ The tool automatically performs the following validation checks on the input YAM
 Uniqueness of keys is automatically enforced by the YAML format.
 
 Error messages and warnings are printed to stderr.
+
+## Additional Layers
+
+Additional attributes of a node are ignored by default.
+With the command line option `-l` or `--layers` you can enable the output of those additional attributes.
+Using this feature, different views on the GSN can be generated.
+
+### Example
+
+    G1:
+      text: This is a Goal
+      supportedBy: [S1]
+      inContextOf: [C1]
+      layer1: This is additional information for G1.
+    
+    S1:
+      text: This is a Strategy
+      layer1: This is additional information for S1.
+    
+    C1: 
+      text: This is a Context
+      layer1: This is additional information for C1.
+
+In this example, a call to `gsn2x -l layer1` will show the additional information to each element prefixed with `LAYER1: `.
+
+It is intentional that information is only added for a view, but not hidden to ensure consistency of the GSN in all variants.

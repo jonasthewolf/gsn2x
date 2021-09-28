@@ -5,8 +5,10 @@ use std::fmt::Debug;
 use std::marker::PhantomData;
 
 // Copied and adapted from https://serde.rs/deserialize-map.html
+// to work around an issue in serde_yaml that does not check for duplicate keys in input YAML.
+// Duplicate keys are no valid YAML but this is ignored by serde_yaml.
 
-#[derive(Serialize)]
+#[derive(Default, PartialEq, Serialize)]
 pub struct MyMap<K, V>(BTreeMap<K, V>)
 where
     K: Ord;
