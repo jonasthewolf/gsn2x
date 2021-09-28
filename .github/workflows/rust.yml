@@ -5,6 +5,8 @@ on:
     branches: [ master ]
   pull_request:
     branches: [ master ]
+  tags:
+    branches: [ master ]
 
 env:
   CARGO_TERM_COLOR: always
@@ -48,10 +50,12 @@ jobs:
     - name: Strip binaries
       if: hashFiles('target/release/gsn2x')
       run: strip target/release/gsn2x
+      run: mv target/release/gsn2x gsn2x.${{ runner.os }}
     - name: Strip binaries (Windows)
       if: hashFiles('target/release/gsn2x.exe')
       run: strip target/release/gsn2x.exe
-    - name: Deploy to github.com
+      run: move target/release/gsn2x.exe gsn2x.${{ runner.os }}.exe
+    - name: Deploy pre-release to github.com
       uses: "marvinpinto/action-automatic-releases@latest"
       with:
         repo_token: "${{ secrets.GITHUB_TOKEN }}"
@@ -59,8 +63,9 @@ jobs:
         prerelease: true
         title: "Latest Build for ${{ matrix.os }}"
         files: |
-          target/release/gsn2x
-          target/release/gsn2x.exe
+          gsn2x.Linux
+          gsn2x.Macos
+          gsn2x.Windows.exe
 
   coverage:
     needs: build_test_deploy
