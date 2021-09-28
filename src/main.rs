@@ -46,6 +46,15 @@ fn main() -> Result<()> {
                 .use_delimiter(true)
                 .required(false),
         )
+        .arg(
+            Arg::with_name("STYLESHEET")
+                .help("Sets a stylesheet that is used by Graphviz in SVG output.")
+                .short("s")
+                .long("stylesheet")
+                .takes_value(true)
+                .multiple(false)
+                .required(false),
+        )
         .get_matches();
 
     // Read input
@@ -64,6 +73,7 @@ fn main() -> Result<()> {
         input,
         nodes,
         matches.values_of("LAYERS").map(|x| x.collect()),
+        matches.value_of("STYLESHEET"),
         matches.is_present("VALONLY"),
         d,
         &mut match matches.value_of("OUTPUT") {
@@ -85,12 +95,13 @@ fn output(
     input: &str,
     nodes: MyMap<String, GsnNode>,
     layers: Option<Vec<&str>>,
+    stylesheet: Option<&str>,
     validonly: bool,
     d: gsn::Diagnostics,
     output: &mut impl Write,
 ) -> Result<()> {
     if !validonly {
-        render_result(input, nodes, layers, output)?;
+        render_result(input, nodes, layers, stylesheet, output)?;
     }
     if d.errors == 0 {
         if d.warnings > 0 {
@@ -110,12 +121,14 @@ fn render_result(
     input: &str,
     nodes: MyMap<String, GsnNode>,
     layers: Option<Vec<&str>>,
+    stylesheet: Option<&str>,
     output: &mut impl Write,
 ) -> Result<(), anyhow::Error> {
     let mut context = tera::Context::new();
     context.insert("filename", input);
     context.insert("nodes", &nodes);
     context.insert("layers", &layers);
+    context.insert("stylesheet", &stylesheet);
     let mut tera = Tera::default();
     tera.register_filter("wordwrap", WordWrap);
     tera.add_raw_templates(vec![

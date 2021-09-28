@@ -81,7 +81,7 @@ Uniqueness of keys is automatically enforced by the YAML format.
 
 Error messages and warnings are printed to stderr.
 
-## Additional Layers
+## Additional layers
 
 Additional attributes of a node are ignored by default.
 With the command line option `-l` or `--layers` you can enable the output of those additional attributes.
@@ -106,3 +106,16 @@ Using this feature, different views on the GSN can be generated.
 In this example, a call to `gsn2x -l layer1` will show the additional information to each element prefixed with `LAYER1: `.
 
 It is intentional that information is only added for a view, but not hidden to ensure consistency of the GSN in all variants.
+
+## Stylesheets for SVG rendering
+
+You can provide a custom stylesheet for SVG via the `-s` or `--stylesheet` options.
+
+Please see https://graphviz.org/docs/attrs/stylesheet/ and https://graphviz.org/docs/attrs/class/ for more details.
+
+Elements are assigned `gsnelem` class, edges are assigned `gsnedge` class.
+
+The complete diagram is assigned `gsndiagram` class.
+
+Every elements will also be addressable by `id`. The `id` is the same as the YAML id.
+

@@ -1,11 +1,12 @@
 {%- macro render_box(id, node) -%}
   {%- set wrap = 60 -%}
-  shape={%- if   id is starting_with("G") %}"box"
-        {%- elif id is starting_with("A") %}"oval"
-        {%- elif id is starting_with("J") %}"oval"
-        {%- elif id is starting_with("C") %}"box"
-        {%- elif id is starting_with("Sn") %}"circle"{%- set wrap = 15 -%}
-        {%- elif id is starting_with("S") %}"parallelogram"
+  id="gsn_{{ id | lower | slugify | replace(from="-", to="_")}}", shape=
+        {%- if   id is starting_with("G") %}"box", class="gsnelem,gsngoal"
+        {%- elif id is starting_with("A") %}"oval", class="gsnelem,gsnasmp"
+        {%- elif id is starting_with("J") %}"oval", class="gsnelem,gsnjust"
+        {%- elif id is starting_with("C") %}"box", class="gsnelem,gsnctxt"
+        {%- elif id is starting_with("Sn") %}"circle"{%- set wrap = 15 -%}, class="gsnelem,gsnsltn"
+        {%- elif id is starting_with("S") %}"parallelogram", class="gsnelem,gsnstgy"
         {%- endif %}
 
         {%- if id is starting_with("C") %}, style="rounded"{%- endif %}{%- if node["url"] %}, URL="{{ node["url"] }}"{%- endif %}, label=<<B>{{id}}</B><BR align="left"/>{{ node.text|trim_end|wordwrap(width=wrap,wrapstr='<BR align="left"/>') }}

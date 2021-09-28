@@ -67,14 +67,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    # the action needs a nightly toolchain with llvm-tools
+    # coverage measurement needs a nightly toolchain with llvm-tools
     - uses: actions-rs/toolchain@v1
       with:
         profile: minimal
         toolchain: nightly
         components: llvm-tools-preview
-    # runs cargo with defaults flags, using the default `lcov` output
-    #- uses: Swatinem/fucov@v1
     - name: Coverage measurement
       continue-on-error: true
       run: |

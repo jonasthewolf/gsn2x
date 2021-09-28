@@ -2,7 +2,7 @@
 name = "gsn2x"
 description = "Tool to create graphical representations of Goal Structuring Notations from YAML."
 authors = ["Jonas Wolf <jonas.wolf@jonaswolf.org>"]
-version = "1.1.0"
+version = "1.2.0"
 edition = "2018"
 license = "CC-BY-4.0"
 
