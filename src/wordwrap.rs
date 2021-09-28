@@ -137,7 +137,7 @@ mod test {
         map.insert("width".to_owned(), Value::Number(tera::Number::from(42u64)));
         // wrapstr is missing
         assert!(
-            matches!(dbg!(ww.filter(&Value::String("Test".to_owned()), &map)).err().unwrap().kind, ErrorKind::Msg(t) if t == "Parameter wrapstr missing")
+            matches!(ww.filter(&Value::String("Test".to_owned()), &map).err().unwrap().kind, ErrorKind::Msg(t) if t == "Parameter wrapstr missing")
         );
     }
 
@@ -148,7 +148,7 @@ mod test {
         map.insert("width".to_owned(), Value::Number(tera::Number::from(42u64)));
         map.insert("wrapstr".to_owned(), Value::Null);
         assert!(
-            matches!(dbg!(ww.filter(&Value::String("Test".to_owned()), &map)).err().unwrap().kind, ErrorKind::Msg(t) if t == "Parameter wrapstr is not a string")
+            matches!(ww.filter(&Value::String("Test".to_owned()), &map).err().unwrap().kind, ErrorKind::Msg(t) if t == "Parameter wrapstr is not a string")
         );
     }
 }
