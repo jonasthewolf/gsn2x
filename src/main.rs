@@ -161,7 +161,7 @@ mod test {
         let d = gsn::validate(&mut std::io::stderr(), &nodes)?;
         assert_eq!(d.errors, 0);
         assert_eq!(d.warnings, 0);
-        crate::output("example.gsn.yaml", nodes, None, false, d, &mut output)?;
+        crate::output("example.gsn.yaml", nodes, None, None, false, d, &mut output)?;
         output.flush()?;
         output.seek(SeekFrom::Start(0))?;
         let orig = BufReader::new(std::fs::File::open("example.gsn.dot")?).lines();
@@ -177,7 +177,7 @@ mod test {
             errors: 3,
         };
         let mut output = Vec::<u8>::new();
-        let res = crate::output("", nodes, None, true, d, &mut output);
+        let res = crate::output("", nodes, None, None, true, d, &mut output);
         assert!(res.is_err());
         assert_eq!(
             format!("{:?}", res),
