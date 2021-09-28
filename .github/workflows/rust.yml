@@ -21,17 +21,19 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
-
     - name: Annotate commit with clippy warnings
       uses: actions-rs/clippy-check@v1
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
         args: --all-features
-
     - name: Security audit
       uses: actions-rs/audit-check@v1
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
+    - name: License check
+      run: |
+        cargo install cargo-lichking
+        cargo lichking check --all
 
   build_test_deploy:
     strategy:
@@ -52,19 +54,44 @@ jobs:
       if: hashFiles('target/release/gsn2x')
       run: |
         strip target/release/gsn2x
-        mv target/release/gsn2x gsn2x.${{ runner.os }}
+        cp target/release/gsn2x gsn2x.${{ runner.os }}
     - name: Strip binaries (Windows)
       if: hashFiles('target/release/gsn2x.exe')
       run: |
         strip target/release/gsn2x.exe
-        move target/release/gsn2x.exe gsn2x.${{ runner.os }}.exe
+        copy target/release/gsn2x.exe gsn2x.${{ runner.os }}.exe
+    - name: Upload artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: gsn2x
+        path: gsn2x.${{ runner.os }}
     - name: Deploy pre-release to github.com
       uses: "marvinpinto/action-automatic-releases@latest"
       with:
         repo_token: "${{ secrets.GITHUB_TOKEN }}"
         automatic_release_tag: "latest-${{ matrix.os }}"
         prerelease: true
-        title: "Latest Build for ${{ matrix.os }}"
+        title: "Latest build for ${{ matrix.os }}"
+        files: |
+          target/release/gsn2x
+          target/release/gsn2x.exe
+ 
+  release:
+    needs: build_test_deploy
+    if: ${{ startsWith(github.ref, 'refs/tags/') }}
+    steps:
+    - name: Get the version
+      id: get_version
+      run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+    - name: Download artifacts
+      uses: actions/download-artifact@v2
+    - name: Deploy release to github.com
+      uses: "marvinpinto/action-automatic-releases@latest"
+      with:
+        repo_token: "${{ secrets.GITHUB_TOKEN }}"
+        automatic_release_tag: ${{ step.get_version.outputs.VERSION }}
+        prerelease: false
+        title: ${{ github.event.head_commit.message }}
         files: |
           gsn2x.Linux
           gsn2x.Macos
