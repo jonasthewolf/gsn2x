@@ -50,12 +50,14 @@ jobs:
       run: cargo test --verbose
     - name: Strip binaries
       if: hashFiles('target/release/gsn2x')
-      run: strip target/release/gsn2x
-      run: mv target/release/gsn2x gsn2x.${{ runner.os }}
+      run: |
+        strip target/release/gsn2x
+        mv target/release/gsn2x gsn2x.${{ runner.os }}
     - name: Strip binaries (Windows)
       if: hashFiles('target/release/gsn2x.exe')
-      run: strip target/release/gsn2x.exe
-      run: move target/release/gsn2x.exe gsn2x.${{ runner.os }}.exe
+      run: |
+        strip target/release/gsn2x.exe
+        move target/release/gsn2x.exe gsn2x.${{ runner.os }}.exe
     - name: Deploy pre-release to github.com
       uses: "marvinpinto/action-automatic-releases@latest"
       with:
