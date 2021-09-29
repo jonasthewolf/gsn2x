@@ -88,9 +88,7 @@ jobs:
         prerelease: true
         title: "Latest build on commit"
         files: |
-          gsn2x-Linux
-          gsn2x-Macos
-          gsn2x-Windows.exe
+          gsn2x-*
  
   release:
     needs: build_test_deploy
@@ -114,11 +112,9 @@ jobs:
         repo_token: "${{ secrets.GITHUB_TOKEN }}"
         automatic_release_tag: ${{ steps.get_version.outputs.VERSION }}
         prerelease: false
-        title: ${{ steps.tag_data.outputs.git-tag-annotation }}
+        title: ${{ steps.get_version.outputs.VERSION }}
         files: |
-          gsn2x-Linux
-          gsn2x-Macos
-          gsn2x-Windows.exe
+          gsn2x-*
 
   coverage:
     needs: build_test_deploy
