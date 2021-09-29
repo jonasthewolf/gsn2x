@@ -48,8 +48,7 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-    - name: Checkout 
-      uses: actions/checkout@v2
+    - uses: actions/checkout@v2
     - name: Build
       run: cargo build --verbose
     - name: Release build
@@ -60,27 +59,36 @@ jobs:
       if: hashFiles('target/release/gsn2x')
       run: |
         strip target/release/gsn2x
-        cp target/release/gsn2x gsn2x.${{ runner.os }}
+        cp target/release/gsn2x gsn2x-${{ runner.os }}
     - name: Strip binaries (Windows)
       if: hashFiles('target/release/gsn2x.exe')
       run: |
         strip target/release/gsn2x.exe
-        copy target/release/gsn2x.exe gsn2x.${{ runner.os }}.exe
+        copy target/release/gsn2x.exe gsn2x-${{ runner.os }}.exe
     - name: Upload artifact
       uses: actions/upload-artifact@v2
       with:
         name: gsn2x
-        path: gsn2x.${{ runner.os }}
+        path: gsn2x-${{ runner.os }}*
+
+  pre_release:
+    needs: build_test_deploy
+    runs-on: ubuntu-latest
+    - name: Download artifacts
+      uses: actions/download-artifact@v2
+      with:
+        name: gsn2x
     - name: Deploy pre-release to github.com
       uses: "marvinpinto/action-automatic-releases@latest"
       with:
         repo_token: "${{ secrets.GITHUB_TOKEN }}"
-        automatic_release_tag: "latest-${{ matrix.os }}"
+        automatic_release_tag: "latest-build"
         prerelease: true
-        title: "Latest build for ${{ matrix.os }}"
+        title: "Latest build on commit"
         files: |
-          target/release/gsn2x
-          target/release/gsn2x.exe
+          gsn2x-Linux
+          gsn2x-Macos
+          gsn2x-Windows.exe
  
   release:
     needs: build_test_deploy
@@ -88,22 +96,27 @@ jobs:
     if: ${{ startsWith(github.ref, 'refs/tags/') }}
 
     steps:
+    - uses: actions/checkout@v1
+    - uses: ericcornelissen/git-tag-annotation-action@v1
+      id: tag_data
     - name: Get the version
       id: get_version
       run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
     - name: Download artifacts
       uses: actions/download-artifact@v2
+      with:
+        name: gsn2x
     - name: Deploy release to github.com
       uses: "marvinpinto/action-automatic-releases@latest"
       with:
         repo_token: "${{ secrets.GITHUB_TOKEN }}"
         automatic_release_tag: ${{ steps.get_version.outputs.VERSION }}
         prerelease: false
-        title: ${{ github.event.head_commit.message }}
+        title: ${{ steps.tag_data.outputs.git-tag-annotation }}
         files: |
-          gsn2x.Linux
-          gsn2x.Macos
-          gsn2x.Windows.exe
+          gsn2x-Linux
+          gsn2x-Macos
+          gsn2x-Windows.exe
 
   coverage:
     needs: build_test_deploy
