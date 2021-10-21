@@ -1,6 +1,6 @@
 {%- macro render_box(id, node) -%}
   {%- set wrap = 60 -%}
-  id="gsn_{{ id | lower | slugify | replace(from="-", to="_")}}", shape=
+  id="gsn_{{ id | lower | trim | replace(from=" ", to="_") | replace(from="-", to="_")}}", shape=
         {%- if   id is starting_with("G") %}"box", class="gsnelem gsngoal{%- if node.classes %} {{ node.classes | join(sep=" ") }}{%- endif %}"
         {%- elif id is starting_with("A") %}"oval", class="gsnelem gsnasmp{%- if node.classes %} {{ node.classes | join(sep=" ") }}{%- endif %}"
         {%- elif id is starting_with("J") %}"oval", class="gsnelem gsnjust{%- if node.classes %} {{ node.classes | join(sep=" ") }}{%- endif %}"
