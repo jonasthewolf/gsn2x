@@ -1,77 +1,77 @@
 digraph "example.gsn.yaml" {
-  graph [class="gsndiagram"]
+  graph [class="gsndiagram", ranksep="equally"]
 
   ## Elements
-  "A1" [id="gsn_a1", shape="oval", class="gsnelem,gsnasmp", label=<<B>A1</B><BR align="left"/>Argument 1>];
+  "A1" [id="gsn_a1", shape="oval", class="gsnelem gsnasmp", label=<<B>A1</B><BR align="left"/>Argument 1>];
   "A1":e -> "A1":e [headlabel=< <B>A</B> >, labeldistance=2.5, penwidth=0, arrowhead=none];
-  "A2" [id="gsn_a2", shape="oval", class="gsnelem,gsnasmp", label=<<B>A2</B><BR align="left"/>Assumption 2>];
+  "A2" [id="gsn_a2", shape="oval", class="gsnelem gsnasmp mycssclass anotherclass", label=<<B>A2</B><BR align="left"/>Assumption 2>];
   "A2":e -> "A2":e [headlabel=< <B>A</B> >, labeldistance=2.5, penwidth=0, arrowhead=none];
-  "C1" [id="gsn_c1", shape="box", class="gsnelem,gsnctxt", style="rounded", label=<<B>C1</B><BR align="left"/>Context 1>];
-  "C2" [id="gsn_c2", shape="box", class="gsnelem,gsnctxt", style="rounded", label=<<B>C2</B><BR align="left"/>Context 2<BR align="left"/>Multiline>];
-  "G1" [id="gsn_g1", shape="box", class="gsnelem,gsngoal", label=<<B>G1</B><BR align="left"/>Goal 1>];
-  "G2" [id="gsn_g2", shape="box", class="gsnelem,gsngoal", label=<<B>G2</B><BR align="left"/>Goal 2>];
-  "G3" [id="gsn_g3", shape="box", class="gsnelem,gsngoal", label=<<B>G3</B><BR align="left"/>Goal 3>];
-  "G4" [id="gsn_g4", shape="box", class="gsnelem,gsngoal", label=<<B>G4</B><BR align="left"/>Goal 4>];
-  "G5" [id="gsn_g5", shape="box", class="gsnelem,gsngoal", label=<<B>G5</B><BR align="left"/>Goal 5>];
-  "G6" [id="gsn_g6", shape="box", class="gsnelem,gsngoal", label=<<B>G6</B><BR align="left"/>Goal 6>];
-  "G7" [id="gsn_g7", shape="box", class="gsnelem,gsngoal", label=<<B>G7</B><BR align="left"/>Undeveloped Goal>];
+  "C1" [id="gsn_c1", shape="box", class="gsnelem gsnctxt", style="rounded", label=<<B>C1</B><BR align="left"/>Context 1>];
+  "C2" [id="gsn_c2", shape="box", class="gsnelem gsnctxt", style="rounded", label=<<B>C2</B><BR align="left"/>Context 2<BR align="left"/>Multiline>];
+  "G1" [id="gsn_g1", shape="box", class="gsnelem gsngoal", label=<<B>G1</B><BR align="left"/>Goal 1>];
+  "G2" [id="gsn_g2", shape="box", class="gsnelem gsngoal", label=<<B>G2</B><BR align="left"/>Goal 2>];
+  "G3" [id="gsn_g3", shape="box", class="gsnelem gsngoal", label=<<B>G3</B><BR align="left"/>Goal 3>];
+  "G4" [id="gsn_g4", shape="box", class="gsnelem gsngoal", label=<<B>G4</B><BR align="left"/>Goal 4>];
+  "G5" [id="gsn_g5", shape="box", class="gsnelem gsngoal", label=<<B>G5</B><BR align="left"/>Goal 5>];
+  "G6" [id="gsn_g6", shape="box", class="gsnelem gsngoal", label=<<B>G6</B><BR align="left"/>Goal 6>];
+  "G7" [id="gsn_g7", shape="box", class="gsnelem gsngoal", label=<<B>G7</B><BR align="left"/>Undeveloped Goal>];
   "G7":s -> "G7":s [taillabel=<<br/><b>&#9826;</b>>,color=transparent,arrowhead=none,labeldistance=0.1]
-  "J1" [id="gsn_j1", shape="oval", class="gsnelem,gsnjust", label=<<B>J1</B><BR align="left"/>Justification 1>];
+  "J1" [id="gsn_j1", shape="oval", class="gsnelem gsnjust", label=<<B>J1</B><BR align="left"/>Justification 1>];
   "J1":e -> "J1":e [headlabel=< <B>J</B> >, labeldistance=2.5, penwidth=0, arrowhead=none];
-  "J2" [id="gsn_j2", shape="oval", class="gsnelem,gsnjust", label=<<B>J2</B><BR align="left"/>Justification 2>];
+  "J2" [id="gsn_j2", shape="oval", class="gsnelem gsnjust", label=<<B>J2</B><BR align="left"/>Justification 2>];
   "J2":e -> "J2":e [headlabel=< <B>J</B> >, labeldistance=2.5, penwidth=0, arrowhead=none];
-  "S1" [id="gsn_s1", shape="parallelogram", class="gsnelem,gsnstgy", label=<<B>S1</B><BR align="left"/>Strategy 1>];
-  "S2" [id="gsn_s2", shape="parallelogram", class="gsnelem,gsnstgy", label=<<B>S2</B><BR align="left"/>Solution 2>];
-  "Sn1" [id="gsn_sn1", shape="circle", class="gsnelem,gsnsltn", URL="https://github.com/jonasthewolf/gsn2x", label=<<B>Sn1</B><BR align="left"/>Solution 1>];
-  "Sn2" [id="gsn_sn2", shape="circle", class="gsnelem,gsnsltn", label=<<B>Sn2</B><BR align="left"/>Solution 2>];
-  "Sn3" [id="gsn_sn3", shape="circle", class="gsnelem,gsnsltn", label=<<B>Sn3</B><BR align="left"/>Solution 3>];
-  "Sn4" [id="gsn_sn4", shape="circle", class="gsnelem,gsnsltn", label=<<B>Sn4</B><BR align="left"/>Solution 4>];
-  "Sn5" [id="gsn_sn5", shape="circle", class="gsnelem,gsnsltn", label=<<B>Sn5</B><BR align="left"/>Solution 5>];
+  "S1" [id="gsn_s1", shape="parallelogram", class="gsnelem gsnstgy", label=<<B>S1</B><BR align="left"/>Strategy 1>];
+  "S2" [id="gsn_s2", shape="parallelogram", class="gsnelem gsnstgy", label=<<B>S2</B><BR align="left"/>Solution 2>];
+  "Sn1" [id="gsn_sn1", shape="circle", class="gsnelem gsnsltn", URL="https://github.com/jonasthewolf/gsn2x", label=<<B>Sn1</B><BR align="left"/>Solution 1>];
+  "Sn2" [id="gsn_sn2", shape="circle", class="gsnelem gsnsltn", label=<<B>Sn2</B><BR align="left"/>Solution 2>];
+  "Sn3" [id="gsn_sn3", shape="circle", class="gsnelem gsnsltn", label=<<B>Sn3</B><BR align="left"/>Solution 3>];
+  "Sn4" [id="gsn_sn4", shape="circle", class="gsnelem gsnsltn", label=<<B>Sn4</B><BR align="left"/>Solution 4>];
+  "Sn5" [id="gsn_sn5", shape="circle", class="gsnelem gsnsltn", label=<<B>Sn5</B><BR align="left"/>Solution 5>];
 
   ## Relations
-  "G1" -> "G2" [class="gsnedge,gsnspby"];
-  "G1" -> "G3" [class="gsnedge,gsnspby"];
-  "G1" -> "S2" [class="gsnedge,gsnspby"];
-  "G2" -> "S1" [class="gsnedge,gsnspby"];
-  "G3" -> "Sn1" [class="gsnedge,gsnspby"];
+  "G1" -> "G2" [class="gsnedge gsnspby"];
+  "G1" -> "G3" [class="gsnedge gsnspby"];
+  "G1" -> "S2" [class="gsnedge gsnspby"];
+  "G2" -> "S1" [class="gsnedge gsnspby"];
+  "G3" -> "Sn1" [class="gsnedge gsnspby"];
   subgraph cluster7 {
     graph[peripheries=0];
     {
       rank = same;
-      "G3" -> "C1" [arrowhead=empty, class="gsnedge,gsninctxt"];
+      "G3" -> "C1" [arrowhead=empty, class="gsnedge gsninctxt"];
     }
   }
-  "G4" -> "Sn2" [class="gsnedge,gsnspby"];
+  "G4" -> "Sn2" [class="gsnedge gsnspby"];
   subgraph cluster8 {
     graph[peripheries=0];
     {
       rank = same;
-      "G4" -> "J2" [arrowhead=empty, class="gsnedge,gsninctxt"];
+      "G4" -> "J2" [arrowhead=empty, class="gsnedge gsninctxt"];
     }
   }
-  "G5" -> "Sn3" [class="gsnedge,gsnspby"];
-  "G5" -> "Sn4" [class="gsnedge,gsnspby"];
+  "G5" -> "Sn3" [class="gsnedge gsnspby"];
+  "G5" -> "Sn4" [class="gsnedge gsnspby"];
   subgraph cluster9 {
     graph[peripheries=0];
     {
       rank = same;
-      "G5" -> "C2" [arrowhead=empty, class="gsnedge,gsninctxt"];
-      "A2" -> "G5" [dir=back, arrowtail=empty, class="gsnedge,gsninctxt"];
+      "G5" -> "C2" [arrowhead=empty, class="gsnedge gsninctxt"];
+      "A2" -> "G5" [dir=back, arrowtail=empty, class="gsnedge gsninctxt"];
     }
   }
-  "G6" -> "Sn3" [class="gsnedge,gsnspby"];
-  "G6" -> "Sn5" [class="gsnedge,gsnspby"];
-  "S1" -> "G5" [class="gsnedge,gsnspby"];
-  "S1" -> "G6" [class="gsnedge,gsnspby"];
+  "G6" -> "Sn3" [class="gsnedge gsnspby"];
+  "G6" -> "Sn5" [class="gsnedge gsnspby"];
+  "S1" -> "G5" [class="gsnedge gsnspby"];
+  "S1" -> "G6" [class="gsnedge gsnspby"];
   subgraph cluster14 {
     graph[peripheries=0];
     {
       rank = same;
-      "S1" -> "A1" [arrowhead=empty, class="gsnedge,gsninctxt"];
-      "J1" -> "S1" [dir=back, arrowtail=empty, class="gsnedge,gsninctxt"];
+      "S1" -> "A1" [arrowhead=empty, class="gsnedge gsninctxt"];
+      "J1" -> "S1" [dir=back, arrowtail=empty, class="gsnedge gsninctxt"];
     }
   }
-  "S2" -> "G4" [class="gsnedge,gsnspby"];
-  "S2" -> "G7" [class="gsnedge,gsnspby"];
+  "S2" -> "G4" [class="gsnedge gsnspby"];
+  "S2" -> "G7" [class="gsnedge gsnspby"];
 }
 

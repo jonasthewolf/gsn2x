@@ -1,18 +1,18 @@
 {%- macro render_box(id, node) -%}
   {%- set wrap = 60 -%}
   id="gsn_{{ id | lower | slugify | replace(from="-", to="_")}}", shape=
-        {%- if   id is starting_with("G") %}"box", class="gsnelem,gsngoal"
-        {%- elif id is starting_with("A") %}"oval", class="gsnelem,gsnasmp"
-        {%- elif id is starting_with("J") %}"oval", class="gsnelem,gsnjust"
-        {%- elif id is starting_with("C") %}"box", class="gsnelem,gsnctxt"
-        {%- elif id is starting_with("Sn") %}"circle"{%- set wrap = 15 -%}, class="gsnelem,gsnsltn"
-        {%- elif id is starting_with("S") %}"parallelogram", class="gsnelem,gsnstgy"
+        {%- if   id is starting_with("G") %}"box", class="gsnelem gsngoal{%- if node.classes %} {{ node.classes | join(sep=" ") }}{%- endif %}"
+        {%- elif id is starting_with("A") %}"oval", class="gsnelem gsnasmp{%- if node.classes %} {{ node.classes | join(sep=" ") }}{%- endif %}"
+        {%- elif id is starting_with("J") %}"oval", class="gsnelem gsnjust{%- if node.classes %} {{ node.classes | join(sep=" ") }}{%- endif %}"
+        {%- elif id is starting_with("C") %}"box", class="gsnelem gsnctxt{%- if node.classes %} {{ node.classes | join(sep=" ") }}{%- endif %}"
+        {%- elif id is starting_with("Sn") %}"circle"{%- set wrap = 15 -%}, class="gsnelem gsnsltn{%- if node.classes %} {{ node.classes | join(sep=" ") }}{%- endif %}"
+        {%- elif id is starting_with("S") %}"parallelogram", class="gsnelem gsnstgy{%- if node.classes %} {{ node.classes | join(sep=" ") }}{%- endif %}"
         {%- endif %}
 
-        {%- if id is starting_with("C") %}, style="rounded"{%- endif %}{%- if node["url"] %}, URL="{{ node["url"] }}"{%- endif %}, label=<<B>{{id}}</B><BR align="left"/>{{ node.text|trim_end|wordwrap(width=wrap,wrapstr='<BR align="left"/>') }}
+        {%- if id is starting_with("C") %}, style="rounded"{%- endif %}{%- if node["url"] %}, URL="{{ node["url"] }}"{%- endif %}, label=<<B>{{id}}</B><BR align="left"/>{{ node.text|trim|wordwrap(width=wrap,wrapstr='<BR align="left"/>') }}
         {%- if layers %}
           {%- for layer in layers %}
-            {%- if node[layer] %}<BR align="left"/><I>{{ layer | upper }}</I>:{{ node[layer]|trim_end|wordwrap(width=wrap,wrapstr='<BR align="left"/>') }}{%- endif %}
+            {%- if node[layer] %}<BR align="left"/><I>{{ layer | upper }}</I>:{{ node[layer]|trim|wordwrap(width=wrap,wrapstr='<BR align="left"/>') }}{%- endif %}
           {%- endfor %}
         {%- endif %}>
         

@@ -3,7 +3,7 @@
 
 
 digraph "{{filename}}" {
-  graph [class="gsndiagram"{%- if stylesheet %}, stylesheet="{{ stylesheet }}"{%- endif %}]
+  graph [class="gsndiagram", ranksep="equally"{%- if stylesheet %}, stylesheet="{{ stylesheet }}"{%- endif %}]
 
   ## Elements
   {%- for id, node in nodes %}
@@ -22,7 +22,7 @@ digraph "{{filename}}" {
   {%- for id, node in nodes %}
       {%- if node.supportedBy is iterable %} 
         {%- for target in node["supportedBy"] %}
-  "{{id}}" -> "{{target}}" [class="gsnedge,gsnspby"];
+  "{{id}}" -> "{{target}}" [class="gsnedge gsnspby"];
         {%- endfor %} 
       {%- endif %} 
 
@@ -33,9 +33,9 @@ digraph "{{filename}}" {
       rank = same; 
       {%- for c in node.inContextOf %}
         {%- if loop.index is odd %}
-      "{{id}}" -> "{{c}}" [arrowhead=empty, class="gsnedge,gsninctxt"]; 
+      "{{id}}" -> "{{c}}" [arrowhead=empty, class="gsnedge gsninctxt"]; 
         {%- else %}
-      "{{c}}" -> "{{id}}" [dir=back, arrowtail=empty, class="gsnedge,gsninctxt"]; 
+      "{{c}}" -> "{{id}}" [dir=back, arrowtail=empty, class="gsnedge gsninctxt"]; 
         {%- endif %}
       {%- endfor %}
     }

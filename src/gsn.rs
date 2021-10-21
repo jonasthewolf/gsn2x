@@ -11,6 +11,7 @@ pub struct GsnNode {
     text: String,
     in_context_of: Option<Vec<String>>,
     supported_by: Option<Vec<String>>,
+    classes: Option<Vec<String>>,
     url: Option<String>,
     #[serde(flatten)]
     additional: MyMap<String, String>,
@@ -257,6 +258,7 @@ mod test {
                 supported_by: None,
                 url: None,
                 undeveloped: None,
+                classes: None,
                 additional: MyMap::<String, String>::new(),
             },
         );
@@ -282,6 +284,7 @@ mod test {
                 supported_by: Some(vec!["G1".to_owned()]),
                 url: None,
                 undeveloped: None,
+                classes: None,
                 additional: MyMap::<String, String>::new(),
             },
         );
@@ -307,6 +310,7 @@ mod test {
                 supported_by: Some(vec!["C1".to_owned()]),
                 url: None,
                 undeveloped: None,
+                classes: None,
                 additional: MyMap::<String, String>::new(),
             },
         );
@@ -335,6 +339,7 @@ mod test {
                 supported_by: None,
                 url: None,
                 undeveloped: Some(true),
+                classes: None,
                 additional: MyMap::<String, String>::new(),
             },
         );
@@ -363,6 +368,7 @@ mod test {
                 supported_by: None,
                 url: None,
                 undeveloped: Some(true),
+                classes: None,
                 additional: MyMap::<String, String>::new(),
             },
         );
@@ -388,6 +394,7 @@ mod test {
                 supported_by: Some(vec!["G2".to_owned()]),
                 url: None,
                 undeveloped: None,
+                classes: None,
                 additional: MyMap::<String, String>::new(),
             },
         );
@@ -413,6 +420,7 @@ mod test {
                 supported_by: Some(vec!["Sn1".to_owned()]),
                 url: None,
                 undeveloped: None,
+                classes: None,
                 additional: MyMap::<String, String>::new(),
             },
         );
@@ -424,6 +432,7 @@ mod test {
                 supported_by: None,
                 url: None,
                 undeveloped: None,
+                classes: None,
                 additional: MyMap::<String, String>::new(),
             },
         );
@@ -435,6 +444,7 @@ mod test {
                 supported_by: None,
                 url: None,
                 undeveloped: None,
+                classes: None,
                 additional: MyMap::<String, String>::new(),
             },
         );
@@ -460,6 +470,7 @@ mod test {
                 supported_by: Some(vec!["G2".to_owned(), "G2".to_owned()]),
                 url: None,
                 undeveloped: None,
+                classes: None,
                 additional: MyMap::<String, String>::new(),
             },
         );
@@ -471,6 +482,7 @@ mod test {
                 supported_by: None,
                 url: None,
                 undeveloped: Some(true),
+                classes: None,
                 additional: MyMap::<String, String>::new(),
             },
         );
@@ -496,6 +508,7 @@ mod test {
                 supported_by: None,
                 url: None,
                 undeveloped: Some(true),
+                classes: None,
                 additional: MyMap::<String, String>::new(),
             },
         );
@@ -507,6 +520,7 @@ mod test {
                 supported_by: None,
                 url: None,
                 undeveloped: None,
+                classes: None,
                 additional: MyMap::<String, String>::new(),
             },
         );
@@ -532,6 +546,7 @@ mod test {
                 supported_by: None,
                 url: None,
                 undeveloped: Some(true),
+                classes: None,
                 additional: MyMap::<String, String>::new(),
             },
         );
@@ -543,6 +558,7 @@ mod test {
                 supported_by: None,
                 url: None,
                 undeveloped: Some(true),
+                classes: None,
                 additional: MyMap::<String, String>::new(),
             },
         );
@@ -554,6 +570,7 @@ mod test {
                 supported_by: None,
                 url: None,
                 undeveloped: Some(true),
+                classes: None,
                 additional: MyMap::<String, String>::new(),
             },
         );
@@ -565,6 +582,7 @@ mod test {
                 supported_by: None,
                 url: None,
                 undeveloped: None,
+                classes: None,
                 additional: MyMap::<String, String>::new(),
             },
         );
@@ -594,6 +612,7 @@ mod test {
                 supported_by: Some(vec!["C1".to_owned(), "J1".to_owned(), "A1".to_owned()]),
                 url: None,
                 undeveloped: None,
+                classes: None,
                 additional: MyMap::<String, String>::new(),
             },
         );
@@ -605,6 +624,7 @@ mod test {
                 supported_by: None,
                 url: None,
                 undeveloped: None,
+                classes: None,
                 additional: MyMap::<String, String>::new(),
             },
         );
@@ -616,6 +636,7 @@ mod test {
                 supported_by: None,
                 url: None,
                 undeveloped: None,
+                classes: None,
                 additional: MyMap::<String, String>::new(),
             },
         );
@@ -627,6 +648,7 @@ mod test {
                 supported_by: None,
                 url: None,
                 undeveloped: None,
+                classes: None,
                 additional: MyMap::<String, String>::new(),
             },
         );
@@ -656,6 +678,7 @@ mod test {
                 supported_by: None,
                 url: None,
                 undeveloped: None,
+                classes: None,
                 additional: MyMap::<String, String>::new(),
             },
         );
@@ -667,6 +690,7 @@ mod test {
                 supported_by: None,
                 url: None,
                 undeveloped: Some(false),
+                classes: None,
                 additional: MyMap::<String, String>::new(),
             },
         );
@@ -692,6 +716,7 @@ mod test {
                 supported_by: None,
                 url: None,
                 undeveloped: None,
+                classes: None,
                 additional: MyMap::<String, String>::new(),
             },
         );
@@ -703,6 +728,7 @@ mod test {
                 supported_by: None,
                 url: None,
                 undeveloped: Some(false),
+                classes: None,
                 additional: MyMap::<String, String>::new(),
             },
         );
@@ -728,6 +754,7 @@ mod test {
                 supported_by: Some(vec!["Sn2".to_owned()]),
                 url: None,
                 undeveloped: Some(true),
+                classes: None,
                 additional: MyMap::<String, String>::new(),
             },
         );
@@ -739,6 +766,7 @@ mod test {
                 supported_by: None,
                 url: None,
                 undeveloped: None,
+                classes: None,
                 additional: MyMap::<String, String>::new(),
             },
         );
@@ -764,6 +792,7 @@ mod test {
                 supported_by: None,
                 url: None,
                 undeveloped: None,
+                classes: None,
                 additional: MyMap::<String, String>::new(),
             },
         );

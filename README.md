@@ -17,7 +17,7 @@ On Windows you can just run:
 
     gsn2x.exe <yourgsnfile.yaml> | dot -Tsvg > <yourgsnfile.svg>
 
-On other systems you can create a PNG like this:
+On other systems you can create an SVG like this:
 
     gsn2x <yourgsnfile.yaml> | dot -Tsvg > <yourgsnfile.svg>
 
@@ -104,6 +104,7 @@ Using this feature, different views on the GSN can be generated.
       layer1: This is additional information for C1.
 
 In this example, a call to `gsn2x -l layer1` will show the additional information to each element prefixed with _`LAYER1: `_.
+Of course, useing `text`, `inContextOf`, `supportedBy`, `url`, `undeveloped` or `classes` are not sensible parameters to pass for the `-l` option.
 
 It is intentional that information is only added for a view, but not hidden to ensure consistency of the GSN in all variants.
 
@@ -113,9 +114,17 @@ You can provide a custom stylesheet for SVG via the `-s` or `--stylesheet` optio
 
 Please see [Graphviz stylesheet](https://graphviz.org/docs/attrs/stylesheet/) and [Graphviz class](https://graphviz.org/docs/attrs/class/) for more details.
 
-Elements are assigned `gsnelem` class, edges are assigned `gsnedge` class.
+Every element will also be addressable by `id`. The `id` is the same as the YAML id.
+
+Elements are assigned `gsnelem` class, edges are assigned `gsnedge` class. 
 
 The complete diagram is assigned `gsndiagram` class.
 
-Every elements will also be addressable by `id`. The `id` is the same as the YAML id.
+You can assign additional classes by adding the `classes:` attribute. It must be a list of classes you want to assign. 
+
+### Example
+
+    G1:
+      text: This is a Goal
+      classes: [additionalclass1, additionalclass2]
 
