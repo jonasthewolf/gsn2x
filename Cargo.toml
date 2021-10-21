@@ -2,8 +2,8 @@
 name = "gsn2x"
 description = "Tool to create graphical representations of Goal Structuring Notations from YAML."
 authors = ["Jonas Wolf <jonas.wolf@jonaswolf.org>"]
-version = "1.3.0"
-edition = "2021"
+version = "1.3.1"
+edition = "2018"
 license = "CC-BY-4.0"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html

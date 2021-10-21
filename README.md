@@ -104,7 +104,7 @@ Using this feature, different views on the GSN can be generated.
       layer1: This is additional information for C1.
 
 In this example, a call to `gsn2x -l layer1` will show the additional information to each element prefixed with _`LAYER1: `_.
-Of course, useing `text`, `inContextOf`, `supportedBy`, `url`, `undeveloped` or `classes` are not sensible parameters to pass for the `-l` option.
+Of course, using `text`, `inContextOf`, `supportedBy`, `url`, `undeveloped` or `classes` are not sensible parameters to pass for the `-l` option.
 
 It is intentional that information is only added for a view, but not hidden to ensure consistency of the GSN in all variants.
 
