@@ -3,7 +3,7 @@
 
 
 digraph "{{filename}}" {
-  graph [class="gsndiagram", ranksep="equally"{%- if stylesheet %}, stylesheet="{{ stylesheet }}"{%- endif %}]
+  graph [class="gsndiagram", ranksep="equally", newrank="true"{%- if stylesheet %}, stylesheet="{{ stylesheet }}"{%- endif %}]
 
   ## Elements
   {%- for id, node in nodes %}
@@ -47,7 +47,7 @@ digraph "{{filename}}" {
   {% if levlen > 0 %}
   ## Ranks (Levels)
     {%- for level in levels %}
-  {rank=same; {%- for id, node in nodes %} {%- if node.level == level %} {{id}};{%- endif %}{%- endfor %}}
+  {rank=same; {%- for id, node in nodes %} {%- if node.level == level %} {{id}};{%- if node.inContextOf is iterable %}{% for ic in node.inContextOf %} {{ic}};{%- endfor %}{%- endif %}{%- endif %}{%- endfor %}}
     {%- endfor %}
   {%- endif %}
 }

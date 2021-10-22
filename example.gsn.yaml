@@ -24,6 +24,7 @@ S1:
  text: Strategy 1
  supportedBy: [G5, G6]
  inContextOf: [A1, J1]
+ level: 1
 
 G5:
  text: Goal 5
@@ -45,7 +46,6 @@ A1:
 Sn1: 
  text: Solution 1
  url: https://github.com/jonasthewolf/gsn2x
- level: 1
 
 Sn2: 
  text: Solution 2
@@ -73,7 +73,7 @@ A2:
  classes: [mycssclass, anotherclass]
 
 S2:
- text: Solution 2
+ text: Strategy 2
  supportedBy: [G4, G7]
  level: 1
 
