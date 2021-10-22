@@ -32,7 +32,15 @@ impl AddAssign for Diagnostics {
     }
 }
 
+/// 
+/// Validate all nodes
+/// 
+/// Check if key is one of the known prefixes
+/// Check if all references of node exist
+/// Check if there is more than one top-level node
+/// 
 /// Returns the number of validation warnings and errors
+/// 
 pub fn validate(output: &mut impl Write, nodes: &MyMap<String, GsnNode>) -> Result<Diagnostics> {
     let mut wnodes: HashSet<String> = nodes.keys().cloned().collect();
     let mut diag = Diagnostics::default();
@@ -83,6 +91,9 @@ pub fn validate(output: &mut impl Write, nodes: &MyMap<String, GsnNode>) -> Resu
     Ok(diag)
 }
 
+///
+/// Check if node id starts with a know prefix
+///
 fn validate_id(output: &mut impl Write, id: &str) -> Result<Diagnostics> {
     // Order is important due to Sn and S
     if !(id.starts_with("Sn")
@@ -221,6 +232,10 @@ fn validate_reference(
     Ok(diag)
 }
 
+///
+/// Gathers all different 'level' attributes from all nodes.
+/// Levels are used to create "{rank=same; x; y; z;}" statements.
+///
 pub fn get_levels(nodes: &MyMap<String, GsnNode>) -> Vec<String> {
     let mut levels = HashSet::<String>::new();
     for (_, v) in nodes.iter() {
@@ -229,6 +244,55 @@ pub fn get_levels(nodes: &MyMap<String, GsnNode>) -> Vec<String> {
         }
     }
     levels.into_iter().collect()
+}
+
+///
+/// Checks if the layers handed in via command line parameters
+/// are actually used at at least one node.
+/// Also checks if no reserved words are used, like 'level' or 'text'
+///
+pub fn check_layers(
+    output: &mut impl Write,
+    nodes: &MyMap<String, GsnNode>,
+    layers: &[&str],
+) -> Result<Diagnostics> {
+    let mut diag = Diagnostics::default();
+    let reserved_words = [
+        "text",
+        "inContextOf",
+        "supportedBy",
+        "classes",
+        "url",
+        "level",
+        "undeveloped",
+    ];
+    for l in layers {
+        if reserved_words.contains(l) {
+            diag.errors += 1;
+            writeln!(
+                output,
+                "Error: {} is a reserved attribute and cannot be used as layer.",
+                l
+            )?;
+            continue;
+        }
+        let mut found = false;
+        for (_, n) in nodes.iter() {
+            if n.additional.contains_key(l.to_owned()) {
+                found = true;
+                break;
+            }
+        }
+        if !found {
+            diag.warnings += 1;
+            writeln!(
+                output,
+                "Warning: Layer {} is not used in file. No additional output will be generated.",
+                l
+            )?;
+        }
+    }
+    Ok(diag)
 }
 
 #[cfg(test)]
@@ -264,14 +328,8 @@ mod test {
         nodes.insert(
             "C1".to_owned(),
             GsnNode {
-                text: "".to_owned(),
                 in_context_of: Some(vec!["C1".to_owned()]),
-                supported_by: None,
-                url: None,
-                undeveloped: None,
-                classes: None,
-                level: None,
-                additional: MyMap::<String, String>::new(),
+                ..Default::default()
             },
         );
         let d = validate(&mut output, &nodes)?;
@@ -291,14 +349,8 @@ mod test {
         nodes.insert(
             "G1".to_owned(),
             GsnNode {
-                text: "".to_owned(),
-                in_context_of: None,
                 supported_by: Some(vec!["G1".to_owned()]),
-                url: None,
-                undeveloped: None,
-                classes: None,
-                level: None,
-                additional: MyMap::<String, String>::new(),
+                ..Default::default()
             },
         );
         let d = validate(&mut output, &nodes)?;
@@ -318,14 +370,8 @@ mod test {
         nodes.insert(
             "C1".to_owned(),
             GsnNode {
-                text: "".to_owned(),
-                in_context_of: None,
                 supported_by: Some(vec!["C1".to_owned()]),
-                url: None,
-                undeveloped: None,
-                classes: None,
-                level: None,
-                additional: MyMap::<String, String>::new(),
+                ..Default::default()
             },
         );
         let d = validate(&mut output, &nodes)?;
@@ -348,14 +394,9 @@ mod test {
         nodes.insert(
             "G1".to_owned(),
             GsnNode {
-                text: "".to_owned(),
                 in_context_of: Some(vec!["G1".to_owned()]),
-                supported_by: None,
-                url: None,
                 undeveloped: Some(true),
-                classes: None,
-                level: None,
-                additional: MyMap::<String, String>::new(),
+                ..Default::default()
             },
         );
         let d = validate(&mut output, &nodes)?;
@@ -378,14 +419,9 @@ mod test {
         nodes.insert(
             "G1".to_owned(),
             GsnNode {
-                text: "".to_owned(),
                 in_context_of: Some(vec!["C1".to_owned()]),
-                supported_by: None,
-                url: None,
                 undeveloped: Some(true),
-                classes: None,
-                level: None,
-                additional: MyMap::<String, String>::new(),
+                ..Default::default()
             },
         );
         let d = validate(&mut output, &nodes)?;
@@ -405,14 +441,8 @@ mod test {
         nodes.insert(
             "G1".to_owned(),
             GsnNode {
-                text: "".to_owned(),
-                in_context_of: None,
                 supported_by: Some(vec!["G2".to_owned()]),
-                url: None,
-                undeveloped: None,
-                classes: None,
-                level: None,
-                additional: MyMap::<String, String>::new(),
+                ..Default::default()
             },
         );
         let d = validate(&mut output, &nodes)?;
@@ -432,42 +462,13 @@ mod test {
         nodes.insert(
             "G1".to_owned(),
             GsnNode {
-                text: "".to_owned(),
                 in_context_of: Some(vec!["C1".to_owned(), "C1".to_owned()]),
                 supported_by: Some(vec!["Sn1".to_owned()]),
-                url: None,
-                undeveloped: None,
-                classes: None,
-                level: None,
-                additional: MyMap::<String, String>::new(),
+                ..Default::default()
             },
         );
-        nodes.insert(
-            "Sn1".to_owned(),
-            GsnNode {
-                text: "".to_owned(),
-                in_context_of: None,
-                supported_by: None,
-                url: None,
-                undeveloped: None,
-                classes: None,
-                level: None,
-                additional: MyMap::<String, String>::new(),
-            },
-        );
-        nodes.insert(
-            "C1".to_owned(),
-            GsnNode {
-                text: "".to_owned(),
-                in_context_of: None,
-                supported_by: None,
-                url: None,
-                undeveloped: None,
-                classes: None,
-                level: None,
-                additional: MyMap::<String, String>::new(),
-            },
-        );
+        nodes.insert("Sn1".to_owned(), GsnNode::default());
+        nodes.insert("C1".to_owned(), GsnNode::default());
         let d = validate(&mut output, &nodes)?;
         assert_eq!(
             std::str::from_utf8(&output).unwrap(),
@@ -485,27 +486,15 @@ mod test {
         nodes.insert(
             "G1".to_owned(),
             GsnNode {
-                text: "".to_owned(),
-                in_context_of: None,
                 supported_by: Some(vec!["G2".to_owned(), "G2".to_owned()]),
-                url: None,
-                undeveloped: None,
-                classes: None,
-                level: None,
-                additional: MyMap::<String, String>::new(),
+                ..Default::default()
             },
         );
         nodes.insert(
             "G2".to_owned(),
             GsnNode {
-                text: "".to_owned(),
-                in_context_of: None,
-                supported_by: None,
-                url: None,
                 undeveloped: Some(true),
-                classes: None,
-                level: None,
-                additional: MyMap::<String, String>::new(),
+                ..Default::default()
             },
         );
         let d = validate(&mut output, &nodes)?;
@@ -525,29 +514,11 @@ mod test {
         nodes.insert(
             "G1".to_owned(),
             GsnNode {
-                text: "".to_owned(),
-                in_context_of: None,
-                supported_by: None,
-                url: None,
                 undeveloped: Some(true),
-                classes: None,
-                level: None,
-                additional: MyMap::<String, String>::new(),
+                ..Default::default()
             },
         );
-        nodes.insert(
-            "C1".to_owned(),
-            GsnNode {
-                text: "".to_owned(),
-                in_context_of: None,
-                supported_by: None,
-                url: None,
-                undeveloped: None,
-                classes: None,
-                level: None,
-                additional: MyMap::<String, String>::new(),
-            },
-        );
+        nodes.insert("C1".to_owned(), GsnNode::default());
         let d = validate(&mut output, &nodes)?;
         assert_eq!(
             std::str::from_utf8(&output).unwrap(),
@@ -565,55 +536,26 @@ mod test {
         nodes.insert(
             "G1".to_owned(),
             GsnNode {
-                text: "".to_owned(),
                 in_context_of: Some(vec!["G2".to_owned(), "S1".to_owned(), "Sn1".to_owned()]),
-                supported_by: None,
-                url: None,
                 undeveloped: Some(true),
-                classes: None,
-                level: None,
-                additional: MyMap::<String, String>::new(),
+                ..Default::default()
             },
         );
         nodes.insert(
             "G2".to_owned(),
             GsnNode {
-                text: "".to_owned(),
-                in_context_of: None,
-                supported_by: None,
-                url: None,
                 undeveloped: Some(true),
-                classes: None,
-                level: None,
-                additional: MyMap::<String, String>::new(),
+                ..Default::default()
             },
         );
         nodes.insert(
             "S1".to_owned(),
             GsnNode {
-                text: "".to_owned(),
-                in_context_of: None,
-                supported_by: None,
-                url: None,
                 undeveloped: Some(true),
-                classes: None,
-                level: None,
-                additional: MyMap::<String, String>::new(),
+                ..Default::default()
             },
         );
-        nodes.insert(
-            "Sn1".to_owned(),
-            GsnNode {
-                text: "".to_owned(),
-                in_context_of: None,
-                supported_by: None,
-                url: None,
-                undeveloped: None,
-                classes: None,
-                level: None,
-                additional: MyMap::<String, String>::new(),
-            },
-        );
+        nodes.insert("Sn1".to_owned(), GsnNode::default());
         let d = validate(&mut output, &nodes)?;
         assert_eq!(
             std::str::from_utf8(&output).unwrap(),
@@ -635,55 +577,13 @@ mod test {
         nodes.insert(
             "G1".to_owned(),
             GsnNode {
-                text: "".to_owned(),
-                in_context_of: None,
                 supported_by: Some(vec!["C1".to_owned(), "J1".to_owned(), "A1".to_owned()]),
-                url: None,
-                undeveloped: None,
-                classes: None,
-                level: None,
-                additional: MyMap::<String, String>::new(),
+                ..Default::default()
             },
         );
-        nodes.insert(
-            "C1".to_owned(),
-            GsnNode {
-                text: "".to_owned(),
-                in_context_of: None,
-                supported_by: None,
-                url: None,
-                undeveloped: None,
-                classes: None,
-                level: None,
-                additional: MyMap::<String, String>::new(),
-            },
-        );
-        nodes.insert(
-            "J1".to_owned(),
-            GsnNode {
-                text: "".to_owned(),
-                in_context_of: None,
-                supported_by: None,
-                url: None,
-                undeveloped: None,
-                classes: None,
-                level: None,
-                additional: MyMap::<String, String>::new(),
-            },
-        );
-        nodes.insert(
-            "A1".to_owned(),
-            GsnNode {
-                text: "".to_owned(),
-                in_context_of: None,
-                supported_by: None,
-                url: None,
-                undeveloped: None,
-                classes: None,
-                level: None,
-                additional: MyMap::<String, String>::new(),
-            },
-        );
+        nodes.insert("C1".to_owned(), GsnNode::default());
+        nodes.insert("J1".to_owned(), GsnNode::default());
+        nodes.insert("A1".to_owned(), GsnNode::default());
         let d = validate(&mut output, &nodes)?;
         assert_eq!(
             std::str::from_utf8(&output).unwrap(),
@@ -702,30 +602,12 @@ mod test {
     fn undeveloped_goal() -> Result<()> {
         let mut output = Vec::<u8>::new();
         let mut nodes = MyMap::<String, GsnNode>::new();
-        nodes.insert(
-            "G1".to_owned(),
-            GsnNode {
-                text: "".to_owned(),
-                in_context_of: None,
-                supported_by: None,
-                url: None,
-                undeveloped: None,
-                classes: None,
-                level: None,
-                additional: MyMap::<String, String>::new(),
-            },
-        );
+        nodes.insert("G1".to_owned(), GsnNode::default());
         nodes.insert(
             "G2".to_owned(),
             GsnNode {
-                text: "".to_owned(),
-                in_context_of: None,
-                supported_by: None,
-                url: None,
                 undeveloped: Some(false),
-                classes: None,
-                level: None,
-                additional: MyMap::<String, String>::new(),
+                ..Default::default()
             },
         );
         let d = validate(&mut output, &nodes)?;
@@ -742,30 +624,12 @@ mod test {
     fn undeveloped_strategy() -> Result<()> {
         let mut output = Vec::<u8>::new();
         let mut nodes = MyMap::<String, GsnNode>::new();
-        nodes.insert(
-            "S1".to_owned(),
-            GsnNode {
-                text: "".to_owned(),
-                in_context_of: None,
-                supported_by: None,
-                url: None,
-                undeveloped: None,
-                classes: None,
-                level: None,
-                additional: MyMap::<String, String>::new(),
-            },
-        );
+        nodes.insert("S1".to_owned(), GsnNode::default());
         nodes.insert(
             "S2".to_owned(),
             GsnNode {
-                text: "".to_owned(),
-                in_context_of: None,
-                supported_by: None,
-                url: None,
                 undeveloped: Some(false),
-                classes: None,
-                level: None,
-                additional: MyMap::<String, String>::new(),
+                ..Default::default()
             },
         );
         let d = validate(&mut output, &nodes)?;
@@ -785,29 +649,12 @@ mod test {
         nodes.insert(
             "G1".to_owned(),
             GsnNode {
-                text: "".to_owned(),
-                in_context_of: None,
                 supported_by: Some(vec!["Sn2".to_owned()]),
-                url: None,
                 undeveloped: Some(true),
-                classes: None,
-                level: None,
-                additional: MyMap::<String, String>::new(),
+                ..Default::default()
             },
         );
-        nodes.insert(
-            "Sn2".to_owned(),
-            GsnNode {
-                text: "".to_owned(),
-                in_context_of: None,
-                supported_by: None,
-                url: None,
-                undeveloped: None,
-                classes: None,
-                level: None,
-                additional: MyMap::<String, String>::new(),
-            },
-        );
+        nodes.insert("Sn2".to_owned(), GsnNode::default());
         let d = validate(&mut output, &nodes)?;
         assert_eq!(
             std::str::from_utf8(&output).unwrap(),
@@ -822,19 +669,7 @@ mod test {
     fn wrong_root() -> Result<()> {
         let mut output = Vec::<u8>::new();
         let mut nodes = MyMap::<String, GsnNode>::new();
-        nodes.insert(
-            "Sn1".to_owned(),
-            GsnNode {
-                text: "".to_owned(),
-                in_context_of: None,
-                supported_by: None,
-                url: None,
-                undeveloped: None,
-                classes: None,
-                level: None,
-                additional: MyMap::<String, String>::new(),
-            },
-        );
+        nodes.insert("Sn1".to_owned(), GsnNode::default());
         let d = validate(&mut output, &nodes)?;
         assert_eq!(
             std::str::from_utf8(&output).unwrap(),
@@ -843,5 +678,122 @@ mod test {
         assert_eq!(d.errors, 1);
         assert_eq!(d.warnings, 0);
         Ok(())
+    }
+
+    #[test]
+    fn layer_exists() -> Result<()> {
+        let mut output = Vec::<u8>::new();
+        let mut nodes = MyMap::<String, GsnNode>::new();
+
+        let mut admap = MyMap::new();
+        admap.insert("layer1".to_owned(), "dontcare".to_owned());
+        nodes.insert(
+            "Sn1".to_owned(),
+            GsnNode {
+                additional: admap,
+                ..Default::default()
+            },
+        );
+        let d = check_layers(&mut output, &nodes, &["layer1"])?;
+        assert!(output.is_empty());
+        assert_eq!(d.errors, 0);
+        assert_eq!(d.warnings, 0);
+        Ok(())
+    }
+
+    #[test]
+    fn layer_does_not_exist() -> Result<()> {
+        let mut output = Vec::<u8>::new();
+        let mut nodes = MyMap::<String, GsnNode>::new();
+
+        nodes.insert("Sn1".to_owned(), GsnNode::default());
+        let d = check_layers(&mut output, &nodes, &["layer1"])?;
+        assert_eq!(
+            std::str::from_utf8(&output).unwrap(),
+            "Warning: Layer layer1 is not used in file. No additional output will be generated.\n"
+        );
+        assert_eq!(d.errors, 0);
+        assert_eq!(d.warnings, 1);
+        Ok(())
+    }
+
+    #[test]
+    fn only_one_layer_exists() -> Result<()> {
+        let mut output = Vec::<u8>::new();
+        let mut nodes = MyMap::<String, GsnNode>::new();
+
+        let mut admap = MyMap::new();
+        admap.insert("layer1".to_owned(), "dontcare".to_owned());
+        nodes.insert(
+            "Sn1".to_owned(),
+            GsnNode {
+                additional: admap,
+                ..Default::default()
+            },
+        );
+        let d = check_layers(&mut output, &nodes, &["layer1", "layer2"])?;
+        assert_eq!(
+            std::str::from_utf8(&output).unwrap(),
+            "Warning: Layer layer2 is not used in file. No additional output will be generated.\n"
+        );
+        assert_eq!(d.errors, 0);
+        assert_eq!(d.warnings, 1);
+        Ok(())
+    }
+
+    #[test]
+    fn layer_reserved() -> Result<()> {
+        let mut output = Vec::<u8>::new();
+        let mut nodes = MyMap::<String, GsnNode>::new();
+
+        let mut admap = MyMap::new();
+        admap.insert("layer1".to_owned(), "dontcare".to_owned());
+        nodes.insert(
+            "Sn1".to_owned(),
+            GsnNode {
+                additional: admap,
+                ..Default::default()
+            },
+        );
+        let d = check_layers(&mut output, &nodes, &["inContextOf", "layer2"])?;
+        assert_eq!(
+            std::str::from_utf8(&output).unwrap(),
+            concat!("Error: inContextOf is a reserved attribute and cannot be used as layer.\n",
+            "Warning: Layer layer2 is not used in file. No additional output will be generated.\n")
+        );
+        assert_eq!(d.errors, 1);
+        assert_eq!(d.warnings, 1);
+        Ok(())
+    }
+
+    #[test]
+    fn no_level_exists() {
+        let mut nodes = MyMap::<String, GsnNode>::new();
+        nodes.insert("Sn1".to_owned(), Default::default());
+        let output = get_levels(&nodes);
+        assert!(output.is_empty());
+    }
+
+    #[test]
+    fn two_levels_exist() {
+        let mut nodes = MyMap::<String, GsnNode>::new();
+        nodes.insert(
+            "Sn1".to_owned(),
+            GsnNode {
+                level: Some("x1".to_owned()),
+                ..Default::default()
+            },
+        );
+        nodes.insert(
+            "G1".to_owned(),
+            GsnNode {
+                level: Some("x2".to_owned()),
+                ..Default::default()
+            },
+        );
+        let output = get_levels(&nodes);
+        assert_eq!(output.len(), 2);
+        assert!(output.contains(&"x1".to_owned()));
+        assert!(output.contains(&"x2".to_owned()));
     }
 }

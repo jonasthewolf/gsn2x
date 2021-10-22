@@ -22,6 +22,9 @@ impl Filter for WordWrap {
     }
 }
 
+///
+/// Wraps `s` at each `width`-th character adding `wrapstr` as a kind of line ending.
+/// 
 fn wordwrap(s: &str, width: u64, wrapstr: &str) -> Result<Value> {
     let mut out = Vec::<String>::new();
     for line in s.lines() {

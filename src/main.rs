@@ -22,14 +22,12 @@ fn main() -> Result<()> {
         .arg(
             Arg::with_name("INPUT")
                 .help("Sets the input file to use")
-                .required(true)
-                .index(1),
+                .required(true),
         )
         .arg(
             Arg::with_name("OUTPUT")
                 .help("Sets the optional output file to use")
-                .required(false)
-                .index(2),
+                .required(false),
         )
         .arg(
             Arg::with_name("VALONLY")
@@ -68,13 +66,19 @@ fn main() -> Result<()> {
         .with_context(|| format!("Failed to parse YAML from file {}", input))?;
 
     // Validate
-    let d = gsn::validate(&mut std::io::stderr(), &nodes)?;
+    let mut d = gsn::validate(&mut std::io::stderr(), &nodes)?;
+    let layers = matches
+        .values_of("LAYERS")
+        .map(|x| x.collect::<Vec<&str>>());
+    if let Some(lays) = &layers {
+        d += gsn::check_layers(&mut std::io::stderr(), &nodes, lays)?;
+    }
 
     // Output
     output(
         input,
         nodes,
-        matches.values_of("LAYERS").map(|x| x.collect()),
+        layers,
         matches.value_of("STYLESHEET"),
         matches.is_present("VALONLY"),
         d,
