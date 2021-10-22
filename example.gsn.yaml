@@ -45,6 +45,7 @@ A1:
 Sn1: 
  text: Solution 1
  url: https://github.com/jonasthewolf/gsn2x
+ level: 1
 
 Sn2: 
  text: Solution 2
@@ -74,6 +75,7 @@ A2:
 S2:
  text: Solution 2
  supportedBy: [G4, G7]
+ level: 1
 
 G7:
  text: Undeveloped Goal

@@ -42,5 +42,13 @@ digraph "{{filename}}" {
   }
     {%- endif %} 
   {%- endfor %}
+
+  {% set levlen = levels | length %}
+  {% if levlen > 0 %}
+  ## Ranks (Levels)
+    {%- for level in levels %}
+  {rank=same; {%- for id, node in nodes %} {%- if node.level == level %} {{id}};{%- endif %}{%- endfor %}}
+    {%- endfor %}
+  {%- endif %}
 }
 

@@ -12,6 +12,8 @@ use gsn::GsnNode;
 use wordwrap::WordWrap;
 use yaml_fix::MyMap;
 
+use crate::gsn::get_levels;
+
 fn main() -> Result<()> {
     let matches = App::new(crate_name!())
         .version(crate_version!())
@@ -128,6 +130,7 @@ fn render_result(
     context.insert("filename", input);
     context.insert("nodes", &nodes);
     context.insert("layers", &layers);
+    context.insert("levels", &get_levels(&nodes));
     context.insert("stylesheet", &stylesheet);
     let mut tera = Tera::default();
     tera.register_filter("wordwrap", WordWrap);

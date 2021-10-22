@@ -104,7 +104,7 @@ Using this feature, different views on the GSN can be generated.
       layer1: This is additional information for C1.
 
 In this example, a call to `gsn2x -l layer1` will show the additional information to each element prefixed with _`LAYER1: `_.
-Of course, using `text`, `inContextOf`, `supportedBy`, `url`, `undeveloped` or `classes` are not sensible parameters to pass for the `-l` option.
+Of course, using `text`, `inContextOf`, `supportedBy`, `url`, `undeveloped`, `level` or `classes` are not sensible parameters to pass for the `-l` option.
 
 It is intentional that information is only added for a view, but not hidden to ensure consistency of the GSN in all variants.
 
@@ -128,3 +128,10 @@ You can assign additional classes by adding the `classes:` attribute. It must be
       text: This is a Goal
       classes: [additionalclass1, additionalclass2]
 
+## Logical levels for elements
+
+To influence the rendered image, you can add an identifier to a GSN element with the `level` attribute. All elements with the same identifier for `level` will now have the same rank for Graphviz. 
+
+This is especially useful, if e.g., two goals or strategies are on the same logical level, but have a different "depth" in the argumentation (i.e. a different number of goals or strategies in their path to the root goal).
+
+See the [example](example.gsn.yaml) for usage. The strategies S1 and S2 are on the same level.

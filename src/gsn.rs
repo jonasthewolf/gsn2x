@@ -13,6 +13,7 @@ pub struct GsnNode {
     supported_by: Option<Vec<String>>,
     classes: Option<Vec<String>>,
     url: Option<String>,
+    level: Option<String>,
     #[serde(flatten)]
     additional: MyMap<String, String>,
     undeveloped: Option<bool>,
@@ -220,6 +221,16 @@ fn validate_reference(
     Ok(diag)
 }
 
+pub fn get_levels(nodes: &MyMap<String, GsnNode>) -> Vec<String> {
+    let mut levels = HashSet::<String>::new();
+    for (_, v) in nodes.iter() {
+        if let Some(l) = &v.level {
+            levels.insert(l.trim().to_owned());
+        }
+    }
+    levels.into_iter().collect()
+}
+
 #[cfg(test)]
 mod test {
     use super::*;
@@ -259,6 +270,7 @@ mod test {
                 url: None,
                 undeveloped: None,
                 classes: None,
+                level: None,
                 additional: MyMap::<String, String>::new(),
             },
         );
@@ -285,6 +297,7 @@ mod test {
                 url: None,
                 undeveloped: None,
                 classes: None,
+                level: None,
                 additional: MyMap::<String, String>::new(),
             },
         );
@@ -311,6 +324,7 @@ mod test {
                 url: None,
                 undeveloped: None,
                 classes: None,
+                level: None,
                 additional: MyMap::<String, String>::new(),
             },
         );
@@ -340,6 +354,7 @@ mod test {
                 url: None,
                 undeveloped: Some(true),
                 classes: None,
+                level: None,
                 additional: MyMap::<String, String>::new(),
             },
         );
@@ -369,6 +384,7 @@ mod test {
                 url: None,
                 undeveloped: Some(true),
                 classes: None,
+                level: None,
                 additional: MyMap::<String, String>::new(),
             },
         );
@@ -395,6 +411,7 @@ mod test {
                 url: None,
                 undeveloped: None,
                 classes: None,
+                level: None,
                 additional: MyMap::<String, String>::new(),
             },
         );
@@ -421,6 +438,7 @@ mod test {
                 url: None,
                 undeveloped: None,
                 classes: None,
+                level: None,
                 additional: MyMap::<String, String>::new(),
             },
         );
@@ -433,6 +451,7 @@ mod test {
                 url: None,
                 undeveloped: None,
                 classes: None,
+                level: None,
                 additional: MyMap::<String, String>::new(),
             },
         );
@@ -445,6 +464,7 @@ mod test {
                 url: None,
                 undeveloped: None,
                 classes: None,
+                level: None,
                 additional: MyMap::<String, String>::new(),
             },
         );
@@ -471,6 +491,7 @@ mod test {
                 url: None,
                 undeveloped: None,
                 classes: None,
+                level: None,
                 additional: MyMap::<String, String>::new(),
             },
         );
@@ -483,6 +504,7 @@ mod test {
                 url: None,
                 undeveloped: Some(true),
                 classes: None,
+                level: None,
                 additional: MyMap::<String, String>::new(),
             },
         );
@@ -509,6 +531,7 @@ mod test {
                 url: None,
                 undeveloped: Some(true),
                 classes: None,
+                level: None,
                 additional: MyMap::<String, String>::new(),
             },
         );
@@ -521,6 +544,7 @@ mod test {
                 url: None,
                 undeveloped: None,
                 classes: None,
+                level: None,
                 additional: MyMap::<String, String>::new(),
             },
         );
@@ -547,6 +571,7 @@ mod test {
                 url: None,
                 undeveloped: Some(true),
                 classes: None,
+                level: None,
                 additional: MyMap::<String, String>::new(),
             },
         );
@@ -559,6 +584,7 @@ mod test {
                 url: None,
                 undeveloped: Some(true),
                 classes: None,
+                level: None,
                 additional: MyMap::<String, String>::new(),
             },
         );
@@ -571,6 +597,7 @@ mod test {
                 url: None,
                 undeveloped: Some(true),
                 classes: None,
+                level: None,
                 additional: MyMap::<String, String>::new(),
             },
         );
@@ -583,6 +610,7 @@ mod test {
                 url: None,
                 undeveloped: None,
                 classes: None,
+                level: None,
                 additional: MyMap::<String, String>::new(),
             },
         );
@@ -613,6 +641,7 @@ mod test {
                 url: None,
                 undeveloped: None,
                 classes: None,
+                level: None,
                 additional: MyMap::<String, String>::new(),
             },
         );
@@ -625,6 +654,7 @@ mod test {
                 url: None,
                 undeveloped: None,
                 classes: None,
+                level: None,
                 additional: MyMap::<String, String>::new(),
             },
         );
@@ -637,6 +667,7 @@ mod test {
                 url: None,
                 undeveloped: None,
                 classes: None,
+                level: None,
                 additional: MyMap::<String, String>::new(),
             },
         );
@@ -649,6 +680,7 @@ mod test {
                 url: None,
                 undeveloped: None,
                 classes: None,
+                level: None,
                 additional: MyMap::<String, String>::new(),
             },
         );
@@ -679,6 +711,7 @@ mod test {
                 url: None,
                 undeveloped: None,
                 classes: None,
+                level: None,
                 additional: MyMap::<String, String>::new(),
             },
         );
@@ -691,6 +724,7 @@ mod test {
                 url: None,
                 undeveloped: Some(false),
                 classes: None,
+                level: None,
                 additional: MyMap::<String, String>::new(),
             },
         );
@@ -717,6 +751,7 @@ mod test {
                 url: None,
                 undeveloped: None,
                 classes: None,
+                level: None,
                 additional: MyMap::<String, String>::new(),
             },
         );
@@ -729,6 +764,7 @@ mod test {
                 url: None,
                 undeveloped: Some(false),
                 classes: None,
+                level: None,
                 additional: MyMap::<String, String>::new(),
             },
         );
@@ -755,6 +791,7 @@ mod test {
                 url: None,
                 undeveloped: Some(true),
                 classes: None,
+                level: None,
                 additional: MyMap::<String, String>::new(),
             },
         );
@@ -767,6 +804,7 @@ mod test {
                 url: None,
                 undeveloped: None,
                 classes: None,
+                level: None,
                 additional: MyMap::<String, String>::new(),
             },
         );
@@ -793,6 +831,7 @@ mod test {
                 url: None,
                 undeveloped: None,
                 classes: None,
+                level: None,
                 additional: MyMap::<String, String>::new(),
             },
         );

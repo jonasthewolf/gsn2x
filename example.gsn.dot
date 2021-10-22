@@ -73,5 +73,10 @@ digraph "example.gsn.yaml" {
   }
   "S2" -> "G4" [class="gsnedge gsnspby"];
   "S2" -> "G7" [class="gsnedge gsnspby"];
+
+  
+  
+  ## Ranks (Levels)
+  {rank=same; S2; Sn1;}
 }
 
