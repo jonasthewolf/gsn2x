@@ -132,10 +132,10 @@ jobs:
       continue-on-error: true
       run: |
          mkdir coverage
-         cargo +nightly install cargo-llvm-cov
-         cargo +nightly llvm-cov --no-report --tests
-         cargo +nightly llvm-cov run --no-report -- example.gsn.yaml
-         cargo +nightly llvm-cov --no-run --lcov --output-path=coverage/coverage.lcov
+         cargo install cargo-llvm-cov
+         cargo llvm-cov --no-report --tests
+         cargo llvm-cov run --no-report -- example.gsn.yaml -e=test.md -l=layer1 -s=test.css test.dot
+         cargo llvm-cov --no-run --lcov --output-path=coverage/coverage.lcov
     - name: Upload to codecov
       uses: codecov/codecov-action@v2
       with:

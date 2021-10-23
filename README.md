@@ -63,7 +63,7 @@ These elements should marked with `undeveloped: true`, otherwise validation will
       text: This is a Context
 
 
-Please see example.gsn.yaml for an example of the used syntax.
+Please see [example.gsn.yaml] for an example of the used syntax.
 
 ## Validation checks
 
@@ -135,3 +135,12 @@ To influence the rendered image, you can add an identifier to a GSN element with
 This is especially useful, if e.g., two goals or strategies are on the same logical level, but have a different "depth" in the argumentation (i.e. a different number of goals or strategies in their path to the root goal).
 
 See the [example](example.gsn.yaml) for usage. The strategies S1 and S2 are on the same level.
+
+## List of evidences
+
+With the `-e` option you can create an additional file that lists all the evidences in the input file.
+
+The format can be used in Markdown and reStructuredText files.
+
+
+

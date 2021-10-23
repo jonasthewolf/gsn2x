@@ -5,7 +5,7 @@ use std::collections::HashSet;
 use std::io::Write;
 use std::ops::{AddAssign, Deref};
 
-#[derive(Debug, Default, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Default, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct GsnNode {
     text: String,
@@ -19,7 +19,19 @@ pub struct GsnNode {
     undeveloped: Option<bool>,
 }
 
-#[derive(Debug, Default)]
+impl GsnNode {
+    pub(crate) fn get_text(&self) -> &str {
+        &self.text
+    }
+    pub(crate) fn get_url(&self) -> &Option<String> {
+        &self.url
+    }
+    pub(crate) fn get_layer(&self, layer: &str) -> Option<&String> {
+        self.additional.get(&layer.to_owned())
+    }
+}
+
+#[derive(Default)]
 pub struct Diagnostics {
     pub warnings: usize,
     pub errors: usize,
@@ -32,15 +44,15 @@ impl AddAssign for Diagnostics {
     }
 }
 
-/// 
+///
 /// Validate all nodes
-/// 
+///
 /// Check if key is one of the known prefixes
 /// Check if all references of node exist
 /// Check if there is more than one top-level node
-/// 
+///
 /// Returns the number of validation warnings and errors
-/// 
+///
 pub fn validate(output: &mut impl Write, nodes: &MyMap<String, GsnNode>) -> Result<Diagnostics> {
     let mut wnodes: HashSet<String> = nodes.keys().cloned().collect();
     let mut diag = Diagnostics::default();
@@ -120,6 +132,14 @@ fn validate_id(output: &mut impl Write, id: &str) -> Result<Diagnostics> {
     }
 }
 
+///
+/// Check all references.
+///
+/// - Check if node does not reference itself.
+/// - Check if all references exist.
+/// - Check if a list of references only contains unique values.
+/// - Check if a reference in the correct list i.e., inContextOf or supportedBy
+///
 fn check_references(
     mut output: &mut impl Write,
     nodes: &MyMap<String, GsnNode>,
@@ -179,6 +199,10 @@ fn check_references(
     Ok(diag)
 }
 
+///
+///
+///
+///
 fn validate_reference(
     output: &mut impl Write,
     nodes: &MyMap<String, GsnNode>,
