@@ -7,7 +7,8 @@
   {%- set_global tmp_c = "" -%}
   {%- for k,v in node -%} 
     {%- if k != "text" and k != "classes" and k != "inContextOf" and k != "supportedBy" and k != "url" and k != "level" and k != "undeveloped" -%}
-      {%- set_global tmp_c = tmp_c ~ " gsnlay_" ~ k -%}
+      {%- set key = k | lower | trim -%}
+      {%- set_global tmp_c = tmp_c ~ " gsnlay_" ~ key -%}
     {%- endif -%}
   {%- endfor -%}
   {%- if class | length > 0 -%} 
