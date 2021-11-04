@@ -16,5 +16,5 @@ serde = { version = "1.0", features = ["derive"] }
 serde_yaml = "0.8"
 
 [dependencies.tera]
-version = "1.13"
+version = "1.15"
 default-features = false

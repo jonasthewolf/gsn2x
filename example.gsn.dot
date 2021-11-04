@@ -23,8 +23,8 @@ digraph "example.gsn.yaml" {
   "S1" [id="gsn_s1", shape="parallelogram", class="gsnelem gsnstgy", label=<<B>S1</B><BR align="left"/>Strategy 1>];
   "S2" [id="gsn_s2", shape="parallelogram", class="gsnelem gsnstgy", label=<<B>S2</B><BR align="left"/>Strategy 2>];
   "Sn1" [id="gsn_sn1", shape="circle", class="gsnelem gsnsltn", URL="https://github.com/jonasthewolf/gsn2x", label=<<B>Sn1</B><BR align="left"/>Solution 1>];
-  "Sn2" [id="gsn_sn2", shape="circle", class="gsnelem gsnsltn", label=<<B>Sn2</B><BR align="left"/>Solution 2>];
-  "Sn3" [id="gsn_sn3", shape="circle", class="gsnelem gsnsltn", label=<<B>Sn3</B><BR align="left"/>Solution 3>];
+  "Sn2" [id="gsn_sn2", shape="circle", class="gsnelem gsnsltn gsnlay_layer1 gsnlay_layer2", label=<<B>Sn2</B><BR align="left"/>Solution 2>];
+  "Sn3" [id="gsn_sn3", shape="circle", class="gsnelem gsnsltn gsnlay_layer2", label=<<B>Sn3</B><BR align="left"/>Solution 3>];
   "Sn4" [id="gsn_sn4", shape="circle", class="gsnelem gsnsltn", label=<<B>Sn4</B><BR align="left"/>Solution 4>];
   "Sn5" [id="gsn_sn5", shape="circle", class="gsnelem gsnsltn", label=<<B>Sn5</B><BR align="left"/>Solution 5>];
 

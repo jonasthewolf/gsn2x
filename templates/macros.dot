@@ -1,12 +1,28 @@
 {%- macro render_box(id, node) -%}
   {%- set wrap = 60 -%}
+  {%- set class = "" -%}
+  {%- if node.classes -%} 
+    {%- set class = node.classes | join(sep=" ") -%}
+  {%- endif -%}
+  {%- set_global tmp_c = "" -%}
+  {%- for k,v in node -%} 
+    {%- if k != "text" and k != "classes" and k != "inContextOf" and k != "supportedBy" and k != "url" and k != "level" and k != "undeveloped" -%}
+      {%- set_global tmp_c = tmp_c ~ " gsnlay_" ~ k -%}
+    {%- endif -%}
+  {%- endfor -%}
+  {%- if class | length > 0 -%} 
+      {%- set class = " " ~ class -%}
+  {%- endif -%}
+  {%- if tmp_c | length > 0 -%} 
+      {%- set class = class ~ tmp_c -%}
+  {%- endif -%}
   id="gsn_{{ id | lower | trim | replace(from=" ", to="_") | replace(from="-", to="_")}}", shape=
-        {%- if   id is starting_with("G") %}"box", class="gsnelem gsngoal{%- if node.classes %} {{ node.classes | join(sep=" ") }}{%- endif %}"
-        {%- elif id is starting_with("A") %}"oval", class="gsnelem gsnasmp{%- if node.classes %} {{ node.classes | join(sep=" ") }}{%- endif %}"
-        {%- elif id is starting_with("J") %}"oval", class="gsnelem gsnjust{%- if node.classes %} {{ node.classes | join(sep=" ") }}{%- endif %}"
-        {%- elif id is starting_with("C") %}"box", class="gsnelem gsnctxt{%- if node.classes %} {{ node.classes | join(sep=" ") }}{%- endif %}"
-        {%- elif id is starting_with("Sn") %}"circle"{%- set wrap = 15 -%}, class="gsnelem gsnsltn{%- if node.classes %} {{ node.classes | join(sep=" ") }}{%- endif %}"
-        {%- elif id is starting_with("S") %}"parallelogram", class="gsnelem gsnstgy{%- if node.classes %} {{ node.classes | join(sep=" ") }}{%- endif %}"
+        {%- if   id is starting_with("G") %}"box", class="gsnelem gsngoal{{ class }}"
+        {%- elif id is starting_with("A") %}"oval", class="gsnelem gsnasmp{{ class }}"
+        {%- elif id is starting_with("J") %}"oval", class="gsnelem gsnjust{{ class }}"
+        {%- elif id is starting_with("C") %}"box", class="gsnelem gsnctxt{{ class }}"
+        {%- elif id is starting_with("Sn") %}"circle"{%- set wrap = 15 -%}, class="gsnelem gsnsltn{{ class }}"
+        {%- elif id is starting_with("S") %}"parallelogram", class="gsnelem gsnstgy{{ class }}"
         {%- endif %}
 
         {%- if id is starting_with("C") %}, style="rounded"{%- endif %}{%- if node["url"] %}, URL="{{ node["url"] }}"{%- endif %}, label=<<B>{{id}}</B><BR align="left"/>{{ node.text|trim|wordwrap(width=wrap,wrapstr='<BR align="left"/>') }}
