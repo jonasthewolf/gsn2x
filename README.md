@@ -148,10 +148,10 @@ The format can be used in Markdown and reStructuredText files.
 
 This tool is based on the [Goal Structuring Notation Community Standard Version 3](https://scsc.uk/r141C:1).
 
-| Standard                    | Support     |
-|-----------------------------|-------------|
-|Core GSN                     | full        |
-|Argument Pattern Extension   | not planned |
-|Modular Extension            | see #6      |
-|Confidence Argument Extension| not planned |
-|Dialectic Extension          | not planned |
+| Standard                    | Support                 |
+|-----------------------------|-------------------------|
+|Core GSN                     | :heavy_check_mark: full |
+|Argument Pattern Extension   | :x: not planned         |
+|Modular Extension            | :construction: see #6   |
+|Confidence Argument Extension| :x: not planned         |
+|Dialectic Extension          | :x: not planned         |
