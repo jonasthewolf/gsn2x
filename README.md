@@ -136,6 +136,8 @@ This is especially useful, if e.g., two goals or strategies are on the same logi
 
 See the [example](example.gsn.yaml) for usage. The strategies S1 and S2 are on the same level.
 
+It is recommended to use `level` only for goals, since related contexts, justifications and assumptions are automatically put on the same level, i.e. the same rank in Graphviz.
+
 ## List of evidences
 
 With the `-e` option you can create an additional file that lists all the evidences in the input file.
