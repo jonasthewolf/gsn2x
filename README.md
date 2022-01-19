@@ -148,7 +148,7 @@ The format can be used in Markdown and reStructuredText files.
 
 This tool is based on the [Goal Structuring Notation Community Standard Version 3](https://scsc.uk/r141C:1).
 
-| Standard                    | Support                 |
+| Standard                    | Support                 |
 |-----------------------------|-------------------------|
 |Core GSN                     | :heavy_check_mark: full |
 |Argument Pattern Extension   | :x: not planned         |
