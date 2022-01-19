@@ -1,4 +1,4 @@
-digraph "example.gsn.yaml" {
+digraph "examples/example.gsn.yaml" {
   graph [class="gsndiagram", ranksep="equally", newrank="true"]
 
   ## Elements

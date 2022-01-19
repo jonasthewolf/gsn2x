@@ -88,8 +88,13 @@ fn main() -> Result<()> {
     }
 
     // Output
+    let input_filename = std::path::Path::new(input)
+        .file_name()
+        .with_context(|| format!("{} is not a file.", input))?
+        .to_str()
+        .unwrap();
     output(
-        input,
+        input_filename,
         &nodes,
         &layers,
         matches.value_of("STYLESHEET"),
@@ -107,7 +112,7 @@ fn main() -> Result<()> {
     if let Some(output) = matches.value_of("EVIDENCES") {
         let mut output_file = File::create(output)
             .with_context(|| format!("Failed to open output file {}", output))?;
-        output_evidences(input, &nodes, &layers, &mut output_file)?;
+        output_evidences(input_filename, &nodes, &layers, &mut output_file)?;
     }
     Ok(())
 }
@@ -249,14 +254,14 @@ mod test {
             .create(true)
             .truncate(true)
             .read(true)
-            .open("example.gsn.test.dot")?;
-        let mut reader = BufReader::new(File::open("example.gsn.yaml")?);
+            .open("examples/example.gsn.test.dot")?;
+        let mut reader = BufReader::new(File::open("examples/example.gsn.yaml")?);
         let nodes = crate::read_input(&mut reader)?;
         let d = gsn::validate(&mut std::io::stderr(), &nodes)?;
         assert_eq!(d.errors, 0);
         assert_eq!(d.warnings, 0);
         crate::output(
-            "example.gsn.yaml",
+            "examples/example.gsn.yaml",
             &nodes,
             &None,
             None,
@@ -266,7 +271,7 @@ mod test {
         )?;
         output.flush()?;
         output.seek(SeekFrom::Start(0))?;
-        let orig = BufReader::new(std::fs::File::open("example.gsn.dot")?).lines();
+        let orig = BufReader::new(std::fs::File::open("examples/example.gsn.dot")?).lines();
         let test = BufReader::new(&output).lines();
         assert!(orig.map(|x| x.unwrap()).eq(test.map(|x| x.unwrap())));
         Ok(())
@@ -279,18 +284,18 @@ mod test {
             .create(true)
             .truncate(true)
             .read(true)
-            .open("example.gsn.test.md")?;
-        let mut reader = BufReader::new(File::open("example.gsn.yaml")?);
+            .open("examples/example.gsn.test.md")?;
+        let mut reader = BufReader::new(File::open("examples/example.gsn.yaml")?);
         let nodes = crate::read_input(&mut reader)?;
         crate::output_evidences(
-            "example.gsn.yaml",
+            "examples/example.gsn.yaml",
             &nodes,
             &Some(vec!["layer1"]),
             &mut output,
         )?;
         output.flush()?;
         output.seek(SeekFrom::Start(0))?;
-        let orig = BufReader::new(std::fs::File::open("example.gsn.md")?).lines();
+        let orig = BufReader::new(std::fs::File::open("examples/example.gsn.md")?).lines();
         let test = BufReader::new(&output).lines();
         assert!(orig.map(|x| x.unwrap()).eq(test.map(|x| x.unwrap())));
         Ok(())

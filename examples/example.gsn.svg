@@ -7,7 +7,7 @@
 <svg width="995pt" height="533pt"
  viewBox="0.00 0.00 995.00 533.45" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 <g id="graph0" class="graph gsndiagram" transform="scale(1 1) rotate(0) translate(4 529.45)">
-<title>example.gsn.yaml</title>
+<title>examples/example.gsn.yaml</title>
 <polygon fill="white" stroke="transparent" points="-4,4 -4,-529.45 991,-529.45 991,4 -4,4"/>
 <g id="clust1" class="cluster gsndiagram">
 <title>cluster7</title>

@@ -1,5 +1,5 @@
 
-List of evidences in example.gsn.yaml
+List of evidences in examples/example.gsn.yaml
 
 1. Sn1: Solution 1
    https://github.com/jonasthewolf/gsn2x

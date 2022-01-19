@@ -4,7 +4,7 @@
 
 This little program converts [Goal Structuring Notation](https://scsc.uk/gsn) in a YAML format to the DOT format of [Graphviz](https://graphviz.org). From there it can be rendered to different graphic formats.
 
-![Example](example.gsn.svg "Example")
+![Example](examples/example.gsn.svg "Example")
 
 Graphviz is required to create an image from the output of this tool.
 
