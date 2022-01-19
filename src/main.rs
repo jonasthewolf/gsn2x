@@ -24,48 +24,51 @@ fn main() -> Result<()> {
         .author(crate_authors!())
         .about(crate_description!())
         .arg(
-            Arg::with_name("INPUT")
-                .help("Sets the input file to use")
+            Arg::new("INPUT")
+                .help("Sets the input file(s) to use.")
+                .multiple_occurrences(true)
                 .required(true),
         )
         .arg(
-            Arg::with_name("OUTPUT")
-                .help("Sets the optional output file to use")
+            Arg::new("OUTPUT")
+                .help("Sets the optional output file to use.")
+                .short('o')
+                .long("output")
                 .required(false),
         )
         .arg(
-            Arg::with_name("VALONLY")
+            Arg::new("VALONLY")
                 .help("Only check the input file, but do not output the result.")
-                .short("c")
+                .short('c')
                 .long("check")
                 .required(false),
         )
         .arg(
-            Arg::with_name("LAYERS")
+            Arg::new("LAYERS")
                 .help("Output additional layers.")
-                .short("l")
+                .short('l')
                 .long("layers")
                 .takes_value(true)
-                .multiple(true)
+                .multiple_occurrences(true)
                 .use_delimiter(true)
                 .required(false),
         )
         .arg(
-            Arg::with_name("STYLESHEET")
+            Arg::new("STYLESHEET")
                 .help("Sets a stylesheet that is used by Graphviz in SVG output.")
-                .short("s")
+                .short('s')
                 .long("stylesheet")
                 .takes_value(true)
-                .multiple(false)
+                .multiple_occurrences(false)
                 .required(false),
         )
         .arg(
-            Arg::with_name("EVIDENCES")
+            Arg::new("EVIDENCES")
                 .help("Additionally output list of all evidences in given file.")
-                .short("e")
+                .short('e')
                 .long("evicdenes")
                 .takes_value(true)
-                .multiple(false)
+                .multiple_occurrences(false)
                 .required(false),
         )
         .get_matches();
