@@ -4,10 +4,12 @@ use std::fs::File;
 use std::io::{BufReader, Read, Write};
 use tera::Tera;
 
+mod diagnostics;
 mod gsn;
 mod wordwrap;
 mod yaml_fix;
 
+use diagnostics::{Diagnostics};
 use gsn::GsnNode;
 use wordwrap::WordWrap;
 use yaml_fix::MyMap;
@@ -73,49 +75,56 @@ fn main() -> Result<()> {
         )
         .get_matches();
 
+    let mut diags = Diagnostics::default();
     // Read input
-    let input = matches.value_of("INPUT").unwrap();
-    let mut reader = BufReader::new(
-        File::open(&input).with_context(|| format!("Failed to open file {}", input))?,
-    );
-    let nodes = read_input(&mut reader)
-        .with_context(|| format!("Failed to parse YAML from file {}", input))?;
-
-    // Validate
-    let mut d = gsn::validate(&mut std::io::stderr(), &nodes)?;
-    let layers = matches
+    let inputs = matches.values_of("INPUT").unwrap();
+    let mut nodes = MyMap::<String, GsnNode>::new();
+    for input in inputs {
+        let mut reader = BufReader::new(
+            File::open(&input).with_context(|| format!("Failed to open file {}", input))?,
+        );
+        let mut n = read_input(&mut reader)
+            .with_context(|| format!("Failed to parse YAML from file {}", input))?;
+        // Duplicates are automatically rejected
+        // TODO Check error message
+        nodes.append(&mut n);
+        // Validate
+        gsn::validate_module(&mut diags, input, &nodes);
+        let layers = matches
         .values_of("LAYERS")
         .map(|x| x.collect::<Vec<&str>>());
-    if let Some(lays) = &layers {
-        d += gsn::check_layers(&mut std::io::stderr(), &nodes, lays)?;
-    }
+        if let Some(lays) = &layers {
+            gsn::check_layers(&mut diags, input, &nodes, lays);
+        }
 
-    // Output
-    let input_filename = std::path::Path::new(input)
-        .file_name()
-        .with_context(|| format!("{} is not a file.", input))?
-        .to_str()
-        .unwrap();
-    output(
-        input_filename,
-        &nodes,
-        &layers,
-        matches.value_of("STYLESHEET"),
-        matches.is_present("VALONLY"),
-        d,
-        &mut match matches.value_of("OUTPUT") {
-            Some(output) => Box::new(
-                File::create(output)
-                    .with_context(|| format!("Failed to open output file {}", output))?,
-            ) as Box<dyn std::io::Write>,
-            None => Box::new(std::io::stdout()) as Box<dyn std::io::Write>,
-        },
-    )?;
+        // Output
+        let input_filename = std::path::Path::new(input)
+            .file_name()
+            .with_context(|| format!("{} is not a file.", input))?
+            .to_str()
+            .unwrap();
+        output(
+            &diags,
+            input_filename,
+            &nodes,
+            &layers,
+            matches.value_of("STYLESHEET"),
+            matches.is_present("VALONLY"),
+            &mut match matches.value_of("OUTPUT") {
+                Some(output) => Box::new(
+                    File::create(output)
+                        .with_context(|| format!("Failed to open output file {}", output))?,
+                ) as Box<dyn std::io::Write>,
+                None => Box::new(std::io::stdout()) as Box<dyn std::io::Write>,
+            },
+        )?;
 
-    if let Some(output) = matches.value_of("EVIDENCES") {
-        let mut output_file = File::create(output)
-            .with_context(|| format!("Failed to open output file {}", output))?;
-        output_evidences(input_filename, &nodes, &layers, &mut output_file)?;
+        if let Some(output) = matches.value_of("EVIDENCES") {
+            let mut output_file = File::create(output)
+                .with_context(|| format!("Failed to open output file {}", output))?;
+            output_evidences(input_filename, &nodes, &layers, &mut output_file)?;
+        }
+
     }
     Ok(())
 }
@@ -133,27 +142,30 @@ fn read_input(input: &mut impl Read) -> Result<MyMap<String, GsnNode>, anyhow::E
 /// Output summary of warnings and errors.
 ///
 fn output(
+    diags: &Diagnostics,
     input: &str,
     nodes: &MyMap<String, GsnNode>,
     layers: &Option<Vec<&str>>,
     stylesheet: Option<&str>,
     validonly: bool,
-    d: gsn::Diagnostics,
     output: &mut impl Write,
 ) -> Result<()> {
     if !validonly {
         render_result(input, nodes, layers, stylesheet, output)?;
     }
-    if d.errors == 0 {
-        if d.warnings > 0 {
-            eprintln!("Warning: {} warnings detected.", d.warnings);
+    for msg in &diags.messages {
+        eprintln!("{}", msg);
+    }
+    if diags.errors == 0 {
+        if diags.warnings > 0 {
+            eprintln!("Warning: {} warnings detected.", diags.warnings);
         }
         Ok(())
     } else {
         Err(anyhow!(
             "{} errors and {} warnings detected.",
-            d.errors,
-            d.warnings
+            diags.errors,
+            diags.warnings
         ))
     }
 }
@@ -243,7 +255,7 @@ fn output_evidences(
 
 #[cfg(test)]
 mod test {
-    use crate::gsn::Diagnostics;
+    use crate::diagnostics::Diagnostics;
     use crate::*;
     use std::fs::OpenOptions;
     use std::io::BufRead;
@@ -252,6 +264,7 @@ mod test {
 
     #[test]
     fn example_back_to_back() -> Result<(), Box<dyn std::error::Error>> {
+        let mut d = Diagnostics::default();
         let mut output = OpenOptions::new()
             .write(true)
             .create(true)
@@ -260,16 +273,16 @@ mod test {
             .open("examples/example.gsn.test.dot")?;
         let mut reader = BufReader::new(File::open("examples/example.gsn.yaml")?);
         let nodes = crate::read_input(&mut reader)?;
-        let d = gsn::validate(&mut std::io::stderr(), &nodes)?;
+        gsn::validate_module(&mut d, "examples/example.gsn.yaml", &nodes);
         assert_eq!(d.errors, 0);
         assert_eq!(d.warnings, 0);
         crate::output(
+            &d,
             "examples/example.gsn.yaml",
             &nodes,
             &None,
             None,
             false,
-            d,
             &mut output,
         )?;
         output.flush()?;
@@ -310,9 +323,10 @@ mod test {
         let d = Diagnostics {
             warnings: 2,
             errors: 3,
+            ..Default::default()
         };
         let mut output = Vec::<u8>::new();
-        let res = crate::output("", &nodes, &None, None, true, d, &mut output);
+        let res = crate::output(&d, "", &nodes, &None, None, true, &mut output);
         assert!(res.is_err());
         assert_eq!(
             format!("{:?}", res),

@@ -1,9 +1,8 @@
+use crate::diagnostics::{DiagType, Diagnostics};
 use crate::yaml_fix::MyMap;
-use anyhow::Result;
 use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
-use std::io::Write;
-use std::ops::{AddAssign, Deref};
+use std::ops::Deref;
 
 #[derive(Debug, Default, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -31,19 +30,6 @@ impl GsnNode {
     }
 }
 
-#[derive(Default)]
-pub struct Diagnostics {
-    pub warnings: usize,
-    pub errors: usize,
-}
-
-impl AddAssign for Diagnostics {
-    fn add_assign(&mut self, rhs: Diagnostics) {
-        self.warnings += rhs.warnings;
-        self.errors += rhs.errors;
-    }
-}
-
 ///
 /// Validate all nodes
 ///
@@ -53,14 +39,13 @@ impl AddAssign for Diagnostics {
 ///
 /// Returns the number of validation warnings and errors
 ///
-pub fn validate(output: &mut impl Write, nodes: &MyMap<String, GsnNode>) -> Result<Diagnostics> {
+pub fn validate_module(diag: &mut Diagnostics, module: &str, nodes: &MyMap<String, GsnNode>) {
     let mut wnodes: HashSet<String> = nodes.keys().cloned().collect();
-    let mut diag = Diagnostics::default();
     for (key, node) in nodes.deref() {
         // Validate if key is one of the known prefixes
-        diag += validate_id(output, key)?;
+        validate_id(diag, module, key);
         // Validate if all references of node exist
-        diag += validate_reference(output, nodes, key, node)?;
+        validate_reference(diag, module, nodes, key, node);
         // Remove all keys if they are referenced; used to see if there is more than one top level node
         if let Some(context) = node.in_context_of.as_ref() {
             for cnode in context {
@@ -77,36 +62,36 @@ pub fn validate(output: &mut impl Write, nodes: &MyMap<String, GsnNode>) -> Resu
         x if x > 1 => {
             let mut wn = wnodes.iter().cloned().collect::<Vec<String>>();
             wn.sort();
-            writeln!(
-                output,
-                "Error: There is more than one unreferenced element: {}.",
-                wn.join(", ")
-            )?;
-            diag.errors += 1;
+            diag.add_error(
+                module,
+                format!(
+                    "There is more than one unreferenced element: {}.",
+                    wn.join(", ")
+                ),
+            );
         }
         x if x == 1 => {
             let rootn = wnodes.iter().next().unwrap();
             if !rootn.starts_with('G') {
-                writeln!(
-                    output,
-                    "Error: The root element should be a goal, but {} was found.",
-                    rootn
-                )?;
-                diag.errors += 1;
+                diag.add_error(
+                    module,
+                    format!(
+                        "The root element should be a goal, but {} was found.",
+                        rootn
+                    ),
+                );
             }
         }
         _ => {
             // Ignore empty document.
         }
     }
-
-    Ok(diag)
 }
 
 ///
 /// Check if node id starts with a know prefix
 ///
-fn validate_id(output: &mut impl Write, id: &str) -> Result<Diagnostics> {
+fn validate_id(diag: &mut Diagnostics, module: &str, id: &str) {
     // Order is important due to Sn and S
     if !(id.starts_with("Sn")
         || id.starts_with('G')
@@ -115,20 +100,14 @@ fn validate_id(output: &mut impl Write, id: &str) -> Result<Diagnostics> {
         || id.starts_with('S')
         || id.starts_with('C'))
     {
-        writeln!(
-            output,
-            "Error: Elememt {} is of unknown type. Please see README for supported types",
-            id
-        )?;
-        Ok(Diagnostics {
-            warnings: 0,
-            errors: 1,
-        })
-    } else {
-        Ok(Diagnostics {
-            warnings: 0,
-            errors: 0,
-        })
+        diag.add_msg(
+            DiagType::Error,
+            module,
+            format!(
+                "Elememt {} is of unknown type. Please see README for supported types",
+                id
+            ),
+        );
     }
 }
 
@@ -141,62 +120,55 @@ fn validate_id(output: &mut impl Write, id: &str) -> Result<Diagnostics> {
 /// - Check if a reference in the correct list i.e., inContextOf or supportedBy
 ///
 fn check_references(
-    mut output: &mut impl Write,
+    diag: &mut Diagnostics,
+    module: &str,
     nodes: &MyMap<String, GsnNode>,
     node: &str,
     refs: &[String],
     diag_str: &str,
     valid_refs: &[&str],
-) -> Result<Diagnostics> {
-    let mut diag = Diagnostics::default();
+) {
     let mut set = HashSet::with_capacity(refs.len());
     let wrong_refs: Vec<&String> = refs
         .iter()
         .filter(|&n| {
             let isself = n == node;
             if isself {
-                writeln!(
-                    &mut output,
-                    "Error: Element {} references itself in {}.",
-                    node, diag_str
-                )
-                .unwrap();
-                diag.errors += 1;
+                diag.add_error(
+                    module,
+                    format!("Element {} references itself in {}.", node, diag_str),
+                );
             }
             let doubled = !set.insert(n);
             if doubled {
-                writeln!(
-                    &mut output,
-                    "Warning: Element {} has duplicate entry {} in {}.",
-                    node, n, diag_str
-                )
-                .unwrap();
-                diag.warnings += 1;
+                diag.add_warning(
+                    module,
+                    format!(
+                        "Element {} has duplicate entry {} in {}.",
+                        node, n, diag_str
+                    ),
+                );
             }
             let wellformed = valid_refs.iter().any(|&r| n.starts_with(r));
             if !wellformed {
-                writeln!(
-                    &mut output,
-                    "Error: Element {} has invalid type of reference {} in {}.",
-                    node, n, diag_str
-                )
-                .unwrap();
-                diag.errors += 1;
+                diag.add_error(
+                    module,
+                    format!(
+                        "Element {} has invalid type of reference {} in {}.",
+                        node, n, diag_str
+                    ),
+                );
             }
             !isself && !doubled && wellformed
         })
         .filter(|&n| !nodes.contains_key(n))
         .collect();
     for wref in wrong_refs {
-        writeln!(
-            &mut output,
-            "Error: Element {} has unresolved {}: {}",
-            node, diag_str, wref
-        )
-        .unwrap();
-        diag.errors += 1;
+        diag.add_error(
+            module,
+            format!("Element {} has unresolved {}: {}", node, diag_str, wref),
+        );
     }
-    Ok(diag)
 }
 
 ///
@@ -204,19 +176,19 @@ fn check_references(
 ///
 ///
 fn validate_reference(
-    output: &mut impl Write,
+    diag: &mut Diagnostics,
+    module: &str,
     nodes: &MyMap<String, GsnNode>,
     key: &str,
     node: &GsnNode,
-) -> Result<Diagnostics> {
-    let mut diag = Diagnostics::default();
+) {
     if let Some(context) = node.in_context_of.as_ref() {
         let mut valid_refs = vec![];
         // Only goals and strategies can have contexts, assumptions and goals
         if key.starts_with('S') || key.starts_with('G') {
             valid_refs.append(&mut vec!["J", "A", "C"]);
         }
-        diag += check_references(output, nodes, key, context, "context", &valid_refs)?;
+        check_references(diag, module, nodes, key, context, "context", &valid_refs);
     }
     if let Some(support) = node.supported_by.as_ref() {
         let mut valid_refs = vec![];
@@ -224,36 +196,27 @@ fn validate_reference(
         if key.starts_with('S') || key.starts_with('G') {
             valid_refs.append(&mut vec!["G", "Sn", "S"]);
         }
-        diag += check_references(
-            output,
+        check_references(
+            diag,
+            module,
             nodes,
             key,
             support,
             "supported by element",
             &valid_refs,
-        )?;
+        );
         if Some(true) == node.undeveloped {
-            writeln!(
-                output,
-                "Error: Undeveloped element {} has supporting arguments.",
-                key
-            )?;
-            diag += Diagnostics {
-                errors: 1,
-                warnings: 0,
-            };
+            diag.add_error(
+                module,
+                format!("Undeveloped element {} has supporting arguments.", key),
+            );
         }
     } else if (key.starts_with('S') && !key.starts_with("Sn") || key.starts_with('G'))
         && (Some(false) == node.undeveloped || node.undeveloped.is_none())
     {
         // No "supported by" entries, but Strategy and Goal => undeveloped
-        writeln!(output, "Warning: Element {} is undeveloped.", key)?;
-        diag += Diagnostics {
-            errors: 0,
-            warnings: 1,
-        };
+        diag.add_warning(module, format!("Element {} is undeveloped.", key));
     }
-    Ok(diag)
 }
 
 ///
@@ -276,11 +239,11 @@ pub fn get_levels(nodes: &MyMap<String, GsnNode>) -> Vec<String> {
 /// Also checks if no reserved words are used, like 'level' or 'text'
 ///
 pub fn check_layers(
-    output: &mut impl Write,
+    diag: &mut Diagnostics,
+    module: &str,
     nodes: &MyMap<String, GsnNode>,
     layers: &[&str],
-) -> Result<Diagnostics> {
-    let mut diag = Diagnostics::default();
+) {
     let reserved_words = [
         "text",
         "inContextOf",
@@ -292,12 +255,10 @@ pub fn check_layers(
     ];
     for l in layers {
         if reserved_words.contains(l) {
-            diag.errors += 1;
-            writeln!(
-                output,
-                "Error: {} is a reserved attribute and cannot be used as layer.",
-                l
-            )?;
+            diag.add_error(
+                module,
+                format!("{} is a reserved attribute and cannot be used as layer.", l),
+            );
             continue;
         }
         let mut found = false;
@@ -308,46 +269,47 @@ pub fn check_layers(
             }
         }
         if !found {
-            diag.warnings += 1;
-            writeln!(
-                output,
-                "Warning: Layer {} is not used in file. No additional output will be generated.",
-                l
-            )?;
+            diag.add_warning(
+                module,
+                format!(
+                    "Layer {} is not used in file. No additional output will be generated.",
+                    l
+                ),
+            );
         }
     }
-    Ok(diag)
 }
 
 #[cfg(test)]
 mod test {
     use super::*;
     #[test]
-    fn unknown_id() -> Result<()> {
-        let mut output = Vec::<u8>::new();
-        let d = validate_id(&mut output, &"X1".to_owned())?;
+    fn unknown_id() {
+        let mut d = Diagnostics::default();
+        validate_id(&mut d, "module1", &"X1".to_owned());
+        assert_eq!(d.messages.len(), 1);
+        assert_eq!(d.messages[0].module, "module1");
+        assert_eq!(d.messages[0].diag_type, DiagType::Error);
         assert_eq!(
-            std::str::from_utf8(&output).unwrap(),
-            "Error: Elememt X1 is of unknown type. Please see README for supported types\n"
+            d.messages[0].msg,
+            "Elememt X1 is of unknown type. Please see README for supported types"
         );
         assert_eq!(d.errors, 1);
         assert_eq!(d.warnings, 0);
-        Ok(())
     }
 
     #[test]
-    fn known_id() -> Result<()> {
-        let mut output = Vec::<u8>::new();
-        let d = validate_id(&mut output, &"Sn1".to_owned())?;
-        assert_eq!(std::str::from_utf8(&output).unwrap(), "");
+    fn known_id() {
+        let mut d = Diagnostics::default();
+        validate_id(&mut d, "module1", &"Sn1".to_owned());
+        assert_eq!(d.messages.len(), 0);
         assert_eq!(d.errors, 0);
         assert_eq!(d.warnings, 0);
-        Ok(())
     }
 
     #[test]
-    fn self_ref_context() -> Result<()> {
-        let mut output = Vec::<u8>::new();
+    fn self_ref_context() {
+        let mut d = Diagnostics::default();
         let mut nodes = MyMap::<String, GsnNode>::new();
         nodes.insert(
             "C1".to_owned(),
@@ -356,19 +318,27 @@ mod test {
                 ..Default::default()
             },
         );
-        let d = validate(&mut output, &nodes)?;
+        validate_module(&mut d, "module1", &nodes);
+        assert_eq!(d.messages.len(), 2);
+        assert_eq!(d.messages[0].module, "module1");
+        assert_eq!(d.messages[0].diag_type, DiagType::Error);
         assert_eq!(
-            std::str::from_utf8(&output).unwrap(),
-            "Error: Element C1 references itself in context.\nError: Element C1 has invalid type of reference C1 in context.\n"
+            d.messages[0].msg,
+            "Element C1 references itself in context."
+        );
+        assert_eq!(d.messages[1].module, "module1");
+        assert_eq!(d.messages[1].diag_type, DiagType::Error);
+        assert_eq!(
+            d.messages[1].msg,
+            "Element C1 has invalid type of reference C1 in context."
         );
         assert_eq!(d.errors, 2);
         assert_eq!(d.warnings, 0);
-        Ok(())
     }
 
     #[test]
-    fn self_ref_support() -> Result<()> {
-        let mut output = Vec::<u8>::new();
+    fn self_ref_support() {
+        let mut d = Diagnostics::default();
         let mut nodes = MyMap::<String, GsnNode>::new();
         nodes.insert(
             "G1".to_owned(),
@@ -377,19 +347,21 @@ mod test {
                 ..Default::default()
             },
         );
-        let d = validate(&mut output, &nodes)?;
+        validate_module(&mut d, "module1", &nodes);
+        assert_eq!(d.messages.len(), 1);
+        assert_eq!(d.messages[0].module, "module1");
+        assert_eq!(d.messages[0].diag_type, DiagType::Error);
         assert_eq!(
-            std::str::from_utf8(&output).unwrap(),
-            "Error: Element G1 references itself in supported by element.\n"
+            d.messages[0].msg,
+            "Element G1 references itself in supported by element."
         );
         assert_eq!(d.errors, 1);
         assert_eq!(d.warnings, 0);
-        Ok(())
     }
 
     #[test]
-    fn self_ref_wrong_context() -> Result<()> {
-        let mut output = Vec::<u8>::new();
+    fn self_ref_wrong_context() {
+        let mut d = Diagnostics::default();
         let mut nodes = MyMap::<String, GsnNode>::new();
         nodes.insert(
             "C1".to_owned(),
@@ -398,22 +370,27 @@ mod test {
                 ..Default::default()
             },
         );
-        let d = validate(&mut output, &nodes)?;
+        validate_module(&mut d, "module1", &nodes);
+        assert_eq!(d.messages.len(), 2);
+        assert_eq!(d.messages[0].module, "module1");
+        assert_eq!(d.messages[0].diag_type, DiagType::Error);
         assert_eq!(
-            std::str::from_utf8(&output).unwrap(),
-            concat!(
-                "Error: Element C1 references itself in supported by element.\n",
-                "Error: Element C1 has invalid type of reference C1 in supported by element.\n"
-            )
+            d.messages[0].msg,
+            "Element C1 references itself in supported by element."
+        );
+        assert_eq!(d.messages[1].module, "module1");
+        assert_eq!(d.messages[1].diag_type, DiagType::Error);
+        assert_eq!(
+            d.messages[1].msg,
+            "Element C1 has invalid type of reference C1 in supported by element."
         );
         assert_eq!(d.errors, 2);
         assert_eq!(d.warnings, 0);
-        Ok(())
     }
 
     #[test]
-    fn self_ref_wrong_support() -> Result<()> {
-        let mut output = Vec::<u8>::new();
+    fn self_ref_wrong_support() {
+        let mut d = Diagnostics::default();
         let mut nodes = MyMap::<String, GsnNode>::new();
         nodes.insert(
             "G1".to_owned(),
@@ -423,22 +400,27 @@ mod test {
                 ..Default::default()
             },
         );
-        let d = validate(&mut output, &nodes)?;
+        validate_module(&mut d, "module1", &nodes);
+        assert_eq!(d.messages.len(), 2);
+        assert_eq!(d.messages[0].module, "module1");
+        assert_eq!(d.messages[0].diag_type, DiagType::Error);
         assert_eq!(
-            std::str::from_utf8(&output).unwrap(),
-            concat!(
-                "Error: Element G1 references itself in context.\n",
-                "Error: Element G1 has invalid type of reference G1 in context.\n"
-            )
+            d.messages[0].msg,
+            "Element G1 references itself in context."
+        );
+        assert_eq!(d.messages[1].module, "module1");
+        assert_eq!(d.messages[1].diag_type, DiagType::Error);
+        assert_eq!(
+            d.messages[1].msg,
+            "Element G1 has invalid type of reference G1 in context."
         );
         assert_eq!(d.errors, 2);
         assert_eq!(d.warnings, 0);
-        Ok(())
     }
 
     #[test]
-    fn unresolved_ref_context() -> Result<()> {
-        let mut output = Vec::<u8>::new();
+    fn unresolved_ref_context() {
+        let mut d = Diagnostics::default();
         let mut nodes = MyMap::<String, GsnNode>::new();
         nodes.insert(
             "G1".to_owned(),
@@ -448,19 +430,18 @@ mod test {
                 ..Default::default()
             },
         );
-        let d = validate(&mut output, &nodes)?;
-        assert_eq!(
-            std::str::from_utf8(&output).unwrap(),
-            "Error: Element G1 has unresolved context: C1\n"
-        );
+        validate_module(&mut d, "module1", &nodes);
+        assert_eq!(d.messages.len(), 1);
+        assert_eq!(d.messages[0].module, "module1");
+        assert_eq!(d.messages[0].diag_type, DiagType::Error);
+        assert_eq!(d.messages[0].msg, "Element G1 has unresolved context: C1");
         assert_eq!(d.errors, 1);
         assert_eq!(d.warnings, 0);
-        Ok(())
     }
 
     #[test]
-    fn unresolved_ref_support() -> Result<()> {
-        let mut output = Vec::<u8>::new();
+    fn unresolved_ref_support() {
+        let mut d = Diagnostics::default();
         let mut nodes = MyMap::<String, GsnNode>::new();
         nodes.insert(
             "G1".to_owned(),
@@ -469,19 +450,21 @@ mod test {
                 ..Default::default()
             },
         );
-        let d = validate(&mut output, &nodes)?;
+        validate_module(&mut d, "module1", &nodes);
+        assert_eq!(d.messages.len(), 1);
+        assert_eq!(d.messages[0].module, "module1");
+        assert_eq!(d.messages[0].diag_type, DiagType::Error);
         assert_eq!(
-            std::str::from_utf8(&output).unwrap(),
-            "Error: Element G1 has unresolved supported by element: G2\n"
+            d.messages[0].msg,
+            "Element G1 has unresolved supported by element: G2"
         );
         assert_eq!(d.errors, 1);
         assert_eq!(d.warnings, 0);
-        Ok(())
     }
 
     #[test]
-    fn duplicate_ref_context() -> Result<()> {
-        let mut output = Vec::<u8>::new();
+    fn duplicate_ref_context() {
+        let mut d = Diagnostics::default();
         let mut nodes = MyMap::<String, GsnNode>::new();
         nodes.insert(
             "G1".to_owned(),
@@ -493,19 +476,21 @@ mod test {
         );
         nodes.insert("Sn1".to_owned(), GsnNode::default());
         nodes.insert("C1".to_owned(), GsnNode::default());
-        let d = validate(&mut output, &nodes)?;
+        validate_module(&mut d, "module1", &nodes);
+        assert_eq!(d.messages.len(), 1);
+        assert_eq!(d.messages[0].module, "module1");
+        assert_eq!(d.messages[0].diag_type, DiagType::Warning);
         assert_eq!(
-            std::str::from_utf8(&output).unwrap(),
-            "Warning: Element G1 has duplicate entry C1 in context.\n"
+            d.messages[0].msg,
+            "Element G1 has duplicate entry C1 in context."
         );
         assert_eq!(d.errors, 0);
         assert_eq!(d.warnings, 1);
-        Ok(())
     }
 
     #[test]
-    fn duplicate_ref_support() -> Result<()> {
-        let mut output = Vec::<u8>::new();
+    fn duplicate_ref_support() {
+        let mut d = Diagnostics::default();
         let mut nodes = MyMap::<String, GsnNode>::new();
         nodes.insert(
             "G1".to_owned(),
@@ -521,19 +506,21 @@ mod test {
                 ..Default::default()
             },
         );
-        let d = validate(&mut output, &nodes)?;
+        validate_module(&mut d, "module1", &nodes);
+        assert_eq!(d.messages.len(), 1);
+        assert_eq!(d.messages[0].module, "module1");
+        assert_eq!(d.messages[0].diag_type, DiagType::Warning);
         assert_eq!(
-            std::str::from_utf8(&output).unwrap(),
-            "Warning: Element G1 has duplicate entry G2 in supported by element.\n"
+            d.messages[0].msg,
+            "Element G1 has duplicate entry G2 in supported by element."
         );
         assert_eq!(d.errors, 0);
         assert_eq!(d.warnings, 1);
-        Ok(())
     }
 
     #[test]
-    fn unreferenced_id() -> Result<()> {
-        let mut output = Vec::<u8>::new();
+    fn unreferenced_id() {
+        let mut d = Diagnostics::default();
         let mut nodes = MyMap::<String, GsnNode>::new();
         nodes.insert(
             "G1".to_owned(),
@@ -543,19 +530,21 @@ mod test {
             },
         );
         nodes.insert("C1".to_owned(), GsnNode::default());
-        let d = validate(&mut output, &nodes)?;
+        validate_module(&mut d, "module1", &nodes);
+        assert_eq!(d.messages.len(), 1);
+        assert_eq!(d.messages[0].module, "module1");
+        assert_eq!(d.messages[0].diag_type, DiagType::Error);
         assert_eq!(
-            std::str::from_utf8(&output).unwrap(),
-            "Error: There is more than one unreferenced element: C1, G1.\n"
+            d.messages[0].msg,
+            "There is more than one unreferenced element: C1, G1."
         );
         assert_eq!(d.errors, 1);
         assert_eq!(d.warnings, 0);
-        Ok(())
     }
 
     #[test]
-    fn wrong_ref_context() -> Result<()> {
-        let mut output = Vec::<u8>::new();
+    fn wrong_ref_context() {
+        let mut d = Diagnostics::default();
         let mut nodes = MyMap::<String, GsnNode>::new();
         nodes.insert(
             "G1".to_owned(),
@@ -580,23 +569,33 @@ mod test {
             },
         );
         nodes.insert("Sn1".to_owned(), GsnNode::default());
-        let d = validate(&mut output, &nodes)?;
+        validate_module(&mut d, "module1", &nodes);
+        assert_eq!(d.messages.len(), 3);
+        assert_eq!(d.messages[0].module, "module1");
+        assert_eq!(d.messages[0].diag_type, DiagType::Error);
         assert_eq!(
-            std::str::from_utf8(&output).unwrap(),
-            concat!(
-                "Error: Element G1 has invalid type of reference G2 in context.\n",
-                "Error: Element G1 has invalid type of reference S1 in context.\n",
-                "Error: Element G1 has invalid type of reference Sn1 in context.\n"
-            )
+            d.messages[0].msg,
+            "Element G1 has invalid type of reference G2 in context."
+        );
+        assert_eq!(d.messages[1].module, "module1");
+        assert_eq!(d.messages[1].diag_type, DiagType::Error);
+        assert_eq!(
+            d.messages[1].msg,
+            "Element G1 has invalid type of reference S1 in context."
+        );
+        assert_eq!(d.messages[2].module, "module1");
+        assert_eq!(d.messages[2].diag_type, DiagType::Error);
+        assert_eq!(
+            d.messages[2].msg,
+            "Element G1 has invalid type of reference Sn1 in context."
         );
         assert_eq!(d.errors, 3);
         assert_eq!(d.warnings, 0);
-        Ok(())
     }
 
     #[test]
-    fn wrong_ref_support() -> Result<()> {
-        let mut output = Vec::<u8>::new();
+    fn wrong_ref_support() {
+        let mut d = Diagnostics::default();
         let mut nodes = MyMap::<String, GsnNode>::new();
         nodes.insert(
             "G1".to_owned(),
@@ -608,23 +607,33 @@ mod test {
         nodes.insert("C1".to_owned(), GsnNode::default());
         nodes.insert("J1".to_owned(), GsnNode::default());
         nodes.insert("A1".to_owned(), GsnNode::default());
-        let d = validate(&mut output, &nodes)?;
+        validate_module(&mut d, "module1", &nodes);
+        assert_eq!(d.messages.len(), 3);
+        assert_eq!(d.messages[0].module, "module1");
+        assert_eq!(d.messages[0].diag_type, DiagType::Error);
         assert_eq!(
-            std::str::from_utf8(&output).unwrap(),
-            concat!(
-                "Error: Element G1 has invalid type of reference C1 in supported by element.\n",
-                "Error: Element G1 has invalid type of reference J1 in supported by element.\n",
-                "Error: Element G1 has invalid type of reference A1 in supported by element.\n"
-            )
+            d.messages[0].msg,
+            "Element G1 has invalid type of reference C1 in supported by element."
+        );
+        assert_eq!(d.messages[1].module, "module1");
+        assert_eq!(d.messages[1].diag_type, DiagType::Error);
+        assert_eq!(
+            d.messages[1].msg,
+            "Element G1 has invalid type of reference J1 in supported by element."
+        );
+        assert_eq!(d.messages[2].module, "module1");
+        assert_eq!(d.messages[2].diag_type, DiagType::Error);
+        assert_eq!(
+            d.messages[2].msg,
+            "Element G1 has invalid type of reference A1 in supported by element."
         );
         assert_eq!(d.errors, 3);
         assert_eq!(d.warnings, 0);
-        Ok(())
     }
 
     #[test]
-    fn undeveloped_goal() -> Result<()> {
-        let mut output = Vec::<u8>::new();
+    fn undeveloped_goal() {
+        let mut d = Diagnostics::default();
         let mut nodes = MyMap::<String, GsnNode>::new();
         nodes.insert("G1".to_owned(), GsnNode::default());
         nodes.insert(
@@ -634,19 +643,27 @@ mod test {
                 ..Default::default()
             },
         );
-        let d = validate(&mut output, &nodes)?;
+        validate_module(&mut d, "module1", &nodes);
+        assert_eq!(d.messages.len(), 3);
+        assert_eq!(d.messages[0].module, "module1");
+        assert_eq!(d.messages[0].diag_type, DiagType::Warning);
+        assert_eq!(d.messages[0].msg, "Element G1 is undeveloped.");
+        assert_eq!(d.messages[1].module, "module1");
+        assert_eq!(d.messages[1].diag_type, DiagType::Warning);
+        assert_eq!(d.messages[1].msg, "Element G2 is undeveloped.");
+        assert_eq!(d.messages[2].module, "module1");
+        assert_eq!(d.messages[2].diag_type, DiagType::Error);
         assert_eq!(
-            std::str::from_utf8(&output).unwrap(),
-            "Warning: Element G1 is undeveloped.\nWarning: Element G2 is undeveloped.\nError: There is more than one unreferenced element: G1, G2.\n"
+            d.messages[2].msg,
+            "There is more than one unreferenced element: G1, G2."
         );
         assert_eq!(d.errors, 1);
         assert_eq!(d.warnings, 2);
-        Ok(())
     }
 
     #[test]
-    fn undeveloped_strategy() -> Result<()> {
-        let mut output = Vec::<u8>::new();
+    fn undeveloped_strategy() {
+        let mut d = Diagnostics::default();
         let mut nodes = MyMap::<String, GsnNode>::new();
         nodes.insert("S1".to_owned(), GsnNode::default());
         nodes.insert(
@@ -656,19 +673,27 @@ mod test {
                 ..Default::default()
             },
         );
-        let d = validate(&mut output, &nodes)?;
+        validate_module(&mut d, "module1", &nodes);
+        assert_eq!(d.messages.len(), 3);
+        assert_eq!(d.messages[0].module, "module1");
+        assert_eq!(d.messages[0].diag_type, DiagType::Warning);
+        assert_eq!(d.messages[0].msg, "Element S1 is undeveloped.");
+        assert_eq!(d.messages[1].module, "module1");
+        assert_eq!(d.messages[1].diag_type, DiagType::Warning);
+        assert_eq!(d.messages[1].msg, "Element S2 is undeveloped.");
+        assert_eq!(d.messages[2].module, "module1");
+        assert_eq!(d.messages[2].diag_type, DiagType::Error);
         assert_eq!(
-            std::str::from_utf8(&output).unwrap(),
-            "Warning: Element S1 is undeveloped.\nWarning: Element S2 is undeveloped.\nError: There is more than one unreferenced element: S1, S2.\n"
+            d.messages[2].msg,
+            "There is more than one unreferenced element: S1, S2."
         );
         assert_eq!(d.errors, 1);
         assert_eq!(d.warnings, 2);
-        Ok(())
     }
 
     #[test]
-    fn wrong_undeveloped() -> Result<()> {
-        let mut output = Vec::<u8>::new();
+    fn wrong_undeveloped() {
+        let mut d = Diagnostics::default();
         let mut nodes = MyMap::<String, GsnNode>::new();
         nodes.insert(
             "G1".to_owned(),
@@ -679,34 +704,38 @@ mod test {
             },
         );
         nodes.insert("Sn2".to_owned(), GsnNode::default());
-        let d = validate(&mut output, &nodes)?;
+        validate_module(&mut d, "module1", &nodes);
+        assert_eq!(d.messages.len(), 1);
+        assert_eq!(d.messages[0].module, "module1");
+        assert_eq!(d.messages[0].diag_type, DiagType::Error);
         assert_eq!(
-            std::str::from_utf8(&output).unwrap(),
-            "Error: Undeveloped element G1 has supporting arguments.\n"
+            d.messages[0].msg,
+            "Undeveloped element G1 has supporting arguments."
         );
         assert_eq!(d.errors, 1);
         assert_eq!(d.warnings, 0);
-        Ok(())
     }
 
     #[test]
-    fn wrong_root() -> Result<()> {
-        let mut output = Vec::<u8>::new();
+    fn wrong_root() {
+        let mut d = Diagnostics::default();
         let mut nodes = MyMap::<String, GsnNode>::new();
         nodes.insert("Sn1".to_owned(), GsnNode::default());
-        let d = validate(&mut output, &nodes)?;
+        validate_module(&mut d, "module1", &nodes);
+        assert_eq!(d.messages.len(), 1);
+        assert_eq!(d.messages[0].module, "module1");
+        assert_eq!(d.messages[0].diag_type, DiagType::Error);
         assert_eq!(
-            std::str::from_utf8(&output).unwrap(),
-            "Error: The root element should be a goal, but Sn1 was found.\n"
+            d.messages[0].msg,
+            "The root element should be a goal, but Sn1 was found."
         );
         assert_eq!(d.errors, 1);
         assert_eq!(d.warnings, 0);
-        Ok(())
     }
 
     #[test]
-    fn layer_exists() -> Result<()> {
-        let mut output = Vec::<u8>::new();
+    fn layer_exists() {
+        let mut d = Diagnostics::default();
         let mut nodes = MyMap::<String, GsnNode>::new();
 
         let mut admap = MyMap::new();
@@ -718,32 +747,33 @@ mod test {
                 ..Default::default()
             },
         );
-        let d = check_layers(&mut output, &nodes, &["layer1"])?;
-        assert!(output.is_empty());
+        check_layers(&mut d, "module1", &nodes, &["layer1"]);
+        assert_eq!(d.messages.len(), 0);
         assert_eq!(d.errors, 0);
         assert_eq!(d.warnings, 0);
-        Ok(())
     }
 
     #[test]
-    fn layer_does_not_exist() -> Result<()> {
-        let mut output = Vec::<u8>::new();
+    fn layer_does_not_exist() {
+        let mut d = Diagnostics::default();
         let mut nodes = MyMap::<String, GsnNode>::new();
 
         nodes.insert("Sn1".to_owned(), GsnNode::default());
-        let d = check_layers(&mut output, &nodes, &["layer1"])?;
+        check_layers(&mut d, "module1", &nodes, &["layer1"]);
+        assert_eq!(d.messages.len(), 1);
+        assert_eq!(d.messages[0].module, "module1");
+        assert_eq!(d.messages[0].diag_type, DiagType::Warning);
         assert_eq!(
-            std::str::from_utf8(&output).unwrap(),
-            "Warning: Layer layer1 is not used in file. No additional output will be generated.\n"
+            d.messages[0].msg,
+            "Layer layer1 is not used in file. No additional output will be generated."
         );
         assert_eq!(d.errors, 0);
         assert_eq!(d.warnings, 1);
-        Ok(())
     }
 
     #[test]
-    fn only_one_layer_exists() -> Result<()> {
-        let mut output = Vec::<u8>::new();
+    fn only_one_layer_exists() {
+        let mut d = Diagnostics::default();
         let mut nodes = MyMap::<String, GsnNode>::new();
 
         let mut admap = MyMap::new();
@@ -755,19 +785,21 @@ mod test {
                 ..Default::default()
             },
         );
-        let d = check_layers(&mut output, &nodes, &["layer1", "layer2"])?;
+        check_layers(&mut d, "module1", &nodes, &["layer1", "layer2"]);
+        assert_eq!(d.messages.len(), 1);
+        assert_eq!(d.messages[0].module, "module1");
+        assert_eq!(d.messages[0].diag_type, DiagType::Warning);
         assert_eq!(
-            std::str::from_utf8(&output).unwrap(),
-            "Warning: Layer layer2 is not used in file. No additional output will be generated.\n"
+            d.messages[0].msg,
+            "Layer layer2 is not used in file. No additional output will be generated."
         );
         assert_eq!(d.errors, 0);
         assert_eq!(d.warnings, 1);
-        Ok(())
     }
 
     #[test]
-    fn layer_reserved() -> Result<()> {
-        let mut output = Vec::<u8>::new();
+    fn layer_reserved() {
+        let mut d = Diagnostics::default();
         let mut nodes = MyMap::<String, GsnNode>::new();
 
         let mut admap = MyMap::new();
@@ -779,15 +811,22 @@ mod test {
                 ..Default::default()
             },
         );
-        let d = check_layers(&mut output, &nodes, &["inContextOf", "layer2"])?;
+        check_layers(&mut d, "module1", &nodes, &["inContextOf", "layer2"]);
+        assert_eq!(d.messages.len(), 2);
+        assert_eq!(d.messages[0].module, "module1");
+        assert_eq!(d.messages[0].diag_type, DiagType::Error);
         assert_eq!(
-            std::str::from_utf8(&output).unwrap(),
-            concat!("Error: inContextOf is a reserved attribute and cannot be used as layer.\n",
-            "Warning: Layer layer2 is not used in file. No additional output will be generated.\n")
+            d.messages[0].msg,
+            "inContextOf is a reserved attribute and cannot be used as layer."
+        );
+        assert_eq!(d.messages[1].module, "module1");
+        assert_eq!(d.messages[1].diag_type, DiagType::Warning);
+        assert_eq!(
+            d.messages[1].msg,
+            "Layer layer2 is not used in file. No additional output will be generated."
         );
         assert_eq!(d.errors, 1);
         assert_eq!(d.warnings, 1);
-        Ok(())
     }
 
     #[test]
