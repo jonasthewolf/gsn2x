@@ -1,0 +1,13 @@
+
+G1:
+  text: Main Goal
+  supportedBy: [S1]
+
+S1:
+  text: Divide and Conquer
+  supportedBy: [G2, G3]
+
+G2:
+  text: Divide
+  undeveloped: true
+

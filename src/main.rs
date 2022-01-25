@@ -1,5 +1,6 @@
 use anyhow::{anyhow, Context, Result};
-use clap::{crate_authors, crate_description, crate_name, crate_version, App, Arg};
+use clap::{app_from_crate, Arg, ErrorKind};
+use std::collections::BTreeMap;
 use std::fs::File;
 use std::io::{BufReader, Read, Write};
 use tera::Tera;
@@ -9,7 +10,7 @@ mod gsn;
 mod wordwrap;
 mod yaml_fix;
 
-use diagnostics::{Diagnostics};
+use diagnostics::Diagnostics;
 use gsn::GsnNode;
 use wordwrap::WordWrap;
 use yaml_fix::MyMap;
@@ -21,10 +22,7 @@ use crate::gsn::get_levels;
 ///
 ///
 fn main() -> Result<()> {
-    let matches = App::new(crate_name!())
-        .version(crate_version!())
-        .author(crate_authors!())
-        .about(crate_description!())
+    let mut app = app_from_crate!()
         .arg(
             Arg::new("INPUT")
                 .help("Sets the input file(s) to use.")
@@ -33,10 +31,12 @@ fn main() -> Result<()> {
         )
         .arg(
             Arg::new("OUTPUT")
-                .help("Sets the optional output file to use.")
+                .help("Writes output to standard output (only possible with single input).")
                 .short('o')
                 .long("output")
-                .required(false),
+                .required(false)
+                .conflicts_with("VALONLY")
+                .help_heading("OUTPUT"),
         )
         .arg(
             Arg::new("VALONLY")
@@ -46,6 +46,34 @@ fn main() -> Result<()> {
                 .required(false),
         )
         .arg(
+            Arg::new("COMPLETE_VIEW")
+                .help("Additionally output the complete view to this file.")
+                .short('f')
+                .long("full")
+                .takes_value(true)
+                .required(false)
+                .help_heading("OUTPUT"),
+        )
+        .arg(
+            Arg::new("ARCHITECTURE_VIEW")
+                .help("Additionally output the architecture view to this file.")
+                .short('a')
+                .long("arch")
+                .takes_value(true)
+                .required(false)
+                .help_heading("OUTPUT"),
+        )
+        .arg(
+            Arg::new("MODULE")
+                .help("Hide this module from the complete view.")
+                .short('m')
+                .long("mod")
+                .multiple_occurrences(true)
+                .takes_value(true)
+                .required(false)
+                .help_heading("MODIFICATIONS"),
+        )
+        .arg(
             Arg::new("LAYERS")
                 .help("Output additional layers.")
                 .short('l')
@@ -53,7 +81,8 @@ fn main() -> Result<()> {
                 .takes_value(true)
                 .multiple_occurrences(true)
                 .use_delimiter(true)
-                .required(false),
+                .required(false)
+                .help_heading("MODIFICATIONS"),
         )
         .arg(
             Arg::new("STYLESHEET")
@@ -62,7 +91,8 @@ fn main() -> Result<()> {
                 .long("stylesheet")
                 .takes_value(true)
                 .multiple_occurrences(false)
-                .required(false),
+                .required(false)
+                .help_heading("MODIFICATIONS"),
         )
         .arg(
             Arg::new("EVIDENCES")
@@ -71,28 +101,55 @@ fn main() -> Result<()> {
                 .long("evicdenes")
                 .takes_value(true)
                 .multiple_occurrences(false)
-                .required(false),
+                .required(false)
+                .help_heading("OUTPUT"),
+        );
+    let matches = app.get_matches_mut();
+    if matches.is_present("OUTPUT") && matches.occurrences_of("INPUT") > 1 {
+        app.error(
+            ErrorKind::ArgumentConflict,
+            "The argument '-o' cannot be used with multiple input files.",
         )
-        .get_matches();
+        .exit();
+    }
 
     let mut diags = Diagnostics::default();
     // Read input
-    let inputs = matches.values_of("INPUT").unwrap();
+    let inputs: Vec<&str> = matches.values_of("INPUT").unwrap().collect();
     let mut nodes = MyMap::<String, GsnNode>::new();
-    for input in inputs {
+    let mut modules_keys = BTreeMap::<String, Vec<String>>::new();
+    for input in &inputs {
         let mut reader = BufReader::new(
             File::open(&input).with_context(|| format!("Failed to open file {}", input))?,
         );
         let mut n = read_input(&mut reader)
             .with_context(|| format!("Failed to parse YAML from file {}", input))?;
-        // Duplicates are automatically rejected
-        // TODO Check error message
+        // Check for duplicates, since they might be in separate files.
+        for (mod_n, mod_keys) in &modules_keys {
+            for k in n.keys() {
+                if mod_keys.contains(k) {
+                    diags.add_error(
+                        input,
+                        format!(
+                            "Element {} in {} was already present in {}.",
+                            k, input, mod_n
+                        ),
+                    );
+                }
+            }
+        }
+        // Remember from which file IDs are coming.
+        modules_keys.insert(input.to_string(), n.keys().cloned().collect());
+        // Merge nodes for further processing.
         nodes.append(&mut n);
+    }
+    for input in inputs {
         // Validate
+        // When validating a module, all references are resolved.
         gsn::validate_module(&mut diags, input, &nodes);
         let layers = matches
-        .values_of("LAYERS")
-        .map(|x| x.collect::<Vec<&str>>());
+            .values_of("LAYERS")
+            .map(|x| x.collect::<Vec<&str>>());
         if let Some(lays) = &layers {
             gsn::check_layers(&mut diags, input, &nodes, lays);
         }
@@ -103,6 +160,17 @@ fn main() -> Result<()> {
             .with_context(|| format!("{} is not a file.", input))?
             .to_str()
             .unwrap();
+        let mut pbuf = std::path::PathBuf::from(input);
+        pbuf.set_extension("dot");
+        let output_filename = pbuf.as_path();
+        // It is already checked that if OUTPUT is set, only one input file is provided.
+        let mut output_handle = if matches.is_present("OUTPUT") {
+            Box::new(std::io::stdout()) as Box<dyn std::io::Write>
+        } else {
+            Box::new(File::create(output_filename).with_context(|| {
+                format!("Failed to open output file {}", output_filename.display())
+            })?) as Box<dyn std::io::Write>
+        };
         output(
             &diags,
             input_filename,
@@ -110,13 +178,7 @@ fn main() -> Result<()> {
             &layers,
             matches.value_of("STYLESHEET"),
             matches.is_present("VALONLY"),
-            &mut match matches.value_of("OUTPUT") {
-                Some(output) => Box::new(
-                    File::create(output)
-                        .with_context(|| format!("Failed to open output file {}", output))?,
-                ) as Box<dyn std::io::Write>,
-                None => Box::new(std::io::stdout()) as Box<dyn std::io::Write>,
-            },
+            &mut output_handle,
         )?;
 
         if let Some(output) = matches.value_of("EVIDENCES") {
@@ -124,7 +186,6 @@ fn main() -> Result<()> {
                 .with_context(|| format!("Failed to open output file {}", output))?;
             output_evidences(input_filename, &nodes, &layers, &mut output_file)?;
         }
-
     }
     Ok(())
 }

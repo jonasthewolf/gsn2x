@@ -23,7 +23,7 @@ impl Display for DiagMsg {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self.diag_type {
             DiagType::Error => write!(f, "Error: ({}) {}", self.module, self.msg),
-            DiagType::Warning => write!(f, "Warning: ({}) {}", self.module, self.msg)
+            DiagType::Warning => write!(f, "Warning: ({}) {}", self.module, self.msg),
         }
     }
 }

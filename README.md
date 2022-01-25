@@ -10,16 +10,15 @@ Graphviz is required to create an image from the output of this tool.
 
 Feel free to use it and please let me know. Same applies if you have feature requests, bug reports or contributions.
 
-
 ## Usage
 
 On Windows you can just run:
 
-    gsn2x.exe <yourgsnfile.yaml> | dot -Tsvg > <yourgsnfile.svg>
+    gsn2x.exe -o <yourgsnfile.yaml> | dot -Tsvg > <yourgsnfile.svg>
 
 On other systems you can create an SVG like this:
 
-    gsn2x <yourgsnfile.yaml> | dot -Tsvg > <yourgsnfile.svg>
+    gsn2x -o <yourgsnfile.yaml> | dot -Tsvg > <yourgsnfile.svg>
 
 If a second optional argument is provided, the output is not written to stdout, but to the file named by the second argument.
 If called with option `-c` or `--check` the input file is only checked for validity, but the resulting graph is not written.
@@ -138,11 +137,33 @@ See the [example](example.gsn.yaml) for usage. The strategies S1 and S2 are on t
 
 It is recommended to use `level` only for goals, since related contexts, justifications and assumptions are automatically put on the same level, i.e. the same rank in Graphviz.
 
+## Modular Extension
+
+gsn2x supports the Modular Extension of the GSN standard (see [Standard support](#standard-support)).
+
+Each module is a separate file. The name of the module is the file name (incl. the path provided to the gsn2x command line).
+
+If modules are used, all dependent module files must be provided to the command line of gsn2x.
+Element IDs must be unique accross all modules. Validation will always be performed accross all modules.
+
+In addition to the argument view for each module, there can be two output files generated:
+1) Complete View
+2) Architecture View
+
+### Complete View
+
+TODO
+
+### Architecture View
+
+TODO
+
 ## List of evidences
 
 With the `-e` option you can create an additional file that lists all the evidences in the input file.
 
 The format can be used in Markdown and reStructuredText files.
+
 
 ## Standard support
 
