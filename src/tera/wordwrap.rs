@@ -83,6 +83,14 @@ mod test {
         assert_eq!(out, expected);
     }
     #[test]
+    fn empty_line() {
+        let input = " ";
+        let expected = Value::from("".to_owned()); // make explicit heap allocation to prevent Short value
+        let out = wordwrap(input, 50, "\n").unwrap();
+        assert_eq!(out, expected);
+    }
+
+    #[test]
     fn wrapstring() {
         let input = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt";
         let expected = Value::from(concat!(
