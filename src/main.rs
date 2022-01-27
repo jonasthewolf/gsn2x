@@ -142,11 +142,10 @@ fn main() -> Result<()> {
 
     // Read input
     for input in &inputs {
-        let mut reader = BufReader::new(
-            File::open(&input).with_context(|| format!("Failed to open file {}", input))?,
-        );
-        let mut n = read_input(&mut reader)
-            .with_context(|| format!("Failed to parse YAML from file {}", input))?;
+        let mut reader =
+            BufReader::new(File::open(&input).context(format!("Failed to open file {}", input))?);
+        let mut n =
+            read_input(&mut reader).context(format!("Failed to parse YAML from file {}", input))?;
         // Remember module for node
         n.iter_mut()
             .for_each(|(_, mut x)| x.module = input.to_string());
@@ -194,9 +193,10 @@ fn main() -> Result<()> {
                 let mut pbuf = std::path::PathBuf::from(input);
                 pbuf.set_extension("dot");
                 let output_filename = pbuf.as_path();
-                Box::new(File::create(output_filename).with_context(|| {
-                    format!("Failed to open output file {}", output_filename.display())
-                })?) as Box<dyn std::io::Write>
+                Box::new(File::create(output_filename).context(format!(
+                    "Failed to open output file {}",
+                    output_filename.display()
+                ))?) as Box<dyn std::io::Write>
             };
             render_view(
                 input,
@@ -215,8 +215,8 @@ fn main() -> Result<()> {
 
     // Architecture view
     if let Some(arch_view) = matches.value_of("ARCHITECTURE_VIEW") {
-        let mut output_file = File::create(arch_view)
-            .with_context(|| format!("Failed to open output file {}", arch_view))?;
+        let mut output_file =
+            File::create(arch_view).context(format!("Failed to open output file {}", arch_view))?;
         render_view(
             arch_view,
             &nodes,
@@ -230,7 +230,7 @@ fn main() -> Result<()> {
     // Complete view
     if let Some(compl_view) = matches.value_of("COMPLETE_VIEW") {
         let mut output_file = File::create(compl_view)
-            .with_context(|| format!("Failed to open output file {}", compl_view))?;
+            .context(format!("Failed to open output file {}", compl_view))?;
         render_view(
             compl_view,
             &nodes,
@@ -243,8 +243,8 @@ fn main() -> Result<()> {
 
     // List of evidences
     if let Some(output) = matches.value_of("EVIDENCES") {
-        let mut output_file = File::create(output)
-            .with_context(|| format!("Failed to open output file {}", output))?;
+        let mut output_file =
+            File::create(output).context(format!("Failed to open output file {}", output))?;
         render_view(
             "Evidences",
             &nodes,
@@ -343,7 +343,7 @@ fn render_view(
         View::Evidences => "evidences.md",
     };
     tera.render_to(template, &context, output)
-        .with_context(|| "Failed to write to output.")?;
+        .context("Failed to write to output.")?;
     Ok(())
 }
 

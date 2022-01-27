@@ -2,7 +2,7 @@
 mod integrations {
     use assert_cmd::prelude::*;
     use predicates::prelude::*;
-    use std::process::Command;
+    use std::{fs, process::Command};
 
     #[test]
     fn file_doesnt_exist() -> Result<(), Box<dyn std::error::Error>> {
@@ -128,7 +128,14 @@ mod integrations {
             .stdout(predicate::str::is_empty())
             .stderr(predicate::str::is_empty());
         let predicate_file = predicate::path::eq_file(arch_file.path()).utf8().unwrap();
-        assert!(predicate_file.eval(std::path::Path::new("examples/modular/arch.gsn.test.dot")));
+        // Fix path from temporary location
+        let expected =
+            fs::read_to_string(std::path::Path::new("examples/modular/arch.gsn.test.dot"))?
+                .replace(
+                    "examples/modular/arch.gsn.test.dot",
+                    &format!("{}", arch_file.path().display()),
+                );
+        assert!(predicate_file.eval(expected.as_str()));
         arch_file.close()?;
         Ok(())
     }
@@ -136,16 +143,28 @@ mod integrations {
     #[test]
     fn comp_view() -> Result<(), Box<dyn std::error::Error>> {
         // TODO Implement
-        // let mut cmd = Command::cargo_bin("gsn2x")?;
-        // let evidence_file = assert_fs::NamedTempFile::new("evidences.md")?;
-        // cmd.arg("-e").arg(evidence_file.path()).arg("examples/example.gsn.yaml").arg("-l").arg("layer1");
-        // cmd.assert()
-        //     .success()
-        //     .stdout(predicate::str::is_empty())
-        //     .stderr(predicate::str::is_empty());
-        // let predicate_file = predicate::path::eq_file(evidence_file.path()).utf8().unwrap();
-        // assert!(predicate_file.eval(std::path::Path::new("examples/example.gsn.test.md")));
-        // evidence_file.close()?;
+        let mut cmd = Command::cargo_bin("gsn2x")?;
+        let compl_file = assert_fs::NamedTempFile::new("complete.dot")?;
+        cmd.arg("-n")
+            .arg("-f")
+            .arg(compl_file.path())
+            .arg("examples/modular/main.gsn.yaml")
+            .arg("examples/modular/sub1.gsn.yaml");
+        cmd.assert()
+            .success()
+            .stdout(predicate::str::is_empty())
+            .stderr(predicate::str::is_empty());
+        let predicate_file = predicate::path::eq_file(compl_file.path()).utf8().unwrap();
+        // Fix path from temporary location
+        let expected = fs::read_to_string(std::path::Path::new(
+            "examples/modular/complete.gsn.test.dot",
+        ))?
+        .replace(
+            "examples/modular/complete.gsn.test.dot",
+            &format!("{}", compl_file.path().display()),
+        );
+        assert!(predicate_file.eval(expected.as_str()));
+        compl_file.close()?;
         Ok(())
     }
 }
