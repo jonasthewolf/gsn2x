@@ -62,7 +62,7 @@ These elements should marked with `undeveloped: true`, otherwise validation will
       text: This is a Context
 
 
-Please see [example.gsn.yaml] for an example of the used syntax.
+Please see [examples/example.gsn.yaml] for an example of the used syntax.
 
 ## Validation checks
 
@@ -135,7 +135,7 @@ To influence the rendered image, you can add an identifier to a GSN element with
 
 This is especially useful, if e.g., two goals or strategies are on the same logical level, but have a different "depth" in the argumentation (i.e. a different number of goals or strategies in their path to the root goal).
 
-See the [example](example.gsn.yaml) for usage. The strategies S1 and S2 are on the same level.
+See the [example](examples/example.gsn.yaml) for usage. The strategies S1 and S2 are on the same level.
 
 It is recommended to use `level` only for goals, since related contexts, justifications and assumptions are automatically put on the same level, i.e. the same rank in Graphviz.
 
@@ -146,11 +146,14 @@ gsn2x supports the Modular Extension of the GSN standard (see [Standard support]
 Each module is a separate file. The name of the module is the file name (incl. the path provided to the gsn2x command line).
 
 If modules are used, all dependent module files must be provided to the command line of gsn2x.
-Element IDs must be unique accross all modules. Validation will always be performed accross all modules.
+Element IDs must be unique accross all modules. Validation will by default be performed accross all modules.
+Validation messages for individual modules can be omitted using the `-x` option.
 
-In addition to the argument view for each module, there can be two output files generated:
+In addition to the default argument view for each module, there can be two output files generated:
 1) Complete View
 2) Architecture View
+
+If the argument view should not be updated, use the `-n` option.
 
 ### Complete View
 
@@ -163,6 +166,10 @@ TODO
 ## List of evidences
 
 With the `-e` option you can create an additional file that lists all the evidences in the input file.
+
+See [examples/example.gsn.test.md] for an example.
+
+The `-n` option also be used in combination with `-e`.
 
 The format can be used in Markdown and reStructuredText files.
 
