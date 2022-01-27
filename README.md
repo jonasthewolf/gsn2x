@@ -103,7 +103,9 @@ Using this feature, different views on the GSN can be generated.
       layer1: This is additional information for C1.
 
 In this example, a call to `gsn2x -l layer1` will show the additional information to each element prefixed with _`LAYER1: `_.
-Of course, using `text`, `inContextOf`, `supportedBy`, `url`, `undeveloped`, `level` or `classes` are not sensible parameters to pass for the `-l` option.
+Of course, using `text`, `inContextOf`, `supportedBy`, `url`, `undeveloped`, `level` or `classes` are not sensible parameters to pass for the `-l` option. 
+
+Please note that using `module` and passing it as a layer option will also not work. 
 
 It is intentional that information is only added for a view, but not hidden to ensure consistency of the GSN in all variants.
 
@@ -169,10 +171,10 @@ The format can be used in Markdown and reStructuredText files.
 
 This tool is based on the [Goal Structuring Notation Community Standard Version 3](https://scsc.uk/r141C:1).
 
-| Standard                    | Support                 |
-|-----------------------------|-------------------------|
-|Core GSN                     | :heavy_check_mark: full |
-|Argument Pattern Extension   | :x: not planned         |
-|Modular Extension            | :construction: see #6   |
-|Confidence Argument Extension| :x: not planned         |
-|Dialectic Extension          | :x: not planned         |
+| Standard                    | Support                                                                 |
+|-----------------------------|-------------------------------------------------------------------------|
+|Core GSN                     | :heavy_check_mark: full                                                 |
+|Argument Pattern Extension   | :x: not planned                                                         |
+|Modular Extension            | :construction: see [#6](https://github.com/jonasthewolf/gsn2x/issues/6) |
+|Confidence Argument Extension| :x: not planned                                                         |
+|Dialectic Extension          | :x: not planned                                                         |

@@ -19,9 +19,12 @@ gsn2x main.yml sub1.yml -f full.dot -a arch.dot
    full.dot
    arch.dot
 
-# Hide sub1 in full
-gsn2x main.yml sub1.yml -f full.dot -a arch.dot -u sub1 
+# Mask sub1 in full
+gsn2x main.yml sub1.yml -f full.dot -a arch.dot -m sub1 
    main.dot
    sub1.dot
    full.dot
    arch.dot
+
+# Exclude sub1 from validation
+gsn2x main.yml sub1.yml -c -x sub1 

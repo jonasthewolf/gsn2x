@@ -1,4 +1,3 @@
 /target/
-**/example.gsn.test.*
 *.prof*
 /coverage/

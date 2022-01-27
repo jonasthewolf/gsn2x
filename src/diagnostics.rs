@@ -6,13 +6,6 @@ pub enum DiagType {
     Error,
 }
 
-impl Default for DiagType {
-    fn default() -> Self {
-        DiagType::Warning
-    }
-}
-
-#[derive(Default)]
 pub struct DiagMsg {
     pub diag_type: DiagType,
     pub module: String,

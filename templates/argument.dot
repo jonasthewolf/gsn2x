@@ -1,8 +1,8 @@
-
+{#- TODO Too much is shown here. Only show what? Elements defined, yes. Elements in other modules? #}
 {% import "macros.dot" as macros %}
 
 
-digraph "{{filename}}" {
+digraph "{{module}}" {
   graph [class="gsndiagram", ranksep="equally", newrank="true"{%- if stylesheet %}, stylesheet="{{ stylesheet }}"{%- endif %}]
 
   ## Elements

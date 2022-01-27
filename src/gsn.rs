@@ -4,6 +4,10 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
 use std::ops::Deref;
 
+///
+/// The main struct of this program
+/// It describes a GSN element
+///
 #[derive(Debug, Default, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct GsnNode {
@@ -16,18 +20,8 @@ pub struct GsnNode {
     #[serde(flatten)]
     additional: MyMap<String, String>,
     undeveloped: Option<bool>,
-}
-
-impl GsnNode {
-    pub(crate) fn get_text(&self) -> &str {
-        &self.text
-    }
-    pub(crate) fn get_url(&self) -> &Option<String> {
-        &self.url
-    }
-    pub(crate) fn get_layer(&self, layer: &str) -> Option<&String> {
-        self.additional.get(&layer.to_owned())
-    }
+    #[serde(skip_deserializing)]
+    pub module: String,
 }
 
 ///
@@ -37,25 +31,28 @@ impl GsnNode {
 /// Check if all references of node exist
 /// Check if there is more than one top-level node
 ///
-/// Returns the number of validation warnings and errors
 ///
 pub fn validate_module(diag: &mut Diagnostics, module: &str, nodes: &MyMap<String, GsnNode>) {
     let mut wnodes: HashSet<String> = nodes.keys().cloned().collect();
     for (key, node) in nodes.deref() {
-        // Validate if key is one of the known prefixes
-        validate_id(diag, module, key);
-        // Validate if all references of node exist
-        validate_reference(diag, module, nodes, key, node);
-        // Remove all keys if they are referenced; used to see if there is more than one top level node
-        if let Some(context) = node.in_context_of.as_ref() {
-            for cnode in context {
-                wnodes.remove(cnode);
+        if node.module == module {
+            // Validate if key is one of the known prefixes
+            validate_id(diag, module, key);
+            // Validate if all references of node exist
+            validate_reference(diag, module, nodes, key, node);
+            // Remove all keys if they are referenced; used to see if there is more than one top level node
+            if let Some(context) = node.in_context_of.as_ref() {
+                for cnode in context {
+                    wnodes.remove(cnode);
+                }
             }
-        }
-        if let Some(support) = node.supported_by.as_ref() {
-            for snode in support {
-                wnodes.remove(snode);
+            if let Some(support) = node.supported_by.as_ref() {
+                for snode in support {
+                    wnodes.remove(snode);
+                }
             }
+        } else {
+            wnodes.remove(key);
         }
     }
     match wnodes.len() {
@@ -172,7 +169,7 @@ fn check_references(
 }
 
 ///
-///
+/// Validate all references
 ///
 ///
 fn validate_reference(
@@ -286,9 +283,9 @@ mod test {
     #[test]
     fn unknown_id() {
         let mut d = Diagnostics::default();
-        validate_id(&mut d, "module1", &"X1".to_owned());
+        validate_id(&mut d, "", &"X1".to_owned());
         assert_eq!(d.messages.len(), 1);
-        assert_eq!(d.messages[0].module, "module1");
+        assert_eq!(d.messages[0].module, "");
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
         assert_eq!(
             d.messages[0].msg,
@@ -301,7 +298,7 @@ mod test {
     #[test]
     fn known_id() {
         let mut d = Diagnostics::default();
-        validate_id(&mut d, "module1", &"Sn1".to_owned());
+        validate_id(&mut d, "", &"Sn1".to_owned());
         assert_eq!(d.messages.len(), 0);
         assert_eq!(d.errors, 0);
         assert_eq!(d.warnings, 0);
@@ -318,15 +315,15 @@ mod test {
                 ..Default::default()
             },
         );
-        validate_module(&mut d, "module1", &nodes);
+        validate_module(&mut d, "", &nodes);
         assert_eq!(d.messages.len(), 2);
-        assert_eq!(d.messages[0].module, "module1");
+        assert_eq!(d.messages[0].module, "");
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
         assert_eq!(
             d.messages[0].msg,
             "Element C1 references itself in context."
         );
-        assert_eq!(d.messages[1].module, "module1");
+        assert_eq!(d.messages[1].module, "");
         assert_eq!(d.messages[1].diag_type, DiagType::Error);
         assert_eq!(
             d.messages[1].msg,
@@ -347,9 +344,9 @@ mod test {
                 ..Default::default()
             },
         );
-        validate_module(&mut d, "module1", &nodes);
+        validate_module(&mut d, "", &nodes);
         assert_eq!(d.messages.len(), 1);
-        assert_eq!(d.messages[0].module, "module1");
+        assert_eq!(d.messages[0].module, "");
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
         assert_eq!(
             d.messages[0].msg,
@@ -370,15 +367,15 @@ mod test {
                 ..Default::default()
             },
         );
-        validate_module(&mut d, "module1", &nodes);
+        validate_module(&mut d, "", &nodes);
         assert_eq!(d.messages.len(), 2);
-        assert_eq!(d.messages[0].module, "module1");
+        assert_eq!(d.messages[0].module, "");
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
         assert_eq!(
             d.messages[0].msg,
             "Element C1 references itself in supported by element."
         );
-        assert_eq!(d.messages[1].module, "module1");
+        assert_eq!(d.messages[1].module, "");
         assert_eq!(d.messages[1].diag_type, DiagType::Error);
         assert_eq!(
             d.messages[1].msg,
@@ -400,15 +397,15 @@ mod test {
                 ..Default::default()
             },
         );
-        validate_module(&mut d, "module1", &nodes);
+        validate_module(&mut d, "", &nodes);
         assert_eq!(d.messages.len(), 2);
-        assert_eq!(d.messages[0].module, "module1");
+        assert_eq!(d.messages[0].module, "");
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
         assert_eq!(
             d.messages[0].msg,
             "Element G1 references itself in context."
         );
-        assert_eq!(d.messages[1].module, "module1");
+        assert_eq!(d.messages[1].module, "");
         assert_eq!(d.messages[1].diag_type, DiagType::Error);
         assert_eq!(
             d.messages[1].msg,
@@ -430,9 +427,9 @@ mod test {
                 ..Default::default()
             },
         );
-        validate_module(&mut d, "module1", &nodes);
+        validate_module(&mut d, "", &nodes);
         assert_eq!(d.messages.len(), 1);
-        assert_eq!(d.messages[0].module, "module1");
+        assert_eq!(d.messages[0].module, "");
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
         assert_eq!(d.messages[0].msg, "Element G1 has unresolved context: C1");
         assert_eq!(d.errors, 1);
@@ -450,9 +447,9 @@ mod test {
                 ..Default::default()
             },
         );
-        validate_module(&mut d, "module1", &nodes);
+        validate_module(&mut d, "", &nodes);
         assert_eq!(d.messages.len(), 1);
-        assert_eq!(d.messages[0].module, "module1");
+        assert_eq!(d.messages[0].module, "");
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
         assert_eq!(
             d.messages[0].msg,
@@ -476,9 +473,9 @@ mod test {
         );
         nodes.insert("Sn1".to_owned(), GsnNode::default());
         nodes.insert("C1".to_owned(), GsnNode::default());
-        validate_module(&mut d, "module1", &nodes);
+        validate_module(&mut d, "", &nodes);
         assert_eq!(d.messages.len(), 1);
-        assert_eq!(d.messages[0].module, "module1");
+        assert_eq!(d.messages[0].module, "");
         assert_eq!(d.messages[0].diag_type, DiagType::Warning);
         assert_eq!(
             d.messages[0].msg,
@@ -506,9 +503,9 @@ mod test {
                 ..Default::default()
             },
         );
-        validate_module(&mut d, "module1", &nodes);
+        validate_module(&mut d, "", &nodes);
         assert_eq!(d.messages.len(), 1);
-        assert_eq!(d.messages[0].module, "module1");
+        assert_eq!(d.messages[0].module, "");
         assert_eq!(d.messages[0].diag_type, DiagType::Warning);
         assert_eq!(
             d.messages[0].msg,
@@ -530,9 +527,9 @@ mod test {
             },
         );
         nodes.insert("C1".to_owned(), GsnNode::default());
-        validate_module(&mut d, "module1", &nodes);
+        validate_module(&mut d, "", &nodes);
         assert_eq!(d.messages.len(), 1);
-        assert_eq!(d.messages[0].module, "module1");
+        assert_eq!(d.messages[0].module, "");
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
         assert_eq!(
             d.messages[0].msg,
@@ -569,21 +566,21 @@ mod test {
             },
         );
         nodes.insert("Sn1".to_owned(), GsnNode::default());
-        validate_module(&mut d, "module1", &nodes);
+        validate_module(&mut d, "", &nodes);
         assert_eq!(d.messages.len(), 3);
-        assert_eq!(d.messages[0].module, "module1");
+        assert_eq!(d.messages[0].module, "");
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
         assert_eq!(
             d.messages[0].msg,
             "Element G1 has invalid type of reference G2 in context."
         );
-        assert_eq!(d.messages[1].module, "module1");
+        assert_eq!(d.messages[1].module, "");
         assert_eq!(d.messages[1].diag_type, DiagType::Error);
         assert_eq!(
             d.messages[1].msg,
             "Element G1 has invalid type of reference S1 in context."
         );
-        assert_eq!(d.messages[2].module, "module1");
+        assert_eq!(d.messages[2].module, "");
         assert_eq!(d.messages[2].diag_type, DiagType::Error);
         assert_eq!(
             d.messages[2].msg,
@@ -607,21 +604,21 @@ mod test {
         nodes.insert("C1".to_owned(), GsnNode::default());
         nodes.insert("J1".to_owned(), GsnNode::default());
         nodes.insert("A1".to_owned(), GsnNode::default());
-        validate_module(&mut d, "module1", &nodes);
+        validate_module(&mut d, "", &nodes);
         assert_eq!(d.messages.len(), 3);
-        assert_eq!(d.messages[0].module, "module1");
+        assert_eq!(d.messages[0].module, "");
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
         assert_eq!(
             d.messages[0].msg,
             "Element G1 has invalid type of reference C1 in supported by element."
         );
-        assert_eq!(d.messages[1].module, "module1");
+        assert_eq!(d.messages[1].module, "");
         assert_eq!(d.messages[1].diag_type, DiagType::Error);
         assert_eq!(
             d.messages[1].msg,
             "Element G1 has invalid type of reference J1 in supported by element."
         );
-        assert_eq!(d.messages[2].module, "module1");
+        assert_eq!(d.messages[2].module, "");
         assert_eq!(d.messages[2].diag_type, DiagType::Error);
         assert_eq!(
             d.messages[2].msg,
@@ -643,15 +640,15 @@ mod test {
                 ..Default::default()
             },
         );
-        validate_module(&mut d, "module1", &nodes);
+        validate_module(&mut d, "", &nodes);
         assert_eq!(d.messages.len(), 3);
-        assert_eq!(d.messages[0].module, "module1");
+        assert_eq!(d.messages[0].module, "");
         assert_eq!(d.messages[0].diag_type, DiagType::Warning);
         assert_eq!(d.messages[0].msg, "Element G1 is undeveloped.");
-        assert_eq!(d.messages[1].module, "module1");
+        assert_eq!(d.messages[1].module, "");
         assert_eq!(d.messages[1].diag_type, DiagType::Warning);
         assert_eq!(d.messages[1].msg, "Element G2 is undeveloped.");
-        assert_eq!(d.messages[2].module, "module1");
+        assert_eq!(d.messages[2].module, "");
         assert_eq!(d.messages[2].diag_type, DiagType::Error);
         assert_eq!(
             d.messages[2].msg,
@@ -673,15 +670,15 @@ mod test {
                 ..Default::default()
             },
         );
-        validate_module(&mut d, "module1", &nodes);
+        validate_module(&mut d, "", &nodes);
         assert_eq!(d.messages.len(), 3);
-        assert_eq!(d.messages[0].module, "module1");
+        assert_eq!(d.messages[0].module, "");
         assert_eq!(d.messages[0].diag_type, DiagType::Warning);
         assert_eq!(d.messages[0].msg, "Element S1 is undeveloped.");
-        assert_eq!(d.messages[1].module, "module1");
+        assert_eq!(d.messages[1].module, "");
         assert_eq!(d.messages[1].diag_type, DiagType::Warning);
         assert_eq!(d.messages[1].msg, "Element S2 is undeveloped.");
-        assert_eq!(d.messages[2].module, "module1");
+        assert_eq!(d.messages[2].module, "");
         assert_eq!(d.messages[2].diag_type, DiagType::Error);
         assert_eq!(
             d.messages[2].msg,
@@ -704,9 +701,9 @@ mod test {
             },
         );
         nodes.insert("Sn2".to_owned(), GsnNode::default());
-        validate_module(&mut d, "module1", &nodes);
+        validate_module(&mut d, "", &nodes);
         assert_eq!(d.messages.len(), 1);
-        assert_eq!(d.messages[0].module, "module1");
+        assert_eq!(d.messages[0].module, "");
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
         assert_eq!(
             d.messages[0].msg,
@@ -721,9 +718,9 @@ mod test {
         let mut d = Diagnostics::default();
         let mut nodes = MyMap::<String, GsnNode>::new();
         nodes.insert("Sn1".to_owned(), GsnNode::default());
-        validate_module(&mut d, "module1", &nodes);
+        validate_module(&mut d, "", &nodes);
         assert_eq!(d.messages.len(), 1);
-        assert_eq!(d.messages[0].module, "module1");
+        assert_eq!(d.messages[0].module, "");
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
         assert_eq!(
             d.messages[0].msg,
@@ -747,7 +744,7 @@ mod test {
                 ..Default::default()
             },
         );
-        check_layers(&mut d, "module1", &nodes, &["layer1"]);
+        check_layers(&mut d, "", &nodes, &["layer1"]);
         assert_eq!(d.messages.len(), 0);
         assert_eq!(d.errors, 0);
         assert_eq!(d.warnings, 0);
@@ -759,9 +756,9 @@ mod test {
         let mut nodes = MyMap::<String, GsnNode>::new();
 
         nodes.insert("Sn1".to_owned(), GsnNode::default());
-        check_layers(&mut d, "module1", &nodes, &["layer1"]);
+        check_layers(&mut d, "", &nodes, &["layer1"]);
         assert_eq!(d.messages.len(), 1);
-        assert_eq!(d.messages[0].module, "module1");
+        assert_eq!(d.messages[0].module, "");
         assert_eq!(d.messages[0].diag_type, DiagType::Warning);
         assert_eq!(
             d.messages[0].msg,
@@ -785,9 +782,9 @@ mod test {
                 ..Default::default()
             },
         );
-        check_layers(&mut d, "module1", &nodes, &["layer1", "layer2"]);
+        check_layers(&mut d, "", &nodes, &["layer1", "layer2"]);
         assert_eq!(d.messages.len(), 1);
-        assert_eq!(d.messages[0].module, "module1");
+        assert_eq!(d.messages[0].module, "");
         assert_eq!(d.messages[0].diag_type, DiagType::Warning);
         assert_eq!(
             d.messages[0].msg,
@@ -811,15 +808,15 @@ mod test {
                 ..Default::default()
             },
         );
-        check_layers(&mut d, "module1", &nodes, &["inContextOf", "layer2"]);
+        check_layers(&mut d, "", &nodes, &["inContextOf", "layer2"]);
         assert_eq!(d.messages.len(), 2);
-        assert_eq!(d.messages[0].module, "module1");
+        assert_eq!(d.messages[0].module, "");
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
         assert_eq!(
             d.messages[0].msg,
             "inContextOf is a reserved attribute and cannot be used as layer."
         );
-        assert_eq!(d.messages[1].module, "module1");
+        assert_eq!(d.messages[1].module, "");
         assert_eq!(d.messages[1].diag_type, DiagType::Warning);
         assert_eq!(
             d.messages[1].msg,
