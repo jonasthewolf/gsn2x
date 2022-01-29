@@ -110,6 +110,7 @@ where
 
 #[cfg(test)]
 mod test {
+
     use super::*;
     #[test]
     fn format() {
@@ -117,4 +118,14 @@ mod test {
         let mm = MyMap(btm.clone());
         assert_eq!(format!("{:?}", mm), format!("{:?}", btm));
     }
+    #[test]
+    fn debug() {
+        assert!(MyMap::<String,String>::new() == MyMap::<String,String>::new());
+    }
+    #[test]
+    fn dupliacte() {
+        let m = serde_yaml::from_str::<MyMap<String,String>>("x:a\nx:b");
+        assert!(m.is_err());
+    }
 }
+

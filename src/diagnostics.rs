@@ -50,3 +50,13 @@ impl Diagnostics {
         self.messages.push(d);
     }
 }
+
+#[cfg(test)]
+mod test {
+    use crate::diagnostics::DiagType;
+
+    #[test]
+    fn debug() {
+        assert_eq!(format!("{:?}", DiagType::Warning), "Warning");
+    }
+}
