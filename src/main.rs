@@ -1,24 +1,18 @@
-use ::tera::Tera;
 use anyhow::{anyhow, Context, Result};
 use clap::{app_from_crate, Arg, ErrorKind};
-use std::collections::BTreeMap;
 use std::fs::File;
-use std::io::{BufReader, Read, Write};
+use std::io::BufReader;
 
 mod diagnostics;
 mod gsn;
+mod render;
 mod tera;
 mod util;
 mod yaml_fix;
 
-use crate::tera::Pad;
-use crate::tera::Ralign;
-use crate::tera::WordWrap;
 use diagnostics::Diagnostics;
-use gsn::{GsnNode, ModuleDependency};
+use gsn::GsnNode;
 use yaml_fix::MyMap;
-
-use crate::gsn::get_levels;
 
 ///
 /// Main entry point.
@@ -138,17 +132,28 @@ fn main() -> Result<()> {
     let layers = matches
         .values_of("LAYERS")
         .map(|x| x.collect::<Vec<&str>>());
+    let stylesheet = matches.value_of("STYLESHEET");
     let excluded_modules = matches
         .values_of("EXCLUDED_MODULE")
         .map(|x| x.collect::<Vec<&str>>());
+    let modules = inputs
+        .iter()
+        .map(util::escape_module_name)
+        .collect::<Vec<String>>();
+    let static_render_context = render::StaticRenderContext {
+        modules: &modules,
+        input_files: &inputs,
+        layers: &layers,
+        stylesheet,
+    };
 
     // Read input
     for input in &inputs {
         let module = util::escape_module_name(input);
-        let mut reader =
+        let reader =
             BufReader::new(File::open(&input).context(format!("Failed to open file {}", input))?);
-        let mut n =
-            read_input(&mut reader).context(format!("Failed to parse YAML from file {}", input))?;
+        let mut n: MyMap<String, GsnNode> = serde_yaml::from_reader(reader)
+            .context(format!("Failed to parse YAML from file {}", input))?;
         // Remember module for node
         n.iter_mut()
             .for_each(|(_, mut x)| x.module = module.to_string());
@@ -187,101 +192,82 @@ fn main() -> Result<()> {
     }
     // TODO Check that only one global top-level element remains
     // TODO Return really necessary?
-    if diags.errors > 0 {
-        return output_messages(&diags);
-    }
+    if diags.errors == 0 {
+        // Output argument view
+        if !(matches.is_present("VALONLY") || matches.is_present("SUPPRESSARGUMENT")) {
+            for input in &inputs {
+                // It is already checked that if OUTPUT is set, only one input file is provided.
+                let mut output_file = if matches.is_present("OUTPUT") {
+                    Box::new(std::io::stdout()) as Box<dyn std::io::Write>
+                } else {
+                    let mut pbuf = std::path::PathBuf::from(input);
+                    pbuf.set_extension("dot");
+                    let output_filename = pbuf.as_path();
+                    Box::new(File::create(output_filename).context(format!(
+                        "Failed to open output file {}",
+                        output_filename.display()
+                    ))?) as Box<dyn std::io::Write>
+                };
+                render::render_view(
+                    &util::escape_module_name(input),
+                    &nodes,
+                    None,
+                    &mut output_file,
+                    render::View::Argument,
+                    &static_render_context,
+                )?;
+            }
+        }
 
-    // Output argument view
-    if !(matches.is_present("VALONLY") || matches.is_present("SUPPRESSARGUMENT")) {
-        for input in &inputs {
-            // It is already checked that if OUTPUT is set, only one input file is provided.
-            let mut output_file = if matches.is_present("OUTPUT") {
-                Box::new(std::io::stdout()) as Box<dyn std::io::Write>
-            } else {
-                let mut pbuf = std::path::PathBuf::from(input);
-                pbuf.set_extension("dot");
-                let output_filename = pbuf.as_path();
-                Box::new(File::create(output_filename).context(format!(
-                    "Failed to open output file {}",
-                    output_filename.display()
-                ))?) as Box<dyn std::io::Write>
-            };
-            render_view(
-                &util::escape_module_name(input),
-                &inputs,
+        //
+        // Additional outputs
+        //
+
+        // Architecture view
+        if let Some(arch_view) = matches.value_of("ARCHITECTURE_VIEW") {
+            let mut output_file = File::create(arch_view)
+                .context(format!("Failed to open output file {}", arch_view))?;
+            let deps = crate::gsn::calculate_module_dependencies(&nodes);
+            render::render_view(
+                &util::escape_module_name(&arch_view),
                 &nodes,
-                &layers,
-                matches.value_of("STYLESHEET"),
+                Some(&deps),
+                &mut output_file,
+                render::View::Architecture,
+                &static_render_context,
+            )?;
+        }
+
+        // Complete view
+        if let Some(compl_view) = matches.value_of("COMPLETE_VIEW") {
+            let mut output_file = File::create(compl_view)
+                .context(format!("Failed to open output file {}", compl_view))?;
+            render::render_view(
+                &util::escape_module_name(&compl_view),
+                &nodes,
                 None,
                 &mut output_file,
-                View::Argument,
+                render::View::Complete,
+                &static_render_context,
+            )?;
+        }
+
+        // List of evidences
+        if let Some(output) = matches.value_of("EVIDENCES") {
+            let mut output_file =
+                File::create(output).context(format!("Failed to open output file {}", output))?;
+            render::render_view(
+                "Evidences",
+                &nodes,
+                None,
+                &mut output_file,
+                render::View::Evidences,
+                &static_render_context,
             )?;
         }
     }
-
-    //
-    // Additional outputs
-    //
-
-    // Architecture view
-    if let Some(arch_view) = matches.value_of("ARCHITECTURE_VIEW") {
-        let mut output_file =
-            File::create(arch_view).context(format!("Failed to open output file {}", arch_view))?;
-        let deps = crate::gsn::calculate_module_dependencies(&nodes);
-        render_view(
-            &util::escape_module_name(&arch_view),
-            &inputs,
-            &nodes,
-            &layers,
-            matches.value_of("STYLESHEET"),
-            Some(&deps),
-            &mut output_file,
-            View::Architecture,
-        )?;
-    }
-
-    // Complete view
-    if let Some(compl_view) = matches.value_of("COMPLETE_VIEW") {
-        let mut output_file = File::create(compl_view)
-            .context(format!("Failed to open output file {}", compl_view))?;
-        render_view(
-            &util::escape_module_name(&compl_view),
-            &inputs,
-            &nodes,
-            &layers,
-            matches.value_of("STYLESHEET"),
-            None,
-            &mut output_file,
-            View::Complete,
-        )?;
-    }
-
-    // List of evidences
-    if let Some(output) = matches.value_of("EVIDENCES") {
-        let mut output_file =
-            File::create(output).context(format!("Failed to open output file {}", output))?;
-        render_view(
-            "Evidences",
-            &inputs,
-            &nodes,
-            &layers,
-            None, // No stylesheet for Markdown
-            None,
-            &mut output_file,
-            View::Evidences,
-        )?;
-    }
-
     // Output diagnostic messages
     output_messages(&diags)
-}
-
-///
-/// Create separate function for testability reasons.
-///
-fn read_input(input: &mut impl Read) -> Result<MyMap<String, GsnNode>, anyhow::Error> {
-    let nodes: MyMap<String, GsnNode> = serde_yaml::from_reader(input)?;
-    Ok(nodes)
 }
 
 ///
@@ -306,74 +292,9 @@ fn output_messages(diags: &Diagnostics) -> Result<()> {
     }
 }
 
-enum View {
-    Argument,
-    Architecture,
-    Complete,
-    Evidences,
-}
-
-///
-/// Use Tera to create dot-file.
-/// Templates are inlined in executable.
-///
-/// TODO clippy warning, remove too many parameters e.g. by introducing a struct for context
-///
-fn render_view(
-    module: &str,
-    modules: &[&str],
-    nodes: &MyMap<String, GsnNode>,
-    layers: &Option<Vec<&str>>,
-    stylesheet: Option<&str>,
-    dependencies: Option<&BTreeMap<String, BTreeMap<String, ModuleDependency>>>,
-    output: &mut impl Write,
-    view: View,
-) -> Result<(), anyhow::Error> {
-    let mut context = ::tera::Context::new();
-    // Note the max() at the end, so we don't get a NaN when calculating width
-    let num_solutions = nodes
-        .iter()
-        .filter(|(id, _)| id.starts_with("Sn"))
-        .count()
-        .max(1);
-    let width = (num_solutions as f32).log10().ceil() as usize;
-    context.insert("module", module);
-    context.insert("modules", modules);
-    context.insert("dependencies", &dependencies);
-    context.insert("nodes", &nodes);
-    context.insert("layers", &layers);
-    context.insert("levels", &get_levels(nodes));
-    context.insert("stylesheet", &stylesheet);
-    context.insert("evidences_width", &width);
-    let mut tera = Tera::default();
-    tera.register_filter("wordwrap", WordWrap);
-    tera.register_filter("ralign", Ralign);
-    tera.register_filter("pad", Pad);
-    tera.add_raw_templates(vec![
-        ("macros.dot", include_str!("../templates/macros.dot")),
-        ("argument.dot", include_str!("../templates/argument.dot")),
-        (
-            "architecture.dot",
-            include_str!("../templates/architecture.dot"),
-        ),
-        ("complete.dot", include_str!("../templates/complete.dot")),
-        ("evidences.md", include_str!("../templates/evidences.md")),
-    ])?;
-    let template = match view {
-        View::Argument => "argument.dot",
-        View::Architecture => "architecture.dot",
-        View::Complete => "complete.dot",
-        View::Evidences => "evidences.md",
-    };
-    tera.render_to(template, &context, output)
-        .context("Failed to write to output.")?;
-    Ok(())
-}
-
 #[cfg(test)]
 mod test {
     use crate::diagnostics::Diagnostics;
-    use crate::*;
 
     #[test]
     fn check_output_messages_errors() {
@@ -412,27 +333,5 @@ mod test {
         let res = crate::output_messages(&d);
         assert!(res.is_ok());
         assert_eq!(format!("{:?}", res), "Ok(())");
-    }
-
-    #[test]
-    fn checkyamlworkaround() {
-        let input = "A:\n text: absd\n\nA:\n text: cdawer\n\nB:\n text: asfas";
-        let res = read_input(&mut input.as_bytes());
-        assert!(res.is_err());
-        assert_eq!(
-            format!("{:?}", res),
-            "Err(Element A is already existing at line 1 column 2)"
-        );
-    }
-
-    #[test]
-    fn checkyamlworkaround_unknownformat() {
-        let input = "- A\n\n- B\n\n- C\n";
-        let res = read_input(&mut input.as_bytes());
-        assert!(res.is_err());
-        assert_eq!(
-            format!("{:?}", res),
-            "Err(invalid type: sequence, expected a map with unique keys at line 1 column 1)"
-        );
     }
 }

@@ -141,12 +141,11 @@ mod integrations {
             .stderr(predicate::str::contains("Warning: (examples_modular_sub3_gsn_yaml) There is more than one unreferenced element: C2, Sn1."));
         let predicate_file = predicate::path::eq_file(arch_file.path()).utf8().unwrap();
         // Fix path from temporary location
-        let expected =
-            fs::read_to_string(std::path::Path::new("tests/arch.gsn.test.dot"))?
-                .replace(
-                    "examples_modular_arch_gsn_test_dot",
-                    &util::escape_module_name(&format!("{}", arch_file.path().display()).as_str()),
-                );
+        let expected = fs::read_to_string(std::path::Path::new("tests/arch.gsn.test.dot"))?
+            .replace(
+                "examples_modular_arch_gsn_test_dot",
+                &util::escape_module_name(&format!("{}", arch_file.path().display()).as_str()),
+            );
         assert!(predicate_file.eval(expected.as_str()));
         arch_file.close()?;
         Ok(())
@@ -170,13 +169,11 @@ mod integrations {
             ));
         let predicate_file = predicate::path::eq_file(compl_file.path()).utf8().unwrap();
         // Fix path from temporary location
-        let expected = fs::read_to_string(std::path::Path::new(
-            "tests/complete.gsn.test.dot",
-        ))?
-        .replace(
-            "examples_modular_complete_gsn_test_dot",
-            &util::escape_module_name(&format!("{}", compl_file.path().display()).as_str()),
-        );
+        let expected = fs::read_to_string(std::path::Path::new("tests/complete.gsn.test.dot"))?
+            .replace(
+                "examples_modular_complete_gsn_test_dot",
+                &util::escape_module_name(&format!("{}", compl_file.path().display()).as_str()),
+            );
         assert!(predicate_file.eval(expected.as_str()));
         compl_file.close()?;
         Ok(())

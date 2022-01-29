@@ -120,12 +120,25 @@ mod test {
     }
     #[test]
     fn debug() {
-        assert!(MyMap::<String,String>::new() == MyMap::<String,String>::new());
+        assert!(MyMap::<String, String>::new() == MyMap::<String, String>::new());
     }
     #[test]
     fn dupliacte() {
-        let m = serde_yaml::from_str::<MyMap<String,String>>("x:a\nx:b");
+        let m = serde_yaml::from_str::<MyMap<String, String>>("x:\n\nx:");
         assert!(m.is_err());
+        assert_eq!(
+            format!("{:?}", m),
+            "Err(Message(\"Element x is already existing\", Some(Pos { marker: Marker { index: 1, line: 1, col: 1 }, path: \".\" })))"
+        );
+    }
+    #[test]
+    fn unknown_format() {
+        let input = "- A\n\n- B\n\n- C\n";
+        let res = serde_yaml::from_str::<MyMap<String, String>>(input);
+        assert!(res.is_err());
+        assert_eq!(
+            format!("{:?}", res),
+            "Err(Message(\"invalid type: sequence, expected a map with unique keys\", Some(Pos { marker: Marker { index: 0, line: 1, col: 0 }, path: \".\" })))"
+        );
     }
 }
-
