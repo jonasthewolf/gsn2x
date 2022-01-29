@@ -19,5 +19,5 @@ List of Evidences
     {%- endif %} 
 {%- endfor %} 
 {%- if counter == 0 %}
-No evidences found
+No evidences found.
 {%- endif -%}

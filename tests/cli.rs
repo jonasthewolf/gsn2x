@@ -1,5 +1,9 @@
+#[path = "../src/util.rs"]
+mod util;
+
 #[cfg(test)]
 mod integrations {
+    use super::util;
     use assert_cmd::prelude::*;
     use predicates::prelude::*;
     use std::{fs, process::Command};
@@ -31,7 +35,7 @@ mod integrations {
         cmd.assert()
             .success()
             .stdout(predicate::path::eq_file(std::path::Path::new(
-                "examples/example.gsn.test.dot",
+                "tests/example.gsn.test.dot",
             )));
         Ok(())
     }
@@ -41,8 +45,14 @@ mod integrations {
         let mut cmd = Command::cargo_bin("gsn2x")?;
         cmd.arg("-c")
             .arg("examples/modular/main.gsn.yaml")
-            .arg("examples/modular/sub1.gsn.yaml");
-        cmd.assert().success().stdout(predicate::str::is_empty());
+            .arg("examples/modular/sub1.gsn.yaml")
+            .arg("examples/modular/sub3.gsn.yaml");
+        cmd.assert()
+            .success()
+            .stdout(predicate::str::is_empty())
+            .stderr(predicate::str::contains(
+                "There is more than one unreferenced element",
+            ));
         Ok(())
     }
 
@@ -79,7 +89,8 @@ mod integrations {
         cmd.arg("-n")
             .arg("-e")
             .arg(evidence_file.path())
-            .arg("examples/modular/main.gsn.yaml")
+            .arg("examples/modular/sub1.gsn.yaml")
+            .arg("-x")
             .arg("examples/modular/sub1.gsn.yaml");
         cmd.assert()
             .success()
@@ -88,7 +99,7 @@ mod integrations {
         let predicate_file = predicate::path::eq_file(evidence_file.path())
             .utf8()
             .unwrap();
-        assert!(predicate_file.eval("\nList of Evidences\n\nNo evidences found"));
+        assert!(predicate_file.eval("\nList of Evidences\n\nNo evidences found."));
         evidence_file.close()?;
         Ok(())
     }
@@ -109,7 +120,7 @@ mod integrations {
         let predicate_file = predicate::path::eq_file(evidence_file.path())
             .utf8()
             .unwrap();
-        assert!(predicate_file.eval(std::path::Path::new("examples/example.gsn.test.md")));
+        assert!(predicate_file.eval(std::path::Path::new("tests/example.gsn.test.md")));
         evidence_file.close()?;
         Ok(())
     }
@@ -117,23 +128,24 @@ mod integrations {
     #[test]
     fn arch_view() -> Result<(), Box<dyn std::error::Error>> {
         let mut cmd = Command::cargo_bin("gsn2x")?;
-        let arch_file = assert_fs::NamedTempFile::new("evidences.md")?;
+        let arch_file = assert_fs::NamedTempFile::new("arch.dot")?;
         cmd.arg("-n")
             .arg("-a")
             .arg(arch_file.path())
             .arg("examples/modular/main.gsn.yaml")
-            .arg("examples/modular/sub1.gsn.yaml");
+            .arg("examples/modular/sub1.gsn.yaml")
+            .arg("examples/modular/sub3.gsn.yaml");
         cmd.assert()
             .success()
             .stdout(predicate::str::is_empty())
-            .stderr(predicate::str::is_empty());
+            .stderr(predicate::str::contains("Warning: (examples_modular_sub3_gsn_yaml) There is more than one unreferenced element: C2, Sn1."));
         let predicate_file = predicate::path::eq_file(arch_file.path()).utf8().unwrap();
         // Fix path from temporary location
         let expected =
-            fs::read_to_string(std::path::Path::new("examples/modular/arch.gsn.test.dot"))?
+            fs::read_to_string(std::path::Path::new("tests/arch.gsn.test.dot"))?
                 .replace(
-                    "examples/modular/arch.gsn.test.dot",
-                    &format!("{}", arch_file.path().display()),
+                    "examples_modular_arch_gsn_test_dot",
+                    &util::escape_module_name(&format!("{}", arch_file.path().display()).as_str()),
                 );
         assert!(predicate_file.eval(expected.as_str()));
         arch_file.close()?;
@@ -148,19 +160,22 @@ mod integrations {
             .arg("-f")
             .arg(compl_file.path())
             .arg("examples/modular/main.gsn.yaml")
-            .arg("examples/modular/sub1.gsn.yaml");
+            .arg("examples/modular/sub1.gsn.yaml")
+            .arg("examples/modular/sub3.gsn.yaml");
         cmd.assert()
             .success()
             .stdout(predicate::str::is_empty())
-            .stderr(predicate::str::is_empty());
+            .stderr(predicate::str::contains(
+                "There is more than one unreferenced element",
+            ));
         let predicate_file = predicate::path::eq_file(compl_file.path()).utf8().unwrap();
         // Fix path from temporary location
         let expected = fs::read_to_string(std::path::Path::new(
-            "examples/modular/complete.gsn.test.dot",
+            "tests/complete.gsn.test.dot",
         ))?
         .replace(
-            "examples/modular/complete.gsn.test.dot",
-            &format!("{}", compl_file.path().display()),
+            "examples_modular_complete_gsn_test_dot",
+            &util::escape_module_name(&format!("{}", compl_file.path().display()).as_str()),
         );
         assert!(predicate_file.eval(expected.as_str()));
         compl_file.close()?;

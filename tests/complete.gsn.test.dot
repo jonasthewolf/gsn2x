@@ -1,0 +1,41 @@
+
+
+digraph "examples_modular_complete_gsn_test_dot" {
+  graph [class="gsndiagram", ranksep="equally", newrank="true"]
+
+  ## Elements
+  "C1" [id="gsn_c1", shape="box", class="gsnelem gsnctxt gsnmod_examples_modular_main_gsn_yaml", style="rounded", label=<<B>C1</B><BR align="left"/>Some Context>];
+  "C2" [id="gsn_c2", shape="box", class="gsnelem gsnctxt gsnmod_examples_modular_sub3_gsn_yaml", style="rounded", label=<<B>C2</B><BR align="left"/>Context 2>];
+  "G1" [id="gsn_g1", shape="box", class="gsnelem gsngoal gsnmod_examples_modular_main_gsn_yaml", label=<<B>G1</B><BR align="left"/>Main Goal>];
+  "G2" [id="gsn_g2", shape="box", class="gsnelem gsngoal gsnmod_examples_modular_main_gsn_yaml", label=<<B>G2</B><BR align="left"/>Divide>];
+  "G2":s -> "G2":s [taillabel=<<br/><b>&#9826;</b>>,color=transparent,arrowhead=none,labeldistance=0.1]
+  "G3" [id="gsn_g3", shape="box", class="gsnelem gsngoal gsnmod_examples_modular_sub1_gsn_yaml", label=<<B>G3</B><BR align="left"/>Conquer the submodules>];
+  "S1" [id="gsn_s1", shape="parallelogram", class="gsnelem gsnstgy gsnmod_examples_modular_main_gsn_yaml", label=<<B>S1</B><BR align="left"/>Divide and Conquer>];
+  "Sn1" [id="gsn_sn1", shape="circle", class="gsnelem gsnsltn gsnmod_examples_modular_sub3_gsn_yaml", label=<<B>Sn1</B><BR align="left"/>Solution 1>];
+
+  ## Relations
+  "G1" -> "S1" [class="gsnedge gsnspby"];
+  subgraph cluster4 {
+    graph[peripheries=0];
+    {
+      rank = same;
+      "G2" -> "C1" [arrowhead=empty, class="gsnedge gsninctxt"];
+    }
+  }
+  "G3" -> "Sn1" [class="gsnedge gsnspby"];
+  subgraph cluster5 {
+    graph[peripheries=0];
+    {
+      rank = same;
+      "G3" -> "C1" [arrowhead=empty, class="gsnedge gsninctxt"];
+      "C2" -> "G3" [dir=back, arrowtail=empty, class="gsnedge gsninctxt"];
+    }
+  }
+  "S1" -> "G2" [class="gsnedge gsnspby"];
+  "S1" -> "G3" [class="gsnedge gsnspby"];
+
+  
+  
+  
+}
+

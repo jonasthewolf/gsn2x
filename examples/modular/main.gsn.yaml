@@ -9,5 +9,8 @@ S1:
 
 G2:
   text: Divide
+  inContextOf: [C1]
   undeveloped: true
 
+C1:
+  text: Some Context

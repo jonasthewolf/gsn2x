@@ -8,6 +8,7 @@ use std::io::{BufReader, Read, Write};
 mod diagnostics;
 mod gsn;
 mod tera;
+mod util;
 mod yaml_fix;
 
 use crate::tera::Pad;
@@ -143,7 +144,7 @@ fn main() -> Result<()> {
 
     // Read input
     for input in &inputs {
-        let module = escape_module_name(input);
+        let module = util::escape_module_name(input);
         let mut reader =
             BufReader::new(File::open(&input).context(format!("Failed to open file {}", input))?);
         let mut n =
@@ -172,7 +173,7 @@ fn main() -> Result<()> {
 
     // Validate
     for input in &inputs {
-        let module = escape_module_name(input);
+        let module = util::escape_module_name(input);
         // When validating a module, all references are resolved.
         if let Some(excluded) = &excluded_modules {
             if excluded.contains(input) {
@@ -206,7 +207,7 @@ fn main() -> Result<()> {
                 ))?) as Box<dyn std::io::Write>
             };
             render_view(
-                &escape_module_name(input),
+                &util::escape_module_name(input),
                 &inputs,
                 &nodes,
                 &layers,
@@ -228,7 +229,7 @@ fn main() -> Result<()> {
             File::create(arch_view).context(format!("Failed to open output file {}", arch_view))?;
         let deps = crate::gsn::calculate_module_dependencies(&nodes);
         render_view(
-            &escape_module_name(&arch_view),
+            &util::escape_module_name(&arch_view),
             &inputs,
             &nodes,
             &layers,
@@ -244,7 +245,7 @@ fn main() -> Result<()> {
         let mut output_file = File::create(compl_view)
             .context(format!("Failed to open output file {}", compl_view))?;
         render_view(
-            &escape_module_name(&compl_view),
+            &util::escape_module_name(&compl_view),
             &inputs,
             &nodes,
             &layers,
@@ -273,22 +274,6 @@ fn main() -> Result<()> {
 
     // Output diagnostic messages
     output_messages(&diags)
-}
-
-///
-/// Escape module name
-///
-/// Remove espcially the "."'s, since the module name is used in the template as a key for a map.
-/// However, Tera cannot cope with that. The dot is interpreted as a separator for attributes.
-///
-fn escape_module_name(input: &&str) -> String {
-    input
-        .replace(".", "_")
-        .replace("-", "_")
-        .replace(" ", "_")
-        .replace("/", "_")
-        .replace("\\", "_")
-        .replace(":", "_")
 }
 
 ///
