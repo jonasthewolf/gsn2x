@@ -141,13 +141,16 @@ It is recommended to use `level` only for goals, since related contexts, justifi
 
 ## Modular Extension
 
-gsn2x supports the Modular Extension of the GSN standard (see [Standard support](#standard-support)).
+gsn2x partially supports the Modular Extension of the GSN standard (see [Standard support](#standard-support)).
+Module Interfaces (1:4.6) and Inter-Module Contracts (1:4.7) are not supported.
 
 Each module is a separate file. The name of the module is the file name (incl. the path provided to the gsn2x command line).
 
 If modules are used, all dependent module files must be provided to the command line of gsn2x.
 Element IDs must be unique accross all modules. Validation will by default be performed accross all modules.
 Validation messages for individual modules can be omitted using the `-x` option.
+
+The argument view of individual modules will show "away" elements if elements from other modules are referenced.
 
 In addition to the default argument view for each module, there can be two output files generated:
 1) Complete View
@@ -157,11 +160,18 @@ If the argument view should not be updated, use the `-n` option.
 
 ### Complete View
 
-TODO
+The complete view is a similar to an argument view for a single module, but showing all modules within the same diagram. The modules are "unrolled". Modules can be masked i.e., unrolling is prevented, by additionally 
+adding those modules with the `-m` option.
 
 ### Architecture View
 
-TODO
+The architecture view only shows the selected modules and their dependencies.
+
+### Example:
+    
+    gsn2x -f full.dot -a arch.dot -m sub1.yml main.yml sub1.yml sub3.yml sub5.yml  
+
+This will generate the argument view for each module, the complete view (`-f full.dot`) of all modules and the architecture view (`-a arch.dot`). In the complete view, the elements of the `sub1` module will be represented by a module.
 
 ## List of evidences
 
@@ -178,10 +188,10 @@ The format can be used in Markdown and reStructuredText files.
 
 This tool is based on the [Goal Structuring Notation Community Standard Version 3](https://scsc.uk/r141C:1).
 
-| Standard                    | Support                                                                 |
-|-----------------------------|-------------------------------------------------------------------------|
-|Core GSN                     | :heavy_check_mark: full                                                 |
-|Argument Pattern Extension   | :x: not planned                                                         |
-|Modular Extension            | :construction: see [#6](https://github.com/jonasthewolf/gsn2x/issues/6) |
-|Confidence Argument Extension| :x: not planned                                                         |
-|Dialectic Extension          | :x: not planned                                                         |
+| Standard                    | Support                                     |
+|-----------------------------|---------------------------------------------|
+|Core GSN                     | :heavy_check_mark: full                     |
+|Argument Pattern Extension   | :x: not planned                             |
+|Modular Extension            | see (Modular Extension)[#modular-extension] |
+|Confidence Argument Extension| :x: not planned                             |
+|Dialectic Extension          | :x: not planned                             |

@@ -1,2 +1,42 @@
 
-// TODO What dependencies between modules are shown? and how to show them?
+digraph "{{module}}" {
+  graph [class="gsndiagram", ranksep="equally", newrank="true"{%- if stylesheet %}, stylesheet="{{ stylesheet }}"{%- endif %}]
+
+  ## Elements
+  {%- for mod, deps in dependencies %}
+  "{{mod}}" [shape="tab", class="gsnmodule gsnmod_{{ mod | lower | trim | replace(from=" ", to="_") | replace(from="-", to="_") | replace(from="/", to="_") | replace(from="\", to="_") | replace(from=".", to="_") }}"];
+  {%- endfor %}
+
+  ## Relations
+  {%- set_global covmod = [] %}
+  {%- for mod, deps in dependencies %}
+    {%- for other_mod, dtype in deps %}
+      {%- if mod ~ "-" ~ other_mod not in covmod %}
+            {%- set dir='' %}
+            {%- if other_mod in dependencies and mod in dependencies[other_mod] %}
+              {#- References are in both directions #}
+              {%- set dir=' dir="both"' %}
+              {%- if dependencies[other_mod][mod] == "InContextOf" %}
+                {%- set dir= dir ~ ' arrowtail="empty" ' %}
+              {%- elif dependencies[other_mod][mod] == "SupportedBy" %}
+                {%- set dir= dir ~ ' arrowtail="normal" ' %}
+              {%- else %}
+                {%- set dir= dir ~ ' arrowtail="veevee" ' %}
+              {%- endif %}
+            {%- endif %}
+            {#- References at least in one direction #}
+              {%- set tail='' %}
+              {%- if deps[other_mod] == "InContext" %}
+                {%- set tail= tail ~ ' arrowhead="empty"' %}
+              {%- elif deps[other_mod] == "SupportedBy" %}
+                {%- set tail= tail ~ ' arrowhead="normal"' %}
+              {%- else %}
+                {%- set tail= tail ~ ' arrowhead="veevee"' %}
+              {%- endif %}
+  "{{mod}}" -> "{{other_mod}}" [class="gsnedge"{{ dir }}{{ tail }}];
+            {%- set_global covmod = covmod | concat(with=other_mod ~ "-" ~ mod) %}
+      {%- endif %}
+    {%- endfor %} 
+  {%- endfor %} 
+}
+

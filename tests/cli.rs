@@ -142,7 +142,6 @@ mod integrations {
 
     #[test]
     fn comp_view() -> Result<(), Box<dyn std::error::Error>> {
-        // TODO Implement
         let mut cmd = Command::cargo_bin("gsn2x")?;
         let compl_file = assert_fs::NamedTempFile::new("complete.dot")?;
         cmd.arg("-n")

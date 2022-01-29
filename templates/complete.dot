@@ -1,6 +1,5 @@
-
 {% import "macros.dot" as macros %}
-
+{# TODO Allow masking of elements #}
 
 digraph "{{module}}" {
   graph [class="gsndiagram", ranksep="equally", newrank="true"{%- if stylesheet %}, stylesheet="{{ stylesheet }}"{%- endif %}]
@@ -43,6 +42,7 @@ digraph "{{module}}" {
     {%- endif %} 
   {%- endfor %}
 
+  {# #### Levels #### #}
   {% set levlen = levels | length %}
   {% if levlen > 0 %}
   ## Ranks (Levels)

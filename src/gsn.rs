@@ -1,7 +1,7 @@
 use crate::diagnostics::{DiagType, Diagnostics};
 use crate::yaml_fix::MyMap;
 use serde::{Deserialize, Serialize};
-use std::collections::HashSet;
+use std::collections::{BTreeMap, HashSet};
 use std::ops::Deref;
 
 ///
@@ -59,7 +59,7 @@ pub fn validate_module(diag: &mut Diagnostics, module: &str, nodes: &MyMap<Strin
         x if x > 1 => {
             let mut wn = wnodes.iter().cloned().collect::<Vec<String>>();
             wn.sort();
-            diag.add_error(
+            diag.add_warning(
                 module,
                 format!(
                     "There is more than one unreferenced element: {}.",
@@ -275,6 +275,59 @@ pub fn check_layers(
             );
         }
     }
+}
+
+#[derive(Debug, PartialEq, Serialize)]
+pub enum ModuleDependency {
+    SupportedBy,
+    InContextOf,
+    Both,
+}
+
+///
+/// Calculate module dependencies
+///
+///
+pub fn calculate_module_dependencies(
+    nodes: &MyMap<String, GsnNode>,
+) -> BTreeMap<String, BTreeMap<String, ModuleDependency>> {
+    let mut res = BTreeMap::<String, BTreeMap<String, ModuleDependency>>::new();
+    for v in nodes.values() {
+        res.insert(v.module.to_owned(), BTreeMap::new());
+    }
+    for v in nodes.deref().values() {
+        if let Some(sups) = &v.supported_by {
+            for sup in sups {
+                let other_module = &nodes.get(sup).unwrap().module;
+                if &v.module != other_module {
+                    let e = res.get_mut(&v.module).unwrap();
+                    e.entry(other_module.to_owned())
+                        .and_modify(|x| {
+                            if *x == ModuleDependency::InContextOf {
+                                *x = ModuleDependency::Both
+                            }
+                        })
+                        .or_insert(ModuleDependency::SupportedBy);
+                }
+            }
+        }
+        if let Some(ctxs) = &v.in_context_of {
+            for ctx in ctxs {
+                let other_module = &nodes.get(ctx).unwrap().module;
+                if &v.module != other_module {
+                    let e = res.get_mut(&v.module).unwrap();
+                    e.entry(other_module.to_owned())
+                        .and_modify(|x| {
+                            if *x == ModuleDependency::SupportedBy {
+                                *x = ModuleDependency::Both
+                            }
+                        })
+                        .or_insert(ModuleDependency::InContextOf);
+                }
+            }
+        }
+    }
+    res
 }
 
 #[cfg(test)]
@@ -530,13 +583,13 @@ mod test {
         validate_module(&mut d, "", &nodes);
         assert_eq!(d.messages.len(), 1);
         assert_eq!(d.messages[0].module, "");
-        assert_eq!(d.messages[0].diag_type, DiagType::Error);
+        assert_eq!(d.messages[0].diag_type, DiagType::Warning);
         assert_eq!(
             d.messages[0].msg,
             "There is more than one unreferenced element: C1, G1."
         );
-        assert_eq!(d.errors, 1);
-        assert_eq!(d.warnings, 0);
+        assert_eq!(d.errors, 0);
+        assert_eq!(d.warnings, 1);
     }
 
     #[test]
@@ -649,13 +702,13 @@ mod test {
         assert_eq!(d.messages[1].diag_type, DiagType::Warning);
         assert_eq!(d.messages[1].msg, "Element G2 is undeveloped.");
         assert_eq!(d.messages[2].module, "");
-        assert_eq!(d.messages[2].diag_type, DiagType::Error);
+        assert_eq!(d.messages[2].diag_type, DiagType::Warning);
         assert_eq!(
             d.messages[2].msg,
             "There is more than one unreferenced element: G1, G2."
         );
-        assert_eq!(d.errors, 1);
-        assert_eq!(d.warnings, 2);
+        assert_eq!(d.errors, 0);
+        assert_eq!(d.warnings, 3);
     }
 
     #[test]
@@ -679,13 +732,13 @@ mod test {
         assert_eq!(d.messages[1].diag_type, DiagType::Warning);
         assert_eq!(d.messages[1].msg, "Element S2 is undeveloped.");
         assert_eq!(d.messages[2].module, "");
-        assert_eq!(d.messages[2].diag_type, DiagType::Error);
+        assert_eq!(d.messages[2].diag_type, DiagType::Warning);
         assert_eq!(
             d.messages[2].msg,
             "There is more than one unreferenced element: S1, S2."
         );
-        assert_eq!(d.errors, 1);
-        assert_eq!(d.warnings, 2);
+        assert_eq!(d.errors, 0);
+        assert_eq!(d.warnings, 3);
     }
 
     #[test]

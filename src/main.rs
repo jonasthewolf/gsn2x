@@ -1,6 +1,7 @@
 use ::tera::Tera;
 use anyhow::{anyhow, Context, Result};
 use clap::{app_from_crate, Arg, ErrorKind};
+use std::collections::BTreeMap;
 use std::fs::File;
 use std::io::{BufReader, Read, Write};
 
@@ -13,7 +14,7 @@ use crate::tera::Pad;
 use crate::tera::Ralign;
 use crate::tera::WordWrap;
 use diagnostics::Diagnostics;
-use gsn::GsnNode;
+use gsn::{GsnNode, ModuleDependency};
 use yaml_fix::MyMap;
 
 use crate::gsn::get_levels;
@@ -142,13 +143,14 @@ fn main() -> Result<()> {
 
     // Read input
     for input in &inputs {
+        let module = escape_module_name(input);
         let mut reader =
             BufReader::new(File::open(&input).context(format!("Failed to open file {}", input))?);
         let mut n =
             read_input(&mut reader).context(format!("Failed to parse YAML from file {}", input))?;
         // Remember module for node
         n.iter_mut()
-            .for_each(|(_, mut x)| x.module = input.to_string());
+            .for_each(|(_, mut x)| x.module = module.to_string());
         // Check for duplicates, since they might be in separate files.
         for k in n.keys() {
             if nodes.contains_key(k) {
@@ -170,18 +172,23 @@ fn main() -> Result<()> {
 
     // Validate
     for input in &inputs {
+        let module = escape_module_name(input);
         // When validating a module, all references are resolved.
         if let Some(excluded) = &excluded_modules {
             if excluded.contains(input) {
                 continue;
             }
         }
-        gsn::validate_module(&mut diags, input, &nodes);
+        gsn::validate_module(&mut diags, &module, &nodes);
         if let Some(lays) = &layers {
-            gsn::check_layers(&mut diags, input, &nodes, lays);
+            gsn::check_layers(&mut diags, &module, &nodes, lays);
         }
     }
     // TODO Check that only one global top-level element remains
+    // TODO Return really necessary?
+    if diags.errors > 0 {
+        return output_messages(&diags);
+    }
 
     // Output argument view
     if !(matches.is_present("VALONLY") || matches.is_present("SUPPRESSARGUMENT")) {
@@ -199,10 +206,12 @@ fn main() -> Result<()> {
                 ))?) as Box<dyn std::io::Write>
             };
             render_view(
-                input,
+                &escape_module_name(input),
+                &inputs,
                 &nodes,
                 &layers,
                 matches.value_of("STYLESHEET"),
+                None,
                 &mut output_file,
                 View::Argument,
             )?;
@@ -217,11 +226,14 @@ fn main() -> Result<()> {
     if let Some(arch_view) = matches.value_of("ARCHITECTURE_VIEW") {
         let mut output_file =
             File::create(arch_view).context(format!("Failed to open output file {}", arch_view))?;
+        let deps = crate::gsn::calculate_module_dependencies(&nodes);
         render_view(
-            arch_view,
+            &escape_module_name(&arch_view),
+            &inputs,
             &nodes,
             &layers,
             matches.value_of("STYLESHEET"),
+            Some(&deps),
             &mut output_file,
             View::Architecture,
         )?;
@@ -232,10 +244,12 @@ fn main() -> Result<()> {
         let mut output_file = File::create(compl_view)
             .context(format!("Failed to open output file {}", compl_view))?;
         render_view(
-            compl_view,
+            &escape_module_name(&compl_view),
+            &inputs,
             &nodes,
             &layers,
             matches.value_of("STYLESHEET"),
+            None,
             &mut output_file,
             View::Complete,
         )?;
@@ -247,9 +261,11 @@ fn main() -> Result<()> {
             File::create(output).context(format!("Failed to open output file {}", output))?;
         render_view(
             "Evidences",
+            &inputs,
             &nodes,
             &layers,
             None, // No stylesheet for Markdown
+            None,
             &mut output_file,
             View::Evidences,
         )?;
@@ -257,6 +273,22 @@ fn main() -> Result<()> {
 
     // Output diagnostic messages
     output_messages(&diags)
+}
+
+///
+/// Escape module name
+///
+/// Remove espcially the "."'s, since the module name is used in the template as a key for a map.
+/// However, Tera cannot cope with that. The dot is interpreted as a separator for attributes.
+///
+fn escape_module_name(input: &&str) -> String {
+    input
+        .replace(".", "_")
+        .replace("-", "_")
+        .replace(" ", "_")
+        .replace("/", "_")
+        .replace("\\", "_")
+        .replace(":", "_")
 }
 
 ///
@@ -300,11 +332,15 @@ enum View {
 /// Use Tera to create dot-file.
 /// Templates are inlined in executable.
 ///
+/// TODO clippy warning, remove too many parameters e.g. by introducing a struct for context
+///
 fn render_view(
-    input: &str,
+    module: &str,
+    modules: &[&str],
     nodes: &MyMap<String, GsnNode>,
     layers: &Option<Vec<&str>>,
     stylesheet: Option<&str>,
+    dependencies: Option<&BTreeMap<String, BTreeMap<String, ModuleDependency>>>,
     output: &mut impl Write,
     view: View,
 ) -> Result<(), anyhow::Error> {
@@ -316,7 +352,9 @@ fn render_view(
         .count()
         .max(1);
     let width = (num_solutions as f32).log10().ceil() as usize;
-    context.insert("module", input);
+    context.insert("module", module);
+    context.insert("modules", modules);
+    context.insert("dependencies", &dependencies);
     context.insert("nodes", &nodes);
     context.insert("layers", &layers);
     context.insert("levels", &get_levels(nodes));
