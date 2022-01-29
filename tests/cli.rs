@@ -99,7 +99,7 @@ mod integrations {
         let predicate_file = predicate::path::eq_file(evidence_file.path())
             .utf8()
             .unwrap();
-        assert!(predicate_file.eval("\nList of Evidences\n\nNo evidences found."));
+        assert!(predicate_file.eval(std::path::Path::new("tests/empty.md")));
         evidence_file.close()?;
         Ok(())
     }
