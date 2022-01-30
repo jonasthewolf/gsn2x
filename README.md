@@ -192,6 +192,6 @@ This tool is based on the [Goal Structuring Notation Community Standard Version 
 |-----------------------------|---------------------------------------------|
 |Core GSN                     | :heavy_check_mark: full                     |
 |Argument Pattern Extension   | :x: not planned                             |
-|Modular Extension            | see (Modular Extension)[#modular-extension] |
+|Modular Extension            | see [Modular Extension](#modular-extension) |
 |Confidence Argument Extension| :x: not planned                             |
 |Dialectic Extension          | :x: not planned                             |
