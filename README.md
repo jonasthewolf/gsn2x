@@ -72,13 +72,15 @@ The tool automatically performs the following validation checks on the input YAM
  - The top-level element is a Goal.
  - All referenced elements (`supportedBy` and `inContextOf`) exist and only reference valid elements 
    (e.g. a Justification cannot be listed under `supportedBy`).
- - All IDs start with a known prefix, i.e. there are only known elements.
+ - All IDs start with a known prefix i.e., there are only known elements.
  - All Goals and Strategies are either marked with `undeveloped: true` or have supporting Goals, Strategies or Solutions.
  - Goals and Strategies marked as undeveloped, must have no supporting arguments.
 
 Uniqueness of keys is automatically enforced by the YAML format.
 
 Error messages and warnings are printed to stderr.
+
+Validation can be skipped for individual files by using the `-x` option.
 
 ## Additional layers
 
@@ -137,12 +139,12 @@ This is especially useful, if e.g., two goals or strategies are on the same logi
 
 See the [example](examples/example.gsn.yaml) for usage. The strategies S1 and S2 are on the same level.
 
-It is recommended to use `level` only for goals, since related contexts, justifications and assumptions are automatically put on the same level, i.e. the same rank in Graphviz.
+It is recommended to use `level` only for goals, since related contexts, justifications and assumptions are automatically put on the same level i.e., the same rank in Graphviz.
 
 ## Modular Extension
 
 gsn2x partially supports the Modular Extension of the GSN standard (see [Standard support](#standard-support)).
-Module Interfaces (1:4.6) and Inter-Module Contracts (1:4.7) are not supported.
+Module Interfaces (Section 1:4.6) and Inter-Module Contracts (Section 1:4.7) are not supported.
 
 Each module is a separate file. The name of the module is the file name (incl. the path provided to the gsn2x command line).
 
@@ -188,10 +190,12 @@ The format can be used in Markdown and reStructuredText files.
 
 This tool is based on the [Goal Structuring Notation Community Standard Version 3](https://scsc.uk/r141C:1).
 
-| Standard                    | Support                                     |
-|-----------------------------|---------------------------------------------|
-|Core GSN                     | :heavy_check_mark: full                     |
-|Argument Pattern Extension   | :x: not planned                             |
-|Modular Extension            | see [Modular Extension](#modular-extension) |
-|Confidence Argument Extension| :x: not planned                             |
-|Dialectic Extension          | :x: not planned                             |
+This table shows the support of `gsn2x` for the different parts of the standard.
+
+| Standard                    | Support                                                                        |
+|-----------------------------|--------------------------------------------------------------------------------|
+|Core GSN                     | :heavy_check_mark: full                                                        |
+|Argument Pattern Extension   | :x: not planned                                                                |
+|Modular Extension            | :part_alternation_mark: partially, see [Modular Extension](#modular-extension) |
+|Confidence Argument Extension| :x: not planned                                                                |
+|Dialectic Extension          | :x: not planned                                                                |
