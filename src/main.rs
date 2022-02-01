@@ -148,7 +148,134 @@ fn main() -> Result<()> {
     };
 
     // Read input
-    for input in &inputs {
+    read_inputs(&inputs, &mut nodes, &mut diags)?;
+    // Validate
+    validate(&inputs, excluded_modules, &mut diags, &nodes, &layers);
+
+    // TODO Check that only one global top-level element remains
+    if diags.errors == 0 {
+        // Output argument view
+        print_outputs(&matches, &inputs, nodes, static_render_context)?;
+    }
+    // Output diagnostic messages
+    output_messages(&diags)
+}
+
+///
+/// Print outputs
+///
+///
+///
+///
+fn print_outputs(
+    matches: &clap::ArgMatches,
+    inputs: &[&str],
+    nodes: MyMap<String, GsnNode>,
+    static_render_context: render::StaticRenderContext,
+) -> Result<(), anyhow::Error> {
+    if !(matches.is_present("VALONLY") || matches.is_present("SUPPRESSARGUMENT")) {
+        for input in inputs {
+            // It is already checked that if OUTPUT is set, only one input file is provided.
+            let mut output_file = if matches.is_present("OUTPUT") {
+                Box::new(std::io::stdout()) as Box<dyn std::io::Write>
+            } else {
+                let mut pbuf = std::path::PathBuf::from(input);
+                pbuf.set_extension("dot");
+                let output_filename = pbuf.as_path();
+                Box::new(File::create(output_filename).context(format!(
+                    "Failed to open output file {}",
+                    output_filename.display()
+                ))?) as Box<dyn std::io::Write>
+            };
+            render::render_view(
+                &util::escape_module_name(input),
+                &nodes,
+                None,
+                &mut output_file,
+                render::View::Argument,
+                &static_render_context,
+            )?;
+        }
+    }
+    if let Some(arch_view) = matches.value_of("ARCHITECTURE_VIEW") {
+        let mut output_file =
+            File::create(arch_view).context(format!("Failed to open output file {}", arch_view))?;
+        let deps = crate::gsn::calculate_module_dependencies(&nodes);
+        render::render_view(
+            &util::escape_module_name(&arch_view),
+            &nodes,
+            Some(&deps),
+            &mut output_file,
+            render::View::Architecture,
+            &static_render_context,
+        )?;
+    }
+    if let Some(compl_view) = matches.value_of("COMPLETE_VIEW") {
+        let mut output_file = File::create(compl_view)
+            .context(format!("Failed to open output file {}", compl_view))?;
+        render::render_view(
+            &util::escape_module_name(&compl_view),
+            &nodes,
+            None,
+            &mut output_file,
+            render::View::Complete,
+            &static_render_context,
+        )?;
+    }
+    if let Some(output) = matches.value_of("EVIDENCES") {
+        let mut output_file =
+            File::create(output).context(format!("Failed to open output file {}", output))?;
+        render::render_view(
+            "Evidences",
+            &nodes,
+            None,
+            &mut output_file,
+            render::View::Evidences,
+            &static_render_context,
+        )?;
+    }
+    Ok(())
+}
+
+///
+/// Validate modules
+///
+///
+///
+///
+fn validate(
+    inputs: &[&str],
+    excluded_modules: Option<Vec<&str>>,
+    diags: &mut Diagnostics,
+    nodes: &MyMap<String, GsnNode>,
+    layers: &Option<Vec<&str>>,
+) {
+    for input in inputs {
+        let module = util::escape_module_name(input);
+        // When validating a module, all references are resolved.
+        if let Some(excluded) = &excluded_modules {
+            // Only allow excluding files from validation if there is more than one.
+            if excluded.contains(input) && inputs.len() > 1 {
+                continue;
+            }
+        }
+        gsn::validate_module(diags, &module, nodes);
+        if let Some(lays) = &layers {
+            gsn::check_layers(diags, &module, nodes, lays);
+        }
+    }
+}
+
+///
+/// Read inputs
+///
+///
+fn read_inputs(
+    inputs: &[&str],
+    nodes: &mut MyMap<String, GsnNode>,
+    diags: &mut Diagnostics,
+) -> Result<(), anyhow::Error> {
+    for input in inputs {
         let module = util::escape_module_name(input);
         let reader =
             BufReader::new(File::open(&input).context(format!("Failed to open file {}", input))?);
@@ -169,105 +296,13 @@ fn main() -> Result<()> {
                         nodes.get(k).unwrap().module
                     ),
                 );
-                return output_messages(&diags);
+                break;
             }
         }
         // Merge nodes for further processing.
         nodes.append(&mut n);
     }
-
-    // Validate
-    for input in &inputs {
-        let module = util::escape_module_name(input);
-        // When validating a module, all references are resolved.
-        if let Some(excluded) = &excluded_modules {
-            if excluded.contains(input) {
-                continue;
-            }
-        }
-        gsn::validate_module(&mut diags, &module, &nodes);
-        if let Some(lays) = &layers {
-            gsn::check_layers(&mut diags, &module, &nodes, lays);
-        }
-    }
-    // TODO Check that only one global top-level element remains
-    // TODO Return really necessary?
-    if diags.errors == 0 {
-        // Output argument view
-        if !(matches.is_present("VALONLY") || matches.is_present("SUPPRESSARGUMENT")) {
-            for input in &inputs {
-                // It is already checked that if OUTPUT is set, only one input file is provided.
-                let mut output_file = if matches.is_present("OUTPUT") {
-                    Box::new(std::io::stdout()) as Box<dyn std::io::Write>
-                } else {
-                    let mut pbuf = std::path::PathBuf::from(input);
-                    pbuf.set_extension("dot");
-                    let output_filename = pbuf.as_path();
-                    Box::new(File::create(output_filename).context(format!(
-                        "Failed to open output file {}",
-                        output_filename.display()
-                    ))?) as Box<dyn std::io::Write>
-                };
-                render::render_view(
-                    &util::escape_module_name(input),
-                    &nodes,
-                    None,
-                    &mut output_file,
-                    render::View::Argument,
-                    &static_render_context,
-                )?;
-            }
-        }
-
-        //
-        // Additional outputs
-        //
-
-        // Architecture view
-        if let Some(arch_view) = matches.value_of("ARCHITECTURE_VIEW") {
-            let mut output_file = File::create(arch_view)
-                .context(format!("Failed to open output file {}", arch_view))?;
-            let deps = crate::gsn::calculate_module_dependencies(&nodes);
-            render::render_view(
-                &util::escape_module_name(&arch_view),
-                &nodes,
-                Some(&deps),
-                &mut output_file,
-                render::View::Architecture,
-                &static_render_context,
-            )?;
-        }
-
-        // Complete view
-        if let Some(compl_view) = matches.value_of("COMPLETE_VIEW") {
-            let mut output_file = File::create(compl_view)
-                .context(format!("Failed to open output file {}", compl_view))?;
-            render::render_view(
-                &util::escape_module_name(&compl_view),
-                &nodes,
-                None,
-                &mut output_file,
-                render::View::Complete,
-                &static_render_context,
-            )?;
-        }
-
-        // List of evidences
-        if let Some(output) = matches.value_of("EVIDENCES") {
-            let mut output_file =
-                File::create(output).context(format!("Failed to open output file {}", output))?;
-            render::render_view(
-                "Evidences",
-                &nodes,
-                None,
-                &mut output_file,
-                render::View::Evidences,
-                &static_render_context,
-            )?;
-        }
-    }
-    // Output diagnostic messages
-    output_messages(&diags)
+    Ok(())
 }
 
 ///

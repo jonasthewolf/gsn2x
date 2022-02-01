@@ -63,7 +63,7 @@ mod integrations {
             .arg("examples/modular/main.gsn.yaml")
             .arg("examples/modular/sub2.gsn.yaml");
         cmd.assert().failure().stderr(predicate::str::contains(
-            "Error: 1 errors and 0 warnings detected.",
+            "Error: 3 errors and 0 warnings detected.",
         ));
         Ok(())
     }
@@ -77,7 +77,7 @@ mod integrations {
             .arg("-x")
             .arg("examples/modular/sub2.gsn.yaml");
         cmd.assert().failure().stderr(predicate::str::contains(
-            "Error: 1 errors and 0 warnings detected.",
+            "Error: 3 errors and 0 warnings detected.",
         ));
         Ok(())
     }
@@ -89,9 +89,7 @@ mod integrations {
         cmd.arg("-n")
             .arg("-e")
             .arg(evidence_file.path())
-            .arg("examples/modular/sub1.gsn.yaml")
-            .arg("-x")
-            .arg("examples/modular/sub1.gsn.yaml");
+            .arg("tests/no_evidences.gsn.test.yaml");
         cmd.assert()
             .success()
             .stdout(predicate::str::is_empty())
@@ -99,7 +97,7 @@ mod integrations {
         let predicate_file = predicate::path::eq_file(evidence_file.path())
             .utf8()
             .unwrap();
-        assert!(predicate_file.eval(std::path::Path::new("tests/empty.md")));
+        assert!(predicate_file.eval(std::path::Path::new("tests/no_evidences.gsn.test.md")));
         evidence_file.close()?;
         Ok(())
     }
