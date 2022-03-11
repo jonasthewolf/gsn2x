@@ -1,0 +1,16 @@
+[package]
+name = "dirgraphsvg"
+description = ""
+version = "0.1.0"
+authors = ["Jonas Wolf <jonas.wolf@jonaswolf.org"]
+edition = "2021"
+license = "CC-BY-4.0"
+
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+anyhow = "1"
+svg = "0.10"
+font-kit = "0.10"
+rusttype = "0.9"
