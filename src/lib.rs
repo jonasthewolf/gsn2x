@@ -205,7 +205,7 @@ impl DirGraph {
             }
             ranks.insert(rank as usize, v);
             // Find children
-            n_ids = self.find_child_nodes(dbg!(rank), &n_ids);
+            n_ids = self.find_child_nodes(rank, &n_ids);
             if n_ids.is_empty() {
                 break;
             }
