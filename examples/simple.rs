@@ -27,6 +27,30 @@ fn main() -> Result<(), std::io::Error> {
         None,
         None,
     )));
+    let goal3 = Rc::new(RefCell::new(Goal::new(
+        "G3",
+        "sub di dub di dub",
+        false,
+        None,
+        None,
+        Some(3),
+    )));
+    let goal4 = Rc::new(RefCell::new(Goal::new(
+        "G4",
+        "circle di circle",
+        false,
+        None,
+        None,
+        None,
+    )));
+    let goal5 = Rc::new(RefCell::new(Goal::new(
+        "G5",
+        "elcric id elcric",
+        false,
+        None,
+        None,
+        Some(2),
+    )));
     let strategy = Rc::new(RefCell::new(Strategy::new(
         "S1",
         "test strategy",
@@ -50,6 +74,13 @@ fn main() -> Result<(), std::io::Error> {
         None,
         Some(2),
     )));
+    let solution3 = Rc::new(RefCell::new(Solution::new(
+        "Sn3",
+        "yet another solution",
+        None,
+        None,
+        None,
+    )));
     let justification = Rc::new(RefCell::new(Justification::new(
         "J1",
         "lalalsfa wrnasdf asdfa sdf asdlmösgm qwjsnf asndflan asdfa as",
@@ -69,18 +100,27 @@ fn main() -> Result<(), std::io::Error> {
         .add_node(justification.clone())
         .add_node(goal.clone())
         .add_node(goal2.clone())
+        .add_node(goal3.clone())
+        .add_node(goal4.clone())
+        .add_node(goal5.clone())
         .add_node(strategy.clone())
         .add_node(assumption.clone())
         .add_node(context.clone())
         .add_node(solution.clone())
         .add_node(solution2.clone())
+        .add_node(solution3.clone())
         .add_edge(goal.clone(), context.clone(), EdgeType::InContextOf)
         .add_edge(goal.clone(), solution2.clone(), EdgeType::SupportedBy)
         .add_edge(goal.clone(), strategy.clone(), EdgeType::SupportedBy)
         .add_edge(strategy.clone(), solution, EdgeType::SupportedBy)
         .add_edge(goal.clone(), justification, EdgeType::InContextOf)
-        .add_edge(goal, assumption, EdgeType::InContextOf)
-        .add_edge(strategy, goal2, EdgeType::SupportedBy)
+        .add_edge(goal.clone(), assumption, EdgeType::InContextOf)
+        .add_edge(strategy.clone(), goal2, EdgeType::SupportedBy)
+        .add_edge(strategy, goal3, EdgeType::SupportedBy)
+        .add_edge(goal.clone(), goal4.clone(), EdgeType::SupportedBy)
+        .add_edge(goal4, solution3.clone(), EdgeType::SupportedBy)
+        .add_edge(goal5.clone(), solution3.clone(), EdgeType::SupportedBy)
+        .add_edge(goal, goal5, EdgeType::SupportedBy)
         .write_to_file(std::path::Path::new("examples/simple.svg"))?;
     Ok(())
 }
