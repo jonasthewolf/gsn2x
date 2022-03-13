@@ -10,7 +10,8 @@ impl Goal {
         undeveloped: bool,
         url: Option<String>,
         classes: Option<Vec<String>>,
+        forced_level: Option<u32>,
     ) -> BoxNode {
-        BoxNode::new(id, text, undeveloped, 0, url, classes)
+        BoxNode::new(id, text, undeveloped, 0, url, classes, forced_level)
     }
 }

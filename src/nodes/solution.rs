@@ -9,7 +9,8 @@ impl Solution {
         text: &str,
         url: Option<String>,
         classes: Option<Vec<String>>,
+        forced_level: Option<u32>,
     ) -> EllipticalNode {
-        EllipticalNode::new(id, text, None, true, url, classes)
+        EllipticalNode::new(id, text, None, true, url, classes, forced_level)
     }
 }

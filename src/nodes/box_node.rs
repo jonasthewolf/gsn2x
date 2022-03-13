@@ -21,8 +21,7 @@ pub struct BoxNode {
     lines: Vec<(u32, u32)>,
     x: u32,
     y: u32,
-    vertical_rank: usize,
-    horizontal_rank: usize,
+    forced_level: Option<u32>,
 }
 
 impl Node for BoxNode {
@@ -50,6 +49,9 @@ impl Node for BoxNode {
             self.height,
             PADDING_VERTICAL * 2 + TEXT_OFFSET + text_height + 3,
         ); // +3 to make padding at bottom larger
+        if self.undeveloped {
+            self.height += 5;
+        }
     }
 
     fn get_id(&self) -> &str {
@@ -68,9 +70,19 @@ impl Node for BoxNode {
         get_port_default_coordinates(self.x, self.y, self.width, self.height, port)
     }
 
-    fn render(&mut self, x: u32, y: u32, font: &FontInfo) -> svg::node::element::Group {
-        self.x = x;
-        self.y = y;
+    fn set_position(&mut self, pos: &Point2D) {
+        self.x = pos.x;
+        self.y = pos.y;
+    }
+
+    fn get_position(&self) -> Point2D {
+        Point2D {
+            x: self.x,
+            y: self.y,
+        }
+    }
+
+    fn render(&mut self, font: &FontInfo) -> svg::node::element::Group {
         let mut g = Group::new(); //.set("id", "").set("class", "");
         if let Some(url) = &self.url {
             let link = Link::new();
@@ -80,10 +92,16 @@ impl Node for BoxNode {
         let title = Title::new().add(svg::node::Text::new(&self.identifier));
 
         let data = Data::new()
-            .move_to((x + self.skew, y))
-            .line_to((x + self.width, y))
-            .line_to((x + self.width - self.skew, y + self.height))
-            .line_to((x, y + self.height))
+            .move_to((
+                self.x - self.width / 2 + self.skew,
+                self.y - self.height / 2,
+            ))
+            .line_to((self.x + self.width / 2, self.y - self.height / 2))
+            .line_to((
+                self.x + self.width / 2 - self.skew,
+                self.y + self.height / 2,
+            ))
+            .line_to((self.x - self.width / 2, self.y + self.height / 2))
             .close();
 
         let border = Path::new()
@@ -93,8 +111,14 @@ impl Node for BoxNode {
             .set("d", data);
 
         let id = Text::new()
-            .set("x", x + PADDING_HORIZONTAL + self.skew)
-            .set("y", y + PADDING_VERTICAL + self.lines.get(0).unwrap().1)
+            .set(
+                "x",
+                self.x - self.width / 2 + PADDING_HORIZONTAL + self.skew,
+            )
+            .set(
+                "y",
+                self.y - self.height / 2 + PADDING_VERTICAL + self.lines.get(0).unwrap().1,
+            )
             .set("font-weight", "bold")
             .set("font-size", font.size)
             .set("font-family", font.name.to_owned())
@@ -104,10 +128,11 @@ impl Node for BoxNode {
 
         for (n, t) in self.text.lines().enumerate() {
             let text = Text::new()
-                .set("x", x + PADDING_HORIZONTAL)
+                .set("x", self.x - self.width / 2 + PADDING_HORIZONTAL)
                 .set(
                     "y",
-                    y + PADDING_VERTICAL
+                    self.y - self.height / 2
+                        + PADDING_VERTICAL
                         + TEXT_OFFSET
                         + (n as u32 + 1) * self.lines.get(n + 1).unwrap().1,
                 )
@@ -120,7 +145,7 @@ impl Node for BoxNode {
 
         if self.undeveloped {
             let data = Data::new()
-                .move_to((self.x + self.width / 2, self.y + self.height))
+                .move_to((self.x, self.y + self.height / 2))
                 .line_by((5i32, 5i32))
                 .line_by((-5i32, 5i32))
                 .line_by((-5i32, -5i32))
@@ -135,23 +160,12 @@ impl Node for BoxNode {
         g
     }
 
-    fn get_forced_level(&self) -> u32 {
-        todo!()
+    fn get_forced_level(&self) -> Option<u32> {
+        self.forced_level
     }
 
-    fn set_vertical_rank(&mut self, vertical_rank: usize) {
-        self.vertical_rank = vertical_rank;
-    }
-
-    fn set_horizontal_rank(&mut self, horizontal_rank: usize) {
-        self.horizontal_rank = horizontal_rank;
-    }
-
-    fn get_vertical_rank(&self) -> usize {
-        self.vertical_rank
-    }
-    fn get_horizontal_rank(&self) -> usize {
-        self.horizontal_rank
+    fn set_forced_level(&mut self, level: u32) {
+        self.forced_level = Some(level);
     }
 }
 
@@ -163,6 +177,7 @@ impl BoxNode {
         skew: u32,
         url: Option<String>,
         classes: Option<Vec<String>>,
+        forced_level: Option<u32>,
     ) -> Self {
         BoxNode {
             identifier: id.to_string(),
@@ -176,8 +191,7 @@ impl BoxNode {
             lines: vec![],
             x: 0,
             y: 0,
-            vertical_rank: 0,
-            horizontal_rank: 0,
+            forced_level,
         }
     }
 }

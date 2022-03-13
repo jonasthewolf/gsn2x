@@ -18,8 +18,7 @@ pub struct Context {
     lines: Vec<(u32, u32)>,
     x: u32,
     y: u32,
-    vertical_rank: usize,
-    horizontal_rank: usize,
+    forced_level: Option<u32>,
 }
 
 impl Node for Context {
@@ -42,9 +41,21 @@ impl Node for Context {
             text_height += height;
             text_width = std::cmp::max(text_width, width + PADDING * 2);
         }
-        self.width = std::cmp::max(self.width, text_width);
+        self.width = std::cmp::max(self.width, text_width) + 20;
         self.height = std::cmp::max(self.height, PADDING * 2 + TEXT_OFFSET + text_height + 3);
         // +3 to make padding at bottom larger
+    }
+
+    fn set_position(&mut self, pos: &Point2D) {
+        self.x = pos.x;
+        self.y = pos.y;
+    }
+
+    fn get_position(&self) -> Point2D {
+        Point2D {
+            x: self.x,
+            y: self.y,
+        }
     }
 
     fn get_id(&self) -> &str {
@@ -63,9 +74,7 @@ impl Node for Context {
         get_port_default_coordinates(self.x, self.y, self.width, self.height, port)
     }
 
-    fn render(&mut self, x: u32, y: u32, font: &FontInfo) -> svg::node::element::Group {
-        self.x = x;
-        self.y = y;
+    fn render(&mut self, font: &FontInfo) -> svg::node::element::Group {
         let mut g = Group::new(); //.set("id", "").set("class", ""); // TOOD add id and classes
         if let Some(url) = &self.url {
             let link = Link::new();
@@ -75,18 +84,25 @@ impl Node for Context {
         let title = Title::new().add(svg::node::Text::new(&self.identifier));
 
         let data = Data::new()
-            .move_to((x + 10, y))
-            .line_to((x + self.width - 10, y))
+            .move_to((self.x + 10 - self.width / 2, self.y - self.height / 2))
+            .line_to((self.x - 10 + self.width / 2, self.y - self.height / 2))
             .cubic_curve_to((
-                x + self.width,
-                y,
-                x + self.width,
-                y + self.height,
-                x + self.width - 10,
-                y + self.height,
+                self.x + self.width / 2,
+                self.y - self.height / 2,
+                self.x + self.width / 2,
+                self.y + self.height / 2,
+                self.x + self.width / 2 - 10,
+                self.y + self.height / 2,
             ))
-            .line_to((x + 10, y + self.height))
-            .cubic_curve_to((x, y + self.height, x, y, x + 10, y));
+            .line_to((self.x - self.width / 2 + 10, self.y + self.height / 2))
+            .cubic_curve_to((
+                self.x - self.width / 2,
+                self.y + self.height / 2,
+                self.x - self.width / 2,
+                self.y - self.height / 2,
+                self.x - self.width / 2 + 10,
+                self.y - self.height / 2,
+            ));
 
         let border = Path::new()
             .set("fill", "none")
@@ -95,8 +111,11 @@ impl Node for Context {
             .set("d", data);
 
         let id = Text::new()
-            .set("x", x + PADDING)
-            .set("y", y + PADDING + self.lines.get(0).unwrap().1)
+            .set("x", self.x - self.width / 2 + PADDING + 5)
+            .set(
+                "y",
+                self.y - self.height / 2 + PADDING + self.lines.get(0).unwrap().1,
+            )
             .set("font-weight", "bold")
             .set("font-size", font.size)
             .set("font-family", font.name.to_owned())
@@ -106,10 +125,13 @@ impl Node for Context {
 
         for (n, t) in self.text.lines().enumerate() {
             let text = Text::new()
-                .set("x", x + PADDING)
+                .set("x", self.x - self.width / 2 + PADDING + 5)
                 .set(
                     "y",
-                    y + PADDING + TEXT_OFFSET + (n as u32 + 1) * self.lines.get(n + 1).unwrap().1,
+                    self.y - self.height / 2
+                        + PADDING
+                        + TEXT_OFFSET
+                        + (n as u32 + 1) * self.lines.get(n + 1).unwrap().1,
                 )
                 .set("textLength", self.lines.get(n + 1).unwrap().0)
                 .set("font-size", font.size)
@@ -120,21 +142,12 @@ impl Node for Context {
         g
     }
 
-    fn get_forced_level(&self) -> u32 {
-        todo!()
-    }
-    fn set_vertical_rank(&mut self, vertical_rank: usize) {
-        self.vertical_rank = vertical_rank;
+    fn get_forced_level(&self) -> Option<u32> {
+        self.forced_level
     }
 
-    fn set_horizontal_rank(&mut self, horizontal_rank: usize) {
-        self.horizontal_rank = horizontal_rank;
-    }
-    fn get_vertical_rank(&self) -> usize {
-        self.vertical_rank
-    }
-    fn get_horizontal_rank(&self) -> usize {
-        self.horizontal_rank
+    fn set_forced_level(&mut self, level: u32) {
+        self.forced_level = Some(level);
     }
 }
 
@@ -150,8 +163,7 @@ impl Context {
             lines: vec![],
             x: 0,
             y: 0,
-            vertical_rank: 0,
-            horizontal_rank: 0,
+            forced_level: None,
         }
     }
 }

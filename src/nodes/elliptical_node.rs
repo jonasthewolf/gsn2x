@@ -20,8 +20,7 @@ pub struct EllipticalNode {
     lines: Vec<(u32, u32)>,
     x: u32,
     y: u32,
-    vertical_rank: usize,
-    horizontal_rank: usize,
+    forced_level: Option<u32>,
 }
 
 impl Node for EllipticalNode {
@@ -57,6 +56,18 @@ impl Node for EllipticalNode {
         }
     }
 
+    fn set_position(&mut self, pos: &Point2D) {
+        self.x = pos.x;
+        self.y = pos.y;
+    }
+
+    fn get_position(&self) -> Point2D {
+        Point2D {
+            x: self.x,
+            y: self.y,
+        }
+    }
+
     fn get_id(&self) -> &str {
         self.identifier.as_ref()
     }
@@ -69,29 +80,19 @@ impl Node for EllipticalNode {
         self.height
     }
 
-    fn get_forced_level(&self) -> u32 {
-        todo!()
-    }
-    fn set_vertical_rank(&mut self, vertical_rank: usize) {
-        self.vertical_rank = vertical_rank;
+    fn get_forced_level(&self) -> Option<u32> {
+        self.forced_level
     }
 
-    fn set_horizontal_rank(&mut self, horizontal_rank: usize) {
-        self.horizontal_rank = horizontal_rank;
+    fn set_forced_level(&mut self, level: u32) {
+        self.forced_level = Some(level);
     }
-    fn get_vertical_rank(&self) -> usize {
-        self.vertical_rank
-    }
-    fn get_horizontal_rank(&self) -> usize {
-        self.horizontal_rank
-    }
+
     fn get_coordinates(&self, port: super::Port) -> Point2D {
         get_port_default_coordinates(self.x, self.y, self.width, self.height, port)
     }
 
-    fn render(&mut self, x: u32, y: u32, font: &FontInfo) -> svg::node::element::Group {
-        self.x = x;
-        self.y = y;
+    fn render(&mut self, font: &FontInfo) -> svg::node::element::Group {
         let mut g = Group::new(); //.set("id", "").set("class", "");
         if let Some(url) = &self.url {
             let link = Link::new();
@@ -104,14 +105,17 @@ impl Node for EllipticalNode {
             .set("fill", "none")
             .set("stroke", "black")
             .set("stroke-width", 1u32)
-            .set("cx", x + self.width / 2)
-            .set("cy", y + self.height / 2)
+            .set("cx", self.x)
+            .set("cy", self.y)
             .set("rx", self.width / 2)
             .set("ry", self.height / 2);
 
         let id = Text::new()
-            .set("x", x + PADDING + self.width / 8)
-            .set("y", y + PADDING + self.lines.get(0).unwrap().1)
+            .set("x", self.x - self.width / 2 + PADDING + self.width / 8)
+            .set(
+                "y",
+                self.y - self.height / 2 + PADDING + self.lines.get(0).unwrap().1,
+            )
             .set("font-weight", "bold")
             .set("font-size", font.size)
             .set("font-family", font.name.to_owned())
@@ -120,8 +124,8 @@ impl Node for EllipticalNode {
         g = g.add(title).add(border).add(id);
         if let Some(adm) = &self.admonition {
             let decorator = Text::new()
-                .set("x", x + self.width - 5)
-                .set("y", y + self.height - 5)
+                .set("x", self.x + self.width / 2 - 5)
+                .set("y", self.y + self.height / 2 - 5)
                 .set("font-weight", "bold")
                 .set("font-size", font.size)
                 .set("font-family", font.name.to_owned())
@@ -131,10 +135,13 @@ impl Node for EllipticalNode {
 
         for (n, t) in self.text.lines().enumerate() {
             let text = Text::new()
-                .set("x", x + PADDING)
+                .set("x", self.x - self.width / 2 + PADDING)
                 .set(
                     "y",
-                    y + PADDING + TEXT_OFFSET + (n as u32 + 1) * self.lines.get(n + 1).unwrap().1,
+                    self.y - self.height / 2
+                        + PADDING
+                        + TEXT_OFFSET
+                        + (n as u32 + 1) * self.lines.get(n + 1).unwrap().1,
                 )
                 .set("textLength", self.lines.get(n + 1).unwrap().0)
                 .set("font-size", font.size)
@@ -154,6 +161,7 @@ impl EllipticalNode {
         circle: bool,
         url: Option<String>,
         classes: Option<Vec<String>>,
+        forced_level: Option<u32>,
     ) -> Self {
         EllipticalNode {
             identifier: id.to_string(),
@@ -167,8 +175,7 @@ impl EllipticalNode {
             lines: vec![],
             x: 0,
             y: 0,
-            vertical_rank: 0,
-            horizontal_rank: 0,
+            forced_level,
         }
     }
 }

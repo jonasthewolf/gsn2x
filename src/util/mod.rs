@@ -1,4 +1,5 @@
 pub mod font;
+pub mod point2d;
 pub mod wordwrap;
 
 ///

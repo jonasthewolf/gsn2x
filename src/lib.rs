@@ -14,7 +14,12 @@ use svg::{
     node::element::{path::Data, Marker, Path, Polyline},
     Document,
 };
-use util::font::{get_default_font, get_font};
+use util::{
+    font::{get_default_font, get_font},
+    point2d::Point2D,
+};
+
+const MARKER_HEIGHT: u32 = 10;
 
 pub struct Margin {
     pub top: u32,
@@ -27,9 +32,9 @@ impl Default for Margin {
     fn default() -> Self {
         Self {
             top: 20,
-            right: 10,
+            right: 20,
             bottom: 20,
-            left: 10,
+            left: 20,
         }
     }
 }
@@ -139,7 +144,7 @@ impl DirGraph {
             .set("refX", 0f32)
             .set("refY", 4.5f32)
             .set("orient", "auto")
-            .set("markerUnits", "userSpaceOnUse")
+            .set("markerUnits", "users_posaceOnUse")
             .add(supportedby_polyline);
 
         let incontext_polyline = Polyline::new()
@@ -154,7 +159,7 @@ impl DirGraph {
             .set("refX", 0f32)
             .set("refY", 4.5f32)
             .set("orient", "auto")
-            .set("markerUnits", "userSpaceOnUse")
+            .set("markerUnits", "users_posaceOnUse")
             .add(incontext_polyline);
 
         doc = doc.add(supportedby_arrow).add(incontext_arrow);
@@ -167,9 +172,13 @@ impl DirGraph {
         // Copy IDs
         let mut n_ids: BTreeSet<String> = self
             .nodes
-            .keys()
-            .into_iter()
-            .map(|x| x.to_owned())
+            .iter()
+            // Filter nodes with forced level
+            .filter(|(_, node)| match node.borrow().get_forced_level() {
+                Some(x) if x != 0 => false,
+                _ => true,
+            })
+            .map(|(id, _)| id.to_owned())
             .collect();
         // Find root nodes
         for t_edges in self.edges.values() {
@@ -180,20 +189,28 @@ impl DirGraph {
         // Add inContextOf nodes again
         n_ids.append(&mut self.find_in_context_nodes(&n_ids));
         let mut rank = 0;
+        let mut x = self.margin.left;
+        let mut y = self.margin.top;
+        let mut y_max = 0;
         loop {
-            // Assign ranks to nodes
+            y_max = 0;
             let v: Vec<_> = n_ids.iter().map(|x| x.to_owned()).collect();
-            for (i, id) in v.iter().enumerate() {
+            for id in v.iter() {
                 let mut n = self.nodes.get(id).unwrap().borrow_mut();
-                n.set_horizontal_rank(i);
-                n.set_vertical_rank(rank);
+                let h = n.get_height();
+                x += n.get_width() / 2;
+                n.set_position(&Point2D { x, y: y + h / 2 });
+                x += n.get_width() / 2 + self.margin.left + self.margin.right;
+                y_max = std::cmp::max(y_max, n.get_height());
             }
-            ranks.insert(rank, v);
+            ranks.insert(rank as usize, v);
             // Find children
-            n_ids = self.find_child_nodes(&n_ids);
+            n_ids = self.find_child_nodes(dbg!(rank), &n_ids);
             if n_ids.is_empty() {
                 break;
             }
+            x = self.margin.left;
+            y += y_max + self.margin.left + self.margin.right;
             rank += 1;
         }
         ranks
@@ -208,13 +225,9 @@ impl DirGraph {
                         .iter()
                         .filter(|(id, _)| id == other_rn)
                         .filter(|(id, _)| {
-                            (self.nodes.get(id).unwrap().borrow().get_horizontal_rank() as i32
-                                - self
-                                    .nodes
-                                    .get(other_rn)
-                                    .unwrap()
-                                    .borrow()
-                                    .get_horizontal_rank() as i32)
+                            (self.nodes.get(id).unwrap().borrow().get_position().x as i32
+                                - self.nodes.get(other_rn).unwrap().borrow().get_position().x
+                                    as i32)
                                 .abs()
                                 > 1
                         })
@@ -225,7 +238,7 @@ impl DirGraph {
         sum
     }
 
-    fn find_child_nodes(&self, parents: &BTreeSet<String>) -> BTreeSet<String> {
+    fn find_child_nodes(&self, rank: u32, parents: &BTreeSet<String>) -> BTreeSet<String> {
         let mut children = BTreeSet::new();
         for p in parents {
             // Direct children
@@ -236,11 +249,24 @@ impl DirGraph {
                         EdgeType::SupportedBy => Some(id.to_owned()),
                         _ => None,
                     })
+                    .filter(
+                        // Filter forced level nodes
+                        |id| match self.nodes.get(id).unwrap().borrow().get_forced_level() {
+                            Some(x) if x != rank + 1 => false,
+                            _ => true,
+                        },
+                    )
                     .collect();
                 children.append(&mut targets);
             }
         }
         children.append(&mut self.find_in_context_nodes(&children));
+        // Add forced level nodes
+        for (id, n) in self.nodes.iter() {
+            if n.borrow().get_forced_level() == Some(rank + 1) {
+                children.insert(id.to_owned());
+            }
+        }
         children
     }
 
@@ -278,30 +304,14 @@ impl DirGraph {
             .values()
             .for_each(|n| n.borrow_mut().calculate_size(&self.font, self.wrap));
         let ranks = self.place_nodes();
-        // TODO Don't use HashSet, that makes order of nodes random.
         let mut n_rendered: BTreeSet<String> = BTreeSet::new();
 
-        // TODO support forced level
-        let mut last_max_height = 0;
-        let mut y = self.margin.top;
         for rank in ranks {
-            let mut x_s = HashMap::with_capacity(rank.len());
-            let mut width_sum = 0;
-            for id in rank.iter() {
-                let n = self.nodes.get(id).unwrap().borrow();
-                width_sum += n.get_width() + self.margin.left + self.margin.right;
-                x_s.insert(id.clone(), width_sum - n.get_width() - self.margin.right);
-            }
-            let x_offset = std::cmp::max((self.width - width_sum) / 2, 0);
             for id in rank.iter() {
                 let mut n = self.nodes.get(id).unwrap().borrow_mut();
-                // TODO panics if width is too small for node
-                last_max_height = std::cmp::max(last_max_height, n.get_height());
-                doc = doc.add(n.render(x_s.get(id).unwrap() + x_offset, y, &self.font));
+                doc = doc.add(n.render(&self.font)); // x_s.get(id).unwrap() + x_offset, y,
                 n_rendered.insert(n.get_id().to_owned());
             }
-            y += last_max_height + self.margin.top + self.margin.bottom;
-            last_max_height = 0;
         }
         // Draw edges
         for (source, targets) in &self.edges {
@@ -323,43 +333,53 @@ impl DirGraph {
     ) -> Document {
         // TODO class and id
         let s = source.borrow();
+        let s_pos = s.get_position();
         let t = target.borrow();
-        let (start, end) = if s.get_vertical_rank() < t.get_vertical_rank() {
-            (
-                s.get_coordinates(Port::South),
-                t.get_coordinates(Port::North),
-            )
-        } else if s.get_vertical_rank() > t.get_vertical_rank() {
-            (
-                s.get_coordinates(Port::North),
-                t.get_coordinates(Port::South),
-            )
-        } else {
-            // s.get_vertical_rank() == t.get_vertical_rank()
-            if s.get_horizontal_rank() > t.get_horizontal_rank() {
-                (s.get_coordinates(Port::West), t.get_coordinates(Port::East))
+        let t_pos = t.get_position();
+        let (start, start_sup, end, end_sup) =
+            if s_pos.y + s.get_height() / 2 < t_pos.y - t.get_height() / 2 {
+                (
+                    s.get_coordinates(Port::South),
+                    s.get_coordinates(Port::South)
+                        .move_relative(0, 2 * MARKER_HEIGHT as i32),
+                    t.get_coordinates(Port::North)
+                        .move_relative(0, -(MARKER_HEIGHT as i32)),
+                    t.get_coordinates(Port::North)
+                        .move_relative(0, -(2 * MARKER_HEIGHT as i32)),
+                )
+            } else if s_pos.y - s.get_height() / 2 > t_pos.y + t.get_height() / 2 {
+                (
+                    s.get_coordinates(Port::North)
+                        .move_relative(0, -(MARKER_HEIGHT as i32)),
+                    s.get_coordinates(Port::North)
+                        .move_relative(0, -(2 * MARKER_HEIGHT as i32)),
+                    t.get_coordinates(Port::South),
+                    t.get_coordinates(Port::South)
+                        .move_relative(0, 2 * MARKER_HEIGHT as i32),
+                )
             } else {
-                (s.get_coordinates(Port::East), t.get_coordinates(Port::West))
-            }
-        };
-        let parameters = match edge_type {
-            edges::EdgeType::InContextOf => (
-                (start.x + end.x) / 2,
-                start.y,
-                (start.x + end.x) / 2,
-                end.y,
-                end.x - 10, // Marker height
-                end.y,
-            ),
-            edges::EdgeType::SupportedBy => (
-                start.x,
-                (start.y + end.y) / 2,
-                end.x,
-                (start.y + end.y) / 2,
-                end.x,
-                end.y - 10, // Marker height
-            ),
-        };
+                // s.get_vertical_rank() == t.get_vertical_rank()
+                if s_pos.x - s.get_width() / 2 > t_pos.x + t.get_width() / 2 {
+                    (
+                        s.get_coordinates(Port::West),
+                        s.get_coordinates(Port::West),
+                        t.get_coordinates(Port::East)
+                            .move_relative(MARKER_HEIGHT as i32, 0),
+                        t.get_coordinates(Port::East)
+                            .move_relative(2 * MARKER_HEIGHT as i32, 0),
+                    )
+                } else {
+                    (
+                        s.get_coordinates(Port::East),
+                        s.get_coordinates(Port::East),
+                        t.get_coordinates(Port::West)
+                            .move_relative(-(MARKER_HEIGHT as i32), 0),
+                        t.get_coordinates(Port::West)
+                            .move_relative(-(2 * MARKER_HEIGHT as i32), 0),
+                    )
+                }
+            };
+        let parameters = (start_sup.x, start_sup.y, end_sup.x, end_sup.y, end.x, end.y);
         let data = Data::new()
             .move_to((start.x, start.y))
             .cubic_curve_to(parameters);

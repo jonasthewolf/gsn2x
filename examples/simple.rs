@@ -3,8 +3,8 @@ use std::{cell::RefCell, rc::Rc};
 use dirgraphsvg::{
     edges::EdgeType,
     nodes::{
-        context::Context, goal::Goal, justification::Justification, solution::Solution,
-        strategy::Strategy,
+        assumption::Assumption, context::Context, goal::Goal, justification::Justification,
+        solution::Solution, strategy::Strategy,
     },
     DirGraph,
 };
@@ -17,11 +17,13 @@ fn main() -> Result<(), std::io::Error> {
         false,
         None,
         None,
+        None,
     )));
     let goal2 = Rc::new(RefCell::new(Goal::new(
         "G2",
         "under lighted, undeveloped",
         true,
+        None,
         None,
         None,
     )));
@@ -31,6 +33,7 @@ fn main() -> Result<(), std::io::Error> {
         false,
         None,
         None,
+        None,
     )));
     let context = Rc::new(RefCell::new(Context::new("C1", "some context", None, None)));
     let solution = Rc::new(RefCell::new(Solution::new(
@@ -38,26 +41,46 @@ fn main() -> Result<(), std::io::Error> {
         "test solution",
         None,
         None,
+        None,
+    )));
+    let solution2 = Rc::new(RefCell::new(Solution::new(
+        "Sn2",
+        "test another solution",
+        None,
+        None,
+        Some(2),
     )));
     let justification = Rc::new(RefCell::new(Justification::new(
         "J1",
         "lalalsfa wrnasdf asdfa sdf asdlmösgm qwjsnf asndflan asdfa as",
         None,
         None,
+        None,
+    )));
+    let assumption = Rc::new(RefCell::new(Assumption::new(
+        "A1",
+        "teadskfasjdfjne",
+        None,
+        None,
+        None,
     )));
     dg.set_font("Arial", 12.0)
         .set_size(1500, 1500)
+        .add_node(justification.clone())
         .add_node(goal.clone())
         .add_node(goal2.clone())
         .add_node(strategy.clone())
+        .add_node(assumption.clone())
         .add_node(context.clone())
         .add_node(solution.clone())
-        .add_node(justification.clone())
+        .add_node(solution2.clone())
         .add_edge(goal.clone(), context.clone(), EdgeType::InContextOf)
+        .add_edge(goal.clone(), solution2.clone(), EdgeType::SupportedBy)
         .add_edge(goal.clone(), strategy.clone(), EdgeType::SupportedBy)
         .add_edge(strategy.clone(), solution, EdgeType::SupportedBy)
+        .add_edge(goal.clone(), justification, EdgeType::InContextOf)
+        .add_edge(goal, assumption, EdgeType::InContextOf)
         .add_edge(strategy, goal2, EdgeType::SupportedBy)
-        .add_edge(goal, justification, EdgeType::InContextOf)
         .write_to_file(std::path::Path::new("examples/simple.svg"))?;
     Ok(())
 }

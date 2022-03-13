@@ -9,7 +9,16 @@ impl Assumption {
         text: &str,
         url: Option<String>,
         classes: Option<Vec<String>>,
+        forced_level: Option<u32>,
     ) -> EllipticalNode {
-        EllipticalNode::new(id, text, Some("A".to_owned()), false, url, classes)
+        EllipticalNode::new(
+            id,
+            text,
+            Some("A".to_owned()),
+            false,
+            url,
+            classes,
+            forced_level,
+        )
     }
 }
