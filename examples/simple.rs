@@ -81,6 +81,13 @@ fn main() -> Result<(), std::io::Error> {
         None,
         None,
     )));
+    let solution4 = Rc::new(RefCell::new(Solution::new(
+        "Sn4",
+        "another forced solution",
+        None,
+        None,
+        Some(1),
+    )));
     let justification = Rc::new(RefCell::new(Justification::new(
         "J1",
         "lalalsfa wrnasdf asdfa sdf asdlmösgm qwjsnf asndflan asdfa as",
@@ -109,6 +116,7 @@ fn main() -> Result<(), std::io::Error> {
         .add_node(solution.clone())
         .add_node(solution2.clone())
         .add_node(solution3.clone())
+        .add_node(solution4.clone())
         .add_edge(goal.clone(), context.clone(), EdgeType::InContextOf)
         .add_edge(goal.clone(), solution2.clone(), EdgeType::SupportedBy)
         .add_edge(goal.clone(), strategy.clone(), EdgeType::SupportedBy)
@@ -118,7 +126,8 @@ fn main() -> Result<(), std::io::Error> {
         .add_edge(strategy.clone(), goal2, EdgeType::SupportedBy)
         .add_edge(strategy, goal3, EdgeType::SupportedBy)
         .add_edge(goal.clone(), goal4.clone(), EdgeType::SupportedBy)
-        .add_edge(goal4, solution3.clone(), EdgeType::SupportedBy)
+        .add_edge(goal4.clone(), solution3.clone(), EdgeType::SupportedBy)
+        .add_edge(goal4, solution4.clone(), EdgeType::SupportedBy)
         .add_edge(goal5.clone(), solution3.clone(), EdgeType::SupportedBy)
         .add_edge(goal, goal5, EdgeType::SupportedBy)
         .write_to_file(std::path::Path::new("examples/simple.svg"))?;
