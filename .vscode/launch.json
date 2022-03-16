@@ -17,14 +17,6 @@
             },
             "program": "${cargo:program}",
             "args": []
-        },
-        {
-            "type": "lldb",
-            "request": "launch",
-            "name": "Debug",
-            "program": "${workspaceFolder}/<your program>",
-            "args": [],
-            "cwd": "${workspaceFolder}"
         }
     ]
 }
