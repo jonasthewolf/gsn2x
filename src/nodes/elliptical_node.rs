@@ -20,7 +20,7 @@ pub struct EllipticalNode {
     lines: Vec<(u32, u32)>,
     x: u32,
     y: u32,
-    forced_level: Option<u32>,
+    forced_level: Option<usize>,
 }
 
 impl Node for EllipticalNode {
@@ -80,11 +80,11 @@ impl Node for EllipticalNode {
         self.height
     }
 
-    fn get_forced_level(&self) -> Option<u32> {
+    fn get_forced_level(&self) -> Option<usize> {
         self.forced_level
     }
 
-    fn set_forced_level(&mut self, level: u32) {
+    fn set_forced_level(&mut self, level: usize) {
         self.forced_level = Some(level);
     }
 
@@ -161,7 +161,7 @@ impl EllipticalNode {
         circle: bool,
         url: Option<String>,
         classes: Option<Vec<String>>,
-        forced_level: Option<u32>,
+        forced_level: Option<usize>,
     ) -> Self {
         EllipticalNode {
             identifier: id.to_string(),

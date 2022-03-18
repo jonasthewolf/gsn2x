@@ -9,7 +9,7 @@ impl Assumption {
         text: &str,
         url: Option<String>,
         classes: Option<Vec<String>>,
-        forced_level: Option<u32>,
+        forced_level: Option<usize>,
     ) -> EllipticalNode {
         EllipticalNode::new(
             id,

@@ -7,7 +7,7 @@
         {
             "type": "lldb",
             "request": "launch",
-            "name": "Cargo launch",
+            "name": "Debug simple example",
             "cargo": {
                 "args": [
                     "run",
@@ -15,7 +15,7 @@
                     "simple"
                 ]
             },
-            "program": "${cargo:program}",
+            "stopOnEntry": true,
             "args": []
         }
     ]

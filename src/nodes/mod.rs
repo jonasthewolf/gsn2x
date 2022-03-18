@@ -24,8 +24,8 @@ pub trait Node {
     fn set_position(&mut self, pos: &Point2D);
     fn get_position(&self) -> Point2D;
     fn get_coordinates(&self, port: Port) -> Point2D;
-    fn get_forced_level(&self) -> Option<u32>;
-    fn set_forced_level(&mut self, level: u32);
+    fn get_forced_level(&self) -> Option<usize>;
+    fn set_forced_level(&mut self, level: usize);
     fn render(&mut self, font: &FontInfo) -> svg::node::element::Group;
 }
 

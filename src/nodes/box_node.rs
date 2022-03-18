@@ -21,7 +21,7 @@ pub struct BoxNode {
     lines: Vec<(u32, u32)>,
     x: u32,
     y: u32,
-    forced_level: Option<u32>,
+    forced_level: Option<usize>,
 }
 
 impl Node for BoxNode {
@@ -160,11 +160,11 @@ impl Node for BoxNode {
         g
     }
 
-    fn get_forced_level(&self) -> Option<u32> {
+    fn get_forced_level(&self) -> Option<usize> {
         self.forced_level
     }
 
-    fn set_forced_level(&mut self, level: u32) {
+    fn set_forced_level(&mut self, level: usize) {
         self.forced_level = Some(level);
     }
 }
@@ -177,7 +177,7 @@ impl BoxNode {
         skew: u32,
         url: Option<String>,
         classes: Option<Vec<String>>,
-        forced_level: Option<u32>,
+        forced_level: Option<usize>,
     ) -> Self {
         BoxNode {
             identifier: id.to_string(),

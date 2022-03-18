@@ -18,7 +18,7 @@ pub struct Context {
     lines: Vec<(u32, u32)>,
     x: u32,
     y: u32,
-    forced_level: Option<u32>,
+    forced_level: Option<usize>,
 }
 
 impl Node for Context {
@@ -142,11 +142,11 @@ impl Node for Context {
         g
     }
 
-    fn get_forced_level(&self) -> Option<u32> {
+    fn get_forced_level(&self) -> Option<usize> {
         self.forced_level
     }
 
-    fn set_forced_level(&mut self, level: u32) {
+    fn set_forced_level(&mut self, level: usize) {
         self.forced_level = Some(level);
     }
 }

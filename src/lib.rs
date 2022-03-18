@@ -163,21 +163,18 @@ impl DirGraph {
 
         let mut x = self.margin.left;
         let mut y = self.margin.top;
-        let mut y_max;
-        for rank in ranks {
-            y_max = 0;
-            for id in rank.iter() {
+        for rank in ranks.values() {
+            let height_max = rank.values().map(|id|self.nodes.get(id).unwrap().borrow().get_height()).max().unwrap();
+            for id in rank.values() {
                 let mut n = self.nodes.get(id).unwrap().borrow_mut();
-                let h = n.get_height();
                 x += n.get_width() / 2;
-                n.set_position(&Point2D { x, y: y + h / 2 });
+                n.set_position(&Point2D { x, y: y + height_max / 2 });
                 x += n.get_width() / 2 + self.margin.left + self.margin.right;
-                y_max = std::cmp::max(y_max, n.get_height());
                 doc = doc.add(n.render(&self.font)); // x_s.get(id).unwrap() + x_offset, y,
                 n_rendered.insert(n.get_id().to_owned());
             }
             x = self.margin.left;
-            y += y_max + self.margin.left + self.margin.right;
+            y += height_max + self.margin.left + self.margin.right;
         }
         // Draw edges
         for (source, targets) in &self.edges {
