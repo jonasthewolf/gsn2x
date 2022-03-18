@@ -51,7 +51,7 @@ pub(crate) fn rank_nodes(
                 // dbg!(c_r);
                 // dbg!(&loc_stack);
                 // Add invisible nodes
-                for i in cur_rank..c_r {
+                for i in p_r+1..c_r {
                     let inv = Invisible::from(nodes.get(&c).unwrap());
                     let inv_id = inv.get_id().to_owned();
                     nodes.insert(inv.get_id().to_owned(), Rc::new(RefCell::new(inv)));
