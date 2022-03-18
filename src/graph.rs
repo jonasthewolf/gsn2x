@@ -4,10 +4,10 @@ use std::{
     rc::Rc,
 };
 
-use crate::{edges::EdgeType, nodes::Node};
+use crate::{edges::EdgeType, nodes::{Node, invisible::Invisible}};
 
 pub(crate) fn rank_nodes(
-    nodes: &BTreeMap<String, Rc<RefCell<dyn Node>>>,
+    nodes: &mut BTreeMap<String, Rc<RefCell<dyn Node>>>,
     edges: &BTreeMap<String, Vec<(String, EdgeType)>>,
 ) -> BTreeMap<usize, BTreeMap<usize, String>> {
     let mut ranks = BTreeMap::new();
@@ -50,6 +50,14 @@ pub(crate) fn rank_nodes(
                 // dbg!(&c);
                 // dbg!(c_r);
                 // dbg!(&loc_stack);
+                // Add invisible nodes
+                for i in cur_rank..c_r {
+                    let inv = Invisible::from(nodes.get(&c).unwrap());
+                    let inv_id = inv.get_id().to_owned();
+                    nodes.insert(inv.get_id().to_owned(), Rc::new(RefCell::new(inv)));
+                    let v_r = ranks.entry(i).or_insert(BTreeMap::new());
+                    v_r.insert(v_r.len(), inv_id.to_owned());    
+                }
                 let v_r = ranks.entry(c_r).or_insert(BTreeMap::new());
                 v_r.insert(v_r.len(), c.to_owned());
                 visited_nodes.insert(c.to_owned());

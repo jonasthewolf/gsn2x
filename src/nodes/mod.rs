@@ -8,6 +8,7 @@ pub mod goal;
 pub mod justification;
 pub mod solution;
 pub mod strategy;
+pub(crate) mod invisible; 
 
 pub enum Port {
     North,

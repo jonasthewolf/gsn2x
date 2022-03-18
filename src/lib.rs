@@ -133,7 +133,7 @@ impl DirGraph {
         self
     }
 
-    pub fn write_to_file(self, file: &std::path::Path) -> Result<(), std::io::Error> {
+    pub fn write_to_file(mut self, file: &std::path::Path) -> Result<(), std::io::Error> {
         let mut document = Document::new().set("viewBox", (0u32, 0u32, self.width, self.height));
 
         document = setup_basics(document);
@@ -154,11 +154,11 @@ impl DirGraph {
     ///    How to sort nodes on the same level?
     /// 4) Draw the edges
     ///
-    fn layout(&self, mut doc: Document) -> Document {
+    fn layout(&mut self, mut doc: Document) -> Document {
         self.nodes
             .values()
             .for_each(|n| n.borrow_mut().calculate_size(&self.font, self.wrap));
-        let ranks = rank_nodes(&self.nodes, &self.edges);
+        let ranks = rank_nodes(&mut self.nodes, &self.edges);
         let mut n_rendered: BTreeSet<String> = BTreeSet::new();
 
         let mut x = self.margin.left;
