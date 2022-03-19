@@ -1,3 +1,3 @@
 # dirgraphsvg
 
-![Example](examples/simple.svg "Example")
+<img src="examples/simple.svg" alt="Example" width="500">
