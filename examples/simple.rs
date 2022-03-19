@@ -20,7 +20,7 @@ fn main() -> Result<(), std::io::Error> {
     )));
     let goal2 = Rc::new(RefCell::new(new_goal(
         "G2",
-        "under lighted, undeveloped",
+        "undeveloped undeveloped undeveloped",
         true,
         None,
         None,

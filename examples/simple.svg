@@ -133,25 +133,25 @@ test solution
 <title>
 G2
 </title>
-<path d="M286,404 L440,404 L440,458 L286,458 z" fill="none" stroke="black" stroke-width="1"/>
+<path d="M286,404 L508,404 L508,458 L286,458 z" fill="none" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="293" y="424">
 G2
 </text>
-<text font-family="Arial" font-size="12" textLength="141" x="293" y="444">
-under lighted, undeveloped
+<text font-family="Arial" font-size="12" textLength="209" x="293" y="444">
+undeveloped undeveloped undeveloped
 </text>
-<path d="M363,458 l5,5 l-5,5 l-5,-5 z" fill="none" stroke="black" stroke-width="1"/>
+<path d="M397,458 l5,5 l-5,5 l-5,-5 z" fill="none" stroke="black" stroke-width="1"/>
 </g>
 <g/>
 <g>
 <title>
 Sn3
 </title>
-<ellipse cx="680" cy="431" fill="none" rx="56" ry="56" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="643" y="393">
+<ellipse cx="748" cy="431" fill="none" rx="56" ry="56" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="711" y="393">
 Sn3
 </text>
-<text font-family="Arial" font-size="12" textLength="103" x="629" y="413">
+<text font-family="Arial" font-size="12" textLength="103" x="697" y="413">
 yet another solution
 </text>
 </g>
@@ -159,11 +159,11 @@ yet another solution
 <title>
 G5
 </title>
-<path d="M776,406 L860,406 L860,456 L776,456 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="783" y="426">
+<path d="M844,406 L928,406 L928,456 L844,456 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="851" y="426">
 G5
 </text>
-<text font-family="Arial" font-size="12" textLength="71" x="783" y="446">
+<text font-family="Arial" font-size="12" textLength="71" x="851" y="446">
 elcric id elcric
 </text>
 </g>
@@ -185,11 +185,11 @@ sub di dub di dub
 <path d="M381,93 C381,93,401,93,411,93" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
 <path d="M161,93 C161,93,140,126,130,126" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
 <path d="M271,124 C271,144,482,225,482,235" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path d="M271,124 C271,144,818,386,818,396" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path d="M482,295 C482,315,680,355,680,365" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path d="M271,124 C271,144,886,386,886,396" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path d="M482,295 C482,315,748,355,748,365" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 <path d="M524,270 C524,270,696,270,706,270" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path d="M776,431 C776,431,756,431,746,431" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path d="M844,431 C844,431,824,431,814,431" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 <path d="M231,295 C231,315,210,375,210,385" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path d="M231,295 C231,315,363,384,363,394" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path d="M231,295 C231,315,397,384,397,394" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 <path d="M231,295 C231,315,72,508,72,518" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 </svg>
