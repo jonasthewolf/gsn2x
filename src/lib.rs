@@ -146,13 +146,12 @@ impl DirGraph {
     /// Layout the graph on a pseudo-stack layout
     ///
     /// 1) Let each element identify its size
-    /// 2) Find and count the nodes on top level
-    ///    Top level nodes only appear in source, but not in target of edges
-    ///    Assumption: There are no unreferenced nodes.
-    ///    Then, its the set of all nodes without the set of target nodes
+    /// 2) Rank the nodes
     /// 3) Draw them
-    ///    How to sort nodes on the same level?
     /// 4) Draw the edges
+    ///
+    /// TODO Automatic width & height of document
+    /// TODO Center in document
     ///
     fn layout(&mut self, mut doc: Document) -> Document {
         self.nodes

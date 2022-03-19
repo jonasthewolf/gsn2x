@@ -35,12 +35,8 @@ pub(crate) fn rank_nodes(
             n_ids.remove(target);
         }
     }
-    // Add inContextOf nodes again
-    //n_ids.append(&mut find_in_context_nodes(edges, &n_ids));
     let root_nodes: Vec<_> = n_ids.iter().map(|x| x.to_owned()).collect();
-    // if dbg!(count_crossings_same_rank(edges, &v)) > 0 {
-    //     swap_same_rank(edges, &mut v);
-    // }
+    // Perform depth first searcb for SupportedBy child nodes.
     for (horiz_rank, n) in root_nodes.into_iter().enumerate() {
         visited_nodes.insert(n.to_owned());
         let v_r = ranks.entry(0).or_insert(BTreeMap::new());
@@ -56,9 +52,6 @@ pub(crate) fn rank_nodes(
                 find_next_child_node(nodes, edges, cur_rank, &visited_nodes, &cur_node)
             {
                 loc_stack.push((cur_node.to_owned(), cur_rank));
-                // dbg!(&c);
-                // dbg!(c_r);
-                // dbg!(&loc_stack);
                 // Add invisible nodes
                 for i in p_r + 1..c_r {
                     let inv = Invisible::from(nodes.get(&c).unwrap());
