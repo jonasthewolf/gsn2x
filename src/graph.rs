@@ -55,9 +55,12 @@ pub(crate) fn rank_nodes(
                     let inv = Invisible::from(nodes.get(&c).unwrap());
                     let inv_id = inv.get_id().to_owned();
                     nodes.insert(inv.get_id().to_owned(), Rc::new(RefCell::new(inv)));
+                    // TODO Replace edge with two edges and new edge type
                     let v_r = ranks.entry(i).or_insert(BTreeMap::new());
+                    // TODO Position of invisible node is wrong.
                     v_r.insert(v_r.len(), inv_id.to_owned());    
                 }
+                // TODO If more than one incoming edge, the lowest rank should move unforced elements down
                 let v_r = ranks.entry(c_r).or_insert(BTreeMap::new());
                 v_r.insert(v_r.len(), c.to_owned());
                 visited_nodes.insert(c.to_owned());
