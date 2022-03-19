@@ -28,11 +28,11 @@ pub(crate) fn rank_nodes(
     }
     // Add inContextOf nodes again
     //n_ids.append(&mut find_in_context_nodes(edges, &n_ids));
-    let stack: Vec<_> = n_ids.iter().map(|x| x.to_owned()).collect();
+    let root_nodes: Vec<_> = n_ids.iter().map(|x| x.to_owned()).collect();
     // if dbg!(count_crossings_same_rank(edges, &v)) > 0 {
     //     swap_same_rank(edges, &mut v);
     // }
-    for (horiz_rank, n) in stack.into_iter().enumerate() {
+    for (horiz_rank, n) in root_nodes.into_iter().enumerate() {
         visited_nodes.insert(n.to_owned());
         let v_r = ranks.entry(0).or_insert(BTreeMap::new());
         v_r.insert(horiz_rank, n.to_owned());
