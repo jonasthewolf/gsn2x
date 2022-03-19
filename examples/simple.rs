@@ -3,7 +3,7 @@ use std::{cell::RefCell, rc::Rc};
 use dirgraphsvg::{
     edges::EdgeType,
     nodes::{
-    context::Context, new_goal, new_strategy, new_solution, new_justification, new_assumption,
+        context::Context, new_assumption, new_goal, new_justification, new_solution, new_strategy,
     },
     DirGraph,
 };

@@ -1,11 +1,10 @@
-use std::{rc::Rc, cell::RefCell};
+use std::{cell::RefCell, rc::Rc};
 
 use svg::node::element::Group;
 
 use crate::util::point2d::Point2D;
 
 use super::Node;
-
 
 pub struct Invisible {
     width: u32,
@@ -44,9 +43,11 @@ impl Node for Invisible {
         }
     }
 
-
     fn get_coordinates(&self, _: super::Port) -> crate::util::point2d::Point2D {
-        Point2D { x: self.x, y: self.y }
+        Point2D {
+            x: self.x,
+            y: self.y,
+        }
     }
 
     fn get_forced_level(&self) -> Option<usize> {
@@ -67,7 +68,7 @@ impl From<&Rc<RefCell<dyn Node>>> for Invisible {
     fn from(n: &Rc<RefCell<dyn Node>>) -> Self {
         let n = n.borrow();
         Invisible {
-            id: format!("__invisible__node__{}", n.get_id()).to_owned(), 
+            id: format!("__invisible__node__{}", n.get_id()).to_owned(),
             width: n.get_width(),
             height: n.get_height(),
             x: n.get_position().x,

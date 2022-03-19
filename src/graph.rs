@@ -83,7 +83,10 @@ pub(crate) fn rank_nodes(
     dbg!(ranks)
 }
 
-fn _swap_same_rank(edges: &BTreeMap<String, Vec<(String, EdgeType)>>, rank_nodes: &mut Vec<String>) {
+fn _swap_same_rank(
+    edges: &BTreeMap<String, Vec<(String, EdgeType)>>,
+    rank_nodes: &mut Vec<String>,
+) {
     let mut s: Option<(usize, usize)> = None;
     for (i, rn) in rank_nodes.iter().enumerate() {
         if let Some(edges) = edges.get(rn) {
@@ -163,7 +166,7 @@ fn add_in_context_nodes(
             match n {
                 NodePlace::Node(n) => {
                     if let Some(target) = edges.get(n) {
-                        let (left, right) : (Vec<(usize,String)>, Vec<(usize,String)>) = target
+                        let (left, right): (Vec<(usize, String)>, Vec<(usize, String)>) = target
                             .iter()
                             .filter_map(|(tn, et)| match et {
                                 EdgeType::InContextOf => Some(tn.to_owned()),
@@ -175,19 +178,23 @@ fn add_in_context_nodes(
                             .partition(|(i, _)| i % 2 == 0);
                         match &left.len() {
                             1 => new_rank.push(NodePlace::Node(left.get(0).unwrap().1.to_owned())),
-                            2.. => new_rank.push(NodePlace::MultipleNodes(left.iter().map(|(_, x)| x.to_owned()).collect())),
+                            2.. => new_rank.push(NodePlace::MultipleNodes(
+                                left.iter().map(|(_, x)| x.to_owned()).collect(),
+                            )),
                             _ => (),
                         }
                         new_rank.push(NodePlace::Node(n.to_owned()));
                         match &right.len() {
                             1 => new_rank.push(NodePlace::Node(right.get(0).unwrap().1.to_owned())),
-                            2.. => new_rank.push(NodePlace::MultipleNodes(right.iter().map(|(_, x)| x.to_owned()).collect())),
+                            2.. => new_rank.push(NodePlace::MultipleNodes(
+                                right.iter().map(|(_, x)| x.to_owned()).collect(),
+                            )),
                             _ => (),
                         }
                     } else {
                         new_rank.push(NodePlace::Node(n.to_owned()));
                     }
-                },
+                }
                 NodePlace::MultipleNodes(_) => (),
             }
         }

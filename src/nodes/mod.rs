@@ -1,11 +1,11 @@
 use crate::{util::point2d::Point2D, FontInfo};
 
-use self::{elliptical_node::EllipticalNode, box_node::BoxNode};
+use self::{box_node::BoxNode, elliptical_node::EllipticalNode};
 
 mod box_node;
 pub mod context;
 mod elliptical_node;
-pub(crate) mod invisible_node; 
+pub(crate) mod invisible_node;
 
 pub enum Port {
     North,
@@ -49,7 +49,6 @@ pub(crate) fn get_port_default_coordinates(
         },
     }
 }
-
 
 pub fn new_assumption(
     id: &str,
