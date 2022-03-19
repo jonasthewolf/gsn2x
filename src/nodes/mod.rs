@@ -1,14 +1,11 @@
 use crate::{util::point2d::Point2D, FontInfo};
 
-pub mod assumption;
+use self::{elliptical_node::EllipticalNode, box_node::BoxNode};
+
 mod box_node;
 pub mod context;
 mod elliptical_node;
-pub mod goal;
-pub mod justification;
-pub mod solution;
-pub mod strategy;
-pub(crate) mod invisible; 
+pub(crate) mod invisible_node; 
 
 pub enum Port {
     North,
@@ -51,4 +48,73 @@ pub(crate) fn get_port_default_coordinates(
             Port::West => y,
         },
     }
+}
+
+
+pub fn new_assumption(
+    id: &str,
+    text: &str,
+    url: Option<String>,
+    classes: Option<Vec<String>>,
+    forced_level: Option<usize>,
+) -> EllipticalNode {
+    EllipticalNode::new(
+        id,
+        text,
+        Some("A".to_owned()),
+        false,
+        url,
+        classes,
+        forced_level,
+    )
+}
+
+pub fn new_justification(
+    id: &str,
+    text: &str,
+    url: Option<String>,
+    classes: Option<Vec<String>>,
+    forced_level: Option<usize>,
+) -> EllipticalNode {
+    EllipticalNode::new(
+        id,
+        text,
+        Some("J".to_owned()),
+        false,
+        url,
+        classes,
+        forced_level,
+    )
+}
+
+pub fn new_solution(
+    id: &str,
+    text: &str,
+    url: Option<String>,
+    classes: Option<Vec<String>>,
+    forced_level: Option<usize>,
+) -> EllipticalNode {
+    EllipticalNode::new(id, text, None, true, url, classes, forced_level)
+}
+
+pub fn new_strategy(
+    id: &str,
+    text: &str,
+    undeveloped: bool,
+    url: Option<String>,
+    classes: Option<Vec<String>>,
+    forced_level: Option<usize>,
+) -> BoxNode {
+    BoxNode::new(id, text, undeveloped, 15, url, classes, forced_level)
+}
+
+pub fn new_goal(
+    id: &str,
+    text: &str,
+    undeveloped: bool,
+    url: Option<String>,
+    classes: Option<Vec<String>>,
+    forced_level: Option<usize>,
+) -> BoxNode {
+    BoxNode::new(id, text, undeveloped, 0, url, classes, forced_level)
 }

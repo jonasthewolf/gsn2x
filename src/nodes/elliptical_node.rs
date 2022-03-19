@@ -1,4 +1,4 @@
-use svg::node::element::{Ellipse, Group, Link, Text, Title};
+use svg::node::element::{Ellipse, Group, Link, Rectangle, Text, Title};
 
 use crate::FontInfo;
 
@@ -50,9 +50,10 @@ impl Node for EllipticalNode {
         );
         // +3 to make padding at bottom larger
         if self.circle {
-            let max = (std::cmp::max(self.width, self.height) as f32 / 1.141) as u32;
-            self.width = max;
-            self.height = max;
+            let r_width =
+                ((text_width * text_width / 4 + text_height + text_height / 4) as f64).sqrt();
+            self.width = r_width as u32 * 2;
+            self.height = r_width as u32 * 2;
         }
     }
 

@@ -1,11 +1,11 @@
-use svg::node::element::{path::Data, Group, Link, Path, Text, Title};
+use svg::node::element::{path::Data, Group, Link, Path, Rectangle, Text, Title};
 
 use crate::FontInfo;
 
 use super::{get_port_default_coordinates, Node, Point2D};
 
-const PADDING_VERTICAL: u32 = 5;
-const PADDING_HORIZONTAL: u32 = 15;
+const PADDING_VERTICAL: u32 = 7;
+const PADDING_HORIZONTAL: u32 = 7;
 const TEXT_OFFSET: u32 = 20;
 
 #[derive(Clone)]
@@ -30,7 +30,7 @@ impl Node for BoxNode {
     /// Height: 5 padding on each side, minimum 30, id line height (max. 20) + height of each text line
     ///
     fn calculate_size(&mut self, font: &FontInfo, suggested_char_wrap: u32) {
-        self.width = PADDING_HORIZONTAL * 2 + 70; // Padding of 5 on both sides
+        self.width = PADDING_HORIZONTAL * 2 + 70 + self.skew * 2; // Padding of 5 on both sides
         self.height = PADDING_VERTICAL * 2 + 30; // Padding of 5 on both sides
         self.text = crate::util::wordwrap::wordwrap(&self.text, suggested_char_wrap, "\n");
         let (t_width, t_height) =
@@ -42,7 +42,7 @@ impl Node for BoxNode {
             let (width, height) = crate::util::font::text_bounding_box(&font.font, t, font.size);
             self.lines.push((width, height));
             text_height += height;
-            text_width = std::cmp::max(text_width, width + PADDING_HORIZONTAL * 2);
+            text_width = std::cmp::max(text_width, width + PADDING_HORIZONTAL * 2 + self.skew * 2);
         }
         self.width = std::cmp::max(self.width, text_width);
         self.height = std::cmp::max(

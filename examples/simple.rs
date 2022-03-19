@@ -3,15 +3,14 @@ use std::{cell::RefCell, rc::Rc};
 use dirgraphsvg::{
     edges::EdgeType,
     nodes::{
-        assumption::Assumption, context::Context, goal::Goal, justification::Justification,
-        solution::Solution, strategy::Strategy,
+    context::Context, new_goal, new_strategy, new_solution, new_justification, new_assumption,
     },
     DirGraph,
 };
 
 fn main() -> Result<(), std::io::Error> {
     let dg = DirGraph::default();
-    let goal = Rc::new(RefCell::new(Goal::new(
+    let goal = Rc::new(RefCell::new(new_goal(
         "G1",
         "My extremely very, very, very, long Goal dEscription",
         false,
@@ -19,7 +18,7 @@ fn main() -> Result<(), std::io::Error> {
         None,
         None,
     )));
-    let goal2 = Rc::new(RefCell::new(Goal::new(
+    let goal2 = Rc::new(RefCell::new(new_goal(
         "G2",
         "under lighted, undeveloped",
         true,
@@ -27,7 +26,7 @@ fn main() -> Result<(), std::io::Error> {
         None,
         None,
     )));
-    let goal3 = Rc::new(RefCell::new(Goal::new(
+    let goal3 = Rc::new(RefCell::new(new_goal(
         "G3",
         "sub di dub di dub",
         false,
@@ -35,7 +34,7 @@ fn main() -> Result<(), std::io::Error> {
         None,
         Some(3),
     )));
-    let goal4 = Rc::new(RefCell::new(Goal::new(
+    let goal4 = Rc::new(RefCell::new(new_goal(
         "G4",
         "circle di circle",
         false,
@@ -43,7 +42,7 @@ fn main() -> Result<(), std::io::Error> {
         None,
         None,
     )));
-    let goal5 = Rc::new(RefCell::new(Goal::new(
+    let goal5 = Rc::new(RefCell::new(new_goal(
         "G5",
         "elcric id elcric",
         false,
@@ -51,7 +50,7 @@ fn main() -> Result<(), std::io::Error> {
         None,
         Some(2),
     )));
-    let strategy = Rc::new(RefCell::new(Strategy::new(
+    let strategy = Rc::new(RefCell::new(new_strategy(
         "S1",
         "test strategy",
         false,
@@ -60,42 +59,42 @@ fn main() -> Result<(), std::io::Error> {
         None,
     )));
     let context = Rc::new(RefCell::new(Context::new("C1", "some context", None, None)));
-    let solution = Rc::new(RefCell::new(Solution::new(
+    let solution = Rc::new(RefCell::new(new_solution(
         "Sn1",
         "test solution",
         None,
         None,
         None,
     )));
-    let solution2 = Rc::new(RefCell::new(Solution::new(
+    let solution2 = Rc::new(RefCell::new(new_solution(
         "Sn2",
         "test another solution",
         None,
         None,
         Some(2),
     )));
-    let solution3 = Rc::new(RefCell::new(Solution::new(
+    let solution3 = Rc::new(RefCell::new(new_solution(
         "Sn3",
         "yet another solution",
         None,
         None,
         None,
     )));
-    let solution4 = Rc::new(RefCell::new(Solution::new(
+    let solution4 = Rc::new(RefCell::new(new_solution(
         "Sn4",
         "another forced solution",
         None,
         None,
         Some(1),
     )));
-    let justification = Rc::new(RefCell::new(Justification::new(
+    let justification = Rc::new(RefCell::new(new_justification(
         "J1",
         "lalalsfa wrnasdf asdfa sdf asdlmösgm qwjsnf asndflan asdfa as",
         None,
         None,
         None,
     )));
-    let assumption = Rc::new(RefCell::new(Assumption::new(
+    let assumption = Rc::new(RefCell::new(new_assumption(
         "A1",
         "teadskfasjdfjne",
         None,

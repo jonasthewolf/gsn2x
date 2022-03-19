@@ -4,7 +4,7 @@ use std::{
     rc::Rc,
 };
 
-use crate::{edges::EdgeType, nodes::{Node, invisible::Invisible}};
+use crate::{edges::EdgeType, nodes::{Node, invisible_node::Invisible}};
 
 pub(crate) fn rank_nodes(
     nodes: &mut BTreeMap<String, Rc<RefCell<dyn Node>>>,
