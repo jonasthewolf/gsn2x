@@ -4,12 +4,21 @@ use std::{
     rc::Rc,
 };
 
-use crate::{edges::EdgeType, nodes::{Node, invisible_node::Invisible}};
+use crate::{
+    edges::EdgeType,
+    nodes::{invisible_node::Invisible, Node},
+};
+
+#[derive(Debug)]
+pub enum NodePlace {
+    Node(String),
+    MultipleNodes(Vec<String>),
+}
 
 pub(crate) fn rank_nodes(
     nodes: &mut BTreeMap<String, Rc<RefCell<dyn Node>>>,
     edges: &BTreeMap<String, Vec<(String, EdgeType)>>,
-) -> BTreeMap<usize, BTreeMap<usize, String>> {
+) -> BTreeMap<usize, BTreeMap<usize, NodePlace>> {
     let mut ranks = BTreeMap::new();
     let mut visited_nodes: BTreeSet<String> = BTreeSet::new();
 
@@ -35,7 +44,7 @@ pub(crate) fn rank_nodes(
     for (horiz_rank, n) in root_nodes.into_iter().enumerate() {
         visited_nodes.insert(n.to_owned());
         let v_r = ranks.entry(0).or_insert(BTreeMap::new());
-        v_r.insert(horiz_rank, n.to_owned());
+        v_r.insert(horiz_rank, NodePlace::Node(n.to_owned()));
         let mut loc_stack = Vec::new();
         let mut cur_node = n;
         let mut cur_rank;
@@ -51,18 +60,18 @@ pub(crate) fn rank_nodes(
                 // dbg!(c_r);
                 // dbg!(&loc_stack);
                 // Add invisible nodes
-                for i in p_r+1..c_r {
+                for i in p_r + 1..c_r {
                     let inv = Invisible::from(nodes.get(&c).unwrap());
                     let inv_id = inv.get_id().to_owned();
                     nodes.insert(inv.get_id().to_owned(), Rc::new(RefCell::new(inv)));
                     // TODO Replace edge with two edges and new edge type
                     let v_r = ranks.entry(i).or_insert(BTreeMap::new());
                     // TODO Position of invisible node is wrong.
-                    v_r.insert(v_r.len(), inv_id.to_owned());    
+                    v_r.insert(v_r.len(), NodePlace::Node(inv_id.to_owned()));
                 }
                 // TODO If more than one incoming edge, the lowest rank should move unforced elements down
                 let v_r = ranks.entry(c_r).or_insert(BTreeMap::new());
-                v_r.insert(v_r.len(), c.to_owned());
+                v_r.insert(v_r.len(), NodePlace::Node(c.to_owned()));
                 visited_nodes.insert(c.to_owned());
                 cur_node = c;
                 cur_rank = c_r;
@@ -74,7 +83,7 @@ pub(crate) fn rank_nodes(
     dbg!(ranks)
 }
 
-fn swap_same_rank(edges: &BTreeMap<String, Vec<(String, EdgeType)>>, rank_nodes: &mut Vec<String>) {
+fn _swap_same_rank(edges: &BTreeMap<String, Vec<(String, EdgeType)>>, rank_nodes: &mut Vec<String>) {
     let mut s: Option<(usize, usize)> = None;
     for (i, rn) in rank_nodes.iter().enumerate() {
         if let Some(edges) = edges.get(rn) {
@@ -92,7 +101,7 @@ fn swap_same_rank(edges: &BTreeMap<String, Vec<(String, EdgeType)>>, rank_nodes:
     }
 }
 
-fn count_crossings_same_rank(
+fn _count_crossings_same_rank(
     edges: &BTreeMap<String, Vec<(String, EdgeType)>>,
     rank_nodes: &Vec<String>,
 ) -> usize {
@@ -146,36 +155,45 @@ fn find_next_child_node(
 
 fn add_in_context_nodes(
     edges: &BTreeMap<String, Vec<(String, EdgeType)>>,
-    ranks: &mut BTreeMap<usize, BTreeMap<usize, String>>,
+    ranks: &mut BTreeMap<usize, BTreeMap<usize, NodePlace>>,
 ) {
     for v_ranks in ranks.values_mut() {
         let mut new_rank = Vec::new();
         for n in v_ranks.values() {
-            if let Some(target) = edges.get(n) {
-                let an = target
-                    .iter()
-                    .filter_map(|(tn, et)| match et {
-                        EdgeType::InContextOf => Some(tn.to_owned()),
-                        _ => None,
-                    })
-                    .collect::<Vec<String>>();
-                let mut right_add = Vec::new();
-                for (i, c_node) in an.into_iter().enumerate() {
-                    if i % 2 == 0 {
-                        new_rank.push(c_node.to_owned());
+            match n {
+                NodePlace::Node(n) => {
+                    if let Some(target) = edges.get(n) {
+                        let (left, right) : (Vec<(usize,String)>, Vec<(usize,String)>) = target
+                            .iter()
+                            .filter_map(|(tn, et)| match et {
+                                EdgeType::InContextOf => Some(tn.to_owned()),
+                                _ => None,
+                            })
+                            .collect::<Vec<String>>()
+                            .into_iter()
+                            .enumerate()
+                            .partition(|(i, _)| i % 2 == 0);
+                        match &left.len() {
+                            1 => new_rank.push(NodePlace::Node(left.get(0).unwrap().1.to_owned())),
+                            2.. => new_rank.push(NodePlace::MultipleNodes(left.iter().map(|(_, x)| x.to_owned()).collect())),
+                            _ => (),
+                        }
+                        new_rank.push(NodePlace::Node(n.to_owned()));
+                        match &right.len() {
+                            1 => new_rank.push(NodePlace::Node(right.get(0).unwrap().1.to_owned())),
+                            2.. => new_rank.push(NodePlace::MultipleNodes(right.iter().map(|(_, x)| x.to_owned()).collect())),
+                            _ => (),
+                        }
                     } else {
-                        right_add.push(c_node.to_owned());
+                        new_rank.push(NodePlace::Node(n.to_owned()));
                     }
-                }
-                new_rank.push(n.to_owned());
-                new_rank.append(&mut right_add);
-            } else {
-                new_rank.push(n.to_owned());
+                },
+                NodePlace::MultipleNodes(_) => (),
             }
         }
         v_ranks.clear();
-        for (h, n) in new_rank.iter().enumerate() {
-            v_ranks.insert(h, n.to_owned());
+        for (h, n) in new_rank.into_iter().enumerate() {
+            v_ranks.insert(h, n);
         }
     }
 }

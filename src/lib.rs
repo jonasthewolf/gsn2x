@@ -9,7 +9,7 @@ use std::{
 };
 
 use edges::EdgeType;
-use graph::rank_nodes;
+use graph::{rank_nodes, NodePlace};
 use nodes::{Node, Port};
 use rusttype::Font;
 use svg::{
@@ -164,14 +164,55 @@ impl DirGraph {
         let mut x = self.margin.left;
         let mut y = self.margin.top;
         for rank in ranks.values() {
-            let height_max = rank.values().map(|id|self.nodes.get(id).unwrap().borrow().get_height()).max().unwrap();
-            for id in rank.values() {
-                let mut n = self.nodes.get(id).unwrap().borrow_mut();
-                x += n.get_width() / 2;
-                n.set_position(&Point2D { x, y: y + height_max / 2 });
-                x += n.get_width() / 2 + self.margin.left + self.margin.right;
-                doc = doc.add(n.render(&self.font)); // x_s.get(id).unwrap() + x_offset, y,
-                n_rendered.insert(n.get_id().to_owned());
+            let height_max = rank
+                .values()
+                .map(|id| match id {
+                    NodePlace::Node(id) => self.nodes.get(id).unwrap().borrow().get_height(),
+                    NodePlace::MultipleNodes(ids) => ids
+                        .iter()
+                        .map(|id| {
+                            self.nodes.get(id).unwrap().borrow().get_height() + self.margin.top
+                        })
+                        .sum::<u32>(),
+                })
+                .max()
+                .unwrap();
+            for np in rank.values() {
+                match np {
+                    NodePlace::Node(id) => {
+                        let mut n = self.nodes.get(id).unwrap().borrow_mut();
+                        x += n.get_width() / 2;
+                        n.set_position(&Point2D {
+                            x,
+                            y: y + height_max / 2,
+                        });
+                        x += n.get_width() / 2 + self.margin.left + self.margin.right;
+                        doc = doc.add(n.render(&self.font)); // x_s.get(id).unwrap() + x_offset, y,
+                        n_rendered.insert(n.get_id().to_owned());
+                    }
+                    NodePlace::MultipleNodes(ids) => {
+                        let base_x = x;
+                        let mut x_max = 0;
+                        let mut y_n = y;
+                        for id in ids {
+                            let mut n = self.nodes.get(id).unwrap().borrow_mut();
+                            let n_width = n.get_width();
+                            let n_height = n.get_height();
+                            n.set_position(&Point2D {
+                                x: base_x + n_width / 2,
+                                y: y_n + n_height / 2,
+                            });
+                            y_n += y + n_height + (self.margin.top + self.margin.bottom) / 4;
+                            x_max = std::cmp::max(
+                                x_max,
+                                n_width + self.margin.left + self.margin.right,
+                            );
+                            doc = doc.add(n.render(&self.font)); // x_s.get(id).unwrap() + x_offset, y,
+                            n_rendered.insert(n.get_id().to_owned());
+                        }
+                        x += x_max;
+                    }
+                }
             }
             x = self.margin.left;
             y += height_max + self.margin.left + self.margin.right;

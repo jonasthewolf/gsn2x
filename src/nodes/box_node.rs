@@ -1,4 +1,4 @@
-use svg::node::element::{path::Data, Group, Link, Path, Rectangle, Text, Title};
+use svg::node::element::{path::Data, Group, Link, Path, Text, Title};
 
 use crate::FontInfo;
 
