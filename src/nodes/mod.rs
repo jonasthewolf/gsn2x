@@ -2,7 +2,7 @@ use std::{cell::RefCell, rc::Rc};
 
 use crate::{util::point2d::Point2D, FontInfo};
 
-use self::{box_node::BoxNode, elliptical_node::EllipticalNode, context_node::ContextNode};
+use self::{box_node::BoxNode, context_node::ContextNode, elliptical_node::EllipticalNode};
 
 mod box_node;
 mod context_node;
@@ -58,7 +58,7 @@ pub fn new_assumption(
     url: Option<String>,
     classes: Option<Vec<String>>,
     forced_level: Option<usize>,
-) -> Rc<RefCell<EllipticalNode>>{
+) -> Rc<RefCell<EllipticalNode>> {
     Rc::new(RefCell::new(EllipticalNode::new(
         id,
         text,
@@ -95,7 +95,15 @@ pub fn new_solution(
     classes: Option<Vec<String>>,
     forced_level: Option<usize>,
 ) -> Rc<RefCell<EllipticalNode>> {
-    Rc::new(RefCell::new(EllipticalNode::new(id, text, None, true, url, classes, forced_level)))
+    Rc::new(RefCell::new(EllipticalNode::new(
+        id,
+        text,
+        None,
+        true,
+        url,
+        classes,
+        forced_level,
+    )))
 }
 
 pub fn new_strategy(
@@ -106,7 +114,15 @@ pub fn new_strategy(
     classes: Option<Vec<String>>,
     forced_level: Option<usize>,
 ) -> Rc<RefCell<BoxNode>> {
-    Rc::new(RefCell::new(BoxNode::new(id, text, undeveloped, 15, url, classes, forced_level)))
+    Rc::new(RefCell::new(BoxNode::new(
+        id,
+        text,
+        undeveloped,
+        15,
+        url,
+        classes,
+        forced_level,
+    )))
 }
 
 pub fn new_goal(
@@ -117,14 +133,22 @@ pub fn new_goal(
     classes: Option<Vec<String>>,
     forced_level: Option<usize>,
 ) -> Rc<RefCell<BoxNode>> {
-    Rc::new(RefCell::new(BoxNode::new(id, text, undeveloped, 0, url, classes, forced_level)))
-}
-
-pub fn new_context(id: &str, text: &str, url: Option<String>, classes: Option<Vec<String>>) -> Rc<RefCell<ContextNode>> {
-    Rc::new(RefCell::new(ContextNode::new(
+    Rc::new(RefCell::new(BoxNode::new(
         id,
         text,
+        undeveloped,
+        0,
         url,
         classes,
+        forced_level,
     )))
+}
+
+pub fn new_context(
+    id: &str,
+    text: &str,
+    url: Option<String>,
+    classes: Option<Vec<String>>,
+) -> Rc<RefCell<ContextNode>> {
+    Rc::new(RefCell::new(ContextNode::new(id, text, url, classes)))
 }

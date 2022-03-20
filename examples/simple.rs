@@ -1,8 +1,6 @@
 use dirgraphsvg::{
     edges::EdgeType,
-    nodes::{
-        new_context, new_assumption, new_goal, new_justification, new_solution, new_strategy,
-    },
+    nodes::{new_assumption, new_context, new_goal, new_justification, new_solution, new_strategy},
     DirGraph,
 };
 
@@ -24,67 +22,15 @@ fn main() -> Result<(), std::io::Error> {
         None,
         None,
     );
-    let goal3 = new_goal(
-        "G3",
-        "sub di dub di dub",
-        false,
-        None,
-        None,
-        Some(3),
-    );
-    let goal4 = new_goal(
-        "G4",
-        "circle di circle",
-        false,
-        None,
-        None,
-        None,
-    );
-    let goal5 = new_goal(
-        "G5",
-        "elcric id elcric",
-        false,
-        None,
-        None,
-        Some(2),
-    );
-    let strategy = new_strategy(
-        "S1",
-        "test strategy",
-        false,
-        None,
-        None,
-        None,
-    );
+    let goal3 = new_goal("G3", "sub di dub di dub", false, None, None, Some(3));
+    let goal4 = new_goal("G4", "circle di circle", false, None, None, None);
+    let goal5 = new_goal("G5", "elcric id elcric", false, None, None, Some(2));
+    let strategy = new_strategy("S1", "test strategy", false, None, None, None);
     let context = new_context("C1", "some context", None, None);
-    let solution = new_solution(
-        "Sn1",
-        "test solution",
-        None,
-        None,
-        None,
-    );
-    let solution2 = new_solution(
-        "Sn2",
-        "test another solution",
-        None,
-        None,
-        Some(2),
-    );
-    let solution3 = new_solution(
-        "Sn3",
-        "yet another solution",
-        None,
-        None,
-        None,
-    );
-    let solution4 = new_solution(
-        "Sn4",
-        "another forced solution",
-        None,
-        None,
-        Some(1),
-    );
+    let solution = new_solution("Sn1", "test solution", None, None, None);
+    let solution2 = new_solution("Sn2", "test another solution", None, None, Some(2));
+    let solution3 = new_solution("Sn3", "yet another solution", None, None, None);
+    let solution4 = new_solution("Sn4", "another forced solution", None, None, Some(1));
     let justification = new_justification(
         "J1",
         "lalalsfa wrnasdf asdfa sdf asdlmösgm qwjsnf asndflan asdfa as",
@@ -92,13 +38,7 @@ fn main() -> Result<(), std::io::Error> {
         None,
         None,
     );
-    let assumption = new_assumption(
-        "A1",
-        "teadskfasjdfjne",
-        None,
-        None,
-        None,
-    );
+    let assumption = new_assumption("A1", "teadskfasjdfjne", None, None, None);
     let justification2 = new_justification(
         "J2",
         "asdfgasgnajkg aksdnnglert klnalsdn kölnsdg ljsmdg snnjk slls qwjsnf asndflan asdfa as",

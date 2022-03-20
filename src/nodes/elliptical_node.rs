@@ -1,4 +1,4 @@
-use svg::node::element::{Ellipse, Group, Link, Text, Title, Rectangle};
+use svg::node::element::{Ellipse, Group, Link, Rectangle, Text, Title};
 
 use crate::FontInfo;
 
@@ -40,21 +40,27 @@ impl Node for EllipticalNode {
         self.text_height = t_height + TEXT_OFFSET + 3;
         self.text_width = t_width;
         for t in self.text.lines() {
-            let (line_width, line_height) = crate::util::font::text_bounding_box(&font.font, t, font.size);
+            let (line_width, line_height) =
+                crate::util::font::text_bounding_box(&font.font, t, font.size);
             self.lines.push((line_width, line_height));
             self.text_height += line_height;
             self.text_width = std::cmp::max(self.text_width, line_width);
         }
         if self.circle {
-            let r_width =
-            ((self.text_width * self.text_width / 4 + self.text_height + self.text_height / 4) as f64).sqrt();
+            let r_width = ((self.text_width * self.text_width / 4
+                + self.text_height
+                + self.text_height / 4) as f64)
+                .sqrt();
             self.width = std::cmp::max(MIN_SIZE, (2 * PADDING + r_width as u32) * 2);
-            self.height = std::cmp::max(MIN_SIZE,(2 * PADDING + r_width as u32) * 2);
+            self.height = std::cmp::max(MIN_SIZE, (2 * PADDING + r_width as u32) * 2);
         } else {
-            self.width = std::cmp::max(MIN_SIZE, PADDING * 2 + ((self.text_width as f32 * 1.414) as u32));
+            self.width = std::cmp::max(
+                MIN_SIZE,
+                PADDING * 2 + ((self.text_width as f32 * 1.414) as u32),
+            );
             self.height = std::cmp::max(
                 self.height,
-                PADDING * 2 + ((self.text_height as f32 * 1.414) as u32)
+                PADDING * 2 + ((self.text_height as f32 * 1.414) as u32),
             );
         }
     }
@@ -149,11 +155,8 @@ impl Node for EllipticalNode {
         for (n, t) in self.text.lines().enumerate() {
             text_y += self.lines.get(n + 1).unwrap().1;
             let text = Text::new()
-                .set("x", self.x - self.text_width/2)
-                .set(
-                    "y",
-                    text_y
-                )
+                .set("x", self.x - self.text_width / 2)
+                .set("y", text_y)
                 .set("textLength", self.lines.get(n + 1).unwrap().0)
                 .set("font-size", font.size)
                 .set("font-family", font.name.to_owned())
