@@ -36,7 +36,7 @@ pub(crate) fn rank_nodes(
         }
     }
     let root_nodes = n_ids.iter().map(|x| x.to_owned());
-    // Perform depth first searcb for SupportedBy child nodes.
+    // Perform depth first search for SupportedBy child nodes.
     for (horiz_rank, n) in root_nodes.into_iter().enumerate() {
         visited_nodes.insert(n.to_owned());
         let v_r = ranks.entry(0).or_insert(BTreeMap::new());
@@ -76,26 +76,6 @@ pub(crate) fn rank_nodes(
     dbg!(ranks)
 }
 
-fn _swap_same_rank(
-    edges: &BTreeMap<String, Vec<(String, EdgeType)>>,
-    rank_nodes: &mut Vec<String>,
-) {
-    let mut s: Option<(usize, usize)> = None;
-    for (i, rn) in rank_nodes.iter().enumerate() {
-        if let Some(edges) = edges.get(rn) {
-            for (id, _) in edges {
-                if let Some(x) = rank_nodes.iter().position(|x| x == id) {
-                    if (x as i64 - i as i64).abs() > 1 {
-                        s = Some((x, (x as i64 - i as i64).abs() as usize / 2));
-                    }
-                }
-            }
-        }
-    }
-    if let Some((x, y)) = s {
-        rank_nodes.swap(x, y);
-    }
-}
 
 fn _count_crossings_same_rank(
     edges: &BTreeMap<String, Vec<(String, EdgeType)>>,
@@ -163,7 +143,6 @@ fn add_in_context_nodes(
                             })
                             .collect::<Vec<String>>()
                             .into_iter()
-                            // .enumerate()
                             .partition(|_| {
                                 i += 1;
                                 i % 2 == 0
