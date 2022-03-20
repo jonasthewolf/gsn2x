@@ -1,4 +1,4 @@
-use svg::node::element::{Ellipse, Group, Link, Text, Title};
+use svg::node::element::{Ellipse, Group, Link, Text, Title, Rectangle};
 
 use crate::FontInfo;
 
@@ -6,6 +6,7 @@ use super::{get_port_default_coordinates, Node, Point2D};
 
 const PADDING: u32 = 5;
 const TEXT_OFFSET: u32 = 20;
+const MIN_SIZE: u32 = 50;
 
 #[derive(Clone)]
 pub struct EllipticalNode {
@@ -29,9 +30,9 @@ impl Node for EllipticalNode {
     ///
     ///
     fn calculate_size(&mut self, font: &FontInfo, suggested_char_wrap: u32) {
-        self.height = PADDING * 2 + 50;
-        self.width = PADDING * 2 + 50; 
+        // Wrap text
         self.text = crate::util::wordwrap::wordwrap(&self.text, suggested_char_wrap, "\n");
+        // Calculate bounding box of identifier
         let (t_width, t_height) =
             crate::util::font::text_bounding_box(&font.font, &self.identifier, font.size);
         self.lines.push((t_width, t_height));
@@ -47,15 +48,14 @@ impl Node for EllipticalNode {
         if self.circle {
             let r_width =
             ((self.text_width * self.text_width / 4 + self.text_height + self.text_height / 4) as f64).sqrt();
-            self.width = (PADDING + r_width as u32) * 2;
-            self.height = (PADDING + r_width as u32) * 2;
+            self.width = std::cmp::max(MIN_SIZE, (2 * PADDING + r_width as u32) * 2);
+            self.height = std::cmp::max(MIN_SIZE,(2 * PADDING + r_width as u32) * 2);
         } else {
-            self.width = std::cmp::max(self.width, PADDING * 2 + ((self.text_width as f32 * 1.1416) as u32));
+            self.width = std::cmp::max(MIN_SIZE, PADDING * 2 + ((self.text_width as f32 * 1.414) as u32));
             self.height = std::cmp::max(
                 self.height,
-                PADDING * 2 + ((self.text_height as f32 * 1.1416) as u32)
+                PADDING * 2 + ((self.text_height as f32 * 1.414) as u32)
             );
-
         }
     }
 
@@ -123,6 +123,15 @@ impl Node for EllipticalNode {
             .set("font-size", font.size)
             .set("font-family", font.name.to_owned())
             .add(svg::node::Text::new(&self.identifier));
+
+        let red_box = Rectangle::new()
+            .set("x", self.x - self.text_width / 2)
+            .set("y", self.y - self.text_height / 2)
+            .set("width", self.text_width)
+            .set("height", self.text_height)
+            .set("fill", "none")
+            .set("stroke", "red");
+        g = g.add(red_box);
 
         g = g.add(title).add(border).add(id);
         if let Some(adm) = &self.admonition {
