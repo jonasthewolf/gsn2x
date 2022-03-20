@@ -252,11 +252,11 @@ impl DirGraph {
                 )
             } else if s_pos.y - s.get_height() / 2 > t_pos.y + t.get_height() / 2 {
                 (
-                    s.get_coordinates(Port::North)
-                        .move_relative(0, -(MARKER_HEIGHT as i32)),
+                    s.get_coordinates(Port::North),
                     s.get_coordinates(Port::North)
                         .move_relative(0, -(2 * MARKER_HEIGHT as i32)),
-                    t.get_coordinates(Port::South),
+                    t.get_coordinates(Port::South)
+                        .move_relative(0, MARKER_HEIGHT as i32),
                     t.get_coordinates(Port::South)
                         .move_relative(0, 2 * MARKER_HEIGHT as i32),
                 )
