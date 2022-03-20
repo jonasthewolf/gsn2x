@@ -6,7 +6,7 @@ use crate::util::point2d::Point2D;
 
 use super::Node;
 
-pub struct Invisible {
+pub struct InvisibleNode {
     width: u32,
     height: u32,
     x: u32,
@@ -14,7 +14,7 @@ pub struct Invisible {
     id: String,
 }
 
-impl Node for Invisible {
+impl Node for InvisibleNode {
     fn get_id(&self) -> &str {
         &self.id
     }
@@ -63,10 +63,10 @@ impl Node for Invisible {
     }
 }
 
-impl From<&Rc<RefCell<dyn Node>>> for Invisible {
+impl From<&Rc<RefCell<dyn Node>>> for InvisibleNode {
     fn from(n: &Rc<RefCell<dyn Node>>) -> Self {
         let n = n.borrow();
-        Invisible {
+        InvisibleNode {
             id: format!("__invisible__node__{}", n.get_id()),
             width: n.get_width(),
             height: n.get_height(),
