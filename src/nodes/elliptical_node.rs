@@ -130,15 +130,6 @@ impl Node for EllipticalNode {
             .set("font-family", font.name.to_owned())
             .add(svg::node::Text::new(&self.identifier));
 
-        let red_box = Rectangle::new()
-            .set("x", self.x - self.text_width / 2)
-            .set("y", self.y - self.text_height / 2)
-            .set("width", self.text_width)
-            .set("height", self.text_height)
-            .set("fill", "none")
-            .set("stroke", "red");
-        g = g.add(red_box);
-
         g = g.add(title).add(border).add(id);
         if let Some(adm) = &self.admonition {
             let decorator = Text::new()
