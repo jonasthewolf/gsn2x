@@ -167,12 +167,12 @@ impl DirGraph {
                 .values()
                 .map(|id| match id {
                     NodePlace::Node(id) => self.nodes.get(id).unwrap().borrow().get_height(),
-                    NodePlace::MultipleNodes(ids) => ids
-                        .iter()
-                        .map(|id| {
-                            self.nodes.get(id).unwrap().borrow().get_height() + self.margin.top
-                        })
-                        .sum::<u32>(),
+                    NodePlace::MultipleNodes(ids) => {
+                        ids.iter()
+                            .map(|id| self.nodes.get(id).unwrap().borrow().get_height())
+                            .sum::<u32>()
+                            + (self.margin.top + self.margin.bottom) * (ids.len() - 1) as u32
+                    }
                 })
                 .max()
                 .unwrap();
@@ -186,27 +186,25 @@ impl DirGraph {
                             y: y + height_max / 2,
                         });
                         x += n.get_width() / 2 + self.margin.left + self.margin.right;
-                        doc = doc.add(n.render(&self.font)); // x_s.get(id).unwrap() + x_offset, y,
+                        doc = doc.add(n.render(&self.font)); 
                         n_rendered.insert(n.get_id().to_owned());
                     }
                     NodePlace::MultipleNodes(ids) => {
-                        let base_x = x;
-                        let mut x_max = 0;
+                        let x_max = ids
+                            .iter()
+                            .map(|id| self.nodes.get(id).unwrap().borrow().get_width())
+                            .max()
+                            .unwrap();
                         let mut y_n = y;
                         for id in ids {
                             let mut n = self.nodes.get(id).unwrap().borrow_mut();
-                            let n_width = n.get_width();
                             let n_height = n.get_height();
                             n.set_position(&Point2D {
-                                x: base_x + n_width / 2,
+                                x: x + x_max / 2,
                                 y: y_n + n_height / 2,
                             });
-                            y_n += y + n_height + (self.margin.top + self.margin.bottom) / 4;
-                            x_max = std::cmp::max(
-                                x_max,
-                                n_width + self.margin.left + self.margin.right,
-                            );
-                            doc = doc.add(n.render(&self.font)); // x_s.get(id).unwrap() + x_offset, y,
+                            y_n += n_height + self.margin.top + self.margin.bottom;
+                            doc = doc.add(n.render(&self.font)); 
                             n_rendered.insert(n.get_id().to_owned());
                         }
                         x += x_max;

@@ -42,11 +42,11 @@ dEscription
 <title>
 C1
 </title>
-<path d="M614,20 L694,20 C704,20,704,66,694,66 L614,66 C604,66,604,20,614,20" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="614" y="38">
+<path d="M624,20 L704,20 C714,20,714,66,704,66 L624,66 C614,66,614,20,624,20" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="624" y="38">
 C1
 </text>
-<text font-family="Arial" font-size="12" textLength="70" x="614" y="58">
+<text font-family="Arial" font-size="12" textLength="70" x="624" y="58">
 some context
 </text>
 </g>
@@ -54,14 +54,14 @@ some context
 <title>
 A1
 </title>
-<ellipse cx="664" cy="135" fill="none" rx="60" ry="39" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="625" y="124">
+<ellipse cx="664" cy="145" fill="none" rx="60" ry="39" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="625" y="134">
 A1
 </text>
-<text font-family="Arial" font-size="12" font-weight="bold" x="719" y="169">
+<text font-family="Arial" font-size="12" font-weight="bold" x="719" y="179">
 A
 </text>
-<text font-family="Arial" font-size="12" textLength="79" x="625" y="144">
+<text font-family="Arial" font-size="12" textLength="79" x="625" y="154">
 teadskfasjdfjne
 </text>
 </g>
@@ -200,11 +200,11 @@ G3
 sub di dub di dub
 </text>
 </g>
-<path d="M454,71 C454,51,654,86,654,76" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path d="M454,71 C454,51,664,86,664,76" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
 <path d="M454,133 C454,153,83,385,83,395" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 <path d="M454,133 C454,153,243,250,243,260" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 <path d="M344,102 C344,102,324,102,314,102" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path d="M564,102 C564,102,584,135,594,135" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path d="M564,102 C564,102,584,145,594,145" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
 <path d="M454,133 C454,153,504,250,504,260" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 <path d="M454,133 C454,153,920,423,920,433" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 <path d="M504,320 C504,340,776,386,776,396" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>

@@ -76,7 +76,6 @@ pub(crate) fn rank_nodes(
     dbg!(ranks)
 }
 
-
 fn _count_crossings_same_rank(
     edges: &BTreeMap<String, Vec<(String, EdgeType)>>,
     rank_nodes: &[String],
