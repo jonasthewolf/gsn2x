@@ -1,4 +1,4 @@
-use svg::node::element::{Ellipse, Group, Link, Rectangle, Text, Title};
+use svg::node::element::{Ellipse, Group, Link, Text, Title};
 
 use crate::FontInfo;
 

@@ -58,9 +58,8 @@ impl Node for Invisible {
         // Intentionally left emtpy
     }
 
-    // TODO Don't render invisilbe node at all
     fn render(&mut self, _: &crate::FontInfo) -> svg::node::element::Group {
-        Group::new()
+        Group::new() // Empty groups are not rendered.
     }
 }
 
@@ -68,7 +67,7 @@ impl From<&Rc<RefCell<dyn Node>>> for Invisible {
     fn from(n: &Rc<RefCell<dyn Node>>) -> Self {
         let n = n.borrow();
         Invisible {
-            id: format!("__invisible__node__{}", n.get_id()).to_owned(),
+            id: format!("__invisible__node__{}", n.get_id()),
             width: n.get_width(),
             height: n.get_height(),
             x: n.get_position().x,

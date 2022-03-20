@@ -35,7 +35,7 @@ pub(crate) fn rank_nodes(
             n_ids.remove(target);
         }
     }
-    let root_nodes: Vec<_> = n_ids.iter().map(|x| x.to_owned()).collect();
+    let root_nodes = n_ids.iter().map(|x| x.to_owned());
     // Perform depth first searcb for SupportedBy child nodes.
     for (horiz_rank, n) in root_nodes.into_iter().enumerate() {
         visited_nodes.insert(n.to_owned());
@@ -99,7 +99,7 @@ fn _swap_same_rank(
 
 fn _count_crossings_same_rank(
     edges: &BTreeMap<String, Vec<(String, EdgeType)>>,
-    rank_nodes: &Vec<String>,
+    rank_nodes: &[String],
 ) -> usize {
     let mut sum = 0usize;
     for (i, rn) in rank_nodes.iter().enumerate() {
@@ -127,22 +127,17 @@ fn find_next_child_node(
     visited_nodes: &BTreeSet<String>,
     current: &str,
 ) -> Option<(String, usize)> {
-    for p in edges.get(current) {
+    if let Some(p) = edges.get(current) {
         if let Some(opt_child) = p
             .iter()
             .filter_map(|(id, et)| match et {
                 EdgeType::SupportedBy => Some(id.to_owned()),
                 _ => None,
             })
-            .filter(|id| !visited_nodes.contains(id))
-            .next()
+            .find(|id| !visited_nodes.contains(id))
         {
             let node = nodes.get(&opt_child).unwrap();
-            let r = node
-                .borrow()
-                .get_forced_level()
-                .or_else(|| Some(rank + 1))
-                .unwrap();
+            let r = node.borrow().get_forced_level().unwrap_or(rank + 1);
             return Some((opt_child, r));
         }
     }
@@ -159,7 +154,8 @@ fn add_in_context_nodes(
             match n {
                 NodePlace::Node(n) => {
                     if let Some(target) = edges.get(n) {
-                        let (left, right): (Vec<(usize, String)>, Vec<(usize, String)>) = target
+                        let mut i = 0;
+                        let (left, right): (Vec<String>, Vec<String>) = target
                             .iter()
                             .filter_map(|(tn, et)| match et {
                                 EdgeType::InContextOf => Some(tn.to_owned()),
@@ -167,20 +163,23 @@ fn add_in_context_nodes(
                             })
                             .collect::<Vec<String>>()
                             .into_iter()
-                            .enumerate()
-                            .partition(|(i, _)| i % 2 == 1);
+                            // .enumerate()
+                            .partition(|_| {
+                                i += 1;
+                                i % 2 == 0
+                            });
                         match &left.len() {
-                            1 => new_rank.push(NodePlace::Node(left.get(0).unwrap().1.to_owned())),
+                            1 => new_rank.push(NodePlace::Node(left.get(0).unwrap().to_owned())),
                             2.. => new_rank.push(NodePlace::MultipleNodes(
-                                left.iter().map(|(_, x)| x.to_owned()).collect(),
+                                left.iter().map(|x| x.to_owned()).collect(),
                             )),
                             _ => (),
                         }
                         new_rank.push(NodePlace::Node(n.to_owned()));
                         match &right.len() {
-                            1 => new_rank.push(NodePlace::Node(right.get(0).unwrap().1.to_owned())),
+                            1 => new_rank.push(NodePlace::Node(right.get(0).unwrap().to_owned())),
                             2.. => new_rank.push(NodePlace::MultipleNodes(
-                                right.iter().map(|(_, x)| x.to_owned()).collect(),
+                                right.iter().map(|x| x.to_owned()).collect(),
                             )),
                             _ => (),
                         }
