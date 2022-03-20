@@ -168,7 +168,7 @@ fn add_in_context_nodes(
                             .collect::<Vec<String>>()
                             .into_iter()
                             .enumerate()
-                            .partition(|(i, _)| i % 2 == 0);
+                            .partition(|(i, _)| i % 2 == 1);
                         match &left.len() {
                             1 => new_rank.push(NodePlace::Node(left.get(0).unwrap().1.to_owned())),
                             2.. => new_rank.push(NodePlace::MultipleNodes(

@@ -99,11 +99,19 @@ fn main() -> Result<(), std::io::Error> {
         None,
         None,
     );
+    let justification2 = new_justification(
+        "J2",
+        "asdfgasgnajkg aksdnnglert klnalsdn kölnsdg ljsmdg snnjk slls qwjsnf asndflan asdfa as",
+        None,
+        None,
+        None,
+    );
     dg.set_font("Arial", 12.0)
-        .set_size(1000, 600)
+        .set_size(1200, 600)
         .add_node(justification.clone())
         .add_node(goal.clone())
         .add_node(goal2.clone())
+        .add_node(justification2.clone())
         .add_node(goal3.clone())
         .add_node(goal4.clone())
         .add_node(goal5.clone())
@@ -126,7 +134,8 @@ fn main() -> Result<(), std::io::Error> {
         .add_edge(goal4.clone(), solution3.clone(), EdgeType::SupportedBy)
         .add_edge(goal4, solution4.clone(), EdgeType::SupportedBy)
         .add_edge(goal5.clone(), solution3.clone(), EdgeType::SupportedBy)
-        .add_edge(goal, goal5, EdgeType::SupportedBy)
+        .add_edge(goal, goal5.clone(), EdgeType::SupportedBy)
+        .add_edge(goal5.clone(), justification2, EdgeType::InContextOf)
         .write_to_file(std::path::Path::new("examples/simple.svg"))?;
     Ok(())
 }

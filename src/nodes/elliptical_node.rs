@@ -17,6 +17,8 @@ pub struct EllipticalNode {
     _classes: Option<Vec<String>>,
     width: u32,
     height: u32,
+    text_width: u32,
+    text_height: u32,
     lines: Vec<(u32, u32)>,
     x: u32,
     y: u32,
@@ -25,35 +27,35 @@ pub struct EllipticalNode {
 
 impl Node for EllipticalNode {
     ///
-    /// Width: 5 padding on each side, minimum 50, maximum line length of text or identifier
-    /// Height: 5 padding on each side, minimum 30, id line height (max. 20) + height of each text line
     ///
     fn calculate_size(&mut self, font: &FontInfo, suggested_char_wrap: u32) {
         self.height = PADDING * 2 + 50;
-        self.width = PADDING * 2 + 50; // Padding of 5 on both sides
+        self.width = PADDING * 2 + 50; 
         self.text = crate::util::wordwrap::wordwrap(&self.text, suggested_char_wrap, "\n");
         let (t_width, t_height) =
             crate::util::font::text_bounding_box(&font.font, &self.identifier, font.size);
         self.lines.push((t_width, t_height));
-        let mut text_height = 0;
-        let mut text_width = t_width + PADDING * 2;
-        for t in self.text.lines() {
-            let (width, height) = crate::util::font::text_bounding_box(&font.font, t, font.size);
-            self.lines.push((width, height));
-            text_height += height;
-            text_width = std::cmp::max(text_width, width + PADDING * 2);
-        }
-        self.width = std::cmp::max(self.width, (text_width as f32 * 1.141) as u32);
-        self.height = std::cmp::max(
-            self.height,
-            ((PADDING * 2 + TEXT_OFFSET + text_height + 3) as f32 * 1.141) as u32,
-        );
         // +3 to make padding at bottom larger
+        self.text_height = t_height + TEXT_OFFSET + 3;
+        self.text_width = t_width;
+        for t in self.text.lines() {
+            let (line_width, line_height) = crate::util::font::text_bounding_box(&font.font, t, font.size);
+            self.lines.push((line_width, line_height));
+            self.text_height += line_height;
+            self.text_width = std::cmp::max(self.text_width, line_width);
+        }
         if self.circle {
             let r_width =
-                ((text_width * text_width / 4 + text_height + text_height / 4) as f64).sqrt();
-            self.width = r_width as u32 * 2;
-            self.height = r_width as u32 * 2;
+            ((self.text_width * self.text_width / 4 + self.text_height + self.text_height / 4) as f64).sqrt();
+            self.width = (PADDING + r_width as u32) * 2;
+            self.height = (PADDING + r_width as u32) * 2;
+        } else {
+            self.width = std::cmp::max(self.width, PADDING * 2 + ((self.text_width as f32 * 1.1416) as u32));
+            self.height = std::cmp::max(
+                self.height,
+                PADDING * 2 + ((self.text_height as f32 * 1.1416) as u32)
+            );
+
         }
     }
 
@@ -112,10 +114,10 @@ impl Node for EllipticalNode {
             .set("ry", self.height / 2);
 
         let id = Text::new()
-            .set("x", self.x - self.width / 2 + PADDING + self.width / 8)
+            .set("x", self.x - self.text_width / 2)
             .set(
                 "y",
-                self.y - self.height / 2 + PADDING + self.lines.get(0).unwrap().1,
+                self.y - self.text_height / 2 + self.lines.get(0).unwrap().1,
             )
             .set("font-weight", "bold")
             .set("font-size", font.size)
@@ -134,15 +136,14 @@ impl Node for EllipticalNode {
             g = g.add(decorator);
         }
 
+        let mut text_y = self.y - self.text_height / 2 + TEXT_OFFSET;
         for (n, t) in self.text.lines().enumerate() {
+            text_y += self.lines.get(n + 1).unwrap().1;
             let text = Text::new()
-                .set("x", self.x - self.width / 2 + PADDING)
+                .set("x", self.x - self.text_width/2)
                 .set(
                     "y",
-                    self.y - self.height / 2
-                        + PADDING
-                        + TEXT_OFFSET
-                        + (n as u32 + 1) * self.lines.get(n + 1).unwrap().1,
+                    text_y
                 )
                 .set("textLength", self.lines.get(n + 1).unwrap().0)
                 .set("font-size", font.size)
@@ -173,6 +174,8 @@ impl EllipticalNode {
             _classes: classes,
             width: 0,
             height: 0,
+            text_width: 0,
+            text_height: 0,
             lines: vec![],
             x: 0,
             y: 0,
