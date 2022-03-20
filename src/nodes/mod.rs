@@ -1,9 +1,11 @@
+use std::{cell::RefCell, rc::Rc};
+
 use crate::{util::point2d::Point2D, FontInfo};
 
-use self::{box_node::BoxNode, elliptical_node::EllipticalNode};
+use self::{box_node::BoxNode, elliptical_node::EllipticalNode, context_node::ContextNode};
 
 mod box_node;
-pub mod context;
+mod context_node;
 mod elliptical_node;
 pub(crate) mod invisible_node;
 
@@ -56,8 +58,8 @@ pub fn new_assumption(
     url: Option<String>,
     classes: Option<Vec<String>>,
     forced_level: Option<usize>,
-) -> EllipticalNode {
-    EllipticalNode::new(
+) -> Rc<RefCell<EllipticalNode>>{
+    Rc::new(RefCell::new(EllipticalNode::new(
         id,
         text,
         Some("A".to_owned()),
@@ -65,7 +67,7 @@ pub fn new_assumption(
         url,
         classes,
         forced_level,
-    )
+    )))
 }
 
 pub fn new_justification(
@@ -74,8 +76,8 @@ pub fn new_justification(
     url: Option<String>,
     classes: Option<Vec<String>>,
     forced_level: Option<usize>,
-) -> EllipticalNode {
-    EllipticalNode::new(
+) -> Rc<RefCell<EllipticalNode>> {
+    Rc::new(RefCell::new(EllipticalNode::new(
         id,
         text,
         Some("J".to_owned()),
@@ -83,7 +85,7 @@ pub fn new_justification(
         url,
         classes,
         forced_level,
-    )
+    )))
 }
 
 pub fn new_solution(
@@ -92,8 +94,8 @@ pub fn new_solution(
     url: Option<String>,
     classes: Option<Vec<String>>,
     forced_level: Option<usize>,
-) -> EllipticalNode {
-    EllipticalNode::new(id, text, None, true, url, classes, forced_level)
+) -> Rc<RefCell<EllipticalNode>> {
+    Rc::new(RefCell::new(EllipticalNode::new(id, text, None, true, url, classes, forced_level)))
 }
 
 pub fn new_strategy(
@@ -103,8 +105,8 @@ pub fn new_strategy(
     url: Option<String>,
     classes: Option<Vec<String>>,
     forced_level: Option<usize>,
-) -> BoxNode {
-    BoxNode::new(id, text, undeveloped, 15, url, classes, forced_level)
+) -> Rc<RefCell<BoxNode>> {
+    Rc::new(RefCell::new(BoxNode::new(id, text, undeveloped, 15, url, classes, forced_level)))
 }
 
 pub fn new_goal(
@@ -114,6 +116,15 @@ pub fn new_goal(
     url: Option<String>,
     classes: Option<Vec<String>>,
     forced_level: Option<usize>,
-) -> BoxNode {
-    BoxNode::new(id, text, undeveloped, 0, url, classes, forced_level)
+) -> Rc<RefCell<BoxNode>> {
+    Rc::new(RefCell::new(BoxNode::new(id, text, undeveloped, 0, url, classes, forced_level)))
+}
+
+pub fn new_context(id: &str, text: &str, url: Option<String>, classes: Option<Vec<String>>) -> Rc<RefCell<ContextNode>> {
+    Rc::new(RefCell::new(ContextNode::new(
+        id,
+        text,
+        url,
+        classes,
+    )))
 }

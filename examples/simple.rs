@@ -1,106 +1,104 @@
-use std::{cell::RefCell, rc::Rc};
-
 use dirgraphsvg::{
     edges::EdgeType,
     nodes::{
-        context::Context, new_assumption, new_goal, new_justification, new_solution, new_strategy,
+        new_context, new_assumption, new_goal, new_justification, new_solution, new_strategy,
     },
     DirGraph,
 };
 
 fn main() -> Result<(), std::io::Error> {
     let dg = DirGraph::default();
-    let goal = Rc::new(RefCell::new(new_goal(
+    let goal = new_goal(
         "G1",
         "My extremely very, very, very, long Goal dEscription",
         false,
         None,
         None,
         None,
-    )));
-    let goal2 = Rc::new(RefCell::new(new_goal(
+    );
+    let goal2 = new_goal(
         "G2",
         "undeveloped undeveloped undeveloped",
         true,
         None,
         None,
         None,
-    )));
-    let goal3 = Rc::new(RefCell::new(new_goal(
+    );
+    let goal3 = new_goal(
         "G3",
         "sub di dub di dub",
         false,
         None,
         None,
         Some(3),
-    )));
-    let goal4 = Rc::new(RefCell::new(new_goal(
+    );
+    let goal4 = new_goal(
         "G4",
         "circle di circle",
         false,
         None,
         None,
         None,
-    )));
-    let goal5 = Rc::new(RefCell::new(new_goal(
+    );
+    let goal5 = new_goal(
         "G5",
         "elcric id elcric",
         false,
         None,
         None,
         Some(2),
-    )));
-    let strategy = Rc::new(RefCell::new(new_strategy(
+    );
+    let strategy = new_strategy(
         "S1",
         "test strategy",
         false,
         None,
         None,
         None,
-    )));
-    let context = Rc::new(RefCell::new(Context::new("C1", "some context", None, None)));
-    let solution = Rc::new(RefCell::new(new_solution(
+    );
+    let context = new_context("C1", "some context", None, None);
+    let solution = new_solution(
         "Sn1",
         "test solution",
         None,
         None,
         None,
-    )));
-    let solution2 = Rc::new(RefCell::new(new_solution(
+    );
+    let solution2 = new_solution(
         "Sn2",
         "test another solution",
         None,
         None,
         Some(2),
-    )));
-    let solution3 = Rc::new(RefCell::new(new_solution(
+    );
+    let solution3 = new_solution(
         "Sn3",
         "yet another solution",
         None,
         None,
         None,
-    )));
-    let solution4 = Rc::new(RefCell::new(new_solution(
+    );
+    let solution4 = new_solution(
         "Sn4",
         "another forced solution",
         None,
         None,
         Some(1),
-    )));
-    let justification = Rc::new(RefCell::new(new_justification(
+    );
+    let justification = new_justification(
         "J1",
         "lalalsfa wrnasdf asdfa sdf asdlmösgm qwjsnf asndflan asdfa as",
         None,
         None,
         None,
-    )));
-    let assumption = Rc::new(RefCell::new(new_assumption(
+    );
+    let assumption = new_assumption(
         "A1",
         "teadskfasjdfjne",
         None,
         None,
         None,
-    )));
+    );
     dg.set_font("Arial", 12.0)
         .set_size(1000, 600)
         .add_node(justification.clone())

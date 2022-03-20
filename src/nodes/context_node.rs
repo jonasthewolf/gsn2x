@@ -8,7 +8,7 @@ const PADDING: u32 = 5;
 const TEXT_OFFSET: u32 = 20;
 
 #[derive(Clone)]
-pub struct Context {
+pub struct ContextNode {
     identifier: String,
     text: String,
     url: Option<String>,
@@ -21,7 +21,7 @@ pub struct Context {
     forced_level: Option<usize>,
 }
 
-impl Node for Context {
+impl Node for ContextNode {
     ///
     /// Width: 5 padding on each side, minimum 50, maximum line length of text or identifier
     /// Height: 5 padding on each side, minimum 30, id line height (max. 20) + height of each text line
@@ -151,9 +151,9 @@ impl Node for Context {
     }
 }
 
-impl Context {
+impl ContextNode {
     pub fn new(id: &str, text: &str, url: Option<String>, classes: Option<Vec<String>>) -> Self {
-        Context {
+        ContextNode {
             identifier: id.to_string(),
             text: text.to_string(),
             url,
