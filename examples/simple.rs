@@ -30,7 +30,7 @@ fn main() -> Result<(), std::io::Error> {
     let solution = new_solution("Sn1", "test solution", None, None, None);
     let solution2 = new_solution("Sn2", "test another solution", None, None, Some(2));
     let solution3 = new_solution("Sn3", "yet another solution", None, None, None);
-    let solution4 = new_solution("Sn4", "another forced solution", None, None, Some(1));
+    let solution4 = new_solution("Sn4", "another forced solution", None, None, None);
     let justification = new_justification(
         "J1",
         "lalalsfa wrnasdf asdfa sdf asdlmösgm qwjsnf asndflan asdfa as",
@@ -72,7 +72,7 @@ fn main() -> Result<(), std::io::Error> {
         .add_edge(strategy, goal3, EdgeType::SupportedBy)
         .add_edge(goal.clone(), goal4.clone(), EdgeType::SupportedBy)
         .add_edge(goal4.clone(), solution3.clone(), EdgeType::SupportedBy)
-        .add_edge(goal4, solution4.clone(), EdgeType::SupportedBy)
+        .add_edge(goal5.clone(), solution4.clone(), EdgeType::SupportedBy)
         .add_edge(goal5.clone(), solution3.clone(), EdgeType::SupportedBy)
         .add_edge(goal, goal5.clone(), EdgeType::SupportedBy)
         .add_edge(goal5.clone(), justification2, EdgeType::InContextOf)

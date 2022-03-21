@@ -186,7 +186,7 @@ impl DirGraph {
                             y: y + height_max / 2,
                         });
                         x += n.get_width() / 2 + self.margin.left + self.margin.right;
-                        doc = doc.add(n.render(&self.font)); 
+                        doc = doc.add(n.render(&self.font));
                         n_rendered.insert(n.get_id().to_owned());
                     }
                     NodePlace::MultipleNodes(ids) => {
@@ -204,7 +204,7 @@ impl DirGraph {
                                 y: y_n + n_height / 2,
                             });
                             y_n += n_height + self.margin.top + self.margin.bottom;
-                            doc = doc.add(n.render(&self.font)); 
+                            doc = doc.add(n.render(&self.font));
                             n_rendered.insert(n.get_id().to_owned());
                         }
                         x += x_max;
@@ -225,6 +225,15 @@ impl DirGraph {
         doc
     }
 
+    ///
+    ///
+    ///
+    ///
+    ///
+    ///
+    ///
+    ///
+    ///
     fn render_edge(
         &self,
         doc: Document,

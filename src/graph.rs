@@ -1,4 +1,5 @@
 use std::{
+    borrow::BorrowMut,
     cell::RefCell,
     collections::{BTreeMap, BTreeSet},
     rc::Rc,
@@ -54,23 +55,19 @@ pub(crate) fn rank_nodes(
                 stack.push((current_node.to_owned(), current_rank));
                 // Add invisible nodes on the vertical ranks if at least one rank is skipped
                 for i in current_rank + 1..child_rank {
-                    let inv = InvisibleNode::from(nodes.get(&child_node).unwrap());
-                    let inv_id = inv.get_id().to_owned();
-                    nodes.insert(inv.get_id().to_owned(), Rc::new(RefCell::new(inv)));
                     // TODO Replace edge with two edges and new edge type
                     let vertical_rank = ranks.entry(i).or_insert(BTreeMap::new());
                     // TODO Position of invisible node is wrong.
-                    vertical_rank.insert(vertical_rank.len(), NodePlace::Node(inv_id.to_owned()));
+                    vertical_rank.insert(
+                        vertical_rank.len(),
+                        clone_invisible_node(nodes, &NodePlace::Node(child_node.to_owned())),
+                    );
                 }
                 // TODO If more than one incoming edge, the lowest rank should move unforced elements down
-
-                let cur_h_rank = dbg!(ranks.get(&current_rank).unwrap().len());
+       
                 let vertical_rank = ranks.entry(child_rank).or_insert(BTreeMap::new());
-                for i in vertical_rank.len()..cur_h_rank {
-                    // let inv = Invisible { width: 50, height: 50, x: 0, y: 0, id: format!("inv{}",i) };
-                    // nodes.insert(inv.get_id().to_owned(), Rc::new(RefCell::new(inv)));
-                    // vertical_rank.insert(i, NodePlace::Node(format!("inv{}",i)));
-                }
+                // vertical_rank.len() is not correct, if forced?
+                // maybe shift it after the context nodes are introduced
                 vertical_rank.insert(vertical_rank.len(), NodePlace::Node(child_node.to_owned()));
                 visited_nodes.insert(child_node.to_owned());
                 current_node = child_node;
@@ -81,6 +78,41 @@ pub(crate) fn rank_nodes(
     dbg!(&ranks);
     add_in_context_nodes(edges, &mut ranks);
     dbg!(ranks)
+}
+
+fn clone_invisible_node(
+    nodes: &mut BTreeMap<String, Rc<RefCell<dyn Node>>>,
+    origin: &NodePlace,
+) -> NodePlace {
+    match origin {
+        NodePlace::Node(n) => {
+            let invisible_node = InvisibleNode::from(nodes.get(n).unwrap());
+            let invisible_node_id = invisible_node.get_id().to_owned();
+            nodes.insert(
+                invisible_node.get_id().to_owned(),
+                Rc::new(RefCell::new(invisible_node)),
+            );
+            NodePlace::Node(invisible_node_id)
+        }
+        NodePlace::MultipleNodes(ns) => {
+            let mut invisible_node = InvisibleNode::from(nodes.get(ns.get(0).unwrap()).unwrap());
+            let (max_height, max_width) = ns
+                .iter()
+                .map(|n| {
+                    let nb = nodes.get(n).unwrap().borrow();
+                    (nb.get_width(), nb.get_height())
+                })
+                .max()
+                .unwrap();
+            invisible_node.borrow_mut().set_size(max_width, max_height);
+            let invisible_node_id = ns.join("_");
+            nodes.insert(
+                invisible_node.get_id().to_owned(),
+                Rc::new(RefCell::new(invisible_node)),
+            );
+            NodePlace::Node(invisible_node_id)
+        }
+    }
 }
 
 fn _count_crossings_same_rank(

@@ -63,6 +63,13 @@ impl Node for InvisibleNode {
     }
 }
 
+impl InvisibleNode {
+    pub fn set_size(&mut self, width: u32, height: u32) {
+        self.width = width;
+        self.height = height;
+    }
+}
+
 impl From<&Rc<RefCell<dyn Node>>> for InvisibleNode {
     fn from(n: &Rc<RefCell<dyn Node>>) -> Self {
         let n = n.borrow();
