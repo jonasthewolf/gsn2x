@@ -198,18 +198,21 @@ Sn4
 another forced solution
 </text>
 </g>
-<path d="M454,71 C454,51,664,86,664,76" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path d="M454,133 C454,153,83,371,83,381" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path d="M454,133 C454,153,243,243,243,253" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path d="M344,102 C344,102,324,102,314,102" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path d="M564,102 C564,102,584,145,594,145" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path d="M454,133 C454,153,382,243,382,253" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path d="M454,133 C454,153,920,409,920,419" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path d="M382,313 C382,333,776,372,776,382" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path d="M920,479 C920,499,234,537,234,547" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path d="M878,454 C878,454,858,454,848,454" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path d="M962,454 C962,454,982,454,992,454" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path d="M243,313 C243,333,227,393,227,403" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path d="M243,313 C243,333,419,407,419,417" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path d="M243,313 C243,333,72,582,72,592" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path d="M454,71 C454,41,664,96,664,76" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path d="M454,133 C454,163,243,233,243,253" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path d="M344,102 C344,102,334,102,314,102" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path d="M564,102 C564,102,574,145,594,145" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path d="M454,133 C454,163,382,233,382,253" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path d="M454,133 C454,163,83,258,83,288" fill="none" marker-end="" stroke="black" stroke-width="1"/>
+<path d="M454,133 C454,163,506,258,506,288" fill="none" marker-end="" stroke="black" stroke-width="1"/>
+<path d="M382,313 C382,343,776,362,776,382" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path d="M920,479 C920,509,234,527,234,547" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path d="M878,454 C878,454,868,454,848,454" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path d="M962,454 C962,454,972,454,992,454" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path d="M243,313 C243,343,227,383,227,403" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path d="M243,313 C243,343,419,397,419,417" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path d="M243,313 C243,343,622,424,622,454" fill="none" marker-end="" stroke="black" stroke-width="1"/>
+<path d="M622,454 C622,484,72,572,72,592" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path d="M506,288 C506,318,920,399,920,419" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path d="M83,288 C83,318,83,361,83,381" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 </svg>

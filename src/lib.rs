@@ -157,7 +157,7 @@ impl DirGraph {
         self.nodes
             .values()
             .for_each(|n| n.borrow_mut().calculate_size(&self.font, self.wrap));
-        let ranks = rank_nodes(&mut self.nodes, &self.edges);
+        let ranks = rank_nodes(&mut self.nodes, &mut self.edges);
         let mut n_rendered: BTreeSet<String> = BTreeSet::new();
 
         let mut x = self.margin.left;
@@ -226,7 +226,7 @@ impl DirGraph {
     }
 
     ///
-    ///
+    /// TODO make edges for invisible nodes smoother
     ///
     ///
     ///
@@ -242,6 +242,11 @@ impl DirGraph {
         edge_type: &EdgeType,
     ) -> Document {
         // TODO class and id
+        let (marker_height, support_distance) = match edge_type {
+            EdgeType::InContextOf => (MARKER_HEIGHT, 3*MARKER_HEIGHT),
+            EdgeType::SupportedBy => (MARKER_HEIGHT, 3*MARKER_HEIGHT),
+            EdgeType::Invisible => (0, 3*MARKER_HEIGHT),
+        };
         let s = source.borrow();
         let s_pos = s.get_position();
         let t = target.borrow();
@@ -251,21 +256,21 @@ impl DirGraph {
                 (
                     s.get_coordinates(Port::South),
                     s.get_coordinates(Port::South)
-                        .move_relative(0, 2 * MARKER_HEIGHT as i32),
+                        .move_relative(0, support_distance as i32),
                     t.get_coordinates(Port::North)
-                        .move_relative(0, -(MARKER_HEIGHT as i32)),
+                        .move_relative(0, -(marker_height as i32)),
                     t.get_coordinates(Port::North)
-                        .move_relative(0, -(2 * MARKER_HEIGHT as i32)),
+                        .move_relative(0, -(support_distance as i32)),
                 )
             } else if s_pos.y - s.get_height() / 2 > t_pos.y + t.get_height() / 2 {
                 (
                     s.get_coordinates(Port::North),
                     s.get_coordinates(Port::North)
-                        .move_relative(0, -(2 * MARKER_HEIGHT as i32)),
+                        .move_relative(0, -(support_distance as i32)),
                     t.get_coordinates(Port::South)
-                        .move_relative(0, MARKER_HEIGHT as i32),
+                        .move_relative(0, marker_height as i32),
                     t.get_coordinates(Port::South)
-                        .move_relative(0, 2 * MARKER_HEIGHT as i32),
+                        .move_relative(0, support_distance as i32),
                 )
             } else {
                 // s.get_vertical_rank() == t.get_vertical_rank()
@@ -274,18 +279,18 @@ impl DirGraph {
                         s.get_coordinates(Port::West),
                         s.get_coordinates(Port::West),
                         t.get_coordinates(Port::East)
-                            .move_relative(MARKER_HEIGHT as i32, 0),
+                            .move_relative(marker_height as i32, 0),
                         t.get_coordinates(Port::East)
-                            .move_relative(2 * MARKER_HEIGHT as i32, 0),
+                            .move_relative(support_distance as i32, 0),
                     )
                 } else {
                     (
                         s.get_coordinates(Port::East),
                         s.get_coordinates(Port::East),
                         t.get_coordinates(Port::West)
-                            .move_relative(-(MARKER_HEIGHT as i32), 0),
+                            .move_relative(-(marker_height as i32), 0),
                         t.get_coordinates(Port::West)
-                            .move_relative(-(2 * MARKER_HEIGHT as i32), 0),
+                            .move_relative(-(support_distance as i32), 0),
                     )
                 }
             };
@@ -296,6 +301,7 @@ impl DirGraph {
         let arrow_id = match edge_type {
             edges::EdgeType::InContextOf => "url(#incontextof_arrow)",
             edges::EdgeType::SupportedBy => "url(#supportedby_arrow)",
+            edges::EdgeType::Invisible => "",
         };
         let e = Path::new()
             .set("d", data)

@@ -18,7 +18,7 @@ pub enum NodePlace {
 
 pub(crate) fn rank_nodes(
     nodes: &mut BTreeMap<String, Rc<RefCell<dyn Node>>>,
-    edges: &BTreeMap<String, Vec<(String, EdgeType)>>,
+    edges: &mut BTreeMap<String, Vec<(String, EdgeType)>>,
 ) -> BTreeMap<usize, BTreeMap<usize, NodePlace>> {
     let mut ranks = BTreeMap::new();
     let mut visited_nodes: BTreeSet<String> = BTreeSet::new();
@@ -57,14 +57,24 @@ pub(crate) fn rank_nodes(
                 for i in current_rank + 1..child_rank {
                     // TODO Replace edge with two edges and new edge type
                     let vertical_rank = ranks.entry(i).or_insert(BTreeMap::new());
-                    // TODO Position of invisible node is wrong.
-                    vertical_rank.insert(
-                        vertical_rank.len(),
-                        clone_invisible_node(nodes, &NodePlace::Node(child_node.to_owned())),
-                    );
+                    let cloned_node =
+                        clone_invisible_node(nodes, &NodePlace::Node(child_node.to_owned()));
+                    vertical_rank
+                        .insert(vertical_rank.len(), NodePlace::Node(cloned_node.to_owned()));
+                    // Remove original edge
+                    let orig_edges = edges.get_mut(&current_node).unwrap();
+                    let orig_edge_id = orig_edges
+                        .iter()
+                        .position(|e| e == &(child_node.to_owned(), EdgeType::SupportedBy))
+                        .unwrap();
+                    orig_edges.remove(orig_edge_id);
+                    // Add two new edges.
+                    orig_edges.push((cloned_node.to_owned(), EdgeType::Invisible));
+                    let new_entry = edges.entry(cloned_node.to_owned()).or_insert(Vec::new());
+                    new_entry.push((child_node.to_owned(), EdgeType::SupportedBy));
                 }
                 // TODO If more than one incoming edge, the lowest rank should move unforced elements down
-       
+
                 let vertical_rank = ranks.entry(child_rank).or_insert(BTreeMap::new());
                 // vertical_rank.len() is not correct, if forced?
                 // maybe shift it after the context nodes are introduced
@@ -83,7 +93,7 @@ pub(crate) fn rank_nodes(
 fn clone_invisible_node(
     nodes: &mut BTreeMap<String, Rc<RefCell<dyn Node>>>,
     origin: &NodePlace,
-) -> NodePlace {
+) -> String {
     match origin {
         NodePlace::Node(n) => {
             let invisible_node = InvisibleNode::from(nodes.get(n).unwrap());
@@ -92,7 +102,7 @@ fn clone_invisible_node(
                 invisible_node.get_id().to_owned(),
                 Rc::new(RefCell::new(invisible_node)),
             );
-            NodePlace::Node(invisible_node_id)
+            invisible_node_id
         }
         NodePlace::MultipleNodes(ns) => {
             let mut invisible_node = InvisibleNode::from(nodes.get(ns.get(0).unwrap()).unwrap());
@@ -110,7 +120,7 @@ fn clone_invisible_node(
                 invisible_node.get_id().to_owned(),
                 Rc::new(RefCell::new(invisible_node)),
             );
-            NodePlace::Node(invisible_node_id)
+            invisible_node_id
         }
     }
 }
