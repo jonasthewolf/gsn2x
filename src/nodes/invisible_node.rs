@@ -68,13 +68,22 @@ impl InvisibleNode {
         self.width = width;
         self.height = height;
     }
+
+    pub fn set_id(&mut self, id: &str) {
+        self.id = id.to_owned();
+    }
 }
 
 impl From<&Rc<RefCell<dyn Node>>> for InvisibleNode {
     fn from(n: &Rc<RefCell<dyn Node>>) -> Self {
         let n = n.borrow();
         InvisibleNode {
-            id: format!("__invisible__node__{}", n.get_id()),
+            id: if n.get_id().starts_with("__invisible__node__") {
+                let (node_name, num) = n.get_id().rsplit_once('-').unwrap_or((n.get_id(), "0"));
+                format!("{}-{}", node_name, num.parse::<u32>().unwrap() + 1)
+            } else {
+                format!("__invisible__node__{}", n.get_id())
+            },
             width: n.get_width(),
             height: n.get_height(),
             x: n.get_position().x,

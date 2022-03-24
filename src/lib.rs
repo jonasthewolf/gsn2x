@@ -243,9 +243,9 @@ impl DirGraph {
     ) -> Document {
         // TODO class and id
         let (marker_height, support_distance) = match edge_type {
-            EdgeType::InContextOf => (MARKER_HEIGHT, 3*MARKER_HEIGHT),
-            EdgeType::SupportedBy => (MARKER_HEIGHT, 3*MARKER_HEIGHT),
-            EdgeType::Invisible => (0, 3*MARKER_HEIGHT),
+            EdgeType::InContextOf => (MARKER_HEIGHT, 3 * MARKER_HEIGHT),
+            EdgeType::SupportedBy => (MARKER_HEIGHT, 3 * MARKER_HEIGHT),
+            EdgeType::Invisible => (0, 3 * MARKER_HEIGHT),
         };
         let s = source.borrow();
         let s_pos = s.get_position();

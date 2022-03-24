@@ -174,27 +174,31 @@ kölnsdg ljsmdg snnjk slls qwjsnf
 asndflan asdfa as
 </text>
 </g>
+<g/>
+<g/>
+<g/>
 <g>
 <title>
 G3
 </title>
-<path d="M20,602 L124,602 L124,652 L20,652 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="27" y="622">
+<path d="M570,602 L674,602 L674,652 L570,652 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="577" y="622">
 G3
 </text>
-<text font-family="Arial" font-size="12" textLength="90" x="27" y="642">
+<text font-family="Arial" font-size="12" textLength="90" x="577" y="642">
 sub di dub di dub
 </text>
 </g>
+<g/>
 <g>
 <title>
 Sn4
 </title>
-<ellipse cx="234" cy="627" fill="none" rx="70" ry="70" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="175" y="616">
+<ellipse cx="948" cy="627" fill="none" rx="70" ry="70" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="889" y="616">
 Sn4
 </text>
-<text font-family="Arial" font-size="12" textLength="119" x="175" y="636">
+<text font-family="Arial" font-size="12" textLength="119" x="889" y="636">
 another forced solution
 </text>
 </g>
@@ -206,13 +210,13 @@ another forced solution
 <path d="M454,133 C454,163,83,258,83,288" fill="none" marker-end="" stroke="black" stroke-width="1"/>
 <path d="M454,133 C454,163,506,258,506,288" fill="none" marker-end="" stroke="black" stroke-width="1"/>
 <path d="M382,313 C382,343,776,362,776,382" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path d="M920,479 C920,509,234,527,234,547" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path d="M920,479 C920,509,948,527,948,547" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 <path d="M878,454 C878,454,868,454,848,454" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 <path d="M962,454 C962,454,972,454,992,454" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
 <path d="M243,313 C243,343,227,383,227,403" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 <path d="M243,313 C243,343,419,397,419,417" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 <path d="M243,313 C243,343,622,424,622,454" fill="none" marker-end="" stroke="black" stroke-width="1"/>
-<path d="M622,454 C622,484,72,572,72,592" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path d="M622,454 C622,484,622,572,622,592" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 <path d="M506,288 C506,318,920,399,920,419" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 <path d="M83,288 C83,318,83,361,83,381" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 </svg>

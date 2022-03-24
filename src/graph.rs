@@ -40,8 +40,10 @@ pub(crate) fn rank_nodes(
     // Perform depth first search for SupportedBy child nodes.
     for (horiz_rank, n) in root_nodes.into_iter().enumerate() {
         visited_nodes.insert(n.to_owned());
-        let vertical_rank = ranks.entry(0).or_insert(BTreeMap::new());
-        vertical_rank.insert(horiz_rank, NodePlace::Node(n.to_owned()));
+        {
+            let vertical_rank = ranks.entry(0).or_insert(BTreeMap::new());
+            vertical_rank.insert(horiz_rank, NodePlace::Node(n.to_owned()));
+        }
         let mut stack = Vec::new();
         let mut current_node = n;
         let mut current_rank;
@@ -53,12 +55,24 @@ pub(crate) fn rank_nodes(
                 find_next_child_node(nodes, edges, current_rank, &visited_nodes, &current_node)
             {
                 stack.push((current_node.to_owned(), current_rank));
+
+                let mut last_h_rank = ranks
+                    .get_mut(&current_rank)
+                    .unwrap()
+                    .iter()
+                    .find(|(_, np)| match np {
+                        NodePlace::Node(n) => n == &current_node,
+                        NodePlace::MultipleNodes(_) => false,
+                    })
+                    .map(|(&hr, _)| hr)
+                    .unwrap();
                 // Add invisible nodes on the vertical ranks if at least one rank is skipped
                 for i in current_rank + 1..child_rank {
                     // TODO Replace edge with two edges and new edge type
                     let vertical_rank = ranks.entry(i).or_insert(BTreeMap::new());
                     let cloned_node =
                         clone_invisible_node(nodes, &NodePlace::Node(child_node.to_owned()));
+                    last_h_rank = vertical_rank.len();
                     vertical_rank
                         .insert(vertical_rank.len(), NodePlace::Node(cloned_node.to_owned()));
                     // Remove original edge
@@ -75,10 +89,20 @@ pub(crate) fn rank_nodes(
                 }
                 // TODO If more than one incoming edge, the lowest rank should move unforced elements down
 
+                // Move nodes to the right if child rank contains too few nodes
                 let vertical_rank = ranks.entry(child_rank).or_insert(BTreeMap::new());
-                // vertical_rank.len() is not correct, if forced?
-                // maybe shift it after the context nodes are introduced
-                vertical_rank.insert(vertical_rank.len(), NodePlace::Node(child_node.to_owned()));
+                for i in vertical_rank.len()..last_h_rank {
+                    if let Some(b_node) = ranks.get(&(child_rank - 1)).unwrap().get(&i) {
+                        let cloned_node = NodePlace::Node(clone_invisible_node(nodes, b_node));
+                        let vertical_rank = ranks.entry(child_rank).or_insert(BTreeMap::new());
+                        vertical_rank.insert(i, cloned_node);
+                    }
+                }
+                let vertical_rank = ranks.entry(child_rank).or_insert(BTreeMap::new());
+                vertical_rank.insert(
+                    vertical_rank.len(),
+                    NodePlace::Node(child_node.to_owned()),
+                );
                 visited_nodes.insert(child_node.to_owned());
                 current_node = child_node;
                 current_rank = child_rank;
@@ -96,8 +120,14 @@ fn clone_invisible_node(
 ) -> String {
     match origin {
         NodePlace::Node(n) => {
-            let invisible_node = InvisibleNode::from(nodes.get(n).unwrap());
-            let invisible_node_id = invisible_node.get_id().to_owned();
+            let mut invisible_node = InvisibleNode::from(nodes.get(n).unwrap());
+            let mut invisible_node_id = invisible_node.get_id().to_owned();
+            let mut i = 0;
+            while nodes.contains_key(&invisible_node_id) {
+                invisible_node_id = format!("{}{}", invisible_node.get_id(), i);
+                i += 1;
+            }
+            invisible_node.set_id(&invisible_node_id);
             nodes.insert(
                 invisible_node.get_id().to_owned(),
                 Rc::new(RefCell::new(invisible_node)),
