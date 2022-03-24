@@ -78,11 +78,6 @@ impl Default for DirGraph {
 }
 
 impl DirGraph {
-    pub fn set_size(mut self, width: u32, height: u32) -> DirGraph {
-        self.width = width;
-        self.height = height;
-        self
-    }
 
     pub fn set_wrap(mut self, wrap: u32) -> DirGraph {
         self.wrap = wrap;
@@ -134,10 +129,11 @@ impl DirGraph {
     }
 
     pub fn write_to_file(mut self, file: &std::path::Path) -> Result<(), std::io::Error> {
-        let mut document = Document::new().set("viewBox", (0u32, 0u32, self.width, self.height));
+        let mut document = Document::new();
 
         document = setup_basics(document);
         document = self.layout(document);
+        document = document.set("viewBox", (0u32, 0u32, self.width, self.height));
         svg::save(file, &document)?;
         Ok(())
     }
@@ -150,7 +146,6 @@ impl DirGraph {
     /// 3) Draw them
     /// 4) Draw the edges
     ///
-    /// TODO Automatic width & height of document
     /// TODO Center in document
     ///
     fn layout(&mut self, mut doc: Document) -> Document {
@@ -159,6 +154,9 @@ impl DirGraph {
             .for_each(|n| n.borrow_mut().calculate_size(&self.font, self.wrap));
         let ranks = rank_nodes(&mut self.nodes, &mut self.edges);
         let mut n_rendered: BTreeSet<String> = BTreeSet::new();
+
+        self.width = 0;
+        self.height = 0;
 
         let mut x = self.margin.left;
         let mut y = self.margin.top;
@@ -211,9 +209,11 @@ impl DirGraph {
                     }
                 }
             }
+            self.width = std::cmp::max(self.width, x);
             x = self.margin.left;
-            y += height_max + self.margin.left + self.margin.right;
+            y += height_max + self.margin.top + self.margin.bottom;
         }
+        self.height = y + self.margin.bottom;
         // Draw edges
         for (source, targets) in &self.edges {
             let s = self.nodes.get(source).unwrap();

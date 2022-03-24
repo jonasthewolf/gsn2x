@@ -47,7 +47,6 @@ fn main() -> Result<(), std::io::Error> {
         None,
     );
     dg.set_font("Arial", 12.0)
-        .set_size(1500, 600)
         .add_node(justification.clone())
         .add_node(goal.clone())
         .add_node(goal2.clone())
