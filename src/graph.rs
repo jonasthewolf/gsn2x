@@ -68,7 +68,6 @@ pub(crate) fn rank_nodes(
                     .unwrap();
                 // Add invisible nodes on the vertical ranks if at least one rank is skipped
                 for i in current_rank + 1..child_rank {
-                    // TODO Replace edge with two edges and new edge type
                     let vertical_rank = ranks.entry(i).or_insert(BTreeMap::new());
                     let cloned_node =
                         clone_invisible_node(nodes, &NodePlace::Node(child_node.to_owned()));

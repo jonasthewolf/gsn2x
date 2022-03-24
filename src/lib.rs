@@ -226,8 +226,6 @@ impl DirGraph {
     }
 
     ///
-    /// TODO make edges for invisible nodes smoother
-    ///
     ///
     ///
     ///
