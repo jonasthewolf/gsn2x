@@ -260,7 +260,7 @@ impl DirGraph {
                     t.get_coordinates(Port::North)
                         .move_relative(0, -(support_distance as i32)),
                 )
-            } else if s_pos.y - s.get_height() / 2 > t_pos.y + t.get_height() / 2 {
+            } else if s_pos.y - s.get_height() / 2 - self.margin.top > t_pos.y + t.get_height() / 2 {
                 (
                     s.get_coordinates(Port::North),
                     s.get_coordinates(Port::North)
