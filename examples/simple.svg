@@ -9,17 +9,17 @@
 <title>
 J1
 </title>
-<ellipse cx="162" cy="102" fill="none" rx="142" ry="48" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="65" y="84">
+<ellipse cx="418" cy="102" fill="none" rx="142" ry="48" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="321" y="84">
 J1
 </text>
-<text font-family="Arial" font-size="12" font-weight="bold" x="299" y="145">
+<text font-family="Arial" font-size="12" font-weight="bold" x="555" y="145">
 J
 </text>
-<text font-family="Arial" font-size="12" textLength="195" x="65" y="104">
+<text font-family="Arial" font-size="12" textLength="195" x="321" y="104">
 lalalsfa wrnasdf asdfa sdf asdlmösgm
 </text>
-<text font-family="Arial" font-size="12" textLength="129" x="65" y="117">
+<text font-family="Arial" font-size="12" textLength="129" x="321" y="117">
 qwjsnf asndflan asdfa as
 </text>
 </g>
@@ -27,14 +27,14 @@ qwjsnf asndflan asdfa as
 <title>
 G1
 </title>
-<path d="M344,71 L564,71 L564,133 L344,133 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="351" y="91">
+<path d="M600,71 L820,71 L820,133 L600,133 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="607" y="91">
 G1
 </text>
-<text font-family="Arial" font-size="12" textLength="207" x="351" y="111">
+<text font-family="Arial" font-size="12" textLength="207" x="607" y="111">
 My extremely very, very, very, long Goal
 </text>
-<text font-family="Arial" font-size="12" textLength="58" x="351" y="124">
+<text font-family="Arial" font-size="12" textLength="58" x="607" y="124">
 dEscription
 </text>
 </g>
@@ -42,11 +42,11 @@ dEscription
 <title>
 C1
 </title>
-<path d="M624,20 L704,20 C714,20,714,66,704,66 L624,66 C614,66,614,20,624,20" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="624" y="38">
+<path d="M880,20 L960,20 C970,20,970,66,960,66 L880,66 C870,66,870,20,880,20" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="880" y="38">
 C1
 </text>
-<text font-family="Arial" font-size="12" textLength="70" x="624" y="58">
+<text font-family="Arial" font-size="12" textLength="70" x="880" y="58">
 some context
 </text>
 </g>
@@ -54,14 +54,14 @@ some context
 <title>
 A1
 </title>
-<ellipse cx="664" cy="145" fill="none" rx="60" ry="39" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="625" y="134">
+<ellipse cx="920" cy="145" fill="none" rx="60" ry="39" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="881" y="134">
 A1
 </text>
-<text font-family="Arial" font-size="12" font-weight="bold" x="719" y="179">
+<text font-family="Arial" font-size="12" font-weight="bold" x="975" y="179">
 A
 </text>
-<text font-family="Arial" font-size="12" textLength="79" x="625" y="154">
+<text font-family="Arial" font-size="12" textLength="79" x="881" y="154">
 teadskfasjdfjne
 </text>
 </g>
@@ -70,11 +70,11 @@ teadskfasjdfjne
 <title>
 S1
 </title>
-<path d="M201,263 L300,263 L285,313 L186,313 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="208" y="283">
+<path d="M555,263 L654,263 L639,313 L540,313 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="562" y="283">
 S1
 </text>
-<text font-family="Arial" font-size="12" textLength="64" x="193" y="303">
+<text font-family="Arial" font-size="12" textLength="64" x="547" y="303">
 test strategy
 </text>
 </g>
@@ -82,11 +82,11 @@ test strategy
 <title>
 G4
 </title>
-<path d="M340,263 L424,263 L424,313 L340,313 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="347" y="283">
+<path d="M694,263 L778,263 L778,313 L694,313 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="701" y="283">
 G4
 </text>
-<text font-family="Arial" font-size="12" textLength="71" x="347" y="303">
+<text font-family="Arial" font-size="12" textLength="71" x="701" y="303">
 circle di circle
 </text>
 </g>
@@ -95,11 +95,11 @@ circle di circle
 <title>
 Sn2
 </title>
-<ellipse cx="83" cy="454" fill="none" rx="63" ry="63" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="31" y="443">
+<ellipse cx="97" cy="454" fill="none" rx="63" ry="63" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="45" y="443">
 Sn2
 </text>
-<text font-family="Arial" font-size="12" textLength="105" x="31" y="463">
+<text font-family="Arial" font-size="12" textLength="105" x="45" y="463">
 test another solution
 </text>
 </g>
@@ -107,11 +107,11 @@ test another solution
 <title>
 Sn1
 </title>
-<ellipse cx="227" cy="454" fill="none" rx="41" ry="41" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="196" y="443">
+<ellipse cx="241" cy="454" fill="none" rx="41" ry="41" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="210" y="443">
 Sn1
 </text>
-<text font-family="Arial" font-size="12" textLength="62" x="196" y="463">
+<text font-family="Arial" font-size="12" textLength="62" x="210" y="463">
 test solution
 </text>
 </g>
@@ -119,25 +119,25 @@ test solution
 <title>
 G2
 </title>
-<path d="M308,427 L530,427 L530,481 L308,481 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="315" y="447">
+<path d="M322,427 L544,427 L544,481 L322,481 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="329" y="447">
 G2
 </text>
-<text font-family="Arial" font-size="12" textLength="209" x="315" y="467">
+<text font-family="Arial" font-size="12" textLength="209" x="329" y="467">
 undeveloped undeveloped undeveloped
 </text>
-<path d="M419,481 l5,5 l-5,5 l-5,-5 z" fill="none" stroke="black" stroke-width="1"/>
+<path d="M433,481 l5,5 l-5,5 l-5,-5 z" fill="none" stroke="black" stroke-width="1"/>
 </g>
 <g/>
 <g>
 <title>
 Sn3
 </title>
-<ellipse cx="776" cy="454" fill="none" rx="62" ry="62" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="725" y="443">
+<ellipse cx="790" cy="454" fill="none" rx="62" ry="62" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="739" y="443">
 Sn3
 </text>
-<text font-family="Arial" font-size="12" textLength="103" x="725" y="463">
+<text font-family="Arial" font-size="12" textLength="103" x="739" y="463">
 yet another solution
 </text>
 </g>
@@ -145,11 +145,11 @@ yet another solution
 <title>
 G5
 </title>
-<path d="M878,429 L962,429 L962,479 L878,479 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="885" y="449">
+<path d="M892,429 L976,429 L976,479 L892,479 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="899" y="449">
 G5
 </text>
-<text font-family="Arial" font-size="12" textLength="71" x="885" y="469">
+<text font-family="Arial" font-size="12" textLength="71" x="899" y="469">
 elcric id elcric
 </text>
 </g>
@@ -157,20 +157,20 @@ elcric id elcric
 <title>
 J2
 </title>
-<ellipse cx="1139" cy="454" fill="none" rx="137" ry="58" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="1046" y="430">
+<ellipse cx="1153" cy="454" fill="none" rx="137" ry="58" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="1060" y="430">
 J2
 </text>
-<text font-family="Arial" font-size="12" font-weight="bold" x="1271" y="507">
+<text font-family="Arial" font-size="12" font-weight="bold" x="1285" y="507">
 J
 </text>
-<text font-family="Arial" font-size="12" textLength="187" x="1046" y="450">
+<text font-family="Arial" font-size="12" textLength="187" x="1060" y="450">
 asdfgasgnajkg aksdnnglert klnalsdn
 </text>
-<text font-family="Arial" font-size="12" textLength="167" x="1046" y="463">
+<text font-family="Arial" font-size="12" textLength="167" x="1060" y="463">
 kölnsdg ljsmdg snnjk slls qwjsnf
 </text>
-<text font-family="Arial" font-size="12" textLength="92" x="1046" y="476">
+<text font-family="Arial" font-size="12" textLength="92" x="1060" y="476">
 asndflan asdfa as
 </text>
 </g>
@@ -181,11 +181,11 @@ asndflan asdfa as
 <title>
 G3
 </title>
-<path d="M570,602 L674,602 L674,652 L570,652 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="577" y="622">
+<path d="M696,602 L800,602 L800,652 L696,652 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="703" y="622">
 G3
 </text>
-<text font-family="Arial" font-size="12" textLength="90" x="577" y="642">
+<text font-family="Arial" font-size="12" textLength="90" x="703" y="642">
 sub di dub di dub
 </text>
 </g>
@@ -194,29 +194,29 @@ sub di dub di dub
 <title>
 Sn4
 </title>
-<ellipse cx="948" cy="627" fill="none" rx="70" ry="70" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="889" y="616">
+<ellipse cx="1074" cy="627" fill="none" rx="70" ry="70" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="1015" y="616">
 Sn4
 </text>
-<text font-family="Arial" font-size="12" textLength="119" x="889" y="636">
+<text font-family="Arial" font-size="12" textLength="119" x="1015" y="636">
 another forced solution
 </text>
 </g>
-<path d="M564,102 C564,102,584,43,604,43" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path d="M454,133 C454,163,243,233,243,253" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path d="M344,102 C344,102,334,102,314,102" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path d="M564,102 C564,102,574,145,594,145" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path d="M454,133 C454,163,382,233,382,253" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path d="M454,133 C454,163,83,258,83,288" fill="none" marker-end="" stroke="black" stroke-width="1"/>
-<path d="M454,133 C454,163,506,258,506,288" fill="none" marker-end="" stroke="black" stroke-width="1"/>
-<path d="M382,313 C382,343,776,362,776,382" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path d="M920,479 C920,509,948,527,948,547" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path d="M878,454 C878,454,868,454,848,454" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path d="M962,454 C962,454,972,454,992,454" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path d="M243,313 C243,343,227,383,227,403" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path d="M243,313 C243,343,419,397,419,417" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path d="M243,313 C243,343,622,424,622,454" fill="none" marker-end="" stroke="black" stroke-width="1"/>
-<path d="M622,454 C622,484,622,572,622,592" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path d="M506,288 C506,318,920,399,920,419" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path d="M83,288 C83,318,83,361,83,381" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path d="M820,102 C820,102,840,43,860,43" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path d="M710,133 C710,163,597,233,597,253" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path d="M600,102 C600,102,590,102,570,102" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path d="M820,102 C820,102,830,145,850,145" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path d="M710,133 C710,163,736,233,736,253" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path d="M710,133 C710,163,437,258,437,288" fill="none" marker-end="" stroke="black" stroke-width="1"/>
+<path d="M710,133 C710,163,860,258,860,288" fill="none" marker-end="" stroke="black" stroke-width="1"/>
+<path d="M736,313 C736,343,790,362,790,382" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path d="M934,479 C934,509,1074,527,1074,547" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path d="M892,454 C892,454,882,454,862,454" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path d="M976,454 C976,454,986,454,1006,454" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path d="M597,313 C597,343,241,383,241,403" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path d="M597,313 C597,343,433,397,433,417" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path d="M597,313 C597,343,636,424,636,454" fill="none" marker-end="" stroke="black" stroke-width="1"/>
+<path d="M636,454 C636,484,748,572,748,592" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path d="M860,288 C860,318,934,399,934,419" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path d="M437,288 C437,318,97,361,97,381" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 </svg>

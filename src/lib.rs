@@ -2,11 +2,7 @@ pub mod edges;
 mod graph;
 pub mod nodes;
 mod util;
-use std::{
-    cell::RefCell,
-    collections::{BTreeMap, BTreeSet},
-    rc::Rc,
-};
+use std::{cell::RefCell, collections::BTreeMap, rc::Rc};
 
 use edges::EdgeType;
 use graph::{rank_nodes, NodePlace};
@@ -78,7 +74,6 @@ impl Default for DirGraph {
 }
 
 impl DirGraph {
-
     pub fn set_wrap(mut self, wrap: u32) -> DirGraph {
         self.wrap = wrap;
         self
@@ -146,14 +141,12 @@ impl DirGraph {
     /// 3) Draw them
     /// 4) Draw the edges
     ///
-    /// TODO Center in document
     ///
     fn layout(&mut self, mut doc: Document) -> Document {
         self.nodes
             .values()
             .for_each(|n| n.borrow_mut().calculate_size(&self.font, self.wrap));
         let ranks = rank_nodes(&mut self.nodes, &mut self.edges);
-        let mut n_rendered: BTreeSet<String> = BTreeSet::new();
 
         self.width = 0;
         self.height = 0;
@@ -184,8 +177,6 @@ impl DirGraph {
                             y: y + height_max / 2,
                         });
                         x += n.get_width() / 2 + self.margin.left + self.margin.right;
-                        doc = doc.add(n.render(&self.font));
-                        n_rendered.insert(n.get_id().to_owned());
                     }
                     NodePlace::MultipleNodes(ids) => {
                         let x_max = ids
@@ -202,8 +193,6 @@ impl DirGraph {
                                 y: y_n + n_height / 2,
                             });
                             y_n += n_height + self.margin.top + self.margin.bottom;
-                            doc = doc.add(n.render(&self.font));
-                            n_rendered.insert(n.get_id().to_owned());
                         }
                         x += x_max;
                     }
@@ -214,6 +203,42 @@ impl DirGraph {
             y += height_max + self.margin.top + self.margin.bottom;
         }
         self.height = y + self.margin.bottom;
+
+        // Center nodes and draw them
+        for rank in ranks.values() {
+            let last_node_place = rank.iter().last().unwrap().1;
+            let delta_x = (self.width
+                - 2 * self.margin.left
+                - 2 * self.margin.right
+                - (last_node_place.get_x(&self.nodes)
+                    + last_node_place.get_max_width(&self.nodes) / 2))
+                / 2;
+            for np in rank.values() {
+                match np {
+                    NodePlace::Node(id) => {
+                        let mut n = self.nodes.get(id).unwrap().borrow_mut();
+                        let cur_pos = n.get_position();
+                        n.set_position(&Point2D {
+                            x: cur_pos.x + delta_x,
+                            y: cur_pos.y,
+                        });
+                        doc = doc.add(n.render(&self.font));
+                    }
+                    NodePlace::MultipleNodes(ids) => {
+                        for id in ids {
+                            let mut n = self.nodes.get(id).unwrap().borrow_mut();
+                            let cur_pos = n.get_position();
+                            n.set_position(&Point2D {
+                                x: cur_pos.x + delta_x,
+                                y: cur_pos.y,
+                            });
+                            doc = doc.add(n.render(&self.font));
+                        }
+                    }
+                }
+            }
+        }
+
         // Draw edges
         for (source, targets) in &self.edges {
             let s = self.nodes.get(source).unwrap();
@@ -249,49 +274,50 @@ impl DirGraph {
         let s_pos = s.get_position();
         let t = target.borrow();
         let t_pos = t.get_position();
-        let (start, start_sup, end, end_sup) =
-            if s_pos.y + s.get_height() / 2 < t_pos.y - t.get_height() / 2 {
+        let (start, start_sup, end, end_sup) = if s_pos.y + s.get_height() / 2
+            < t_pos.y - t.get_height() / 2
+        {
+            (
+                s.get_coordinates(Port::South),
+                s.get_coordinates(Port::South)
+                    .move_relative(0, support_distance as i32),
+                t.get_coordinates(Port::North)
+                    .move_relative(0, -(marker_height as i32)),
+                t.get_coordinates(Port::North)
+                    .move_relative(0, -(support_distance as i32)),
+            )
+        } else if s_pos.y - s.get_height() / 2 - self.margin.top > t_pos.y + t.get_height() / 2 {
+            (
+                s.get_coordinates(Port::North),
+                s.get_coordinates(Port::North)
+                    .move_relative(0, -(support_distance as i32)),
+                t.get_coordinates(Port::South)
+                    .move_relative(0, marker_height as i32),
+                t.get_coordinates(Port::South)
+                    .move_relative(0, support_distance as i32),
+            )
+        } else {
+            // s.get_vertical_rank() == t.get_vertical_rank()
+            if s_pos.x - s.get_width() / 2 > t_pos.x + t.get_width() / 2 {
                 (
-                    s.get_coordinates(Port::South),
-                    s.get_coordinates(Port::South)
-                        .move_relative(0, support_distance as i32),
-                    t.get_coordinates(Port::North)
-                        .move_relative(0, -(marker_height as i32)),
-                    t.get_coordinates(Port::North)
-                        .move_relative(0, -(support_distance as i32)),
-                )
-            } else if s_pos.y - s.get_height() / 2 - self.margin.top > t_pos.y + t.get_height() / 2 {
-                (
-                    s.get_coordinates(Port::North),
-                    s.get_coordinates(Port::North)
-                        .move_relative(0, -(support_distance as i32)),
-                    t.get_coordinates(Port::South)
-                        .move_relative(0, marker_height as i32),
-                    t.get_coordinates(Port::South)
-                        .move_relative(0, support_distance as i32),
+                    s.get_coordinates(Port::West),
+                    s.get_coordinates(Port::West),
+                    t.get_coordinates(Port::East)
+                        .move_relative(marker_height as i32, 0),
+                    t.get_coordinates(Port::East)
+                        .move_relative(support_distance as i32, 0),
                 )
             } else {
-                // s.get_vertical_rank() == t.get_vertical_rank()
-                if s_pos.x - s.get_width() / 2 > t_pos.x + t.get_width() / 2 {
-                    (
-                        s.get_coordinates(Port::West),
-                        s.get_coordinates(Port::West),
-                        t.get_coordinates(Port::East)
-                            .move_relative(marker_height as i32, 0),
-                        t.get_coordinates(Port::East)
-                            .move_relative(support_distance as i32, 0),
-                    )
-                } else {
-                    (
-                        s.get_coordinates(Port::East),
-                        s.get_coordinates(Port::East),
-                        t.get_coordinates(Port::West)
-                            .move_relative(-(marker_height as i32), 0),
-                        t.get_coordinates(Port::West)
-                            .move_relative(-(support_distance as i32), 0),
-                    )
-                }
-            };
+                (
+                    s.get_coordinates(Port::East),
+                    s.get_coordinates(Port::East),
+                    t.get_coordinates(Port::West)
+                        .move_relative(-(marker_height as i32), 0),
+                    t.get_coordinates(Port::West)
+                        .move_relative(-(support_distance as i32), 0),
+                )
+            }
+        };
         let parameters = (start_sup.x, start_sup.y, end_sup.x, end_sup.y, end.x, end.y);
         let data = Data::new()
             .move_to((start.x, start.y))

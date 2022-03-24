@@ -16,6 +16,38 @@ pub enum NodePlace {
     MultipleNodes(Vec<String>),
 }
 
+impl NodePlace {
+    pub(crate) fn get_max_width(&self, nodes: &BTreeMap<String, Rc<RefCell<dyn Node>>>) -> u32 {
+        match self {
+            NodePlace::Node(n) => {
+                let n = nodes.get(n).unwrap().borrow();
+                n.get_width() / 2
+            }
+            NodePlace::MultipleNodes(np) => {
+                let mut max = 0;
+                for n in np {
+                    let n = nodes.get(n).unwrap().borrow();
+                    max = std::cmp::max(max, n.get_width());
+                }
+                max
+            }
+        }
+    }
+
+    pub(crate) fn get_x(&self, nodes: &BTreeMap<String, Rc<RefCell<dyn Node>>>) -> u32 {
+        match self {
+            NodePlace::Node(n) => {
+                let n = nodes.get(n).unwrap().borrow();
+                n.get_position().x
+            }
+            NodePlace::MultipleNodes(np) => {
+                let n = nodes.get(np.first().unwrap()).unwrap().borrow();
+                n.get_position().x
+            }
+        }
+    }
+}
+
 pub(crate) fn rank_nodes(
     nodes: &mut BTreeMap<String, Rc<RefCell<dyn Node>>>,
     edges: &mut BTreeMap<String, Vec<(String, EdgeType)>>,
@@ -98,19 +130,15 @@ pub(crate) fn rank_nodes(
                     }
                 }
                 let vertical_rank = ranks.entry(child_rank).or_insert(BTreeMap::new());
-                vertical_rank.insert(
-                    vertical_rank.len(),
-                    NodePlace::Node(child_node.to_owned()),
-                );
+                vertical_rank.insert(vertical_rank.len(), NodePlace::Node(child_node.to_owned()));
                 visited_nodes.insert(child_node.to_owned());
                 current_node = child_node;
                 current_rank = child_rank;
             }
         }
     }
-    dbg!(&ranks);
     add_in_context_nodes(edges, &mut ranks);
-    dbg!(ranks)
+    ranks
 }
 
 fn clone_invisible_node(
@@ -152,29 +180,6 @@ fn clone_invisible_node(
             invisible_node_id
         }
     }
-}
-
-fn _count_crossings_same_rank(
-    edges: &BTreeMap<String, Vec<(String, EdgeType)>>,
-    rank_nodes: &[String],
-) -> usize {
-    let mut sum = 0usize;
-    for (i, rn) in rank_nodes.iter().enumerate() {
-        if let Some(edges) = edges.get(rn) {
-            sum += edges
-                .iter()
-                .filter(|(id, _)| {
-                    if let Some(x) = rank_nodes.iter().position(|x| x == id) {
-                        if (x as i64 - i as i64).abs() > 1 {
-                            return true;
-                        }
-                    }
-                    false
-                })
-                .count()
-        }
-    }
-    sum
 }
 
 fn find_next_child_node(
