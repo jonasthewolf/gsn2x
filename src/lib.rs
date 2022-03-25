@@ -223,7 +223,6 @@ impl DirGraph {
                 - (last_node_place.get_x(&self.nodes)
                     + last_node_place.get_max_width(&self.nodes)))
                 / 2;
-            // let delta_x = 0;
             for np in rank.values() {
                 match np {
                     NodePlace::Node(id) => {
