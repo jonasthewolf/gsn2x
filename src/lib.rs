@@ -217,13 +217,13 @@ impl DirGraph {
         // Center nodes and draw them
         for rank in ranks.values() {
             let last_node_place = rank.iter().last().unwrap().1;
-            // let delta_x = (self.width
-            //     - 2 * self.margin.left
-            //     - 2 * self.margin.right
-            //     - (last_node_place.get_x(&self.nodes)
-            //         + last_node_place.get_max_width(&self.nodes) / 2))
-            //     / 2;
-            let delta_x = 0;
+            let delta_x = (self.width
+                - self.margin.left
+                - self.margin.right
+                - (last_node_place.get_x(&self.nodes)
+                    + last_node_place.get_max_width(&self.nodes)))
+                / 2;
+            // let delta_x = 0;
             for np in rank.values() {
                 match np {
                     NodePlace::Node(id) => {
@@ -379,6 +379,7 @@ fn setup_basics(mut doc: Document) -> Document {
         .set("markerUnits", "users_posaceOnUse")
         .add(incontext_polyline);
 
+    doc = doc.set("xmlns:xlink", "http://www.w3.org/1999/xlink");
     doc = doc.add(supportedby_arrow).add(incontext_arrow);
     doc
 }
