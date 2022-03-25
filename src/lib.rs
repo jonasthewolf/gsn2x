@@ -138,19 +138,24 @@ impl DirGraph {
     ///
     /// 1) Let each element identify its size
     /// 2) Rank the nodes
-    /// 3) Draw them
-    /// 4) Draw the edges
+    /// 3) Position nodes initially
+    /// 4) Center nodes and draw them
+    /// 5) Draw the edges
     ///
     ///
     fn layout(&mut self, mut doc: Document) -> Document {
+        // Calculate node size
         self.nodes
             .values()
             .for_each(|n| n.borrow_mut().calculate_size(&self.font, self.wrap));
+
+        // Rank nodes
         let ranks = rank_nodes(&mut self.nodes, &mut self.edges);
 
         self.width = 0;
         self.height = 0;
 
+        // Position nodes
         let mut x = self.margin.left;
         let mut y = self.margin.top;
         for rank in ranks.values() {
@@ -323,16 +328,18 @@ impl DirGraph {
             .move_to((start.x, start.y))
             .cubic_curve_to(parameters);
         let arrow_id = match edge_type {
-            edges::EdgeType::InContextOf => "url(#incontextof_arrow)",
-            edges::EdgeType::SupportedBy => "url(#supportedby_arrow)",
-            edges::EdgeType::Invisible => "",
+            edges::EdgeType::InContextOf => Some("url(#incontextof_arrow)"),
+            edges::EdgeType::SupportedBy => Some("url(#supportedby_arrow)"),
+            edges::EdgeType::Invisible => None,
         };
-        let e = Path::new()
+        let mut e = Path::new()
             .set("d", data)
-            .set("marker-end", arrow_id)
             .set("fill", "none")
             .set("stroke", "black")
             .set("stroke-width", 1u32);
+        if let Some(arrow_id) = arrow_id {
+            e = e.set("marker-end", arrow_id);
+        }
         doc.add(e)
     }
 }

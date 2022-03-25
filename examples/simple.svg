@@ -207,15 +207,15 @@ another forced solution
 <path d="M600,102 C600,102,590,102,570,102" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
 <path d="M820,102 C820,102,830,145,850,145" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
 <path d="M710,133 C710,163,736,233,736,253" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path d="M710,133 C710,163,437,258,437,288" fill="none" marker-end="" stroke="black" stroke-width="1"/>
-<path d="M710,133 C710,163,860,258,860,288" fill="none" marker-end="" stroke="black" stroke-width="1"/>
+<path d="M710,133 C710,163,437,258,437,288" fill="none" stroke="black" stroke-width="1"/>
+<path d="M710,133 C710,163,860,258,860,288" fill="none" stroke="black" stroke-width="1"/>
 <path d="M736,313 C736,343,790,362,790,382" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 <path d="M934,479 C934,509,1074,527,1074,547" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 <path d="M892,454 C892,454,882,454,862,454" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 <path d="M976,454 C976,454,986,454,1006,454" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
 <path d="M597,313 C597,343,241,383,241,403" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 <path d="M597,313 C597,343,433,397,433,417" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path d="M597,313 C597,343,636,424,636,454" fill="none" marker-end="" stroke="black" stroke-width="1"/>
+<path d="M597,313 C597,343,636,424,636,454" fill="none" stroke="black" stroke-width="1"/>
 <path d="M636,454 C636,484,748,572,748,592" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 <path d="M860,288 C860,318,934,399,934,419" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 <path d="M437,288 C437,318,97,361,97,381" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>

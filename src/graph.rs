@@ -23,14 +23,11 @@ impl NodePlace {
                 let n = nodes.get(n).unwrap().borrow();
                 n.get_width() / 2
             }
-            NodePlace::MultipleNodes(np) => {
-                let mut max = 0;
-                for n in np {
-                    let n = nodes.get(n).unwrap().borrow();
-                    max = std::cmp::max(max, n.get_width());
-                }
-                max
-            }
+            NodePlace::MultipleNodes(np) => np
+                .iter()
+                .map(|n| nodes.get(n).unwrap().borrow().get_width())
+                .max()
+                .unwrap(),
         }
     }
 
