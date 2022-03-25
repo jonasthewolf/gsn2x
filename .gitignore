@@ -1,3 +1,4 @@
 /target/
 *.prof*
 /coverage/
+**/.DS_Store
