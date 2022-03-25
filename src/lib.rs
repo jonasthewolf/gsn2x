@@ -9,7 +9,7 @@ use graph::{rank_nodes, NodePlace};
 use nodes::{Node, Port};
 use rusttype::Font;
 use svg::{
-    node::element::{path::Data, Marker, Path, Polyline},
+    node::element::{path::Data, Marker, Path, Polyline, Link},
     Document,
 };
 use util::{
@@ -132,6 +132,7 @@ impl DirGraph {
         let mut document = Document::new();
 
         document = setup_basics(document);
+        document = setup_stylesheets(document, &self.css_stylesheets);
         document = self.layout(document);
         document = document.set("viewBox", (0u32, 0u32, self.width, self.height));
         svg::save(file, &document)?;
@@ -347,6 +348,15 @@ impl DirGraph {
         }
         doc.add(e)
     }
+}
+
+fn setup_stylesheets(mut doc: Document, stylesheets: &[String]) -> Document {
+    for css in stylesheets {
+        let l = Link::default().
+        set("rel","stylesheet").set("href", css.to_owned()).set("type","text/css");
+        doc = doc.add(l);
+    }
+    doc
 }
 
 fn setup_basics(mut doc: Document) -> Document {
