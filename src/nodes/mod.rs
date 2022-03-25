@@ -4,11 +4,12 @@ use crate::{util::point2d::Point2D, FontInfo};
 
 use self::{box_node::BoxNode, context_node::ContextNode, elliptical_node::EllipticalNode};
 
-mod box_node;
-mod context_node;
-mod elliptical_node;
+pub mod box_node;
+pub mod context_node;
+pub mod elliptical_node;
 pub(crate) mod invisible_node;
 
+#[derive(PartialEq)]
 pub enum Port {
     North,
     East,
@@ -23,7 +24,7 @@ pub trait Node {
     fn get_height(&self) -> u32;
     fn set_position(&mut self, pos: &Point2D);
     fn get_position(&self) -> Point2D;
-    fn get_coordinates(&self, port: Port) -> Point2D;
+    fn get_coordinates(&self, port: &Port) -> Point2D;
     fn get_forced_level(&self) -> Option<usize>;
     fn set_forced_level(&mut self, level: usize);
     fn render(&mut self, font: &FontInfo) -> svg::node::element::Group;
@@ -34,7 +35,7 @@ pub(crate) fn get_port_default_coordinates(
     y: u32,
     width: u32,
     height: u32,
-    port: Port,
+    port: &Port,
 ) -> Point2D {
     Point2D {
         x: match port {

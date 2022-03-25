@@ -43,7 +43,7 @@ impl Node for InvisibleNode {
         }
     }
 
-    fn get_coordinates(&self, _: super::Port) -> crate::util::point2d::Point2D {
+    fn get_coordinates(&self, _: &super::Port) -> crate::util::point2d::Point2D {
         Point2D {
             x: self.x,
             y: self.y,

@@ -2,7 +2,7 @@ use svg::node::element::{path::Data, Group, Link, Path, Text, Title};
 
 use crate::FontInfo;
 
-use super::{get_port_default_coordinates, Node, Point2D};
+use super::{get_port_default_coordinates, Node, Point2D, Port};
 
 const PADDING_VERTICAL: u32 = 7;
 const PADDING_HORIZONTAL: u32 = 7;
@@ -66,8 +66,15 @@ impl Node for BoxNode {
         self.height
     }
 
-    fn get_coordinates(&self, port: super::Port) -> Point2D {
-        get_port_default_coordinates(self.x, self.y, self.width, self.height, port)
+    fn get_coordinates(&self, port: &Port) -> Point2D {
+        let mut coords =
+            get_port_default_coordinates(self.x, self.y, self.width, self.height, port);
+        if port == &super::Port::East {
+            coords.x -= self.skew / 2;
+        } else if port == &super::Port::West {
+            coords.x += self.skew / 2;
+        }
+        coords
     }
 
     fn set_position(&mut self, pos: &Point2D) {

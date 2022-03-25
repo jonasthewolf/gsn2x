@@ -97,7 +97,7 @@ impl Node for EllipticalNode {
         self.forced_level = Some(level);
     }
 
-    fn get_coordinates(&self, port: super::Port) -> Point2D {
+    fn get_coordinates(&self, port: &super::Port) -> Point2D {
         get_port_default_coordinates(self.x, self.y, self.width, self.height, port)
     }
 

@@ -123,6 +123,11 @@ impl DirGraph {
         self
     }
 
+    pub fn add_edges(mut self, edges: &mut BTreeMap<String, Vec<(String, EdgeType)>>) -> Self {
+        self.edges.append(edges);
+        self
+    }
+
     pub fn write_to_file(mut self, file: &std::path::Path) -> Result<(), std::io::Error> {
         let mut document = Document::new();
 
@@ -212,12 +217,13 @@ impl DirGraph {
         // Center nodes and draw them
         for rank in ranks.values() {
             let last_node_place = rank.iter().last().unwrap().1;
-            let delta_x = (self.width
-                - 2 * self.margin.left
-                - 2 * self.margin.right
-                - (last_node_place.get_x(&self.nodes)
-                    + last_node_place.get_max_width(&self.nodes) / 2))
-                / 2;
+            // let delta_x = (self.width
+            //     - 2 * self.margin.left
+            //     - 2 * self.margin.right
+            //     - (last_node_place.get_x(&self.nodes)
+            //         + last_node_place.get_max_width(&self.nodes) / 2))
+            //     / 2;
+            let delta_x = 0;
             for np in rank.values() {
                 match np {
                     NodePlace::Node(id) => {
@@ -283,42 +289,42 @@ impl DirGraph {
             < t_pos.y - t.get_height() / 2
         {
             (
-                s.get_coordinates(Port::South),
-                s.get_coordinates(Port::South)
+                s.get_coordinates(&Port::South),
+                s.get_coordinates(&Port::South)
                     .move_relative(0, support_distance as i32),
-                t.get_coordinates(Port::North)
+                t.get_coordinates(&Port::North)
                     .move_relative(0, -(marker_height as i32)),
-                t.get_coordinates(Port::North)
+                t.get_coordinates(&Port::North)
                     .move_relative(0, -(support_distance as i32)),
             )
         } else if s_pos.y - s.get_height() / 2 - self.margin.top > t_pos.y + t.get_height() / 2 {
             (
-                s.get_coordinates(Port::North),
-                s.get_coordinates(Port::North)
+                s.get_coordinates(&Port::North),
+                s.get_coordinates(&Port::North)
                     .move_relative(0, -(support_distance as i32)),
-                t.get_coordinates(Port::South)
+                t.get_coordinates(&Port::South)
                     .move_relative(0, marker_height as i32),
-                t.get_coordinates(Port::South)
+                t.get_coordinates(&Port::South)
                     .move_relative(0, support_distance as i32),
             )
         } else {
             // s.get_vertical_rank() == t.get_vertical_rank()
             if s_pos.x - s.get_width() / 2 > t_pos.x + t.get_width() / 2 {
                 (
-                    s.get_coordinates(Port::West),
-                    s.get_coordinates(Port::West),
-                    t.get_coordinates(Port::East)
+                    s.get_coordinates(&Port::West),
+                    s.get_coordinates(&Port::West),
+                    t.get_coordinates(&Port::East)
                         .move_relative(marker_height as i32, 0),
-                    t.get_coordinates(Port::East)
+                    t.get_coordinates(&Port::East)
                         .move_relative(support_distance as i32, 0),
                 )
             } else {
                 (
-                    s.get_coordinates(Port::East),
-                    s.get_coordinates(Port::East),
-                    t.get_coordinates(Port::West)
+                    s.get_coordinates(&Port::East),
+                    s.get_coordinates(&Port::East),
+                    t.get_coordinates(&Port::West)
                         .move_relative(-(marker_height as i32), 0),
-                    t.get_coordinates(Port::West)
+                    t.get_coordinates(&Port::West)
                         .move_relative(-(support_distance as i32), 0),
                 )
             }
