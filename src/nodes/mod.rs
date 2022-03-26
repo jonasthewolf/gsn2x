@@ -53,6 +53,8 @@ pub(crate) fn get_port_default_coordinates(
     }
 }
 
+// TODO Add layer as class too
+
 pub fn new_assumption(
     id: &str,
     text: &str,
@@ -60,13 +62,17 @@ pub fn new_assumption(
     classes: Option<Vec<String>>,
     forced_level: Option<usize>,
 ) -> Rc<RefCell<EllipticalNode>> {
+    let mut new_classes: Vec<String> = vec!["gsnelem".to_owned(), "gsnasmp".to_owned()];
+    if let Some(classes) = classes {
+        classes.into_iter().for_each(|c| new_classes.push(c));
+    }
     Rc::new(RefCell::new(EllipticalNode::new(
         id,
         text,
         Some("A".to_owned()),
         false,
         url,
-        classes,
+        Some(new_classes),
         forced_level,
     )))
 }
@@ -78,13 +84,17 @@ pub fn new_justification(
     classes: Option<Vec<String>>,
     forced_level: Option<usize>,
 ) -> Rc<RefCell<EllipticalNode>> {
+    let mut new_classes: Vec<String> = vec!["gsnelem".to_owned(), "gsnjust".to_owned()];
+    if let Some(classes) = classes {
+        classes.into_iter().for_each(|c| new_classes.push(c));
+    }
     Rc::new(RefCell::new(EllipticalNode::new(
         id,
         text,
         Some("J".to_owned()),
         false,
         url,
-        classes,
+        Some(new_classes),
         forced_level,
     )))
 }
@@ -96,13 +106,17 @@ pub fn new_solution(
     classes: Option<Vec<String>>,
     forced_level: Option<usize>,
 ) -> Rc<RefCell<EllipticalNode>> {
+    let mut new_classes: Vec<String> = vec!["gsnelem".to_owned(), "gsnsltn".to_owned()];
+    if let Some(classes) = classes {
+        classes.into_iter().for_each(|c| new_classes.push(c));
+    }
     Rc::new(RefCell::new(EllipticalNode::new(
         id,
         text,
         None,
         true,
         url,
-        classes,
+        Some(new_classes),
         forced_level,
     )))
 }
@@ -115,13 +129,17 @@ pub fn new_strategy(
     classes: Option<Vec<String>>,
     forced_level: Option<usize>,
 ) -> Rc<RefCell<BoxNode>> {
+    let mut new_classes: Vec<String> = vec!["gsnelem".to_owned(), "gsnstgy".to_owned()];
+    if let Some(classes) = classes {
+        classes.into_iter().for_each(|c| new_classes.push(c));
+    }
     Rc::new(RefCell::new(BoxNode::new(
         id,
         text,
         undeveloped,
         15,
         url,
-        classes,
+        Some(new_classes),
         forced_level,
     )))
 }
@@ -134,13 +152,17 @@ pub fn new_goal(
     classes: Option<Vec<String>>,
     forced_level: Option<usize>,
 ) -> Rc<RefCell<BoxNode>> {
+    let mut new_classes: Vec<String> = vec!["gsnelem".to_owned(), "gsngoal".to_owned()];
+    if let Some(classes) = classes {
+        classes.into_iter().for_each(|c| new_classes.push(c));
+    }
     Rc::new(RefCell::new(BoxNode::new(
         id,
         text,
         undeveloped,
         0,
         url,
-        classes,
+        Some(new_classes),
         forced_level,
     )))
 }
@@ -151,5 +173,14 @@ pub fn new_context(
     url: Option<String>,
     classes: Option<Vec<String>>,
 ) -> Rc<RefCell<ContextNode>> {
-    Rc::new(RefCell::new(ContextNode::new(id, text, url, classes)))
+    let mut new_classes: Vec<String> = vec!["gsnelem".to_owned(), "gsnctxt".to_owned()];
+    if let Some(classes) = classes {
+        classes.into_iter().for_each(|c| new_classes.push(c));
+    }
+    Rc::new(RefCell::new(ContextNode::new(
+        id,
+        text,
+        url,
+        Some(new_classes),
+    )))
 }

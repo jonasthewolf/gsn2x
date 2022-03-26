@@ -15,7 +15,7 @@ pub struct BoxNode {
     undeveloped: bool,
     skew: u32,
     url: Option<String>,
-    _classes: Option<Vec<String>>,
+    classes: Option<Vec<String>>,
     width: u32,
     height: u32,
     lines: Vec<(u32, u32)>,
@@ -90,7 +90,11 @@ impl Node for BoxNode {
     }
 
     fn render(&mut self, font: &FontInfo) -> svg::node::element::Group {
-        let mut g = Group::new(); //.set("id", "").set("class", "");
+        // TODO escape id
+        let mut g = Group::new().set("id", format!("node_{}", self.get_id()));
+        if let Some(classes) = &self.classes {
+            g = g.set("class", classes.join(" "))
+        }
         if let Some(url) = &self.url {
             let link = Link::new();
             g = g.add(link.set("xlink:href", url.as_str()));
@@ -115,7 +119,8 @@ impl Node for BoxNode {
             .set("fill", "none")
             .set("stroke", "black")
             .set("stroke-width", 1u32)
-            .set("d", data);
+            .set("d", data)
+            .set("class", "border");
 
         let id = Text::new()
             .set(
@@ -192,7 +197,7 @@ impl BoxNode {
             undeveloped,
             url,
             skew,
-            _classes: classes,
+            classes,
             width: 0,
             height: 0,
             lines: vec![],

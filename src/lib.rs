@@ -9,7 +9,7 @@ use graph::{rank_nodes, NodePlace};
 use nodes::{Node, Port};
 use rusttype::Font;
 use svg::{
-    node::element::{path::Data, Marker, Path, Polyline, Link},
+    node::element::{path::Data, Link, Marker, Path, Polyline},
     Document,
 };
 use util::{
@@ -275,7 +275,6 @@ impl DirGraph {
         target: Rc<RefCell<dyn Node>>,
         edge_type: &EdgeType,
     ) -> Document {
-        // TODO class and id
         let (marker_height, support_distance) = match edge_type {
             EdgeType::InContextOf => (MARKER_HEIGHT, 3 * MARKER_HEIGHT),
             EdgeType::SupportedBy => (MARKER_HEIGHT, 3 * MARKER_HEIGHT),
@@ -338,6 +337,11 @@ impl DirGraph {
             edges::EdgeType::SupportedBy => Some("url(#supportedby_arrow)"),
             edges::EdgeType::Invisible => None,
         };
+        let classes = match edge_type {
+            edges::EdgeType::InContextOf => Some("gsnedge gsnspby"),
+            edges::EdgeType::SupportedBy => Some("gsnedge gsninctxt"),
+            edges::EdgeType::Invisible => None,
+        };
         let mut e = Path::new()
             .set("d", data)
             .set("fill", "none")
@@ -346,14 +350,19 @@ impl DirGraph {
         if let Some(arrow_id) = arrow_id {
             e = e.set("marker-end", arrow_id);
         }
+        if let Some(classes) = classes {
+            e = e.set("class", classes);
+        }
         doc.add(e)
     }
 }
 
 fn setup_stylesheets(mut doc: Document, stylesheets: &[String]) -> Document {
     for css in stylesheets {
-        let l = Link::default().
-        set("rel","stylesheet").set("href", css.to_owned()).set("type","text/css");
+        let l = Link::default()
+            .set("rel", "stylesheet")
+            .set("href", css.to_owned())
+            .set("type", "text/css");
         doc = doc.add(l);
     }
     doc
