@@ -23,6 +23,7 @@ pub struct EllipticalNode {
     lines: Vec<(u32, u32)>,
     x: u32,
     y: u32,
+    forced_level: Option<usize>,
 }
 
 impl Node for EllipticalNode {
@@ -89,11 +90,11 @@ impl Node for EllipticalNode {
     }
 
     fn get_forced_level(&self) -> Option<usize> {
-        // Intentionally left empty
-        None
+        self.forced_level
     }
 
-    fn set_forced_level(&mut self, _: usize) {
+    fn set_forced_level(&mut self, level: usize) {
+        self.forced_level = Some(level)
     }
 
     fn get_coordinates(&self, port: &super::Port) -> Point2D {
@@ -170,6 +171,7 @@ impl EllipticalNode {
         circle: bool,
         url: Option<String>,
         classes: Option<Vec<String>>,
+        forced_level: Option<usize>,
     ) -> Self {
         EllipticalNode {
             identifier: id.to_string(),
@@ -185,6 +187,7 @@ impl EllipticalNode {
             lines: vec![],
             x: 0,
             y: 0,
+            forced_level,
         }
     }
 }

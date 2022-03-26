@@ -150,8 +150,7 @@ impl Node for ContextNode {
         None
     }
 
-    fn set_forced_level(&mut self, _: usize) {
-    }
+    fn set_forced_level(&mut self, _: usize) {}
 }
 
 impl ContextNode {

@@ -36,13 +36,11 @@ fn main() -> Result<(), std::io::Error> {
         "lalalsfa wrnasdf asdfa sdf asdlmösgm qwjsnf asndflan asdfa as",
         None,
         None,
-        None,
     );
-    let assumption = new_assumption("A1", "teadskfasjdfjne", None, None, None);
+    let assumption = new_assumption("A1", "teadskfasjdfjne", None, None);
     let justification2 = new_justification(
         "J2",
         "asdfgasgnajkg aksdnnglert klnalsdn kölnsdg ljsmdg snnjk slls qwjsnf asndflan asdfa as",
-        None,
         None,
         None,
     );
