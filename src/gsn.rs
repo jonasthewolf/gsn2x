@@ -1,8 +1,14 @@
 use crate::diagnostics::{DiagType, Diagnostics};
 use crate::yaml_fix::MyMap;
+use dirgraphsvg::edges::EdgeType;
+use dirgraphsvg::nodes::{
+    new_assumption, new_context, new_goal, new_justification, new_solution, new_strategy,
+};
 use serde::{Deserialize, Serialize};
+use std::cell::RefCell;
 use std::collections::{BTreeMap, HashSet};
 use std::ops::Deref;
+use std::rc::Rc;
 
 ///
 /// The main struct of this program
@@ -22,6 +28,79 @@ pub struct GsnNode {
     undeveloped: Option<bool>,
     #[serde(skip_deserializing)]
     pub module: String,
+}
+
+impl GsnNode {
+    pub fn get_edges(&self) -> Vec<(String, EdgeType)> {
+        let mut edges = Vec::new();
+        if let Some(c_nodes) = &self.in_context_of {
+            let mut es: Vec<(String, EdgeType)> = c_nodes
+                .iter()
+                .map(|target| (target.to_owned(), EdgeType::InContextOf))
+                .collect();
+            edges.append(&mut es);
+        }
+        if let Some(s_nodes) = &self.supported_by {
+            let mut es: Vec<(String, EdgeType)> = s_nodes
+                .iter()
+                .map(|target| (target.to_owned(), EdgeType::SupportedBy))
+                .collect();
+            edges.append(&mut es);
+        }
+        edges
+    }
+}
+
+// TODO Support forced levels
+pub fn from_gsn_node(
+    id: &str,
+    gsn_node: &GsnNode,
+    forced_levels: &BTreeMap<String, usize>,
+) -> Rc<RefCell<dyn dirgraphsvg::nodes::Node>> {
+    match id {
+        id if id.starts_with('G') => new_goal(
+            id,
+            &gsn_node.text,
+            gsn_node.undeveloped.unwrap_or(false),
+            gsn_node.url.to_owned(),
+            gsn_node.classes.to_owned(),
+            forced_levels.get(id).copied(),
+        ),
+        id if id.starts_with("Sn") => new_solution(
+            id,
+            &gsn_node.text,
+            gsn_node.url.to_owned(),
+            gsn_node.classes.to_owned(),
+            forced_levels.get(id).copied(),
+        ),
+        id if id.starts_with('S') => new_strategy(
+            id,
+            &gsn_node.text,
+            gsn_node.undeveloped.unwrap_or(false),
+            gsn_node.url.to_owned(),
+            gsn_node.classes.to_owned(),
+            forced_levels.get(id).copied(),
+        ),
+        id if id.starts_with('C') => new_context(
+            id,
+            &gsn_node.text,
+            gsn_node.url.to_owned(),
+            gsn_node.classes.to_owned(),
+        ),
+        id if id.starts_with('A') => new_assumption(
+            id,
+            &gsn_node.text,
+            gsn_node.url.to_owned(),
+            gsn_node.classes.to_owned(),
+        ),
+        id if id.starts_with('J') => new_justification(
+            id,
+            &gsn_node.text,
+            gsn_node.url.to_owned(),
+            gsn_node.classes.to_owned(),
+        ),
+        _ => unreachable!(),
+    }
 }
 
 ///
@@ -218,16 +297,18 @@ fn validate_reference(
 
 ///
 /// Gathers all different 'level' attributes from all nodes.
-/// Levels are used to create "{rank=same; x; y; z;}" statements.
 ///
-pub fn get_levels(nodes: &MyMap<String, GsnNode>) -> Vec<String> {
-    let mut levels = HashSet::<String>::new();
-    for (_, v) in nodes.iter() {
-        if let Some(l) = &v.level {
-            levels.insert(l.trim().to_owned());
+pub fn get_levels(nodes: &MyMap<String, GsnNode>) -> MyMap<String, Vec<String>> {
+    let mut levels = MyMap::<String, Vec<String>>::new();
+    for (id, node) in nodes.iter() {
+        if let Some(l) = &node.level {
+            levels
+                .entry(l.trim().to_owned())
+                .or_insert(Vec::new())
+                .push(id.to_owned());
         }
     }
-    levels.into_iter().collect()
+    levels
 }
 
 ///
@@ -275,6 +356,54 @@ pub fn check_layers(
             );
         }
     }
+}
+
+pub(crate) fn get_forced_levels(nodes: &MyMap<String, GsnNode>) -> BTreeMap<String, usize> {
+    let mut forced_levels = BTreeMap::new();
+    let depths = get_depths(nodes);
+    let levels = get_levels(nodes);
+    for (_, nodes) in levels.iter() {
+        let max_depth = nodes.iter().map(|n| depths.get(n).unwrap()).max().unwrap();
+        for node in nodes {
+            forced_levels.insert(node.to_owned(), *max_depth);
+        }
+    }
+    forced_levels
+}
+
+fn get_depths(nodes: &MyMap<String, GsnNode>) -> BTreeMap<String, usize> {
+    let mut depths = BTreeMap::new();
+    let mut current_nodes = get_root_nodes(nodes);
+
+    let mut depth = 0usize;
+    while !current_nodes.is_empty() {
+        let mut child_nodes = Vec::new();
+        for cur_node in &current_nodes {
+            depths.insert(cur_node.to_owned().to_owned(), depth);
+            if let Some(children) = &nodes.get(cur_node).unwrap().supported_by {
+                for child in children {
+                    child_nodes.push(child.to_owned());
+                }
+            }
+        }
+        depth += 1;
+        current_nodes.clear();
+        current_nodes.append(&mut child_nodes);
+    }
+    depths
+}
+
+fn get_root_nodes(nodes: &MyMap<String, GsnNode>) -> Vec<String> {
+    let mut root_nodes: Vec<String> = nodes.keys().map(|id| id.to_owned()).collect();
+    for node in nodes.values() {
+        if let Some(in_context_of) = &node.in_context_of {
+            root_nodes.retain(|x| !in_context_of.contains(x));
+        }
+        if let Some(supported_by) = &node.supported_by {
+            root_nodes.retain(|x| !supported_by.contains(x));
+        }
+    }
+    root_nodes
 }
 
 #[derive(Debug, PartialEq, Serialize)]
@@ -906,7 +1035,7 @@ mod test {
         );
         let output = get_levels(&nodes);
         assert_eq!(output.len(), 2);
-        assert!(output.contains(&"x1".to_owned()));
-        assert!(output.contains(&"x2".to_owned()));
+        assert!(output.contains_key(&"x1".to_owned()));
+        assert!(output.contains_key(&"x2".to_owned()));
     }
 }

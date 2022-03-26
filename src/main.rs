@@ -1,12 +1,12 @@
 use anyhow::{anyhow, Context, Result};
-use clap::{app_from_crate, Arg, ErrorKind};
+use clap::{Arg, ErrorKind};
 use std::fs::File;
 use std::io::BufReader;
 
 mod diagnostics;
 mod gsn;
 mod render;
-mod tera;
+// mod tera;
 mod util;
 mod yaml_fix;
 
@@ -19,7 +19,7 @@ use yaml_fix::MyMap;
 ///
 ///
 fn main() -> Result<()> {
-    let mut app = app_from_crate!()
+    let mut app = clap::command!()
         .arg(
             Arg::new("INPUT")
                 .help("Sets the input file(s) to use.")
@@ -93,7 +93,7 @@ fn main() -> Result<()> {
                 .long("layers")
                 .takes_value(true)
                 .multiple_occurrences(true)
-                .use_delimiter(true)
+                .use_value_delimiter(true)
                 .conflicts_with("VALONLY")
                 .help_heading("OUTPUT"),
         )
@@ -138,7 +138,7 @@ fn main() -> Result<()> {
         .map(|x| x.collect::<Vec<&str>>());
     let modules = inputs
         .iter()
-        .map(util::escape_module_name)
+        .map(util::escape_text)
         .collect::<Vec<String>>();
     let static_render_context = render::StaticRenderContext {
         modules: &modules,
@@ -188,7 +188,7 @@ fn print_outputs(
                 ))?) as Box<dyn std::io::Write>
             };
             render::render_view(
-                &util::escape_module_name(input),
+                &util::escape_text(input),
                 &nodes,
                 None,
                 &mut output_file,
@@ -202,7 +202,7 @@ fn print_outputs(
             File::create(arch_view).context(format!("Failed to open output file {}", arch_view))?;
         let deps = crate::gsn::calculate_module_dependencies(&nodes);
         render::render_view(
-            &util::escape_module_name(&arch_view),
+            &util::escape_text(&arch_view),
             &nodes,
             Some(&deps),
             &mut output_file,
@@ -214,7 +214,7 @@ fn print_outputs(
         let mut output_file = File::create(compl_view)
             .context(format!("Failed to open output file {}", compl_view))?;
         render::render_view(
-            &util::escape_module_name(&compl_view),
+            &util::escape_text(&compl_view),
             &nodes,
             None,
             &mut output_file,
@@ -251,7 +251,7 @@ fn validate(
     layers: &Option<Vec<&str>>,
 ) {
     for input in inputs {
-        let module = util::escape_module_name(input);
+        let module = util::escape_text(input);
         // When validating a module, all references are resolved.
         if let Some(excluded) = &excluded_modules {
             // Only allow excluding files from validation if there is more than one.
@@ -276,7 +276,7 @@ fn read_inputs(
     diags: &mut Diagnostics,
 ) -> Result<(), anyhow::Error> {
     for input in inputs {
-        let module = util::escape_module_name(input);
+        let module = util::escape_text(input);
         let reader =
             BufReader::new(File::open(&input).context(format!("Failed to open file {}", input))?);
         let mut n: MyMap<String, GsnNode> = serde_yaml::from_reader(reader)

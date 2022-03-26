@@ -142,7 +142,7 @@ mod integrations {
         let expected = fs::read_to_string(std::path::Path::new("tests/arch.gsn.test.dot"))?
             .replace(
                 "examples_modular_arch_gsn_test_dot",
-                &util::escape_module_name(&format!("{}", arch_file.path().display()).as_str()),
+                &util::escape_text(&format!("{}", arch_file.path().display()).as_str()),
             );
         assert!(predicate_file.eval(expected.as_str()));
         arch_file.close()?;
@@ -170,7 +170,7 @@ mod integrations {
         let expected = fs::read_to_string(std::path::Path::new("tests/complete.gsn.test.dot"))?
             .replace(
                 "examples_modular_complete_gsn_test_dot",
-                &util::escape_module_name(&format!("{}", compl_file.path().display()).as_str()),
+                &util::escape_text(&format!("{}", compl_file.path().display()).as_str()),
             );
         assert!(predicate_file.eval(expected.as_str()));
         compl_file.close()?;
