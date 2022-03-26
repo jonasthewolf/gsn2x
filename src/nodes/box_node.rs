@@ -91,6 +91,7 @@ impl Node for BoxNode {
 
     fn render(&mut self, font: &FontInfo) -> svg::node::element::Group {
         // TODO escape id
+        // TODO Centralize
         let mut g = Group::new().set("id", format!("node_{}", self.get_id()));
         if let Some(classes) = &self.classes {
             g = g.set("class", classes.join(" "))

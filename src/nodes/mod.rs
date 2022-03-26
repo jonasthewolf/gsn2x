@@ -60,7 +60,6 @@ pub fn new_assumption(
     text: &str,
     url: Option<String>,
     classes: Option<Vec<String>>,
-    forced_level: Option<usize>,
 ) -> Rc<RefCell<EllipticalNode>> {
     let mut new_classes: Vec<String> = vec!["gsnelem".to_owned(), "gsnasmp".to_owned()];
     if let Some(classes) = classes {
@@ -73,7 +72,6 @@ pub fn new_assumption(
         false,
         url,
         Some(new_classes),
-        forced_level,
     )))
 }
 
@@ -82,7 +80,6 @@ pub fn new_justification(
     text: &str,
     url: Option<String>,
     classes: Option<Vec<String>>,
-    forced_level: Option<usize>,
 ) -> Rc<RefCell<EllipticalNode>> {
     let mut new_classes: Vec<String> = vec!["gsnelem".to_owned(), "gsnjust".to_owned()];
     if let Some(classes) = classes {
@@ -95,7 +92,6 @@ pub fn new_justification(
         false,
         url,
         Some(new_classes),
-        forced_level,
     )))
 }
 
@@ -104,7 +100,6 @@ pub fn new_solution(
     text: &str,
     url: Option<String>,
     classes: Option<Vec<String>>,
-    forced_level: Option<usize>,
 ) -> Rc<RefCell<EllipticalNode>> {
     let mut new_classes: Vec<String> = vec!["gsnelem".to_owned(), "gsnsltn".to_owned()];
     if let Some(classes) = classes {
@@ -117,7 +112,6 @@ pub fn new_solution(
         true,
         url,
         Some(new_classes),
-        forced_level,
     )))
 }
 

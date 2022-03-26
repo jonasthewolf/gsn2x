@@ -18,7 +18,6 @@ pub struct ContextNode {
     lines: Vec<(u32, u32)>,
     x: u32,
     y: u32,
-    forced_level: Option<usize>,
 }
 
 impl Node for ContextNode {
@@ -148,11 +147,10 @@ impl Node for ContextNode {
     }
 
     fn get_forced_level(&self) -> Option<usize> {
-        self.forced_level
+        None
     }
 
-    fn set_forced_level(&mut self, level: usize) {
-        self.forced_level = Some(level);
+    fn set_forced_level(&mut self, _: usize) {
     }
 }
 
@@ -168,7 +166,6 @@ impl ContextNode {
             lines: vec![],
             x: 0,
             y: 0,
-            forced_level: None,
         }
     }
 }
