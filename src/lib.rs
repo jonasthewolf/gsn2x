@@ -5,7 +5,7 @@ mod util;
 use std::{cell::RefCell, collections::BTreeMap, rc::Rc};
 
 use edges::EdgeType;
-use graph::{rank_nodes, NodePlace};
+use graph::{rank_nodes, NodePlace, get_forced_levels};
 use nodes::{Node, Port};
 use rusttype::Font;
 use svg::{
@@ -50,6 +50,7 @@ pub struct DirGraph {
     wrap: u32,
     font: FontInfo,
     css_stylesheets: Vec<String>,
+    forced_levels: BTreeMap<String, Vec<String>>,
     nodes: BTreeMap<String, Rc<RefCell<dyn Node>>>,
     edges: BTreeMap<String, Vec<(String, EdgeType)>>,
 }
@@ -67,6 +68,7 @@ impl Default for DirGraph {
                 size: 12.0,
             },
             css_stylesheets: Vec::new(),
+            forced_levels: BTreeMap::new(),
             nodes: BTreeMap::new(),
             edges: BTreeMap::new(),
         }
@@ -128,6 +130,13 @@ impl DirGraph {
         self
     }
 
+    pub fn add_levels(mut self, levels: &BTreeMap<String, Vec<String>>) -> Self {
+        for (level, nodes) in levels {
+            self.forced_levels.insert(level.to_owned(), nodes.iter().map(|n| n.to_owned()).collect());
+        }
+        self
+    }
+
     pub fn write_to_file(mut self, file: &std::path::Path) -> Result<(), std::io::Error> {
         let mut document = Document::new();
 
@@ -143,10 +152,11 @@ impl DirGraph {
     /// Layout the graph on a pseudo-stack layout
     ///
     /// 1) Let each element identify its size
-    /// 2) Rank the nodes
-    /// 3) Position nodes initially
-    /// 4) Center nodes and draw them
-    /// 5) Draw the edges
+    /// 2) Calculate forced levels
+    /// 3) Rank the nodes
+    /// 4) Position nodes initially
+    /// 5) Center nodes and draw them
+    /// 6) Draw the edges
     ///
     ///
     fn layout(&mut self, mut doc: Document) -> Document {
@@ -154,6 +164,12 @@ impl DirGraph {
         self.nodes
             .values()
             .for_each(|n| n.borrow_mut().calculate_size(&self.font, self.wrap));
+
+        // Create forced levels
+        let forced_levels = get_forced_levels(&self.nodes, &self.edges, &self.forced_levels);
+        for (node, level) in forced_levels {
+            self.nodes.get(&node).unwrap().borrow_mut().set_forced_level(level);
+        }
 
         // Rank nodes
         let ranks = rank_nodes(&mut self.nodes, &mut self.edges);
