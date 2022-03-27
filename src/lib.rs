@@ -5,7 +5,7 @@ mod util;
 use std::{cell::RefCell, collections::BTreeMap, rc::Rc};
 
 use edges::EdgeType;
-use graph::{rank_nodes, NodePlace, get_forced_levels};
+use graph::{get_forced_levels, rank_nodes, NodePlace};
 use nodes::{Node, Port};
 use rusttype::Font;
 use svg::{
@@ -132,7 +132,10 @@ impl DirGraph {
 
     pub fn add_levels(mut self, levels: &BTreeMap<String, Vec<String>>) -> Self {
         for (level, nodes) in levels {
-            self.forced_levels.insert(level.to_owned(), nodes.iter().map(|n| n.to_owned()).collect());
+            self.forced_levels.insert(
+                level.to_owned(),
+                nodes.iter().map(|n| n.to_owned()).collect(),
+            );
         }
         self
     }
@@ -168,7 +171,11 @@ impl DirGraph {
         // Create forced levels
         let forced_levels = get_forced_levels(&self.nodes, &self.edges, &self.forced_levels);
         for (node, level) in forced_levels {
-            self.nodes.get(&node).unwrap().borrow_mut().set_forced_level(level);
+            self.nodes
+                .get(&node)
+                .unwrap()
+                .borrow_mut()
+                .set_forced_level(level);
         }
 
         // Rank nodes

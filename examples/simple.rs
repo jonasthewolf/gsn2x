@@ -1,3 +1,5 @@
+use std::collections::BTreeMap;
+
 use dirgraphsvg::{
     edges::EdgeType,
     nodes::{new_assumption, new_context, new_goal, new_justification, new_solution, new_strategy},
@@ -12,7 +14,6 @@ fn main() -> Result<(), std::io::Error> {
         false,
         None,
         None,
-        None,
     );
     let goal2 = new_goal(
         "G2",
@@ -20,17 +21,16 @@ fn main() -> Result<(), std::io::Error> {
         true,
         None,
         None,
-        None,
     );
-    let goal3 = new_goal("G3", "sub di dub di dub", false, None, None, Some(3));
-    let goal4 = new_goal("G4", "circle di circle", false, None, None, None);
-    let goal5 = new_goal("G5", "elcric id elcric", false, None, None, Some(2));
-    let strategy = new_strategy("S1", "test strategy", false, None, None, None);
+    let goal3 = new_goal("G3", "sub di dub di dub", false, None, None);
+    let goal4 = new_goal("G4", "circle di circle", false, None, None);
+    let goal5 = new_goal("G5", "elcric id elcric", false, None, None);
+    let strategy = new_strategy("S1", "test strategy", false, None, None);
     let context = new_context("C1", "some context", None, None);
-    let solution = new_solution("Sn1", "test solution", None, None, None);
-    let solution2 = new_solution("Sn2", "test another solution", None, None, Some(2));
-    let solution3 = new_solution("Sn3", "yet another solution", None, None, None);
-    let solution4 = new_solution("Sn4", "another forced solution", None, None, None);
+    let solution = new_solution("Sn1", "test solution", None, None);
+    let solution2 = new_solution("Sn2", "test another solution", None, None);
+    let solution3 = new_solution("Sn3", "yet another solution", None, None);
+    let solution4 = new_solution("Sn4", "another forced solution", None, None);
     let justification = new_justification(
         "J1",
         "lalalsfa wrnasdf asdfa sdf asdlmösgm qwjsnf asndflan asdfa as",
@@ -44,6 +44,10 @@ fn main() -> Result<(), std::io::Error> {
         None,
         None,
     );
+    let mut levels = BTreeMap::new();
+    levels.insert("First".to_owned(), vec!["G5".to_owned(), "Sn2".to_owned()]);
+    levels.insert("Second".to_owned(), vec!["G3".to_owned(), "Sn4".to_owned()]);
+
     dg.set_font("Arial", 12.0)
         .add_node(justification.clone())
         .add_node(goal.clone())
@@ -73,6 +77,7 @@ fn main() -> Result<(), std::io::Error> {
         .add_edge(goal5.clone(), solution3.clone(), EdgeType::SupportedBy)
         .add_edge(goal, goal5.clone(), EdgeType::SupportedBy)
         .add_edge(goal5.clone(), justification2, EdgeType::InContextOf)
+        .add_levels(&mut levels)
         .write_to_file(std::path::Path::new("examples/simple.svg"))?;
     Ok(())
 }

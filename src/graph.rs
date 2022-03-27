@@ -272,6 +272,10 @@ pub(crate) fn get_forced_levels(
     forced_levels
 }
 
+///
+///
+/// There can be no forced levels yet.
+///
 fn get_depths(
     nodes: &BTreeMap<String, Rc<RefCell<dyn Node>>>,
     edges: &BTreeMap<String, Vec<(String, EdgeType)>>,
@@ -285,15 +289,14 @@ fn get_depths(
         for cur_node in &current_nodes {
             depths.insert(cur_node.to_owned().to_owned(), depth);
             if let Some(children) = &edges.get(cur_node) {
-                let mut c_nodes: Vec<String> =
-                    children
-                        .iter()
-                        .filter_map(|(target, edge_type)| match edge_type {
-                            EdgeType::SupportedBy => Some(target.to_owned()),
-                            _ => None,
-                        })
-                        .collect();
-                        child_nodes.append(&mut c_nodes);
+                let mut c_nodes: Vec<String> = children
+                    .iter()
+                    .filter_map(|(target, edge_type)| match edge_type {
+                        EdgeType::SupportedBy => Some(target.to_owned()),
+                        _ => None,
+                    })
+                    .collect();
+                child_nodes.append(&mut c_nodes);
             }
         }
         depth += 1;
@@ -303,6 +306,11 @@ fn get_depths(
     depths
 }
 
+///
+/// Get the root nodes of the given (nodes, edges) graph
+///
+/// Root nodes are considered those nodes that have no incoming edges.
+///
 fn get_root_nodes(
     nodes: &BTreeMap<String, Rc<RefCell<dyn Node>>>,
     edges: &BTreeMap<String, Vec<(String, EdgeType)>>,

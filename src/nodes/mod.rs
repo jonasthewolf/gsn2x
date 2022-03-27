@@ -72,7 +72,6 @@ pub fn new_assumption(
         false,
         url,
         Some(new_classes),
-        None,
     )))
 }
 
@@ -93,7 +92,6 @@ pub fn new_justification(
         false,
         url,
         Some(new_classes),
-        None,
     )))
 }
 
@@ -102,7 +100,6 @@ pub fn new_solution(
     text: &str,
     url: Option<String>,
     classes: Option<Vec<String>>,
-    forced_level: Option<usize>,
 ) -> Rc<RefCell<EllipticalNode>> {
     let mut new_classes: Vec<String> = vec!["gsnelem".to_owned(), "gsnsltn".to_owned()];
     if let Some(classes) = classes {
@@ -115,7 +112,6 @@ pub fn new_solution(
         true,
         url,
         Some(new_classes),
-        forced_level,
     )))
 }
 
@@ -125,7 +121,6 @@ pub fn new_strategy(
     undeveloped: bool,
     url: Option<String>,
     classes: Option<Vec<String>>,
-    forced_level: Option<usize>,
 ) -> Rc<RefCell<BoxNode>> {
     let mut new_classes: Vec<String> = vec!["gsnelem".to_owned(), "gsnstgy".to_owned()];
     if let Some(classes) = classes {
@@ -138,7 +133,6 @@ pub fn new_strategy(
         15,
         url,
         Some(new_classes),
-        forced_level,
     )))
 }
 
@@ -148,7 +142,6 @@ pub fn new_goal(
     undeveloped: bool,
     url: Option<String>,
     classes: Option<Vec<String>>,
-    forced_level: Option<usize>,
 ) -> Rc<RefCell<BoxNode>> {
     let mut new_classes: Vec<String> = vec!["gsnelem".to_owned(), "gsngoal".to_owned()];
     if let Some(classes) = classes {
@@ -161,7 +154,6 @@ pub fn new_goal(
         0,
         url,
         Some(new_classes),
-        forced_level,
     )))
 }
 

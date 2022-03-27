@@ -171,7 +171,6 @@ impl EllipticalNode {
         circle: bool,
         url: Option<String>,
         classes: Option<Vec<String>>,
-        forced_level: Option<usize>,
     ) -> Self {
         EllipticalNode {
             identifier: id.to_string(),
@@ -187,7 +186,7 @@ impl EllipticalNode {
             lines: vec![],
             x: 0,
             y: 0,
-            forced_level,
+            forced_level: None,
         }
     }
 }

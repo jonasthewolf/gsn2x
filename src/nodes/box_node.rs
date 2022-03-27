@@ -91,7 +91,7 @@ impl Node for BoxNode {
 
     fn render(&mut self, font: &FontInfo) -> svg::node::element::Group {
         // TODO escape id
-        // TODO Centralize
+        // TODO Centialize id and class adding.
         let mut g = Group::new().set("id", format!("node_{}", self.get_id()));
         if let Some(classes) = &self.classes {
             g = g.set("class", classes.join(" "))
@@ -190,7 +190,6 @@ impl BoxNode {
         skew: u32,
         url: Option<String>,
         classes: Option<Vec<String>>,
-        forced_level: Option<usize>,
     ) -> Self {
         BoxNode {
             identifier: id.to_string(),
@@ -204,7 +203,7 @@ impl BoxNode {
             lines: vec![],
             x: 0,
             y: 0,
-            forced_level,
+            forced_level: None,
         }
     }
 }
