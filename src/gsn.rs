@@ -55,7 +55,6 @@ impl GsnNode {
 pub fn from_gsn_node(
     id: &str,
     gsn_node: &GsnNode,
-    forced_levels: &BTreeMap<String, usize>,
 ) -> Rc<RefCell<dyn dirgraphsvg::nodes::Node>> {
     match id {
         id if id.starts_with('G') => new_goal(
@@ -64,14 +63,14 @@ pub fn from_gsn_node(
             gsn_node.undeveloped.unwrap_or(false),
             gsn_node.url.to_owned(),
             gsn_node.classes.to_owned(),
-            forced_levels.get(id).copied(),
+            None,
         ),
         id if id.starts_with("Sn") => new_solution(
             id,
             &gsn_node.text,
             gsn_node.url.to_owned(),
             gsn_node.classes.to_owned(),
-            forced_levels.get(id).copied(),
+            None,
         ),
         id if id.starts_with('S') => new_strategy(
             id,
@@ -79,7 +78,7 @@ pub fn from_gsn_node(
             gsn_node.undeveloped.unwrap_or(false),
             gsn_node.url.to_owned(),
             gsn_node.classes.to_owned(),
-            forced_levels.get(id).copied(),
+            None,
         ),
         id if id.starts_with('C') => new_context(
             id,
@@ -298,8 +297,8 @@ fn validate_reference(
 ///
 /// Gathers all different 'level' attributes from all nodes.
 ///
-pub fn get_levels(nodes: &MyMap<String, GsnNode>) -> MyMap<String, Vec<String>> {
-    let mut levels = MyMap::<String, Vec<String>>::new();
+pub fn get_levels(nodes: &MyMap<String, GsnNode>) -> BTreeMap<String, Vec<String>> {
+    let mut levels = BTreeMap::<String, Vec<String>>::new();
     for (id, node) in nodes.iter() {
         if let Some(l) = &node.level {
             levels
@@ -356,54 +355,6 @@ pub fn check_layers(
             );
         }
     }
-}
-
-pub(crate) fn get_forced_levels(nodes: &MyMap<String, GsnNode>) -> BTreeMap<String, usize> {
-    let mut forced_levels = BTreeMap::new();
-    let depths = get_depths(nodes);
-    let levels = get_levels(nodes);
-    for (_, nodes) in levels.iter() {
-        let max_depth = nodes.iter().map(|n| depths.get(n).unwrap()).max().unwrap();
-        for node in nodes {
-            forced_levels.insert(node.to_owned(), *max_depth);
-        }
-    }
-    forced_levels
-}
-
-fn get_depths(nodes: &MyMap<String, GsnNode>) -> BTreeMap<String, usize> {
-    let mut depths = BTreeMap::new();
-    let mut current_nodes = get_root_nodes(nodes);
-
-    let mut depth = 0usize;
-    while !current_nodes.is_empty() {
-        let mut child_nodes = Vec::new();
-        for cur_node in &current_nodes {
-            depths.insert(cur_node.to_owned().to_owned(), depth);
-            if let Some(children) = &nodes.get(cur_node).unwrap().supported_by {
-                for child in children {
-                    child_nodes.push(child.to_owned());
-                }
-            }
-        }
-        depth += 1;
-        current_nodes.clear();
-        current_nodes.append(&mut child_nodes);
-    }
-    depths
-}
-
-fn get_root_nodes(nodes: &MyMap<String, GsnNode>) -> Vec<String> {
-    let mut root_nodes: Vec<String> = nodes.keys().map(|id| id.to_owned()).collect();
-    for node in nodes.values() {
-        if let Some(in_context_of) = &node.in_context_of {
-            root_nodes.retain(|x| !in_context_of.contains(x));
-        }
-        if let Some(supported_by) = &node.supported_by {
-            root_nodes.retain(|x| !supported_by.contains(x));
-        }
-    }
-    root_nodes
 }
 
 #[derive(Debug, PartialEq, Serialize)]
