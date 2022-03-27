@@ -3,12 +3,11 @@ pub mod point2d;
 pub mod wordwrap;
 
 ///
-/// Escape module name
 ///
-/// Remove espcially the "."'s, since the module name is used in the template as a key for a map.
-/// However, Tera cannot cope with that. The dot is interpreted as a separator for attributes.
+/// Escape string to prevent misrendering if special characters are used.
 ///
-pub fn _escape_module_name(input: &&str) -> String {
+///
+pub fn _escape_text(input: &&str) -> String {
     input
         .replace('.', "_")
         .replace('-', "_")
@@ -16,4 +15,6 @@ pub fn _escape_module_name(input: &&str) -> String {
         .replace('/', "_")
         .replace('\\', "_")
         .replace(':', "_")
+        .replace('\'', "")
+        .replace('"', "")
 }

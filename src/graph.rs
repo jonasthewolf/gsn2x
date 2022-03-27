@@ -116,6 +116,7 @@ pub(crate) fn rank_nodes(
                     new_entry.push((child_node.to_owned(), EdgeType::SupportedBy));
                 }
                 // TODO If more than one incoming edge, the lowest rank should move unforced elements down
+                // this may be achieved when placing nodes with multiple incoming edges when the last parent is ranked
 
                 // Move nodes to the right if child rank contains too few nodes
                 let vertical_rank = ranks.entry(child_rank).or_insert(BTreeMap::new());
