@@ -53,7 +53,7 @@ pub(crate) fn get_port_default_coordinates(
     }
 }
 
-// TODO Add layer as class too
+
 
 pub fn new_assumption(
     id: &str,

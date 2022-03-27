@@ -1,7 +1,7 @@
 use std::{
     borrow::BorrowMut,
     cell::RefCell,
-    collections::{BTreeMap, BTreeSet},
+    collections::{BTreeMap, BTreeSet, HashSet},
     rc::Rc,
 };
 
@@ -45,12 +45,18 @@ impl NodePlace {
     }
 }
 
+///
+///
+///
+///
+///
 pub(crate) fn rank_nodes(
     nodes: &mut BTreeMap<String, Rc<RefCell<dyn Node>>>,
     edges: &mut BTreeMap<String, Vec<(String, EdgeType)>>,
 ) -> BTreeMap<usize, BTreeMap<usize, NodePlace>> {
     let mut ranks = BTreeMap::new();
     let mut visited_nodes: BTreeSet<String> = BTreeSet::new();
+    let edge_map = calculate_parent_node_map(edges);
 
     // Copy IDs
     let mut n_ids: BTreeSet<String> = nodes
@@ -80,9 +86,14 @@ pub(crate) fn rank_nodes(
         while let Some((p_id, p_r)) = stack.pop() {
             current_node = p_id.to_owned();
             current_rank = p_r;
-            while let Some((child_node, child_rank)) =
-                find_next_child_node(nodes, edges, current_rank, &visited_nodes, &current_node)
-            {
+            while let Some((child_node, child_rank)) = find_next_child_node(
+                nodes,
+                edges,
+                current_rank,
+                &visited_nodes,
+                &current_node,
+                &edge_map,
+            ) {
                 stack.push((current_node.to_owned(), current_rank));
 
                 let mut last_h_rank = ranks
@@ -115,8 +126,6 @@ pub(crate) fn rank_nodes(
                     let new_entry = edges.entry(cloned_node.to_owned()).or_insert(Vec::new());
                     new_entry.push((child_node.to_owned(), EdgeType::SupportedBy));
                 }
-                // TODO If more than one incoming edge, the lowest rank should move unforced elements down
-                // this may be achieved when placing nodes with multiple incoming edges when the last parent is ranked
 
                 // Move nodes to the right if child rank contains too few nodes
                 let vertical_rank = ranks.entry(child_rank).or_insert(BTreeMap::new());
@@ -139,6 +148,11 @@ pub(crate) fn rank_nodes(
     ranks
 }
 
+///
+///
+///
+///
+///
 fn clone_invisible_node(
     nodes: &mut BTreeMap<String, Rc<RefCell<dyn Node>>>,
     origin: &NodePlace,
@@ -180,16 +194,23 @@ fn clone_invisible_node(
     }
 }
 
+///
+///
+/// Finds the next child node and returns it together with its rank.
+/// The rank could be constraint by the forced level.
+///
 fn find_next_child_node(
     nodes: &BTreeMap<String, Rc<RefCell<dyn Node>>>,
     edges: &BTreeMap<String, Vec<(String, EdgeType)>>,
     rank: usize,
     visited_nodes: &BTreeSet<String>,
     current: &str,
+    edge_map: &BTreeMap<String, HashSet<String>>,
 ) -> Option<(String, usize)> {
     if let Some(p) = edges.get(current) {
         if let Some(opt_child) = p
             .iter()
+            .filter(|(id, _)| count_unvisited_parents(edge_map, visited_nodes, id) == 0)
             .filter_map(|(id, et)| match et {
                 EdgeType::SupportedBy => Some(id.to_owned()),
                 _ => None,
@@ -204,6 +225,33 @@ fn find_next_child_node(
     None
 }
 
+///
+///
+///
+///
+fn count_unvisited_parents(
+    edge_map: &BTreeMap<String, HashSet<String>>,
+    visited_nodes: &BTreeSet<String>,
+    current: &str,
+) -> usize {
+    let mut unvisited_parents = 0usize;
+    // None can actually only happen for root nodes
+    if let Some(parents) = edge_map.get(current) {
+        for parent in parents {
+            if !visited_nodes.contains(parent) {
+                unvisited_parents += 1;
+            }
+        }
+    }
+    unvisited_parents
+}
+
+///
+///
+///
+///
+///
+///
 fn add_in_context_nodes(
     edges: &BTreeMap<String, Vec<(String, EdgeType)>>,
     ranks: &mut BTreeMap<usize, BTreeMap<usize, NodePlace>>,
@@ -256,6 +304,12 @@ fn add_in_context_nodes(
     }
 }
 
+///
+///
+///
+///
+///
+///
 pub(crate) fn get_forced_levels(
     nodes: &BTreeMap<String, Rc<RefCell<dyn Node>>>,
     edges: &BTreeMap<String, Vec<(String, EdgeType)>>,
@@ -273,6 +327,9 @@ pub(crate) fn get_forced_levels(
 }
 
 ///
+/// Calculate the depth of each node.
+///
+/// TODO depth of in_context_of nodes
 ///
 /// There can be no forced levels yet.
 ///
@@ -311,6 +368,8 @@ fn get_depths(
 ///
 /// Root nodes are considered those nodes that have no incoming edges.
 ///
+/// TODO check if forced levels are already set
+///
 fn get_root_nodes(
     nodes: &BTreeMap<String, Rc<RefCell<dyn Node>>>,
     edges: &BTreeMap<String, Vec<(String, EdgeType)>>,
@@ -322,4 +381,24 @@ fn get_root_nodes(
         }
     }
     root_nodes
+}
+
+///
+///
+///
+///
+///
+fn calculate_parent_node_map(
+    edges: &BTreeMap<String, Vec<(String, EdgeType)>>,
+) -> BTreeMap<String, HashSet<String>> {
+    let mut parent_map = BTreeMap::new();
+    for (child, target_edges) in edges {
+        for (target_edge, _) in target_edges {
+            parent_map
+                .entry(target_edge.to_owned())
+                .or_insert_with(HashSet::new)
+                .insert(child.to_owned());
+        }
+    }
+    parent_map
 }
