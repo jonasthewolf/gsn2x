@@ -215,28 +215,28 @@ Undeveloped Goal
 </text>
 <path d="M860,393 l5,5 l-5,5 l-5,-5 z" fill="none" stroke="black" stroke-width="1"/>
 </g>
-<g class="gsnelem gsnsltn" id="node_Sn3">
-<title>
-Sn3
-</title>
-<ellipse class="border" cx="299" cy="482" fill="none" rx="36" ry="36" stroke="black" stroke-width="1"/>
-<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" x="274" y="471">
-Sn3
-</text>
-<text font-family="AppleSystemUIFont" font-size="12" textLength="50" x="274" y="491">
-Solution 3
-</text>
-</g>
 <g class="gsnelem gsnsltn" id="node_Sn4">
 <title>
 Sn4
 </title>
-<ellipse class="border" cx="411" cy="482" fill="none" rx="36" ry="36" stroke="black" stroke-width="1"/>
-<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" x="386" y="471">
+<ellipse class="border" cx="299" cy="482" fill="none" rx="36" ry="36" stroke="black" stroke-width="1"/>
+<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" x="274" y="471">
 Sn4
 </text>
-<text font-family="AppleSystemUIFont" font-size="12" textLength="50" x="386" y="491">
+<text font-family="AppleSystemUIFont" font-size="12" textLength="50" x="274" y="491">
 Solution 4
+</text>
+</g>
+<g class="gsnelem gsnsltn" id="node_Sn3">
+<title>
+Sn3
+</title>
+<ellipse class="border" cx="411" cy="482" fill="none" rx="36" ry="36" stroke="black" stroke-width="1"/>
+<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" x="386" y="471">
+Sn3
+</text>
+<text font-family="AppleSystemUIFont" font-size="12" textLength="50" x="386" y="491">
+Solution 3
 </text>
 </g>
 <g class="gsnelem gsnsltn" id="node_Sn5">
@@ -273,9 +273,9 @@ Solution 2
 <path class="gsnedge gsninctxt" d="M576,390 C576,420,635,416,635,436" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsnspby" d="M250,365 C250,365,260,365,280,365" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsnspby" d="M166,365 C166,365,156,365,136,365" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninctxt" d="M208,390 C208,420,299,416,299,436" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsninctxt" d="M208,390 C208,420,411,416,411,436" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninctxt" d="M452,390 C452,420,299,416,299,436" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M208,390 C208,420,299,416,299,436" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M452,390 C452,420,411,416,411,436" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsninctxt" d="M452,390 C452,420,523,416,523,436" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsnspby" d="M393,243 C393,243,410,243,430,243" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsnspby" d="M293,243 C293,243,276,243,256,243" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>

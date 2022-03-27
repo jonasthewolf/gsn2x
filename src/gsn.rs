@@ -51,7 +51,7 @@ impl GsnNode {
     }
 }
 
-// TODO Support forced levels
+// TODO Add layer as class 
 pub fn from_gsn_node(
     id: &str,
     gsn_node: &GsnNode,
@@ -63,14 +63,12 @@ pub fn from_gsn_node(
             gsn_node.undeveloped.unwrap_or(false),
             gsn_node.url.to_owned(),
             gsn_node.classes.to_owned(),
-            None,
         ),
         id if id.starts_with("Sn") => new_solution(
             id,
             &gsn_node.text,
             gsn_node.url.to_owned(),
             gsn_node.classes.to_owned(),
-            None,
         ),
         id if id.starts_with('S') => new_strategy(
             id,
@@ -78,7 +76,6 @@ pub fn from_gsn_node(
             gsn_node.undeveloped.unwrap_or(false),
             gsn_node.url.to_owned(),
             gsn_node.classes.to_owned(),
-            None,
         ),
         id if id.starts_with('C') => new_context(
             id,
