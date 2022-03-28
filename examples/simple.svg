@@ -172,28 +172,28 @@ G3
 sub di dub di dub
 </text>
 </g>
-<g class="gsnelem gsnsltn" id="node_Sn3">
-<title>
-Sn3
-</title>
-<ellipse class="border" cx="776" cy="461" fill="none" rx="62" ry="62" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="725" y="450">
-Sn3
-</text>
-<text font-family="Arial" font-size="12" textLength="103" x="725" y="470">
-yet another solution
-</text>
-</g>
 <g class="gsnelem gsnsltn" id="node_Sn4">
 <title>
 Sn4
 </title>
-<ellipse class="border" cx="948" cy="461" fill="none" rx="70" ry="70" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="889" y="450">
+<ellipse class="border" cx="784" cy="461" fill="none" rx="70" ry="70" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="725" y="450">
 Sn4
 </text>
-<text font-family="Arial" font-size="12" textLength="119" x="889" y="470">
+<text font-family="Arial" font-size="12" textLength="119" x="725" y="470">
 another forced solution
+</text>
+</g>
+<g class="gsnelem gsnsltn" id="node_Sn3">
+<title>
+Sn3
+</title>
+<ellipse class="border" cx="956" cy="461" fill="none" rx="62" ry="62" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="905" y="450">
+Sn3
+</text>
+<text font-family="Arial" font-size="12" textLength="103" x="905" y="470">
+yet another solution
 </text>
 </g>
 <path class="gsnedge gsnspby" d="M680,102 C680,102,700,43,720,43" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
@@ -203,9 +203,9 @@ another forced solution
 <path class="gsnedge gsnspby" d="M680,102 C680,102,690,145,710,145" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsninctxt" d="M570,133 C570,163,460,233,460,253" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsninctxt" d="M570,133 C570,163,584,233,584,253" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninctxt" d="M460,313 C460,343,776,369,776,389" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninctxt" d="M584,313 C584,343,948,361,948,381" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninctxt" d="M584,313 C584,343,776,369,776,389" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M460,313 C460,343,956,369,956,389" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M584,313 C584,343,784,361,784,381" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M584,313 C584,343,956,369,956,389" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsnspby" d="M626,288 C626,288,636,288,656,288" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsninctxt" d="M321,313 C321,343,227,390,227,410" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsninctxt" d="M321,313 C321,343,419,404,419,424" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
