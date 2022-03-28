@@ -53,8 +53,6 @@ pub(crate) fn get_port_default_coordinates(
     }
 }
 
-
-
 pub fn new_assumption(
     id: &str,
     text: &str,

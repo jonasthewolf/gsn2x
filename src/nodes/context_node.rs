@@ -122,7 +122,7 @@ impl Node for ContextNode {
             )
             .set("font-weight", "bold")
             .set("font-size", font.size)
-            .set("font-family", font.name.to_owned())
+            .set("font-family", font.name.as_str())
             .add(svg::node::Text::new(&self.identifier));
 
         g = g.add(title).add(border).add(id);
@@ -139,7 +139,7 @@ impl Node for ContextNode {
                 )
                 .set("textLength", self.lines.get(n + 1).unwrap().0)
                 .set("font-size", font.size)
-                .set("font-family", font.name.to_owned())
+                .set("font-family", font.name.as_str())
                 .add(svg::node::Text::new(t));
             g = g.add(text);
         }

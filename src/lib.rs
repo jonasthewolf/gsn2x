@@ -49,7 +49,7 @@ pub struct DirGraph<'a> {
     margin: Margin,
     wrap: u32,
     font: FontInfo,
-    css_stylesheets: Vec<String>,
+    css_stylesheets: Vec<&'a str>,
     forced_levels: BTreeMap<&'a str, Vec<&'a str>>,
     nodes: BTreeMap<String, Rc<RefCell<dyn Node>>>,
     edges: BTreeMap<String, Vec<(String, EdgeType)>>,
@@ -75,7 +75,7 @@ impl<'a> Default for DirGraph<'a> {
     }
 }
 
-impl<'a> DirGraph<'a>{
+impl<'a> DirGraph<'a> {
     pub fn set_wrap(mut self, wrap: u32) -> Self {
         self.wrap = wrap;
         self
@@ -95,8 +95,8 @@ impl<'a> DirGraph<'a>{
         self
     }
 
-    pub fn add_css_sytlesheet(mut self, css: &str) -> Self {
-        self.css_stylesheets.push(css.to_owned());
+    pub fn add_css_sytlesheet(mut self, css: &'a str) -> Self {
+        self.css_stylesheets.push(css);
         self
     }
 
@@ -132,10 +132,7 @@ impl<'a> DirGraph<'a>{
 
     pub fn add_levels(mut self, levels: &BTreeMap<&'a str, Vec<&'a str>>) -> Self {
         for (level, nodes) in levels {
-            self.forced_levels.insert(
-                level,
-                nodes.iter().map(|&n| n).collect(),
-            );
+            self.forced_levels.insert(level, nodes.to_vec());
         }
         self
     }
@@ -380,11 +377,11 @@ impl<'a> DirGraph<'a>{
     }
 }
 
-fn setup_stylesheets(mut doc: Document, stylesheets: &[String]) -> Document {
+fn setup_stylesheets(mut doc: Document, stylesheets: &[&str]) -> Document {
     for css in stylesheets {
         let l = Link::default()
             .set("rel", "stylesheet")
-            .set("href", css.to_owned())
+            .set("href", *css)
             .set("type", "text/css");
         doc = doc.add(l);
     }
