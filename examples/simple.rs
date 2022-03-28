@@ -45,8 +45,8 @@ fn main() -> Result<(), std::io::Error> {
         None,
     );
     let mut levels = BTreeMap::new();
-    levels.insert("First".to_owned(), vec!["G5".to_owned(), "Sn2".to_owned()]);
-    levels.insert("Second".to_owned(), vec!["G3".to_owned(), "Sn4".to_owned()]);
+    levels.insert("First", vec!["G5", "Sn2"]);
+    levels.insert("Second", vec!["G3", "Sn4"]);
 
     dg.set_font("Arial", 12.0)
         .add_node(justification.clone())

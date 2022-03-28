@@ -43,19 +43,19 @@ pub struct FontInfo {
     size: f32,
 }
 
-pub struct DirGraph {
+pub struct DirGraph<'a> {
     width: u32,
     height: u32,
     margin: Margin,
     wrap: u32,
     font: FontInfo,
     css_stylesheets: Vec<String>,
-    forced_levels: BTreeMap<String, Vec<String>>,
+    forced_levels: BTreeMap<&'a str, Vec<&'a str>>,
     nodes: BTreeMap<String, Rc<RefCell<dyn Node>>>,
     edges: BTreeMap<String, Vec<(String, EdgeType)>>,
 }
 
-impl Default for DirGraph {
+impl<'a> Default for DirGraph<'a> {
     fn default() -> Self {
         Self {
             width: 210,
@@ -75,18 +75,18 @@ impl Default for DirGraph {
     }
 }
 
-impl DirGraph {
-    pub fn set_wrap(mut self, wrap: u32) -> DirGraph {
+impl<'a> DirGraph<'a>{
+    pub fn set_wrap(mut self, wrap: u32) -> Self {
         self.wrap = wrap;
         self
     }
 
-    pub fn set_margin(mut self, margin: Margin) -> DirGraph {
+    pub fn set_margin(mut self, margin: Margin) -> Self {
         self.margin = margin;
         self
     }
 
-    pub fn set_font(mut self, font: &str, size: f32) -> DirGraph {
+    pub fn set_font(mut self, font: &str, size: f32) -> Self {
         self.font = FontInfo {
             font: get_font(font).unwrap(),
             name: font.to_owned(),
@@ -95,17 +95,17 @@ impl DirGraph {
         self
     }
 
-    pub fn add_css_sytlesheet(mut self, css: &str) -> DirGraph {
+    pub fn add_css_sytlesheet(mut self, css: &str) -> Self {
         self.css_stylesheets.push(css.to_owned());
         self
     }
 
-    pub fn add_nodes(mut self, nodes: &mut BTreeMap<String, Rc<RefCell<dyn Node>>>) -> DirGraph {
+    pub fn add_nodes(mut self, nodes: &mut BTreeMap<String, Rc<RefCell<dyn Node>>>) -> Self {
         self.nodes.append(nodes);
         self
     }
 
-    pub fn add_node(mut self, node: Rc<RefCell<dyn Node>>) -> DirGraph {
+    pub fn add_node(mut self, node: Rc<RefCell<dyn Node>>) -> Self {
         self.nodes
             .insert(node.borrow().get_id().to_owned(), node.clone());
         self
@@ -116,7 +116,7 @@ impl DirGraph {
         source: Rc<RefCell<dyn Node>>,
         target: Rc<RefCell<dyn Node>>,
         edge_type: EdgeType,
-    ) -> DirGraph {
+    ) -> DirGraph<'a> {
         let entry = self
             .edges
             .entry(source.borrow().get_id().to_owned())
@@ -130,11 +130,11 @@ impl DirGraph {
         self
     }
 
-    pub fn add_levels(mut self, levels: &BTreeMap<String, Vec<String>>) -> Self {
+    pub fn add_levels(mut self, levels: &BTreeMap<&'a str, Vec<&'a str>>) -> Self {
         for (level, nodes) in levels {
             self.forced_levels.insert(
-                level.to_owned(),
-                nodes.iter().map(|n| n.to_owned()).collect(),
+                level,
+                nodes.iter().map(|&n| n).collect(),
             );
         }
         self
@@ -172,7 +172,7 @@ impl DirGraph {
         let forced_levels = get_forced_levels(&self.nodes, &self.edges, &self.forced_levels);
         for (node, level) in forced_levels {
             self.nodes
-                .get(&node)
+                .get(&*node)
                 .unwrap()
                 .borrow_mut()
                 .set_forced_level(level);

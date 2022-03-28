@@ -310,11 +310,11 @@ fn add_in_context_nodes(
 ///
 ///
 ///
-pub(crate) fn get_forced_levels(
+pub(crate) fn get_forced_levels<'a>(
     nodes: &BTreeMap<String, Rc<RefCell<dyn Node>>>,
     edges: &BTreeMap<String, Vec<(String, EdgeType)>>,
-    levels: &BTreeMap<String, Vec<String>>,
-) -> BTreeMap<String, usize> {
+    levels: &BTreeMap<&'a str, Vec<&'a str>>,
+) -> BTreeMap<&'a str, usize> {
     let mut forced_levels = BTreeMap::new();
     let depths = get_depths(nodes, edges);
     for (_, nodes) in levels.iter() {
@@ -333,10 +333,10 @@ pub(crate) fn get_forced_levels(
 ///
 /// There can be no forced levels yet.
 ///
-fn get_depths(
-    nodes: &BTreeMap<String, Rc<RefCell<dyn Node>>>,
-    edges: &BTreeMap<String, Vec<(String, EdgeType)>>,
-) -> BTreeMap<String, usize> {
+fn get_depths<'a>(
+    nodes: &'a BTreeMap<String, Rc<RefCell<dyn Node>>>,
+    edges: &'a BTreeMap<String, Vec<(String, EdgeType)>>,
+) -> BTreeMap<&'a str, usize> {
     let mut depths = BTreeMap::new();
     let mut current_nodes = get_root_nodes(nodes, edges);
 
@@ -344,12 +344,12 @@ fn get_depths(
     while !current_nodes.is_empty() {
         let mut child_nodes = Vec::new();
         for cur_node in &current_nodes {
-            depths.insert(cur_node.to_owned().to_owned(), depth);
-            if let Some(children) = &edges.get(cur_node) {
-                let mut c_nodes: Vec<String> = children
+            depths.insert(*cur_node, depth);
+            if let Some(children) = edges.get(*cur_node) {
+                let mut c_nodes: Vec<&str> = children
                     .iter()
                     .filter_map(|(target, edge_type)| match edge_type {
-                        EdgeType::SupportedBy => Some(target.to_owned()),
+                        EdgeType::SupportedBy => Some(target.as_str()),
                         _ => None,
                     })
                     .collect();
@@ -370,11 +370,11 @@ fn get_depths(
 ///
 /// TODO check if forced levels are already set
 ///
-fn get_root_nodes(
-    nodes: &BTreeMap<String, Rc<RefCell<dyn Node>>>,
+fn get_root_nodes<'a>(
+    nodes: &'a BTreeMap<String, Rc<RefCell<dyn Node>>>,
     edges: &BTreeMap<String, Vec<(String, EdgeType)>>,
-) -> Vec<String> {
-    let mut root_nodes: Vec<String> = nodes.keys().map(|id| id.to_owned()).collect();
+) -> Vec<&'a str> {
+    let mut root_nodes: Vec<&str> = nodes.keys().map(|n| n.as_str()).collect();
     for t_edges in edges.values() {
         for (target, _) in t_edges {
             root_nodes.retain(|id| id != target);
