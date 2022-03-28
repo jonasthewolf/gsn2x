@@ -294,14 +294,14 @@ fn validate_reference(
 ///
 /// Gathers all different 'level' attributes from all nodes.
 ///
-pub fn get_levels(nodes: &MyMap<String, GsnNode>) -> BTreeMap<String, Vec<String>> {
-    let mut levels = BTreeMap::<String, Vec<String>>::new();
+pub fn get_levels(nodes: &MyMap<String, GsnNode>) -> BTreeMap<&str, Vec<&str>> {
+    let mut levels = BTreeMap::<&str, Vec<&str>>::new();
     for (id, node) in nodes.iter() {
         if let Some(l) = &node.level {
             levels
-                .entry(l.trim().to_owned())
+                .entry(l.trim())
                 .or_insert(Vec::new())
-                .push(id.to_owned());
+                .push(id);
         }
     }
     levels
@@ -983,7 +983,7 @@ mod test {
         );
         let output = get_levels(&nodes);
         assert_eq!(output.len(), 2);
-        assert!(output.contains_key(&"x1".to_owned()));
-        assert!(output.contains_key(&"x2".to_owned()));
+        assert!(output.contains_key(&"x1"));
+        assert!(output.contains_key(&"x2"));
     }
 }
