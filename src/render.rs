@@ -60,13 +60,13 @@ fn render_complete(nodes: &MyMap<String, GsnNode>) -> Result<(), anyhow::Error> 
         .iter()
         .map(|(id, node)| (id.to_owned(), node.get_edges()))
         .collect();
-    let mut svg_nodes: BTreeMap<String, Rc<RefCell<dyn Node>>> = nodes
+    let svg_nodes: BTreeMap<String, Rc<RefCell<dyn Node>>> = nodes
         .iter()
         .map(|(id, node)| (id.to_owned(), from_gsn_node(id, node)))
         .collect();
-    dg.add_nodes(&mut svg_nodes)
+    dg.add_nodes(svg_nodes)
         .add_edges(&mut edges)
-        .add_levels(&get_levels(&nodes))
+        .add_levels(&get_levels(nodes))
         .write_to_file(std::path::Path::new("complete.svg"))?;
 
     Ok(())
