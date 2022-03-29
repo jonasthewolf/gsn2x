@@ -53,6 +53,7 @@ pub struct DirGraph<'a> {
     forced_levels: BTreeMap<&'a str, Vec<&'a str>>,
     nodes: BTreeMap<String, Rc<RefCell<dyn Node>>>,
     edges: BTreeMap<String, Vec<(String, EdgeType)>>,
+    document: Document,
 }
 
 impl<'a> Default for DirGraph<'a> {
@@ -71,6 +72,7 @@ impl<'a> Default for DirGraph<'a> {
             forced_levels: BTreeMap::new(),
             nodes: BTreeMap::new(),
             edges: BTreeMap::new(),
+            document: Document::new(),
         }
     }
 }
@@ -100,8 +102,8 @@ impl<'a> DirGraph<'a> {
         self
     }
 
-    pub fn add_nodes(mut self, nodes: &mut BTreeMap<String, Rc<RefCell<dyn Node>>>) -> Self {
-        self.nodes.append(nodes);
+    pub fn add_nodes(mut self, mut nodes: BTreeMap<String, Rc<RefCell<dyn Node>>>) -> Self {
+        self.nodes.append(&mut nodes);
         self
     }
 
@@ -116,7 +118,7 @@ impl<'a> DirGraph<'a> {
         source: Rc<RefCell<dyn Node>>,
         target: Rc<RefCell<dyn Node>>,
         edge_type: EdgeType,
-    ) -> DirGraph<'a> {
+    ) -> Self {
         let entry = self
             .edges
             .entry(source.borrow().get_id().to_owned())
@@ -138,20 +140,20 @@ impl<'a> DirGraph<'a> {
     }
 
     pub fn write_to_file(mut self, file: &std::path::Path) -> Result<(), std::io::Error> {
-        let mut document = Document::new();
-
-        document = setup_basics(document);
-        document = setup_stylesheets(document, &self.css_stylesheets);
-        document = self.layout(document);
-        document = document.set("viewBox", (0u32, 0u32, self.width, self.height));
-        svg::save(file, &document)?;
+        self = self.setup_basics();
+        self = self.setup_stylesheets();
+        self = self.layout();
+        self.document = self
+            .document
+            .set("viewBox", (0u32, 0u32, self.width, self.height));
+        svg::save(file, &self.document)?;
         Ok(())
     }
 
     ///
     /// Layout the graph on a pseudo-stack layout
     ///
-    /// 1) Let each element identify its size
+    /// 1) Let each element calculate its size
     /// 2) Calculate forced levels
     /// 3) Rank the nodes
     /// 4) Position nodes initially
@@ -159,7 +161,7 @@ impl<'a> DirGraph<'a> {
     /// 6) Draw the edges
     ///
     ///
-    fn layout(&mut self, mut doc: Document) -> Document {
+    fn layout(mut self) -> Self {
         // Calculate node size
         self.nodes
             .values()
@@ -253,7 +255,7 @@ impl<'a> DirGraph<'a> {
                             x: cur_pos.x + delta_x,
                             y: cur_pos.y,
                         });
-                        doc = doc.add(n.render(&self.font));
+                        self.document = self.document.add(n.render(&self.font));
                     }
                     NodePlace::MultipleNodes(ids) => {
                         for id in ids {
@@ -263,7 +265,7 @@ impl<'a> DirGraph<'a> {
                                 x: cur_pos.x + delta_x,
                                 y: cur_pos.y,
                             });
-                            doc = doc.add(n.render(&self.font));
+                            self.document = self.document.add(n.render(&self.font));
                         }
                     }
                 }
@@ -271,153 +273,148 @@ impl<'a> DirGraph<'a> {
         }
 
         // Draw edges
+        self.render_edges()
+    }
+
+    ///
+    ///
+    ///
+    ///
+    ///
+    ///
+    ///
+    fn render_edges(mut self) -> Self {
         for (source, targets) in &self.edges {
-            let s = self.nodes.get(source).unwrap();
             for (target, edge_type) in targets {
-                let t = self.nodes.get(target).unwrap();
-                doc = self.render_edge(doc, s.clone(), t.clone(), edge_type);
+                let s = self.nodes.get(source).unwrap().borrow();
+                let t = self.nodes.get(target).unwrap().borrow();
+                let (marker_height, support_distance) = match edge_type {
+                    EdgeType::InContextOf => (MARKER_HEIGHT, 3 * MARKER_HEIGHT),
+                    EdgeType::SupportedBy => (MARKER_HEIGHT, 3 * MARKER_HEIGHT),
+                    EdgeType::Invisible => (0, 3 * MARKER_HEIGHT),
+                };
+                let s_pos = s.get_position();
+                let t_pos = t.get_position();
+                let (start, start_sup, end, end_sup) =
+                    if s_pos.y + s.get_height() / 2 < t_pos.y - t.get_height() / 2 {
+                        (
+                            s.get_coordinates(&Port::South),
+                            s.get_coordinates(&Port::South)
+                                .move_relative(0, support_distance as i32),
+                            t.get_coordinates(&Port::North)
+                                .move_relative(0, -(marker_height as i32)),
+                            t.get_coordinates(&Port::North)
+                                .move_relative(0, -(support_distance as i32)),
+                        )
+                    } else if s_pos.y - s.get_height() / 2 - self.margin.top
+                        > t_pos.y + t.get_height() / 2
+                    {
+                        (
+                            s.get_coordinates(&Port::North),
+                            s.get_coordinates(&Port::North)
+                                .move_relative(0, -(support_distance as i32)),
+                            t.get_coordinates(&Port::South)
+                                .move_relative(0, marker_height as i32),
+                            t.get_coordinates(&Port::South)
+                                .move_relative(0, support_distance as i32),
+                        )
+                    } else {
+                        // s.get_vertical_rank() == t.get_vertical_rank()
+                        if s_pos.x - s.get_width() / 2 > t_pos.x + t.get_width() / 2 {
+                            (
+                                s.get_coordinates(&Port::West),
+                                s.get_coordinates(&Port::West),
+                                t.get_coordinates(&Port::East)
+                                    .move_relative(marker_height as i32, 0),
+                                t.get_coordinates(&Port::East)
+                                    .move_relative(support_distance as i32, 0),
+                            )
+                        } else {
+                            (
+                                s.get_coordinates(&Port::East),
+                                s.get_coordinates(&Port::East),
+                                t.get_coordinates(&Port::West)
+                                    .move_relative(-(marker_height as i32), 0),
+                                t.get_coordinates(&Port::West)
+                                    .move_relative(-(support_distance as i32), 0),
+                            )
+                        }
+                    };
+                let parameters = (start_sup.x, start_sup.y, end_sup.x, end_sup.y, end.x, end.y);
+                let data = Data::new()
+                    .move_to((start.x, start.y))
+                    .cubic_curve_to(parameters);
+                let arrow_id = match edge_type {
+                    edges::EdgeType::InContextOf => Some("url(#incontextof_arrow)"),
+                    edges::EdgeType::SupportedBy => Some("url(#supportedby_arrow)"),
+                    edges::EdgeType::Invisible => None,
+                };
+                let classes = match edge_type {
+                    edges::EdgeType::InContextOf => Some("gsnedge gsnspby"),
+                    edges::EdgeType::SupportedBy => Some("gsnedge gsninctxt"),
+                    edges::EdgeType::Invisible => None,
+                };
+                let mut e = Path::new()
+                    .set("d", data)
+                    .set("fill", "none")
+                    .set("stroke", "black")
+                    .set("stroke-width", 1u32);
+                if let Some(arrow_id) = arrow_id {
+                    e = e.set("marker-end", arrow_id);
+                }
+                if let Some(classes) = classes {
+                    e = e.set("class", classes);
+                }
+                self.document = self.document.add(e);
             }
         }
-        doc
+        self
     }
 
-    ///
-    ///
-    ///
-    ///
-    ///
-    ///
-    ///
-    fn render_edge(
-        &self,
-        doc: Document,
-        source: Rc<RefCell<dyn Node>>,
-        target: Rc<RefCell<dyn Node>>,
-        edge_type: &EdgeType,
-    ) -> Document {
-        let (marker_height, support_distance) = match edge_type {
-            EdgeType::InContextOf => (MARKER_HEIGHT, 3 * MARKER_HEIGHT),
-            EdgeType::SupportedBy => (MARKER_HEIGHT, 3 * MARKER_HEIGHT),
-            EdgeType::Invisible => (0, 3 * MARKER_HEIGHT),
-        };
-        let s = source.borrow();
-        let s_pos = s.get_position();
-        let t = target.borrow();
-        let t_pos = t.get_position();
-        let (start, start_sup, end, end_sup) = if s_pos.y + s.get_height() / 2
-            < t_pos.y - t.get_height() / 2
-        {
-            (
-                s.get_coordinates(&Port::South),
-                s.get_coordinates(&Port::South)
-                    .move_relative(0, support_distance as i32),
-                t.get_coordinates(&Port::North)
-                    .move_relative(0, -(marker_height as i32)),
-                t.get_coordinates(&Port::North)
-                    .move_relative(0, -(support_distance as i32)),
-            )
-        } else if s_pos.y - s.get_height() / 2 - self.margin.top > t_pos.y + t.get_height() / 2 {
-            (
-                s.get_coordinates(&Port::North),
-                s.get_coordinates(&Port::North)
-                    .move_relative(0, -(support_distance as i32)),
-                t.get_coordinates(&Port::South)
-                    .move_relative(0, marker_height as i32),
-                t.get_coordinates(&Port::South)
-                    .move_relative(0, support_distance as i32),
-            )
-        } else {
-            // s.get_vertical_rank() == t.get_vertical_rank()
-            if s_pos.x - s.get_width() / 2 > t_pos.x + t.get_width() / 2 {
-                (
-                    s.get_coordinates(&Port::West),
-                    s.get_coordinates(&Port::West),
-                    t.get_coordinates(&Port::East)
-                        .move_relative(marker_height as i32, 0),
-                    t.get_coordinates(&Port::East)
-                        .move_relative(support_distance as i32, 0),
-                )
-            } else {
-                (
-                    s.get_coordinates(&Port::East),
-                    s.get_coordinates(&Port::East),
-                    t.get_coordinates(&Port::West)
-                        .move_relative(-(marker_height as i32), 0),
-                    t.get_coordinates(&Port::West)
-                        .move_relative(-(support_distance as i32), 0),
-                )
-            }
-        };
-        let parameters = (start_sup.x, start_sup.y, end_sup.x, end_sup.y, end.x, end.y);
-        let data = Data::new()
-            .move_to((start.x, start.y))
-            .cubic_curve_to(parameters);
-        let arrow_id = match edge_type {
-            edges::EdgeType::InContextOf => Some("url(#incontextof_arrow)"),
-            edges::EdgeType::SupportedBy => Some("url(#supportedby_arrow)"),
-            edges::EdgeType::Invisible => None,
-        };
-        let classes = match edge_type {
-            edges::EdgeType::InContextOf => Some("gsnedge gsnspby"),
-            edges::EdgeType::SupportedBy => Some("gsnedge gsninctxt"),
-            edges::EdgeType::Invisible => None,
-        };
-        let mut e = Path::new()
-            .set("d", data)
-            .set("fill", "none")
+    fn setup_basics(mut self) -> Self {
+        let supportedby_polyline = Polyline::new()
+            .set("points", "0 0, 10 4.5, 0 9")
+            .set("fill", "black");
+        let supportedby_arrow = Marker::new()
+            .set("id", "supportedby_arrow")
+            .set("markerWidth", 10u32)
+            .set("markerHeight", 9u32)
+            .set("refX", 0f32)
+            .set("refY", 4.5f32)
+            .set("orient", "auto")
+            .set("markerUnits", "users_posaceOnUse")
+            .add(supportedby_polyline);
+
+        let incontext_polyline = Polyline::new()
+            .set("points", "0 0, 10 4.5, 0 9, 0 0")
             .set("stroke", "black")
-            .set("stroke-width", 1u32);
-        if let Some(arrow_id) = arrow_id {
-            e = e.set("marker-end", arrow_id);
-        }
-        if let Some(classes) = classes {
-            e = e.set("class", classes);
-        }
-        doc.add(e)
+            .set("stroke-width", 1u32)
+            .set("fill", "none");
+        let incontext_arrow = Marker::new()
+            .set("id", "incontextof_arrow")
+            .set("markerWidth", 10u32)
+            .set("markerHeight", 9u32)
+            .set("refX", 0f32)
+            .set("refY", 4.5f32)
+            .set("orient", "auto")
+            .set("markerUnits", "users_posaceOnUse")
+            .add(incontext_polyline);
+
+        self.document = self
+            .document
+            .set("xmlns:xlink", "http://www.w3.org/1999/xlink");
+        self.document = self.document.add(supportedby_arrow).add(incontext_arrow);
+        self
     }
-}
 
-fn setup_stylesheets(mut doc: Document, stylesheets: &[&str]) -> Document {
-    for css in stylesheets {
-        let l = Link::default()
-            .set("rel", "stylesheet")
-            .set("href", *css)
-            .set("type", "text/css");
-        doc = doc.add(l);
+    fn setup_stylesheets(mut self) -> Self {
+        for css in &self.css_stylesheets {
+            let l = Link::default()
+                .set("rel", "stylesheet")
+                .set("href", *css)
+                .set("type", "text/css");
+            self.document = self.document.add(l);
+        }
+        self
     }
-    doc
-}
-
-fn setup_basics(mut doc: Document) -> Document {
-    let supportedby_polyline = Polyline::new()
-        .set("points", "0 0, 10 4.5, 0 9")
-        .set("fill", "black");
-    let supportedby_arrow = Marker::new()
-        .set("id", "supportedby_arrow")
-        .set("markerWidth", 10u32)
-        .set("markerHeight", 9u32)
-        .set("refX", 0f32)
-        .set("refY", 4.5f32)
-        .set("orient", "auto")
-        .set("markerUnits", "users_posaceOnUse")
-        .add(supportedby_polyline);
-
-    let incontext_polyline = Polyline::new()
-        .set("points", "0 0, 10 4.5, 0 9, 0 0")
-        .set("stroke", "black")
-        .set("stroke-width", 1u32)
-        .set("fill", "none");
-    let incontext_arrow = Marker::new()
-        .set("id", "incontextof_arrow")
-        .set("markerWidth", 10u32)
-        .set("markerHeight", 9u32)
-        .set("refX", 0f32)
-        .set("refY", 4.5f32)
-        .set("orient", "auto")
-        .set("markerUnits", "users_posaceOnUse")
-        .add(incontext_polyline);
-
-    doc = doc.set("xmlns:xlink", "http://www.w3.org/1999/xlink");
-    doc = doc.add(supportedby_arrow).add(incontext_arrow);
-    doc
 }

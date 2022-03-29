@@ -192,8 +192,8 @@ impl BoxNode {
         classes: Option<Vec<String>>,
     ) -> Self {
         BoxNode {
-            identifier: id.to_string(),
-            text: text.to_string(),
+            identifier: id.to_owned(),
+            text: text.to_owned(),
             undeveloped,
             url,
             skew,

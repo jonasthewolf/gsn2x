@@ -74,7 +74,7 @@ impl InvisibleNode {
     }
 }
 
-impl From<&Rc<RefCell<dyn Node>>> for InvisibleNode {
+impl<'a> From<&Rc<RefCell<dyn Node>>> for InvisibleNode {
     fn from(n: &Rc<RefCell<dyn Node>>) -> Self {
         let n = n.borrow();
         InvisibleNode {

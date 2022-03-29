@@ -50,9 +50,9 @@ impl NodePlace {
 ///
 ///
 ///
-pub(crate) fn rank_nodes(
-    nodes: &mut BTreeMap<String, Rc<RefCell<dyn Node>>>,
-    edges: &mut BTreeMap<String, Vec<(String, EdgeType)>>,
+pub(crate) fn rank_nodes<'a>(
+    nodes: &'a mut BTreeMap<String, Rc<RefCell<dyn Node>>>,
+    edges: &'a mut BTreeMap<String, Vec<(String, EdgeType)>>,
 ) -> BTreeMap<usize, BTreeMap<usize, NodePlace>> {
     let mut ranks = BTreeMap::new();
     let mut visited_nodes: BTreeSet<String> = BTreeSet::new();
@@ -311,16 +311,16 @@ fn add_in_context_nodes(
 ///
 ///
 pub(crate) fn get_forced_levels<'a>(
-    nodes: &BTreeMap<String, Rc<RefCell<dyn Node>>>,
-    edges: &BTreeMap<String, Vec<(String, EdgeType)>>,
+    nodes: &'a BTreeMap<String, Rc<RefCell<dyn Node>>>,
+    edges: &'a BTreeMap<String, Vec<(String, EdgeType)>>,
     levels: &BTreeMap<&'a str, Vec<&'a str>>,
 ) -> BTreeMap<&'a str, usize> {
     let mut forced_levels = BTreeMap::new();
     let depths = get_depths(nodes, edges);
-    for (_, nodes) in levels.iter() {
+    for nodes in levels.values() {
         let max_depth = nodes.iter().map(|n| depths.get(n).unwrap()).max().unwrap();
         for node in nodes {
-            forced_levels.insert(node.to_owned(), *max_depth);
+            forced_levels.insert(*node, *max_depth);
         }
     }
     forced_levels
@@ -372,7 +372,7 @@ fn get_depths<'a>(
 ///
 fn get_root_nodes<'a>(
     nodes: &'a BTreeMap<String, Rc<RefCell<dyn Node>>>,
-    edges: &BTreeMap<String, Vec<(String, EdgeType)>>,
+    edges: &'a BTreeMap<String, Vec<(String, EdgeType)>>,
 ) -> Vec<&'a str> {
     let mut root_nodes: Vec<&str> = nodes.keys().map(|n| n.as_str()).collect();
     for t_edges in edges.values() {

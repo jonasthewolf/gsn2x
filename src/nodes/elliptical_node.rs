@@ -173,8 +173,8 @@ impl EllipticalNode {
         classes: Option<Vec<String>>,
     ) -> Self {
         EllipticalNode {
-            identifier: id.to_string(),
-            text: text.to_string(),
+            identifier: id.to_owned(),
+            text: text.to_owned(),
             admonition,
             circle,
             url,
