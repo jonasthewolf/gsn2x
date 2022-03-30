@@ -156,8 +156,8 @@ impl Node for ContextNode {
 impl ContextNode {
     pub fn new(id: &str, text: &str, url: Option<String>, classes: Option<Vec<String>>) -> Self {
         ContextNode {
-            identifier: id.to_string(),
-            text: text.to_string(),
+            identifier: id.to_owned(),
+            text: text.to_owned(),
             url,
             classes,
             width: 0,
