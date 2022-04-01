@@ -17,15 +17,15 @@ use std::rc::Rc;
 #[derive(Debug, Default, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct GsnNode {
-    text: String,
-    in_context_of: Option<Vec<String>>,
-    supported_by: Option<Vec<String>>,
-    classes: Option<Vec<String>>,
-    url: Option<String>,
-    level: Option<String>,
+    pub(crate) text: String,
+    pub(crate) in_context_of: Option<Vec<String>>,
+    pub(crate) supported_by: Option<Vec<String>>,
+    pub(crate) classes: Option<Vec<String>>,
+    pub(crate) url: Option<String>,
+    pub(crate) level: Option<String>,
     #[serde(flatten)]
-    additional: MyMap<String, String>,
-    undeveloped: Option<bool>,
+    pub(crate) additional: MyMap<String, String>,
+    pub(crate) undeveloped: Option<bool>,
     #[serde(skip_deserializing)]
     pub module: String,
 }
@@ -51,11 +51,8 @@ impl GsnNode {
     }
 }
 
-// TODO Add layer as class 
-pub fn from_gsn_node(
-    id: &str,
-    gsn_node: &GsnNode,
-) -> Rc<RefCell<dyn dirgraphsvg::nodes::Node>> {
+// TODO Add layer as class
+pub fn from_gsn_node(id: &str, gsn_node: &GsnNode) -> Rc<RefCell<dyn dirgraphsvg::nodes::Node>> {
     match id {
         id if id.starts_with('G') => new_goal(
             id,
@@ -298,10 +295,7 @@ pub fn get_levels(nodes: &MyMap<String, GsnNode>) -> BTreeMap<&str, Vec<&str>> {
     let mut levels = BTreeMap::<&str, Vec<&str>>::new();
     for (id, node) in nodes.iter() {
         if let Some(l) = &node.level {
-            levels
-                .entry(l.trim())
-                .or_insert(Vec::new())
-                .push(id);
+            levels.entry(l.trim()).or_insert(Vec::new()).push(id);
         }
     }
     levels

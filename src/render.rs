@@ -1,4 +1,4 @@
-use crate::gsn::{from_gsn_node, GsnNode, ModuleDependency, get_levels};
+use crate::gsn::{from_gsn_node, get_levels, GsnNode, ModuleDependency};
 use crate::yaml_fix::MyMap;
 use dirgraphsvg::edges::EdgeType;
 use dirgraphsvg::nodes::Node;
@@ -11,7 +11,6 @@ pub enum View {
     Argument,
     Architecture,
     Complete,
-    Evidences,
 }
 
 pub struct StaticRenderContext<'a> {
@@ -32,30 +31,25 @@ pub fn render_view(
     _dependencies: Option<&BTreeMap<String, BTreeMap<String, ModuleDependency>>>,
     _output: &mut impl Write,
     view: View,
-    _ctx: &StaticRenderContext,
+    ctx: &StaticRenderContext,
 ) -> Result<(), anyhow::Error> {
-    // Note the max() at the end, so we don't get a NaN when calculating width
-    let num_solutions = nodes
-        .iter()
-        .filter(|(id, _)| id.starts_with("Sn"))
-        .count()
-        .max(1);
-    let _width = (num_solutions as f32).log10().ceil() as usize;
     let _template = match view {
         View::Argument => "argument.dot",
         View::Architecture => "architecture.dot",
         View::Complete => "complete.dot",
-        View::Evidences => "evidences.md",
     };
-    render_complete(nodes)?;
+    render_complete(nodes, ctx)?;
     Ok(())
 }
 
 ///
 /// Render all nodes in one diagram
 ///
-fn render_complete(nodes: &MyMap<String, GsnNode>) -> Result<(), anyhow::Error> {
-    let dg = dirgraphsvg::DirGraph::default();
+pub fn render_complete(
+    nodes: &MyMap<String, GsnNode>,
+    ctx: &StaticRenderContext,
+) -> Result<(), anyhow::Error> {
+    let mut dg = dirgraphsvg::DirGraph::default();
     let mut edges: BTreeMap<String, Vec<(String, EdgeType)>> = nodes
         .iter()
         .map(|(id, node)| (id.to_owned(), node.get_edges()))
@@ -64,10 +58,58 @@ fn render_complete(nodes: &MyMap<String, GsnNode>) -> Result<(), anyhow::Error> 
         .iter()
         .map(|(id, node)| (id.to_owned(), from_gsn_node(id, node)))
         .collect();
-    dg.add_nodes(svg_nodes)
+    dg = dg
+        .add_nodes(svg_nodes)
         .add_edges(&mut edges)
-        .add_levels(&get_levels(nodes))
-        .write_to_file(std::path::Path::new("complete.svg"))?;
+        .add_levels(&get_levels(nodes));
+
+    if let Some(css) = ctx.stylesheet {
+        dg = dg.add_css_sytlesheet(css);
+    }
+
+    dg.write_to_file(std::path::Path::new("complete.svg"))?;
+
+    Ok(())
+}
+
+pub(crate) fn render_evidences(
+    nodes: &MyMap<String, GsnNode>,
+    output: &mut impl Write,
+    ctx: &StaticRenderContext,
+) -> Result<(), anyhow::Error> {
+    writeln!(output, "List of Evidences")?;
+    writeln!(output)?;
+    writeln!(output)?;
+
+    let solutions: Vec<(&String, &GsnNode)> = nodes
+        .iter()
+        .filter(|(id, _)| id.starts_with("Sn"))
+        .collect();
+    if solutions.is_empty() {
+        writeln!(output, "No evidences found.")?;
+    }
+    let width = (solutions.len() as f32).log10().ceil() as usize;
+    for (i, (id, node)) in solutions.into_iter().enumerate() {
+        writeln!(output, "{:>width$}. {}: {}", i + 1, id, node.text)?;
+        let width = width + 2;
+        writeln!(output, "{: >width$}{}", ' ', node.module)?;
+        if let Some(url) = &node.url {
+            writeln!(output, "{: >width$}{}", ' ', url)?;
+        }
+        for (layer, text) in node
+            .additional
+            .iter()
+            .filter(|(l, _)| ctx.layers.iter().flatten().any(|x| x == l))
+        {
+            writeln!(
+                output,
+                "{: >width$}{}: {}",
+                ' ',
+                layer.to_ascii_uppercase(),
+                text
+            )?;
+        }
+    }
 
     Ok(())
 }

@@ -225,14 +225,7 @@ fn print_outputs(
     if let Some(output) = matches.value_of("EVIDENCES") {
         let mut output_file =
             File::create(output).context(format!("Failed to open output file {}", output))?;
-        render::render_view(
-            "Evidences",
-            &nodes,
-            None,
-            &mut output_file,
-            render::View::Evidences,
-            &static_render_context,
-        )?;
+        render::render_evidences(&nodes, &mut output_file, &static_render_context)?;
     }
     Ok(())
 }
