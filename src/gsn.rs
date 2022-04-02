@@ -378,7 +378,7 @@ fn check_levels(diag: &mut Diagnostics, nodes: &MyMap<String, GsnNode>) {
     }
     levels
         .iter()
-        .filter(|(_, &count)| count > 1)
+        .filter(|(_, &count)| count == 1)
         .for_each(|(l, _)| diag.add_warning("", format!("Level {} is only used once.", l)));
 }
 
