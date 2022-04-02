@@ -19,16 +19,6 @@ mod integrations {
     }
 
     #[test]
-    fn multiple_inputs_stdout() -> Result<(), Box<dyn std::error::Error>> {
-        let mut cmd = Command::cargo_bin("gsn2x")?;
-        cmd.arg("file1").arg("file2").arg("-o");
-        cmd.assert().failure().stderr(predicate::str::contains(
-            "The argument '-o' cannot be used with multiple input files.",
-        ));
-        Ok(())
-    }
-
-    #[test]
     fn argument_view() -> Result<(), Box<dyn std::error::Error>> {
         let mut cmd = Command::cargo_bin("gsn2x")?;
         cmd.arg("examples/example.gsn.yaml").arg("-o");
@@ -86,7 +76,7 @@ mod integrations {
     fn no_evidences() -> Result<(), Box<dyn std::error::Error>> {
         let mut cmd = Command::cargo_bin("gsn2x")?;
         let evidence_file = assert_fs::NamedTempFile::new("evidences.md")?;
-        cmd.arg("-n")
+        cmd.arg("-N")
             .arg("-e")
             .arg(evidence_file.path())
             .arg("tests/no_evidences.gsn.test.yaml");

@@ -76,8 +76,8 @@ pub(crate) fn render_evidences(
     output: &mut impl Write,
     ctx: &StaticRenderContext,
 ) -> Result<(), anyhow::Error> {
-    writeln!(output, "List of Evidences")?;
     writeln!(output)?;
+    writeln!(output, "List of Evidences")?;
     writeln!(output)?;
 
     let solutions: Vec<(&String, &GsnNode)> = nodes
