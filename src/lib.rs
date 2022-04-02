@@ -139,14 +139,14 @@ impl<'a> DirGraph<'a> {
         self
     }
 
-    pub fn write_to_file(mut self, file: &std::path::Path) -> Result<(), std::io::Error> {
+    pub fn write(mut self, output: impl std::io::Write) -> Result<(), std::io::Error> {
         self = self.setup_basics();
         self = self.setup_stylesheets();
         self = self.layout();
         self.document = self
             .document
             .set("viewBox", (0u32, 0u32, self.width, self.height));
-        svg::save(file, &self.document)?;
+        svg::write(output, &self.document)?;
         Ok(())
     }
 
