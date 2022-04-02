@@ -125,7 +125,7 @@ fn validate_id(diag: &mut Diagnostics, module: &str, id: &str) {
     {
         diag.add_msg(
             DiagType::Error,
-            module,
+            Some(module),
             format!(
                 "Elememt {} is of unknown type. Please see README for supported types",
                 id
@@ -166,7 +166,7 @@ fn validate_references(diag: &mut Diagnostics, module: &str, id: &str, node: &Gs
         );
         if Some(true) == node.undeveloped {
             diag.add_error(
-                module,
+                Some(module),
                 format!("Undeveloped element {} has supporting arguments.", id),
             );
         }
@@ -174,7 +174,7 @@ fn validate_references(diag: &mut Diagnostics, module: &str, id: &str, node: &Gs
         && (Some(false) == node.undeveloped || node.undeveloped.is_none())
     {
         // No "supported by" entries, but Strategy and Goal => undeveloped
-        diag.add_warning(module, format!("Element {} is undeveloped.", id));
+        diag.add_warning(Some(module), format!("Element {} is undeveloped.", id));
     }
 }
 
@@ -197,13 +197,13 @@ fn validate_reference(
     for n in refs {
         if n == node {
             diag.add_error(
-                module,
+                Some(module),
                 format!("Element {} references itself in {}.", node, diag_str),
             );
         }
         if !set.insert(n) {
             diag.add_warning(
-                module,
+                Some(module),
                 format!(
                     "Element {} has duplicate entry {} in {}.",
                     node, n, diag_str
@@ -212,7 +212,7 @@ fn validate_reference(
         }
         if !valid_refs.iter().any(|&r| n.starts_with(r)) {
             diag.add_error(
-                module,
+                Some(module),
                 format!(
                     "Element {} has invalid type of reference {} in {}.",
                     node, n, diag_str
@@ -272,7 +272,7 @@ fn check_root_nodes(diag: &mut Diagnostics, nodes: &MyMap<String, GsnNode>) {
             let mut wn = root_nodes.to_vec();
             wn.sort();
             diag.add_warning(
-                "",
+                None,
                 format!(
                     "There is more than one unreferenced element: {}.",
                     wn.join(", ")
@@ -283,7 +283,7 @@ fn check_root_nodes(diag: &mut Diagnostics, nodes: &MyMap<String, GsnNode>) {
             let rootn = root_nodes.get(0).unwrap();
             if !rootn.starts_with('G') {
                 diag.add_error(
-                    "",
+                    None,
                     format!(
                         "The root element should be a goal, but {} was found.",
                         rootn
@@ -317,7 +317,7 @@ fn check_node_references(
                 .filter(|&n| !nodes.contains_key(n))
                 .for_each(|wref| {
                     diag.add_error(
-                        &node.module,
+                        Some(&node.module),
                         format!("Element {} has unresolved {}: {}", id, "context", wref),
                     );
                 });
@@ -328,7 +328,7 @@ fn check_node_references(
                 .filter(|&n| !nodes.contains_key(n))
                 .for_each(|wref| {
                     diag.add_error(
-                        &node.module,
+                        Some(&node.module),
                         format!(
                             "Element {} has unresolved {}: {}",
                             id, "supported by element", wref
@@ -363,7 +363,7 @@ fn check_cycles(diag: &mut Diagnostics, nodes: &MyMap<String, GsnNode>) {
         {
             stack.push(child_node.to_owned());
             if !visited.insert(child_node.to_owned()) {
-                diag.add_error("", format!("Cycle detected at node {}.", child_node));
+                diag.add_error(None, format!("Cycle detected at node {}.", child_node));
                 stack.clear();
                 break;
             }
@@ -386,7 +386,7 @@ fn check_levels(diag: &mut Diagnostics, nodes: &MyMap<String, GsnNode>) {
     levels
         .iter()
         .filter(|(_, &count)| count == 1)
-        .for_each(|(l, _)| diag.add_warning("", format!("Level {} is only used once.", l)));
+        .for_each(|(l, _)| diag.add_warning(None, format!("Level {} is only used once.", l)));
 }
 
 ///
@@ -420,7 +420,7 @@ pub fn check_layers(diag: &mut Diagnostics, nodes: &MyMap<String, GsnNode>, laye
     for l in layers {
         if reserved_words.contains(l) {
             diag.add_error(
-                "",
+                None,
                 format!("{} is a reserved attribute and cannot be used as layer.", l),
             );
             continue;
@@ -434,7 +434,7 @@ pub fn check_layers(diag: &mut Diagnostics, nodes: &MyMap<String, GsnNode>, laye
         }
         if !found {
             diag.add_warning(
-                "",
+                None,
                 format!(
                     "Layer {} is not used in file. No additional output will be generated.",
                     l
@@ -505,7 +505,7 @@ mod test {
         let mut d = Diagnostics::default();
         validate_id(&mut d, "", &"X1".to_owned());
         assert_eq!(d.messages.len(), 1);
-        assert_eq!(d.messages[0].module, "");
+        assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
         assert_eq!(
             d.messages[0].msg,
@@ -537,13 +537,13 @@ mod test {
         );
         validate_module(&mut d, "", &nodes);
         assert_eq!(d.messages.len(), 2);
-        assert_eq!(d.messages[0].module, "");
+        assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
         assert_eq!(
             d.messages[0].msg,
             "Element C1 references itself in context."
         );
-        assert_eq!(d.messages[1].module, "");
+        assert_eq!(d.messages[1].module, Some("".to_owned()));
         assert_eq!(d.messages[1].diag_type, DiagType::Error);
         assert_eq!(
             d.messages[1].msg,
@@ -566,7 +566,7 @@ mod test {
         );
         validate_module(&mut d, "", &nodes);
         assert_eq!(d.messages.len(), 1);
-        assert_eq!(d.messages[0].module, "");
+        assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
         assert_eq!(
             d.messages[0].msg,
@@ -589,13 +589,13 @@ mod test {
         );
         validate_module(&mut d, "", &nodes);
         assert_eq!(d.messages.len(), 2);
-        assert_eq!(d.messages[0].module, "");
+        assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
         assert_eq!(
             d.messages[0].msg,
             "Element C1 references itself in supported by element."
         );
-        assert_eq!(d.messages[1].module, "");
+        assert_eq!(d.messages[1].module, Some("".to_owned()));
         assert_eq!(d.messages[1].diag_type, DiagType::Error);
         assert_eq!(
             d.messages[1].msg,
@@ -619,13 +619,13 @@ mod test {
         );
         validate_module(&mut d, "", &nodes);
         assert_eq!(d.messages.len(), 2);
-        assert_eq!(d.messages[0].module, "");
+        assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
         assert_eq!(
             d.messages[0].msg,
             "Element G1 references itself in context."
         );
-        assert_eq!(d.messages[1].module, "");
+        assert_eq!(d.messages[1].module, Some("".to_owned()));
         assert_eq!(d.messages[1].diag_type, DiagType::Error);
         assert_eq!(
             d.messages[1].msg,
@@ -649,7 +649,7 @@ mod test {
         );
         check_nodes(&mut d, &nodes, None);
         assert_eq!(d.messages.len(), 1);
-        assert_eq!(d.messages[0].module, "");
+        assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
         assert_eq!(d.messages[0].msg, "Element G1 has unresolved context: C1");
         assert_eq!(d.errors, 1);
@@ -669,7 +669,7 @@ mod test {
         );
         check_nodes(&mut d, &nodes, None);
         assert_eq!(d.messages.len(), 1);
-        assert_eq!(d.messages[0].module, "");
+        assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
         assert_eq!(
             d.messages[0].msg,
@@ -695,7 +695,7 @@ mod test {
         nodes.insert("C1".to_owned(), GsnNode::default());
         validate_module(&mut d, "", &nodes);
         assert_eq!(d.messages.len(), 1);
-        assert_eq!(d.messages[0].module, "");
+        assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Warning);
         assert_eq!(
             d.messages[0].msg,
@@ -725,7 +725,7 @@ mod test {
         );
         validate_module(&mut d, "", &nodes);
         assert_eq!(d.messages.len(), 1);
-        assert_eq!(d.messages[0].module, "");
+        assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Warning);
         assert_eq!(
             d.messages[0].msg,
@@ -749,7 +749,7 @@ mod test {
         nodes.insert("C1".to_owned(), GsnNode::default());
         check_nodes(&mut d, &nodes, None);
         assert_eq!(d.messages.len(), 1);
-        assert_eq!(d.messages[0].module, "");
+        assert_eq!(d.messages[0].module, None);
         assert_eq!(d.messages[0].diag_type, DiagType::Warning);
         assert_eq!(
             d.messages[0].msg,
@@ -786,7 +786,7 @@ mod test {
         );
         check_cycles(&mut d, &nodes);
         assert_eq!(d.messages.len(), 1);
-        assert_eq!(d.messages[0].module, "");
+        assert_eq!(d.messages[0].module, None);
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
         assert_eq!(d.messages[0].msg, "Cycle detected at node G1.");
         assert_eq!(d.errors, 1);
@@ -822,19 +822,19 @@ mod test {
         nodes.insert("Sn1".to_owned(), GsnNode::default());
         validate_module(&mut d, "", &nodes);
         assert_eq!(d.messages.len(), 3);
-        assert_eq!(d.messages[0].module, "");
+        assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
         assert_eq!(
             d.messages[0].msg,
             "Element G1 has invalid type of reference G2 in context."
         );
-        assert_eq!(d.messages[1].module, "");
+        assert_eq!(d.messages[1].module, Some("".to_owned()));
         assert_eq!(d.messages[1].diag_type, DiagType::Error);
         assert_eq!(
             d.messages[1].msg,
             "Element G1 has invalid type of reference S1 in context."
         );
-        assert_eq!(d.messages[2].module, "");
+        assert_eq!(d.messages[2].module, Some("".to_owned()));
         assert_eq!(d.messages[2].diag_type, DiagType::Error);
         assert_eq!(
             d.messages[2].msg,
@@ -860,19 +860,19 @@ mod test {
         nodes.insert("A1".to_owned(), GsnNode::default());
         validate_module(&mut d, "", &nodes);
         assert_eq!(d.messages.len(), 3);
-        assert_eq!(d.messages[0].module, "");
+        assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
         assert_eq!(
             d.messages[0].msg,
             "Element G1 has invalid type of reference C1 in supported by element."
         );
-        assert_eq!(d.messages[1].module, "");
+        assert_eq!(d.messages[1].module, Some("".to_owned()));
         assert_eq!(d.messages[1].diag_type, DiagType::Error);
         assert_eq!(
             d.messages[1].msg,
             "Element G1 has invalid type of reference J1 in supported by element."
         );
-        assert_eq!(d.messages[2].module, "");
+        assert_eq!(d.messages[2].module, Some("".to_owned()));
         assert_eq!(d.messages[2].diag_type, DiagType::Error);
         assert_eq!(
             d.messages[2].msg,
@@ -896,10 +896,10 @@ mod test {
         );
         validate_module(&mut d, "", &nodes);
         assert_eq!(d.messages.len(), 2);
-        assert_eq!(d.messages[0].module, "");
+        assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Warning);
         assert_eq!(d.messages[0].msg, "Element G1 is undeveloped.");
-        assert_eq!(d.messages[1].module, "");
+        assert_eq!(d.messages[1].module, Some("".to_owned()));
         assert_eq!(d.messages[1].diag_type, DiagType::Warning);
         assert_eq!(d.messages[1].msg, "Element G2 is undeveloped.");
         assert_eq!(d.errors, 0);
@@ -920,10 +920,10 @@ mod test {
         );
         validate_module(&mut d, "", &nodes);
         assert_eq!(d.messages.len(), 2);
-        assert_eq!(d.messages[0].module, "");
+        assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Warning);
         assert_eq!(d.messages[0].msg, "Element S1 is undeveloped.");
-        assert_eq!(d.messages[1].module, "");
+        assert_eq!(d.messages[1].module, Some("".to_owned()));
         assert_eq!(d.messages[1].diag_type, DiagType::Warning);
         assert_eq!(d.messages[1].msg, "Element S2 is undeveloped.");
         assert_eq!(d.errors, 0);
@@ -945,7 +945,7 @@ mod test {
         nodes.insert("Sn2".to_owned(), GsnNode::default());
         validate_module(&mut d, "", &nodes);
         assert_eq!(d.messages.len(), 1);
-        assert_eq!(d.messages[0].module, "");
+        assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
         assert_eq!(
             d.messages[0].msg,
@@ -962,7 +962,7 @@ mod test {
         nodes.insert("Sn1".to_owned(), GsnNode::default());
         check_nodes(&mut d, &nodes, None);
         assert_eq!(d.messages.len(), 1);
-        assert_eq!(d.messages[0].module, "");
+        assert_eq!(d.messages[0].module, None);
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
         assert_eq!(
             d.messages[0].msg,
@@ -1000,7 +1000,7 @@ mod test {
         nodes.insert("Sn1".to_owned(), GsnNode::default());
         check_layers(&mut d, &nodes, &["layer1"]);
         assert_eq!(d.messages.len(), 1);
-        assert_eq!(d.messages[0].module, "");
+        assert_eq!(d.messages[0].module, None);
         assert_eq!(d.messages[0].diag_type, DiagType::Warning);
         assert_eq!(
             d.messages[0].msg,
@@ -1026,7 +1026,7 @@ mod test {
         );
         check_layers(&mut d, &nodes, &["layer1", "layer2"]);
         assert_eq!(d.messages.len(), 1);
-        assert_eq!(d.messages[0].module, "");
+        assert_eq!(d.messages[0].module, None);
         assert_eq!(d.messages[0].diag_type, DiagType::Warning);
         assert_eq!(
             d.messages[0].msg,
@@ -1052,13 +1052,13 @@ mod test {
         );
         check_layers(&mut d, &nodes, &["inContextOf", "layer2"]);
         assert_eq!(d.messages.len(), 2);
-        assert_eq!(d.messages[0].module, "");
+        assert_eq!(d.messages[0].module, None);
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
         assert_eq!(
             d.messages[0].msg,
             "inContextOf is a reserved attribute and cannot be used as layer."
         );
-        assert_eq!(d.messages[1].module, "");
+        assert_eq!(d.messages[1].module, None);
         assert_eq!(d.messages[1].diag_type, DiagType::Warning);
         assert_eq!(
             d.messages[1].msg,

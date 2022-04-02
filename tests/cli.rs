@@ -53,7 +53,7 @@ mod integrations {
             .arg("examples/modular/main.gsn.yaml")
             .arg("examples/modular/sub2.gsn.yaml");
         cmd.assert().failure().stderr(predicate::str::contains(
-            "Error: 3 errors and 0 warnings detected.",
+            "Error: 2 errors and 1 warnings detected.",
         ));
         Ok(())
     }

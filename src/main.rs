@@ -185,18 +185,13 @@ fn print_outputs(
 ) -> Result<(), anyhow::Error> {
     if !(matches.is_present("CHECKONLY") || matches.is_present("NO_ARGUMENT_VIEW")) {
         for input in inputs {
-            // It is already checked that if OUTPUT is set, only one input file is provided.
-            let mut output_file = if matches.is_present("OUTPUT") {
-                Box::new(std::io::stdout()) as Box<dyn std::io::Write>
-            } else {
-                let mut pbuf = std::path::PathBuf::from(input);
-                pbuf.set_extension("dot");
-                let output_filename = pbuf.as_path();
-                Box::new(File::create(output_filename).context(format!(
-                    "Failed to open output file {}",
-                    output_filename.display()
-                ))?) as Box<dyn std::io::Write>
-            };
+            let mut pbuf = std::path::PathBuf::from(input);
+            pbuf.set_extension("dot");
+            let output_filename = pbuf.as_path();
+            let mut output_file = Box::new(File::create(output_filename).context(format!(
+                "Failed to open output file {}",
+                output_filename.display()
+            ))?) as Box<dyn std::io::Write>;
             render::render_view(
                 &util::escape_text(input),
                 &nodes,
@@ -289,7 +284,7 @@ fn read_inputs(
         for k in n.keys() {
             if nodes.contains_key(k) {
                 diags.add_error(
-                    input,
+                    Some(input),
                     format!(
                         "Element {} in {} was already present in {}.",
                         k,
