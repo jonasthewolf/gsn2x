@@ -257,7 +257,7 @@ pub fn check_nodes(
     if diag.errors == 0 {
         check_levels(diag, nodes);
         check_cycles(diag, nodes);
-    }    
+    }
 }
 
 ///
@@ -353,9 +353,16 @@ fn check_cycles(diag: &mut Diagnostics, nodes: &MyMap<String, GsnNode>) {
     }
     stack.append(&mut root_nodes);
     while let Some(p_id) = stack.pop() {
-        for child_node in nodes.get(&p_id).unwrap().supported_by.iter().flatten() {
+        for child_node in nodes
+            .get(&p_id)
+            .unwrap()
+            .supported_by
+            .iter()
+            .flatten()
+            .filter(|id| !id.starts_with("Sn"))
+        {
             stack.push(child_node.to_owned());
-            if visited.insert(child_node.to_owned()) {
+            if !visited.insert(child_node.to_owned()) {
                 diag.add_error("", format!("Cycle detected at node {}.", child_node));
                 stack.clear();
                 break;
