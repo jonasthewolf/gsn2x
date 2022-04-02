@@ -97,66 +97,20 @@ pub fn from_gsn_node(id: &str, gsn_node: &GsnNode) -> Rc<RefCell<dyn dirgraphsvg
 }
 
 ///
-/// Validate all nodes
-///
-/// Check if key is one of the known prefixes
-/// Check if all references of node exist
-/// Check if there is more than one top-level node
+/// Validate all ids and nodes
 ///
 ///
 pub fn validate_module(diag: &mut Diagnostics, module: &str, nodes: &MyMap<String, GsnNode>) {
-    let mut wnodes: HashSet<String> = nodes.keys().cloned().collect();
-    for (key, node) in nodes.deref() {
-        if node.module == module {
-            // Validate if key is one of the known prefixes
-            validate_id(diag, module, key);
-            // Validate if all references of node exist
-            validate_reference(diag, module, nodes, key, node);
-            // Remove all keys if they are referenced; used to see if there is more than one top level node
-            if let Some(context) = node.in_context_of.as_ref() {
-                for cnode in context {
-                    wnodes.remove(cnode);
-                }
-            }
-            if let Some(support) = node.supported_by.as_ref() {
-                for snode in support {
-                    wnodes.remove(snode);
-                }
-            }
-        } else {
-            wnodes.remove(key);
-        }
-    }
-    match wnodes.len() {
-        x if x > 1 => {
-            let mut wn = wnodes.iter().cloned().collect::<Vec<String>>();
-            wn.sort();
-            diag.add_warning(
-                module,
-                format!(
-                    "There is more than one unreferenced element: {}.",
-                    wn.join(", ")
-                ),
-            );
-        }
-        x if x == 1 => {
-            let rootn = wnodes.iter().next().unwrap();
-            if !rootn.starts_with('G') {
-                diag.add_error(
-                    module,
-                    format!(
-                        "The root element should be a goal, but {} was found.",
-                        rootn
-                    ),
-                );
-            }
-        }
-        _ => {
-            // Ignore empty document.
-        }
+    for (id, node) in nodes.iter().filter(|(_, n)| n.module == module) {
+        // Validate if key is one of the known prefixes
+        validate_id(diag, module, id);
+        // Validate all references of node
+        validate_references(diag, module, id, node);
     }
 }
 
+///
+/// Validate id
 ///
 /// Check if node id starts with a know prefix
 ///
@@ -181,95 +135,31 @@ fn validate_id(diag: &mut Diagnostics, module: &str, id: &str) {
 }
 
 ///
-/// Check all references.
-///
-/// - Check if node does not reference itself.
-/// - Check if all references exist.
-/// - Check if a list of references only contains unique values.
-/// - Check if a reference in the correct list i.e., inContextOf or supportedBy
-///
-fn check_references(
-    diag: &mut Diagnostics,
-    module: &str,
-    nodes: &MyMap<String, GsnNode>,
-    node: &str,
-    refs: &[String],
-    diag_str: &str,
-    valid_refs: &[&str],
-) {
-    let mut set = HashSet::with_capacity(refs.len());
-    let wrong_refs: Vec<&String> = refs
-        .iter()
-        .filter(|&n| {
-            let isself = n == node;
-            if isself {
-                diag.add_error(
-                    module,
-                    format!("Element {} references itself in {}.", node, diag_str),
-                );
-            }
-            let doubled = !set.insert(n);
-            if doubled {
-                diag.add_warning(
-                    module,
-                    format!(
-                        "Element {} has duplicate entry {} in {}.",
-                        node, n, diag_str
-                    ),
-                );
-            }
-            let wellformed = valid_refs.iter().any(|&r| n.starts_with(r));
-            if !wellformed {
-                diag.add_error(
-                    module,
-                    format!(
-                        "Element {} has invalid type of reference {} in {}.",
-                        node, n, diag_str
-                    ),
-                );
-            }
-            !isself && !doubled && wellformed
-        })
-        .filter(|&n| !nodes.contains_key(n))
-        .collect();
-    for wref in wrong_refs {
-        diag.add_error(
-            module,
-            format!("Element {} has unresolved {}: {}", node, diag_str, wref),
-        );
-    }
-}
-
-///
 /// Validate all references
 ///
+/// - Check in_context references for wellformedness
+/// - Check supported_by references for wellformedness
+/// - Check if undeveloped is correctly set
 ///
-fn validate_reference(
-    diag: &mut Diagnostics,
-    module: &str,
-    nodes: &MyMap<String, GsnNode>,
-    key: &str,
-    node: &GsnNode,
-) {
-    if let Some(context) = node.in_context_of.as_ref() {
+fn validate_references(diag: &mut Diagnostics, module: &str, id: &str, node: &GsnNode) {
+    if let Some(in_context) = node.in_context_of.as_ref() {
         let mut valid_refs = vec![];
         // Only goals and strategies can have contexts, assumptions and goals
-        if key.starts_with('S') || key.starts_with('G') {
+        if id.starts_with('S') || id.starts_with('G') {
             valid_refs.append(&mut vec!["J", "A", "C"]);
         }
-        check_references(diag, module, nodes, key, context, "context", &valid_refs);
+        validate_reference(diag, module, id, in_context, "context", &valid_refs);
     }
     if let Some(support) = node.supported_by.as_ref() {
         let mut valid_refs = vec![];
         // Only goals and strategies can have other goals, strategies and solutions
-        if key.starts_with('S') || key.starts_with('G') {
+        if id.starts_with('S') || id.starts_with('G') {
             valid_refs.append(&mut vec!["G", "Sn", "S"]);
         }
-        check_references(
+        validate_reference(
             diag,
             module,
-            nodes,
-            key,
+            id,
             support,
             "supported by element",
             &valid_refs,
@@ -277,15 +167,219 @@ fn validate_reference(
         if Some(true) == node.undeveloped {
             diag.add_error(
                 module,
-                format!("Undeveloped element {} has supporting arguments.", key),
+                format!("Undeveloped element {} has supporting arguments.", id),
             );
         }
-    } else if (key.starts_with('S') && !key.starts_with("Sn") || key.starts_with('G'))
+    } else if (id.starts_with('S') && !id.starts_with("Sn") || id.starts_with('G'))
         && (Some(false) == node.undeveloped || node.undeveloped.is_none())
     {
         // No "supported by" entries, but Strategy and Goal => undeveloped
-        diag.add_warning(module, format!("Element {} is undeveloped.", key));
+        diag.add_warning(module, format!("Element {} is undeveloped.", id));
     }
+}
+
+///
+/// Vallidate references.
+///
+/// - Check if node does not reference itself.
+/// - Check if a list of references only contains unique values.
+/// - Check if a reference in the correct list i.e., inContextOf or supportedBy
+///
+fn validate_reference(
+    diag: &mut Diagnostics,
+    module: &str,
+    node: &str,
+    refs: &[String],
+    diag_str: &str,
+    valid_refs: &[&str],
+) {
+    let mut set = HashSet::with_capacity(refs.len());
+    for n in refs {
+        if n == node {
+            diag.add_error(
+                module,
+                format!("Element {} references itself in {}.", node, diag_str),
+            );
+        }
+        if !set.insert(n) {
+            diag.add_warning(
+                module,
+                format!(
+                    "Element {} has duplicate entry {} in {}.",
+                    node, n, diag_str
+                ),
+            );
+        }
+        if !valid_refs.iter().any(|&r| n.starts_with(r)) {
+            diag.add_error(
+                module,
+                format!(
+                    "Element {} has invalid type of reference {} in {}.",
+                    node, n, diag_str
+                ),
+            );
+        }
+    }
+}
+
+///
+/// Get root nodes
+/// These are the unreferenced nodes.
+///
+fn get_root_nodes(nodes: &MyMap<String, GsnNode>) -> Vec<String> {
+    let mut root_nodes: HashSet<String> = nodes.keys().cloned().collect();
+    for node in nodes.values() {
+        // Remove all keys if they are referenced; used to see if there is more than one top level node
+        if let Some(context) = node.in_context_of.as_ref() {
+            for cnode in context {
+                root_nodes.remove(cnode);
+            }
+        }
+        if let Some(support) = node.supported_by.as_ref() {
+            for snode in support {
+                root_nodes.remove(snode);
+            }
+        }
+    }
+    Vec::from_iter(root_nodes)
+}
+
+///
+///
+///
+pub fn check_nodes(
+    diag: &mut Diagnostics,
+    nodes: &MyMap<String, GsnNode>,
+    excluded_modules: Option<Vec<&str>>,
+) {
+    check_node_references(diag, nodes, excluded_modules);
+    check_root_nodes(diag, nodes);
+    if diag.errors == 0 {
+        check_levels(diag, nodes);
+        check_cycles(diag, nodes);
+    }    
+}
+
+///
+/// Check if there is one and only one unreferenced node
+/// and if it is a Goal
+///
+///
+fn check_root_nodes(diag: &mut Diagnostics, nodes: &MyMap<String, GsnNode>) {
+    let root_nodes = get_root_nodes(nodes);
+    match root_nodes.len() {
+        x if x > 1 => {
+            let mut wn = root_nodes.to_vec();
+            wn.sort();
+            diag.add_warning(
+                "",
+                format!(
+                    "There is more than one unreferenced element: {}.",
+                    wn.join(", ")
+                ),
+            );
+        }
+        x if x == 1 => {
+            let rootn = root_nodes.get(0).unwrap();
+            if !rootn.starts_with('G') {
+                diag.add_error(
+                    "",
+                    format!(
+                        "The root element should be a goal, but {} was found.",
+                        rootn
+                    ),
+                );
+            }
+        }
+        _ => {
+            // Ignore empty document.
+        }
+    }
+}
+
+///
+/// Check references of a node
+///
+///
+fn check_node_references(
+    diag: &mut Diagnostics,
+    nodes: &MyMap<String, GsnNode>,
+    excluded_modules: Option<Vec<&str>>,
+) {
+    let ex_mods = excluded_modules.iter().flatten().collect::<Vec<_>>();
+    for (id, node) in nodes
+        .iter()
+        .filter(|(_, n)| !ex_mods.contains(&&n.module.as_str()))
+    {
+        if let Some(context) = node.in_context_of.as_ref() {
+            context
+                .iter()
+                .filter(|&n| !nodes.contains_key(n))
+                .for_each(|wref| {
+                    diag.add_error(
+                        &node.module,
+                        format!("Element {} has unresolved {}: {}", id, "context", wref),
+                    );
+                });
+        }
+        if let Some(support) = node.supported_by.as_ref() {
+            support
+                .iter()
+                .filter(|&n| !nodes.contains_key(n))
+                .for_each(|wref| {
+                    diag.add_error(
+                        &node.module,
+                        format!(
+                            "Element {} has unresolved {}: {}",
+                            id, "supported by element", wref
+                        ),
+                    );
+                });
+        }
+    }
+}
+
+///
+/// Check for cycles in `supported by` references
+///
+///
+///
+fn check_cycles(diag: &mut Diagnostics, nodes: &MyMap<String, GsnNode>) {
+    let mut visited: HashSet<String> = HashSet::new();
+    let mut root_nodes = get_root_nodes(nodes);
+    let mut stack = Vec::new();
+    for root in &root_nodes {
+        visited.insert(root.to_owned());
+    }
+    stack.append(&mut root_nodes);
+    while let Some(p_id) = stack.pop() {
+        for child_node in nodes.get(&p_id).unwrap().supported_by.iter().flatten() {
+            stack.push(child_node.to_owned());
+            if visited.insert(child_node.to_owned()) {
+                diag.add_error("", format!("Cycle detected at node {}.", child_node));
+                stack.clear();
+                break;
+            }
+        }
+    }
+}
+
+///
+/// Check if level statement is used more than once.
+///
+///
+///
+fn check_levels(diag: &mut Diagnostics, nodes: &MyMap<String, GsnNode>) {
+    let mut levels = BTreeMap::<&str, usize>::new();
+    for node in nodes.values() {
+        if let Some(l) = &node.level {
+            *levels.entry(l.trim()).or_insert(0) += 1;
+        }
+    }
+    levels
+        .iter()
+        .filter(|(_, &count)| count > 1)
+        .for_each(|(l, _)| diag.add_warning("", format!("Level {} is only used once.", l)));
 }
 
 ///
@@ -306,12 +400,7 @@ pub fn get_levels(nodes: &MyMap<String, GsnNode>) -> BTreeMap<&str, Vec<&str>> {
 /// are actually used at at least one node.
 /// Also checks if no reserved words are used, like 'level' or 'text'
 ///
-pub fn check_layers(
-    diag: &mut Diagnostics,
-    module: &str,
-    nodes: &MyMap<String, GsnNode>,
-    layers: &[&str],
-) {
+pub fn check_layers(diag: &mut Diagnostics, nodes: &MyMap<String, GsnNode>, layers: &[&str]) {
     let reserved_words = [
         "text",
         "inContextOf",
@@ -324,7 +413,7 @@ pub fn check_layers(
     for l in layers {
         if reserved_words.contains(l) {
             diag.add_error(
-                module,
+                "",
                 format!("{} is a reserved attribute and cannot be used as layer.", l),
             );
             continue;
@@ -338,7 +427,7 @@ pub fn check_layers(
         }
         if !found {
             diag.add_warning(
-                module,
+                "",
                 format!(
                     "Layer {} is not used in file. No additional output will be generated.",
                     l
@@ -551,7 +640,7 @@ mod test {
                 ..Default::default()
             },
         );
-        validate_module(&mut d, "", &nodes);
+        check_nodes(&mut d, &nodes, None);
         assert_eq!(d.messages.len(), 1);
         assert_eq!(d.messages[0].module, "");
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
@@ -571,7 +660,7 @@ mod test {
                 ..Default::default()
             },
         );
-        validate_module(&mut d, "", &nodes);
+        check_nodes(&mut d, &nodes, None);
         assert_eq!(d.messages.len(), 1);
         assert_eq!(d.messages[0].module, "");
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
@@ -651,7 +740,7 @@ mod test {
             },
         );
         nodes.insert("C1".to_owned(), GsnNode::default());
-        validate_module(&mut d, "", &nodes);
+        check_nodes(&mut d, &nodes, None);
         assert_eq!(d.messages.len(), 1);
         assert_eq!(d.messages[0].module, "");
         assert_eq!(d.messages[0].diag_type, DiagType::Warning);
@@ -661,6 +750,40 @@ mod test {
         );
         assert_eq!(d.errors, 0);
         assert_eq!(d.warnings, 1);
+    }
+
+    #[test]
+    fn simple_cycle() {
+        let mut d = Diagnostics::default();
+        let mut nodes = MyMap::<String, GsnNode>::new();
+        nodes.insert(
+            "G0".to_owned(),
+            GsnNode {
+                supported_by: Some(vec!["G1".to_owned()]),
+                ..Default::default()
+            },
+        );
+        nodes.insert(
+            "G1".to_owned(),
+            GsnNode {
+                supported_by: Some(vec!["G2".to_owned()]),
+                ..Default::default()
+            },
+        );
+        nodes.insert(
+            "G2".to_owned(),
+            GsnNode {
+                supported_by: Some(vec!["G1".to_owned()]),
+                ..Default::default()
+            },
+        );
+        check_cycles(&mut d, &nodes);
+        assert_eq!(d.messages.len(), 1);
+        assert_eq!(d.messages[0].module, "");
+        assert_eq!(d.messages[0].diag_type, DiagType::Error);
+        assert_eq!(d.messages[0].msg, "Cycle detected at node G1.");
+        assert_eq!(d.errors, 1);
+        assert_eq!(d.warnings, 0);
     }
 
     #[test]
@@ -765,21 +888,15 @@ mod test {
             },
         );
         validate_module(&mut d, "", &nodes);
-        assert_eq!(d.messages.len(), 3);
+        assert_eq!(d.messages.len(), 2);
         assert_eq!(d.messages[0].module, "");
         assert_eq!(d.messages[0].diag_type, DiagType::Warning);
         assert_eq!(d.messages[0].msg, "Element G1 is undeveloped.");
         assert_eq!(d.messages[1].module, "");
         assert_eq!(d.messages[1].diag_type, DiagType::Warning);
         assert_eq!(d.messages[1].msg, "Element G2 is undeveloped.");
-        assert_eq!(d.messages[2].module, "");
-        assert_eq!(d.messages[2].diag_type, DiagType::Warning);
-        assert_eq!(
-            d.messages[2].msg,
-            "There is more than one unreferenced element: G1, G2."
-        );
         assert_eq!(d.errors, 0);
-        assert_eq!(d.warnings, 3);
+        assert_eq!(d.warnings, 2);
     }
 
     #[test]
@@ -795,21 +912,15 @@ mod test {
             },
         );
         validate_module(&mut d, "", &nodes);
-        assert_eq!(d.messages.len(), 3);
+        assert_eq!(d.messages.len(), 2);
         assert_eq!(d.messages[0].module, "");
         assert_eq!(d.messages[0].diag_type, DiagType::Warning);
         assert_eq!(d.messages[0].msg, "Element S1 is undeveloped.");
         assert_eq!(d.messages[1].module, "");
         assert_eq!(d.messages[1].diag_type, DiagType::Warning);
         assert_eq!(d.messages[1].msg, "Element S2 is undeveloped.");
-        assert_eq!(d.messages[2].module, "");
-        assert_eq!(d.messages[2].diag_type, DiagType::Warning);
-        assert_eq!(
-            d.messages[2].msg,
-            "There is more than one unreferenced element: S1, S2."
-        );
         assert_eq!(d.errors, 0);
-        assert_eq!(d.warnings, 3);
+        assert_eq!(d.warnings, 2);
     }
 
     #[test]
@@ -842,7 +953,7 @@ mod test {
         let mut d = Diagnostics::default();
         let mut nodes = MyMap::<String, GsnNode>::new();
         nodes.insert("Sn1".to_owned(), GsnNode::default());
-        validate_module(&mut d, "", &nodes);
+        check_nodes(&mut d, &nodes, None);
         assert_eq!(d.messages.len(), 1);
         assert_eq!(d.messages[0].module, "");
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
@@ -868,7 +979,7 @@ mod test {
                 ..Default::default()
             },
         );
-        check_layers(&mut d, "", &nodes, &["layer1"]);
+        check_layers(&mut d, &nodes, &["layer1"]);
         assert_eq!(d.messages.len(), 0);
         assert_eq!(d.errors, 0);
         assert_eq!(d.warnings, 0);
@@ -880,7 +991,7 @@ mod test {
         let mut nodes = MyMap::<String, GsnNode>::new();
 
         nodes.insert("Sn1".to_owned(), GsnNode::default());
-        check_layers(&mut d, "", &nodes, &["layer1"]);
+        check_layers(&mut d, &nodes, &["layer1"]);
         assert_eq!(d.messages.len(), 1);
         assert_eq!(d.messages[0].module, "");
         assert_eq!(d.messages[0].diag_type, DiagType::Warning);
@@ -906,7 +1017,7 @@ mod test {
                 ..Default::default()
             },
         );
-        check_layers(&mut d, "", &nodes, &["layer1", "layer2"]);
+        check_layers(&mut d, &nodes, &["layer1", "layer2"]);
         assert_eq!(d.messages.len(), 1);
         assert_eq!(d.messages[0].module, "");
         assert_eq!(d.messages[0].diag_type, DiagType::Warning);
@@ -932,7 +1043,7 @@ mod test {
                 ..Default::default()
             },
         );
-        check_layers(&mut d, "", &nodes, &["inContextOf", "layer2"]);
+        check_layers(&mut d, &nodes, &["inContextOf", "layer2"]);
         assert_eq!(d.messages.len(), 2);
         assert_eq!(d.messages[0].module, "");
         assert_eq!(d.messages[0].diag_type, DiagType::Error);

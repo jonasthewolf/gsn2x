@@ -161,9 +161,8 @@ fn main() -> Result<()> {
     // Read input
     read_inputs(&inputs, &mut nodes, &mut diags)?;
     // Validate
-    validate(&inputs, excluded_modules, &mut diags, &nodes, &layers);
+    validate_and_check(&inputs, excluded_modules, &mut diags, &nodes, &layers);
 
-    // TODO Check that only one global top-level element remains
     if diags.errors == 0 {
         // Output argument view
         print_outputs(&matches, &inputs, nodes, static_render_context)?;
@@ -224,11 +223,7 @@ fn print_outputs(
     if let Some(compl_view) = matches.value_of("COMPLETE_VIEW") {
         let mut output_file = File::create(compl_view)
             .context(format!("Failed to open output file {}", compl_view))?;
-        render::render_complete(
-            &nodes,
-            &mut output_file,
-            &static_render_context,
-        )?;
+        render::render_complete(&nodes, &mut output_file, &static_render_context)?;
     }
     if let Some(output) = matches.value_of("EVIDENCES") {
         let mut output_file =
@@ -244,7 +239,7 @@ fn print_outputs(
 ///
 ///
 ///
-fn validate(
+fn validate_and_check(
     inputs: &[&str],
     excluded_modules: Option<Vec<&str>>,
     diags: &mut Diagnostics,
@@ -253,17 +248,22 @@ fn validate(
 ) {
     for input in inputs {
         let module = util::escape_text(input);
-        // When validating a module, all references are resolved.
+        // Validation for wellformedness is done unconditionally.
+        gsn::validate_module(diags, &module, nodes);
+        if diags.errors > 0 {
+            break;
+        }
+        // When checking a module, all references are resolved.
         if let Some(excluded) = &excluded_modules {
             // Only allow excluding files from validation if there is more than one.
             if excluded.contains(input) && inputs.len() > 1 {
                 continue;
             }
         }
-        gsn::validate_module(diags, &module, nodes);
-        if let Some(lays) = &layers {
-            gsn::check_layers(diags, &module, nodes, lays);
-        }
+    }
+    gsn::check_nodes(diags, nodes, excluded_modules);
+    if let Some(lays) = &layers {
+        gsn::check_layers(diags, nodes, lays);
     }
 }
 

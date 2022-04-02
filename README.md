@@ -14,8 +14,8 @@ You can create an SVG like this:
 
     gsn2x <yourgsnfile.yaml> 
 
-If a second optional argument is provided, the output is not written to stdout, but to the file named by the second argument.
-If called with option `-c` or `--check` the input file is only checked for validity, but the resulting graph is not written.
+The output is automatically written to `<yourgsnfile.svg>`. 
+
     
 **You can find pre-built binaries for Windows, Linux and MacOS on the [releases page](https://github.com/jonasthewolf/gsn2x/releases).**
 
@@ -62,21 +62,27 @@ Please see [examples/example.gsn.yaml] for an example of the used syntax.
 
 The tool automatically performs the following validation checks on the input YAML:
 
- - All IDs start with a known prefix i.e., there are only known elements.
- - All elements listed under `supportedBy` and `inContextOf` are valid elements 
-   (e.g. a Justification cannot be listed under `supportedBy`).
- - There is only one top-level element (G,S,C,J,A,Sn) unreferenced. 
- - The top-level element is a Goal. A top-level element is an element that is not referenced by any other element.
- - All referenced elements in `supportedBy` and `inContextOf` exist.
- - All Goals and Strategies are either marked with `undeveloped: true` or have supporting Goals, Strategies or Solutions.
- - Goals and Strategies marked as undeveloped, must have no supporting arguments.
- - There are no circular `supportedBy` references.
+ 1. All IDs start with a known prefix i.e., there are only known element types.
+ 2. All Goals and Strategies are either marked with `undeveloped: true` or have supporting Goals, Strategies or Solutions.
+ 3. Goals and Strategies marked as undeveloped, must have no supporting arguments.
+ 4. All elements listed under `supportedBy` and `inContextOf` are known elements types and semantically sensible
+    (e.g. a Justification cannot be listed under `supportedBy`).
+ 5. All referenced elelemts in `supportedBy` and `inContextOf` are unique i.e., no duplicates in the list.
+ 6. All referenced elelemts in `supportedBy` and `inContextOf` do not refer to the node itself.
+ 7. There is only one top-level element (G,S,C,J,A,Sn) unreferenced. 
+ 8. The top-level element is a Goal. A top-level element is an element that is not referenced by any other element.
+ 9. All referenced elements in `supportedBy` and `inContextOf` exist.
+ 10. There are no circular `supportedBy` references.
+ 11. There is more than one usage of the same `level`.
+
+The checks always apply to the complete set of input files.
 
 Uniqueness of keys is automatically enforced by the YAML format.
 
 Error messages and warnings are printed to stderr.
 
-Validation can be skipped for individual files by using the `-x` option.
+If called with option `-c` or `--check` the input file is only checked for validity, but the resulting graph is not written.
+The checks for references can be skipped for individual files by using the `-x` option.
 
 ## Additional layers
 
