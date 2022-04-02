@@ -10,7 +10,6 @@ use std::rc::Rc;
 pub enum View {
     Argument,
     Architecture,
-    Complete,
 }
 
 pub struct StaticRenderContext<'a> {
@@ -27,18 +26,17 @@ pub struct StaticRenderContext<'a> {
 ///
 pub fn render_view(
     _module: &str,
-    nodes: &MyMap<String, GsnNode>,
+    _nodes: &MyMap<String, GsnNode>,
     _dependencies: Option<&BTreeMap<String, BTreeMap<String, ModuleDependency>>>,
     _output: &mut impl Write,
     view: View,
-    ctx: &StaticRenderContext,
+    _ctx: &StaticRenderContext,
 ) -> Result<(), anyhow::Error> {
     let _template = match view {
         View::Argument => "argument.dot",
         View::Architecture => "architecture.dot",
-        View::Complete => "complete.dot",
     };
-    render_complete(nodes, ctx)?;
+    // render_complete(nodes, output, ctx)?;
     Ok(())
 }
 
@@ -47,6 +45,7 @@ pub fn render_view(
 ///
 pub fn render_complete(
     nodes: &MyMap<String, GsnNode>,
+    output: &mut impl Write,
     ctx: &StaticRenderContext,
 ) -> Result<(), anyhow::Error> {
     let mut dg = dirgraphsvg::DirGraph::default();
@@ -67,7 +66,7 @@ pub fn render_complete(
         dg = dg.add_css_sytlesheet(css);
     }
 
-    dg.write_to_file(std::path::Path::new("complete.svg"))?;
+    dg.write(output)?;
 
     Ok(())
 }

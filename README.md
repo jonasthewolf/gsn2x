@@ -2,23 +2,17 @@
 
 # gsn2x
 
-This little program converts [Goal Structuring Notation](https://scsc.uk/gsn) in a YAML format to the DOT format of [Graphviz](https://graphviz.org). From there it can be rendered to different graphic formats.
+This little program renders [Goal Structuring Notation](https://scsc.uk/gsn) in a YAML format to a scalable vector graphics (SVG) image.
 
 ![Example](examples/example.gsn.svg "Example")
-
-Graphviz is required to create an image from the output of this tool.
 
 Feel free to use it and please let me know. Same applies if you have feature requests, bug reports or contributions.
 
 ## Usage
 
-On Windows you can just run:
+You can create an SVG like this:
 
-    gsn2x.exe -o <yourgsnfile.yaml> | dot -Tsvg > <yourgsnfile.svg>
-
-On other systems you can create an SVG like this:
-
-    gsn2x -o <yourgsnfile.yaml> | dot -Tsvg > <yourgsnfile.svg>
+    gsn2x <yourgsnfile.yaml> 
 
 If a second optional argument is provided, the output is not written to stdout, but to the file named by the second argument.
 If called with option `-c` or `--check` the input file is only checked for validity, but the resulting graph is not written.
@@ -42,8 +36,8 @@ The (optional) `supportedBy` gives a list of the supporting arguments. Thus, Goa
 
 The (optional) `inContextOf` links Justifications, Contexts or Assumptions. 
 
-Every element may have an optional `url` attribute that will be used by Graphviz accordingly for a node in the graph.
-This should support finding information more easily. Please note the supported output formats by Graphviz.
+Every element may have an optional `url` attribute that creates a navigation link in the resulting SVG.
+This should support finding information more easily.
 
 Goals and Strategies can be undeveloped i.e., without supporting Goals, Strategies or Solutions.
 These elements should marked with `undeveloped: true`, otherwise validation will emit warnings.
@@ -68,13 +62,15 @@ Please see [examples/example.gsn.yaml] for an example of the used syntax.
 
 The tool automatically performs the following validation checks on the input YAML:
 
- - There is only one top-level element (G,S,C,J,A,Sn) unreferenced. 
- - The top-level element is a Goal.
- - All referenced elements (`supportedBy` and `inContextOf`) exist and only reference valid elements 
-   (e.g. a Justification cannot be listed under `supportedBy`).
  - All IDs start with a known prefix i.e., there are only known elements.
+ - All elements listed under `supportedBy` and `inContextOf` are valid elements 
+   (e.g. a Justification cannot be listed under `supportedBy`).
+ - There is only one top-level element (G,S,C,J,A,Sn) unreferenced. 
+ - The top-level element is a Goal. A top-level element is an element that is not referenced by any other element.
+ - All referenced elements in `supportedBy` and `inContextOf` exist.
  - All Goals and Strategies are either marked with `undeveloped: true` or have supporting Goals, Strategies or Solutions.
  - Goals and Strategies marked as undeveloped, must have no supporting arguments.
+ - There are no circular `supportedBy` references.
 
 Uniqueness of keys is automatically enforced by the YAML format.
 
@@ -113,9 +109,7 @@ It is intentional that information is only added for a view, but not hidden to e
 
 ## Stylesheets for SVG rendering
 
-You can provide a custom stylesheet for SVG via the `-s` or `--stylesheet` options.
-
-Please see [Graphviz stylesheet](https://graphviz.org/docs/attrs/stylesheet/) and [Graphviz class](https://graphviz.org/docs/attrs/class/) for more details.
+You can provide custom stylesheets for SVG via the `-s` or `--stylesheet` options.
 
 Every element will also be addressable by `id`. The `id` is the same as the YAML id.
 
@@ -133,13 +127,13 @@ You can assign additional classes by adding the `classes:` attribute. It must be
 
 ## Logical levels for elements
 
-To influence the rendered image, you can add an identifier to a GSN element with the `level` attribute. All elements with the same identifier for `level` will now have the same rank for Graphviz. 
+To influence the rendered image, you can add an identifier to a GSN element with the `level` attribute. All elements with the same identifier for `level` will now show up on the same horizontal level. 
 
 This is especially useful, if e.g., two goals or strategies are on the same logical level, but have a different "depth" in the argumentation (i.e. a different number of goals or strategies in their path to the root goal).
 
 See the [example](examples/example.gsn.yaml) for usage. The strategies S1 and S2 are on the same level.
 
-It is recommended to use `level` only for goals, since related contexts, justifications and assumptions are automatically put on the same level i.e., the same rank in Graphviz.
+It is recommended to use `level` only for goals, since related contexts, justifications and assumptions are automatically put on the same level.
 
 ## Modular Extension
 

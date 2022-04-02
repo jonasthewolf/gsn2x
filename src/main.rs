@@ -1,5 +1,5 @@
 use anyhow::{anyhow, Context, Result};
-use clap::{Arg, ErrorKind};
+use clap::Arg;
 use std::fs::File;
 use std::io::BufReader;
 
@@ -27,75 +27,94 @@ fn main() -> Result<()> {
                 .required(true),
         )
         .arg(
-            Arg::new("OUTPUT")
-                .help("Writes output to standard output (only possible with single input).")
-                .short('o')
-                .long("output")
-                .conflicts_with("VALONLY")
-                .help_heading("OUTPUT"),
-        )
-        .arg(
-            Arg::new("SUPPRESSARGUMENT")
-                .help("Suppress output of argument view for provided input files.")
-                .short('n')
-                .long("noarg")
-                .conflicts_with_all(&["OUTPUT", "VALONLY"])
-                .help_heading("OUTPUT"),
-        )
-        .arg(
-            Arg::new("VALONLY")
+            Arg::new("CHECKONLY")
                 .help("Only check the input file(s), but do not output graphs.")
                 .short('c')
                 .long("check")
-                .help_heading("VALIDATION"),
+                .help_heading("CHECKS"),
         )
         .arg(
             Arg::new("EXCLUDED_MODULE")
-                .help("Exclude this module from validation.")
+                .help("Exclude this module from reference checks.")
                 .short('x')
                 .long("exclude")
                 .multiple_occurrences(true)
                 .takes_value(true)
-                .help_heading("VALIDATION"),
+                .help_heading("CHECKS"),
+        )
+        .arg(
+            Arg::new("NO_ARGUMENT_VIEW")
+                .help("Do not output of argument view for provided input files.")
+                .short('N')
+                .long("no-arg")
+                .help_heading("OUTPUT"),
         )
         .arg(
             Arg::new("COMPLETE_VIEW")
-                .help("Additionally output the complete view to this file.")
+                .help("Output the complete view to <COMPLETE_VIEW>.")
                 .short('f')
                 .long("full")
                 .takes_value(true)
-                .conflicts_with("VALONLY")
+                .conflicts_with_all(&["CHECKONLY", "NO_COMPLETE_VIEW"])
+                .help_heading("OUTPUT"),
+        )
+        .arg(
+            Arg::new("NO_COMPLETE_VIEW")
+                .help("Do not output the complete view.")
+                .short('F')
+                .long("no-full")
+                .takes_value(false)
+                .conflicts_with("COMPLETE_VIEW")
                 .help_heading("OUTPUT"),
         )
         .arg(
             Arg::new("ARCHITECTURE_VIEW")
-                .help("Additionally output the architecture view to this file.")
+                .help("Output the architecture view to <ARCHITECTURE_VIEW>.")
                 .short('a')
                 .long("arch")
                 .takes_value(true)
-                .conflicts_with("VALONLY")
+                .conflicts_with_all(&["CHECKONLY", "NO_ARCHITECTURE_VIEW"])
                 .help_heading("OUTPUT"),
         )
         .arg(
-            Arg::new("MASK_MODULE")
-                .help("Hide this module from the complete view.")
-                .short('m')
-                .long("mask")
-                .multiple_occurrences(true)
+            Arg::new("NO_ARCHITECTURE_VIEW")
+                .help("Do not output the architecture view.")
+                .short('A')
+                .long("no-arch")
+                .takes_value(false)
+                .conflicts_with("ARCHITECTURE_VIEW")
+                .help_heading("OUTPUT"),
+        )
+        .arg(
+            Arg::new("EVIDENCES")
+                .help("Output list of all evidences to <EVIDENCES>.")
+                .short('e')
+                .long("evidences")
                 .takes_value(true)
-                .requires("COMPLETE_VIEW")
+                .multiple_occurrences(false)
+                .conflicts_with_all(&["CHECKONLY", "NO_EVIDENCES"])
+                .help_heading("OUTPUT"),
+        )
+        .arg(
+            Arg::new("NO_EVIDENCES")
+                .help("Do not output list of all evidences.")
+                .short('E')
+                .long("no-evidences")
+                .takes_value(false)
+                .multiple_occurrences(false)
+                .conflicts_with("EVIDENCES")
                 .help_heading("OUTPUT"),
         )
         .arg(
             Arg::new("LAYERS")
-                .help("Output additional layers.")
+                .help("Output additional layer.")
                 .short('l')
-                .long("layers")
+                .long("layer")
                 .takes_value(true)
                 .multiple_occurrences(true)
                 .use_value_delimiter(true)
-                .conflicts_with("VALONLY")
-                .help_heading("OUTPUT"),
+                .conflicts_with("CHECKONLY")
+                .help_heading("OUTPUT MODIFICATION"),
         )
         .arg(
             Arg::new("STYLESHEET")
@@ -104,28 +123,20 @@ fn main() -> Result<()> {
                 .long("stylesheet")
                 .takes_value(true)
                 .multiple_occurrences(false)
-                .conflicts_with("VALONLY")
-                .help_heading("OUTPUT"),
+                .conflicts_with("CHECKONLY")
+                .help_heading("OUTPUT MODIFICATION"),
         )
         .arg(
-            Arg::new("EVIDENCES")
-                .help("Additionally output list of all evidences in given file.")
-                .short('e')
-                .long("evidences")
+            Arg::new("MASK_MODULE")
+                .help("Do not unroll this module in the complete view.")
+                .short('m')
+                .long("mask")
+                .multiple_occurrences(true)
                 .takes_value(true)
-                .multiple_occurrences(false)
-                .conflicts_with("VALONLY")
-                .help_heading("OUTPUT"),
+                .requires("COMPLETE_VIEW")
+                .help_heading("OUTPUT MODIFICATION"),
         );
     let matches = app.get_matches_mut();
-    if matches.is_present("OUTPUT") && matches.occurrences_of("INPUT") > 1 {
-        app.error(
-            ErrorKind::ArgumentConflict,
-            // When supported by clap, the '-o' should be colored
-            "The argument '-o' cannot be used with multiple input files.",
-        )
-        .exit();
-    }
     let mut diags = Diagnostics::default();
     let inputs: Vec<&str> = matches.values_of("INPUT").unwrap().collect();
     let mut nodes = MyMap::<String, GsnNode>::new();
@@ -173,7 +184,7 @@ fn print_outputs(
     nodes: MyMap<String, GsnNode>,
     static_render_context: render::StaticRenderContext,
 ) -> Result<(), anyhow::Error> {
-    if !(matches.is_present("VALONLY") || matches.is_present("SUPPRESSARGUMENT")) {
+    if !(matches.is_present("CHECKONLY") || matches.is_present("NO_ARGUMENT_VIEW")) {
         for input in inputs {
             // It is already checked that if OUTPUT is set, only one input file is provided.
             let mut output_file = if matches.is_present("OUTPUT") {
@@ -213,12 +224,9 @@ fn print_outputs(
     if let Some(compl_view) = matches.value_of("COMPLETE_VIEW") {
         let mut output_file = File::create(compl_view)
             .context(format!("Failed to open output file {}", compl_view))?;
-        render::render_view(
-            &util::escape_text(&compl_view),
+        render::render_complete(
             &nodes,
-            None,
             &mut output_file,
-            render::View::Complete,
             &static_render_context,
         )?;
     }
