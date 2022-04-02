@@ -1098,4 +1098,12 @@ mod test {
         assert!(output.contains_key(&"x1"));
         assert!(output.contains_key(&"x2"));
     }
+
+    #[test]
+    fn empty_document() {
+        let mut d = Diagnostics::default();
+        let nodes = MyMap::<String, GsnNode>::new();
+        check_root_nodes(&mut d, &nodes);
+        assert_eq!(d.messages.len(), 0);
+    }
 }

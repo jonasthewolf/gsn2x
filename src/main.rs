@@ -248,17 +248,12 @@ fn validate_and_check(
         if diags.errors > 0 {
             break;
         }
-        // When checking a module, all references are resolved.
-        if let Some(excluded) = &excluded_modules {
-            // Only allow excluding files from validation if there is more than one.
-            if excluded.contains(input) && inputs.len() > 1 {
-                continue;
-            }
-        }
     }
-    gsn::check_nodes(diags, nodes, excluded_modules);
-    if let Some(lays) = &layers {
-        gsn::check_layers(diags, nodes, lays);
+    if diags.errors == 0 {
+        gsn::check_nodes(diags, nodes, excluded_modules);
+        if let Some(lays) = &layers {
+            gsn::check_layers(diags, nodes, lays);
+        }
     }
 }
 
