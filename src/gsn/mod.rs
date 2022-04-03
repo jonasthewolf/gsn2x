@@ -1,13 +1,8 @@
 use crate::yaml_fix::MyMap;
 use dirgraphsvg::edges::EdgeType;
-use dirgraphsvg::nodes::{
-    new_assumption, new_context, new_goal, new_justification, new_solution, new_strategy,
-};
 use serde::{Deserialize, Serialize};
-use std::cell::RefCell;
 use std::collections::{BTreeMap, HashSet};
 use std::ops::Deref;
-use std::rc::Rc;
 
 pub mod check;
 pub mod validation;
@@ -50,51 +45,6 @@ impl GsnNode {
             edges.append(&mut es);
         }
         edges
-    }
-}
-
-// TODO Add layer as class
-pub fn from_gsn_node(id: &str, gsn_node: &GsnNode) -> Rc<RefCell<dyn dirgraphsvg::nodes::Node>> {
-    match id {
-        id if id.starts_with('G') => new_goal(
-            id,
-            &gsn_node.text,
-            gsn_node.undeveloped.unwrap_or(false),
-            gsn_node.url.to_owned(),
-            gsn_node.classes.to_owned(),
-        ),
-        id if id.starts_with("Sn") => new_solution(
-            id,
-            &gsn_node.text,
-            gsn_node.url.to_owned(),
-            gsn_node.classes.to_owned(),
-        ),
-        id if id.starts_with('S') => new_strategy(
-            id,
-            &gsn_node.text,
-            gsn_node.undeveloped.unwrap_or(false),
-            gsn_node.url.to_owned(),
-            gsn_node.classes.to_owned(),
-        ),
-        id if id.starts_with('C') => new_context(
-            id,
-            &gsn_node.text,
-            gsn_node.url.to_owned(),
-            gsn_node.classes.to_owned(),
-        ),
-        id if id.starts_with('A') => new_assumption(
-            id,
-            &gsn_node.text,
-            gsn_node.url.to_owned(),
-            gsn_node.classes.to_owned(),
-        ),
-        id if id.starts_with('J') => new_justification(
-            id,
-            &gsn_node.text,
-            gsn_node.url.to_owned(),
-            gsn_node.classes.to_owned(),
-        ),
-        _ => unreachable!(),
     }
 }
 

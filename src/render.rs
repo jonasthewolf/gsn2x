@@ -1,8 +1,8 @@
-use crate::gsn::{from_gsn_node, get_levels, GsnNode, ModuleDependency};
+use crate::gsn::{get_levels, GsnNode, ModuleDependency};
 use crate::yaml_fix::MyMap;
 use dirgraphsvg::edges::EdgeType;
 use dirgraphsvg::nodes::away_node::{AwayNode, AwayType};
-use dirgraphsvg::nodes::Node;
+use dirgraphsvg::nodes::{Node, new_goal, new_solution, new_strategy, new_context, new_assumption, new_justification};
 use std::cell::RefCell;
 use std::collections::BTreeMap;
 use std::io::Write;
@@ -13,6 +13,53 @@ pub struct StaticRenderContext<'a> {
     pub input_files: &'a [&'a str],
     pub layers: &'a Option<Vec<&'a str>>,
     pub stylesheet: Option<&'a str>,
+}
+
+
+
+// TODO Add layer as class
+pub fn from_gsn_node(id: &str, gsn_node: &GsnNode) -> Rc<RefCell<dyn dirgraphsvg::nodes::Node>> {
+    match id {
+        id if id.starts_with('G') => new_goal(
+            id,
+            &gsn_node.text,
+            gsn_node.undeveloped.unwrap_or(false),
+            gsn_node.url.to_owned(),
+            gsn_node.classes.to_owned(),
+        ),
+        id if id.starts_with("Sn") => new_solution(
+            id,
+            &gsn_node.text,
+            gsn_node.url.to_owned(),
+            gsn_node.classes.to_owned(),
+        ),
+        id if id.starts_with('S') => new_strategy(
+            id,
+            &gsn_node.text,
+            gsn_node.undeveloped.unwrap_or(false),
+            gsn_node.url.to_owned(),
+            gsn_node.classes.to_owned(),
+        ),
+        id if id.starts_with('C') => new_context(
+            id,
+            &gsn_node.text,
+            gsn_node.url.to_owned(),
+            gsn_node.classes.to_owned(),
+        ),
+        id if id.starts_with('A') => new_assumption(
+            id,
+            &gsn_node.text,
+            gsn_node.url.to_owned(),
+            gsn_node.classes.to_owned(),
+        ),
+        id if id.starts_with('J') => new_justification(
+            id,
+            &gsn_node.text,
+            gsn_node.url.to_owned(),
+            gsn_node.classes.to_owned(),
+        ),
+        _ => unreachable!(),
+    }
 }
 
 ///
