@@ -229,7 +229,7 @@ fn print_outputs(
 }
 
 ///
-/// Validate modules
+/// Validate and check modules
 ///
 ///
 ///
@@ -244,15 +244,15 @@ fn validate_and_check(
     for input in inputs {
         let module = util::escape_text(input);
         // Validation for wellformedness is done unconditionally.
-        gsn::validate_module(diags, &module, nodes);
+        gsn::validation::validate_module(diags, &module, nodes);
         if diags.errors > 0 {
             break;
         }
     }
     if diags.errors == 0 {
-        gsn::check_nodes(diags, nodes, excluded_modules);
+        gsn::check::check_nodes(diags, nodes, excluded_modules);
         if let Some(lays) = &layers {
-            gsn::check_layers(diags, nodes, lays);
+            gsn::check::check_layers(diags, nodes, lays);
         }
     }
 }
