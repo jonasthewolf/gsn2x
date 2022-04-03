@@ -7,7 +7,6 @@ use super::{get_port_default_coordinates, Node, Point2D};
 const PADDING: u32 = 5;
 const TEXT_OFFSET: u32 = 20;
 
-#[derive(Clone)]
 pub struct ContextNode {
     identifier: String,
     text: String,

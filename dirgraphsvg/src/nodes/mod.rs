@@ -7,6 +7,7 @@ use self::{box_node::BoxNode, context_node::ContextNode, elliptical_node::Ellipt
 pub mod box_node;
 pub mod context_node;
 pub mod elliptical_node;
+pub mod away_node;
 pub(crate) mod invisible_node;
 
 #[derive(PartialEq)]

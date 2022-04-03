@@ -1,4 +1,4 @@
-use svg::node::element::{path::Data, Group, Link, Path, Text, Title};
+use svg::node::element::{path::Data, Group, Link, Path, Text, Title, Use};
 
 use crate::FontInfo;
 
@@ -8,11 +8,20 @@ const PADDING_VERTICAL: u32 = 7;
 const PADDING_HORIZONTAL: u32 = 7;
 const TEXT_OFFSET: u32 = 20;
 
-pub struct BoxNode {
+pub enum AwayType {
+    Goal,
+    Solution,
+    Context,
+    Assumption,
+    Justification,
+}
+
+pub struct AwayNode {
     identifier: String,
     text: String,
-    undeveloped: bool,
-    skew: u32,
+    module: String,
+    node_type: AwayType,
+    admonition: Option<String>,
     url: Option<String>,
     classes: Option<Vec<String>>,
     width: u32,
@@ -23,13 +32,13 @@ pub struct BoxNode {
     forced_level: Option<usize>,
 }
 
-impl Node for BoxNode {
+impl Node for AwayNode {
     ///
     /// Width: 5 padding on each side, minimum 50, maximum line length of text or identifier
     /// Height: 5 padding on each side, minimum 30, id line height (max. 20) + height of each text line
     ///
     fn calculate_size(&mut self, font: &FontInfo, suggested_char_wrap: u32) {
-        self.width = PADDING_HORIZONTAL * 2 + 70 + self.skew * 2; // Padding of 5 on both sides
+        self.width = PADDING_HORIZONTAL * 2 + 70; // Padding of 5 on both sides
         self.height = PADDING_VERTICAL * 2 + 30; // Padding of 5 on both sides
         self.text = crate::util::wordwrap::wordwrap(&self.text, suggested_char_wrap, "\n");
         let (t_width, t_height) =
@@ -41,16 +50,13 @@ impl Node for BoxNode {
             let (width, height) = crate::util::font::text_bounding_box(&font.font, t, font.size);
             self.lines.push((width, height));
             text_height += height;
-            text_width = std::cmp::max(text_width, width + PADDING_HORIZONTAL * 2 + self.skew * 2);
+            text_width = std::cmp::max(text_width, width + PADDING_HORIZONTAL * 2);
         }
         self.width = std::cmp::max(self.width, text_width);
         self.height = std::cmp::max(
             self.height,
             PADDING_VERTICAL * 2 + TEXT_OFFSET + text_height + 3,
         ); // +3 to make padding at bottom larger
-        if self.undeveloped {
-            self.height += 5;
-        }
     }
 
     fn get_id(&self) -> &str {
@@ -66,14 +72,7 @@ impl Node for BoxNode {
     }
 
     fn get_coordinates(&self, port: &Port) -> Point2D {
-        let mut coords =
-            get_port_default_coordinates(self.x, self.y, self.width, self.height, port);
-        if port == &super::Port::East {
-            coords.x -= self.skew / 2;
-        } else if port == &super::Port::West {
-            coords.x += self.skew / 2;
-        }
-        coords
+        get_port_default_coordinates(self.x, self.y, self.width, self.height, port)
     }
 
     fn set_position(&mut self, pos: &Point2D) {
@@ -103,15 +102,9 @@ impl Node for BoxNode {
         let title = Title::new().add(svg::node::Text::new(&self.identifier));
 
         let data = Data::new()
-            .move_to((
-                self.x - self.width / 2 + self.skew,
-                self.y - self.height / 2,
-            ))
+            .move_to((self.x - self.width / 2, self.y - self.height / 2))
             .line_to((self.x + self.width / 2, self.y - self.height / 2))
-            .line_to((
-                self.x + self.width / 2 - self.skew,
-                self.y + self.height / 2,
-            ))
+            .line_to((self.x + self.width / 2, self.y + self.height / 2))
             .line_to((self.x - self.width / 2, self.y + self.height / 2))
             .close();
 
@@ -123,10 +116,7 @@ impl Node for BoxNode {
             .set("class", "border");
 
         let id = Text::new()
-            .set(
-                "x",
-                self.x - self.width / 2 + PADDING_HORIZONTAL + self.skew,
-            )
+            .set("x", self.x - self.width / 2 + PADDING_HORIZONTAL)
             .set(
                 "y",
                 self.y - self.height / 2 + PADDING_VERTICAL + self.lines.get(0).unwrap().1,
@@ -136,7 +126,11 @@ impl Node for BoxNode {
             .set("font-family", font.name.as_str())
             .add(svg::node::Text::new(&self.identifier));
 
-        g = g.add(title).add(border).add(id);
+        g = g
+            .add(title)
+            .add(border)
+            .add(id)
+            .add(Use::new().set("href", "#module_icon").set("x", self.x -self.width /2 + 10).set("y", self.y - self.height/2 -10));
 
         for (n, t) in self.text.lines().enumerate() {
             let text = Text::new()
@@ -155,20 +149,6 @@ impl Node for BoxNode {
             g = g.add(text);
         }
 
-        if self.undeveloped {
-            let data = Data::new()
-                .move_to((self.x, self.y + self.height / 2))
-                .line_by((5i32, 5i32))
-                .line_by((-5i32, 5i32))
-                .line_by((-5i32, -5i32))
-                .close();
-            let undev = Path::new()
-                .set("fill", "none")
-                .set("stroke", "black")
-                .set("stroke-width", 1u32)
-                .set("d", data);
-            g = g.add(undev);
-        }
         g
     }
 
@@ -181,21 +161,20 @@ impl Node for BoxNode {
     }
 }
 
-impl BoxNode {
+impl AwayNode {
     pub fn new(
         id: &str,
         text: &str,
-        undeveloped: bool,
-        skew: u32,
+        module: &str,
+        node_type: AwayType,
+        admonition: Option<String>,
         url: Option<String>,
         classes: Option<Vec<String>>,
     ) -> Self {
-        BoxNode {
+        AwayNode {
             identifier: id.to_owned(),
             text: text.to_owned(),
-            undeveloped,
             url,
-            skew,
             classes,
             width: 0,
             height: 0,
@@ -203,6 +182,9 @@ impl BoxNode {
             x: 0,
             y: 0,
             forced_level: None,
+            module: module.to_owned(),
+            node_type: node_type,
+            admonition: admonition,
         }
     }
 }

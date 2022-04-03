@@ -232,7 +232,7 @@ fn print_outputs(
     }
     if !matches.is_present("NO_EVIDENCES") {
         let mut pbuf = std::path::PathBuf::from(inputs.get(0).unwrap());
-            pbuf.set_file_name("evidences.md");
+        pbuf.set_file_name("evidences.md");
         let output_filename = matches
             .value_of("EVIDENCES")
             .or_else(|| pbuf.to_str())

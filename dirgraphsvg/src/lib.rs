@@ -9,7 +9,7 @@ use graph::{get_forced_levels, rank_nodes, NodePlace};
 use nodes::{Node, Port};
 use rusttype::Font;
 use svg::{
-    node::element::{path::Data, Link, Marker, Path, Polyline},
+    node::element::{path::Data, Group, Link, Marker, Path, Polyline, Rectangle, Symbol},
     Document,
 };
 use util::{
@@ -399,6 +399,29 @@ impl<'a> DirGraph<'a> {
             .set("orient", "auto")
             .set("markerUnits", "users_posaceOnUse")
             .add(incontext_polyline);
+
+        let mi_r1 = Rectangle::new()
+            .set("x", 0u32)
+            .set("y", 0u32)
+            .set("width", 10u32)
+            .set("height", 5u32)
+            .set("stroke", "black")
+            .set("stroke-width", 1u32)
+            .set("fill", "lightgrey");
+        let mi_r2 = Rectangle::new()
+            .set("x", 0u32)
+            .set("y", 5u32)
+            .set("width", 20u32)
+            .set("height", 10u32)
+            .set("stroke", "black")
+            .set("stroke-width", 1u32)
+            .set("fill", "lightgrey");
+        let module_image = Symbol::new()
+            .set("id", "module_icon")
+            .set("viewbox", "0 0 20 20")
+            .add(mi_r1)
+            .add(mi_r2);
+        self.document = self.document.add(module_image);
 
         self.document = self
             .document

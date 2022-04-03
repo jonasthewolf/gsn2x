@@ -8,7 +8,6 @@ const PADDING: u32 = 5;
 const TEXT_OFFSET: u32 = 20;
 const MIN_SIZE: u32 = 50;
 
-#[derive(Clone)]
 pub struct EllipticalNode {
     identifier: String,
     text: String,
