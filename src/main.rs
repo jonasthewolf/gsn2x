@@ -202,39 +202,41 @@ fn print_outputs(
             )?;
         }
     }
-    if !matches.is_present("NO_ARCHITECTURE_VIEW") {
-        let output_filename = matches
-            .value_of("ARCHITECTURE_VIEW")
-            .or(Some("architecture.svg"))
-            .unwrap();
-        let mut output_file = File::create(output_filename)
-            .context(format!("Failed to open output file {}", output_filename))?;
-        let deps = crate::gsn::calculate_module_dependencies(&nodes);
-        render::render_view(
-            &util::escape_text(&output_filename),
-            &nodes,
-            Some(&deps),
-            &mut output_file,
-            render::View::Architecture,
-            &static_render_context,
-        )?;
-    }
-    if !matches.is_present("NO_COMPLETE_VIEW") {
-        let output_filename = matches
-            .value_of("COMPLETE_VIEW")
-            .or(Some("complete.svg"))
-            .unwrap();
-        let mut output_file = File::create(output_filename)
-            .context(format!("Failed to open output file {}", output_filename))?;
-        render::render_complete(&nodes, &mut output_file, &static_render_context)?;
+    if inputs.len() > 1 {
+        if !matches.is_present("NO_ARCHITECTURE_VIEW") {
+            let output_filename = matches
+                .value_of("ARCHITECTURE_VIEW")
+                .or(Some("architecture.svg"))
+                .unwrap();
+            let mut output_file = File::create(output_filename)
+                .context(format!("Failed to open output file {}", output_filename))?;
+            let deps = crate::gsn::calculate_module_dependencies(&nodes);
+            render::render_view(
+                &util::escape_text(&output_filename),
+                &nodes,
+                Some(&deps),
+                &mut output_file,
+                render::View::Architecture,
+                &static_render_context,
+            )?;
+        }
+        if !matches.is_present("NO_COMPLETE_VIEW") {
+            let output_filename = matches
+                .value_of("COMPLETE_VIEW")
+                .or(Some("complete.svg"))
+                .unwrap();
+            let mut output_file = File::create(output_filename)
+                .context(format!("Failed to open output file {}", output_filename))?;
+            render::render_complete(&nodes, &mut output_file, &static_render_context)?;
+        }
     }
     if !matches.is_present("NO_EVIDENCES") {
         let output_filename = matches
             .value_of("EVIDENCES")
             .or(Some("evidences.md"))
             .unwrap();
-        let mut output_file =
-            File::create(output_filename).context(format!("Failed to open output file {}", output_filename))?;
+        let mut output_file = File::create(output_filename)
+            .context(format!("Failed to open output file {}", output_filename))?;
         render::render_evidences(&nodes, &mut output_file, &static_render_context)?;
     }
     Ok(())
