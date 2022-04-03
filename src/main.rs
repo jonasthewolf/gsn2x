@@ -192,38 +192,38 @@ fn print_outputs(
                 "Failed to open output file {}",
                 output_filename.display()
             ))?) as Box<dyn std::io::Write>;
-            render::render_view(
+            render::render_argument(
                 &util::escape_text(input),
                 &nodes,
-                None,
                 &mut output_file,
-                render::View::Argument,
                 &static_render_context,
             )?;
         }
     }
     if inputs.len() > 1 {
         if !matches.is_present("NO_ARCHITECTURE_VIEW") {
+            let mut pbuf = std::path::PathBuf::from(inputs.get(0).unwrap());
+            pbuf.set_file_name("architecture.svg");
             let output_filename = matches
                 .value_of("ARCHITECTURE_VIEW")
-                .or(Some("architecture.svg"))
+                .or_else(|| pbuf.to_str())
                 .unwrap();
             let mut output_file = File::create(output_filename)
                 .context(format!("Failed to open output file {}", output_filename))?;
             let deps = crate::gsn::calculate_module_dependencies(&nodes);
-            render::render_view(
-                &util::escape_text(&output_filename),
+            render::render_architecture(
                 &nodes,
                 Some(&deps),
                 &mut output_file,
-                render::View::Architecture,
                 &static_render_context,
             )?;
         }
         if !matches.is_present("NO_COMPLETE_VIEW") {
+            let mut pbuf = std::path::PathBuf::from(inputs.get(0).unwrap());
+            pbuf.set_file_name("complete.svg");
             let output_filename = matches
                 .value_of("COMPLETE_VIEW")
-                .or(Some("complete.svg"))
+                .or_else(|| pbuf.to_str())
                 .unwrap();
             let mut output_file = File::create(output_filename)
                 .context(format!("Failed to open output file {}", output_filename))?;
@@ -231,9 +231,11 @@ fn print_outputs(
         }
     }
     if !matches.is_present("NO_EVIDENCES") {
+        let mut pbuf = std::path::PathBuf::from(inputs.get(0).unwrap());
+            pbuf.set_file_name("evidences.md");
         let output_filename = matches
             .value_of("EVIDENCES")
-            .or(Some("evidences.md"))
+            .or_else(|| pbuf.to_str())
             .unwrap();
         let mut output_file = File::create(output_filename)
             .context(format!("Failed to open output file {}", output_filename))?;

@@ -7,10 +7,6 @@ use std::collections::BTreeMap;
 use std::io::Write;
 use std::rc::Rc;
 
-pub enum View {
-    Argument,
-    Architecture,
-}
 
 pub struct StaticRenderContext<'a> {
     pub modules: &'a [String],
@@ -20,23 +16,15 @@ pub struct StaticRenderContext<'a> {
 }
 
 ///
-/// Use Tera to create dot-file.
-/// Templates are inlined in executable.
 ///
+/// 
 ///
-pub fn render_view(
-    _module: &str,
+pub fn render_architecture(
     _nodes: &MyMap<String, GsnNode>,
     _dependencies: Option<&BTreeMap<String, BTreeMap<String, ModuleDependency>>>,
     _output: &mut impl Write,
-    view: View,
     _ctx: &StaticRenderContext,
 ) -> Result<(), anyhow::Error> {
-    let _template = match view {
-        View::Argument => "argument.dot",
-        View::Architecture => "architecture.dot",
-    };
-    // render_complete(nodes, output, ctx)?;
     Ok(())
 }
 
@@ -70,6 +58,41 @@ pub fn render_complete(
 
     Ok(())
 }
+
+///
+/// Render all nodes in one diagram
+///
+/// TODO make it right
+/// 
+pub fn render_argument(
+    module: &str,
+    nodes: &MyMap<String, GsnNode>,
+    output: &mut impl Write,
+    ctx: &StaticRenderContext,
+) -> Result<(), anyhow::Error> {
+    let mut dg = dirgraphsvg::DirGraph::default();
+    let mut edges: BTreeMap<String, Vec<(String, EdgeType)>> = nodes
+        .iter()
+        .map(|(id, node)| (id.to_owned(), node.get_edges()))
+        .collect();
+    let svg_nodes: BTreeMap<String, Rc<RefCell<dyn Node>>> = nodes
+        .iter()
+        .map(|(id, node)| (id.to_owned(), from_gsn_node(id, node)))
+        .collect();
+    dg = dg
+        .add_nodes(svg_nodes)
+        .add_edges(&mut edges)
+        .add_levels(&get_levels(nodes));
+
+    if let Some(css) = ctx.stylesheet {
+        dg = dg.add_css_sytlesheet(css);
+    }
+
+    dg.write(output)?;
+
+    Ok(())
+}
+
 
 pub(crate) fn render_evidences(
     nodes: &MyMap<String, GsnNode>,

@@ -62,33 +62,33 @@ Please see [examples/example.gsn.yaml] for an example of the used syntax.
 
 The tool automatically performs the following validation checks on the input YAML:
 
- 1. All IDs start with a known prefix i.e., there are only known element types.
- 2. All Goals and Strategies are either marked with `undeveloped: true` or have supporting Goals, Strategies or Solutions.
- 3. Goals and Strategies marked as undeveloped, must have no supporting arguments.
- 4. All elements listed under `supportedBy` and `inContextOf` are known elements types and semantically sensible
-    (e.g. a Justification cannot be listed under `supportedBy`).
- 5. All referenced elelemts in `supportedBy` and `inContextOf` are unique i.e., no duplicates in the list.
- 6. All referenced elelemts in `supportedBy` and `inContextOf` do not refer to the node itself.
- 7. There is only one top-level element (G,S,C,J,A,Sn) unreferenced. 
- 8. The top-level element is a Goal. A top-level element is an element that is not referenced by any other element.
- 9. All referenced elements in `supportedBy` and `inContextOf` exist.
- 10. There are no circular `supportedBy` references.
- 11. There is more than one usage of the same `level`.
+ - V01: All IDs start with a known prefix i.e., there are only known element types.
+ - V02: All Goals and Strategies are either marked with `undeveloped: true` or have supporting Goals, Strategies or Solutions.
+ - V03: Goals and Strategies marked as undeveloped, must have no supporting arguments.
+ - V04: All elements listed under `supportedBy` and `inContextOf` are known elements types and semantically sensible
+        (e.g. a Justification cannot be listed under `supportedBy`).
+ - V05: All referenced elelemts in `supportedBy` and `inContextOf` are unique i.e., no duplicates in the list.
+ - V06: All referenced elelemts in `supportedBy` and `inContextOf` do not refer to the node itself.
+ - C01: There is only one top-level element (G,S,C,J,A,Sn) unreferenced. 
+ - C02: The top-level element is a Goal. A top-level element is an element that is not referenced by any other element.
+ - C03: All referenced elements in `supportedBy` and `inContextOf` exist.
+ - C04: There are no circular `supportedBy` references.
+ - C05: There is more than one usage of the same `level`.
 
-The checks always apply to the complete set of input files.
+The checks (Cxx) always apply to the complete set of input files.
 
 Uniqueness of keys is automatically enforced by the YAML format.
 
 Error messages and warnings are printed to stderr.
 
 If called with option `-c` or `--check` the input file is only checked for validity, but the resulting graph is not written.
-The checks for references can be skipped for individual files by using the `-x` option.
+The checks for references (Cxx) can be skipped for individual files by using the `-x` option.
 
 ## Additional layers
 
 Additional attributes of a node are ignored by default.
 With the command line option `-l` or `--layers` you can enable the output of those additional attributes.
-Using this feature, different views on the GSN can be generated.
+By using this feature different views on the GSN can be generated.
 
 ### Example
 
@@ -148,17 +148,19 @@ Module Interfaces (Section 1:4.6) and Inter-Module Contracts (Section 1:4.7) are
 
 Each module is a separate file. The name of the module is the file name (incl. the path provided to the gsn2x command line).
 
-If modules are used, all dependent module files must be provided to the command line of gsn2x.
-Element IDs must be unique accross all modules. Validation will by default be performed accross all modules.
-Validation messages for individual modules can be omitted using the `-x` option.
+If modules are used, all related module files must be provided to the command line of gsn2x.
+Element IDs must be unique accross all modules. Checks will by default be performed accross all modules.
+Check messages for individual modules can be omitted using the `-x` option.
 
 The argument view of individual modules will show "away" elements if elements from other modules are referenced.
 
-In addition to the default argument view for each module, there can be two output files generated:
-1) Complete View
-2) Architecture View
+In addition to the default argument view for each module, there are two output files generated (if more than one input file is provided):
+1) Complete View (complete.svg)
+2) Architecture View (architecture.svg)
 
-If the argument view should not be updated, use the `-n` option.
+If the argument view should not be updated, use the `-N` option.
+If the complete view should not be output, use the `-F` option.
+If the architecture view should not be output, use the `-A` option.
 
 ### Complete View
 
@@ -177,14 +179,13 @@ This will generate the argument view for each module, the complete view (`-f ful
 
 ## List of evidences
 
-With the `-e` option you can create an additional file that lists all the evidences in the input file.
+An additional file that lists all the evidences in the input file is output by default in `evidences.md`.
 
-See [examples/example.gsn.test.md] for an example.
-
-The `-n` option also be used in combination with `-e`.
+See [examples/evidences.md] for an example.
 
 The format can be used in Markdown and reStructuredText files.
 
+If the list of evidences should not be output, use the `-E` option.
 
 ## Standard support
 
