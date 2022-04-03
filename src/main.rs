@@ -19,7 +19,7 @@ use yaml_fix::MyMap;
 ///
 ///
 fn main() -> Result<()> {
-    let mut app = clap::command!()
+    let app = clap::command!()
         .arg(
             Arg::new("INPUT")
                 .help("Sets the input file(s) to use.")
@@ -136,7 +136,7 @@ fn main() -> Result<()> {
                 .requires("COMPLETE_VIEW")
                 .help_heading("OUTPUT MODIFICATION"),
         );
-    let matches = app.get_matches_mut();
+    let matches = app.get_matches();
     let mut diags = Diagnostics::default();
     let inputs: Vec<&str> = matches.values_of("INPUT").unwrap().collect();
     let mut nodes = MyMap::<String, GsnNode>::new();
@@ -163,7 +163,7 @@ fn main() -> Result<()> {
     // Validate
     validate_and_check(&inputs, excluded_modules, &mut diags, &nodes, &layers);
 
-    if diags.errors == 0 {
+    if diags.errors == 0 && !matches.is_present("CHECKONLY") {
         // Output argument view
         print_outputs(&matches, &inputs, nodes, static_render_context)?;
     }
@@ -183,10 +183,10 @@ fn print_outputs(
     nodes: MyMap<String, GsnNode>,
     static_render_context: render::StaticRenderContext,
 ) -> Result<(), anyhow::Error> {
-    if !(matches.is_present("CHECKONLY") || matches.is_present("NO_ARGUMENT_VIEW")) {
+    if !matches.is_present("NO_ARGUMENT_VIEW") {
         for input in inputs {
             let mut pbuf = std::path::PathBuf::from(input);
-            pbuf.set_extension("dot");
+            pbuf.set_extension("svg");
             let output_filename = pbuf.as_path();
             let mut output_file = Box::new(File::create(output_filename).context(format!(
                 "Failed to open output file {}",
@@ -202,12 +202,16 @@ fn print_outputs(
             )?;
         }
     }
-    if let Some(arch_view) = matches.value_of("ARCHITECTURE_VIEW") {
-        let mut output_file =
-            File::create(arch_view).context(format!("Failed to open output file {}", arch_view))?;
+    if !matches.is_present("NO_ARCHITECTURE_VIEW") {
+        let output_filename = matches
+            .value_of("ARCHITECTURE_VIEW")
+            .or(Some("architecture.svg"))
+            .unwrap();
+        let mut output_file = File::create(output_filename)
+            .context(format!("Failed to open output file {}", output_filename))?;
         let deps = crate::gsn::calculate_module_dependencies(&nodes);
         render::render_view(
-            &util::escape_text(&arch_view),
+            &util::escape_text(&output_filename),
             &nodes,
             Some(&deps),
             &mut output_file,
@@ -215,14 +219,22 @@ fn print_outputs(
             &static_render_context,
         )?;
     }
-    if let Some(compl_view) = matches.value_of("COMPLETE_VIEW") {
-        let mut output_file = File::create(compl_view)
-            .context(format!("Failed to open output file {}", compl_view))?;
+    if !matches.is_present("NO_COMPLETE_VIEW") {
+        let output_filename = matches
+            .value_of("COMPLETE_VIEW")
+            .or(Some("complete.svg"))
+            .unwrap();
+        let mut output_file = File::create(output_filename)
+            .context(format!("Failed to open output file {}", output_filename))?;
         render::render_complete(&nodes, &mut output_file, &static_render_context)?;
     }
-    if let Some(output) = matches.value_of("EVIDENCES") {
+    if !matches.is_present("NO_EVIDENCES") {
+        let output_filename = matches
+            .value_of("EVIDENCES")
+            .or(Some("evidences.md"))
+            .unwrap();
         let mut output_file =
-            File::create(output).context(format!("Failed to open output file {}", output))?;
+            File::create(output_filename).context(format!("Failed to open output file {}", output_filename))?;
         render::render_evidences(&nodes, &mut output_file, &static_render_context)?;
     }
     Ok(())

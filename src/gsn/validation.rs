@@ -135,7 +135,7 @@ mod test {
     #[test]
     fn unknown_id() {
         let mut d = Diagnostics::default();
-        validate_id(&mut d, "", &"X1".to_owned());
+        validate_id(&mut d, "", "X1");
         assert_eq!(d.messages.len(), 1);
         assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
@@ -150,7 +150,7 @@ mod test {
     #[test]
     fn known_id() {
         let mut d = Diagnostics::default();
-        validate_id(&mut d, "", &"Sn1".to_owned());
+        validate_id(&mut d, "", "Sn1");
         assert_eq!(d.messages.len(), 0);
         assert_eq!(d.errors, 0);
         assert_eq!(d.warnings, 0);
