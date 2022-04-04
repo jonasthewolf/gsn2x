@@ -2,7 +2,9 @@ use crate::gsn::{get_levels, GsnNode, ModuleDependency};
 use crate::yaml_fix::MyMap;
 use dirgraphsvg::edges::EdgeType;
 use dirgraphsvg::nodes::away_node::{AwayNode, AwayType};
-use dirgraphsvg::nodes::{Node, new_goal, new_solution, new_strategy, new_context, new_assumption, new_justification};
+use dirgraphsvg::nodes::{
+    new_assumption, new_context, new_goal, new_justification, new_solution, new_strategy, Node,
+};
 use std::cell::RefCell;
 use std::collections::BTreeMap;
 use std::io::Write;
@@ -14,8 +16,6 @@ pub struct StaticRenderContext<'a> {
     pub layers: &'a Option<Vec<&'a str>>,
     pub stylesheet: Option<&'a str>,
 }
-
-
 
 // TODO Add layer as class
 pub fn from_gsn_node(id: &str, gsn_node: &GsnNode) -> Rc<RefCell<dyn dirgraphsvg::nodes::Node>> {
