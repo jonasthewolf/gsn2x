@@ -73,7 +73,7 @@ The tool automatically performs the following validation checks on the input YAM
  - C02: The top-level element is a Goal. A top-level element is an element that is not referenced by any other element.
  - C03: All referenced elements in `supportedBy` and `inContextOf` exist.
  - C04: There are no circular `supportedBy` references.
- - C05: There is more than one usage of the same `level`.
+ - C05: There is only one usage of the same `level`.
 
 The checks (Cxx) always apply to the complete set of input files.
 

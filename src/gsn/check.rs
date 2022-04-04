@@ -33,7 +33,7 @@ fn check_root_nodes(diag: &mut Diagnostics, nodes: &MyMap<String, GsnNode>) {
             diag.add_warning(
                 None,
                 format!(
-                    "There is more than one unreferenced element: {}.",
+                    "C01: There is more than one unreferenced element: {}.",
                     wn.join(", ")
                 ),
             );
@@ -44,7 +44,7 @@ fn check_root_nodes(diag: &mut Diagnostics, nodes: &MyMap<String, GsnNode>) {
                 diag.add_error(
                     None,
                     format!(
-                        "The root element should be a goal, but {} was found.",
+                        "C02: The root element should be a goal, but {} was found.",
                         rootn
                     ),
                 );
@@ -77,7 +77,7 @@ fn check_node_references(
                 .for_each(|wref| {
                     diag.add_error(
                         Some(&node.module),
-                        format!("Element {} has unresolved {}: {}", id, "context", wref),
+                        format!("C03: Element {} has unresolved {}: {}", id, "context", wref),
                     );
                 });
         }
@@ -89,7 +89,7 @@ fn check_node_references(
                     diag.add_error(
                         Some(&node.module),
                         format!(
-                            "Element {} has unresolved {}: {}",
+                            "C03: Element {} has unresolved {}: {}",
                             id, "supported by element", wref
                         ),
                     );
@@ -122,7 +122,7 @@ fn check_cycles(diag: &mut Diagnostics, nodes: &MyMap<String, GsnNode>) {
         {
             stack.push(child_node.to_owned());
             if !visited.insert(child_node.to_owned()) {
-                diag.add_error(None, format!("Cycle detected at node {}.", child_node));
+                diag.add_error(None, format!("C04: Cycle detected at node {}.", child_node));
                 stack.clear();
                 break;
             }
@@ -145,7 +145,7 @@ fn check_levels(diag: &mut Diagnostics, nodes: &MyMap<String, GsnNode>) {
     levels
         .iter()
         .filter(|(_, &count)| count == 1)
-        .for_each(|(l, _)| diag.add_warning(None, format!("Level {} is only used once.", l)));
+        .for_each(|(l, _)| diag.add_warning(None, format!("C05: Level {} is only used once.", l)));
 }
 
 ///
@@ -211,7 +211,7 @@ mod test {
         assert_eq!(d.messages.len(), 1);
         assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
-        assert_eq!(d.messages[0].msg, "Element G1 has unresolved context: C1");
+        assert_eq!(d.messages[0].msg, "C03: Element G1 has unresolved context: C1");
         assert_eq!(d.errors, 1);
         assert_eq!(d.warnings, 0);
     }
@@ -233,7 +233,7 @@ mod test {
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
         assert_eq!(
             d.messages[0].msg,
-            "Element G1 has unresolved supported by element: G2"
+            "C03: Element G1 has unresolved supported by element: G2"
         );
         assert_eq!(d.errors, 1);
         assert_eq!(d.warnings, 0);
@@ -257,7 +257,7 @@ mod test {
         assert_eq!(d.messages[0].diag_type, DiagType::Warning);
         assert_eq!(
             d.messages[0].msg,
-            "There is more than one unreferenced element: C1, G1."
+            "C01: There is more than one unreferenced element: C1, G1."
         );
         assert_eq!(d.errors, 0);
         assert_eq!(d.warnings, 1);
@@ -292,7 +292,7 @@ mod test {
         assert_eq!(d.messages.len(), 1);
         assert_eq!(d.messages[0].module, None);
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
-        assert_eq!(d.messages[0].msg, "Cycle detected at node G1.");
+        assert_eq!(d.messages[0].msg, "C04: Cycle detected at node G1.");
         assert_eq!(d.errors, 1);
         assert_eq!(d.warnings, 0);
     }
@@ -308,7 +308,7 @@ mod test {
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
         assert_eq!(
             d.messages[0].msg,
-            "The root element should be a goal, but Sn1 was found."
+            "C02: The root element should be a goal, but Sn1 was found."
         );
         assert_eq!(d.errors, 1);
         assert_eq!(d.warnings, 0);

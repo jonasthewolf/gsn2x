@@ -34,7 +34,7 @@ fn validate_id(diag: &mut Diagnostics, module: &str, id: &str) {
             DiagType::Error,
             Some(module),
             format!(
-                "Elememt {} is of unknown type. Please see README for supported types",
+                "V01: Elememt {} is of unknown type. Please see README for supported types",
                 id
             ),
         );
@@ -74,14 +74,14 @@ fn validate_references(diag: &mut Diagnostics, module: &str, id: &str, node: &Gs
         if Some(true) == node.undeveloped {
             diag.add_error(
                 Some(module),
-                format!("Undeveloped element {} has supporting arguments.", id),
+                format!("V03: Undeveloped element {} has supporting arguments.", id),
             );
         }
     } else if (id.starts_with('S') && !id.starts_with("Sn") || id.starts_with('G'))
         && (Some(false) == node.undeveloped || node.undeveloped.is_none())
     {
         // No "supported by" entries, but Strategy and Goal => undeveloped
-        diag.add_warning(Some(module), format!("Element {} is undeveloped.", id));
+        diag.add_warning(Some(module), format!("V02: Element {} is undeveloped.", id));
     }
 }
 
@@ -105,14 +105,14 @@ fn validate_reference(
         if n == node {
             diag.add_error(
                 Some(module),
-                format!("Element {} references itself in {}.", node, diag_str),
+                format!("V06: Element {} references itself in {}.", node, diag_str),
             );
         }
         if !set.insert(n) {
             diag.add_warning(
                 Some(module),
                 format!(
-                    "Element {} has duplicate entry {} in {}.",
+                    "V05: Element {} has duplicate entry {} in {}.",
                     node, n, diag_str
                 ),
             );
@@ -121,7 +121,7 @@ fn validate_reference(
             diag.add_error(
                 Some(module),
                 format!(
-                    "Element {} has invalid type of reference {} in {}.",
+                    "V04: Element {} has invalid type of reference {} in {}.",
                     node, n, diag_str
                 ),
             );
@@ -141,7 +141,7 @@ mod test {
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
         assert_eq!(
             d.messages[0].msg,
-            "Elememt X1 is of unknown type. Please see README for supported types"
+            "V01: Elememt X1 is of unknown type. Please see README for supported types"
         );
         assert_eq!(d.errors, 1);
         assert_eq!(d.warnings, 0);
@@ -173,13 +173,13 @@ mod test {
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
         assert_eq!(
             d.messages[0].msg,
-            "Element C1 references itself in context."
+            "V06: Element C1 references itself in context."
         );
         assert_eq!(d.messages[1].module, Some("".to_owned()));
         assert_eq!(d.messages[1].diag_type, DiagType::Error);
         assert_eq!(
             d.messages[1].msg,
-            "Element C1 has invalid type of reference C1 in context."
+            "V04: Element C1 has invalid type of reference C1 in context."
         );
         assert_eq!(d.errors, 2);
         assert_eq!(d.warnings, 0);
@@ -202,7 +202,7 @@ mod test {
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
         assert_eq!(
             d.messages[0].msg,
-            "Element G1 references itself in supported by element."
+            "V06: Element G1 references itself in supported by element."
         );
         assert_eq!(d.errors, 1);
         assert_eq!(d.warnings, 0);
@@ -225,13 +225,13 @@ mod test {
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
         assert_eq!(
             d.messages[0].msg,
-            "Element C1 references itself in supported by element."
+            "V06: Element C1 references itself in supported by element."
         );
         assert_eq!(d.messages[1].module, Some("".to_owned()));
         assert_eq!(d.messages[1].diag_type, DiagType::Error);
         assert_eq!(
             d.messages[1].msg,
-            "Element C1 has invalid type of reference C1 in supported by element."
+            "V04: Element C1 has invalid type of reference C1 in supported by element."
         );
         assert_eq!(d.errors, 2);
         assert_eq!(d.warnings, 0);
@@ -255,13 +255,13 @@ mod test {
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
         assert_eq!(
             d.messages[0].msg,
-            "Element G1 references itself in context."
+            "V06: Element G1 references itself in context."
         );
         assert_eq!(d.messages[1].module, Some("".to_owned()));
         assert_eq!(d.messages[1].diag_type, DiagType::Error);
         assert_eq!(
             d.messages[1].msg,
-            "Element G1 has invalid type of reference G1 in context."
+            "V04: Element G1 has invalid type of reference G1 in context."
         );
         assert_eq!(d.errors, 2);
         assert_eq!(d.warnings, 0);
@@ -287,7 +287,7 @@ mod test {
         assert_eq!(d.messages[0].diag_type, DiagType::Warning);
         assert_eq!(
             d.messages[0].msg,
-            "Element G1 has duplicate entry C1 in context."
+            "V05: Element G1 has duplicate entry C1 in context."
         );
         assert_eq!(d.errors, 0);
         assert_eq!(d.warnings, 1);
@@ -317,7 +317,7 @@ mod test {
         assert_eq!(d.messages[0].diag_type, DiagType::Warning);
         assert_eq!(
             d.messages[0].msg,
-            "Element G1 has duplicate entry G2 in supported by element."
+            "V05: Element G1 has duplicate entry G2 in supported by element."
         );
         assert_eq!(d.errors, 0);
         assert_eq!(d.warnings, 1);
@@ -356,19 +356,19 @@ mod test {
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
         assert_eq!(
             d.messages[0].msg,
-            "Element G1 has invalid type of reference G2 in context."
+            "V04: Element G1 has invalid type of reference G2 in context."
         );
         assert_eq!(d.messages[1].module, Some("".to_owned()));
         assert_eq!(d.messages[1].diag_type, DiagType::Error);
         assert_eq!(
             d.messages[1].msg,
-            "Element G1 has invalid type of reference S1 in context."
+            "V04: Element G1 has invalid type of reference S1 in context."
         );
         assert_eq!(d.messages[2].module, Some("".to_owned()));
         assert_eq!(d.messages[2].diag_type, DiagType::Error);
         assert_eq!(
             d.messages[2].msg,
-            "Element G1 has invalid type of reference Sn1 in context."
+            "V04: Element G1 has invalid type of reference Sn1 in context."
         );
         assert_eq!(d.errors, 3);
         assert_eq!(d.warnings, 0);
@@ -394,19 +394,19 @@ mod test {
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
         assert_eq!(
             d.messages[0].msg,
-            "Element G1 has invalid type of reference C1 in supported by element."
+            "V04: Element G1 has invalid type of reference C1 in supported by element."
         );
         assert_eq!(d.messages[1].module, Some("".to_owned()));
         assert_eq!(d.messages[1].diag_type, DiagType::Error);
         assert_eq!(
             d.messages[1].msg,
-            "Element G1 has invalid type of reference J1 in supported by element."
+            "V04: Element G1 has invalid type of reference J1 in supported by element."
         );
         assert_eq!(d.messages[2].module, Some("".to_owned()));
         assert_eq!(d.messages[2].diag_type, DiagType::Error);
         assert_eq!(
             d.messages[2].msg,
-            "Element G1 has invalid type of reference A1 in supported by element."
+            "V04: Element G1 has invalid type of reference A1 in supported by element."
         );
         assert_eq!(d.errors, 3);
         assert_eq!(d.warnings, 0);
@@ -428,10 +428,10 @@ mod test {
         assert_eq!(d.messages.len(), 2);
         assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Warning);
-        assert_eq!(d.messages[0].msg, "Element G1 is undeveloped.");
+        assert_eq!(d.messages[0].msg, "V02: Element G1 is undeveloped.");
         assert_eq!(d.messages[1].module, Some("".to_owned()));
         assert_eq!(d.messages[1].diag_type, DiagType::Warning);
-        assert_eq!(d.messages[1].msg, "Element G2 is undeveloped.");
+        assert_eq!(d.messages[1].msg, "V02: Element G2 is undeveloped.");
         assert_eq!(d.errors, 0);
         assert_eq!(d.warnings, 2);
     }
@@ -452,10 +452,10 @@ mod test {
         assert_eq!(d.messages.len(), 2);
         assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Warning);
-        assert_eq!(d.messages[0].msg, "Element S1 is undeveloped.");
+        assert_eq!(d.messages[0].msg, "V02: Element S1 is undeveloped.");
         assert_eq!(d.messages[1].module, Some("".to_owned()));
         assert_eq!(d.messages[1].diag_type, DiagType::Warning);
-        assert_eq!(d.messages[1].msg, "Element S2 is undeveloped.");
+        assert_eq!(d.messages[1].msg, "V02: Element S2 is undeveloped.");
         assert_eq!(d.errors, 0);
         assert_eq!(d.warnings, 2);
     }
@@ -479,7 +479,7 @@ mod test {
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
         assert_eq!(
             d.messages[0].msg,
-            "Undeveloped element G1 has supporting arguments."
+            "V03: Undeveloped element G1 has supporting arguments."
         );
         assert_eq!(d.errors, 1);
         assert_eq!(d.warnings, 0);
