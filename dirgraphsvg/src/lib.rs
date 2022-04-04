@@ -9,7 +9,7 @@ use graph::{get_forced_levels, rank_nodes, NodePlace};
 use nodes::{Node, Port};
 use rusttype::Font;
 use svg::{
-    node::element::{path::Data, Group, Link, Marker, Path, Polyline, Rectangle, Symbol},
+    node::element::{path::Data, Link, Marker, Path, Polyline, Rectangle, Symbol},
     Document,
 };
 use util::{

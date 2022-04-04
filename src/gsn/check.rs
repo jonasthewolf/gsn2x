@@ -171,14 +171,10 @@ pub fn check_layers(diag: &mut Diagnostics, nodes: &MyMap<String, GsnNode>, laye
             );
             continue;
         }
-        let mut found = false;
-        for (_, n) in nodes.iter() {
-            if n.additional.contains_key(l.to_owned()) {
-                found = true;
-                break;
-            }
-        }
-        if !found {
+        if !nodes
+            .iter()
+            .any(|(_, n)| n.additional.contains_key(l.to_owned()))
+        {
             diag.add_warning(
                 None,
                 format!(
@@ -211,7 +207,10 @@ mod test {
         assert_eq!(d.messages.len(), 1);
         assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
-        assert_eq!(d.messages[0].msg, "C03: Element G1 has unresolved context: C1");
+        assert_eq!(
+            d.messages[0].msg,
+            "C03: Element G1 has unresolved context: C1"
+        );
         assert_eq!(d.errors, 1);
         assert_eq!(d.warnings, 0);
     }
