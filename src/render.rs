@@ -1,10 +1,7 @@
 use crate::gsn::{get_levels, GsnNode, ModuleDependency};
 use crate::yaml_fix::MyMap;
 use dirgraphsvg::edges::EdgeType;
-use dirgraphsvg::nodes::away_node::{AwayNode, AwayType};
-use dirgraphsvg::nodes::{
-    new_assumption, new_context, new_goal, new_justification, new_solution, new_strategy, Node,
-};
+use dirgraphsvg::nodes::*;
 use std::cell::RefCell;
 use std::collections::BTreeMap;
 use std::io::Write;
@@ -110,6 +107,103 @@ pub fn svg_from_gsn_node(
     }
 }
 
+pub fn away_svg_from_gsn_node(
+    id: &str,
+    gsn_node: &GsnNode,
+) -> Rc<RefCell<dyn dirgraphsvg::nodes::Node>> {
+    let layer_classes: Option<Vec<String>> = gsn_node
+        .additional
+        .keys()
+        .map(|k| {
+            let mut t = k.to_ascii_lowercase();
+            t.insert_str(0, "gsn_");
+            Some(t.to_owned())
+        })
+        .collect();
+
+    match id {
+        id if id.starts_with('G') => new_away_goal(
+            id,
+            &gsn_node.text,
+            &gsn_node.module,
+            gsn_node.url.to_owned(),
+            gsn_node
+                .classes
+                .iter()
+                .chain(layer_classes.iter())
+                .flatten()
+                .map(|x| Some(x.to_owned()))
+                .collect(),
+        ),
+        id if id.starts_with("Sn") => new_away_solution(
+            id,
+            &gsn_node.text,
+            &gsn_node.module,
+            gsn_node.url.to_owned(),
+            gsn_node
+                .classes
+                .iter()
+                .chain(layer_classes.iter())
+                .flatten()
+                .map(|x| Some(x.to_owned()))
+                .collect(),
+        ),
+        id if id.starts_with('S') => new_strategy(
+            id,
+            &gsn_node.text,
+            gsn_node.undeveloped.unwrap_or(false),
+            gsn_node.url.to_owned(),
+            gsn_node
+                .classes
+                .iter()
+                .chain(layer_classes.iter())
+                .flatten()
+                .map(|x| Some(x.to_owned()))
+                .collect(),
+        ),
+        id if id.starts_with('C') => new_away_context(
+            id,
+            &gsn_node.text,
+            &gsn_node.module,
+            gsn_node.url.to_owned(),
+            gsn_node
+                .classes
+                .iter()
+                .chain(layer_classes.iter())
+                .flatten()
+                .map(|x| Some(x.to_owned()))
+                .collect(),
+        ),
+        id if id.starts_with('A') => new_away_assumption(
+            id,
+            &gsn_node.text,
+            &gsn_node.module,
+            gsn_node.url.to_owned(),
+            gsn_node
+                .classes
+                .iter()
+                .chain(layer_classes.iter())
+                .flatten()
+                .map(|x| Some(x.to_owned()))
+                .collect(),
+        ),
+        id if id.starts_with('J') => new_away_justification(
+            id,
+            &gsn_node.text,
+            &gsn_node.module,
+            gsn_node.url.to_owned(),
+            gsn_node
+                .classes
+                .iter()
+                .chain(layer_classes.iter())
+                .flatten()
+                .map(|x| Some(x.to_owned()))
+                .collect(),
+        ),
+        _ => unreachable!(),
+    }
+}
+
 ///
 ///
 ///
@@ -158,14 +252,11 @@ pub fn render_complete(
 ///
 /// Render all nodes in one diagram
 ///
-/// TODO make it right
-///      1) Map gsn nodes to svg nodes
-///         foreign module nodes will be mapped to the away svg node
-///      2) Replace the edges with the right ones
-///      3) filter all foreign modules that have no edge to this module
-/// 
-/// 
-/// 
+///  1) Map gsn nodes to svg nodes
+///     foreign module nodes will be mapped to the away svg node
+///  2) Replace the edges with the right ones
+///  3) filter all foreign modules that have no edge to this module
+///
 pub fn render_argument(
     module: &str,
     nodes: &MyMap<String, GsnNode>,
@@ -173,69 +264,40 @@ pub fn render_argument(
     ctx: &StaticRenderContext,
 ) -> Result<(), anyhow::Error> {
     let mut dg = dirgraphsvg::DirGraph::default();
-    let mut svg_nodes = BTreeMap::<String, Rc<RefCell<dyn Node>>>::new();
-    let mut edges: BTreeMap<String, Vec<(String, EdgeType)>> = nodes
+    let mut svg_nodes: BTreeMap<String, Rc<RefCell<dyn Node>>> = nodes
         .iter()
-        // .filter(|(_, node)| node.module == module)
-        .map(|(id, node)| {
-            (
-                id.to_owned(),
-                node.get_edges()
-                    .into_iter()
-                    .filter_map(|(t, et)| {
-                        let target_node = nodes.get(&t).unwrap();
-                        let target_mod = target_node.module.to_owned();
-                        if target_mod != module {
-                            if svg_nodes.contains_key(&target_mod) {
-                                return Some((target_mod, EdgeType::NoneToComposite));
-                            } else {
-                                let target_type = match &t {
-                                    x if x.starts_with('G') => AwayType::Goal,
-                                    x if x.starts_with("Sn") => AwayType::Solution,
-                                    x if x.starts_with('A') => AwayType::Assumption,
-                                    x if x.starts_with('J') => AwayType::Justification,
-                                    x if x.starts_with('C') => AwayType::Context,
-                                    _ => return Some((t, et)), // Strategies are
-                                };
-                                let admon = match &target_type {
-                                    AwayType::Assumption => Some("A".to_owned()),
-                                    AwayType::Justification => Some("J".to_owned()),
-                                    _ => None,
-                                };
-                                svg_nodes.insert(
-                                    target_mod.to_owned(),
-                                    Rc::new(RefCell::new(AwayNode::new(
-                                        &target_mod,
-                                        &target_node.text,
-                                        &target_mod,
-                                        target_type,
-                                        admon,
-                                        None,
-                                        None,
-                                    ))),
-                                );
-                            }
-                            Some((target_mod, et)) // TODO potentially wrong edge type
-                        } else {
-                            Some((t, et))
-                        }
-                    })
-                    .collect::<Vec<(String, EdgeType)>>(),
-            )
-        })
+        .filter(|(_, node)| node.module == module)
+        .map(|(id, node)| (id.to_owned(), svg_from_gsn_node(id, node)))
         .collect();
 
     svg_nodes.append(
         &mut nodes
             .iter()
-            .filter(|(_, node)| node.module == module)
-            .map(|(id, node)| (id.to_owned(), svg_from_gsn_node(id, node)))
+            .filter(|(_, node)| node.module != module)
+            .map(|(id, node)| (id.to_owned(), away_svg_from_gsn_node(id, node)))
             .collect(),
     );
 
-    dbg!(&module);
-    dbg!(&edges);
-    dbg!(&svg_nodes.keys());
+    let mut edges: BTreeMap<String, Vec<(String, EdgeType)>> = nodes
+        .iter()
+        .map(|(id, node)| {
+            (
+                id.to_owned(),
+                node.get_edges()
+                    .into_iter()
+                    .filter(|(target, _)| {
+                        !(node.module != module && nodes.get(target).unwrap().module != module)
+                    })
+                    .collect::<Vec<(String, EdgeType)>>(),
+            )
+        })
+        .filter(|(_, targets)| !targets.is_empty())
+        .collect();
+
+    svg_nodes = svg_nodes
+        .into_iter()
+        .filter(|(id, _)| edges.contains_key(id) || edges.values().flatten().any(|(x, _)| x == id))
+        .collect();
 
     dg = dg
         .add_nodes(svg_nodes)

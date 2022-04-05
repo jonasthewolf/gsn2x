@@ -74,6 +74,28 @@ pub fn new_assumption(
     )))
 }
 
+pub fn new_away_assumption(
+    id: &str,
+    text: &str,
+    module: &str,
+    url: Option<String>,
+    classes: Option<Vec<String>>,
+) -> Rc<RefCell<AwayNode>> {
+    let mut new_classes: Vec<String> = vec!["gsnelem".to_owned(), "gsnawayasmp".to_owned()];
+    if let Some(classes) = classes {
+        classes.into_iter().for_each(|c| new_classes.push(c));
+    }
+    Rc::new(RefCell::new(AwayNode::new(
+        id,
+        text,
+        module,
+        AwayType::Assumption,
+        Some("A".to_owned()),
+        url,
+        Some(new_classes),
+    )))
+}
+
 pub fn new_justification(
     id: &str,
     text: &str,
@@ -94,6 +116,28 @@ pub fn new_justification(
     )))
 }
 
+pub fn new_away_justification(
+    id: &str,
+    text: &str,
+    module: &str,
+    url: Option<String>,
+    classes: Option<Vec<String>>,
+) -> Rc<RefCell<AwayNode>> {
+    let mut new_classes: Vec<String> = vec!["gsnelem".to_owned(), "gsnawayjust".to_owned()];
+    if let Some(classes) = classes {
+        classes.into_iter().for_each(|c| new_classes.push(c));
+    }
+    Rc::new(RefCell::new(AwayNode::new(
+        id,
+        text,
+        module,
+        AwayType::Justification,
+        Some("J".to_owned()),
+        url,
+        Some(new_classes),
+    )))
+}
+
 pub fn new_solution(
     id: &str,
     text: &str,
@@ -109,6 +153,28 @@ pub fn new_solution(
         text,
         None,
         true,
+        url,
+        Some(new_classes),
+    )))
+}
+
+pub fn new_away_solution(
+    id: &str,
+    text: &str,
+    module: &str,
+    url: Option<String>,
+    classes: Option<Vec<String>>,
+) -> Rc<RefCell<AwayNode>> {
+    let mut new_classes: Vec<String> = vec!["gsnelem".to_owned(), "gsnawaysltn".to_owned()];
+    if let Some(classes) = classes {
+        classes.into_iter().for_each(|c| new_classes.push(c));
+    }
+    Rc::new(RefCell::new(AwayNode::new(
+        id,
+        text,
+        module,
+        AwayType::Solution,
+        None,
         url,
         Some(new_classes),
     )))
@@ -191,6 +257,28 @@ pub fn new_context(
     Rc::new(RefCell::new(ContextNode::new(
         id,
         text,
+        url,
+        Some(new_classes),
+    )))
+}
+
+pub fn new_away_context(
+    id: &str,
+    text: &str,
+    module: &str,
+    url: Option<String>,
+    classes: Option<Vec<String>>,
+) -> Rc<RefCell<AwayNode>> {
+    let mut new_classes: Vec<String> = vec!["gsnelem".to_owned(), "gsnawayctxt".to_owned()];
+    if let Some(classes) = classes {
+        classes.into_iter().for_each(|c| new_classes.push(c));
+    }
+    Rc::new(RefCell::new(AwayNode::new(
+        id,
+        text,
+        module,
+        AwayType::Context,
+        None,
         url,
         Some(new_classes),
     )))

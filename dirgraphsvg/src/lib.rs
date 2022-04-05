@@ -344,15 +344,15 @@ impl<'a> DirGraph<'a> {
                     .move_to((start.x, start.y))
                     .cubic_curve_to(parameters);
                 let arrow_end_id = match &edge_type {
-                    EdgeType::NoneToInContextOf | EdgeType::InContextOfToInContextOf | EdgeType::SupportedByToInContextOf | EdgeType::CompositeToInContextOf=> Some("url(#incontextof_arrow)"),
+                    EdgeType::NoneToInContextOf | EdgeType::InContextOfToInContextOf | EdgeType::SupportedByToInContextOf | EdgeType::CompositeToInContextOf => Some("url(#incontextof_arrow)"),
                     EdgeType::NoneToSupportedBy | EdgeType::InContextOfToSupportedBy | EdgeType::SupportedByToSupportedBy | EdgeType::CompositeToSupportedBy => Some("url(#supportedby_arrow)"),
                     EdgeType::NoneToComposite | EdgeType::InContextOfToComposite | EdgeType::SupportedByToComposite | EdgeType::CompositeToComposite => Some("url(#composite_arrow)"),
                     EdgeType::Invisible => None,
                 };
                 let arrow_start_id = match &edge_type {
-                    edges::EdgeType::NoneToInContextOf => Some("url(#incontextof_arrow)"),
-                    edges::EdgeType::NoneToSupportedBy => Some("url(#supportedby_arrow)"),
-                    edges::EdgeType::NoneToComposite => Some("url(#composite_arrow)"),
+                    EdgeType::InContextOfToComposite | EdgeType::InContextOfToInContextOf | EdgeType::InContextOfToSupportedBy => Some("url(#incontextof_arrow)"),
+                    EdgeType::SupportedByToComposite | EdgeType::SupportedByToInContextOf | EdgeType::SupportedByToSupportedBy => Some("url(#supportedby_arrow)"),
+                    EdgeType::CompositeToComposite | EdgeType::CompositeToInContextOf | EdgeType::CompositeToSupportedBy => Some("url(#composite_arrow)"),
                     _ => None,
                 };
                 let classes = match edge_type {
@@ -377,6 +377,9 @@ impl<'a> DirGraph<'a> {
                     .set("stroke-width", 1u32);
                 if let Some(arrow_id) = arrow_end_id {
                     e = e.set("marker-end", arrow_id);
+                }
+                if let Some(arrow_id) = arrow_start_id {
+                    e = e.set("marker-start", arrow_id);
                 }
                 if let Some(classes) = classes {
                     e = e.set("class", classes);
