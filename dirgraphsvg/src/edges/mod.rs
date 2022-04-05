@@ -1,6 +1,16 @@
 #[derive(Debug, PartialEq)]
 pub enum EdgeType {
-    InContextOf,
-    SupportedBy,
+    NoneToInContextOf,
+    NoneToSupportedBy,
+    NoneToComposite,
+    InContextOfToSupportedBy,
+    InContextOfToInContextOf,
+    InContextOfToComposite,
+    SupportedByToInContextOf,
+    SupportedByToSupportedBy,
+    SupportedByToComposite,
+    CompositeToInContextOf,
+    CompositeToSupportedBy,
+    CompositeToComposite,
     Invisible,
 }

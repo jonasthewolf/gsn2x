@@ -2,7 +2,7 @@ use std::{cell::RefCell, rc::Rc};
 
 use crate::{util::point2d::Point2D, FontInfo};
 
-use self::{box_node::BoxNode, context_node::ContextNode, elliptical_node::EllipticalNode};
+use self::{box_node::BoxNode, context_node::ContextNode, elliptical_node::EllipticalNode, away_node::{AwayNode, AwayType}};
 
 pub mod box_node;
 pub mod context_node;
@@ -151,6 +151,28 @@ pub fn new_goal(
         text,
         undeveloped,
         0,
+        url,
+        Some(new_classes),
+    )))
+}
+
+pub fn new_away_goal(
+    id: &str,
+    text: &str,
+    module: &str,
+    url: Option<String>,
+    classes: Option<Vec<String>>,
+) -> Rc<RefCell<AwayNode>> {
+    let mut new_classes: Vec<String> = vec!["gsnelem".to_owned(), "gsnawaygoal".to_owned()];
+    if let Some(classes) = classes {
+        classes.into_iter().for_each(|c| new_classes.push(c));
+    }
+    Rc::new(RefCell::new(AwayNode::new(
+        id,
+        text,
+        module,
+        AwayType::Goal,
+        None,
         url,
         Some(new_classes),
     )))

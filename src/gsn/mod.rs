@@ -33,14 +33,14 @@ impl GsnNode {
         if let Some(c_nodes) = &self.in_context_of {
             let mut es: Vec<(String, EdgeType)> = c_nodes
                 .iter()
-                .map(|target| (target.to_owned(), EdgeType::InContextOf))
+                .map(|target| (target.to_owned(), EdgeType::NoneToInContextOf))
                 .collect();
             edges.append(&mut es);
         }
         if let Some(s_nodes) = &self.supported_by {
             let mut es: Vec<(String, EdgeType)> = s_nodes
                 .iter()
-                .map(|target| (target.to_owned(), EdgeType::SupportedBy))
+                .map(|target| (target.to_owned(), EdgeType::NoneToSupportedBy))
                 .collect();
             edges.append(&mut es);
         }

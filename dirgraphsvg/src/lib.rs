@@ -289,9 +289,8 @@ impl<'a> DirGraph<'a> {
                 let s = self.nodes.get(source).unwrap().borrow();
                 let t = self.nodes.get(target).unwrap().borrow();
                 let (marker_height, support_distance) = match edge_type {
-                    EdgeType::InContextOf => (MARKER_HEIGHT, 3 * MARKER_HEIGHT),
-                    EdgeType::SupportedBy => (MARKER_HEIGHT, 3 * MARKER_HEIGHT),
                     EdgeType::Invisible => (0, 3 * MARKER_HEIGHT),
+                    _ => (MARKER_HEIGHT, 3 * MARKER_HEIGHT), // Everything else
                 };
                 let s_pos = s.get_position();
                 let t_pos = t.get_position();
@@ -344,22 +343,39 @@ impl<'a> DirGraph<'a> {
                 let data = Data::new()
                     .move_to((start.x, start.y))
                     .cubic_curve_to(parameters);
-                let arrow_id = match edge_type {
-                    edges::EdgeType::InContextOf => Some("url(#incontextof_arrow)"),
-                    edges::EdgeType::SupportedBy => Some("url(#supportedby_arrow)"),
-                    edges::EdgeType::Invisible => None,
+                let arrow_end_id = match &edge_type {
+                    EdgeType::NoneToInContextOf | EdgeType::InContextOfToInContextOf | EdgeType::SupportedByToInContextOf | EdgeType::CompositeToInContextOf=> Some("url(#incontextof_arrow)"),
+                    EdgeType::NoneToSupportedBy | EdgeType::InContextOfToSupportedBy | EdgeType::SupportedByToSupportedBy | EdgeType::CompositeToSupportedBy => Some("url(#supportedby_arrow)"),
+                    EdgeType::NoneToComposite | EdgeType::InContextOfToComposite | EdgeType::SupportedByToComposite | EdgeType::CompositeToComposite => Some("url(#composite_arrow)"),
+                    EdgeType::Invisible => None,
+                };
+                let arrow_start_id = match &edge_type {
+                    edges::EdgeType::NoneToInContextOf => Some("url(#incontextof_arrow)"),
+                    edges::EdgeType::NoneToSupportedBy => Some("url(#supportedby_arrow)"),
+                    edges::EdgeType::NoneToComposite => Some("url(#composite_arrow)"),
+                    _ => None,
                 };
                 let classes = match edge_type {
-                    edges::EdgeType::InContextOf => Some("gsnedge gsnspby"),
-                    edges::EdgeType::SupportedBy => Some("gsnedge gsninctxt"),
-                    edges::EdgeType::Invisible => None,
+                    EdgeType::NoneToInContextOf => Some("gsnedge gsnspby"),
+                    EdgeType::NoneToSupportedBy => Some("gsnedge gsninctxt"),
+                    EdgeType::NoneToComposite => Some("gsnedge gsncomposite"),
+                    EdgeType::InContextOfToSupportedBy => Some("gsnedge gsninctxt gsnspby"),
+                    EdgeType::InContextOfToInContextOf => Some("gsnedge gsninctxt"),
+                    EdgeType::InContextOfToComposite => Some("gsnedge gsninctxt gsncomposite"),
+                    EdgeType::SupportedByToInContextOf => Some("gsnedge gsnspby gsninctxt"),
+                    EdgeType::SupportedByToSupportedBy => Some("gsnedge gsnspby"),
+                    EdgeType::SupportedByToComposite => Some("gsnedge gsnspby gsncomposite"),
+                    EdgeType::CompositeToInContextOf => Some("gsnedge gsncomposite gsninctxt"),
+                    EdgeType::CompositeToSupportedBy => Some("gsnedge gsncomposite gsnspby"),
+                    EdgeType::CompositeToComposite => Some("gsnedge gsncomposite"),
+                    EdgeType::Invisible => None,
                 };
                 let mut e = Path::new()
                     .set("d", data)
                     .set("fill", "none")
                     .set("stroke", "black")
                     .set("stroke-width", 1u32);
-                if let Some(arrow_id) = arrow_id {
+                if let Some(arrow_id) = arrow_end_id {
                     e = e.set("marker-end", arrow_id);
                 }
                 if let Some(classes) = classes {
@@ -400,6 +416,27 @@ impl<'a> DirGraph<'a> {
             .set("markerUnits", "users_posaceOnUse")
             .add(incontext_polyline);
 
+        let composite_polyline1 = Polyline::new()
+            .set("points", "0 0, 10 10, 0 20")
+            .set("stroke", "black")
+            .set("stroke-width", 1u32)
+            .set("fill", "none");
+        let composite_polyline2 = Polyline::new()
+            .set("points", "10 0, 20 10, 10 20")
+            .set("stroke", "black")
+            .set("stroke-width", 1u32)
+            .set("fill", "none");
+        let composite_arrow = Marker::new()
+            .set("id", "composite_arrow")
+            .set("markerWidth", 20u32)
+            .set("markerHeight",20u32)
+            .set("refX", 20f32)
+            .set("refY", 10f32)
+            .set("orient", "auto")
+            .set("markerUnits", "users_posaceOnUse")
+            .add(composite_polyline1)
+            .add(composite_polyline2);
+
         let mi_r1 = Rectangle::new()
             .set("x", 0u32)
             .set("y", 0u32)
@@ -426,7 +463,7 @@ impl<'a> DirGraph<'a> {
         self.document = self
             .document
             .set("xmlns:xlink", "http://www.w3.org/1999/xlink");
-        self.document = self.document.add(supportedby_arrow).add(incontext_arrow);
+        self.document = self.document.add(composite_arrow).add(supportedby_arrow).add(incontext_arrow);
         self
     }
 

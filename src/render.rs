@@ -17,46 +17,94 @@ pub struct StaticRenderContext<'a> {
     pub stylesheet: Option<&'a str>,
 }
 
-// TODO Add layer as class
-pub fn from_gsn_node(id: &str, gsn_node: &GsnNode) -> Rc<RefCell<dyn dirgraphsvg::nodes::Node>> {
+pub fn svg_from_gsn_node(
+    id: &str,
+    gsn_node: &GsnNode,
+) -> Rc<RefCell<dyn dirgraphsvg::nodes::Node>> {
+    let layer_classes: Option<Vec<String>> = gsn_node
+        .additional
+        .keys()
+        .map(|k| {
+            let mut t = k.to_ascii_lowercase();
+            t.insert_str(0, "gsn_");
+            Some(t.to_owned())
+        })
+        .collect();
+
     match id {
         id if id.starts_with('G') => new_goal(
             id,
             &gsn_node.text,
             gsn_node.undeveloped.unwrap_or(false),
             gsn_node.url.to_owned(),
-            gsn_node.classes.to_owned(),
+            gsn_node
+                .classes
+                .iter()
+                .chain(layer_classes.iter())
+                .flatten()
+                .map(|x| Some(x.to_owned()))
+                .collect(),
         ),
         id if id.starts_with("Sn") => new_solution(
             id,
             &gsn_node.text,
             gsn_node.url.to_owned(),
-            gsn_node.classes.to_owned(),
+            gsn_node
+                .classes
+                .iter()
+                .chain(layer_classes.iter())
+                .flatten()
+                .map(|x| Some(x.to_owned()))
+                .collect(),
         ),
         id if id.starts_with('S') => new_strategy(
             id,
             &gsn_node.text,
             gsn_node.undeveloped.unwrap_or(false),
             gsn_node.url.to_owned(),
-            gsn_node.classes.to_owned(),
+            gsn_node
+                .classes
+                .iter()
+                .chain(layer_classes.iter())
+                .flatten()
+                .map(|x| Some(x.to_owned()))
+                .collect(),
         ),
         id if id.starts_with('C') => new_context(
             id,
             &gsn_node.text,
             gsn_node.url.to_owned(),
-            gsn_node.classes.to_owned(),
+            gsn_node
+                .classes
+                .iter()
+                .chain(layer_classes.iter())
+                .flatten()
+                .map(|x| Some(x.to_owned()))
+                .collect(),
         ),
         id if id.starts_with('A') => new_assumption(
             id,
             &gsn_node.text,
             gsn_node.url.to_owned(),
-            gsn_node.classes.to_owned(),
+            gsn_node
+                .classes
+                .iter()
+                .chain(layer_classes.iter())
+                .flatten()
+                .map(|x| Some(x.to_owned()))
+                .collect(),
         ),
         id if id.starts_with('J') => new_justification(
             id,
             &gsn_node.text,
             gsn_node.url.to_owned(),
-            gsn_node.classes.to_owned(),
+            gsn_node
+                .classes
+                .iter()
+                .chain(layer_classes.iter())
+                .flatten()
+                .map(|x| Some(x.to_owned()))
+                .collect(),
         ),
         _ => unreachable!(),
     }
@@ -91,7 +139,7 @@ pub fn render_complete(
         .collect();
     let svg_nodes: BTreeMap<String, Rc<RefCell<dyn Node>>> = nodes
         .iter()
-        .map(|(id, node)| (id.to_owned(), from_gsn_node(id, node)))
+        .map(|(id, node)| (id.to_owned(), svg_from_gsn_node(id, node)))
         .collect();
     dg = dg
         .add_nodes(svg_nodes)
@@ -111,7 +159,13 @@ pub fn render_complete(
 /// Render all nodes in one diagram
 ///
 /// TODO make it right
-///
+///      1) Map gsn nodes to svg nodes
+///         foreign module nodes will be mapped to the away svg node
+///      2) Replace the edges with the right ones
+///      3) filter all foreign modules that have no edge to this module
+/// 
+/// 
+/// 
 pub fn render_argument(
     module: &str,
     nodes: &MyMap<String, GsnNode>,
@@ -122,24 +176,31 @@ pub fn render_argument(
     let mut svg_nodes = BTreeMap::<String, Rc<RefCell<dyn Node>>>::new();
     let mut edges: BTreeMap<String, Vec<(String, EdgeType)>> = nodes
         .iter()
-        .filter(|(_, node)| node.module == module)
+        // .filter(|(_, node)| node.module == module)
         .map(|(id, node)| {
             (
                 id.to_owned(),
                 node.get_edges()
                     .into_iter()
-                    .map(|(t, et)| {
+                    .filter_map(|(t, et)| {
                         let target_node = nodes.get(&t).unwrap();
                         let target_mod = target_node.module.to_owned();
                         if target_mod != module {
-                            if !svg_nodes.contains_key(&target_mod) {
+                            if svg_nodes.contains_key(&target_mod) {
+                                return Some((target_mod, EdgeType::NoneToComposite));
+                            } else {
                                 let target_type = match &t {
                                     x if x.starts_with('G') => AwayType::Goal,
                                     x if x.starts_with("Sn") => AwayType::Solution,
                                     x if x.starts_with('A') => AwayType::Assumption,
                                     x if x.starts_with('J') => AwayType::Justification,
                                     x if x.starts_with('C') => AwayType::Context,
-                                    _ => unimplemented!(), // TODO Strategy
+                                    _ => return Some((t, et)), // Strategies are
+                                };
+                                let admon = match &target_type {
+                                    AwayType::Assumption => Some("A".to_owned()),
+                                    AwayType::Justification => Some("J".to_owned()),
+                                    _ => None,
                                 };
                                 svg_nodes.insert(
                                     target_mod.to_owned(),
@@ -147,20 +208,16 @@ pub fn render_argument(
                                         &target_mod,
                                         &target_node.text,
                                         &target_mod,
-                                        AwayType::Goal,
-                                        match target_type {
-                                            AwayType::Assumption => Some("A".to_owned()),
-                                            AwayType::Justification => Some("J".to_owned()),
-                                            _ => None,
-                                        },
+                                        target_type,
+                                        admon,
                                         None,
                                         None,
                                     ))),
                                 );
                             }
-                            (target_mod, et) // TODO wrong edge type
+                            Some((target_mod, et)) // TODO potentially wrong edge type
                         } else {
-                            (t, et)
+                            Some((t, et))
                         }
                     })
                     .collect::<Vec<(String, EdgeType)>>(),
@@ -172,7 +229,7 @@ pub fn render_argument(
         &mut nodes
             .iter()
             .filter(|(_, node)| node.module == module)
-            .map(|(id, node)| (id.to_owned(), from_gsn_node(id, node)))
+            .map(|(id, node)| (id.to_owned(), svg_from_gsn_node(id, node)))
             .collect(),
     );
 
