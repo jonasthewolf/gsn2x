@@ -2,12 +2,17 @@ use std::{cell::RefCell, rc::Rc};
 
 use crate::{util::point2d::Point2D, FontInfo};
 
-use self::{box_node::BoxNode, context_node::ContextNode, elliptical_node::EllipticalNode, away_node::{AwayNode, AwayType}};
+use self::{
+    away_node::{AwayNode, AwayType},
+    box_node::BoxNode,
+    context_node::ContextNode,
+    elliptical_node::EllipticalNode,
+};
 
+pub mod away_node;
 pub mod box_node;
 pub mod context_node;
 pub mod elliptical_node;
-pub mod away_node;
 pub(crate) mod invisible_node;
 
 #[derive(PartialEq)]
@@ -90,7 +95,6 @@ pub fn new_away_assumption(
         text,
         module,
         AwayType::Assumption,
-        Some("A".to_owned()),
         url,
         Some(new_classes),
     )))
@@ -132,7 +136,6 @@ pub fn new_away_justification(
         text,
         module,
         AwayType::Justification,
-        Some("J".to_owned()),
         url,
         Some(new_classes),
     )))
@@ -174,7 +177,6 @@ pub fn new_away_solution(
         text,
         module,
         AwayType::Solution,
-        None,
         url,
         Some(new_classes),
     )))
@@ -238,7 +240,6 @@ pub fn new_away_goal(
         text,
         module,
         AwayType::Goal,
-        None,
         url,
         Some(new_classes),
     )))
@@ -278,7 +279,6 @@ pub fn new_away_context(
         text,
         module,
         AwayType::Context,
-        None,
         url,
         Some(new_classes),
     )))

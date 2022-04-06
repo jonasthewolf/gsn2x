@@ -344,15 +344,30 @@ impl<'a> DirGraph<'a> {
                     .move_to((start.x, start.y))
                     .cubic_curve_to(parameters);
                 let arrow_end_id = match &edge_type {
-                    EdgeType::NoneToInContextOf | EdgeType::InContextOfToInContextOf | EdgeType::SupportedByToInContextOf | EdgeType::CompositeToInContextOf => Some("url(#incontextof_arrow)"),
-                    EdgeType::NoneToSupportedBy | EdgeType::InContextOfToSupportedBy | EdgeType::SupportedByToSupportedBy | EdgeType::CompositeToSupportedBy => Some("url(#supportedby_arrow)"),
-                    EdgeType::NoneToComposite | EdgeType::InContextOfToComposite | EdgeType::SupportedByToComposite | EdgeType::CompositeToComposite => Some("url(#composite_arrow)"),
+                    EdgeType::NoneToInContextOf
+                    | EdgeType::InContextOfToInContextOf
+                    | EdgeType::SupportedByToInContextOf
+                    | EdgeType::CompositeToInContextOf => Some("url(#incontextof_arrow)"),
+                    EdgeType::NoneToSupportedBy
+                    | EdgeType::InContextOfToSupportedBy
+                    | EdgeType::SupportedByToSupportedBy
+                    | EdgeType::CompositeToSupportedBy => Some("url(#supportedby_arrow)"),
+                    EdgeType::NoneToComposite
+                    | EdgeType::InContextOfToComposite
+                    | EdgeType::SupportedByToComposite
+                    | EdgeType::CompositeToComposite => Some("url(#composite_arrow)"),
                     EdgeType::Invisible => None,
                 };
                 let arrow_start_id = match &edge_type {
-                    EdgeType::InContextOfToComposite | EdgeType::InContextOfToInContextOf | EdgeType::InContextOfToSupportedBy => Some("url(#incontextof_arrow)"),
-                    EdgeType::SupportedByToComposite | EdgeType::SupportedByToInContextOf | EdgeType::SupportedByToSupportedBy => Some("url(#supportedby_arrow)"),
-                    EdgeType::CompositeToComposite | EdgeType::CompositeToInContextOf | EdgeType::CompositeToSupportedBy => Some("url(#composite_arrow)"),
+                    EdgeType::InContextOfToComposite
+                    | EdgeType::InContextOfToInContextOf
+                    | EdgeType::InContextOfToSupportedBy => Some("url(#incontextof_arrow)"),
+                    EdgeType::SupportedByToComposite
+                    | EdgeType::SupportedByToInContextOf
+                    | EdgeType::SupportedByToSupportedBy => Some("url(#supportedby_arrow)"),
+                    EdgeType::CompositeToComposite
+                    | EdgeType::CompositeToInContextOf
+                    | EdgeType::CompositeToSupportedBy => Some("url(#composite_arrow)"),
                     _ => None,
                 };
                 let classes = match edge_type {
@@ -432,7 +447,7 @@ impl<'a> DirGraph<'a> {
         let composite_arrow = Marker::new()
             .set("id", "composite_arrow")
             .set("markerWidth", 20u32)
-            .set("markerHeight",20u32)
+            .set("markerHeight", 20u32)
             .set("refX", 20f32)
             .set("refY", 10f32)
             .set("orient", "auto")
@@ -466,7 +481,11 @@ impl<'a> DirGraph<'a> {
         self.document = self
             .document
             .set("xmlns:xlink", "http://www.w3.org/1999/xlink");
-        self.document = self.document.add(composite_arrow).add(supportedby_arrow).add(incontext_arrow);
+        self.document = self
+            .document
+            .add(composite_arrow)
+            .add(supportedby_arrow)
+            .add(incontext_arrow);
         self
     }
 

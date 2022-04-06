@@ -78,6 +78,8 @@ fn main() -> Result<(), std::io::Error> {
         .add_edge(goal, goal5.clone(), EdgeType::SupportedBy)
         .add_edge(goal5.clone(), justification2, EdgeType::InContextOf)
         .add_levels(&mut levels)
-        .write(std::fs::File::create(std::path::Path::new("examples/simple.svg"))?)?;
+        .write(std::fs::File::create(std::path::Path::new(
+            "examples/simple.svg",
+        ))?)?;
     Ok(())
 }
