@@ -62,18 +62,18 @@ Please see [examples/example.gsn.yaml] for an example of the used syntax.
 
 The tool automatically performs the following validation checks on the input YAML:
 
- - V01: All IDs start with a known prefix i.e., there are only known element types.
- - V02: All Goals and Strategies are either marked with `undeveloped: true` or have supporting Goals, Strategies or Solutions.
+ - V01: All IDs must start with a known prefix i.e., there are only known element types.
+ - V02: All Goals and Strategies must be either marked with `undeveloped: true` or have supporting Goals, Strategies or Solutions.
  - V03: Goals and Strategies marked as undeveloped, must have no supporting arguments.
- - V04: All elements listed under `supportedBy` and `inContextOf` are known elements types and semantically sensible
+ - V04: All elements listed under `supportedBy` and `inContextOf` must be known elements types and semantically sensible
         (e.g. a Justification cannot be listed under `supportedBy`).
- - V05: All referenced elelemts in `supportedBy` and `inContextOf` are unique i.e., no duplicates in the list.
- - V06: All referenced elelemts in `supportedBy` and `inContextOf` do not refer to the node itself.
- - C01: There is only one top-level element (G,S,C,J,A,Sn) unreferenced. 
- - C02: The top-level element is a Goal. A top-level element is an element that is not referenced by any other element.
- - C03: All referenced elements in `supportedBy` and `inContextOf` exist.
- - C04: There are no circular `supportedBy` references.
- - C05: There is only one usage of the same `level`.
+ - V05: All referenced elelemts in `supportedBy` and `inContextOf` must be unique i.e., no duplicates in the list.
+ - V06: All referenced elelemts in `supportedBy` and `inContextOf` must not refer to the node itself.
+ - C01: There should be only one top-level element (G,S,C,J,A,Sn) unreferenced. 
+ - C02: The top-level element must be a Goal. A top-level element is an element that is not referenced by any other element.
+ - C03: All referenced elements in `supportedBy` and `inContextOf` must exist.
+ - C04: There must be no circular `supportedBy` references.
+ - C05: The should be more than one usage of the same `level`.
 
 The checks (Cxx) always apply to the complete set of input files.
 
