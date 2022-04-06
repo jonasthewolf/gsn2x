@@ -186,7 +186,7 @@ This will generate the argument view for each module, the complete view (`-f ful
 
 An additional file that lists all the evidences in the input file is output by default in `evidences.md`.
 
-See [examples/evidences.md] for an example.
+See [examples/evidences.md](examples/evidences.md) for an example.
 
 The format can be used in Markdown and reStructuredText files.
 
