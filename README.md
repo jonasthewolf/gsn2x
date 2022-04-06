@@ -14,7 +14,7 @@ You can create an SVG like this:
 
     gsn2x <yourgsnfile.yaml> 
 
-The output is an argument view in SVG format and automatically written to `<yourgsnfile.svg>`. 
+The output is an argument view in SVG format and automatically written to `<yourgsnfile.svg>`. If more than one input files are provided, they are treated as [modules](#modular-extension).
 
     
 **You can find pre-built binaries for Windows, Linux and MacOS on the [releases page](https://github.com/jonasthewolf/gsn2x/releases).**
@@ -44,6 +44,7 @@ These elements should marked with `undeveloped: true`, otherwise validation will
 
 ### Example
 
+```yaml
     G1:
       text: This is a Goal
       supportedBy: [S1]
@@ -54,7 +55,7 @@ These elements should marked with `undeveloped: true`, otherwise validation will
     
     C1: 
       text: This is a Context
-
+```
 
 Please see [examples/example.gsn.yaml] for an example of the used syntax.
 
@@ -92,6 +93,7 @@ By using this feature different views on the GSN can be generated.
 
 ### Example
 
+```yaml
     G1:
       text: This is a Goal
       supportedBy: [S1]
@@ -105,6 +107,7 @@ By using this feature different views on the GSN can be generated.
     C1: 
       text: This is a Context
       layer1: This is additional information for C1.
+```
 
 In this example, a call to `gsn2x -l layer1` will show the additional information to each element prefixed with _`LAYER1: `_.
 Of course, using `text`, `inContextOf`, `supportedBy`, `url`, `undeveloped`, `level` or `classes` are not sensible parameters to pass for the `-l` option. 
@@ -127,9 +130,11 @@ You can assign additional classes by adding the `classes:` attribute. It must be
 
 ### Example
 
+```yaml
     G1:
       text: This is a Goal
       classes: [additionalclass1, additionalclass2]
+```
 
 ## Logical levels for elements
 
