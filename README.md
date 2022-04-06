@@ -21,7 +21,7 @@ The output is an argument view in SVG format and automatically written to `<your
 
 ## Syntax in YAML
 
-The following Goal Structuring Notation (GSN) elements are supported:
+The following Goal Structuring Notation (GSN) core elements are supported:
  - Goal (G), 
  - Assumption (A), 
  - Justification (J), 
