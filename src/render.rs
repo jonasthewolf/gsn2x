@@ -205,7 +205,10 @@ pub fn away_svg_from_gsn_node(
 }
 
 ///
-///
+/// TODO Implement
+/// Replace every node with the module node.
+/// Calculate dependencies between modules.
+/// Render them.
 ///
 ///
 pub fn render_architecture(
@@ -221,6 +224,8 @@ pub fn render_architecture(
 ///
 /// Render all nodes in one diagram
 ///
+/// TODO mask modules
+/// 
 pub fn render_complete(
     nodes: &MyMap<String, GsnNode>,
     output: &mut impl Write,
