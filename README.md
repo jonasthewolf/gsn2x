@@ -45,16 +45,16 @@ These elements should marked with `undeveloped: true`, otherwise validation will
 ### Example
 
 ```yaml
-    G1:
-      text: This is a Goal
-      supportedBy: [S1]
-      inContextOf: [C1]
-    
-    S1:
-      text: This is a Strategy
-    
-    C1: 
-      text: This is a Context
+G1:
+  text: This is a Goal
+  supportedBy: [S1]
+  inContextOf: [C1]
+
+S1:
+  text: This is a Strategy
+
+C1: 
+  text: This is a Context
 ```
 
 Please see [examples/example.gsn.yaml] for an example of the used syntax.
@@ -94,19 +94,19 @@ By using this feature different views on the GSN can be generated.
 ### Example
 
 ```yaml
-    G1:
-      text: This is a Goal
-      supportedBy: [S1]
-      inContextOf: [C1]
-      layer1: This is additional information for G1.
-    
-    S1:
-      text: This is a Strategy
-      layer1: This is additional information for S1.
-    
-    C1: 
-      text: This is a Context
-      layer1: This is additional information for C1.
+G1:
+  text: This is a Goal
+  supportedBy: [S1]
+  inContextOf: [C1]
+  layer1: This is additional information for G1.
+
+S1:
+  text: This is a Strategy
+  layer1: This is additional information for S1.
+
+C1: 
+  text: This is a Context
+  layer1: This is additional information for C1.
 ```
 
 In this example, a call to `gsn2x -l layer1` will show the additional information to each element prefixed with _`LAYER1: `_.
@@ -131,9 +131,9 @@ You can assign additional classes by adding the `classes:` attribute. It must be
 ### Example
 
 ```yaml
-    G1:
-      text: This is a Goal
-      classes: [additionalclass1, additionalclass2]
+G1:
+  text: This is a Goal
+  classes: [additionalclass1, additionalclass2]
 ```
 
 ## Logical levels for elements
