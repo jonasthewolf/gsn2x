@@ -137,13 +137,14 @@ impl Node for AwayNode {
                 .move_to((self.x - self.width / 2, start_y))
                 .vertical_line_to(self.y - self.height / 2 + self.addon_height)
                 .elliptical_arc_to((
-                    self.width/2,
+                    self.width / 2,
                     self.addon_height,
                     0,
                     0,
                     1,
                     self.x + self.width / 2,
-                    self.y - self.height / 2 + self.addon_height))
+                    self.y - self.height / 2 + self.addon_height,
+                ))
                 .vertical_line_to(start_y),
             AwayType::Context => Data::new()
                 .move_to((self.x - self.width / 2, start_y))

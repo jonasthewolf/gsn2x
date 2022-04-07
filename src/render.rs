@@ -225,7 +225,7 @@ pub fn render_architecture(
 /// Render all nodes in one diagram
 ///
 /// TODO mask modules
-/// 
+///
 pub fn render_complete(
     nodes: &MyMap<String, GsnNode>,
     output: &mut impl Write,
