@@ -111,6 +111,7 @@ impl Node for ContextNode {
                 "y",
                 self.y - self.height / 2 + PADDING + self.lines.get(0).unwrap().1,
             )
+            .set("textLength", self.lines.get(0).unwrap().0)
             .set("font-weight", "bold")
             .set("font-size", font.size)
             .set("font-family", font.name.as_str())

@@ -212,12 +212,50 @@ pub fn away_svg_from_gsn_node(
 ///
 ///
 pub fn render_architecture(
-    _nodes: &MyMap<String, GsnNode>,
-    _dependencies: Option<&BTreeMap<String, BTreeMap<String, ModuleDependency>>>,
-    _output: &mut impl Write,
-    _ctx: &StaticRenderContext,
+    dependencies: &BTreeMap<String, BTreeMap<String, ModuleDependency>>,
+    output: &mut impl Write,
+    ctx: &StaticRenderContext,
 ) -> Result<(), anyhow::Error> {
-    // TODO
+    let mut dg = dirgraphsvg::DirGraph::default();
+    let mut edges: BTreeMap<String, Vec<(String, EdgeType)>> = dependencies
+        .iter()
+        .map(|(module, targets)| {
+            (
+                module.to_owned(),
+                targets
+                    .iter()
+                    .map(|(target, t_type)| {
+                        (
+                            target.to_owned(),
+                            match t_type {
+                                ModuleDependency::SupportedBy => EdgeType::NoneToSupportedBy,
+                                ModuleDependency::InContextOf => EdgeType::NoneToInContextOf,
+                                ModuleDependency::Composite => EdgeType::NoneToComposite,
+                            },
+                        )
+                    })
+                    .collect(),
+            )
+        })
+        .collect();
+    let svg_nodes: BTreeMap<String, Rc<RefCell<dyn Node>>> = dependencies
+        .keys()
+        .map(|module| {
+            (
+                module.to_owned(),
+                new_module(module, "", None, None) as Rc<RefCell<dyn Node>>,
+            )
+        })
+        .collect();
+
+    dg = dg.add_nodes(svg_nodes).add_edges(&mut edges);
+
+    if let Some(css) = ctx.stylesheet {
+        dg = dg.add_css_sytlesheet(css);
+    }
+
+    dg.write(output)?;
+
     Ok(())
 }
 

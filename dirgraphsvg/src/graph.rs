@@ -71,7 +71,14 @@ pub(crate) fn rank_nodes<'a>(
             n_ids.remove(target);
         }
     }
-    let root_nodes = n_ids.iter().map(|x| x.to_owned());
+    let root_nodes: Vec<String> = if n_ids.is_empty() {
+        // No root nodes are found.
+        // This can actually only happen in architecture view.
+        // Take the first node and start from there.
+        vec![nodes.iter().nth(0).unwrap().0.to_owned()]
+    } else {
+        n_ids.iter().map(|x| x.to_owned()).collect()
+    };
     // Perform depth first search for SupportedBy child nodes.
     for (horiz_rank, n) in root_nodes.into_iter().enumerate() {
         visited_nodes.insert(n.to_owned());
@@ -212,7 +219,7 @@ fn find_next_child_node(
             .iter()
             .filter(|(id, _)| count_unvisited_parents(edge_map, visited_nodes, id) == 0)
             .filter_map(|(id, et)| match et {
-                EdgeType::NoneToSupportedBy => Some(id.to_owned()),
+                EdgeType::NoneToSupportedBy | EdgeType::NoneToComposite => Some(id.to_owned()),
                 _ => None,
             })
             .find(|id| !visited_nodes.contains(id))
@@ -349,7 +356,9 @@ fn get_depths<'a>(
                 let mut c_nodes: Vec<&str> = children
                     .iter()
                     .filter_map(|(target, edge_type)| match edge_type {
-                        EdgeType::NoneToSupportedBy => Some(target.as_str()),
+                        EdgeType::NoneToSupportedBy | EdgeType::NoneToComposite => {
+                            Some(target.as_str())
+                        }
                         _ => None,
                     })
                     .collect();

@@ -3,9 +3,10 @@
 <rect fill="lightgrey" height="5" stroke="black" stroke-width="1" width="10" x="0" y="0"/>
 <rect fill="lightgrey" height="10" stroke="black" stroke-width="1" width="20" x="0" y="5"/>
 </symbol>
-<marker id="composite_arrow" markerHeight="20" markerUnits="users_posaceOnUse" markerWidth="20" orient="auto" refX="20" refY="10">
-<polyline fill="none" points="0 0, 10 10, 0 20" stroke="black" stroke-width="1"/>
-<polyline fill="none" points="10 0, 20 10, 10 20" stroke="black" stroke-width="1"/>
+<marker id="composite_arrow" markerHeight="9" markerUnits="users_posaceOnUse" markerWidth="10" orient="auto" refX="0" refY="4.5">
+<polyline fill="none" points="0 0, 6 4.5, 0 9" stroke="black" stroke-width="1"/>
+<polyline fill="none" points="4 0, 10 4.5, 4 9" stroke="black" stroke-width="1"/>
+<polyline fill="none" points="0 4.5, 10 4.5" stroke="black" stroke-width="1"/>
 </marker>
 <marker id="supportedby_arrow" markerHeight="9" markerUnits="users_posaceOnUse" markerWidth="10" orient="auto" refX="0" refY="4.5">
 <polyline fill="black" points="0 0, 10 4.5, 0 9"/>
@@ -18,7 +19,7 @@
 G1
 </title>
 <path class="border" d="M300,20 L384,20 L384,70 L300,70 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" x="307" y="41">
+<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="13" x="307" y="41">
 G1
 </text>
 <text font-family="AppleSystemUIFont" font-size="12" textLength="51" x="307" y="61">
@@ -30,7 +31,7 @@ Main Goal
 S1
 </title>
 <path class="border" d="M285,111 L414,111 L399,161 L270,161 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" x="292" y="132">
+<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="12" x="292" y="132">
 S1
 </text>
 <text font-family="AppleSystemUIFont" font-size="12" textLength="101" x="277" y="152">
@@ -42,7 +43,7 @@ Divide and Conquer
 G2
 </title>
 <path class="border" d="M20,215 L104,215 L104,271 L20,271 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" x="27" y="236">
+<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="14" x="27" y="236">
 G2
 </text>
 <text font-family="AppleSystemUIFont" font-size="12" textLength="31" x="27" y="256">
@@ -55,7 +56,7 @@ Divide
 J1
 </title>
 <ellipse class="border" cx="609" cy="243" fill="none" rx="55" ry="41" stroke="black" stroke-width="1"/>
-<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" x="573" y="232">
+<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="11" x="573" y="232">
 J1
 </text>
 <text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" x="659" y="279">
@@ -74,7 +75,7 @@ G3
 examples_modular_sub1_gsn_yaml
 </text>
 <path class="border" d="M294,254 V204 H514 V254" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" x="301" y="225">
+<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="15" x="301" y="225">
 G3
 </text>
 <use href="#module_icon" x="301" y="261"/>
@@ -87,7 +88,7 @@ Conquer the submodules
 J1
 </title>
 <ellipse class="border" cx="609" cy="243" fill="none" rx="55" ry="41" stroke="black" stroke-width="1"/>
-<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" x="573" y="232">
+<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="11" x="573" y="232">
 J1
 </text>
 <text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" x="659" y="279">

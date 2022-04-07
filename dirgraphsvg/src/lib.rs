@@ -180,7 +180,6 @@ impl<'a> DirGraph<'a> {
 
         // Rank nodes
         let ranks = rank_nodes(&mut self.nodes, &mut self.edges);
-
         self.width = 0;
         self.height = 0;
 
@@ -279,7 +278,7 @@ impl<'a> DirGraph<'a> {
 
     ///
     ///
-    ///
+    /// TODO Only render one edge if there is an edge in the other direction too.
     ///
     ///
     ///
@@ -436,25 +435,31 @@ impl<'a> DirGraph<'a> {
             .add(incontext_polyline);
 
         let composite_polyline1 = Polyline::new()
-            .set("points", "0 0, 10 10, 0 20")
+            .set("points", "0 0, 6 4.5, 0 9")
             .set("stroke", "black")
             .set("stroke-width", 1u32)
             .set("fill", "none");
         let composite_polyline2 = Polyline::new()
-            .set("points", "10 0, 20 10, 10 20")
+            .set("points", "4 0, 10 4.5, 4 9")
+            .set("stroke", "black")
+            .set("stroke-width", 1u32)
+            .set("fill", "none");
+        let composite_polyline3 = Polyline::new()
+            .set("points", "0 4.5, 10 4.5")
             .set("stroke", "black")
             .set("stroke-width", 1u32)
             .set("fill", "none");
         let composite_arrow = Marker::new()
             .set("id", "composite_arrow")
-            .set("markerWidth", 20u32)
-            .set("markerHeight", 20u32)
-            .set("refX", 20f32)
-            .set("refY", 10f32)
+            .set("markerWidth", 10u32)
+            .set("markerHeight", 9u32)
+            .set("refX", 0f32)
+            .set("refY", 4.5f32)
             .set("orient", "auto")
             .set("markerUnits", "users_posaceOnUse")
             .add(composite_polyline1)
-            .add(composite_polyline2);
+            .add(composite_polyline2)
+            .add(composite_polyline3);
 
         let mi_r1 = Rectangle::new()
             .set("x", 0u32)

@@ -194,6 +194,7 @@ impl Node for AwayNode {
         let id = Text::new()
             .set("x", self.x - self.width / 2 + PADDING_HORIZONTAL)
             .set("y", start_id + self.lines.get(0).unwrap().1)
+            .set("textLength", self.lines.get(0).unwrap().0)
             .set("font-weight", "bold")
             .set("font-size", font.size)
             .set("font-family", font.name.as_str())

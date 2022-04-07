@@ -38,6 +38,10 @@ pub trait Node {
     fn render(&mut self, font: &FontInfo) -> svg::node::element::Group;
 }
 
+///
+///
+///
+///
 pub(crate) fn get_port_default_coordinates(
     x: u32,
     y: u32,
@@ -78,6 +82,10 @@ fn setup_basics(id: &str, classes: &Option<Vec<String>>, url: &Option<String>) -
     g
 }
 
+///
+///
+///
+///
 pub fn new_assumption(
     id: &str,
     text: &str,
@@ -98,6 +106,10 @@ pub fn new_assumption(
     )))
 }
 
+///
+///
+///
+///
 pub fn new_away_assumption(
     id: &str,
     text: &str,
@@ -119,6 +131,10 @@ pub fn new_away_assumption(
     )))
 }
 
+///
+///
+///
+///
 pub fn new_justification(
     id: &str,
     text: &str,
@@ -139,6 +155,11 @@ pub fn new_justification(
     )))
 }
 
+///
+///
+///
+///
+///
 pub fn new_away_justification(
     id: &str,
     text: &str,
@@ -160,6 +181,10 @@ pub fn new_away_justification(
     )))
 }
 
+///
+///
+///
+///
 pub fn new_solution(
     id: &str,
     text: &str,
@@ -180,6 +205,10 @@ pub fn new_solution(
     )))
 }
 
+///
+///
+///
+///
 pub fn new_away_solution(
     id: &str,
     text: &str,
@@ -201,6 +230,10 @@ pub fn new_away_solution(
     )))
 }
 
+///
+///
+///
+///
 pub fn new_strategy(
     id: &str,
     text: &str,
@@ -217,11 +250,16 @@ pub fn new_strategy(
         text,
         undeveloped,
         15,
+        false,
         url,
         Some(new_classes),
     )))
 }
 
+///
+///
+///
+///
 pub fn new_goal(
     id: &str,
     text: &str,
@@ -238,11 +276,16 @@ pub fn new_goal(
         text,
         undeveloped,
         0,
+        false,
         url,
         Some(new_classes),
     )))
 }
 
+///
+///
+///
+///
 pub fn new_away_goal(
     id: &str,
     text: &str,
@@ -264,6 +307,10 @@ pub fn new_away_goal(
     )))
 }
 
+///
+///
+///
+///
 pub fn new_context(
     id: &str,
     text: &str,
@@ -282,6 +329,10 @@ pub fn new_context(
     )))
 }
 
+///
+///
+///
+///
 pub fn new_away_context(
     id: &str,
     text: &str,
@@ -298,6 +349,31 @@ pub fn new_away_context(
         text,
         module,
         AwayType::Context,
+        url,
+        Some(new_classes),
+    )))
+}
+
+///
+///
+///
+///
+pub fn new_module(
+    id: &str,
+    text: &str,
+    url: Option<String>,
+    classes: Option<Vec<String>>,
+) -> Rc<RefCell<BoxNode>> {
+    let mut new_classes: Vec<String> = vec!["gsnelem".to_owned(), "gsnmodule".to_owned()];
+    if let Some(classes) = classes {
+        classes.into_iter().for_each(|c| new_classes.push(c));
+    }
+    Rc::new(RefCell::new(BoxNode::new(
+        id,
+        text,
+        false,
+        0,
+        true,
         url,
         Some(new_classes),
     )))

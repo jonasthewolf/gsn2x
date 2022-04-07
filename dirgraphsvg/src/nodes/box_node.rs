@@ -7,6 +7,7 @@ use super::{get_port_default_coordinates, setup_basics, Node, Point2D, Port};
 const PADDING_VERTICAL: u32 = 7;
 const PADDING_HORIZONTAL: u32 = 7;
 const TEXT_OFFSET: u32 = 20;
+const MOUDLE_TAB_HEIGHT: u32 = 10;
 
 pub struct BoxNode {
     identifier: String,
@@ -21,6 +22,7 @@ pub struct BoxNode {
     x: u32,
     y: u32,
     forced_level: Option<usize>,
+    is_module_node: bool,
 }
 
 impl Node for BoxNode {
@@ -51,6 +53,9 @@ impl Node for BoxNode {
         if self.undeveloped {
             self.height += 5;
         }
+        if self.is_module_node {
+            self.height += MOUDLE_TAB_HEIGHT;
+        }
     }
 
     fn get_id(&self) -> &str {
@@ -73,6 +78,9 @@ impl Node for BoxNode {
         } else if port == &super::Port::West {
             coords.x += self.skew / 2;
         }
+        if port == &super::Port::North && self.is_module_node {
+            coords.y += MOUDLE_TAB_HEIGHT;
+        }
         coords
     }
 
@@ -93,18 +101,32 @@ impl Node for BoxNode {
 
         let title = Title::new().add(svg::node::Text::new(&self.identifier));
 
-        let data = Data::new()
-            .move_to((
-                self.x - self.width / 2 + self.skew,
-                self.y - self.height / 2,
-            ))
-            .line_to((self.x + self.width / 2, self.y - self.height / 2))
-            .line_to((
-                self.x + self.width / 2 - self.skew,
-                self.y + self.height / 2,
-            ))
-            .line_to((self.x - self.width / 2, self.y + self.height / 2))
-            .close();
+        let data = if self.is_module_node {
+            Data::new()
+                .move_to((self.x - self.width / 2, self.y - self.height / 2))
+                .horizontal_line_by(30)
+                .vertical_line_by(MOUDLE_TAB_HEIGHT)
+                .line_to((
+                    self.x + self.width / 2,
+                    self.y - self.height / 2 + MOUDLE_TAB_HEIGHT,
+                ))
+                .line_to((self.x + self.width / 2, self.y + self.height / 2))
+                .line_to((self.x - self.width / 2, self.y + self.height / 2))
+                .close()
+        } else {
+            Data::new()
+                .move_to((
+                    self.x - self.width / 2 + self.skew,
+                    self.y - self.height / 2,
+                ))
+                .line_to((self.x + self.width / 2, self.y - self.height / 2))
+                .line_to((
+                    self.x + self.width / 2 - self.skew,
+                    self.y + self.height / 2,
+                ))
+                .line_to((self.x - self.width / 2, self.y + self.height / 2))
+                .close()
+        };
 
         let border = Path::new()
             .set("fill", "none")
@@ -122,6 +144,7 @@ impl Node for BoxNode {
                 "y",
                 self.y - self.height / 2 + PADDING_VERTICAL + self.lines.get(0).unwrap().1,
             )
+            .set("textLength", self.lines.get(0).unwrap().0)
             .set("font-weight", "bold")
             .set("font-size", font.size)
             .set("font-family", font.name.as_str())
@@ -178,6 +201,7 @@ impl BoxNode {
         text: &str,
         undeveloped: bool,
         skew: u32,
+        is_module_node: bool,
         url: Option<String>,
         classes: Option<Vec<String>>,
     ) -> Self {
@@ -194,6 +218,7 @@ impl BoxNode {
             x: 0,
             y: 0,
             forced_level: None,
+            is_module_node,
         }
     }
 }

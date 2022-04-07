@@ -87,7 +87,7 @@ pub fn get_levels(nodes: &MyMap<String, GsnNode>) -> BTreeMap<&str, Vec<&str>> {
 pub enum ModuleDependency {
     SupportedBy,
     InContextOf,
-    Both,
+    Composite,
 }
 
 ///
@@ -110,7 +110,7 @@ pub fn calculate_module_dependencies(
                     e.entry(other_module.to_owned())
                         .and_modify(|x| {
                             if *x == ModuleDependency::InContextOf {
-                                *x = ModuleDependency::Both
+                                *x = ModuleDependency::Composite
                             }
                         })
                         .or_insert(ModuleDependency::SupportedBy);
@@ -125,7 +125,7 @@ pub fn calculate_module_dependencies(
                     e.entry(other_module.to_owned())
                         .and_modify(|x| {
                             if *x == ModuleDependency::SupportedBy {
-                                *x = ModuleDependency::Both
+                                *x = ModuleDependency::Composite
                             }
                         })
                         .or_insert(ModuleDependency::InContextOf);

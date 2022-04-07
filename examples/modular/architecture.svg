@@ -1,0 +1,56 @@
+<svg viewBox="0 0 486 322" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<symbol id="module_icon" viewbox="0 0 20 20">
+<rect fill="lightgrey" height="5" stroke="black" stroke-width="1" width="10" x="0" y="0"/>
+<rect fill="lightgrey" height="10" stroke="black" stroke-width="1" width="20" x="0" y="5"/>
+</symbol>
+<marker id="composite_arrow" markerHeight="9" markerUnits="users_posaceOnUse" markerWidth="10" orient="auto" refX="0" refY="4.5">
+<polyline fill="none" points="0 0, 6 4.5, 0 9" stroke="black" stroke-width="1"/>
+<polyline fill="none" points="4 0, 10 4.5, 4 9" stroke="black" stroke-width="1"/>
+<polyline fill="none" points="0 4.5, 10 4.5" stroke="black" stroke-width="1"/>
+</marker>
+<marker id="supportedby_arrow" markerHeight="9" markerUnits="users_posaceOnUse" markerWidth="10" orient="auto" refX="0" refY="4.5">
+<polyline fill="black" points="0 0, 10 4.5, 0 9"/>
+</marker>
+<marker id="incontextof_arrow" markerHeight="9" markerUnits="users_posaceOnUse" markerWidth="10" orient="auto" refX="0" refY="4.5">
+<polyline fill="none" points="0 0, 10 4.5, 0 9, 0 0" stroke="black" stroke-width="1"/>
+</marker>
+<g class="gsnelem gsnmodule" id="node_examples_modular_main_gsn_yaml">
+<title>
+examples_modular_main_gsn_yaml
+</title>
+<path class="border" d="M254,114 h30 v10 L446,124 L446,168 L254,168 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="179" x="261" y="135">
+examples_modular_main_gsn_yaml
+</text>
+</g>
+<g class="gsnelem gsnmodule" id="node_examples_modular_sub1_gsn_yaml">
+<title>
+examples_modular_sub1_gsn_yaml
+</title>
+<path class="border" d="M20,114 h30 v10 L214,124 L214,168 L20,168 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="180" x="27" y="135">
+examples_modular_sub1_gsn_yaml
+</text>
+</g>
+<g class="gsnelem gsnmodule" id="node_examples_modular_main_gsn_yaml">
+<title>
+examples_modular_main_gsn_yaml
+</title>
+<path class="border" d="M254,114 h30 v10 L446,124 L446,168 L254,168 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="179" x="261" y="135">
+examples_modular_main_gsn_yaml
+</text>
+</g>
+<g class="gsnelem gsnmodule" id="node_examples_modular_sub3_gsn_yaml">
+<title>
+examples_modular_sub3_gsn_yaml
+</title>
+<path class="border" d="M136,208 h30 v10 L330,218 L330,262 L136,262 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="180" x="143" y="229">
+examples_modular_sub3_gsn_yaml
+</text>
+</g>
+<path class="gsnedge gsninctxt" d="M254,141 C254,141,244,141,224,141" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsnspby" d="M214,141 C214,141,224,141,244,141" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsncomposite" d="M117,168 C117,198,233,188,233,208" fill="none" marker-end="url(#composite_arrow)" stroke="black" stroke-width="1"/>
+</svg>

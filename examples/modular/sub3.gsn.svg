@@ -3,9 +3,10 @@
 <rect fill="lightgrey" height="5" stroke="black" stroke-width="1" width="10" x="0" y="0"/>
 <rect fill="lightgrey" height="10" stroke="black" stroke-width="1" width="20" x="0" y="5"/>
 </symbol>
-<marker id="composite_arrow" markerHeight="20" markerUnits="users_posaceOnUse" markerWidth="20" orient="auto" refX="20" refY="10">
-<polyline fill="none" points="0 0, 10 10, 0 20" stroke="black" stroke-width="1"/>
-<polyline fill="none" points="10 0, 20 10, 10 20" stroke="black" stroke-width="1"/>
+<marker id="composite_arrow" markerHeight="9" markerUnits="users_posaceOnUse" markerWidth="10" orient="auto" refX="0" refY="4.5">
+<polyline fill="none" points="0 0, 6 4.5, 0 9" stroke="black" stroke-width="1"/>
+<polyline fill="none" points="4 0, 10 4.5, 4 9" stroke="black" stroke-width="1"/>
+<polyline fill="none" points="0 4.5, 10 4.5" stroke="black" stroke-width="1"/>
 </marker>
 <marker id="supportedby_arrow" markerHeight="9" markerUnits="users_posaceOnUse" markerWidth="10" orient="auto" refX="0" refY="4.5">
 <polyline fill="black" points="0 0, 10 4.5, 0 9"/>
@@ -22,7 +23,7 @@ G3
 examples_modular_sub1_gsn_yaml
 </text>
 <path class="border" d="M20,70 V20 H240 V70" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" x="27" y="41">
+<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="15" x="27" y="41">
 G3
 </text>
 <use href="#module_icon" x="27" y="77"/>
@@ -35,7 +36,7 @@ Conquer the submodules
 C2
 </title>
 <path class="border" d="M290,36 L350,36 C360,36,360,82,350,82 L290,82 C280,82,280,36,290,36" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" x="290" y="55">
+<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="14" x="290" y="55">
 C2
 </text>
 <text font-family="AppleSystemUIFont" font-size="12" textLength="49" x="290" y="75">
@@ -47,7 +48,7 @@ Context 2
 Sn1
 </title>
 <ellipse class="border" cx="190" cy="174" fill="none" rx="35" ry="35" stroke="black" stroke-width="1"/>
-<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" x="166" y="163">
+<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="18" x="166" y="163">
 Sn1
 </text>
 <text font-family="AppleSystemUIFont" font-size="12" textLength="49" x="166" y="183">

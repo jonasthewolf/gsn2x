@@ -121,6 +121,7 @@ impl Node for EllipticalNode {
                 "y",
                 self.y - self.text_height / 2 + self.lines.get(0).unwrap().1,
             )
+            .set("textLength", self.lines.get(0).unwrap().0)
             .set("font-weight", "bold")
             .set("font-size", font.size)
             .set("font-family", font.name.as_str())
