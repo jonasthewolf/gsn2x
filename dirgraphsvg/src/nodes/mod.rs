@@ -1,6 +1,6 @@
 use std::{cell::RefCell, rc::Rc};
 
-use svg::node::element::{Link, Group};
+use svg::node::element::{Group, Link};
 
 use crate::{util::point2d::Point2D, FontInfo};
 
@@ -62,11 +62,11 @@ pub(crate) fn get_port_default_coordinates(
 }
 
 ///
-/// 
-/// 
-/// 
-/// 
-fn setup_basics(id: &str, classes: Option<Vec<String>>, url: Option<String>) -> Group {
+///
+///
+///
+///
+fn setup_basics(id: &str, classes: &Option<Vec<String>>, url: &Option<String>) -> Group {
     let mut g = Group::new().set("id", format!("node_{}", crate::util::escape_text(&id)));
     if let Some(classes) = &classes {
         g = g.set("class", classes.join(" "))

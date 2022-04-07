@@ -146,10 +146,7 @@ fn main() -> Result<()> {
     let excluded_modules = matches
         .values_of("EXCLUDED_MODULE")
         .map(|x| x.collect::<Vec<&str>>());
-    let modules = inputs
-        .iter()
-        .map(escape_text)
-        .collect::<Vec<String>>();
+    let modules = inputs.iter().map(escape_text).collect::<Vec<String>>();
     let static_render_context = render::StaticRenderContext {
         modules: &modules,
         input_files: &inputs,

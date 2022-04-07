@@ -2,8 +2,8 @@ pub mod edges;
 mod graph;
 pub mod nodes;
 mod util;
-pub use util::escape_text;
 use std::{cell::RefCell, collections::BTreeMap, rc::Rc};
+pub use util::escape_text;
 
 use edges::EdgeType;
 use graph::{get_forced_levels, rank_nodes, NodePlace};

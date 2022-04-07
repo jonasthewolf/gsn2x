@@ -18,4 +18,3 @@ pub fn escape_text(input: &&str) -> String {
         .replace('\'', "")
         .replace('"', "")
 }
-

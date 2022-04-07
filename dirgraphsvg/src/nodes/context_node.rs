@@ -1,8 +1,8 @@
-use svg::node::element::{path::Data, Group, Link, Path, Text, Title};
+use svg::node::element::{path::Data, Path, Text, Title};
 
 use crate::FontInfo;
 
-use super::{get_port_default_coordinates, Node, Point2D};
+use super::{get_port_default_coordinates, setup_basics, Node, Point2D};
 
 const PADDING: u32 = 5;
 const TEXT_OFFSET: u32 = 20;
@@ -73,15 +73,7 @@ impl Node for ContextNode {
     }
 
     fn render(&mut self, font: &FontInfo) -> svg::node::element::Group {
-        // TODO escape id
-        let mut g = Group::new().set("id", format!("node_{}", self.get_id()));
-        if let Some(classes) = &self.classes {
-            g = g.set("class", classes.join(" "))
-        }
-        if let Some(url) = &self.url {
-            let link = Link::new();
-            g = g.add(link.set("xlink:href", url.as_str()));
-        }
+        let mut g = setup_basics(&self.identifier, &self.classes, &self.url);
 
         let title = Title::new().add(svg::node::Text::new(&self.identifier));
 
