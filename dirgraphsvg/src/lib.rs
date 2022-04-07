@@ -2,6 +2,7 @@ pub mod edges;
 mod graph;
 pub mod nodes;
 mod util;
+pub use util::escape_text;
 use std::{cell::RefCell, collections::BTreeMap, rc::Rc};
 
 use edges::EdgeType;

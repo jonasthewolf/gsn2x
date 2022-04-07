@@ -1,10 +1,9 @@
-#[path = "../src/util.rs"]
-mod util;
+
 
 #[cfg(test)]
 mod integrations {
-    use super::util;
     use assert_cmd::prelude::*;
+    use dirgraphsvg::escape_text;
     use predicates::prelude::*;
     use std::{fs, process::Command};
 
@@ -132,7 +131,7 @@ mod integrations {
         let expected = fs::read_to_string(std::path::Path::new("tests/arch.gsn.test.dot"))?
             .replace(
                 "examples_modular_arch_gsn_test_dot",
-                &util::escape_text(&format!("{}", arch_file.path().display()).as_str()),
+                &escape_text(&format!("{}", arch_file.path().display()).as_str()),
             );
         assert!(predicate_file.eval(expected.as_str()));
         arch_file.close()?;
@@ -160,7 +159,7 @@ mod integrations {
         let expected = fs::read_to_string(std::path::Path::new("tests/complete.gsn.test.dot"))?
             .replace(
                 "examples_modular_complete_gsn_test_dot",
-                &util::escape_text(&format!("{}", compl_file.path().display()).as_str()),
+                &escape_text(&format!("{}", compl_file.path().display()).as_str()),
             );
         assert!(predicate_file.eval(expected.as_str()));
         compl_file.close()?;

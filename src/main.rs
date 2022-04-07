@@ -1,13 +1,12 @@
 use anyhow::{anyhow, Context, Result};
 use clap::Arg;
+use dirgraphsvg::escape_text;
 use std::fs::File;
 use std::io::BufReader;
 
 mod diagnostics;
 mod gsn;
 mod render;
-// mod tera;
-mod util;
 mod yaml_fix;
 
 use diagnostics::Diagnostics;
@@ -149,7 +148,7 @@ fn main() -> Result<()> {
         .map(|x| x.collect::<Vec<&str>>());
     let modules = inputs
         .iter()
-        .map(util::escape_text)
+        .map(escape_text)
         .collect::<Vec<String>>();
     let static_render_context = render::StaticRenderContext {
         modules: &modules,
@@ -193,7 +192,7 @@ fn print_outputs(
                 output_filename.display()
             ))?) as Box<dyn std::io::Write>;
             render::render_argument(
-                &util::escape_text(input),
+                &escape_text(input),
                 &nodes,
                 &mut output_file,
                 &static_render_context,
@@ -258,7 +257,7 @@ fn validate_and_check(
     layers: &Option<Vec<&str>>,
 ) {
     for input in inputs {
-        let module = util::escape_text(input);
+        let module = escape_text(input);
         // Validation for wellformedness is done unconditionally.
         gsn::validation::validate_module(diags, &module, nodes);
         if diags.errors > 0 {
@@ -283,7 +282,7 @@ fn read_inputs(
     diags: &mut Diagnostics,
 ) -> Result<(), anyhow::Error> {
     for input in inputs {
-        let module = util::escape_text(input);
+        let module = escape_text(input);
         let reader =
             BufReader::new(File::open(&input).context(format!("Failed to open file {}", input))?);
         let mut n: MyMap<String, GsnNode> = serde_yaml::from_reader(reader)

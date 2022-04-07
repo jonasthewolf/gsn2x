@@ -1,5 +1,7 @@
 use std::{cell::RefCell, rc::Rc};
 
+use svg::node::element::{Link, Group};
+
 use crate::{util::point2d::Point2D, FontInfo};
 
 use self::{
@@ -57,6 +59,23 @@ pub(crate) fn get_port_default_coordinates(
             Port::West => y,
         },
     }
+}
+
+///
+/// 
+/// 
+/// 
+/// 
+fn setup_basics(id: &str, classes: Option<Vec<String>>, url: Option<String>) -> Group {
+    let mut g = Group::new().set("id", format!("node_{}", crate::util::escape_text(&id)));
+    if let Some(classes) = &classes {
+        g = g.set("class", classes.join(" "))
+    }
+    if let Some(url) = &url {
+        let link = Link::new();
+        g = g.add(link.set("xlink:href", url.as_str()));
+    }
+    g
 }
 
 pub fn new_assumption(
