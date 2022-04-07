@@ -1,4 +1,4 @@
-<svg viewBox="0 0 722 545" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<svg viewBox="0 0 722 534" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 <symbol id="module_icon" viewbox="0 0 20 20">
 <rect fill="lightgrey" height="5" stroke="black" stroke-width="1" width="10" x="0" y="0"/>
 <rect fill="lightgrey" height="10" stroke="black" stroke-width="1" width="20" x="0" y="5"/>
@@ -29,16 +29,16 @@ Divide and Conquer
 <title>
 C2
 </title>
-<rect fill="none" height="28" stroke="black" stroke-width="1" width="221" x="20" y="183"/>
-<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="180" x="54" y="204">
+<rect fill="none" height="28" stroke="black" stroke-width="1" width="221" x="20" y="200"/>
+<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="180" x="54" y="221">
 examples_modular_sub3_gsn_yaml
 </text>
-<path class="border" d="M20,183 V133 C20,122,31,111,42,111 h177 C229,111,240,122,240,133 V183" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" x="27" y="154">
+<path class="border" d="M20,200 V150 C20,139,31,128,42,128 h177 C229,128,240,139,240,150 V200" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" x="27" y="171">
 C2
 </text>
-<use href="#module_icon" x="27" y="190"/>
-<text font-family="AppleSystemUIFont" font-size="12" textLength="49" x="27" y="174">
+<use href="#module_icon" x="27" y="207"/>
+<text font-family="AppleSystemUIFont" font-size="12" textLength="49" x="27" y="191">
 Context 2
 </text>
 </g>
@@ -46,28 +46,31 @@ Context 2
 <title>
 G3
 </title>
-<path class="border" d="M280,136 L422,136 L422,186 L280,186 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" x="287" y="157">
+<path class="border" d="M280,153 L422,153 L422,203 L280,203 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" x="287" y="174">
 G3
 </text>
-<text font-family="AppleSystemUIFont" font-size="12" textLength="128" x="287" y="177">
+<text font-family="AppleSystemUIFont" font-size="12" textLength="128" x="287" y="194">
 Conquer the submodules
 </text>
 </g>
-<g class="gsnelem gsnawayctxt" id="node_C1">
+<g class="gsnelem gsnawayjust" id="node_J1">
 <title>
-C1
+J1
 </title>
-<rect fill="none" height="28" stroke="black" stroke-width="1" width="220" x="462" y="183"/>
-<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="179" x="496" y="204">
+<rect fill="none" height="28" stroke="black" stroke-width="1" width="220" x="462" y="217"/>
+<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="179" x="496" y="238">
 examples_modular_main_gsn_yaml
 </text>
-<path class="border" d="M462,183 V133 C462,122,473,111,484,111 h176 C671,111,682,122,682,133 V183" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" x="469" y="154">
-C1
+<path class="border" d="M462,217 V166 A110,55,0,0,1,682,166 V217" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" x="469" y="187">
+J1
 </text>
-<use href="#module_icon" x="469" y="190"/>
-<text font-family="AppleSystemUIFont" font-size="12" textLength="72" x="469" y="174">
+<use href="#module_icon" x="469" y="224"/>
+<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" x="675" y="125">
+J
+</text>
+<text font-family="AppleSystemUIFont" font-size="12" textLength="72" x="469" y="207">
 Some Context
 </text>
 </g>
@@ -75,21 +78,21 @@ Some Context
 <title>
 Sn1
 </title>
-<rect fill="none" height="28" stroke="black" stroke-width="1" width="221" x="241" y="456"/>
-<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="180" x="275" y="477">
+<rect fill="none" height="28" stroke="black" stroke-width="1" width="221" x="241" y="445"/>
+<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="180" x="275" y="466">
 examples_modular_sub3_gsn_yaml
 </text>
-<path class="border" d="M241,456 V406 C241,252,461,252,461,406 V456" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" x="248" y="427">
+<path class="border" d="M241,445 V395 A110,110,0,0,1,461,395 V445" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" x="248" y="416">
 Sn1
 </text>
-<use href="#module_icon" x="248" y="463"/>
-<text font-family="AppleSystemUIFont" font-size="12" textLength="49" x="248" y="447">
+<use href="#module_icon" x="248" y="452"/>
+<text font-family="AppleSystemUIFont" font-size="12" textLength="49" x="248" y="436">
 Solution 1
 </text>
 </g>
-<path class="gsnedge gsnspby" d="M422,161 C422,161,432,161,452,161" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsnspby" d="M280,161 C280,161,270,161,250,161" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninctxt" d="M351,186 C351,216,351,222,351,242" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninctxt" d="M351,70 C351,100,351,106,351,126" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsnspby" d="M422,178 C422,178,432,178,452,178" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsnspby" d="M280,178 C280,178,270,178,250,178" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M351,203 C351,233,351,255,351,275" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M351,70 C351,100,351,123,351,143" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 </svg>

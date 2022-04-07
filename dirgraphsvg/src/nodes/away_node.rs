@@ -74,10 +74,10 @@ impl Node for AwayNode {
         ); // +3 to make padding at bottom larger
         self.addon_height = match self.node_type {
             AwayType::Goal => 0,
-            AwayType::Solution => (self.width as f32 * 0.7) as u32,
+            AwayType::Solution => (self.width as f32 * 0.5) as u32,
             AwayType::Context => (self.width as f32 * 0.1) as u32,
-            AwayType::Assumption => (self.width as f32 * 0.2) as u32,
-            AwayType::Justification => (self.width as f32 * 0.2) as u32,
+            AwayType::Assumption => (self.width as f32 * 0.25) as u32,
+            AwayType::Justification => (self.width as f32 * 0.25) as u32,
         };
         self.height += self.addon_height;
     }
@@ -133,18 +133,17 @@ impl Node for AwayNode {
                 .vertical_line_to(self.y - self.height / 2)
                 .horizontal_line_to(self.x + self.width / 2)
                 .vertical_line_to(start_y),
-                // TODO Solution is too "big"
             AwayType::Solution | AwayType::Assumption | AwayType::Justification => Data::new()
                 .move_to((self.x - self.width / 2, start_y))
                 .vertical_line_to(self.y - self.height / 2 + self.addon_height)
-                .cubic_curve_to((
-                    self.x - self.width / 2,
-                    self.y - self.height / 2,
+                .elliptical_arc_to((
+                    self.width/2,
+                    self.addon_height,
+                    0,
+                    0,
+                    1,
                     self.x + self.width / 2,
-                    self.y - self.height / 2,
-                    self.x + self.width / 2,
-                    self.y - self.height / 2 + self.addon_height,
-                ))
+                    self.y - self.height / 2 + self.addon_height))
                 .vertical_line_to(start_y),
             AwayType::Context => Data::new()
                 .move_to((self.x - self.width / 2, start_y))
@@ -231,8 +230,8 @@ impl Node for AwayNode {
         };
         if let Some(adm) = admonition {
             let decorator = Text::new()
-                .set("x", self.x + self.width / 2 - 5)
-                .set("y", self.y + self.height / 2 - 5)
+                .set("x", self.x + self.width / 2 - PADDING_HORIZONTAL)
+                .set("y", self.y - self.height / 2 + self.mod_height)
                 .set("font-weight", "bold")
                 .set("font-size", font.size)
                 .set("font-family", font.name.as_str())
