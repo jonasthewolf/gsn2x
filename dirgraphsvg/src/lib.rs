@@ -162,7 +162,7 @@ impl<'a> DirGraph<'a> {
     /// 6) Draw the edges
     ///
     /// TODO There are still situations with overlapping edges e.g. for incontext nodes
-    /// 
+    ///
     ///
     fn layout(mut self) -> Self {
         // Calculate node size

@@ -1,8 +1,8 @@
 #[cfg(test)]
 mod integrations {
     use assert_cmd::prelude::*;
-    use assert_fs::prelude::*;
     use assert_fs::fixture::PathCopy;
+    use assert_fs::prelude::*;
     use dirgraphsvg::escape_text;
     use predicates::prelude::*;
     use std::{fs, process::Command};
@@ -27,8 +27,7 @@ mod integrations {
         let input_file = temp.child("example.gsn.yaml");
         let output_file = temp.child("example.gsn.svg");
         cmd.arg(input_file.as_os_str());
-        cmd.assert()
-            .success();
+        cmd.assert().success();
         output_file.assert(predicate::path::eq_file("./examples/example.gsn.svg"));
         temp.close()?;
         Ok(())
@@ -130,9 +129,10 @@ mod integrations {
             .arg("-N")
             .arg("-E")
             .arg("-F");
-        cmd.assert()
-            .success();
-        output_file.assert(predicate::path::eq_file("./examples/modular/architecture.svg"));
+        cmd.assert().success();
+        output_file.assert(predicate::path::eq_file(
+            "./examples/modular/architecture.svg",
+        ));
         temp.close()?;
         Ok(())
     }
