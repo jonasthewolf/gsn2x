@@ -57,7 +57,7 @@ C1:
   text: This is a Context
 ```
 
-Please see [examples/example.gsn.yaml] for an example of the used syntax.
+Please see [examples/example.gsn.yaml](examples/example.gsn.yaml) for an example of the used syntax.
 
 ## Validation checks
 
