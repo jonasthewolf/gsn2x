@@ -205,10 +205,6 @@ pub fn away_svg_from_gsn_node(
 }
 
 ///
-/// TODO Implement
-/// Replace every node with the module node.
-/// Calculate dependencies between modules.
-/// Render them.
 ///
 ///
 pub fn render_architecture(

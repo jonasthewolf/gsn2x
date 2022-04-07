@@ -172,9 +172,13 @@ If the architecture view should not be output, use the `-A` option.
 The complete view is a similar to an argument view for a single module, but showing all modules within the same diagram. The modules are "unrolled". Modules can be masked i.e., unrolling is prevented, by additionally 
 adding those modules with the `-m` option.
 
+See [example](examples/modular/complete.svg) here.
+
 ### Architecture View
 
 The architecture view only shows the selected modules and their dependencies.
+
+See [example](examples/modular/architecture.svg) here.
 
 ### Example:
     

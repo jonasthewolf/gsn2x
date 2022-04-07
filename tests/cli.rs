@@ -5,6 +5,8 @@ mod integrations {
     use predicates::prelude::*;
     use std::{fs, process::Command};
 
+    // TODO Fix tests
+    
     #[test]
     fn file_doesnt_exist() -> Result<(), Box<dyn std::error::Error>> {
         let mut cmd = Command::cargo_bin("gsn2x")?;
