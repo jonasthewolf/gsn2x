@@ -1,3 +1,7 @@
+meta:
+  moduleName: Sub1
+  
+
 G3:
    text: Conquer the submodules
    inContextOf: [J1, C2]

@@ -1,6 +1,6 @@
 use crate::yaml_fix::MyMap;
 use dirgraphsvg::edges::EdgeType;
-use serde::{Deserialize, Serialize};
+use serde::Deserialize;
 use std::collections::{BTreeMap, HashSet};
 use std::ops::Deref;
 
@@ -11,20 +11,20 @@ pub mod validation;
 /// The main struct of this program
 /// It describes a GSN element
 ///
-#[derive(Debug, Default, Serialize, Deserialize)]
+#[derive(Debug, Default, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct GsnNode {
     pub(crate) text: String,
     pub(crate) in_context_of: Option<Vec<String>>,
     pub(crate) supported_by: Option<Vec<String>>,
+    pub(crate) undeveloped: Option<bool>,
     pub(crate) classes: Option<Vec<String>>,
     pub(crate) url: Option<String>,
     pub(crate) level: Option<String>,
     #[serde(flatten)]
     pub(crate) additional: MyMap<String, String>,
-    pub(crate) undeveloped: Option<bool>,
     #[serde(skip_deserializing)]
-    pub module: String,
+    pub(crate) module: String,
 }
 
 impl GsnNode {
@@ -46,6 +46,23 @@ impl GsnNode {
         }
         edges
     }
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct MetaInformation {
+    pub(crate) module_name: String,
+    pub(crate) module_brief: Option<String>,
+    pub(crate) version: Option<String>,
+    // #[serde(flatten)]
+    // pub(crate) additional: MyMap<String, String>,
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(untagged)]
+pub enum GsnDocumentNode {
+    GsnNode(GsnNode),
+    MetaInformation(MetaInformation),
 }
 
 ///
@@ -83,7 +100,7 @@ pub fn get_levels(nodes: &MyMap<String, GsnNode>) -> BTreeMap<&str, Vec<&str>> {
     levels
 }
 
-#[derive(Debug, PartialEq, Serialize)]
+#[derive(Debug, PartialEq)]
 pub enum ModuleDependency {
     SupportedBy,
     InContextOf,

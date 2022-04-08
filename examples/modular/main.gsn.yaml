@@ -1,4 +1,6 @@
-
+meta:
+  moduleName: Main
+  
 G1:
   text: Main Goal
   supportedBy: [S1]

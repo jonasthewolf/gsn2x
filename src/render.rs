@@ -7,13 +7,6 @@ use std::collections::BTreeMap;
 use std::io::Write;
 use std::rc::Rc;
 
-pub struct StaticRenderContext<'a> {
-    pub modules: &'a [String],
-    pub input_files: &'a [&'a str],
-    pub layers: &'a Option<Vec<&'a str>>,
-    pub stylesheet: Option<&'a str>,
-}
-
 pub fn svg_from_gsn_node(
     id: &str,
     gsn_node: &GsnNode,
@@ -208,9 +201,9 @@ pub fn away_svg_from_gsn_node(
 ///
 ///
 pub fn render_architecture(
-    dependencies: &BTreeMap<String, BTreeMap<String, ModuleDependency>>,
     output: &mut impl Write,
-    ctx: &StaticRenderContext,
+    dependencies: &BTreeMap<String, BTreeMap<String, ModuleDependency>>,
+    stylesheet: Option<&str>,
 ) -> Result<(), anyhow::Error> {
     let mut dg = dirgraphsvg::DirGraph::default();
     let mut edges: BTreeMap<String, Vec<(String, EdgeType)>> = dependencies
@@ -246,7 +239,7 @@ pub fn render_architecture(
 
     dg = dg.add_nodes(svg_nodes).add_edges(&mut edges);
 
-    if let Some(css) = ctx.stylesheet {
+    if let Some(css) = stylesheet {
         dg = dg.add_css_sytlesheet(css);
     }
 
@@ -261,9 +254,9 @@ pub fn render_architecture(
 /// TODO mask modules
 ///
 pub fn render_complete(
-    nodes: &MyMap<String, GsnNode>,
     output: &mut impl Write,
-    ctx: &StaticRenderContext,
+    nodes: &MyMap<String, GsnNode>,
+    stylesheet: Option<&str>,
 ) -> Result<(), anyhow::Error> {
     let mut dg = dirgraphsvg::DirGraph::default();
     let mut edges: BTreeMap<String, Vec<(String, EdgeType)>> = nodes
@@ -279,7 +272,7 @@ pub fn render_complete(
         .add_edges(&mut edges)
         .add_levels(&get_levels(nodes));
 
-    if let Some(css) = ctx.stylesheet {
+    if let Some(css) = stylesheet {
         dg = dg.add_css_sytlesheet(css);
     }
 
@@ -297,10 +290,10 @@ pub fn render_complete(
 ///  3) filter all foreign modules that have no edge to this module
 ///
 pub fn render_argument(
+    output: &mut impl Write,
     module: &str,
     nodes: &MyMap<String, GsnNode>,
-    output: &mut impl Write,
-    ctx: &StaticRenderContext,
+    stylesheet: Option<&str>,
 ) -> Result<(), anyhow::Error> {
     let mut dg = dirgraphsvg::DirGraph::default();
     let mut svg_nodes: BTreeMap<String, Rc<RefCell<dyn Node>>> = nodes
@@ -343,7 +336,7 @@ pub fn render_argument(
         .add_edges(&mut edges)
         .add_levels(&get_levels(nodes));
 
-    if let Some(css) = ctx.stylesheet {
+    if let Some(css) = stylesheet {
         dg = dg.add_css_sytlesheet(css);
     }
 
@@ -353,9 +346,9 @@ pub fn render_argument(
 }
 
 pub(crate) fn render_evidences(
-    nodes: &MyMap<String, GsnNode>,
     output: &mut impl Write,
-    ctx: &StaticRenderContext,
+    nodes: &MyMap<String, GsnNode>,
+    layers: &Option<Vec<&str>>,
 ) -> Result<(), anyhow::Error> {
     writeln!(output)?;
     writeln!(output, "List of Evidences")?;
@@ -379,7 +372,7 @@ pub(crate) fn render_evidences(
         for (layer, text) in node
             .additional
             .iter()
-            .filter(|(l, _)| ctx.layers.iter().flatten().any(|x| x == l))
+            .filter(|(l, _)| layers.iter().flatten().any(|x| x == l))
         {
             writeln!(
                 output,

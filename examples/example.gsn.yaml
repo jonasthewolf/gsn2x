@@ -24,7 +24,7 @@ S1:
  text: Strategy 1
  supportedBy: [G5, G6]
  inContextOf: [A1, J1]
- level: 1
+ level: "1"
 
 G5:
  text: Goal 5
@@ -75,7 +75,7 @@ A2:
 S2:
  text: Strategy 2
  supportedBy: [G4, G7]
- level: 1
+ level: "1"
 
 G7:
  text: Undeveloped Goal

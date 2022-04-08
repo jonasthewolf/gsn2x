@@ -1,6 +1,7 @@
 use anyhow::{anyhow, Context, Result};
 use clap::Arg;
 use dirgraphsvg::escape_text;
+use std::collections::HashMap;
 use std::fs::File;
 use std::io::BufReader;
 
@@ -10,7 +11,7 @@ mod render;
 mod yaml_fix;
 
 use diagnostics::Diagnostics;
-use gsn::GsnNode;
+use gsn::{GsnDocumentNode, GsnNode, MetaInformation};
 use yaml_fix::MyMap;
 
 ///
@@ -146,22 +147,18 @@ fn main() -> Result<()> {
     let excluded_modules = matches
         .values_of("EXCLUDED_MODULE")
         .map(|x| x.collect::<Vec<&str>>());
-    let modules = inputs.iter().map(escape_text).collect::<Vec<String>>();
-    let static_render_context = render::StaticRenderContext {
-        modules: &modules,
-        input_files: &inputs,
-        layers: &layers,
-        stylesheet,
-    };
+    // Filename to module name mapping
+    let mut modules: HashMap<String, String> = HashMap::new();
 
     // Read input
-    read_inputs(&inputs, &mut nodes, &mut diags)?;
+    read_inputs(&inputs, &mut nodes, &mut modules, &mut diags)?;
+
     // Validate
-    validate_and_check(&inputs, excluded_modules, &mut diags, &nodes, &layers);
+    validate_and_check(&nodes, &modules, &mut diags, excluded_modules, &layers);
 
     if diags.errors == 0 && !matches.is_present("CHECKONLY") {
         // Output argument view
-        print_outputs(&matches, &inputs, nodes, static_render_context)?;
+        print_outputs(&matches, nodes, &modules, &layers, stylesheet)?;
     }
     // Output diagnostic messages
     output_messages(&diags)
@@ -175,30 +172,26 @@ fn main() -> Result<()> {
 ///
 fn print_outputs(
     matches: &clap::ArgMatches,
-    inputs: &[&str],
     nodes: MyMap<String, GsnNode>,
-    static_render_context: render::StaticRenderContext,
+    modules: &HashMap<String, String>,
+    layers: &Option<Vec<&str>>,
+    stylesheet: Option<&str>,
 ) -> Result<(), anyhow::Error> {
     if !matches.is_present("NO_ARGUMENT_VIEW") {
-        for input in inputs {
-            let mut pbuf = std::path::PathBuf::from(input);
+        for (filename, module) in modules {
+            let mut pbuf = std::path::PathBuf::from(filename);
             pbuf.set_extension("svg");
             let output_filename = pbuf.as_path();
             let mut output_file = Box::new(File::create(output_filename).context(format!(
                 "Failed to open output file {}",
                 output_filename.display()
             ))?) as Box<dyn std::io::Write>;
-            render::render_argument(
-                &escape_text(input),
-                &nodes,
-                &mut output_file,
-                &static_render_context,
-            )?;
+            render::render_argument(&mut output_file, &module, &nodes, stylesheet)?;
         }
     }
-    if inputs.len() > 1 {
+    if modules.len() > 1 {
         if !matches.is_present("NO_ARCHITECTURE_VIEW") {
-            let mut pbuf = std::path::PathBuf::from(inputs.get(0).unwrap());
+            let mut pbuf = std::path::PathBuf::from(modules.iter().next().unwrap().0);
             pbuf.set_file_name("architecture.svg");
             let output_filename = matches
                 .value_of("ARCHITECTURE_VIEW")
@@ -207,10 +200,10 @@ fn print_outputs(
             let mut output_file = File::create(output_filename)
                 .context(format!("Failed to open output file {}", output_filename))?;
             let deps = crate::gsn::calculate_module_dependencies(&nodes);
-            render::render_architecture(&deps, &mut output_file, &static_render_context)?;
+            render::render_architecture(&mut output_file, &deps, stylesheet)?;
         }
         if !matches.is_present("NO_COMPLETE_VIEW") {
-            let mut pbuf = std::path::PathBuf::from(inputs.get(0).unwrap());
+            let mut pbuf = std::path::PathBuf::from(modules.iter().next().unwrap().0);
             pbuf.set_file_name("complete.svg");
             let output_filename = matches
                 .value_of("COMPLETE_VIEW")
@@ -218,11 +211,11 @@ fn print_outputs(
                 .unwrap();
             let mut output_file = File::create(output_filename)
                 .context(format!("Failed to open output file {}", output_filename))?;
-            render::render_complete(&nodes, &mut output_file, &static_render_context)?;
+            render::render_complete(&mut output_file, &nodes, stylesheet)?;
         }
     }
     if !matches.is_present("NO_EVIDENCES") {
-        let mut pbuf = std::path::PathBuf::from(inputs.get(0).unwrap());
+        let mut pbuf = std::path::PathBuf::from(modules.iter().next().unwrap().0);
         pbuf.set_file_name("evidences.md");
         let output_filename = matches
             .value_of("EVIDENCES")
@@ -230,7 +223,7 @@ fn print_outputs(
             .unwrap();
         let mut output_file = File::create(output_filename)
             .context(format!("Failed to open output file {}", output_filename))?;
-        render::render_evidences(&nodes, &mut output_file, &static_render_context)?;
+        render::render_evidences(&mut output_file, &nodes, layers)?;
     }
     Ok(())
 }
@@ -242,14 +235,13 @@ fn print_outputs(
 ///
 ///
 fn validate_and_check(
-    inputs: &[&str],
-    excluded_modules: Option<Vec<&str>>,
-    diags: &mut Diagnostics,
     nodes: &MyMap<String, GsnNode>,
+    modules: &HashMap<String, String>,
+    diags: &mut Diagnostics,
+    excluded_modules: Option<Vec<&str>>,
     layers: &Option<Vec<&str>>,
 ) {
-    for input in inputs {
-        let module = escape_text(input);
+    for module in modules.values() {
         // Validation for wellformedness is done unconditionally.
         gsn::validation::validate_module(diags, &module, nodes);
         if diags.errors > 0 {
@@ -271,34 +263,69 @@ fn validate_and_check(
 fn read_inputs(
     inputs: &[&str],
     nodes: &mut MyMap<String, GsnNode>,
+    modules: &mut HashMap<String, String>,
     diags: &mut Diagnostics,
 ) -> Result<(), anyhow::Error> {
     for input in inputs {
-        let module = escape_text(input);
         let reader =
             BufReader::new(File::open(&input).context(format!("Failed to open file {}", input))?);
-        let mut n: MyMap<String, GsnNode> = serde_yaml::from_reader(reader)
+
+        let mut n: MyMap<String, GsnDocumentNode> = serde_yaml::from_reader(reader)
             .context(format!("Failed to parse YAML from file {}", input))?;
-        // Remember module for node
-        n.iter_mut()
-            .for_each(|(_, mut x)| x.module = module.to_string());
+        let meta: Option<MetaInformation> = match n.remove_entry("meta") {
+            Some((_, GsnDocumentNode::MetaInformation(x))) => Some(x),
+            _ => None,
+        };
+        // Add filename and module name to module list
+        let module = meta
+            .and_then(|m| Some(m.module_name))
+            .or_else(|| Some(escape_text(&input)))
+            .unwrap();
+
+        if modules.values().any(|x| x == &module) {
+            diags.add_error(
+                Some(&module),
+                format!(
+                    "C06: Module name {} in {} was already present in {}.",
+                    module,
+                    input,
+                    modules
+                        .iter()
+                        .find_map(|(k, v)| if v == &module { Some(k) } else { None })
+                        .unwrap()
+                ),
+            );
+        } else {
+            modules.insert(input.to_owned().to_owned(), module.to_owned());
+        }
+
         // Check for duplicates, since they might be in separate files.
-        for k in n.keys() {
-            if nodes.contains_key(k) {
-                diags.add_error(
-                    Some(input),
-                    format!(
-                        "Element {} in {} was already present in {}.",
-                        k,
-                        input,
-                        nodes.get(k).unwrap().module
-                    ),
-                );
-                break;
+        let node_names: Vec<String> = n.keys().cloned().collect();
+        for node_name in node_names {
+            if let Some((k, v)) = n.remove_entry(&node_name) {
+                if let std::collections::btree_map::Entry::Vacant(e) = nodes.entry(k.to_owned()) {
+                    match v {
+                        GsnDocumentNode::GsnNode(mut x) => {
+                            // Remember module for node
+                            x.module = module.to_owned();
+                            e.insert(x);
+                        }
+                        _ => unreachable!(), // There can be only one MetaNode
+                    }
+                } else {
+                    diags.add_error(
+                        Some(&module),
+                        format!(
+                            "C07: Element {} in {} was already present in {}.",
+                            k,
+                            input,
+                            nodes.get(&k).unwrap().module
+                        ),
+                    );
+                    break;
+                }
             }
         }
-        // Merge nodes for further processing.
-        nodes.append(&mut n);
     }
     Ok(())
 }

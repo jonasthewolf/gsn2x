@@ -75,6 +75,8 @@ The tool automatically performs the following validation checks on the input YAM
  - C03: All referenced elements in `supportedBy` and `inContextOf` must exist.
  - C04: There must be no circular `supportedBy` references.
  - C05: The should be more than one usage of the same `level`.
+ - C06: All module names must be unique.
+ - C07: All IDs must be unique across all modules.
 
 The checks (Cxx) always apply to the complete set of input files.
 
