@@ -337,7 +337,7 @@ fn print_outputs(
                 .unwrap();
             let mut output_file = File::create(output_filename)
                 .context(format!("Failed to open output file {}", output_filename))?;
-            render::render_complete(&mut output_file, &nodes, stylesheet)?;
+            render::render_complete(&mut output_file, matches, &nodes, stylesheet)?;
         }
     }
     if !matches.is_present("NO_EVIDENCES") {
