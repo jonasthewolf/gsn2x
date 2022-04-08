@@ -126,7 +126,8 @@ mod integrations {
             .arg(input_file3.as_os_str())
             .arg("-N")
             .arg("-E")
-            .arg("-F");
+            .arg("-F")
+            .arg("-G");
         cmd.assert().success();
         output_file.assert(predicate::path::eq_file(
             "./examples/modular/architecture.svg",
