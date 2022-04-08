@@ -53,9 +53,8 @@ impl GsnNode {
 pub struct MetaInformation {
     pub(crate) module_name: String,
     pub(crate) module_brief: Option<String>,
-    pub(crate) version: Option<String>,
-    // #[serde(flatten)]
-    // pub(crate) additional: MyMap<String, String>,
+    #[serde(flatten)]
+    pub(crate) additional: MyMap<String, String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -63,6 +62,11 @@ pub struct MetaInformation {
 pub enum GsnDocumentNode {
     GsnNode(GsnNode),
     MetaInformation(MetaInformation),
+}
+
+pub struct Module {
+    pub filename: String,
+    pub meta: Option<MetaInformation>,
 }
 
 ///

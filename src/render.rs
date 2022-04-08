@@ -1,5 +1,6 @@
-use crate::gsn::{get_levels, GsnNode, ModuleDependency};
+use crate::gsn::{get_levels, GsnNode, Module, ModuleDependency};
 use crate::yaml_fix::MyMap;
+use chrono::Utc;
 use dirgraphsvg::edges::EdgeType;
 use dirgraphsvg::nodes::*;
 use std::cell::RefCell;
@@ -291,21 +292,23 @@ pub fn render_complete(
 ///
 pub fn render_argument(
     output: &mut impl Write,
-    module: &str,
+    matches: &clap::ArgMatches,
+    module_name: &str,
+    module: &Module,
     nodes: &MyMap<String, GsnNode>,
     stylesheet: Option<&str>,
 ) -> Result<(), anyhow::Error> {
     let mut dg = dirgraphsvg::DirGraph::default();
     let mut svg_nodes: BTreeMap<String, Rc<RefCell<dyn Node>>> = nodes
         .iter()
-        .filter(|(_, node)| node.module == module)
+        .filter(|(_, node)| node.module == module_name)
         .map(|(id, node)| (id.to_owned(), svg_from_gsn_node(id, node)))
         .collect();
 
     svg_nodes.append(
         &mut nodes
             .iter()
-            .filter(|(_, node)| node.module != module)
+            .filter(|(_, node)| node.module != module_name)
             .map(|(id, node)| (id.to_owned(), away_svg_from_gsn_node(id, node)))
             .collect(),
     );
@@ -318,7 +321,8 @@ pub fn render_argument(
                 node.get_edges()
                     .into_iter()
                     .filter(|(target, _)| {
-                        !(node.module != module && nodes.get(target).unwrap().module != module)
+                        !(node.module != module_name
+                            && nodes.get(target).unwrap().module != module_name)
                     })
                     .collect::<Vec<(String, EdgeType)>>(),
             )
@@ -338,6 +342,22 @@ pub fn render_argument(
 
     if let Some(css) = stylesheet {
         dg = dg.add_css_sytlesheet(css);
+    }
+
+    // Add meta information if requested
+    if !matches.is_present("NO_LEGEND") {
+        let mut meta_info = vec![format!("Generated on {}", Utc::now())];
+        if let Some(meta) = &module.meta {
+            meta_info.insert(0, format!("Module: {}", meta.module_name));
+            if meta.module_brief.is_some() {
+                meta_info.insert(1, meta.module_brief.as_deref().unwrap().to_owned());
+            }
+            if matches.is_present("FULL_LEGEND") {
+                let add = format!("{:?}", meta.additional);
+                meta_info.append(&mut add.lines().map(|x| x.to_owned()).collect::<Vec<String>>());
+            }
+        }
+        dg = dg.add_meta_information(&mut meta_info);
     }
 
     dg.write(output)?;

@@ -7,10 +7,10 @@ pub use util::escape_text;
 
 use edges::EdgeType;
 use graph::{get_forced_levels, rank_nodes, NodePlace};
-use nodes::{Node, Port};
+use nodes::{setup_basics, Node, Port};
 use rusttype::Font;
 use svg::{
-    node::element::{path::Data, Link, Marker, Path, Polyline, Rectangle, Symbol},
+    node::element::{path::Data, Link, Marker, Path, Polyline, Rectangle, Symbol, Text, Title},
     Document,
 };
 use util::{
@@ -55,6 +55,7 @@ pub struct DirGraph<'a> {
     nodes: BTreeMap<String, Rc<RefCell<dyn Node>>>,
     edges: BTreeMap<String, Vec<(String, EdgeType)>>,
     document: Document,
+    meta_information: Option<Vec<String>>,
 }
 
 impl<'a> Default for DirGraph<'a> {
@@ -74,6 +75,7 @@ impl<'a> Default for DirGraph<'a> {
             nodes: BTreeMap::new(),
             edges: BTreeMap::new(),
             document: Document::new(),
+            meta_information: None,
         }
     }
 }
@@ -140,6 +142,11 @@ impl<'a> DirGraph<'a> {
         self
     }
 
+    pub fn add_meta_information(mut self, meta: &mut Vec<String>) -> Self {
+        self.meta_information.get_or_insert(Vec::new()).append(meta);
+        self
+    }
+
     pub fn write(mut self, output: impl std::io::Write) -> Result<(), std::io::Error> {
         self = self.setup_basics();
         self = self.setup_stylesheets();
@@ -147,6 +154,7 @@ impl<'a> DirGraph<'a> {
         self.document = self
             .document
             .set("viewBox", (0u32, 0u32, self.width, self.height));
+        self = self.render_legend();
         svg::write(output, &self.document)?;
         Ok(())
     }
@@ -407,6 +415,11 @@ impl<'a> DirGraph<'a> {
         self
     }
 
+    ///
+    ///
+    ///
+    ///
+    ///
     fn setup_basics(mut self) -> Self {
         let supportedby_polyline = Polyline::new()
             .set("points", "0 0, 10 4.5, 0 9")
@@ -497,6 +510,10 @@ impl<'a> DirGraph<'a> {
         self
     }
 
+    ///
+    ///
+    ///
+    ///
     fn setup_stylesheets(mut self) -> Self {
         for css in &self.css_stylesheets {
             let l = Link::default()
@@ -504,6 +521,47 @@ impl<'a> DirGraph<'a> {
                 .set("href", *css)
                 .set("type", "text/css");
             self.document = self.document.add(l);
+        }
+        self
+    }
+
+    ///
+    ///
+    ///
+    ///
+    fn render_legend(mut self) -> Self {
+        if let Some(meta) = &self.meta_information {
+            let mut g = setup_basics("gsn_meta", &Some(vec!["gsnmeta".to_owned()]), &None);
+            let title = Title::new().add(svg::node::Text::new("Meta Information"));
+
+            g = g.add(title);
+
+            let mut text_height = 0;
+            let mut text_width = 0;
+            let mut lines = Vec::new();
+            for t in meta {
+                let (width, height) =
+                    crate::util::font::text_bounding_box(&self.font.font, t, self.font.size);
+                lines.push((width, height));
+                text_height += height;
+                text_width = std::cmp::max(text_width, width);
+            }
+
+            let x = self.width - text_width - 20;
+            let y_base = self.height - text_height - 20;
+            let mut y_running = 0;
+            for (t, (w, h)) in (&meta).iter().zip(lines) {
+                y_running += h;
+                let text = Text::new()
+                    .set("x", x)
+                    .set("y", y_base + y_running)
+                    .set("textLength", w)
+                    .set("font-size", self.font.size)
+                    .set("font-family", self.font.name.as_str())
+                    .add(svg::node::Text::new(t));
+                g = g.add(text);
+            }
+            self.document = self.document.add(g);
         }
         self
     }

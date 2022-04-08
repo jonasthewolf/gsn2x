@@ -103,4 +103,15 @@ Some Context
 <path class="gsnedge gsnspby" d="M436,243 C436,243,446,243,466,243" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsninctxt" d="M303,161 C303,191,62,185,62,205" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsninctxt" d="M303,161 C303,191,365,174,365,194" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<g class="gsnmeta" id="node_gsn_meta">
+<title>
+Meta Information
+</title>
+<text font-family="AppleSystemUIFont" font-size="12" textLength="69" x="360" y="310">
+Module: Main
+</text>
+<text font-family="AppleSystemUIFont" font-size="12" textLength="246" x="360" y="324">
+Generated on 2022-04-08 22:31:52.822141 UTC
+</text>
+</g>
 </svg>

@@ -11,7 +11,7 @@ mod render;
 mod yaml_fix;
 
 use diagnostics::Diagnostics;
-use gsn::{GsnDocumentNode, GsnNode, MetaInformation};
+use gsn::{GsnDocumentNode, GsnNode, MetaInformation, Module};
 use yaml_fix::MyMap;
 
 ///
@@ -135,6 +135,22 @@ fn main() -> Result<()> {
                 .takes_value(true)
                 .requires("COMPLETE_VIEW")
                 .help_heading("OUTPUT MODIFICATION"),
+        )
+        .arg(
+            Arg::new("NO_LEGEND")
+                .help("Do not output a legend based on meta information.")
+                .short('G')
+                .long("no-legend")
+                .conflicts_with("CHECKONLY")
+                .help_heading("OUTPUT MODIFICATION"),
+        )
+        .arg(
+            Arg::new("FULL_LEGEND")
+                .help("Output a legend based on all meta information.")
+                .short('g')
+                .long("full-legend")
+                .conflicts_with("CHECKONLY")
+                .help_heading("OUTPUT MODIFICATION"),
         );
     let matches = app.get_matches();
     let mut diags = Diagnostics::default();
@@ -147,8 +163,8 @@ fn main() -> Result<()> {
     let excluded_modules = matches
         .values_of("EXCLUDED_MODULE")
         .map(|x| x.collect::<Vec<&str>>());
-    // Filename to module name mapping
-    let mut modules: HashMap<String, String> = HashMap::new();
+    // Module name to module mapping
+    let mut modules: HashMap<String, Module> = HashMap::new();
 
     // Read input
     read_inputs(&inputs, &mut nodes, &mut modules, &mut diags)?;
@@ -165,105 +181,13 @@ fn main() -> Result<()> {
 }
 
 ///
-/// Print outputs
-///
-///
-///
-///
-fn print_outputs(
-    matches: &clap::ArgMatches,
-    nodes: MyMap<String, GsnNode>,
-    modules: &HashMap<String, String>,
-    layers: &Option<Vec<&str>>,
-    stylesheet: Option<&str>,
-) -> Result<(), anyhow::Error> {
-    if !matches.is_present("NO_ARGUMENT_VIEW") {
-        for (filename, module) in modules {
-            let mut pbuf = std::path::PathBuf::from(filename);
-            pbuf.set_extension("svg");
-            let output_filename = pbuf.as_path();
-            let mut output_file = Box::new(File::create(output_filename).context(format!(
-                "Failed to open output file {}",
-                output_filename.display()
-            ))?) as Box<dyn std::io::Write>;
-            render::render_argument(&mut output_file, &module, &nodes, stylesheet)?;
-        }
-    }
-    if modules.len() > 1 {
-        if !matches.is_present("NO_ARCHITECTURE_VIEW") {
-            let mut pbuf = std::path::PathBuf::from(modules.iter().next().unwrap().0);
-            pbuf.set_file_name("architecture.svg");
-            let output_filename = matches
-                .value_of("ARCHITECTURE_VIEW")
-                .or_else(|| pbuf.to_str())
-                .unwrap();
-            let mut output_file = File::create(output_filename)
-                .context(format!("Failed to open output file {}", output_filename))?;
-            let deps = crate::gsn::calculate_module_dependencies(&nodes);
-            render::render_architecture(&mut output_file, &deps, stylesheet)?;
-        }
-        if !matches.is_present("NO_COMPLETE_VIEW") {
-            let mut pbuf = std::path::PathBuf::from(modules.iter().next().unwrap().0);
-            pbuf.set_file_name("complete.svg");
-            let output_filename = matches
-                .value_of("COMPLETE_VIEW")
-                .or_else(|| pbuf.to_str())
-                .unwrap();
-            let mut output_file = File::create(output_filename)
-                .context(format!("Failed to open output file {}", output_filename))?;
-            render::render_complete(&mut output_file, &nodes, stylesheet)?;
-        }
-    }
-    if !matches.is_present("NO_EVIDENCES") {
-        let mut pbuf = std::path::PathBuf::from(modules.iter().next().unwrap().0);
-        pbuf.set_file_name("evidences.md");
-        let output_filename = matches
-            .value_of("EVIDENCES")
-            .or_else(|| pbuf.to_str())
-            .unwrap();
-        let mut output_file = File::create(output_filename)
-            .context(format!("Failed to open output file {}", output_filename))?;
-        render::render_evidences(&mut output_file, &nodes, layers)?;
-    }
-    Ok(())
-}
-
-///
-/// Validate and check modules
-///
-///
-///
-///
-fn validate_and_check(
-    nodes: &MyMap<String, GsnNode>,
-    modules: &HashMap<String, String>,
-    diags: &mut Diagnostics,
-    excluded_modules: Option<Vec<&str>>,
-    layers: &Option<Vec<&str>>,
-) {
-    for module in modules.values() {
-        // Validation for wellformedness is done unconditionally.
-        gsn::validation::validate_module(diags, &module, nodes);
-        if diags.errors > 0 {
-            break;
-        }
-    }
-    if diags.errors == 0 {
-        gsn::check::check_nodes(diags, nodes, excluded_modules);
-        if let Some(lays) = &layers {
-            gsn::check::check_layers(diags, nodes, lays);
-        }
-    }
-}
-
-///
 /// Read inputs
 ///
 ///
 fn read_inputs(
     inputs: &[&str],
     nodes: &mut MyMap<String, GsnNode>,
-    modules: &mut HashMap<String, String>,
+    modules: &mut HashMap<String, Module>,
     diags: &mut Diagnostics,
 ) -> Result<(), anyhow::Error> {
     for input in inputs {
@@ -277,26 +201,27 @@ fn read_inputs(
             _ => None,
         };
         // Add filename and module name to module list
-        let module = meta
-            .and_then(|m| Some(m.module_name))
-            .or_else(|| Some(escape_text(&input)))
-            .unwrap();
+        let module = if let Some(m) = &meta {
+            m.module_name.to_owned()
+        } else {
+            escape_text(input)
+        };
 
-        if modules.values().any(|x| x == &module) {
+        if let std::collections::hash_map::Entry::Vacant(e) = modules.entry(module.to_owned()) {
+            e.insert(Module {
+                filename: input.to_owned().to_owned(),
+                meta,
+            });
+        } else {
             diags.add_error(
                 Some(&module),
                 format!(
                     "C06: Module name {} in {} was already present in {}.",
                     module,
                     input,
-                    modules
-                        .iter()
-                        .find_map(|(k, v)| if v == &module { Some(k) } else { None })
-                        .unwrap()
+                    modules.get(&module).unwrap().filename
                 ),
             );
-        } else {
-            modules.insert(input.to_owned().to_owned(), module.to_owned());
         }
 
         // Check for duplicates, since they might be in separate files.
@@ -326,6 +251,105 @@ fn read_inputs(
                 }
             }
         }
+    }
+    Ok(())
+}
+
+///
+/// Validate and check modules
+///
+///
+///
+///
+fn validate_and_check(
+    nodes: &MyMap<String, GsnNode>,
+    modules: &HashMap<String, Module>,
+    diags: &mut Diagnostics,
+    excluded_modules: Option<Vec<&str>>,
+    layers: &Option<Vec<&str>>,
+) {
+    for module in modules.keys() {
+        // Validation for wellformedness is done unconditionally.
+        gsn::validation::validate_module(diags, module, nodes);
+        if diags.errors > 0 {
+            break;
+        }
+    }
+    if diags.errors == 0 {
+        gsn::check::check_nodes(diags, nodes, excluded_modules);
+        if let Some(lays) = &layers {
+            gsn::check::check_layers(diags, nodes, lays);
+        }
+    }
+}
+
+///
+/// Print outputs
+///
+///
+///
+///
+fn print_outputs(
+    matches: &clap::ArgMatches,
+    nodes: MyMap<String, GsnNode>,
+    modules: &HashMap<String, Module>,
+    layers: &Option<Vec<&str>>,
+    stylesheet: Option<&str>,
+) -> Result<(), anyhow::Error> {
+    if !matches.is_present("NO_ARGUMENT_VIEW") {
+        for (module_name, module) in modules {
+            let mut pbuf = std::path::PathBuf::from(&module.filename);
+            pbuf.set_extension("svg");
+            let output_filename = pbuf.as_path();
+            let mut output_file = Box::new(File::create(output_filename).context(format!(
+                "Failed to open output file {}",
+                output_filename.display()
+            ))?) as Box<dyn std::io::Write>;
+            render::render_argument(
+                &mut output_file,
+                matches,
+                module_name,
+                module,
+                &nodes,
+                stylesheet,
+            )?;
+        }
+    }
+    if modules.len() > 1 {
+        if !matches.is_present("NO_ARCHITECTURE_VIEW") {
+            let mut pbuf = std::path::PathBuf::from(&modules.iter().next().unwrap().1.filename);
+            pbuf.set_file_name("architecture.svg");
+            let output_filename = matches
+                .value_of("ARCHITECTURE_VIEW")
+                .or_else(|| pbuf.to_str())
+                .unwrap();
+            let mut output_file = File::create(output_filename)
+                .context(format!("Failed to open output file {}", output_filename))?;
+            let deps = crate::gsn::calculate_module_dependencies(&nodes);
+            render::render_architecture(&mut output_file, &deps, stylesheet)?;
+        }
+        if !matches.is_present("NO_COMPLETE_VIEW") {
+            let mut pbuf = std::path::PathBuf::from(&modules.iter().next().unwrap().1.filename);
+            pbuf.set_file_name("complete.svg");
+            let output_filename = matches
+                .value_of("COMPLETE_VIEW")
+                .or_else(|| pbuf.to_str())
+                .unwrap();
+            let mut output_file = File::create(output_filename)
+                .context(format!("Failed to open output file {}", output_filename))?;
+            render::render_complete(&mut output_file, &nodes, stylesheet)?;
+        }
+    }
+    if !matches.is_present("NO_EVIDENCES") {
+        let mut pbuf = std::path::PathBuf::from(&modules.iter().next().unwrap().1.filename);
+        pbuf.set_file_name("evidences.md");
+        let output_filename = matches
+            .value_of("EVIDENCES")
+            .or_else(|| pbuf.to_str())
+            .unwrap();
+        let mut output_file = File::create(output_filename)
+            .context(format!("Failed to open output file {}", output_filename))?;
+        render::render_evidences(&mut output_file, &nodes, layers)?;
     }
     Ok(())
 }

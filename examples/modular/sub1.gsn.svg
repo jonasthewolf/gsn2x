@@ -96,4 +96,15 @@ Solution 1
 <path class="gsnedge gsnspby" d="M144,161 C144,161,134,161,114,161" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsninctxt" d="M215,186 C215,216,216,221,216,241" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsninctxt" d="M216,70 C216,100,215,106,215,126" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<g class="gsnmeta" id="node_gsn_meta">
+<title>
+Meta Information
+</title>
+<text font-family="AppleSystemUIFont" font-size="12" textLength="69" x="186" y="398">
+Module: Sub1
+</text>
+<text font-family="AppleSystemUIFont" font-size="12" textLength="246" x="186" y="412">
+Generated on 2022-04-08 22:31:52.802082 UTC
+</text>
+</g>
 </svg>
