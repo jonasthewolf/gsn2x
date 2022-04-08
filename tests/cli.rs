@@ -3,11 +3,8 @@ mod integrations {
     use assert_cmd::prelude::*;
     use assert_fs::fixture::PathCopy;
     use assert_fs::prelude::*;
-    use dirgraphsvg::escape_text;
     use predicates::prelude::*;
-    use std::{fs, process::Command};
-
-    // TODO Fix tests
+    use std::process::Command;
 
     #[test]
     fn file_doesnt_exist() -> Result<(), Box<dyn std::error::Error>> {
@@ -26,7 +23,7 @@ mod integrations {
         temp.copy_from("./examples", &["example.gsn.yaml"])?;
         let input_file = temp.child("example.gsn.yaml");
         let output_file = temp.child("example.gsn.svg");
-        cmd.arg(input_file.as_os_str());
+        cmd.arg(input_file.as_os_str()).arg("-G");
         cmd.assert().success();
         output_file.assert(predicate::path::eq_file("./examples/example.gsn.svg"));
         temp.close()?;
@@ -101,7 +98,8 @@ mod integrations {
             .arg(evidence_file.path())
             .arg("examples/example.gsn.yaml")
             .arg("-l")
-            .arg("layer1");
+            .arg("layer1")
+            .arg("-N");
         cmd.assert()
             .success()
             .stdout(predicate::str::is_empty())
@@ -140,28 +138,22 @@ mod integrations {
     #[test]
     fn comp_view() -> Result<(), Box<dyn std::error::Error>> {
         let mut cmd = Command::cargo_bin("gsn2x")?;
-        let compl_file = assert_fs::NamedTempFile::new("complete.dot")?;
-        cmd.arg("-n")
-            .arg("-f")
-            .arg(compl_file.path())
-            .arg("examples/modular/main.gsn.yaml")
-            .arg("examples/modular/sub1.gsn.yaml")
-            .arg("examples/modular/sub3.gsn.yaml");
-        cmd.assert()
-            .success()
-            .stdout(predicate::str::is_empty())
-            .stderr(predicate::str::contains(
-                "There is more than one unreferenced element",
-            ));
-        let predicate_file = predicate::path::eq_file(compl_file.path()).utf8().unwrap();
-        // Fix path from temporary location
-        let expected = fs::read_to_string(std::path::Path::new("tests/complete.gsn.test.dot"))?
-            .replace(
-                "examples_modular_complete_gsn_test_dot",
-                &escape_text(&format!("{}", compl_file.path().display()).as_str()),
-            );
-        assert!(predicate_file.eval(expected.as_str()));
-        compl_file.close()?;
+        let temp = assert_fs::TempDir::new()?.into_persistent();
+        temp.copy_from("./examples/modular", &["*.yaml"])?;
+        let input_file1 = temp.child("main.gsn.yaml");
+        let input_file2 = temp.child("sub1.gsn.yaml");
+        let input_file3 = temp.child("sub3.gsn.yaml");
+        let output_file = temp.child("complete.svg");
+        cmd.arg(input_file1.as_os_str())
+            .arg(input_file2.as_os_str())
+            .arg(input_file3.as_os_str())
+            .arg("-N")
+            .arg("-E")
+            .arg("-A")
+            .arg("-G");
+        cmd.assert().success();
+        output_file.assert(predicate::path::eq_file("./examples/modular/complete.svg"));
+        temp.close()?;
         Ok(())
     }
 }
