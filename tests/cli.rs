@@ -25,7 +25,9 @@ mod integrations {
         let output_file = temp.child("example.gsn.svg");
         cmd.arg(input_file.as_os_str()).arg("-G");
         cmd.assert().success();
-        output_file.assert(predicate::path::eq_file("examples/example.gsn.svg"));
+        output_file.assert(predicate::path::eq_file(std::path::Path::new(
+            "examples/example.gsn.svg",
+        )));
         temp.close()?;
         Ok(())
     }
@@ -129,9 +131,9 @@ mod integrations {
             .arg("-F")
             .arg("-G");
         cmd.assert().success();
-        output_file.assert(predicate::path::eq_file(
+        output_file.assert(predicate::path::eq_file(std::path::Path::new(
             "examples/modular/architecture.svg",
-        ));
+        )));
         temp.close()?;
         Ok(())
     }
@@ -153,7 +155,9 @@ mod integrations {
             .arg("-A")
             .arg("-G");
         cmd.assert().success();
-        output_file.assert(predicate::path::eq_file("examples/modular/complete.svg"));
+        output_file.assert(predicate::path::eq_file(std::path::Path::new(
+            "examples/modular/complete.svg",
+        )));
         temp.close()?;
         Ok(())
     }
