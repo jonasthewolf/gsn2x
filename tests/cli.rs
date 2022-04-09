@@ -20,12 +20,12 @@ mod integrations {
     fn argument_view() -> Result<(), Box<dyn std::error::Error>> {
         let mut cmd = Command::cargo_bin("gsn2x")?;
         let temp = assert_fs::TempDir::new()?;
-        temp.copy_from("./examples", &["example.gsn.yaml"])?;
+        temp.copy_from("examples", &["example.gsn.yaml"])?;
         let input_file = temp.child("example.gsn.yaml");
         let output_file = temp.child("example.gsn.svg");
         cmd.arg(input_file.as_os_str()).arg("-G");
         cmd.assert().success();
-        output_file.assert(predicate::path::eq_file("./examples/example.gsn.svg"));
+        output_file.assert(predicate::path::eq_file("examples/example.gsn.svg"));
         temp.close()?;
         Ok(())
     }
@@ -116,7 +116,7 @@ mod integrations {
     fn arch_view() -> Result<(), Box<dyn std::error::Error>> {
         let mut cmd = Command::cargo_bin("gsn2x")?;
         let temp = assert_fs::TempDir::new()?.into_persistent();
-        temp.copy_from("./examples/modular", &["*.yaml"])?;
+        temp.copy_from("examples/modular", &["*.yaml"])?;
         let input_file1 = temp.child("main.gsn.yaml");
         let input_file2 = temp.child("sub1.gsn.yaml");
         let input_file3 = temp.child("sub3.gsn.yaml");
@@ -130,7 +130,7 @@ mod integrations {
             .arg("-G");
         cmd.assert().success();
         output_file.assert(predicate::path::eq_file(
-            "./examples/modular/architecture.svg",
+            "examples/modular/architecture.svg",
         ));
         temp.close()?;
         Ok(())
@@ -140,7 +140,7 @@ mod integrations {
     fn comp_view() -> Result<(), Box<dyn std::error::Error>> {
         let mut cmd = Command::cargo_bin("gsn2x")?;
         let temp = assert_fs::TempDir::new()?.into_persistent();
-        temp.copy_from("./examples/modular", &["*.yaml"])?;
+        temp.copy_from("examples/modular", &["*.yaml"])?;
         let input_file1 = temp.child("main.gsn.yaml");
         let input_file2 = temp.child("sub1.gsn.yaml");
         let input_file3 = temp.child("sub3.gsn.yaml");
@@ -153,7 +153,7 @@ mod integrations {
             .arg("-A")
             .arg("-G");
         cmd.assert().success();
-        output_file.assert(predicate::path::eq_file("./examples/modular/complete.svg"));
+        output_file.assert(predicate::path::eq_file("examples/modular/complete.svg"));
         temp.close()?;
         Ok(())
     }
