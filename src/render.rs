@@ -1,10 +1,10 @@
-use crate::gsn::{get_levels, GsnNode, Module, ModuleDependency};
+use crate::gsn::{get_levels, GsnNode, Module};
 use crate::yaml_fix::MyMap;
 use chrono::Utc;
 use dirgraphsvg::edges::EdgeType;
 use dirgraphsvg::nodes::*;
 use std::cell::RefCell;
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, HashMap};
 use std::io::Write;
 use std::rc::Rc;
 
@@ -203,39 +203,34 @@ pub fn away_svg_from_gsn_node(
 ///
 pub fn render_architecture(
     output: &mut impl Write,
-    dependencies: &BTreeMap<String, BTreeMap<String, ModuleDependency>>,
+    modules: &HashMap<String, Module>,
+    dependencies: BTreeMap<String, BTreeMap<String, EdgeType>>,
     stylesheet: Option<&str>,
 ) -> Result<(), anyhow::Error> {
     let mut dg = dirgraphsvg::DirGraph::default();
-    let mut edges: BTreeMap<String, Vec<(String, EdgeType)>> = dependencies
+    let svg_nodes: BTreeMap<String, Rc<RefCell<dyn Node>>> = modules
         .iter()
-        .map(|(module, targets)| {
+        .filter(|(k, _)| dependencies.contains_key(k.to_owned()))
+        .map(|(k, module)| {
             (
-                module.to_owned(),
-                targets
-                    .iter()
-                    .map(|(target, t_type)| {
-                        (
-                            target.to_owned(),
-                            match t_type {
-                                ModuleDependency::SupportedBy => EdgeType::NoneToSupportedBy,
-                                ModuleDependency::InContextOf => EdgeType::NoneToInContextOf,
-                                ModuleDependency::Composite => EdgeType::NoneToComposite,
-                            },
-                        )
-                    })
-                    .collect(),
+                k.to_owned(),
+                new_module(
+                    k,
+                    module
+                        .meta
+                        .as_ref()
+                        .and_then(|m| m.module_brief.to_owned())
+                        .unwrap_or_else(|| "".to_owned())
+                        .as_str(),
+                    None,
+                    None,
+                ) as Rc<RefCell<dyn Node>>,
             )
         })
         .collect();
-    let svg_nodes: BTreeMap<String, Rc<RefCell<dyn Node>>> = dependencies
-        .keys()
-        .map(|module| {
-            (
-                module.to_owned(),
-                new_module(module, "", None, None) as Rc<RefCell<dyn Node>>,
-            )
-        })
+    let mut edges: BTreeMap<String, Vec<(String, EdgeType)>> = dependencies
+        .into_iter()
+        .map(|(k, v)| (k, Vec::from_iter(v.into_iter())))
         .collect();
 
     dg = dg.add_nodes(svg_nodes).add_edges(&mut edges);

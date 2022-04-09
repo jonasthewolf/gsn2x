@@ -1,8 +1,7 @@
 use crate::yaml_fix::MyMap;
-use dirgraphsvg::edges::EdgeType;
+use dirgraphsvg::edges::{EdgeType, SingleEdge};
 use serde::Deserialize;
 use std::collections::{BTreeMap, HashSet};
-use std::ops::Deref;
 
 pub mod check;
 pub mod validation;
@@ -33,14 +32,14 @@ impl GsnNode {
         if let Some(c_nodes) = &self.in_context_of {
             let mut es: Vec<(String, EdgeType)> = c_nodes
                 .iter()
-                .map(|target| (target.to_owned(), EdgeType::NoneToInContextOf))
+                .map(|target| (target.to_owned(), EdgeType::OneWay(SingleEdge::InContextOf)))
                 .collect();
             edges.append(&mut es);
         }
         if let Some(s_nodes) = &self.supported_by {
             let mut es: Vec<(String, EdgeType)> = s_nodes
                 .iter()
-                .map(|target| (target.to_owned(), EdgeType::NoneToSupportedBy))
+                .map(|target| (target.to_owned(), EdgeType::OneWay(SingleEdge::SupportedBy)))
                 .collect();
             edges.append(&mut es);
         }
@@ -104,37 +103,59 @@ pub fn get_levels(nodes: &MyMap<String, GsnNode>) -> BTreeMap<&str, Vec<&str>> {
     levels
 }
 
-#[derive(Debug, PartialEq)]
-pub enum ModuleDependency {
-    SupportedBy,
-    InContextOf,
-    Composite,
-}
-
 ///
 /// Calculate module dependencies
+/// Check if a dependency in one direction is already known, then only modify the existing one.
 ///
 ///
 pub fn calculate_module_dependencies(
     nodes: &MyMap<String, GsnNode>,
-) -> BTreeMap<String, BTreeMap<String, ModuleDependency>> {
-    let mut res = BTreeMap::<String, BTreeMap<String, ModuleDependency>>::new();
+) -> BTreeMap<String, BTreeMap<String, EdgeType>> {
+    let mut res = BTreeMap::<String, BTreeMap<String, EdgeType>>::new();
+
     for v in nodes.values() {
-        res.insert(v.module.to_owned(), BTreeMap::new());
-    }
-    for v in nodes.deref().values() {
         if let Some(sups) = &v.supported_by {
             for sup in sups {
                 let other_module = &nodes.get(sup).unwrap().module;
                 if &v.module != other_module {
-                    let e = res.get_mut(&v.module).unwrap();
-                    e.entry(other_module.to_owned())
-                        .and_modify(|x| {
-                            if *x == ModuleDependency::InContextOf {
-                                *x = ModuleDependency::Composite
-                            }
-                        })
-                        .or_insert(ModuleDependency::SupportedBy);
+                    if let Some(e) = res.get_mut(&v.module) {
+                        e.entry(other_module.to_owned())
+                            .and_modify(|x| {
+                                *x = match &x {
+                                    EdgeType::OneWay(et) if et == &SingleEdge::InContextOf => {
+                                        EdgeType::OneWay(SingleEdge::Composite)
+                                    }
+                                    EdgeType::TwoWay((te, et))
+                                        if et == &SingleEdge::InContextOf =>
+                                    {
+                                        EdgeType::TwoWay((*te, SingleEdge::Composite))
+                                    }
+                                    _ => *x,
+                                }
+                            })
+                            .or_insert(EdgeType::OneWay(SingleEdge::SupportedBy));
+                    } else if let Some(e) = res.get_mut(other_module) {
+                        e.entry(v.module.to_owned())
+                            .and_modify(|x| {
+                                *x = match &x {
+                                    EdgeType::OneWay(te) => {
+                                        EdgeType::TwoWay((SingleEdge::SupportedBy, *te))
+                                    }
+                                    EdgeType::TwoWay((te, et))
+                                        if te == &SingleEdge::InContextOf =>
+                                    {
+                                        EdgeType::TwoWay((SingleEdge::Composite, *et))
+                                    }
+                                    _ => *x,
+                                }
+                            })
+                            .or_insert(EdgeType::OneWay(SingleEdge::SupportedBy));
+                    } else {
+                        // Both none
+                        let e = res.entry(v.module.to_owned()).or_insert(BTreeMap::new());
+                        e.entry(other_module.to_owned())
+                            .or_insert(EdgeType::OneWay(SingleEdge::SupportedBy));
+                    }
                 }
             }
         }
@@ -142,16 +163,53 @@ pub fn calculate_module_dependencies(
             for ctx in ctxs {
                 let other_module = &nodes.get(ctx).unwrap().module;
                 if &v.module != other_module {
-                    let e = res.get_mut(&v.module).unwrap();
-                    e.entry(other_module.to_owned())
-                        .and_modify(|x| {
-                            if *x == ModuleDependency::SupportedBy {
-                                *x = ModuleDependency::Composite
-                            }
-                        })
-                        .or_insert(ModuleDependency::InContextOf);
+                    if let Some(e) = res.get_mut(&v.module) {
+                        e.entry(other_module.to_owned())
+                            .and_modify(|x| {
+                                *x = match &x {
+                                    EdgeType::OneWay(et) if et == &SingleEdge::SupportedBy => {
+                                        EdgeType::OneWay(SingleEdge::Composite)
+                                    }
+                                    EdgeType::TwoWay((te, et))
+                                        if et == &SingleEdge::SupportedBy =>
+                                    {
+                                        EdgeType::TwoWay((*te, SingleEdge::Composite))
+                                    }
+                                    _ => *x,
+                                }
+                            })
+                            .or_insert(EdgeType::OneWay(SingleEdge::InContextOf));
+                    } else if let Some(e) = res.get_mut(other_module) {
+                        e.entry(v.module.to_owned())
+                            .and_modify(|x| {
+                                *x = match &x {
+                                    EdgeType::OneWay(te) => {
+                                        EdgeType::TwoWay((SingleEdge::InContextOf, *te))
+                                    }
+                                    EdgeType::TwoWay((te, et))
+                                        if te == &SingleEdge::InContextOf =>
+                                    {
+                                        EdgeType::TwoWay((SingleEdge::Composite, *et))
+                                    }
+                                    _ => *x,
+                                }
+                            })
+                            .or_insert(EdgeType::OneWay(SingleEdge::InContextOf));
+                    } else {
+                        // Both none
+                        let e = res.entry(v.module.to_owned()).or_insert(BTreeMap::new());
+                        e.entry(other_module.to_owned())
+                            .or_insert(EdgeType::OneWay(SingleEdge::InContextOf));
+                    }
                 }
             }
+        }
+    }
+
+    // Create empty dummies for other modules.
+    for n in nodes.values() {
+        if let std::collections::btree_map::Entry::Vacant(e) = res.entry(n.module.to_owned()) {
+            e.insert(BTreeMap::new());
         }
     }
     res

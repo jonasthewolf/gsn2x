@@ -3,15 +3,15 @@
 <rect fill="lightgrey" height="5" stroke="black" stroke-width="1" width="10" x="0" y="0"/>
 <rect fill="lightgrey" height="10" stroke="black" stroke-width="1" width="20" x="0" y="5"/>
 </symbol>
-<marker id="composite_arrow" markerHeight="9" markerUnits="users_posaceOnUse" markerWidth="10" orient="auto" refX="0" refY="4.5">
+<marker id="composite_arrow" markerHeight="9" markerUnits="users_posaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
 <polyline fill="none" points="0 0, 6 4.5, 0 9" stroke="black" stroke-width="1"/>
 <polyline fill="none" points="4 0, 10 4.5, 4 9" stroke="black" stroke-width="1"/>
 <polyline fill="none" points="0 4.5, 10 4.5" stroke="black" stroke-width="1"/>
 </marker>
-<marker id="supportedby_arrow" markerHeight="9" markerUnits="users_posaceOnUse" markerWidth="10" orient="auto" refX="0" refY="4.5">
+<marker id="supportedby_arrow" markerHeight="9" markerUnits="users_posaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
 <polyline fill="black" points="0 0, 10 4.5, 0 9"/>
 </marker>
-<marker id="incontextof_arrow" markerHeight="9" markerUnits="users_posaceOnUse" markerWidth="10" orient="auto" refX="0" refY="4.5">
+<marker id="incontextof_arrow" markerHeight="9" markerUnits="users_posaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
 <polyline fill="none" points="0 0, 10 4.5, 0 9, 0 0" stroke="black" stroke-width="1"/>
 </marker>
 <g class="gsnelem gsngoal" id="node_G1">
@@ -272,25 +272,25 @@ Sn2
 Solution 2
 </text>
 </g>
-<path class="gsnedge gsninctxt" d="M467,70 C467,100,268,81,268,101" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninctxt" d="M467,70 C467,100,392,81,392,101" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path d="M467,70 C467,100,651,106,651,136" fill="none" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninctxt" d="M268,161 C268,191,343,188,343,208" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsnspby" d="M434,136 C434,136,444,136,464,136" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninctxt" d="M392,161 C392,191,605,178,605,198" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsnspby" d="M618,365 C618,365,628,365,648,365" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninctxt" d="M576,390 C576,420,635,416,635,436" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsnspby" d="M250,365 C250,365,260,365,280,365" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsnspby" d="M166,365 C166,365,156,365,136,365" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninctxt" d="M208,390 C208,420,411,416,411,436" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninctxt" d="M208,390 C208,420,299,416,299,436" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninctxt" d="M452,390 C452,420,411,416,411,436" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninctxt" d="M452,390 C452,420,523,416,523,436" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsnspby" d="M393,243 C393,243,410,243,430,243" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsnspby" d="M293,243 C293,243,276,243,256,243" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninctxt" d="M343,268 C343,298,208,310,208,330" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninctxt" d="M343,268 C343,298,452,310,452,330" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninctxt" d="M737,268 C737,298,576,310,576,330" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninctxt" d="M737,268 C737,298,860,307,860,327" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninctxt" d="M651,136 C651,166,737,188,737,208" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M467,70 C467,100,268,81,268,101" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M467,70 C467,100,392,81,392,101" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninvis" d="M467,70 C467,100,651,106,651,136" fill="none" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M268,161 C268,191,343,188,343,208" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M434,136 C434,136,444,136,464,136" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M392,161 C392,191,605,178,605,198" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M618,365 C618,365,628,365,648,365" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M576,390 C576,420,635,416,635,436" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M250,365 C250,365,260,365,280,365" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M166,365 C166,365,156,365,136,365" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M208,390 C208,420,411,416,411,436" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M208,390 C208,420,299,416,299,436" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M452,390 C452,420,411,416,411,436" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M452,390 C452,420,523,416,523,436" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M393,243 C393,243,410,243,430,243" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M293,243 C293,243,276,243,256,243" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M343,268 C343,298,208,310,208,330" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M343,268 C343,298,452,310,452,330" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M737,268 C737,298,576,310,576,330" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M737,268 C737,298,860,307,860,327" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M651,136 C651,166,737,188,737,208" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 </svg>

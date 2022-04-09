@@ -6,7 +6,7 @@ use std::{
 };
 
 use crate::{
-    edges::EdgeType,
+    edges::{EdgeType, SingleEdge},
     nodes::{invisible_node::InvisibleNode, Node},
 };
 
@@ -125,13 +125,21 @@ pub(crate) fn rank_nodes<'a>(
                     let orig_edges = edges.get_mut(&current_node).unwrap();
                     let orig_edge_id = orig_edges
                         .iter()
-                        .position(|e| e == &(child_node.to_owned(), EdgeType::NoneToSupportedBy))
+                        .position(|e| {
+                            e == &(
+                                child_node.to_owned(),
+                                EdgeType::OneWay(SingleEdge::SupportedBy),
+                            )
+                        })
                         .unwrap();
                     orig_edges.remove(orig_edge_id);
                     // Add two new edges.
                     orig_edges.push((cloned_node.to_owned(), EdgeType::Invisible));
                     let new_entry = edges.entry(cloned_node.to_owned()).or_insert(Vec::new());
-                    new_entry.push((child_node.to_owned(), EdgeType::NoneToSupportedBy));
+                    new_entry.push((
+                        child_node.to_owned(),
+                        EdgeType::OneWay(SingleEdge::SupportedBy),
+                    ));
                 }
 
                 // Move nodes to the right if child rank contains too few nodes
@@ -219,7 +227,12 @@ fn find_next_child_node(
             .iter()
             .filter(|(id, _)| count_unvisited_parents(edge_map, visited_nodes, id) == 0)
             .filter_map(|(id, et)| match et {
-                EdgeType::NoneToSupportedBy | EdgeType::NoneToComposite => Some(id.to_owned()),
+                EdgeType::OneWay(SingleEdge::SupportedBy)
+                | EdgeType::OneWay(SingleEdge::Composite)
+                | EdgeType::TwoWay((_, SingleEdge::SupportedBy))
+                | EdgeType::TwoWay((SingleEdge::SupportedBy, _))
+                | EdgeType::TwoWay((_, SingleEdge::Composite))
+                | EdgeType::TwoWay((SingleEdge::Composite, _)) => Some(id.to_owned()),
                 _ => None,
             })
             .find(|id| !visited_nodes.contains(id))
@@ -273,7 +286,7 @@ fn add_in_context_nodes(
                         let (left, right): (Vec<String>, Vec<String>) = target
                             .iter()
                             .filter_map(|(tn, et)| match et {
-                                EdgeType::NoneToInContextOf => Some(tn.to_owned()),
+                                EdgeType::OneWay(SingleEdge::InContextOf) => Some(tn.to_owned()),
                                 _ => None,
                             })
                             .collect::<Vec<String>>()
@@ -356,9 +369,12 @@ fn get_depths<'a>(
                 let mut c_nodes: Vec<&str> = children
                     .iter()
                     .filter_map(|(target, edge_type)| match edge_type {
-                        EdgeType::NoneToSupportedBy | EdgeType::NoneToComposite => {
-                            Some(target.as_str())
-                        }
+                        EdgeType::OneWay(SingleEdge::SupportedBy)
+                        | EdgeType::OneWay(SingleEdge::Composite)
+                        | EdgeType::TwoWay((_, SingleEdge::SupportedBy))
+                        | EdgeType::TwoWay((SingleEdge::SupportedBy, _))
+                        | EdgeType::TwoWay((_, SingleEdge::Composite))
+                        | EdgeType::TwoWay((SingleEdge::Composite, _)) => Some(target.as_str()),
                         _ => None,
                     })
                     .collect();

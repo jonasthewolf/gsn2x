@@ -5,7 +5,7 @@ mod util;
 use std::{cell::RefCell, collections::BTreeMap, rc::Rc};
 pub use util::escape_text;
 
-use edges::EdgeType;
+use edges::{EdgeType, SingleEdge};
 use graph::{get_forced_levels, rank_nodes, NodePlace};
 use nodes::{setup_basics, Node, Port};
 use rusttype::Font;
@@ -288,9 +288,6 @@ impl<'a> DirGraph<'a> {
 
     ///
     ///
-    /// TODO Only render one edge if there is an edge in the other direction too.
-    ///
-    ///
     ///
     ///
     fn render_edges(mut self) -> Self {
@@ -298,54 +295,65 @@ impl<'a> DirGraph<'a> {
             for (target, edge_type) in targets {
                 let s = self.nodes.get(source).unwrap().borrow();
                 let t = self.nodes.get(target).unwrap().borrow();
-                let (marker_height, support_distance) = match edge_type {
-                    EdgeType::Invisible => (0, 3 * MARKER_HEIGHT),
-                    _ => (MARKER_HEIGHT, 3 * MARKER_HEIGHT), // Everything else
+                let (marker_start_height, marker_end_height, support_distance) = match edge_type {
+                    EdgeType::Invisible => (0i32, 0i32, 3i32 * MARKER_HEIGHT as i32),
+                    EdgeType::OneWay(_) => {
+                        (0i32, MARKER_HEIGHT as i32, 3i32 * MARKER_HEIGHT as i32)
+                    }
+                    EdgeType::TwoWay(_) => (
+                        MARKER_HEIGHT as i32,
+                        MARKER_HEIGHT as i32,
+                        3i32 * MARKER_HEIGHT as i32,
+                    ),
                 };
                 let s_pos = s.get_position();
                 let t_pos = t.get_position();
                 let (start, start_sup, end, end_sup) =
                     if s_pos.y + s.get_height() / 2 < t_pos.y - t.get_height() / 2 {
                         (
-                            s.get_coordinates(&Port::South),
                             s.get_coordinates(&Port::South)
-                                .move_relative(0, support_distance as i32),
+                                .move_relative(0, marker_start_height),
+                            s.get_coordinates(&Port::South)
+                                .move_relative(0, support_distance),
                             t.get_coordinates(&Port::North)
-                                .move_relative(0, -(marker_height as i32)),
+                                .move_relative(0, -marker_end_height),
                             t.get_coordinates(&Port::North)
-                                .move_relative(0, -(support_distance as i32)),
+                                .move_relative(0, -support_distance),
                         )
                     } else if s_pos.y - s.get_height() / 2 - self.margin.top
                         > t_pos.y + t.get_height() / 2
                     {
                         (
-                            s.get_coordinates(&Port::North),
                             s.get_coordinates(&Port::North)
-                                .move_relative(0, -(support_distance as i32)),
+                                .move_relative(0, -marker_start_height),
+                            s.get_coordinates(&Port::North)
+                                .move_relative(0, -support_distance),
                             t.get_coordinates(&Port::South)
-                                .move_relative(0, marker_height as i32),
+                                .move_relative(0, marker_end_height),
                             t.get_coordinates(&Port::South)
-                                .move_relative(0, support_distance as i32),
+                                .move_relative(0, support_distance),
                         )
                     } else {
                         // s.get_vertical_rank() == t.get_vertical_rank()
                         if s_pos.x - s.get_width() / 2 > t_pos.x + t.get_width() / 2 {
                             (
-                                s.get_coordinates(&Port::West),
+                                s.get_coordinates(&Port::West)
+                                    .move_relative(-marker_start_height, 0),
                                 s.get_coordinates(&Port::West),
                                 t.get_coordinates(&Port::East)
-                                    .move_relative(marker_height as i32, 0),
+                                    .move_relative(marker_end_height, 0),
                                 t.get_coordinates(&Port::East)
-                                    .move_relative(support_distance as i32, 0),
+                                    .move_relative(support_distance, 0),
                             )
                         } else {
                             (
-                                s.get_coordinates(&Port::East),
+                                s.get_coordinates(&Port::East)
+                                    .move_relative(marker_start_height, 0),
                                 s.get_coordinates(&Port::East),
                                 t.get_coordinates(&Port::West)
-                                    .move_relative(-(marker_height as i32), 0),
+                                    .move_relative(-marker_end_height, 0),
                                 t.get_coordinates(&Port::West)
-                                    .move_relative(-(support_distance as i32), 0),
+                                    .move_relative(-support_distance, 0),
                             )
                         }
                     };
@@ -354,46 +362,47 @@ impl<'a> DirGraph<'a> {
                     .move_to((start.x, start.y))
                     .cubic_curve_to(parameters);
                 let arrow_end_id = match &edge_type {
-                    EdgeType::NoneToInContextOf
-                    | EdgeType::InContextOfToInContextOf
-                    | EdgeType::SupportedByToInContextOf
-                    | EdgeType::CompositeToInContextOf => Some("url(#incontextof_arrow)"),
-                    EdgeType::NoneToSupportedBy
-                    | EdgeType::InContextOfToSupportedBy
-                    | EdgeType::SupportedByToSupportedBy
-                    | EdgeType::CompositeToSupportedBy => Some("url(#supportedby_arrow)"),
-                    EdgeType::NoneToComposite
-                    | EdgeType::InContextOfToComposite
-                    | EdgeType::SupportedByToComposite
-                    | EdgeType::CompositeToComposite => Some("url(#composite_arrow)"),
+                    EdgeType::OneWay(SingleEdge::InContextOf)
+                    | EdgeType::TwoWay((_, SingleEdge::InContextOf)) => {
+                        Some("url(#incontextof_arrow)")
+                    }
+                    EdgeType::OneWay(SingleEdge::SupportedBy)
+                    | EdgeType::TwoWay((_, SingleEdge::SupportedBy)) => {
+                        Some("url(#supportedby_arrow)")
+                    }
+                    EdgeType::OneWay(SingleEdge::Composite)
+                    | EdgeType::TwoWay((_, SingleEdge::Composite)) => Some("url(#composite_arrow)"),
                     EdgeType::Invisible => None,
                 };
                 let arrow_start_id = match &edge_type {
-                    EdgeType::InContextOfToComposite
-                    | EdgeType::InContextOfToInContextOf
-                    | EdgeType::InContextOfToSupportedBy => Some("url(#incontextof_arrow)"),
-                    EdgeType::SupportedByToComposite
-                    | EdgeType::SupportedByToInContextOf
-                    | EdgeType::SupportedByToSupportedBy => Some("url(#supportedby_arrow)"),
-                    EdgeType::CompositeToComposite
-                    | EdgeType::CompositeToInContextOf
-                    | EdgeType::CompositeToSupportedBy => Some("url(#composite_arrow)"),
+                    EdgeType::TwoWay((SingleEdge::InContextOf, _)) => {
+                        Some("url(#incontextof_arrow)")
+                    }
+                    EdgeType::TwoWay((SingleEdge::SupportedBy, _)) => {
+                        Some("url(#supportedby_arrow)")
+                    }
+                    EdgeType::TwoWay((SingleEdge::Composite, _)) => Some("url(#composite_arrow)"),
                     _ => None,
                 };
-                let classes = match edge_type {
-                    EdgeType::NoneToInContextOf => Some("gsnedge gsnspby"),
-                    EdgeType::NoneToSupportedBy => Some("gsnedge gsninctxt"),
-                    EdgeType::NoneToComposite => Some("gsnedge gsncomposite"),
-                    EdgeType::InContextOfToSupportedBy => Some("gsnedge gsninctxt gsnspby"),
-                    EdgeType::InContextOfToInContextOf => Some("gsnedge gsninctxt"),
-                    EdgeType::InContextOfToComposite => Some("gsnedge gsninctxt gsncomposite"),
-                    EdgeType::SupportedByToInContextOf => Some("gsnedge gsnspby gsninctxt"),
-                    EdgeType::SupportedByToSupportedBy => Some("gsnedge gsnspby"),
-                    EdgeType::SupportedByToComposite => Some("gsnedge gsnspby gsncomposite"),
-                    EdgeType::CompositeToInContextOf => Some("gsnedge gsncomposite gsninctxt"),
-                    EdgeType::CompositeToSupportedBy => Some("gsnedge gsncomposite gsnspby"),
-                    EdgeType::CompositeToComposite => Some("gsnedge gsncomposite"),
-                    EdgeType::Invisible => None,
+                let mut classes = "gsnedge".to_string();
+                match edge_type {
+                    EdgeType::OneWay(SingleEdge::InContextOf)
+                    | EdgeType::TwoWay((_, SingleEdge::InContextOf))
+                    | EdgeType::TwoWay((SingleEdge::InContextOf, _)) => {
+                        classes.push_str(" gsninctxt")
+                    }
+                    EdgeType::OneWay(SingleEdge::SupportedBy)
+                    | EdgeType::TwoWay((_, SingleEdge::SupportedBy))
+                    | EdgeType::TwoWay((SingleEdge::SupportedBy, _)) => {
+                        classes.push_str(" gsninspby")
+                    }
+                    EdgeType::OneWay(SingleEdge::Composite)
+                    | EdgeType::TwoWay((_, SingleEdge::Composite)) => {
+                        // Already covered by all other matches
+                        //| EdgeType::TwoWay((SingleEdge::Composite, _))
+                        classes.push_str(" gsncomposite")
+                    }
+                    EdgeType::Invisible => classes.push_str(" gsninvis"),
                 };
                 let mut e = Path::new()
                     .set("d", data)
@@ -406,9 +415,7 @@ impl<'a> DirGraph<'a> {
                 if let Some(arrow_id) = arrow_start_id {
                     e = e.set("marker-start", arrow_id);
                 }
-                if let Some(classes) = classes {
-                    e = e.set("class", classes);
-                }
+                e = e.set("class", classes);
                 self.document = self.document.add(e);
             }
         }
@@ -430,7 +437,7 @@ impl<'a> DirGraph<'a> {
             .set("markerHeight", 9u32)
             .set("refX", 0f32)
             .set("refY", 4.5f32)
-            .set("orient", "auto")
+            .set("orient", "auto-start-reverse")
             .set("markerUnits", "users_posaceOnUse")
             .add(supportedby_polyline);
 
@@ -445,7 +452,7 @@ impl<'a> DirGraph<'a> {
             .set("markerHeight", 9u32)
             .set("refX", 0f32)
             .set("refY", 4.5f32)
-            .set("orient", "auto")
+            .set("orient", "auto-start-reverse")
             .set("markerUnits", "users_posaceOnUse")
             .add(incontext_polyline);
 
@@ -470,7 +477,7 @@ impl<'a> DirGraph<'a> {
             .set("markerHeight", 9u32)
             .set("refX", 0f32)
             .set("refY", 4.5f32)
-            .set("orient", "auto")
+            .set("orient", "auto-start-reverse")
             .set("markerUnits", "users_posaceOnUse")
             .add(composite_polyline1)
             .add(composite_polyline2)

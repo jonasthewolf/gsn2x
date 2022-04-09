@@ -1,16 +1,13 @@
-#[derive(Debug, PartialEq)]
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub enum SingleEdge {
+    InContextOf,
+    SupportedBy,
+    Composite,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub enum EdgeType {
-    NoneToInContextOf,
-    NoneToSupportedBy,
-    NoneToComposite,
-    InContextOfToSupportedBy,
-    InContextOfToInContextOf,
-    InContextOfToComposite,
-    SupportedByToInContextOf,
-    SupportedByToSupportedBy,
-    SupportedByToComposite,
-    CompositeToInContextOf,
-    CompositeToSupportedBy,
-    CompositeToComposite,
+    OneWay(SingleEdge),
+    TwoWay((SingleEdge, SingleEdge)),
     Invisible,
 }

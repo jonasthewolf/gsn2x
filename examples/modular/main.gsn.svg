@@ -3,15 +3,15 @@
 <rect fill="lightgrey" height="5" stroke="black" stroke-width="1" width="10" x="0" y="0"/>
 <rect fill="lightgrey" height="10" stroke="black" stroke-width="1" width="20" x="0" y="5"/>
 </symbol>
-<marker id="composite_arrow" markerHeight="9" markerUnits="users_posaceOnUse" markerWidth="10" orient="auto" refX="0" refY="4.5">
+<marker id="composite_arrow" markerHeight="9" markerUnits="users_posaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
 <polyline fill="none" points="0 0, 6 4.5, 0 9" stroke="black" stroke-width="1"/>
 <polyline fill="none" points="4 0, 10 4.5, 4 9" stroke="black" stroke-width="1"/>
 <polyline fill="none" points="0 4.5, 10 4.5" stroke="black" stroke-width="1"/>
 </marker>
-<marker id="supportedby_arrow" markerHeight="9" markerUnits="users_posaceOnUse" markerWidth="10" orient="auto" refX="0" refY="4.5">
+<marker id="supportedby_arrow" markerHeight="9" markerUnits="users_posaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
 <polyline fill="black" points="0 0, 10 4.5, 0 9"/>
 </marker>
-<marker id="incontextof_arrow" markerHeight="9" markerUnits="users_posaceOnUse" markerWidth="10" orient="auto" refX="0" refY="4.5">
+<marker id="incontextof_arrow" markerHeight="9" markerUnits="users_posaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
 <polyline fill="none" points="0 0, 10 4.5, 0 9, 0 0" stroke="black" stroke-width="1"/>
 </marker>
 <g class="gsnelem gsngoal" id="node_G1">
@@ -98,20 +98,9 @@ J
 Some Context
 </text>
 </g>
-<path class="gsnedge gsninctxt" d="M303,70 C303,100,303,81,303,101" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsnspby" d="M104,243 C104,243,446,243,466,243" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsnspby" d="M436,243 C436,243,446,243,466,243" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninctxt" d="M303,161 C303,191,62,185,62,205" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninctxt" d="M303,161 C303,191,365,174,365,194" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<g class="gsnmeta" id="node_gsn_meta">
-<title>
-Meta Information
-</title>
-<text font-family="AppleSystemUIFont" font-size="12" textLength="69" x="360" y="310">
-Module: Main
-</text>
-<text font-family="AppleSystemUIFont" font-size="12" textLength="246" x="360" y="324">
-Generated on 2022-04-08 23:28:54.385964 UTC
-</text>
-</g>
+<path class="gsnedge gsninspby" d="M303,70 C303,100,303,81,303,101" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M104,243 C104,243,446,243,466,243" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M436,243 C436,243,446,243,466,243" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M303,161 C303,191,62,185,62,205" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M303,161 C303,191,365,174,365,194" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 </svg>

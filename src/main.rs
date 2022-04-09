@@ -326,7 +326,7 @@ fn print_outputs(
             let mut output_file = File::create(output_filename)
                 .context(format!("Failed to open output file {}", output_filename))?;
             let deps = crate::gsn::calculate_module_dependencies(&nodes);
-            render::render_architecture(&mut output_file, &deps, stylesheet)?;
+            render::render_architecture(&mut output_file, modules, deps, stylesheet)?;
         }
         if !matches.is_present("NO_COMPLETE_VIEW") {
             let mut pbuf = std::path::PathBuf::from(&modules.iter().next().unwrap().1.filename);
