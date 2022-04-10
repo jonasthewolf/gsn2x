@@ -411,6 +411,7 @@ dependencies = [
  "clap",
  "dirgraphsvg",
  "predicates",
+ "regex",
  "serde",
  "serde_yaml",
 ]

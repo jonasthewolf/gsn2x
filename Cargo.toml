@@ -21,3 +21,4 @@ dirgraphsvg = { path="dirgraphsvg"}
 assert_cmd = "2.0"
 assert_fs = "1.0"
 predicates = "2.1"
+regex = "1.5"

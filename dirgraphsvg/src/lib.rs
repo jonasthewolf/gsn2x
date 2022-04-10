@@ -288,7 +288,7 @@ impl<'a> DirGraph<'a> {
 
     ///
     /// Render the edges
-    /// 
+    ///
     /// TODO Make edges nicer, if e.g., start marker is used. Make the first and last MARKER_HEIGHT pixels vertical.
     ///
     ///

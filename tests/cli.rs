@@ -4,31 +4,37 @@ mod integrations {
     use assert_fs::fixture::PathCopy;
     use assert_fs::prelude::*;
     use predicates::prelude::*;
+    use regex::Regex;
     use std::process::Command;
 
-    fn diff(left: &std::ffi::OsStr, right: &std::ffi::OsStr) -> Result<(),std::io::Error> {
-        let left : &std::path::Path = left.as_ref();
-        let right : &std::path::Path = right.as_ref();
+    fn are_struct_similar_svgs(
+        left: &std::ffi::OsStr,
+        right: &std::ffi::OsStr,
+    ) -> Result<bool, std::io::Error> {
+        let left: &std::path::Path = left.as_ref();
+        let right: &std::path::Path = right.as_ref();
         let left_c = std::fs::read_to_string(left)?;
         let right_c = std::fs::read_to_string(right)?;
         let mut same = true;
-        let mut iter1 = left_c.lines();
-        let mut iter2 = right_c.lines();
-        if left_c.len() < right_c.len(){
-            std::mem::swap(&mut iter1, &mut iter2);
-        } // now iter1 is the largest
-        
-        for (n, (l,r)) in iter1.zip(iter2.chain(std::iter::repeat(""))).enumerate() {
-            if l != r {
-                println!("{}: {}", n, l);
-                println!("{}: {}", n, r);
-                same = false;
+        let coords = Regex::new(r#" (([rc]?(x|y))|width|height|textLength)="\d+""#).unwrap();
+        let paths = Regex::new(r#"(-?\d+,-?\d+[, ]?)+"#).unwrap();
+
+        if left_c.chars().filter(|&c| c == '\n').count()
+            == right_c.chars().filter(|&c| c == '\n').count()
+        {
+            for (l, r) in left_c.lines().zip(right_c.lines()) {
+                if paths.replace_all(&coords.replace_all(l, ""), "")
+                    != paths.replace_all(&coords.replace_all(r, ""), "")
+                {
+                    same = false;
+                    break;
+                }
             }
+        } else {
+            same = false;
         }
-        if same {
-            println!("{} and {} are identical.", left.display(), right.display());
-        }
-        Ok(())
+
+        Ok(same)
     }
 
     #[test]
@@ -50,7 +56,10 @@ mod integrations {
         let output_file = temp.child("example.gsn.svg");
         cmd.arg(input_file.as_os_str()).arg("-G");
         cmd.assert().success();
-        diff(&input_file.as_os_str(), &output_file.as_os_str())?;
+        assert!(are_struct_similar_svgs(
+            std::path::Path::new("examples/example.gsn.svg").as_os_str(),
+            output_file.as_os_str()
+        )?);
         output_file.assert(predicate::path::eq_file(std::path::Path::new(
             "examples/example.gsn.svg",
         )));
@@ -157,7 +166,10 @@ mod integrations {
             .arg("-F")
             .arg("-G");
         cmd.assert().success();
-        diff(&std::path::Path::new("examples/modular/architecture.svg").as_os_str(), &output_file.as_os_str())?;
+        assert!(are_struct_similar_svgs(
+            std::path::Path::new("examples/modular/architecture.svg").as_os_str(),
+            output_file.as_os_str(),
+        )?);
         output_file.assert(predicate::path::eq_file(std::path::Path::new(
             "examples/modular/architecture.svg",
         )));
@@ -182,7 +194,10 @@ mod integrations {
             .arg("-A")
             .arg("-G");
         cmd.assert().success();
-        diff(&std::path::Path::new("examples/modular/complete.svg").as_os_str(), &output_file.as_os_str())?;
+        assert!(are_struct_similar_svgs(
+            std::path::Path::new("examples/modular/complete.svg").as_os_str(),
+            output_file.as_os_str(),
+        )?);
         output_file.assert(predicate::path::eq_file(std::path::Path::new(
             "examples/modular/complete.svg",
         )));
