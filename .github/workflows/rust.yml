@@ -24,7 +24,7 @@ jobs:
     - name: Rust Cache
       uses: Swatinem/rust-cache@v1.3.0
       with:
-        sharedKey: all
+        sharedKey: ci
     - name: Annotate commit with clippy warnings
       uses: actions-rs/clippy-check@v1
       with:
@@ -34,6 +34,7 @@ jobs:
       uses: actions-rs/audit-check@v1
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
+        args: --all
   
   license_check:
     runs-on: ubuntu-latest
@@ -43,7 +44,7 @@ jobs:
     - name: Rust Cache
       uses: Swatinem/rust-cache@v1.3.0
       with:
-        sharedKey: all
+        sharedKey: ci
     - name: License check
       run: |
         cargo install cargo-lichking
@@ -60,7 +61,7 @@ jobs:
     - name: Rust Cache
       uses: Swatinem/rust-cache@v1.3.0
       with:
-        sharedKey: all
+        sharedKey: ci
     - name: Build
       run: cargo build --verbose
     - name: Release build
@@ -137,12 +138,12 @@ jobs:
     - name: Rust Cache
       uses: Swatinem/rust-cache@v1.3.0
       with:
-        sharedKey: all
+        sharedKey: ci
     # coverage measurement needs a nightly toolchain with llvm-tools
     - uses: actions-rs/toolchain@v1
       with:
         profile: minimal
-        toolchain: nightly
+        toolchain: stable
         components: llvm-tools-preview
     - name: Coverage measurement
       continue-on-error: true
