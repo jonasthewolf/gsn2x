@@ -7,27 +7,34 @@ mod integrations {
     use regex::Regex;
     use std::process::Command;
 
-    fn are_struct_similar_svgs(
+    fn compare_lines_with_replace(
         left: &std::ffi::OsStr,
         right: &std::ffi::OsStr,
+        replace_regex: Option<Vec<Regex>>,
     ) -> Result<bool, std::io::Error> {
         let left: &std::path::Path = left.as_ref();
         let right: &std::path::Path = right.as_ref();
         let left_c = std::fs::read_to_string(left)?;
         let right_c = std::fs::read_to_string(right)?;
         let mut same = true;
-        let coords =
-            Regex::new(r#" (([rc]?(x|y))|width|height|textLength|viewbox|viewBox)="[\d\s]+""#).unwrap();
-        let font = Regex::new(r#" font-family="([0-9A-Za-z-_]|\\.|\\u[0-9a-fA-F]{1,4})+"#).unwrap();
-        let paths = Regex::new(r#"(-?\d+,-?\d+[, ]?)+"#).unwrap();
 
         if left_c.chars().filter(|&c| c == '\n').count()
             == right_c.chars().filter(|&c| c == '\n').count()
         {
             for (l, r) in left_c.lines().zip(right_c.lines()) {
-                if dbg!(font.replace_all(&paths.replace_all(&coords.replace_all(l, ""), ""), ""))
-                    != dbg!(font.replace_all(&paths.replace_all(&coords.replace_all(r, ""), ""), ""))
-                {
+                let l_r = replace_regex
+                    .iter()
+                    .flatten()
+                    .fold(l.to_owned(), |replaced, r| {
+                        r.replace_all(&replaced, "").to_string()
+                    });
+                let r_r = replace_regex
+                    .iter()
+                    .flatten()
+                    .fold(r.to_owned(), |replaced, r| {
+                        r.replace_all(&replaced, "").to_string()
+                    });
+                if dbg!(l_r) != dbg!(r_r) {
                     same = false;
                     break;
                 }
@@ -37,6 +44,20 @@ mod integrations {
         }
 
         Ok(same)
+    }
+
+    fn are_struct_similar_svgs(
+        left: &std::ffi::OsStr,
+        right: &std::ffi::OsStr,
+    ) -> Result<bool, std::io::Error> {
+        let replaces = vec![
+            Regex::new(r#" (([rc]?(x|y))|width|height|textLength|viewbox|viewBox)="[\d\s]+""#)
+                .unwrap(),
+            Regex::new(r#" font-family="([0-9A-Za-z-_]|\\.|\\u[0-9a-fA-F]{1,4})+"#).unwrap(),
+            Regex::new(r#"(-?\d+,-?\d+[, ]?)+"#).unwrap(),
+        ];
+
+        compare_lines_with_replace(left, right, Some(replaces))
     }
 
     #[test]
@@ -118,10 +139,11 @@ mod integrations {
             .success()
             .stdout(predicate::str::is_empty())
             .stderr(predicate::str::is_empty());
-        let predicate_file = predicate::path::eq_file(evidence_file.path())
-            .utf8()
-            .unwrap();
-        assert!(predicate_file.eval(std::path::Path::new("tests/no_evidences.gsn.test.md")));
+        assert!(compare_lines_with_replace(
+            evidence_file.as_os_str(),
+            std::path::Path::new("tests/no_evidences.gsn.test.md").as_os_str(),
+            None
+        )?);
         evidence_file.close()?;
         Ok(())
     }
@@ -140,10 +162,11 @@ mod integrations {
             .success()
             .stdout(predicate::str::is_empty())
             .stderr(predicate::str::is_empty());
-        let predicate_file = predicate::path::eq_file(evidence_file.path())
-            .utf8()
-            .unwrap();
-        assert!(predicate_file.eval(std::path::Path::new("tests/example.gsn.test.md")));
+            assert!(compare_lines_with_replace(
+                evidence_file.as_os_str(),
+                std::path::Path::new("tests/example.gsn.test.md").as_os_str(),
+                None
+            )?);
         evidence_file.close()?;
         Ok(())
     }
