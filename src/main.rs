@@ -117,12 +117,12 @@ fn main() -> Result<()> {
                 .help_heading("OUTPUT MODIFICATION"),
         )
         .arg(
-            Arg::new("STYLESHEET")
-                .help("Sets a stylesheet that is used by Graphviz in SVG output.")
+            Arg::new("STYLESHEETS")
+                .help("Sets a stylesheet that is used in SVG output.")
                 .short('s')
                 .long("stylesheet")
                 .takes_value(true)
-                .multiple_occurrences(false)
+                .multiple_occurrences(true)
                 .conflicts_with("CHECKONLY")
                 .help_heading("OUTPUT MODIFICATION"),
         )
@@ -159,7 +159,9 @@ fn main() -> Result<()> {
     let layers = matches
         .values_of("LAYERS")
         .map(|x| x.collect::<Vec<&str>>());
-    let stylesheet = matches.value_of("STYLESHEET");
+    let stylesheets = matches
+        .values_of("STYLESHEETS")
+        .map(|x| x.collect::<Vec<&str>>());
     let excluded_modules = matches
         .values_of("EXCLUDED_MODULE")
         .map(|x| x.collect::<Vec<&str>>());
@@ -174,7 +176,7 @@ fn main() -> Result<()> {
 
     if diags.errors == 0 && !matches.is_present("CHECKONLY") {
         // Output argument view
-        print_outputs(&matches, nodes, &modules, &layers, stylesheet)?;
+        print_outputs(&matches, nodes, &modules, &layers, stylesheets)?;
     }
     // Output diagnostic messages
     output_messages(&diags)
@@ -294,7 +296,7 @@ fn print_outputs(
     nodes: MyMap<String, GsnNode>,
     modules: &HashMap<String, Module>,
     layers: &Option<Vec<&str>>,
-    stylesheet: Option<&str>,
+    stylesheets: Option<Vec<&str>>,
 ) -> Result<(), anyhow::Error> {
     if !matches.is_present("NO_ARGUMENT_VIEW") {
         for (module_name, module) in modules {
@@ -311,7 +313,11 @@ fn print_outputs(
                 module_name,
                 module,
                 &nodes,
-                stylesheet,
+                stylesheets
+                    .iter()
+                    .flatten()
+                    .map(|x| Some(x.to_owned()))
+                    .collect(),
             )?;
         }
     }
@@ -326,7 +332,16 @@ fn print_outputs(
             let mut output_file = File::create(output_filename)
                 .context(format!("Failed to open output file {}", output_filename))?;
             let deps = crate::gsn::calculate_module_dependencies(&nodes);
-            render::render_architecture(&mut output_file, modules, deps, stylesheet)?;
+            render::render_architecture(
+                &mut output_file,
+                modules,
+                deps,
+                stylesheets
+                    .iter()
+                    .flatten()
+                    .map(|x| Some(x.to_owned()))
+                    .collect(),
+            )?;
         }
         if !matches.is_present("NO_COMPLETE_VIEW") {
             let mut pbuf = std::path::PathBuf::from(&modules.iter().next().unwrap().1.filename);
@@ -337,7 +352,7 @@ fn print_outputs(
                 .unwrap();
             let mut output_file = File::create(output_filename)
                 .context(format!("Failed to open output file {}", output_filename))?;
-            render::render_complete(&mut output_file, matches, &nodes, stylesheet)?;
+            render::render_complete(&mut output_file, matches, &nodes, stylesheets)?;
         }
     }
     if !matches.is_present("NO_EVIDENCES") {

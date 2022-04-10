@@ -123,7 +123,7 @@ It is intentional that information is only added for a view, but not hidden to e
 
 ## Stylesheets for SVG rendering
 
-You can provide custom stylesheets for SVG via the `-s` or `--stylesheet` options.
+You can provide (multiple) custom stylesheets for SVG via the `-s` or `--stylesheet` options.
 
 Every element will also be addressable by `id`. The `id` is the same as the YAML id.
 

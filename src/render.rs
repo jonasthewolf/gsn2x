@@ -205,7 +205,7 @@ pub fn render_architecture(
     output: &mut impl Write,
     modules: &HashMap<String, Module>,
     dependencies: BTreeMap<String, BTreeMap<String, EdgeType>>,
-    stylesheet: Option<&str>,
+    stylesheets: Option<Vec<&str>>,
 ) -> Result<(), anyhow::Error> {
     let mut dg = dirgraphsvg::DirGraph::default();
     let svg_nodes: BTreeMap<String, Rc<RefCell<dyn Node>>> = modules
@@ -235,8 +235,8 @@ pub fn render_architecture(
 
     dg = dg.add_nodes(svg_nodes).add_edges(&mut edges);
 
-    if let Some(css) = stylesheet {
-        dg = dg.add_css_sytlesheet(css);
+    if let Some(mut css) = stylesheets {
+        dg = dg.add_css_sytlesheets(&mut css);
     }
 
     dg.write(output)?;
@@ -253,7 +253,7 @@ pub fn render_complete(
     output: &mut impl Write,
     matches: &clap::ArgMatches,
     nodes: &MyMap<String, GsnNode>,
-    stylesheet: Option<&str>,
+    stylesheets: Option<Vec<&str>>,
 ) -> Result<(), anyhow::Error> {
     let masked_modules_opt = matches
         .values_of("MASK_MODULE")
@@ -275,8 +275,8 @@ pub fn render_complete(
         .add_edges(&mut edges)
         .add_levels(&get_levels(nodes));
 
-    if let Some(css) = stylesheet {
-        dg = dg.add_css_sytlesheet(css);
+    if let Some(mut css) = stylesheets {
+        dg = dg.add_css_sytlesheets(&mut css);
     }
 
     dg.write(output)?;
@@ -298,7 +298,7 @@ pub fn render_argument(
     module_name: &str,
     module: &Module,
     nodes: &MyMap<String, GsnNode>,
-    stylesheet: Option<&str>,
+    stylesheets: Option<Vec<&str>>,
 ) -> Result<(), anyhow::Error> {
     let mut dg = dirgraphsvg::DirGraph::default();
     let mut svg_nodes: BTreeMap<String, Rc<RefCell<dyn Node>>> = nodes
@@ -342,8 +342,8 @@ pub fn render_argument(
         .add_edges(&mut edges)
         .add_levels(&get_levels(nodes));
 
-    if let Some(css) = stylesheet {
-        dg = dg.add_css_sytlesheet(css);
+    if let Some(mut css) = stylesheets {
+        dg = dg.add_css_sytlesheets(&mut css);
     }
 
     // Add meta information if requested

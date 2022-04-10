@@ -105,6 +105,11 @@ impl<'a> DirGraph<'a> {
         self
     }
 
+    pub fn add_css_sytlesheets(mut self, css: &mut Vec<&'a str>) -> Self {
+        self.css_stylesheets.append(css);
+        self
+    }
+
     pub fn add_nodes(mut self, mut nodes: BTreeMap<String, Rc<RefCell<dyn Node>>>) -> Self {
         self.nodes.append(&mut nodes);
         self
