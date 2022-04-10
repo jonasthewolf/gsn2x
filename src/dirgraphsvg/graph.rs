@@ -5,7 +5,7 @@ use std::{
     rc::Rc,
 };
 
-use crate::{
+use crate::dirgraphsvg::{
     edges::{EdgeType, SingleEdge},
     nodes::{invisible_node::InvisibleNode, Node},
 };
@@ -75,7 +75,7 @@ pub(crate) fn rank_nodes<'a>(
         // No root nodes are found.
         // This can actually only happen in architecture view.
         // Take the first node and start from there.
-        vec![nodes.iter().nth(0).unwrap().0.to_owned()]
+        vec![nodes.iter().next().unwrap().0.to_owned()]
     } else {
         n_ids.iter().map(|x| x.to_owned()).collect()
     };

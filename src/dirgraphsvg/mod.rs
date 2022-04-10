@@ -81,17 +81,17 @@ impl<'a> Default for DirGraph<'a> {
 }
 
 impl<'a> DirGraph<'a> {
-    pub fn set_wrap(mut self, wrap: u32) -> Self {
+    pub fn _set_wrap(mut self, wrap: u32) -> Self {
         self.wrap = wrap;
         self
     }
 
-    pub fn set_margin(mut self, margin: Margin) -> Self {
+    pub fn _set_margin(mut self, margin: Margin) -> Self {
         self.margin = margin;
         self
     }
 
-    pub fn set_font(mut self, font: &str, size: f32) -> Self {
+    pub fn _set_font(mut self, font: &str, size: f32) -> Self {
         self.font = FontInfo {
             font: get_font(font).unwrap(),
             name: font.to_owned(),
@@ -100,7 +100,7 @@ impl<'a> DirGraph<'a> {
         self
     }
 
-    pub fn add_css_sytlesheet(mut self, css: &'a str) -> Self {
+    pub fn _add_css_sytlesheet(mut self, css: &'a str) -> Self {
         self.css_stylesheets.push(css);
         self
     }
@@ -115,13 +115,13 @@ impl<'a> DirGraph<'a> {
         self
     }
 
-    pub fn add_node(mut self, node: Rc<RefCell<dyn Node>>) -> Self {
+    pub fn _add_node(mut self, node: Rc<RefCell<dyn Node>>) -> Self {
         self.nodes
             .insert(node.borrow().get_id().to_owned(), node.clone());
         self
     }
 
-    pub fn add_edge(
+    pub fn _add_edge(
         mut self,
         source: Rc<RefCell<dyn Node>>,
         target: Rc<RefCell<dyn Node>>,
@@ -554,8 +554,11 @@ impl<'a> DirGraph<'a> {
             let mut text_width = 0;
             let mut lines = Vec::new();
             for t in meta {
-                let (width, height) =
-                    crate::util::font::text_bounding_box(&self.font.font, t, self.font.size);
+                let (width, height) = crate::dirgraphsvg::util::font::text_bounding_box(
+                    &self.font.font,
+                    t,
+                    self.font.size,
+                );
                 lines.push((width, height));
                 text_height += height;
                 text_width = std::cmp::max(text_width, width);
@@ -564,7 +567,7 @@ impl<'a> DirGraph<'a> {
             let x = self.width - text_width - 20;
             let y_base = self.height - text_height - 20;
             let mut y_running = 0;
-            for (t, (w, h)) in (&meta).iter().zip(lines) {
+            for (t, (w, h)) in meta.iter().zip(lines) {
                 y_running += h;
                 let text = Text::new()
                     .set("x", x)

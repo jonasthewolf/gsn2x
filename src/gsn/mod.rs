@@ -1,5 +1,5 @@
+use crate::dirgraphsvg::edges::{EdgeType, SingleEdge};
 use crate::yaml_fix::MyMap;
-use dirgraphsvg::edges::{EdgeType, SingleEdge};
 use serde::Deserialize;
 use std::collections::{BTreeMap, HashSet};
 

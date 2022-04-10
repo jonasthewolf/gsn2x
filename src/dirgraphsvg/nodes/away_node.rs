@@ -1,6 +1,6 @@
 use svg::node::element::{path::Data, Path, Rectangle, Text, Title, Use};
 
-use crate::FontInfo;
+use crate::dirgraphsvg::FontInfo;
 
 use super::{get_port_default_coordinates, setup_basics, Node, Point2D, Port};
 
@@ -43,20 +43,25 @@ impl Node for AwayNode {
     fn calculate_size(&mut self, font: &FontInfo, suggested_char_wrap: u32) {
         self.width = 70; // Padding of 5 on both sides
         self.height = PADDING_VERTICAL * 2 + 30; // Padding of 5 on both sides
-        self.text = crate::util::wordwrap::wordwrap(&self.text, suggested_char_wrap, "\n");
-        let (t_width, t_height) =
-            crate::util::font::text_bounding_box(&font.font, &self.identifier, font.size);
+        self.text =
+            crate::dirgraphsvg::util::wordwrap::wordwrap(&self.text, suggested_char_wrap, "\n");
+        let (t_width, t_height) = crate::dirgraphsvg::util::font::text_bounding_box(
+            &font.font,
+            &self.identifier,
+            font.size,
+        );
         self.lines.push((t_width, t_height));
         let mut text_height = 0;
         let mut text_width = t_width;
         for t in self.text.lines() {
-            let (width, height) = crate::util::font::text_bounding_box(&font.font, t, font.size);
+            let (width, height) =
+                crate::dirgraphsvg::util::font::text_bounding_box(&font.font, t, font.size);
             self.lines.push((width, height));
             text_height += height;
             text_width = std::cmp::max(text_width, width);
         }
         let (mod_width, mod_height) =
-            crate::util::font::text_bounding_box(&font.font, &self.module, font.size);
+            crate::dirgraphsvg::util::font::text_bounding_box(&font.font, &self.module, font.size);
         self.mod_width = mod_width;
         self.mod_height = mod_height;
         self.width = *[

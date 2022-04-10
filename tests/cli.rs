@@ -162,11 +162,11 @@ mod integrations {
             .success()
             .stdout(predicate::str::is_empty())
             .stderr(predicate::str::is_empty());
-            assert!(compare_lines_with_replace(
-                evidence_file.as_os_str(),
-                std::path::Path::new("tests/example.gsn.test.md").as_os_str(),
-                None
-            )?);
+        assert!(compare_lines_with_replace(
+            evidence_file.as_os_str(),
+            std::path::Path::new("tests/example.gsn.test.md").as_os_str(),
+            None
+        )?);
         evidence_file.close()?;
         Ok(())
     }

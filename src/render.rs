@@ -1,8 +1,8 @@
+use crate::dirgraphsvg::edges::EdgeType;
+use crate::dirgraphsvg::nodes::*;
 use crate::gsn::{get_levels, GsnNode, Module};
 use crate::yaml_fix::MyMap;
 use chrono::Utc;
-use dirgraphsvg::edges::EdgeType;
-use dirgraphsvg::nodes::*;
 use std::cell::RefCell;
 use std::collections::{BTreeMap, HashMap};
 use std::io::Write;
@@ -11,7 +11,7 @@ use std::rc::Rc;
 pub fn svg_from_gsn_node(
     id: &str,
     gsn_node: &GsnNode,
-) -> Rc<RefCell<dyn dirgraphsvg::nodes::Node>> {
+) -> Rc<RefCell<dyn crate::dirgraphsvg::nodes::Node>> {
     let layer_classes: Option<Vec<String>> = gsn_node
         .additional
         .keys()
@@ -104,7 +104,7 @@ pub fn svg_from_gsn_node(
 pub fn away_svg_from_gsn_node(
     id: &str,
     gsn_node: &GsnNode,
-) -> Rc<RefCell<dyn dirgraphsvg::nodes::Node>> {
+) -> Rc<RefCell<dyn crate::dirgraphsvg::nodes::Node>> {
     let layer_classes: Option<Vec<String>> = gsn_node
         .additional
         .keys()
@@ -207,7 +207,7 @@ pub fn render_architecture(
     dependencies: BTreeMap<String, BTreeMap<String, EdgeType>>,
     stylesheets: Option<Vec<&str>>,
 ) -> Result<(), anyhow::Error> {
-    let mut dg = dirgraphsvg::DirGraph::default();
+    let mut dg = crate::dirgraphsvg::DirGraph::default();
     let svg_nodes: BTreeMap<String, Rc<RefCell<dyn Node>>> = modules
         .iter()
         .filter(|(k, _)| dependencies.contains_key(k.to_owned()))
@@ -259,7 +259,7 @@ pub fn render_complete(
         .values_of("MASK_MODULE")
         .map(|x| x.map(|y| y.to_owned()).collect::<Vec<String>>());
     let masked_modules = masked_modules_opt.iter().flatten().collect::<Vec<_>>();
-    let mut dg = dirgraphsvg::DirGraph::default();
+    let mut dg = crate::dirgraphsvg::DirGraph::default();
     let mut edges: BTreeMap<String, Vec<(String, EdgeType)>> = nodes
         .iter()
         .filter(|(_, node)| !masked_modules.contains(&&node.module))
@@ -300,7 +300,7 @@ pub fn render_argument(
     nodes: &MyMap<String, GsnNode>,
     stylesheets: Option<Vec<&str>>,
 ) -> Result<(), anyhow::Error> {
-    let mut dg = dirgraphsvg::DirGraph::default();
+    let mut dg = crate::dirgraphsvg::DirGraph::default();
     let mut svg_nodes: BTreeMap<String, Rc<RefCell<dyn Node>>> = nodes
         .iter()
         .filter(|(_, node)| node.module == module_name)

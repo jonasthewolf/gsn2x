@@ -1,16 +1,17 @@
 use anyhow::{anyhow, Context, Result};
 use clap::Arg;
-use dirgraphsvg::escape_text;
 use std::collections::HashMap;
 use std::fs::File;
 use std::io::BufReader;
 
 mod diagnostics;
+mod dirgraphsvg;
 mod gsn;
 mod render;
 mod yaml_fix;
 
 use diagnostics::Diagnostics;
+use dirgraphsvg::escape_text;
 use gsn::{GsnDocumentNode, GsnNode, MetaInformation, Module};
 use yaml_fix::MyMap;
 

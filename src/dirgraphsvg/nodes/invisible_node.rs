@@ -2,7 +2,7 @@ use std::{cell::RefCell, rc::Rc};
 
 use svg::node::element::Group;
 
-use crate::util::point2d::Point2D;
+use crate::dirgraphsvg::util::point2d::Point2D;
 
 use super::Node;
 
@@ -19,7 +19,7 @@ impl Node for InvisibleNode {
         &self.id
     }
 
-    fn calculate_size(&mut self, _: &crate::FontInfo, _: u32) {
+    fn calculate_size(&mut self, _: &crate::dirgraphsvg::FontInfo, _: u32) {
         // Intentionally left empty
     }
 
@@ -43,7 +43,7 @@ impl Node for InvisibleNode {
         }
     }
 
-    fn get_coordinates(&self, _: &super::Port) -> crate::util::point2d::Point2D {
+    fn get_coordinates(&self, _: &super::Port) -> crate::dirgraphsvg::util::point2d::Point2D {
         Point2D {
             x: self.x,
             y: self.y,
@@ -58,7 +58,7 @@ impl Node for InvisibleNode {
         // Intentionally left emtpy
     }
 
-    fn render(&mut self, _: &crate::FontInfo) -> svg::node::element::Group {
+    fn render(&mut self, _: &crate::dirgraphsvg::FontInfo) -> svg::node::element::Group {
         Group::new() // Empty groups are not rendered.
     }
 }
