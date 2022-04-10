@@ -17,14 +17,15 @@ mod integrations {
         let right_c = std::fs::read_to_string(right)?;
         let mut same = true;
         let coords = Regex::new(r#" (([rc]?(x|y))|width|height|textLength)="\d+""#).unwrap();
+        let font = Regex::new(r#" font-family="([0-9A-Za-z-_]|\\.|\\u[0-9a-fA-F]{1,4})+"#).unwrap();
         let paths = Regex::new(r#"(-?\d+,-?\d+[, ]?)+"#).unwrap();
 
         if left_c.chars().filter(|&c| c == '\n').count()
             == right_c.chars().filter(|&c| c == '\n').count()
         {
             for (l, r) in left_c.lines().zip(right_c.lines()) {
-                if paths.replace_all(&coords.replace_all(l, ""), "")
-                    != paths.replace_all(&coords.replace_all(r, ""), "")
+                if font.replace_all(&paths.replace_all(&coords.replace_all(l, ""), ""), "")
+                    != font.replace_all(&paths.replace_all(&coords.replace_all(r, ""), ""), "")
                 {
                     same = false;
                     break;
