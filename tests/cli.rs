@@ -24,8 +24,8 @@ mod integrations {
             == right_c.chars().filter(|&c| c == '\n').count()
         {
             for (l, r) in left_c.lines().zip(right_c.lines()) {
-                if font.replace_all(&paths.replace_all(&coords.replace_all(l, ""), ""), "")
-                    != font.replace_all(&paths.replace_all(&coords.replace_all(r, ""), ""), "")
+                if dbg!(font.replace_all(&paths.replace_all(&coords.replace_all(l, ""), ""), ""))
+                    != dbg!(font.replace_all(&paths.replace_all(&coords.replace_all(r, ""), ""), ""))
                 {
                     same = false;
                     break;
