@@ -393,7 +393,7 @@ fn get_depths<'a>(
 ///
 /// Root nodes are considered those nodes that have no incoming edges.
 ///
-/// TODO check if forced levels are already set
+/// Forced levels are not considered here, since they are set based on this evaluation.
 ///
 fn get_root_nodes<'a>(
     nodes: &'a BTreeMap<String, Rc<RefCell<dyn Node>>>,
