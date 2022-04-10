@@ -127,16 +127,16 @@ fn main() -> Result<()> {
                 .conflicts_with("CHECKONLY")
                 .help_heading("OUTPUT MODIFICATION"),
         )
-        .arg(
-            Arg::new("MASK_MODULE")
-                .help("Do not unroll this module in the complete view.")
-                .short('m')
-                .long("mask")
-                .multiple_occurrences(true)
-                .takes_value(true)
-                .requires("COMPLETE_VIEW")
-                .help_heading("OUTPUT MODIFICATION"),
-        )
+        // .arg(
+        //     Arg::new("MASK_MODULE")
+        //         .help("Do not unroll this module in the complete view.")
+        //         .short('m')
+        //         .long("mask")
+        //         .multiple_occurrences(true)
+        //         .takes_value(true)
+        //         .requires("COMPLETE_VIEW")
+        //         .help_heading("OUTPUT MODIFICATION"),
+        // )
         .arg(
             Arg::new("NO_LEGEND")
                 .help("Do not output a legend based on meta information.")

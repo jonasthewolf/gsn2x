@@ -131,7 +131,8 @@ Elements are assigned `gsnelem` class, edges are assigned `gsnedge` class.
 
 The complete diagram is assigned `gsndiagram` class.
 
-You can assign additional classes by adding the `classes:` attribute. It must be a list of classes you want to assign. Additional layers will be added as CSS classes, too. A `layer1` will e.g. be added as `gsnlay_layer1`.
+You can assign additional classes by adding the `classes:` attribute. It must be a list of classes you want to assign. 
+Additional layers will be added as CSS classes, too. A `layer1` will e.g. be added as `gsnlay_layer1`.
 
 ### Example
 
@@ -143,13 +144,16 @@ G1:
 
 ## Logical levels for elements
 
-To influence the rendered image, you can add an identifier to a GSN element with the `level` attribute. All elements with the same identifier for `level` will now show up on the same horizontal level. 
+To influence the rendered image, you can add an identifier to a GSN element with the `level` attribute. 
+All elements with the same identifier for `level` will now show up on the same horizontal level. 
 
-This is especially useful, if e.g., two goals or strategies are on the same logical level, but have a different "depth" in the argumentation (i.e. a different number of goals or strategies in their path to the root goal).
+This is especially useful, if e.g., two goals or strategies are on the same logical level, 
+but have a different "depth" in the argumentation (i.e. a different number of goals or strategies in their path to the root goal).
 
 See the [example](examples/example.gsn.yaml) for usage. The strategies S1 and S2 are on the same level.
 
-It is recommended to use `level` only for goals, since related contexts, justifications and assumptions are automatically put on the same level.
+It is recommended to use `level` only for goals, since related contexts, 
+justifications and assumptions are automatically put on the same level.
 
 ## Modular Extension
 
@@ -174,8 +178,10 @@ If the architecture view should not be output, use the `-A` option.
 
 ### Complete View
 
-The complete view is a similar to an argument view for a single module, but showing all modules within the same diagram. The modules are "unrolled". Modules can be masked i.e., unrolling is prevented, by additionally 
-adding those modules with the `-m` option.
+The complete view is a similar to an argument view for a single module, 
+but showing all modules within the same diagram. The modules are "unrolled". 
+<!-- Modules can be masked i.e., unrolling is prevented, 
+by additionally adding those modules with the `-m` option. -->
 
 See [example](examples/modular/complete.svg) here.
 
