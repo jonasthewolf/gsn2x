@@ -16,7 +16,7 @@ mod integrations {
         let left_c = std::fs::read_to_string(left)?;
         let right_c = std::fs::read_to_string(right)?;
         let mut same = true;
-        let coords = Regex::new(r#" (([rc]?(x|y))|width|height|textLength)="\d+""#).unwrap();
+        let coords = Regex::new(r#" (([rc]?(x|y))|width|height|textLength|viewbox)="[\d\s]+""#).unwrap();
         let font = Regex::new(r#" font-family="([0-9A-Za-z-_]|\\.|\\u[0-9a-fA-F]{1,4})+"#).unwrap();
         let paths = Regex::new(r#"(-?\d+,-?\d+[, ]?)+"#).unwrap();
 
