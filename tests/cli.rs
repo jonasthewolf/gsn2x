@@ -6,6 +6,31 @@ mod integrations {
     use predicates::prelude::*;
     use std::process::Command;
 
+    fn diff(left: &std::ffi::OsStr, right: &std::ffi::OsStr) -> Result<(),std::io::Error> {
+        let left : &std::path::Path = left.as_ref();
+        let right : &std::path::Path = right.as_ref();
+        let left_c = std::fs::read_to_string(left)?;
+        let right_c = std::fs::read_to_string(right)?;
+        let mut same = true;
+        let mut iter1 = left_c.lines();
+        let mut iter2 = right_c.lines();
+        if left_c.len() < right_c.len(){
+            std::mem::swap(&mut iter1, &mut iter2);
+        } // now iter1 is the largest
+        
+        for (n, (l,r)) in iter1.zip(iter2.chain(std::iter::repeat(""))).enumerate() {
+            if l != r {
+                println!("{}: {}", n, l);
+                println!("{}: {}", n, r);
+                same = false;
+            }
+        }
+        if same {
+            println!("{} and {} are identical.", left.display(), right.display());
+        }
+        Ok(())
+    }
+
     #[test]
     fn file_doesnt_exist() -> Result<(), Box<dyn std::error::Error>> {
         let mut cmd = Command::cargo_bin("gsn2x")?;
@@ -25,6 +50,7 @@ mod integrations {
         let output_file = temp.child("example.gsn.svg");
         cmd.arg(input_file.as_os_str()).arg("-G");
         cmd.assert().success();
+        diff(&input_file.as_os_str(), &output_file.as_os_str())?;
         output_file.assert(predicate::path::eq_file(std::path::Path::new(
             "examples/example.gsn.svg",
         )));
@@ -131,6 +157,7 @@ mod integrations {
             .arg("-F")
             .arg("-G");
         cmd.assert().success();
+        diff(&std::path::Path::new("examples/modular/architecture.svg").as_os_str(), &output_file.as_os_str())?;
         output_file.assert(predicate::path::eq_file(std::path::Path::new(
             "examples/modular/architecture.svg",
         )));
@@ -155,6 +182,7 @@ mod integrations {
             .arg("-A")
             .arg("-G");
         cmd.assert().success();
+        diff(&std::path::Path::new("examples/modular/complete.svg").as_os_str(), &output_file.as_os_str())?;
         output_file.assert(predicate::path::eq_file(std::path::Path::new(
             "examples/modular/complete.svg",
         )));
