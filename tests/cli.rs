@@ -17,7 +17,7 @@ mod integrations {
         let right_c = std::fs::read_to_string(right)?;
         let mut same = true;
         let coords =
-            Regex::new(r#" (([rc]?(x|y))|width|height|textLength|viewbox)="[\d\s]+""#).unwrap();
+            Regex::new(r#" (([rc]?(x|y))|width|height|textLength|viewbox|viewBox)="[\d\s]+""#).unwrap();
         let font = Regex::new(r#" font-family="([0-9A-Za-z-_]|\\.|\\u[0-9a-fA-F]{1,4})+"#).unwrap();
         let paths = Regex::new(r#"(-?\d+,-?\d+[, ]?)+"#).unwrap();
 
@@ -62,9 +62,6 @@ mod integrations {
             std::path::Path::new("examples/example.gsn.svg").as_os_str(),
             output_file.as_os_str()
         )?);
-        output_file.assert(predicate::path::eq_file(std::path::Path::new(
-            "examples/example.gsn.svg",
-        )));
         temp.close()?;
         Ok(())
     }
@@ -172,9 +169,6 @@ mod integrations {
             std::path::Path::new("examples/modular/architecture.svg").as_os_str(),
             output_file.as_os_str(),
         )?);
-        output_file.assert(predicate::path::eq_file(std::path::Path::new(
-            "examples/modular/architecture.svg",
-        )));
         temp.close()?;
         Ok(())
     }
@@ -200,9 +194,6 @@ mod integrations {
             std::path::Path::new("examples/modular/complete.svg").as_os_str(),
             output_file.as_os_str(),
         )?);
-        output_file.assert(predicate::path::eq_file(std::path::Path::new(
-            "examples/modular/complete.svg",
-        )));
         temp.close()?;
         Ok(())
     }
