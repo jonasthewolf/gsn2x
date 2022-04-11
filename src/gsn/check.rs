@@ -50,6 +50,12 @@ fn check_root_nodes(diag: &mut Diagnostics, nodes: &MyMap<String, GsnNode>) {
                 );
             }
         }
+        x if x == 0 && nodes.len() > 0 => {
+            diag.add_error(
+                None,
+                "C01: There are no unreferenced nodes found.".to_owned(),
+            );
+        }
         _ => {
             // Ignore empty document.
         }
@@ -107,12 +113,7 @@ fn check_cycles(diag: &mut Diagnostics, nodes: &MyMap<String, GsnNode>) {
     let mut visited: HashSet<String> = HashSet::new();
     let mut root_nodes = super::get_root_nodes(nodes);
     let mut stack = Vec::new();
-    if root_nodes.is_empty() {
-        diag.add_error(
-            None,
-            "C04: Cycle detected, because no unreferenced node found.".to_owned(),
-        );
-    }
+
     for root in &root_nodes {
         visited.insert(root.to_owned());
     }
@@ -327,13 +328,13 @@ mod test {
                 ..Default::default()
             },
         );
-        check_cycles(&mut d, &nodes);
+        check_nodes(&mut d, &nodes, None);
         assert_eq!(d.messages.len(), 1);
         assert_eq!(d.messages[0].module, None);
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
         assert_eq!(
             d.messages[0].msg,
-            "C04: Cycle detected, because no unreferenced node found."
+            "C01: There are no unreferenced nodes found."
         );
         assert_eq!(d.errors, 1);
         assert_eq!(d.warnings, 0);
