@@ -72,17 +72,17 @@ jobs:
       if: hashFiles('target/release/gsn2x')
       run: |
         strip target/release/gsn2x
-        cp target/release/gsn2x gsn2x-${{ runner.os }}
+        cp target/release/gsn2x ${{ runner.os }}/gsn2x
     - name: Strip binaries (Windows)
       if: hashFiles('target/release/gsn2x.exe')
       run: |
         strip target/release/gsn2x.exe
-        copy target/release/gsn2x.exe gsn2x-${{ runner.os }}.exe
+        copy target/release/gsn2x.exe ${{ runner.os }}/gsn2x.exe
     - name: Upload artifact
       uses: actions/upload-artifact@v2
       with:
         name: gsn2x
-        path: gsn2x-${{ runner.os }}*
+        path: ${{ runner.os }}/gsn2x*
 
   pre_release:
     needs: build_test_deploy
