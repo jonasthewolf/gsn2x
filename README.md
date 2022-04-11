@@ -73,7 +73,7 @@ The tool automatically performs the following validation checks on the input YAM
         (e.g. a Justification cannot be listed under `supportedBy`).
  - V05: All referenced elelemts in `supportedBy` and `inContextOf` must be unique i.e., no duplicates in the list.
  - V06: All referenced elelemts in `supportedBy` and `inContextOf` must not refer to the node itself.
- - C01: There should be only one top-level element (G,S,C,J,A,Sn) unreferenced. 
+ - C01: There should be only one but must be at least one top-level element (G,S,C,J,A,Sn) unreferenced. 
  - C02: The top-level element must be a Goal. A top-level element is an element that is not referenced by any other element.
  - C03: All referenced elements in `supportedBy` and `inContextOf` must exist.
  - C04: There must be no circular `supportedBy` references.

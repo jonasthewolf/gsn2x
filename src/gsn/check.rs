@@ -50,6 +50,12 @@ fn check_root_nodes(diag: &mut Diagnostics, nodes: &MyMap<String, GsnNode>) {
                 );
             }
         }
+        x if x == 0 && nodes.len() > 0 => {
+            diag.add_error(
+                None,
+                "C01: There are no unreferenced nodes found.".to_owned(),
+            );
+        }
         _ => {
             // Ignore empty document.
         }
@@ -107,6 +113,7 @@ fn check_cycles(diag: &mut Diagnostics, nodes: &MyMap<String, GsnNode>) {
     let mut visited: HashSet<String> = HashSet::new();
     let mut root_nodes = super::get_root_nodes(nodes);
     let mut stack = Vec::new();
+
     for root in &root_nodes {
         visited.insert(root.to_owned());
     }
@@ -292,6 +299,43 @@ mod test {
         assert_eq!(d.messages[0].module, None);
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
         assert_eq!(d.messages[0].msg, "C04: Cycle detected at node G1.");
+        assert_eq!(d.errors, 1);
+        assert_eq!(d.warnings, 0);
+    }
+
+    #[test]
+    fn simple_cycle_2() {
+        let mut d = Diagnostics::default();
+        let mut nodes = MyMap::<String, GsnNode>::new();
+        nodes.insert(
+            "G1".to_owned(),
+            GsnNode {
+                supported_by: Some(vec!["S1".to_owned()]),
+                ..Default::default()
+            },
+        );
+        nodes.insert(
+            "S1".to_owned(),
+            GsnNode {
+                supported_by: Some(vec!["G2".to_owned()]),
+                ..Default::default()
+            },
+        );
+        nodes.insert(
+            "G2".to_owned(),
+            GsnNode {
+                supported_by: Some(vec!["G1".to_owned()]),
+                ..Default::default()
+            },
+        );
+        check_nodes(&mut d, &nodes, None);
+        assert_eq!(d.messages.len(), 1);
+        assert_eq!(d.messages[0].module, None);
+        assert_eq!(d.messages[0].diag_type, DiagType::Error);
+        assert_eq!(
+            d.messages[0].msg,
+            "C01: There are no unreferenced nodes found."
+        );
         assert_eq!(d.errors, 1);
         assert_eq!(d.warnings, 0);
     }
