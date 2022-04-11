@@ -271,7 +271,11 @@ pub fn render_argument(
 
     svg_nodes = svg_nodes
         .into_iter()
-        .filter(|(id, _)| edges.contains_key(id) || edges.values().flatten().any(|(x, _)| x == id))
+        .filter(|(id, _)| {
+            edges.contains_key(id)
+                || edges.values().flatten().any(|(x, _)| x == id)
+                || nodes.get(id).unwrap().module == module_name
+        })
         .collect();
 
     dg = dg

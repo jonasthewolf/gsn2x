@@ -564,6 +564,12 @@ impl<'a> DirGraph<'a> {
                 text_width = std::cmp::max(text_width, width);
             }
 
+            if self.width < text_width + 20 {
+                self.width = text_width + 40;
+            }
+            if self.height < text_height + 20 {
+                self.height = text_height + 40;
+            }
             let x = self.width - text_width - 20;
             let y_base = self.height - text_height - 20;
             let mut y_running = 0;
