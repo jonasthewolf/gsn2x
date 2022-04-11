@@ -17,4 +17,5 @@ pub fn escape_text(input: &str) -> String {
         .replace(':', "_")
         .replace('\'', "")
         .replace('"', "")
+        .replace('~', "")
 }
