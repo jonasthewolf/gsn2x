@@ -1,5 +1,5 @@
 use crate::dirgraphsvg::edges::EdgeType;
-use crate::dirgraphsvg::nodes::*;
+use crate::dirgraphsvg::{escape_text, nodes::*};
 use crate::gsn::{get_levels, GsnNode, Module};
 use crate::yaml_fix::MyMap;
 use chrono::Utc;
@@ -16,87 +16,48 @@ pub fn svg_from_gsn_node(
         .additional
         .keys()
         .map(|k| {
-            let mut t = k.to_ascii_lowercase();
+            let mut t = escape_text(&k.to_ascii_lowercase());
             t.insert_str(0, "gsn_");
             Some(t.to_owned())
         })
         .collect();
-
+    let mut mod_class = gsn_node.module.to_owned();
+    mod_class.insert_str(0, "gsn_module_");
+    let classes = gsn_node
+        .classes
+        .iter()
+        .chain(layer_classes.iter())
+        .flatten()
+        .map(|x| Some(x.to_owned()))
+        .chain(vec![mod_class].into_iter().map(Some))
+        .collect();
     match id {
         id if id.starts_with('G') => new_goal(
             id,
             &gsn_node.text,
             gsn_node.undeveloped.unwrap_or(false),
             gsn_node.url.to_owned(),
-            gsn_node
-                .classes
-                .iter()
-                .chain(layer_classes.iter())
-                .flatten()
-                .map(|x| Some(x.to_owned()))
-                .collect(),
+            classes,
         ),
-        id if id.starts_with("Sn") => new_solution(
-            id,
-            &gsn_node.text,
-            gsn_node.url.to_owned(),
-            gsn_node
-                .classes
-                .iter()
-                .chain(layer_classes.iter())
-                .flatten()
-                .map(|x| Some(x.to_owned()))
-                .collect(),
-        ),
+        id if id.starts_with("Sn") => {
+            new_solution(id, &gsn_node.text, gsn_node.url.to_owned(), classes)
+        }
         id if id.starts_with('S') => new_strategy(
             id,
             &gsn_node.text,
             gsn_node.undeveloped.unwrap_or(false),
             gsn_node.url.to_owned(),
-            gsn_node
-                .classes
-                .iter()
-                .chain(layer_classes.iter())
-                .flatten()
-                .map(|x| Some(x.to_owned()))
-                .collect(),
+            classes,
         ),
-        id if id.starts_with('C') => new_context(
-            id,
-            &gsn_node.text,
-            gsn_node.url.to_owned(),
-            gsn_node
-                .classes
-                .iter()
-                .chain(layer_classes.iter())
-                .flatten()
-                .map(|x| Some(x.to_owned()))
-                .collect(),
-        ),
-        id if id.starts_with('A') => new_assumption(
-            id,
-            &gsn_node.text,
-            gsn_node.url.to_owned(),
-            gsn_node
-                .classes
-                .iter()
-                .chain(layer_classes.iter())
-                .flatten()
-                .map(|x| Some(x.to_owned()))
-                .collect(),
-        ),
-        id if id.starts_with('J') => new_justification(
-            id,
-            &gsn_node.text,
-            gsn_node.url.to_owned(),
-            gsn_node
-                .classes
-                .iter()
-                .chain(layer_classes.iter())
-                .flatten()
-                .map(|x| Some(x.to_owned()))
-                .collect(),
-        ),
+        id if id.starts_with('C') => {
+            new_context(id, &gsn_node.text, gsn_node.url.to_owned(), classes)
+        }
+        id if id.starts_with('A') => {
+            new_assumption(id, &gsn_node.text, gsn_node.url.to_owned(), classes)
+        }
+        id if id.starts_with('J') => {
+            new_justification(id, &gsn_node.text, gsn_node.url.to_owned(), classes)
+        }
         _ => unreachable!(),
     }
 }
@@ -109,10 +70,22 @@ pub fn away_svg_from_gsn_node(
         .additional
         .keys()
         .map(|k| {
-            let mut t = k.to_ascii_lowercase();
+            let mut t = escape_text(&k.to_ascii_lowercase());
             t.insert_str(0, "gsn_");
             Some(t.to_owned())
         })
+        .collect();
+
+    let mut mod_class = gsn_node.module.to_owned();
+    mod_class.insert_str(0, "gsn_module_");
+
+    let classes = gsn_node
+        .classes
+        .iter()
+        .chain(layer_classes.iter())
+        .flatten()
+        .map(|x| Some(x.to_owned()))
+        .chain(vec![mod_class].into_iter().map(Some))
         .collect();
 
     match id {
@@ -121,78 +94,42 @@ pub fn away_svg_from_gsn_node(
             &gsn_node.text,
             &gsn_node.module,
             gsn_node.url.to_owned(),
-            gsn_node
-                .classes
-                .iter()
-                .chain(layer_classes.iter())
-                .flatten()
-                .map(|x| Some(x.to_owned()))
-                .collect(),
+            classes,
         ),
         id if id.starts_with("Sn") => new_away_solution(
             id,
             &gsn_node.text,
             &gsn_node.module,
             gsn_node.url.to_owned(),
-            gsn_node
-                .classes
-                .iter()
-                .chain(layer_classes.iter())
-                .flatten()
-                .map(|x| Some(x.to_owned()))
-                .collect(),
+            classes,
         ),
         id if id.starts_with('S') => new_strategy(
             id,
             &gsn_node.text,
             gsn_node.undeveloped.unwrap_or(false),
             gsn_node.url.to_owned(),
-            gsn_node
-                .classes
-                .iter()
-                .chain(layer_classes.iter())
-                .flatten()
-                .map(|x| Some(x.to_owned()))
-                .collect(),
+            classes,
         ),
         id if id.starts_with('C') => new_away_context(
             id,
             &gsn_node.text,
             &gsn_node.module,
             gsn_node.url.to_owned(),
-            gsn_node
-                .classes
-                .iter()
-                .chain(layer_classes.iter())
-                .flatten()
-                .map(|x| Some(x.to_owned()))
-                .collect(),
+            classes,
         ),
         id if id.starts_with('A') => new_away_assumption(
             id,
             &gsn_node.text,
             &gsn_node.module,
             gsn_node.url.to_owned(),
-            gsn_node
-                .classes
-                .iter()
-                .chain(layer_classes.iter())
-                .flatten()
-                .map(|x| Some(x.to_owned()))
-                .collect(),
+            classes,
         ),
         id if id.starts_with('J') => new_away_justification(
             id,
             &gsn_node.text,
             &gsn_node.module,
             gsn_node.url.to_owned(),
-            gsn_node
-                .classes
-                .iter()
-                .chain(layer_classes.iter())
-                .flatten()
-                .map(|x| Some(x.to_owned()))
-                .collect(),
+            classes,
         ),
         _ => unreachable!(),
     }

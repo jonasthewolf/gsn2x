@@ -18,8 +18,8 @@ mod integrations {
         let right_c = std::fs::read_to_string(right)?;
         let mut same = true;
 
-        if left_c.chars().filter(|&c| c == '\n').count()
-            == right_c.chars().filter(|&c| c == '\n').count()
+        if dbg!(left_c.chars().filter(|&c| c == '\n').count())
+            == dbg!(right_c.chars().filter(|&c| c == '\n').count())
         {
             for (l, r) in left_c.lines().zip(right_c.lines()) {
                 let l_r = replace_regex
@@ -34,7 +34,9 @@ mod integrations {
                     .fold(r.to_owned(), |replaced, r| {
                         r.replace_all(&replaced, "").to_string()
                     });
-                if dbg!(l_r) != dbg!(r_r) {
+                if l_r != r_r {
+                    dbg!(l_r);
+                    dbg!(r_r);
                     same = false;
                     break;
                 }
@@ -55,6 +57,7 @@ mod integrations {
                 .unwrap(),
             Regex::new(r#" font-family="([0-9A-Za-z-_]|\\.|\\u[0-9a-fA-F]{1,4})+"#).unwrap(),
             Regex::new(r#"(-?\d+,-?\d+[, ]?)+"#).unwrap(),
+            Regex::new(r#" gsn_module_\w+"#).unwrap(),
         ];
 
         compare_lines_with_replace(left, right, Some(replaces))

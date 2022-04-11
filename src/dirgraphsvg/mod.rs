@@ -545,8 +545,8 @@ impl<'a> DirGraph<'a> {
     ///
     fn render_legend(mut self) -> Self {
         if let Some(meta) = &self.meta_information {
-            let mut g = setup_basics("gsn_meta", &Some(vec!["gsnmeta".to_owned()]), &None);
-            let title = Title::new().add(svg::node::Text::new("Meta Information"));
+            let mut g = setup_basics("gsn_module", &Some(vec!["gsnmodule".to_owned()]), &None);
+            let title = Title::new().add(svg::node::Text::new("Module Information"));
 
             g = g.add(title);
 
