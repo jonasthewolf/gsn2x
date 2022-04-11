@@ -12,8 +12,10 @@ mod yaml_fix;
 
 use diagnostics::Diagnostics;
 use dirgraphsvg::escape_text;
-use gsn::{GsnDocumentNode, GsnNode, MetaInformation, Module};
+use gsn::{GsnDocumentNode, GsnNode, Module, ModuleInformation};
 use yaml_fix::MyMap;
+
+const MODULE_INFOMRATION_NODE: &str = "module";
 
 ///
 /// Main entry point.
@@ -139,7 +141,7 @@ fn main() -> Result<()> {
         // )
         .arg(
             Arg::new("NO_LEGEND")
-                .help("Do not output a legend based on meta information.")
+                .help("Do not output a legend based on module information.")
                 .short('G')
                 .long("no-legend")
                 .conflicts_with("CHECKONLY")
@@ -147,7 +149,7 @@ fn main() -> Result<()> {
         )
         .arg(
             Arg::new("FULL_LEGEND")
-                .help("Output a legend based on all meta information.")
+                .help("Output a legend based on all module information.")
                 .short('g')
                 .long("full-legend")
                 .conflicts_with("CHECKONLY")
@@ -199,13 +201,13 @@ fn read_inputs(
 
         let mut n: MyMap<String, GsnDocumentNode> = serde_yaml::from_reader(reader)
             .context(format!("Failed to parse YAML from file {}", input))?;
-        let meta: Option<MetaInformation> = match n.remove_entry("meta") {
-            Some((_, GsnDocumentNode::MetaInformation(x))) => Some(x),
+        let meta: Option<ModuleInformation> = match n.remove_entry(MODULE_INFOMRATION_NODE) {
+            Some((_, GsnDocumentNode::ModuleInformation(x))) => Some(x),
             _ => None,
         };
         // Add filename and module name to module list
         let module = if let Some(m) = &meta {
-            m.module_name.to_owned()
+            m.name.to_owned()
         } else {
             escape_text(input)
         };

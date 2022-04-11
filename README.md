@@ -207,27 +207,27 @@ The format can be used in Markdown and reStructuredText files.
 
 If the list of evidences should not be output, use the `-E` option.
 
-## Optional Meta Information in Module
+## Optional Module Information
 
-It is possible to add additional `meta` information in the source YAML.
+It is possible to add additional `module` information in the source YAML.
 This allows describing the module`s name and an optional brief description.
 Even arbitrary information can be added.
 
 ```yaml
 
-meta: 
-   moduleName: MainModule
-   moduleBrief: This is a short description of the module
+module: 
+   name: MainModule
+   brief: This is a short description of the module
    additionalInformation: 
     v1: Changed line 2
     v2: Added line 4
 
 ```
 
-The meta information is printed as part of a legend for the argument view.
+The module information is printed as part of a legend for the argument view.
 
 You can use the `-G` option to suppress the legend completely, 
-or the `-g` option to limit it to `moduleName`, `moduleBrief` and 
+or the `-g` option to limit it to `name`, `brief` and 
 the time and date of generation of the SVG.
 
 ## Standard support

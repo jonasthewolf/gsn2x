@@ -7,7 +7,7 @@ pub mod wordwrap;
 /// Escape string to prevent misrendering if special characters are used.
 ///
 ///
-pub fn escape_text(input: &&str) -> String {
+pub fn escape_text(input: &str) -> String {
     input
         .replace('.', "_")
         .replace('-', "_")
@@ -17,4 +17,5 @@ pub fn escape_text(input: &&str) -> String {
         .replace(':', "_")
         .replace('\'', "")
         .replace('"', "")
+        .replace('~', "")
 }

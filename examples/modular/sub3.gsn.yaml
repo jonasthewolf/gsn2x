@@ -1,5 +1,5 @@
-meta:
-  moduleName: Sub3
+module:
+  name: Sub3
 
 C2:
   text: Context 2
