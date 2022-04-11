@@ -49,9 +49,9 @@ impl GsnNode {
 
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
-pub struct MetaInformation {
-    pub(crate) module_name: String,
-    pub(crate) module_brief: Option<String>,
+pub struct ModuleInformation {
+    pub(crate) name: String,
+    pub(crate) brief: Option<String>,
     #[serde(flatten)]
     pub(crate) additional: MyMap<String, String>,
 }
@@ -60,12 +60,12 @@ pub struct MetaInformation {
 #[serde(untagged)]
 pub enum GsnDocumentNode {
     GsnNode(GsnNode),
-    MetaInformation(MetaInformation),
+    ModuleInformation(ModuleInformation),
 }
 
 pub struct Module {
     pub filename: String,
-    pub meta: Option<MetaInformation>,
+    pub meta: Option<ModuleInformation>,
 }
 
 ///

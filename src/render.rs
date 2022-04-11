@@ -219,7 +219,7 @@ pub fn render_architecture(
                     module
                         .meta
                         .as_ref()
-                        .and_then(|m| m.module_brief.to_owned())
+                        .and_then(|m| m.brief.to_owned())
                         .unwrap_or_else(|| "".to_owned())
                         .as_str(),
                     None,
@@ -350,9 +350,9 @@ pub fn render_argument(
     if !matches.is_present("NO_LEGEND") {
         let mut meta_info = vec![format!("Generated on {}", Utc::now())];
         if let Some(meta) = &module.meta {
-            meta_info.insert(0, format!("Module: {}", meta.module_name));
-            if meta.module_brief.is_some() {
-                meta_info.insert(1, meta.module_brief.as_deref().unwrap().to_owned());
+            meta_info.insert(0, format!("Module: {}", meta.name));
+            if meta.brief.is_some() {
+                meta_info.insert(1, meta.brief.as_deref().unwrap().to_owned());
             }
             if matches.is_present("FULL_LEGEND") {
                 let add = format!("{:?}", meta.additional);

@@ -1,5 +1,5 @@
-meta:
-  moduleName: Main
+module:
+  name: Main
   
 G1:
   text: Main Goal
