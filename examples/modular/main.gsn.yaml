@@ -1,4 +1,6 @@
-
+meta:
+  moduleName: Main
+  
 G1:
   text: Main Goal
   supportedBy: [S1]
@@ -9,8 +11,8 @@ S1:
 
 G2:
   text: Divide
-  inContextOf: [C1]
+  inContextOf: [J1]
   undeveloped: true
 
-C1:
+J1:
   text: Some Context

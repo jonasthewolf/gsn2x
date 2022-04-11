@@ -1,5 +1,4 @@
 use serde::de::{Deserialize, Deserializer, MapAccess, Visitor};
-use serde::Serialize;
 use std::collections::BTreeMap;
 use std::fmt::Debug;
 use std::marker::PhantomData;
@@ -8,7 +7,7 @@ use std::marker::PhantomData;
 // to work around an issue in serde_yaml that does not check for duplicate keys in input YAML.
 // Duplicate keys are no valid YAML but this is ignored by serde_yaml.
 
-#[derive(Default, PartialEq, Serialize)]
+#[derive(Default, PartialEq)]
 pub struct MyMap<K, V>(BTreeMap<K, V>)
 where
     K: Ord;

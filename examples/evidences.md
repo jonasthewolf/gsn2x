@@ -6,7 +6,6 @@ List of Evidences
    https://github.com/jonasthewolf/gsn2x
 2. Sn2: Solution 2
    examples_example_gsn_yaml
-   LAYER1: Additional information on layer 1
 3. Sn3: Solution 3
    examples_example_gsn_yaml
 4. Sn4: Solution 4

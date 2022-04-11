@@ -1,4 +1,5 @@
-/target/
+**/target/
 *.prof*
 /coverage/
 **/.DS_Store
+dirgraphsvg/Cargo.lock

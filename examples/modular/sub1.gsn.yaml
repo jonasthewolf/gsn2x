@@ -1,4 +1,8 @@
+meta:
+  moduleName: Sub1
+  
+
 G3:
    text: Conquer the submodules
-   inContextOf: [C1, C2]
+   inContextOf: [J1, C2]
    supportedBy: [Sn1]

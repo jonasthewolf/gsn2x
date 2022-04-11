@@ -1,3 +1,7 @@
+meta:
+  moduleName: Sub2
+  
+
 G1: 
   text: Duplicate Goal
   supportedBy: [Sn1]

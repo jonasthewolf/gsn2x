@@ -1,12 +1,64 @@
-#[path = "../src/util.rs"]
-mod util;
-
 #[cfg(test)]
 mod integrations {
-    use super::util;
     use assert_cmd::prelude::*;
+    use assert_fs::fixture::PathCopy;
+    use assert_fs::prelude::*;
     use predicates::prelude::*;
-    use std::{fs, process::Command};
+    use regex::Regex;
+    use std::process::Command;
+
+    fn compare_lines_with_replace(
+        left: &std::ffi::OsStr,
+        right: &std::ffi::OsStr,
+        replace_regex: Option<Vec<Regex>>,
+    ) -> Result<bool, std::io::Error> {
+        let left: &std::path::Path = left.as_ref();
+        let right: &std::path::Path = right.as_ref();
+        let left_c = std::fs::read_to_string(left)?;
+        let right_c = std::fs::read_to_string(right)?;
+        let mut same = true;
+
+        if left_c.chars().filter(|&c| c == '\n').count()
+            == right_c.chars().filter(|&c| c == '\n').count()
+        {
+            for (l, r) in left_c.lines().zip(right_c.lines()) {
+                let l_r = replace_regex
+                    .iter()
+                    .flatten()
+                    .fold(l.to_owned(), |replaced, r| {
+                        r.replace_all(&replaced, "").to_string()
+                    });
+                let r_r = replace_regex
+                    .iter()
+                    .flatten()
+                    .fold(r.to_owned(), |replaced, r| {
+                        r.replace_all(&replaced, "").to_string()
+                    });
+                if dbg!(l_r) != dbg!(r_r) {
+                    same = false;
+                    break;
+                }
+            }
+        } else {
+            same = false;
+        }
+
+        Ok(same)
+    }
+
+    fn are_struct_similar_svgs(
+        left: &std::ffi::OsStr,
+        right: &std::ffi::OsStr,
+    ) -> Result<bool, std::io::Error> {
+        let replaces = vec![
+            Regex::new(r#" (([rc]?(x|y))|width|height|textLength|viewbox|viewBox)="[\d\s]+""#)
+                .unwrap(),
+            Regex::new(r#" font-family="([0-9A-Za-z-_]|\\.|\\u[0-9a-fA-F]{1,4})+"#).unwrap(),
+            Regex::new(r#"(-?\d+,-?\d+[, ]?)+"#).unwrap(),
+        ];
+
+        compare_lines_with_replace(left, right, Some(replaces))
+    }
 
     #[test]
     fn file_doesnt_exist() -> Result<(), Box<dyn std::error::Error>> {
@@ -19,24 +71,19 @@ mod integrations {
     }
 
     #[test]
-    fn multiple_inputs_stdout() -> Result<(), Box<dyn std::error::Error>> {
-        let mut cmd = Command::cargo_bin("gsn2x")?;
-        cmd.arg("file1").arg("file2").arg("-o");
-        cmd.assert().failure().stderr(predicate::str::contains(
-            "The argument '-o' cannot be used with multiple input files.",
-        ));
-        Ok(())
-    }
-
-    #[test]
     fn argument_view() -> Result<(), Box<dyn std::error::Error>> {
         let mut cmd = Command::cargo_bin("gsn2x")?;
-        cmd.arg("examples/example.gsn.yaml").arg("-o");
-        cmd.assert()
-            .success()
-            .stdout(predicate::path::eq_file(std::path::Path::new(
-                "tests/example.gsn.test.dot",
-            )));
+        let temp = assert_fs::TempDir::new()?;
+        temp.copy_from("examples", &["example.gsn.yaml"])?;
+        let input_file = temp.child("example.gsn.yaml");
+        let output_file = temp.child("example.gsn.svg");
+        cmd.arg(input_file.as_os_str()).arg("-G");
+        cmd.assert().success();
+        assert!(are_struct_similar_svgs(
+            std::path::Path::new("examples/example.gsn.svg").as_os_str(),
+            output_file.as_os_str()
+        )?);
+        temp.close()?;
         Ok(())
     }
 
@@ -50,9 +97,7 @@ mod integrations {
         cmd.assert()
             .success()
             .stdout(predicate::str::is_empty())
-            .stderr(predicate::str::contains(
-                "There is more than one unreferenced element",
-            ));
+            .stderr(predicate::str::is_empty());
         Ok(())
     }
 
@@ -63,7 +108,7 @@ mod integrations {
             .arg("examples/modular/main.gsn.yaml")
             .arg("examples/modular/sub2.gsn.yaml");
         cmd.assert().failure().stderr(predicate::str::contains(
-            "Error: 3 errors and 0 warnings detected.",
+            "Error: 1 errors and 0 warnings detected.",
         ));
         Ok(())
     }
@@ -77,7 +122,7 @@ mod integrations {
             .arg("-x")
             .arg("examples/modular/sub2.gsn.yaml");
         cmd.assert().failure().stderr(predicate::str::contains(
-            "Error: 3 errors and 0 warnings detected.",
+            "Error: 1 errors and 0 warnings detected.",
         ));
         Ok(())
     }
@@ -86,7 +131,7 @@ mod integrations {
     fn no_evidences() -> Result<(), Box<dyn std::error::Error>> {
         let mut cmd = Command::cargo_bin("gsn2x")?;
         let evidence_file = assert_fs::NamedTempFile::new("evidences.md")?;
-        cmd.arg("-n")
+        cmd.arg("-N")
             .arg("-e")
             .arg(evidence_file.path())
             .arg("tests/no_evidences.gsn.test.yaml");
@@ -94,10 +139,11 @@ mod integrations {
             .success()
             .stdout(predicate::str::is_empty())
             .stderr(predicate::str::is_empty());
-        let predicate_file = predicate::path::eq_file(evidence_file.path())
-            .utf8()
-            .unwrap();
-        assert!(predicate_file.eval(std::path::Path::new("tests/no_evidences.gsn.test.md")));
+        assert!(compare_lines_with_replace(
+            evidence_file.as_os_str(),
+            std::path::Path::new("tests/no_evidences.gsn.test.md").as_os_str(),
+            None
+        )?);
         evidence_file.close()?;
         Ok(())
     }
@@ -110,15 +156,17 @@ mod integrations {
             .arg(evidence_file.path())
             .arg("examples/example.gsn.yaml")
             .arg("-l")
-            .arg("layer1");
+            .arg("layer1")
+            .arg("-N");
         cmd.assert()
             .success()
             .stdout(predicate::str::is_empty())
             .stderr(predicate::str::is_empty());
-        let predicate_file = predicate::path::eq_file(evidence_file.path())
-            .utf8()
-            .unwrap();
-        assert!(predicate_file.eval(std::path::Path::new("tests/example.gsn.test.md")));
+        assert!(compare_lines_with_replace(
+            evidence_file.as_os_str(),
+            std::path::Path::new("tests/example.gsn.test.md").as_os_str(),
+            None
+        )?);
         evidence_file.close()?;
         Ok(())
     }
@@ -126,54 +174,50 @@ mod integrations {
     #[test]
     fn arch_view() -> Result<(), Box<dyn std::error::Error>> {
         let mut cmd = Command::cargo_bin("gsn2x")?;
-        let arch_file = assert_fs::NamedTempFile::new("arch.dot")?;
-        cmd.arg("-n")
-            .arg("-a")
-            .arg(arch_file.path())
-            .arg("examples/modular/main.gsn.yaml")
-            .arg("examples/modular/sub1.gsn.yaml")
-            .arg("examples/modular/sub3.gsn.yaml");
-        cmd.assert()
-            .success()
-            .stdout(predicate::str::is_empty())
-            .stderr(predicate::str::contains("Warning: (examples_modular_sub3_gsn_yaml) There is more than one unreferenced element: C2, Sn1."));
-        let predicate_file = predicate::path::eq_file(arch_file.path()).utf8().unwrap();
-        // Fix path from temporary location
-        let expected = fs::read_to_string(std::path::Path::new("tests/arch.gsn.test.dot"))?
-            .replace(
-                "examples_modular_arch_gsn_test_dot",
-                &util::escape_module_name(&format!("{}", arch_file.path().display()).as_str()),
-            );
-        assert!(predicate_file.eval(expected.as_str()));
-        arch_file.close()?;
+        let temp = assert_fs::TempDir::new()?.into_persistent();
+        temp.copy_from("examples/modular", &["*.yaml"])?;
+        let input_file1 = temp.child("main.gsn.yaml");
+        let input_file2 = temp.child("sub1.gsn.yaml");
+        let input_file3 = temp.child("sub3.gsn.yaml");
+        let output_file = temp.child("architecture.svg");
+        cmd.arg(input_file1.as_os_str())
+            .arg(input_file2.as_os_str())
+            .arg(input_file3.as_os_str())
+            .arg("-N")
+            .arg("-E")
+            .arg("-F")
+            .arg("-G");
+        cmd.assert().success();
+        assert!(are_struct_similar_svgs(
+            std::path::Path::new("examples/modular/architecture.svg").as_os_str(),
+            output_file.as_os_str(),
+        )?);
+        temp.close()?;
         Ok(())
     }
 
     #[test]
     fn comp_view() -> Result<(), Box<dyn std::error::Error>> {
         let mut cmd = Command::cargo_bin("gsn2x")?;
-        let compl_file = assert_fs::NamedTempFile::new("complete.dot")?;
-        cmd.arg("-n")
-            .arg("-f")
-            .arg(compl_file.path())
-            .arg("examples/modular/main.gsn.yaml")
-            .arg("examples/modular/sub1.gsn.yaml")
-            .arg("examples/modular/sub3.gsn.yaml");
-        cmd.assert()
-            .success()
-            .stdout(predicate::str::is_empty())
-            .stderr(predicate::str::contains(
-                "There is more than one unreferenced element",
-            ));
-        let predicate_file = predicate::path::eq_file(compl_file.path()).utf8().unwrap();
-        // Fix path from temporary location
-        let expected = fs::read_to_string(std::path::Path::new("tests/complete.gsn.test.dot"))?
-            .replace(
-                "examples_modular_complete_gsn_test_dot",
-                &util::escape_module_name(&format!("{}", compl_file.path().display()).as_str()),
-            );
-        assert!(predicate_file.eval(expected.as_str()));
-        compl_file.close()?;
+        let temp = assert_fs::TempDir::new()?.into_persistent();
+        temp.copy_from("examples/modular", &["*.yaml"])?;
+        let input_file1 = temp.child("main.gsn.yaml");
+        let input_file2 = temp.child("sub1.gsn.yaml");
+        let input_file3 = temp.child("sub3.gsn.yaml");
+        let output_file = temp.child("complete.svg");
+        cmd.arg(input_file1.as_os_str())
+            .arg(input_file2.as_os_str())
+            .arg(input_file3.as_os_str())
+            .arg("-N")
+            .arg("-E")
+            .arg("-A")
+            .arg("-G");
+        cmd.assert().success();
+        assert!(are_struct_similar_svgs(
+            std::path::Path::new("examples/modular/complete.svg").as_os_str(),
+            output_file.as_os_str(),
+        )?);
+        temp.close()?;
         Ok(())
     }
 }

@@ -1,33 +1,30 @@
-[![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/) [![CI/CD](https://github.com/jonasthewolf/gsn2x/actions/workflows/rust.yml/badge.svg)](https://github.com/jonasthewolf/gsn2x/actions/workflows/rust.yml) [![codecov](https://codecov.io/gh/jonasthewolf/gsn2x/branch/master/graph/badge.svg?token=YQKUQQOYS3)](https://codecov.io/gh/jonasthewolf/gsn2x)
+[![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
+[![CI/CD](https://github.com/jonasthewolf/gsn2x/actions/workflows/rust.yml/badge.svg)](https://github.com/jonasthewolf/gsn2x/actions/workflows/rust.yml)
+[![codecov](https://codecov.io/gh/jonasthewolf/gsn2x/branch/master/graph/badge.svg?token=YQKUQQOYS3)](https://codecov.io/gh/jonasthewolf/gsn2x)
+[![](https://tokei.rs/b1/github/jonasthewolf/gsn2x)](https://github.com/jonasthewolf/gsn2x)
 
 # gsn2x
 
-This little program converts [Goal Structuring Notation](https://scsc.uk/gsn) in a YAML format to the DOT format of [Graphviz](https://graphviz.org). From there it can be rendered to different graphic formats.
+This little program renders [Goal Structuring Notation](https://scsc.uk/gsn) in a YAML format to a scalable vector graphics (SVG) image.
 
 ![Example](examples/example.gsn.svg "Example")
-
-Graphviz is required to create an image from the output of this tool.
 
 Feel free to use it and please let me know. Same applies if you have feature requests, bug reports or contributions.
 
 ## Usage
 
-On Windows you can just run:
+You can create an SVG like this:
 
-    gsn2x.exe -o <yourgsnfile.yaml> | dot -Tsvg > <yourgsnfile.svg>
+    gsn2x <yourgsnfile.yaml> 
 
-On other systems you can create an SVG like this:
+The output is an argument view in SVG format and automatically written to `<yourgsnfile.svg>`. If more than one input files are provided, they are treated as [modules](#modular-extension).
 
-    gsn2x -o <yourgsnfile.yaml> | dot -Tsvg > <yourgsnfile.svg>
-
-If a second optional argument is provided, the output is not written to stdout, but to the file named by the second argument.
-If called with option `-c` or `--check` the input file is only checked for validity, but the resulting graph is not written.
     
 **You can find pre-built binaries for Windows, Linux and MacOS on the [releases page](https://github.com/jonasthewolf/gsn2x/releases).**
 
 ## Syntax in YAML
 
-The following Goal Structuring Notation (GSN) elements are supported:
+The following Goal Structuring Notation (GSN) core elements are supported:
  - Goal (G), 
  - Assumption (A), 
  - Justification (J), 
@@ -42,67 +39,80 @@ The (optional) `supportedBy` gives a list of the supporting arguments. Thus, Goa
 
 The (optional) `inContextOf` links Justifications, Contexts or Assumptions. 
 
-Every element may have an optional `url` attribute that will be used by Graphviz accordingly for a node in the graph.
-This should support finding information more easily. Please note the supported output formats by Graphviz.
+Every element may have an optional `url` attribute that creates a navigation link in the resulting SVG.
+This should support finding information more easily.
 
 Goals and Strategies can be undeveloped i.e., without supporting Goals, Strategies or Solutions.
 These elements should marked with `undeveloped: true`, otherwise validation will emit warnings.
 
 ### Example
 
-    G1:
-      text: This is a Goal
-      supportedBy: [S1]
-      inContextOf: [C1]
-    
-    S1:
-      text: This is a Strategy
-    
-    C1: 
-      text: This is a Context
+```yaml
+G1:
+  text: This is a Goal
+  supportedBy: [S1]
+  inContextOf: [C1]
 
+S1:
+  text: This is a Strategy
 
-Please see [examples/example.gsn.yaml] for an example of the used syntax.
+C1: 
+  text: This is a Context
+```
+
+Please see [examples/example.gsn.yaml](examples/example.gsn.yaml) for an example of the used syntax.
 
 ## Validation checks
 
 The tool automatically performs the following validation checks on the input YAML:
 
- - There is only one top-level element (G,S,C,J,A,Sn) unreferenced. 
- - The top-level element is a Goal.
- - All referenced elements (`supportedBy` and `inContextOf`) exist and only reference valid elements 
-   (e.g. a Justification cannot be listed under `supportedBy`).
- - All IDs start with a known prefix i.e., there are only known elements.
- - All Goals and Strategies are either marked with `undeveloped: true` or have supporting Goals, Strategies or Solutions.
- - Goals and Strategies marked as undeveloped, must have no supporting arguments.
+ - V01: All IDs must start with a known prefix i.e., there are only known element types.
+ - V02: All Goals and Strategies must be either marked with `undeveloped: true` or have supporting Goals, Strategies or Solutions.
+ - V03: Goals and Strategies marked as undeveloped, must have no supporting arguments.
+ - V04: All elements listed under `supportedBy` and `inContextOf` must be known elements types and semantically sensible
+        (e.g. a Justification cannot be listed under `supportedBy`).
+ - V05: All referenced elelemts in `supportedBy` and `inContextOf` must be unique i.e., no duplicates in the list.
+ - V06: All referenced elelemts in `supportedBy` and `inContextOf` must not refer to the node itself.
+ - C01: There should be only one top-level element (G,S,C,J,A,Sn) unreferenced. 
+ - C02: The top-level element must be a Goal. A top-level element is an element that is not referenced by any other element.
+ - C03: All referenced elements in `supportedBy` and `inContextOf` must exist.
+ - C04: There must be no circular `supportedBy` references.
+ - C05: The should be more than one usage of the same `level`.
+ - C06: All module names must be unique.
+ - C07: All IDs must be unique across all modules.
+
+The checks (Cxx) always apply to the complete set of input files.
 
 Uniqueness of keys is automatically enforced by the YAML format.
 
 Error messages and warnings are printed to stderr.
 
-Validation can be skipped for individual files by using the `-x` option.
+If called with option `-c` or `--check` the input file is only checked for validity, but the resulting graph is not written.
+The checks for references (Cxx) can be skipped for individual files by using the `-x` option.
 
 ## Additional layers
 
 Additional attributes of a node are ignored by default.
 With the command line option `-l` or `--layers` you can enable the output of those additional attributes.
-Using this feature, different views on the GSN can be generated.
+By using this feature different views on the GSN can be generated.
 
 ### Example
 
-    G1:
-      text: This is a Goal
-      supportedBy: [S1]
-      inContextOf: [C1]
-      layer1: This is additional information for G1.
-    
-    S1:
-      text: This is a Strategy
-      layer1: This is additional information for S1.
-    
-    C1: 
-      text: This is a Context
-      layer1: This is additional information for C1.
+```yaml
+G1:
+  text: This is a Goal
+  supportedBy: [S1]
+  inContextOf: [C1]
+  layer1: This is additional information for G1.
+
+S1:
+  text: This is a Strategy
+  layer1: This is additional information for S1.
+
+C1: 
+  text: This is a Context
+  layer1: This is additional information for C1.
+```
 
 In this example, a call to `gsn2x -l layer1` will show the additional information to each element prefixed with _`LAYER1: `_.
 Of course, using `text`, `inContextOf`, `supportedBy`, `url`, `undeveloped`, `level` or `classes` are not sensible parameters to pass for the `-l` option. 
@@ -113,9 +123,7 @@ It is intentional that information is only added for a view, but not hidden to e
 
 ## Stylesheets for SVG rendering
 
-You can provide a custom stylesheet for SVG via the `-s` or `--stylesheet` options.
-
-Please see [Graphviz stylesheet](https://graphviz.org/docs/attrs/stylesheet/) and [Graphviz class](https://graphviz.org/docs/attrs/class/) for more details.
+You can provide (multiple) custom stylesheets for SVG via the `-s` or `--stylesheet` options.
 
 Every element will also be addressable by `id`. The `id` is the same as the YAML id.
 
@@ -123,23 +131,29 @@ Elements are assigned `gsnelem` class, edges are assigned `gsnedge` class.
 
 The complete diagram is assigned `gsndiagram` class.
 
-You can assign additional classes by adding the `classes:` attribute. It must be a list of classes you want to assign. Additional layers will be added as CSS classes, too. A `layer1` will e.g. be added as `gsnlay_layer1`.
+You can assign additional classes by adding the `classes:` attribute. It must be a list of classes you want to assign. 
+Additional layers will be added as CSS classes, too. A `layer1` will e.g. be added as `gsnlay_layer1`.
 
 ### Example
 
-    G1:
-      text: This is a Goal
-      classes: [additionalclass1, additionalclass2]
+```yaml
+G1:
+  text: This is a Goal
+  classes: [additionalclass1, additionalclass2]
+```
 
 ## Logical levels for elements
 
-To influence the rendered image, you can add an identifier to a GSN element with the `level` attribute. All elements with the same identifier for `level` will now have the same rank for Graphviz. 
+To influence the rendered image, you can add an identifier to a GSN element with the `level` attribute. 
+All elements with the same identifier for `level` will now show up on the same horizontal level. 
 
-This is especially useful, if e.g., two goals or strategies are on the same logical level, but have a different "depth" in the argumentation (i.e. a different number of goals or strategies in their path to the root goal).
+This is especially useful, if e.g., two goals or strategies are on the same logical level, 
+but have a different "depth" in the argumentation (i.e. a different number of goals or strategies in their path to the root goal).
 
 See the [example](examples/example.gsn.yaml) for usage. The strategies S1 and S2 are on the same level.
 
-It is recommended to use `level` only for goals, since related contexts, justifications and assumptions are automatically put on the same level i.e., the same rank in Graphviz.
+It is recommended to use `level` only for goals, since related contexts, 
+justifications and assumptions are automatically put on the same level.
 
 ## Modular Extension
 
@@ -148,26 +162,34 @@ Module Interfaces (Section 1:4.6) and Inter-Module Contracts (Section 1:4.7) are
 
 Each module is a separate file. The name of the module is the file name (incl. the path provided to the gsn2x command line).
 
-If modules are used, all dependent module files must be provided to the command line of gsn2x.
-Element IDs must be unique accross all modules. Validation will by default be performed accross all modules.
-Validation messages for individual modules can be omitted using the `-x` option.
+If modules are used, all related module files must be provided to the command line of gsn2x.
+Element IDs must be unique accross all modules. Checks will by default be performed accross all modules.
+Check messages for individual modules can be omitted using the `-x` option.
 
 The argument view of individual modules will show "away" elements if elements from other modules are referenced.
 
-In addition to the default argument view for each module, there can be two output files generated:
-1) Complete View
-2) Architecture View
+In addition to the default argument view for each module, there are two output files generated (if more than one input file is provided):
+1) Complete View (complete.svg)
+2) Architecture View (architecture.svg)
 
-If the argument view should not be updated, use the `-n` option.
+If the argument view should not be updated, use the `-N` option.
+If the complete view should not be output, use the `-F` option.
+If the architecture view should not be output, use the `-A` option.
 
 ### Complete View
 
-The complete view is a similar to an argument view for a single module, but showing all modules within the same diagram. The modules are "unrolled". Modules can be masked i.e., unrolling is prevented, by additionally 
-adding those modules with the `-m` option.
+The complete view is a similar to an argument view for a single module, 
+but showing all modules within the same diagram. The modules are "unrolled". 
+<!-- Modules can be masked i.e., unrolling is prevented, 
+by additionally adding those modules with the `-m` option. -->
+
+See [example](examples/modular/complete.svg) here.
 
 ### Architecture View
 
 The architecture view only shows the selected modules and their dependencies.
+
+See [example](examples/modular/architecture.svg) here.
 
 ### Example:
     
@@ -177,14 +199,36 @@ This will generate the argument view for each module, the complete view (`-f ful
 
 ## List of evidences
 
-With the `-e` option you can create an additional file that lists all the evidences in the input file.
+An additional file that lists all the evidences in the input file is output by default in `evidences.md`.
 
-See [examples/example.gsn.test.md] for an example.
-
-The `-n` option also be used in combination with `-e`.
+See [examples/evidences.md](examples/evidences.md) for an example.
 
 The format can be used in Markdown and reStructuredText files.
 
+If the list of evidences should not be output, use the `-E` option.
+
+## Optional Meta Information in Module
+
+It is possible to add additional `meta` information in the source YAML.
+This allows describing the module`s name and an optional brief description.
+Even arbitrary information can be added.
+
+```yaml
+
+meta: 
+   moduleName: MainModule
+   moduleBrief: This is a short description of the module
+   additionalInformation: 
+    v1: Changed line 2
+    v2: Added line 4
+
+```
+
+The meta information is printed as part of a legend for the argument view.
+
+You can use the `-G` option to suppress the legend completely, 
+or the `-g` option to limit it to `moduleName`, `moduleBrief` and 
+the time and date of generation of the SVG.
 
 ## Standard support
 
