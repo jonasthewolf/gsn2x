@@ -251,18 +251,18 @@ pub fn render_architecture(
 ///
 pub fn render_complete(
     output: &mut impl Write,
-    matches: &clap::ArgMatches,
+    _matches: &clap::ArgMatches,
     nodes: &MyMap<String, GsnNode>,
     stylesheets: Option<Vec<&str>>,
 ) -> Result<(), anyhow::Error> {
-    let masked_modules_opt = matches
-        .values_of("MASK_MODULE")
-        .map(|x| x.map(|y| y.to_owned()).collect::<Vec<String>>());
-    let masked_modules = masked_modules_opt.iter().flatten().collect::<Vec<_>>();
+    // let masked_modules_opt = matches
+    //     .values_of("MASK_MODULE")
+    //     .map(|x| x.map(|y| y.to_owned()).collect::<Vec<String>>());
+    // let masked_modules = masked_modules_opt.iter().flatten().collect::<Vec<_>>();
     let mut dg = crate::dirgraphsvg::DirGraph::default();
     let mut edges: BTreeMap<String, Vec<(String, EdgeType)>> = nodes
         .iter()
-        .filter(|(_, node)| !masked_modules.contains(&&node.module))
+        // .filter(|(_, node)| !masked_modules.contains(&&node.module))
         // TODO continue masking here
         .map(|(id, node)| (id.to_owned(), node.get_edges()))
         .collect();
