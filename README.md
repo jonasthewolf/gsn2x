@@ -72,7 +72,7 @@ The tool automatically performs the following validation checks on the input YAM
  - V04: All elements listed under `supportedBy` and `inContextOf` must be known elements types and semantically sensible
         (e.g. a Justification cannot be listed under `supportedBy`).
  - V05: All referenced elelemts in `supportedBy` and `inContextOf` must be unique i.e., no duplicates in the list.
- - V06: All referenced elelemts in `supportedBy` and `inContextOf` must not refer to the node itself.
+ - V06: All referenced elelemts in `supportedBy` and `inContextOf` must not refer to the element itself.
  - C01: There should be only one but must be at least one top-level element (G,S,C,J,A,Sn) unreferenced. 
  - C02: The top-level element must be a Goal. A top-level element is an element that is not referenced by any other element.
  - C03: All referenced elements in `supportedBy` and `inContextOf` must exist.
@@ -80,6 +80,8 @@ The tool automatically performs the following validation checks on the input YAM
  - C05: The should be more than one usage of the same `level`.
  - C06: All module names must be unique.
  - C07: All IDs must be unique across all modules.
+ - C08: All elements must be reachable from the root elements.
+        This message can e.g. happen if there are multiple independent graphs where one contains circular references only.
 
 The checks (Cxx) always apply to the complete set of input files.
 
@@ -92,7 +94,7 @@ The checks for references (Cxx) can be skipped for individual files by using the
 
 ## Additional layers
 
-Additional attributes of a node are ignored by default.
+Additional attributes of an element are ignored by default.
 With the command line option `-l` or `--layers` you can enable the output of those additional attributes.
 By using this feature different views on the GSN can be generated.
 

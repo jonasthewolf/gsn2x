@@ -12,11 +12,13 @@ pub fn check_nodes(
     excluded_modules: Option<Vec<&str>>,
 ) {
     check_node_references(diag, nodes, excluded_modules);
-    check_root_nodes(diag, nodes);
-    if diag.errors == 0 {
-        check_levels(diag, nodes);
-        check_cycles(diag, nodes);
-    }
+    check_root_nodes(diag, nodes)
+        .map(|_| {
+            check_levels(diag, nodes);
+            check_cycles(diag, nodes);
+        })
+        .or::<()>(Ok(()))
+        .unwrap();
 }
 
 ///
@@ -24,7 +26,10 @@ pub fn check_nodes(
 /// and if it is a Goal
 ///
 ///
-fn check_root_nodes(diag: &mut Diagnostics, nodes: &MyMap<String, GsnNode>) {
+fn check_root_nodes(
+    diag: &mut Diagnostics,
+    nodes: &MyMap<String, GsnNode>,
+) -> Result<Vec<String>, ()> {
     let root_nodes = super::get_root_nodes(nodes);
     match root_nodes.len() {
         x if x > 1 => {
@@ -53,12 +58,17 @@ fn check_root_nodes(diag: &mut Diagnostics, nodes: &MyMap<String, GsnNode>) {
         x if x == 0 && nodes.len() > 0 => {
             diag.add_error(
                 None,
-                "C01: There are no unreferenced nodes found.".to_owned(),
+                "C01: There are no unreferenced elements found.".to_owned(),
             );
         }
         _ => {
             // Ignore empty document.
         }
+    }
+    if diag.errors == 0 {
+        Ok(root_nodes)
+    } else {
+        Err(())
     }
 }
 
@@ -112,6 +122,7 @@ fn check_node_references(
 fn check_cycles(diag: &mut Diagnostics, nodes: &MyMap<String, GsnNode>) {
     let mut visited: HashSet<String> = HashSet::new();
     let mut root_nodes = super::get_root_nodes(nodes);
+    let cloned_root_nodes = root_nodes.to_vec();
     let mut stack = Vec::new();
 
     for root in &root_nodes {
@@ -119,21 +130,49 @@ fn check_cycles(diag: &mut Diagnostics, nodes: &MyMap<String, GsnNode>) {
     }
     stack.append(&mut root_nodes);
     while let Some(p_id) = stack.pop() {
-        for child_node in nodes
-            .get(&p_id)
-            .unwrap()
-            .supported_by
-            .iter()
-            .flatten()
-            .filter(|id| !id.starts_with("Sn"))
-        {
-            stack.push(child_node.to_owned());
-            if !visited.insert(child_node.to_owned()) {
-                diag.add_error(None, format!("C04: Cycle detected at node {}.", child_node));
-                stack.clear();
-                break;
+        for child_node in nodes.get(&p_id).unwrap().supported_by.iter().flatten() {
+            if !child_node.starts_with("Sn") {
+                stack.push(child_node.to_owned());
+                if !visited.insert(child_node.to_owned()) {
+                    diag.add_error(
+                        None,
+                        format!("C04: Cycle detected at element {}.", child_node),
+                    );
+                    stack.clear();
+                    break;
+                }
+            } else {
+                // Remember the solutions for reachability analyis.
+                visited.insert(child_node.to_owned());
             }
+            // Also remember the incontext elements for the reachability analysis below.
+            nodes
+                .get(child_node)
+                .unwrap()
+                .in_context_of
+                .iter()
+                .flatten()
+                .for_each(|x| {
+                    visited.insert(x.to_owned());
+                });
         }
+    }
+    let node_keys = HashSet::from_iter(nodes.keys().cloned());
+    let unvisited: HashSet<&String> = node_keys.difference(&visited).collect();
+
+    if !unvisited.is_empty() {
+        diag.add_error(
+            None,
+            format!(
+                "C08: The following element(s) are not reachable from the root element(s) ({}): {}",
+                cloned_root_nodes.join(", "),
+                Vec::from_iter(unvisited)
+                    .into_iter()
+                    .cloned()
+                    .collect::<Vec<String>>()
+                    .join(", ")
+            ),
+        );
     }
 }
 
@@ -298,7 +337,7 @@ mod test {
         assert_eq!(d.messages.len(), 1);
         assert_eq!(d.messages[0].module, None);
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
-        assert_eq!(d.messages[0].msg, "C04: Cycle detected at node G1.");
+        assert_eq!(d.messages[0].msg, "C04: Cycle detected at element G1.");
         assert_eq!(d.errors, 1);
         assert_eq!(d.warnings, 0);
     }
@@ -334,7 +373,7 @@ mod test {
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
         assert_eq!(
             d.messages[0].msg,
-            "C01: There are no unreferenced nodes found."
+            "C01: There are no unreferenced elements found."
         );
         assert_eq!(d.errors, 1);
         assert_eq!(d.warnings, 0);
@@ -457,7 +496,7 @@ mod test {
     fn empty_document() {
         let mut d = Diagnostics::default();
         let nodes = MyMap::<String, GsnNode>::new();
-        check_root_nodes(&mut d, &nodes);
+        assert!(check_root_nodes(&mut d, &nodes).is_ok());
         assert_eq!(d.messages.len(), 0);
     }
 }
