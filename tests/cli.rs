@@ -57,6 +57,7 @@ mod integrations {
                 .unwrap(),
             Regex::new(r#" font-family="([0-9A-Za-z-_]|\\.|\\u[0-9a-fA-F]{1,4})+"#).unwrap(),
             Regex::new(r#"(-?\d+,-?\d+[, ]?)+"#).unwrap(),
+            Regex::new(r#"(?:[ "][A-Z])(-?\d+)"#).unwrap(),
             Regex::new(r#" gsn_module_\w+"#).unwrap(),
         ];
 
