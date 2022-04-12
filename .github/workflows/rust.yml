@@ -80,10 +80,10 @@ jobs:
         sharedKey: ci
     - name: Build
       run: cargo build --verbose
-    - name: Release build
-      run: cargo build --release --verbose
     - name: Test
       run: cargo test --verbose
+    - name: Release build
+      run: cargo build --release --verbose
     - name: Strip binaries
       if: hashFiles('target/release/gsn2x')
       run: |
