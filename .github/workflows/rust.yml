@@ -72,11 +72,13 @@ jobs:
       if: hashFiles('target/release/gsn2x')
       run: |
         strip target/release/gsn2x
+        mkdir ${{ runner.os }}
         cp target/release/gsn2x ${{ runner.os }}/gsn2x
     - name: Strip binaries (Windows)
       if: hashFiles('target/release/gsn2x.exe')
       run: |
         strip target/release/gsn2x.exe
+        mkdir ${{ runner.os }}
         copy target/release/gsn2x.exe ${{ runner.os }}/gsn2x.exe
     - name: Upload artifact
       uses: actions/upload-artifact@v2
