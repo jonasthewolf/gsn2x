@@ -104,7 +104,7 @@ jobs:
         prerelease: true
         title: "Latest build on commit"
         files: |
-          gsn2x-*
+          **/gsn2x*
  
   release:
     needs: build_test_deploy
@@ -130,7 +130,7 @@ jobs:
         prerelease: false
         title: ${{ steps.get_version.outputs.VERSION }}
         files: |
-          gsn2x-*
+          **/gsn2x*
 
   coverage:
     needs: build_test_deploy
