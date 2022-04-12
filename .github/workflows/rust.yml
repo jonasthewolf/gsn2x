@@ -21,6 +21,12 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
+    - uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        profile: minimal
+        override: true
+        components: clippy
     - name: Rust Cache
       uses: Swatinem/rust-cache@v1
       with:
@@ -41,6 +47,11 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        profile: minimal
+        override: true
     - name: Rust Cache
       uses: Swatinem/rust-cache@v1
       with:
@@ -58,6 +69,11 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        profile: minimal
+        override: true
     - name: Rust Cache
       uses: Swatinem/rust-cache@v1
       with:
@@ -138,8 +154,9 @@ jobs:
     - uses: actions/checkout@v2
     - uses: actions-rs/toolchain@v1
       with:
-        profile: minimal
         toolchain: stable
+        profile: minimal
+        override: true
         components: llvm-tools-preview
     - name: Rust Cache
       uses: Swatinem/rust-cache@v1
