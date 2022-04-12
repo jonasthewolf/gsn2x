@@ -1,7 +1,7 @@
 use crate::dirgraphsvg::edges::{EdgeType, SingleEdge};
 use crate::yaml_fix::MyMap;
 use serde::Deserialize;
-use std::collections::{BTreeMap, HashSet};
+use std::collections::{BTreeMap, BTreeSet};
 
 pub mod check;
 pub mod validation;
@@ -73,7 +73,8 @@ pub struct Module {
 /// These are the unreferenced nodes.
 ///
 fn get_root_nodes(nodes: &MyMap<String, GsnNode>) -> Vec<String> {
-    let mut root_nodes: HashSet<String> = nodes.keys().cloned().collect();
+    // Usage of BTreeSet, since root nodes might be used in output and that should be deterministic
+    let mut root_nodes: BTreeSet<String> = nodes.keys().cloned().collect();
     for node in nodes.values() {
         // Remove all keys if they are referenced; used to see if there is more than one top level node
         if let Some(context) = node.in_context_of.as_ref() {

@@ -100,6 +100,7 @@ fn validate_reference(
     diag_str: &str,
     valid_refs: &[&str],
 ) {
+    // HashSet ok, since order is never important.
     let mut set = HashSet::with_capacity(refs.len());
     for n in refs {
         if n == node {
