@@ -156,6 +156,16 @@ fn check_cycles(diag: &mut Diagnostics, nodes: &MyMap<String, GsnNode>) {
                     visited.insert(x.to_owned());
                 });
         }
+        // Also remember the incontext elements of the root ndoes for the reachability analysis below.
+        nodes
+        .get(&p_id)
+        .unwrap()
+        .in_context_of
+        .iter()
+        .flatten()
+        .for_each(|x| {
+            visited.insert(x.to_owned());
+        });
     }
     let node_keys = BTreeSet::from_iter(nodes.keys().cloned());
     let unvisited: BTreeSet<&String> = node_keys.difference(&visited).collect();
@@ -405,9 +415,36 @@ mod test {
             },
         );
         nodes.insert(
+            "Sn1".to_owned(),
+            GsnNode {
+                ..Default::default()
+            },
+        );
+        nodes.insert(
             "G3".to_owned(),
             GsnNode {
+                supported_by: Some(vec!["Sn1".to_owned(),"G4".to_owned()]),
+                in_context_of: Some(vec!["A1".to_owned()]),
+                ..Default::default()
+            },
+        );
+        nodes.insert(
+            "G4".to_owned(),
+            GsnNode {
                 undeveloped: Some(true),
+                in_context_of: Some(vec!["J1".to_owned()]),
+                ..Default::default()
+            },
+        );
+        nodes.insert(
+            "A1".to_owned(),
+            GsnNode {
+                ..Default::default()
+            },
+        );
+        nodes.insert(
+            "J1".to_owned(),
+            GsnNode {
                 ..Default::default()
             },
         );
@@ -556,8 +593,8 @@ mod test {
             d.messages[0].msg,
             "C05: Level test is only used once."
         );
-        assert_eq!(d.errors, 1);
-        assert_eq!(d.warnings, 0);
+        assert_eq!(d.errors, 0);
+        assert_eq!(d.warnings, 1);
     }
 
     #[test]
