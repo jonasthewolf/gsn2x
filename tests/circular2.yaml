@@ -1,0 +1,16 @@
+G1:
+  text: This is a Goal
+  supportedBy: [S1]
+
+S1:
+  text: This is a Strategy.
+  supportedBy: [G2.1]
+
+G2.1:
+  text: subgoal
+  # circular reference!!
+  supportedBy: [G1]
+
+G2.2:
+  text: unreferenced
+  undeveloped: true

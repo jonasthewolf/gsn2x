@@ -1,7 +1,7 @@
 use std::{
     borrow::BorrowMut,
     cell::RefCell,
-    collections::{BTreeMap, BTreeSet, HashSet},
+    collections::{BTreeMap, BTreeSet},
     rc::Rc,
 };
 
@@ -220,7 +220,7 @@ fn find_next_child_node(
     rank: usize,
     visited_nodes: &BTreeSet<String>,
     current: &str,
-    edge_map: &BTreeMap<String, HashSet<String>>,
+    edge_map: &BTreeMap<String, BTreeSet<String>>,
 ) -> Option<(String, usize)> {
     if let Some(p) = edges.get(current) {
         if let Some(opt_child) = p
@@ -250,7 +250,7 @@ fn find_next_child_node(
 ///
 ///
 fn count_unvisited_parents(
-    edge_map: &BTreeMap<String, HashSet<String>>,
+    edge_map: &BTreeMap<String, BTreeSet<String>>,
     visited_nodes: &BTreeSet<String>,
     current: &str,
 ) -> usize {
@@ -415,13 +415,13 @@ fn get_root_nodes<'a>(
 ///
 fn calculate_parent_node_map(
     edges: &BTreeMap<String, Vec<(String, EdgeType)>>,
-) -> BTreeMap<String, HashSet<String>> {
+) -> BTreeMap<String, BTreeSet<String>> {
     let mut parent_map = BTreeMap::new();
     for (child, target_edges) in edges {
         for (target_edge, _) in target_edges {
             parent_map
                 .entry(target_edge.to_owned())
-                .or_insert_with(HashSet::new)
+                .or_insert_with(BTreeSet::new)
                 .insert(child.to_owned());
         }
     }

@@ -1,7 +1,7 @@
 use super::GsnNode;
 use crate::diagnostics::Diagnostics;
 use crate::yaml_fix::MyMap;
-use std::collections::{BTreeMap, HashSet};
+use std::collections::{BTreeMap, BTreeSet};
 
 ///
 ///
@@ -120,7 +120,7 @@ fn check_node_references(
 ///
 ///
 fn check_cycles(diag: &mut Diagnostics, nodes: &MyMap<String, GsnNode>) {
-    let mut visited: HashSet<String> = HashSet::new();
+    let mut visited: BTreeSet<String> = BTreeSet::new();
     let mut root_nodes = super::get_root_nodes(nodes);
     let cloned_root_nodes = root_nodes.to_vec();
     let mut stack = Vec::new();
@@ -157,8 +157,8 @@ fn check_cycles(diag: &mut Diagnostics, nodes: &MyMap<String, GsnNode>) {
                 });
         }
     }
-    let node_keys = HashSet::from_iter(nodes.keys().cloned());
-    let unvisited: HashSet<&String> = node_keys.difference(&visited).collect();
+    let node_keys = BTreeSet::from_iter(nodes.keys().cloned());
+    let unvisited: BTreeSet<&String> = node_keys.difference(&visited).collect();
 
     if !unvisited.is_empty() {
         diag.add_error(
@@ -374,6 +374,50 @@ mod test {
         assert_eq!(
             d.messages[0].msg,
             "C01: There are no unreferenced elements found."
+        );
+        assert_eq!(d.errors, 1);
+        assert_eq!(d.warnings, 0);
+    }
+
+    #[test]
+    fn independent_cycle() {
+        let mut d = Diagnostics::default();
+        let mut nodes = MyMap::<String, GsnNode>::new();
+        nodes.insert(
+            "G1".to_owned(),
+            GsnNode {
+                supported_by: Some(vec!["S1".to_owned()]),
+                ..Default::default()
+            },
+        );
+        nodes.insert(
+            "S1".to_owned(),
+            GsnNode {
+                supported_by: Some(vec!["G2".to_owned()]),
+                ..Default::default()
+            },
+        );
+        nodes.insert(
+            "G2".to_owned(),
+            GsnNode {
+                supported_by: Some(vec!["G1".to_owned()]),
+                ..Default::default()
+            },
+        );
+        nodes.insert(
+            "G3".to_owned(),
+            GsnNode {
+                undeveloped: Some(true),
+                ..Default::default()
+            },
+        );
+        check_nodes(&mut d, &nodes, None);
+        assert_eq!(d.messages.len(), 1);
+        assert_eq!(d.messages[0].module, None);
+        assert_eq!(d.messages[0].diag_type, DiagType::Error);
+        assert_eq!(
+            d.messages[0].msg,
+            "C08: The following element(s) are not reachable from the root element(s) (G3): G1, G2, S1"
         );
         assert_eq!(d.errors, 1);
         assert_eq!(d.warnings, 0);
