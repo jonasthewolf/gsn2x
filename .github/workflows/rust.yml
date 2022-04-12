@@ -22,7 +22,7 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: Rust Cache
-      uses: Swatinem/rust-cache@v1.3.0
+      uses: Swatinem/rust-cache@v1
       with:
         sharedKey: ci
     - name: Annotate commit with clippy warnings
@@ -42,7 +42,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Rust Cache
-      uses: Swatinem/rust-cache@v1.3.0
+      uses: Swatinem/rust-cache@v1
       with:
         sharedKey: ci
     - name: License check
@@ -59,7 +59,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Rust Cache
-      uses: Swatinem/rust-cache@v1.3.0
+      uses: Swatinem/rust-cache@v1
       with:
         sharedKey: ci
     - name: Build
@@ -138,16 +138,15 @@ jobs:
     
     steps:
     - uses: actions/checkout@v2
-    - name: Rust Cache
-      uses: Swatinem/rust-cache@v1.3.0
-      with:
-        sharedKey: ci
-    # coverage measurement needs a nightly toolchain with llvm-tools
     - uses: actions-rs/toolchain@v1
       with:
         profile: minimal
         toolchain: stable
         components: llvm-tools-preview
+    - name: Rust Cache
+      uses: Swatinem/rust-cache@v1
+      with:
+        sharedKey: ci
     - name: Coverage measurement
       continue-on-error: true
       run: |
