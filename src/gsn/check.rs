@@ -4,6 +4,7 @@ use crate::yaml_fix::MyMap;
 use std::collections::{BTreeMap, BTreeSet};
 
 ///
+/// Entry function to all checks.
 ///
 ///
 pub fn check_nodes(
@@ -116,7 +117,7 @@ fn check_node_references(
 
 ///
 /// Check for cycles in `supported by` references
-///
+/// It also detects if there is a cycle in an independent graph.
 ///
 ///
 fn check_cycles(diag: &mut Diagnostics, nodes: &MyMap<String, GsnNode>) {
@@ -158,14 +159,14 @@ fn check_cycles(diag: &mut Diagnostics, nodes: &MyMap<String, GsnNode>) {
         }
         // Also remember the incontext elements of the root ndoes for the reachability analysis below.
         nodes
-        .get(&p_id)
-        .unwrap()
-        .in_context_of
-        .iter()
-        .flatten()
-        .for_each(|x| {
-            visited.insert(x.to_owned());
-        });
+            .get(&p_id)
+            .unwrap()
+            .in_context_of
+            .iter()
+            .flatten()
+            .for_each(|x| {
+                visited.insert(x.to_owned());
+            });
     }
     let node_keys = BTreeSet::from_iter(nodes.keys().cloned());
     let unvisited: BTreeSet<&String> = node_keys.difference(&visited).collect();
@@ -423,7 +424,7 @@ mod test {
         nodes.insert(
             "G3".to_owned(),
             GsnNode {
-                supported_by: Some(vec!["Sn1".to_owned(),"G4".to_owned()]),
+                supported_by: Some(vec!["Sn1".to_owned(), "G4".to_owned()]),
                 in_context_of: Some(vec!["A1".to_owned()]),
                 ..Default::default()
             },
@@ -589,10 +590,7 @@ mod test {
         assert_eq!(d.messages.len(), 1);
         assert_eq!(d.messages[0].module, None);
         assert_eq!(d.messages[0].diag_type, DiagType::Warning);
-        assert_eq!(
-            d.messages[0].msg,
-            "C05: Level test is only used once."
-        );
+        assert_eq!(d.messages[0].msg, "C05: Level test is only used once.");
         assert_eq!(d.errors, 0);
         assert_eq!(d.warnings, 1);
     }
