@@ -200,7 +200,44 @@ mod integrations {
     }
 
     #[test]
-    fn comp_view() -> Result<(), Box<dyn std::error::Error>> {
+    fn multiple_view() -> Result<(), Box<dyn std::error::Error>> {
+        let mut cmd = Command::cargo_bin("gsn2x")?;
+        let temp = assert_fs::TempDir::new()?.into_persistent();
+        temp.copy_from("examples/modular", &["*.yaml"])?;
+        let input_file1 = temp.child("main.gsn.yaml");
+        let input_file2 = temp.child("sub1.gsn.yaml");
+        let input_file3 = temp.child("sub3.gsn.yaml");
+        let output_file1 = temp.child("main.gsn.svg");
+        let output_file2 = temp.child("sub1.gsn.svg");
+        let output_file3 = temp.child("sub3.gsn.svg");
+        cmd.arg(input_file1.as_os_str())
+            .arg(input_file2.as_os_str())
+            .arg(input_file3.as_os_str())
+            .arg("-A")
+            .arg("-E")
+            .arg("-F")
+            .arg("-G")
+            .arg("-s")
+            .arg("modular.css");
+        cmd.assert().success();
+        assert!(are_struct_similar_svgs(
+            std::path::Path::new("examples/modular/main.gsn.svg").as_os_str(),
+            output_file1.as_os_str(),
+        )?);
+        assert!(are_struct_similar_svgs(
+            std::path::Path::new("examples/modular/sub1.gsn.svg").as_os_str(),
+            output_file2.as_os_str(),
+        )?);
+        assert!(are_struct_similar_svgs(
+            std::path::Path::new("examples/modular/sub3.gsn.svg").as_os_str(),
+            output_file3.as_os_str(),
+        )?);
+        temp.close()?;
+        Ok(())
+    }
+
+    #[test]
+    fn complete_view() -> Result<(), Box<dyn std::error::Error>> {
         let mut cmd = Command::cargo_bin("gsn2x")?;
         let temp = assert_fs::TempDir::new()?.into_persistent();
         temp.copy_from("examples/modular", &["*.yaml"])?;

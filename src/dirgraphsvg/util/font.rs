@@ -36,3 +36,27 @@ pub fn text_bounding_box(font: &Font, text: &str, size: f32) -> (u32, u32) {
 
     ((width as f32 * 1.1) as u32, (height as f32 * 1.1) as u32) // Do magic: rusttype seems to be roughly 11 percent too small
 }
+
+#[cfg(test)]
+mod test {
+
+    use super::*;
+
+    #[test]
+    fn default_font_exists() {
+        assert!(get_default_font().is_ok());
+    }
+
+    #[test]
+    fn non_exisiting_font_() {
+        assert!(get_font("ahopefullycrazyenoughfontnamethatdoesnotexistanywhere").is_err());
+    }
+
+    #[test]
+    fn bounding_box() {
+        let font = get_default_font().unwrap();
+        let (w, h) = text_bounding_box(&font, "text", 12.0);
+        assert!(w.abs_diff(19) < 5);
+        assert!(h.abs_diff(14) < 5);
+    }
+}

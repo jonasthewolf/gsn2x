@@ -15,7 +15,17 @@ pub fn escape_text(input: &str) -> String {
         .replace('/', "_")
         .replace('\\', "_")
         .replace(':', "_")
-        .replace('\'', "")
-        .replace('"', "")
-        .replace('~', "")
+        .replace('\'', "_")
+        .replace('"', "_")
+        .replace('~', "_")
+}
+
+#[cfg(test)]
+mod test {
+    use super::escape_text;
+
+    #[test]
+    fn escape_test() {
+        assert_eq!(escape_text(".- /\\:\'\"~"), "_________");
+    }
 }
