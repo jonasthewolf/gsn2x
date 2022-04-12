@@ -537,6 +537,30 @@ mod test {
     }
 
     #[test]
+    fn level_only_once() {
+        let mut d = Diagnostics::default();
+        let mut nodes = MyMap::<String, GsnNode>::new();
+        nodes.insert(
+            "G1".to_owned(),
+            GsnNode {
+                undeveloped: Some(true),
+                level: Some("test".to_owned()),
+                ..Default::default()
+            },
+        );
+        check_nodes(&mut d, &nodes, None);
+        assert_eq!(d.messages.len(), 1);
+        assert_eq!(d.messages[0].module, None);
+        assert_eq!(d.messages[0].diag_type, DiagType::Warning);
+        assert_eq!(
+            d.messages[0].msg,
+            "C05: Level test is only used once."
+        );
+        assert_eq!(d.errors, 1);
+        assert_eq!(d.warnings, 0);
+    }
+
+    #[test]
     fn empty_document() {
         let mut d = Diagnostics::default();
         let nodes = MyMap::<String, GsnNode>::new();
