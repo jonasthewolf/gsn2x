@@ -34,9 +34,9 @@ mod integrations {
                     .fold(r.to_owned(), |replaced, r| {
                         r.replace_all(&replaced, "").to_string()
                     });
+                if l_r != r_r {
                     dbg!(&l_r);
                     dbg!(&r_r);
-                if l_r != r_r {
                     same = false;
                     break;
                 }
@@ -52,13 +52,15 @@ mod integrations {
         left: &std::ffi::OsStr,
         right: &std::ffi::OsStr,
     ) -> Result<bool, std::io::Error> {
+        // Order is important.
         let replaces = vec![
+            Regex::new(r#" gsn_module_\w+"#).unwrap(),
             Regex::new(r#" (([rc]?(x|y))|width|height|textLength|viewbox|viewBox)="[\d\s]+""#)
                 .unwrap(),
             Regex::new(r#" font-family="([0-9A-Za-z-_]|\\.|\\u[0-9a-fA-F]{1,4})+""#).unwrap(),
             Regex::new(r#"(-?\d+,-?\d+[, ]?)+"#).unwrap(),
-            Regex::new(r#"(-?\d+)[\s"]"#).unwrap(),
-            Regex::new(r#" gsn_module_\w+"#).unwrap(),
+            Regex::new(r#"(-?\d+)\s+"#).unwrap(),
+            Regex::new(r#"(V-?\d+)""#).unwrap(),
         ];
 
         compare_lines_with_replace(left, right, Some(replaces))
