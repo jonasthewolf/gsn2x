@@ -10,7 +10,7 @@ mod integrations {
     fn compare_lines_with_replace(
         left: &std::ffi::OsStr,
         right: &std::ffi::OsStr,
-        replace_regex: Option<Vec<Regex>>,
+        replace_regex: Option<Vec<(Regex, &str)>>,
     ) -> Result<bool, std::io::Error> {
         let left: &std::path::Path = left.as_ref();
         let right: &std::path::Path = right.as_ref();
@@ -25,18 +25,20 @@ mod integrations {
                 let l_r = replace_regex
                     .iter()
                     .flatten()
-                    .fold(l.to_owned(), |replaced, r| {
-                        r.replace_all(&replaced, "").to_string()
+                    .fold(l.to_owned(), |replaced, (r, rp)| {
+                        r.replace_all(&replaced, *rp).to_string()
                     });
                 let r_r = replace_regex
                     .iter()
                     .flatten()
-                    .fold(r.to_owned(), |replaced, r| {
-                        r.replace_all(&replaced, "").to_string()
+                    .fold(r.to_owned(), |replaced, (r, rp)| {
+                        r.replace_all(&replaced, *rp).to_string()
                     });
                 if l_r != r_r {
-                    dbg!(l_r);
-                    dbg!(r_r);
+                    dbg!(&l);
+                    dbg!(&l_r);
+                    dbg!(&r_r);
+                    dbg!(&r);
                     same = false;
                     break;
                 }
@@ -52,12 +54,27 @@ mod integrations {
         left: &std::ffi::OsStr,
         right: &std::ffi::OsStr,
     ) -> Result<bool, std::io::Error> {
+        // Order is important.
         let replaces = vec![
-            Regex::new(r#" (([rc]?(x|y))|width|height|textLength|viewbox|viewBox)="[\d\s]+""#)
-                .unwrap(),
-            Regex::new(r#" font-family="([0-9A-Za-z-_]|\\.|\\u[0-9a-fA-F]{1,4})+"#).unwrap(),
-            Regex::new(r#"(-?\d+,-?\d+[, ]?)+"#).unwrap(),
-            Regex::new(r#" gsn_module_\w+"#).unwrap(),
+            (
+                Regex::new(r#" gsn_module_\w+"#).unwrap(),
+                " gsn_module_replaced",
+            ),
+            (
+                Regex::new(r#" (?P<attr>(([rc]?(x|y))|width|height|textLength|viewbox|viewBox))="[\d\s]+""#)
+                    .unwrap(),
+                " $attr=\"\"",
+            ),
+            (
+                Regex::new(r#" font-family="([0-9A-Za-z-_]|\\.|\\u[0-9a-fA-F]{1,4})+""#).unwrap(),
+                " font-family=\"\"",
+            ),
+            (Regex::new(r#"(-?\d+,-?\d+[, ]?)+"#).unwrap(), ""),
+            (
+                Regex::new(r#"d="((?P<cmd>[A-Za-z]+)(:?-?\d+(:?,-?\d+)?)? ?(?P<cmd2>z?))+""#)
+                    .unwrap(),
+                "d=\"$cmd$cmd2\"",
+            ),
         ];
 
         compare_lines_with_replace(left, right, Some(replaces))
@@ -200,7 +217,44 @@ mod integrations {
     }
 
     #[test]
-    fn comp_view() -> Result<(), Box<dyn std::error::Error>> {
+    fn multiple_view() -> Result<(), Box<dyn std::error::Error>> {
+        let mut cmd = Command::cargo_bin("gsn2x")?;
+        let temp = assert_fs::TempDir::new()?.into_persistent();
+        temp.copy_from("examples/modular", &["*.yaml"])?;
+        let input_file1 = temp.child("main.gsn.yaml");
+        let input_file2 = temp.child("sub1.gsn.yaml");
+        let input_file3 = temp.child("sub3.gsn.yaml");
+        let output_file1 = temp.child("main.gsn.svg");
+        let output_file2 = temp.child("sub1.gsn.svg");
+        let output_file3 = temp.child("sub3.gsn.svg");
+        cmd.arg(input_file1.as_os_str())
+            .arg(input_file2.as_os_str())
+            .arg(input_file3.as_os_str())
+            .arg("-A")
+            .arg("-E")
+            .arg("-F")
+            .arg("-G")
+            .arg("-s")
+            .arg("modular.css");
+        cmd.assert().success();
+        assert!(are_struct_similar_svgs(
+            std::path::Path::new("examples/modular/main.gsn.svg").as_os_str(),
+            output_file1.as_os_str(),
+        )?);
+        assert!(are_struct_similar_svgs(
+            std::path::Path::new("examples/modular/sub1.gsn.svg").as_os_str(),
+            output_file2.as_os_str(),
+        )?);
+        assert!(are_struct_similar_svgs(
+            std::path::Path::new("examples/modular/sub3.gsn.svg").as_os_str(),
+            output_file3.as_os_str(),
+        )?);
+        temp.close()?;
+        Ok(())
+    }
+
+    #[test]
+    fn complete_view() -> Result<(), Box<dyn std::error::Error>> {
         let mut cmd = Command::cargo_bin("gsn2x")?;
         let temp = assert_fs::TempDir::new()?.into_persistent();
         temp.copy_from("examples/modular", &["*.yaml"])?;

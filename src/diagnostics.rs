@@ -57,10 +57,25 @@ impl Diagnostics {
 
 #[cfg(test)]
 mod test {
-    use crate::diagnostics::DiagType;
+    use super::*;
 
     #[test]
     fn debug() {
         assert_eq!(format!("{:?}", DiagType::Warning), "Warning");
+    }
+
+    #[test]
+    fn add_and_print() {
+        let mut d = Diagnostics::default();
+        d.add_warning(Some("module"), "msg".to_owned());
+        d.add_error(Some("module"), "errmsg".to_owned());
+        assert_eq!(
+            format!("{}", d.messages.get(0).unwrap()),
+            "Warning: (module) msg".to_owned()
+        );
+        assert_eq!(
+            format!("{}", d.messages.get(1).unwrap()),
+            "Error: (module) errmsg".to_owned()
+        );
     }
 }

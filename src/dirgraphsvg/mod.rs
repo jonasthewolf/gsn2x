@@ -589,3 +589,26 @@ impl<'a> DirGraph<'a> {
         self
     }
 }
+
+#[cfg(test)]
+mod test {
+    use super::{nodes::new_away_goal, *};
+
+    #[test]
+    fn call_unused() {
+        let d = DirGraph::default();
+        let b1 = new_away_goal("id", "text", "module", None, None);
+        d._add_css_sytlesheet("css")
+            ._add_edge(
+                b1.clone(),
+                new_away_goal("id2", "text", "module", None, None),
+                EdgeType::OneWay(SingleEdge::SupportedBy),
+            )
+            ._add_node(b1)
+            ._set_font(super::util::font::DEFAULT_FONT_FAMILY_NAME, 12.0)
+            ._set_margin(Margin {
+                ..Default::default()
+            })
+            ._set_wrap(20);
+    }
+}

@@ -11,3 +11,15 @@ impl Point2D {
         }
     }
 }
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    fn move_rel() {
+        let p = Point2D { x: 0, y: 0 }.move_relative(5, 3);
+        assert_eq!(p.x, 5);
+        assert_eq!(p.y, 3);
+    }
+}
