@@ -61,7 +61,7 @@ mod integrations {
                 " gsn_module_replaced",
             ),
             (
-                Regex::new(r#" (?<attr>(([rc]?(x|y))|width|height|textLength|viewbox|viewBox))="[\d\s]+""#)
+                Regex::new(r#" (?P<attr>(([rc]?(x|y))|width|height|textLength|viewbox|viewBox))="[\d\s]+""#)
                     .unwrap(),
                 " $attr=\"\"",
             ),
