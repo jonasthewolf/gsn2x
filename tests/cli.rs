@@ -10,7 +10,7 @@ mod integrations {
     fn compare_lines_with_replace(
         left: &std::ffi::OsStr,
         right: &std::ffi::OsStr,
-        replace_regex: Option<Vec<Regex>>,
+        replace_regex: Option<Vec<(Regex, &str)>>,
     ) -> Result<bool, std::io::Error> {
         let left: &std::path::Path = left.as_ref();
         let right: &std::path::Path = right.as_ref();
@@ -25,18 +25,20 @@ mod integrations {
                 let l_r = replace_regex
                     .iter()
                     .flatten()
-                    .fold(l.to_owned(), |replaced, r| {
-                        r.replace_all(&replaced, "").to_string()
+                    .fold(l.to_owned(), |replaced, (r, rp)| {
+                        r.replace_all(&replaced, *rp).to_string()
                     });
                 let r_r = replace_regex
                     .iter()
                     .flatten()
-                    .fold(r.to_owned(), |replaced, r| {
-                        r.replace_all(&replaced, "").to_string()
+                    .fold(r.to_owned(), |replaced, (r, rp)| {
+                        r.replace_all(&replaced, *rp).to_string()
                     });
                 if l_r != r_r {
+                    dbg!(&l);
                     dbg!(&l_r);
                     dbg!(&r_r);
+                    dbg!(&r);
                     same = false;
                     break;
                 }
@@ -54,13 +56,25 @@ mod integrations {
     ) -> Result<bool, std::io::Error> {
         // Order is important.
         let replaces = vec![
-            Regex::new(r#" gsn_module_\w+"#).unwrap(),
-            Regex::new(r#" (([rc]?(x|y))|width|height|textLength|viewbox|viewBox)="[\d\s]+""#)
-                .unwrap(),
-            Regex::new(r#" font-family="([0-9A-Za-z-_]|\\.|\\u[0-9a-fA-F]{1,4})+""#).unwrap(),
-            Regex::new(r#"(-?\d+,-?\d+[, ]?)+"#).unwrap(),
-            Regex::new(r#"(-?\d+)\s+"#).unwrap(),
-            Regex::new(r#"(V-?\d+)""#).unwrap(),
+            (
+                Regex::new(r#" gsn_module_\w+"#).unwrap(),
+                " gsn_module_replaced",
+            ),
+            (
+                Regex::new(r#" (([rc]?(x|y))|width|height|textLength|viewbox|viewBox)="[\d\s]+""#)
+                    .unwrap(),
+                "",
+            ),
+            (
+                Regex::new(r#" font-family="([0-9A-Za-z-_]|\\.|\\u[0-9a-fA-F]{1,4})+""#).unwrap(),
+                " font-family=\"\"",
+            ),
+            (Regex::new(r#"(-?\d+,-?\d+[, ]?)+"#).unwrap(), ""),
+            (
+                Regex::new(r#"d="((?P<cmd>[A-Za-z]+)(:?-?\d+(:?,-?\d+))? ?(?P<cmd2>z?))+"""#)
+                    .unwrap(),
+                "d=\"$cmd$cmd2\"",
+            ),
         ];
 
         compare_lines_with_replace(left, right, Some(replaces))
