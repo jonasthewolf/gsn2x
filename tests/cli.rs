@@ -71,7 +71,7 @@ mod integrations {
             ),
             (Regex::new(r#"(-?\d+,-?\d+[, ]?)+"#).unwrap(), ""),
             (
-                Regex::new(r#"d="((?P<cmd>[A-Za-z]+)(:?-?\d+(:?,-?\d+))? ?(?P<cmd2>z?))+"""#)
+                Regex::new(r#"d="((?P<cmd>[A-Za-z]+)(:?-?\d+(:?,-?\d+))? ?(?P<cmd2>z?))+""#)
                     .unwrap(),
                 "d=\"$cmd$cmd2\"",
             ),
