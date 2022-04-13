@@ -61,9 +61,9 @@ mod integrations {
                 " gsn_module_replaced",
             ),
             (
-                Regex::new(r#" (([rc]?(x|y))|width|height|textLength|viewbox|viewBox)="[\d\s]+""#)
+                Regex::new(r#" (?<attr>([rc]?(x|y))|width|height|textLength|viewbox|viewBox)="[\d\s]+""#)
                     .unwrap(),
-                "",
+                " $attr=\"\"",
             ),
             (
                 Regex::new(r#" font-family="([0-9A-Za-z-_]|\\.|\\u[0-9a-fA-F]{1,4})+""#).unwrap(),
@@ -71,7 +71,7 @@ mod integrations {
             ),
             (Regex::new(r#"(-?\d+,-?\d+[, ]?)+"#).unwrap(), ""),
             (
-                Regex::new(r#"d="((?P<cmd>[A-Za-z]+)(:?-?\d+(:?,-?\d+))? ?(?P<cmd2>z?))+""#)
+                Regex::new(r#"d="((?P<cmd>[A-Za-z]+)(:?-?\d+(:?,-?\d+)?)? ?(?P<cmd2>z?))+""#)
                     .unwrap(),
                 "d=\"$cmd$cmd2\"",
             ),
