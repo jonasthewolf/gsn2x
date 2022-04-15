@@ -4,6 +4,7 @@ module:
 G1:
   text: Main Goal
   supportedBy: [S1]
+  inContextOf: [A1]
 
 S1:
   text: Divide and Conquer

@@ -1,4 +1,4 @@
-<svg viewBox="0 0 626 344" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<svg viewBox="0 0 626 393" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 <symbol id="module_icon" viewbox="0 0 20 20">
 <rect fill="lightgrey" height="5" stroke="black" stroke-width="1" width="10" x="0" y="0"/>
 <rect fill="lightgrey" height="10" stroke="black" stroke-width="1" width="20" x="0" y="5"/>
@@ -19,23 +19,43 @@
 <title>
 G1
 </title>
-<path class="border" d="M261,20 L345,20 L345,70 L261,70 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="13" x="268" y="41">
+<path class="border" d="M199,45 L283,45 L283,95 L199,95 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="13" x="206" y="66">
 G1
 </text>
-<text font-family="AppleSystemUIFont" font-size="12" textLength="51" x="268" y="61">
+<text font-family="AppleSystemUIFont" font-size="12" textLength="51" x="206" y="86">
 Main Goal
+</text>
+</g>
+<g class="gsnelem gsnawayasmp gsn_module_Sub1" id="node_A1">
+<title>
+A1
+</title>
+<rect fill="none" height="28" stroke="black" stroke-width="1" width="84" x="323" y="92"/>
+<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="25" x="357" y="113">
+Sub1
+</text>
+<path class="border" d="M323,92 V41 A42,21,0,0,1,407,41 V92" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="12" x="330" y="62">
+A1
+</text>
+<use href="#module_icon" x="330" y="99"/>
+<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" x="400" y="34">
+A
+</text>
+<text font-family="AppleSystemUIFont" font-size="12" textLength="44" x="330" y="82">
+TestABC
 </text>
 </g>
 <g class="gsnelem gsnstgy gsn_module_Main" id="node_S1">
 <title>
 S1
 </title>
-<path class="border" d="M246,111 L375,111 L360,161 L231,161 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="12" x="253" y="132">
+<path class="border" d="M246,160 L375,160 L360,210 L231,210 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="12" x="253" y="181">
 S1
 </text>
-<text font-family="AppleSystemUIFont" font-size="12" textLength="101" x="238" y="152">
+<text font-family="AppleSystemUIFont" font-size="12" textLength="101" x="238" y="201">
 Divide and Conquer
 </text>
 </g>
@@ -43,27 +63,27 @@ Divide and Conquer
 <title>
 G2
 </title>
-<path class="border" d="M20,215 L104,215 L104,271 L20,271 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="14" x="27" y="236">
+<path class="border" d="M20,264 L104,264 L104,320 L20,320 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="14" x="27" y="285">
 G2
 </text>
-<text font-family="AppleSystemUIFont" font-size="12" textLength="31" x="27" y="256">
+<text font-family="AppleSystemUIFont" font-size="12" textLength="31" x="27" y="305">
 Divide
 </text>
-<path d="M62,271 l5,5 l-5,5 l-5,-5 z" fill="none" stroke="black" stroke-width="1"/>
+<path d="M62,320 l5,5 l-5,5 l-5,-5 z" fill="none" stroke="black" stroke-width="1"/>
 </g>
 <g class="gsnelem gsnjust gsn_module_Main" id="node_J1">
 <title>
 J1
 </title>
-<ellipse class="border" cx="531" cy="243" fill="none" rx="55" ry="41" stroke="black" stroke-width="1"/>
-<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="11" x="495" y="232">
+<ellipse class="border" cx="531" cy="292" fill="none" rx="55" ry="41" stroke="black" stroke-width="1"/>
+<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="11" x="495" y="281">
 J1
 </text>
-<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" x="581" y="279">
+<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" x="581" y="328">
 J
 </text>
-<text font-family="AppleSystemUIFont" font-size="12" textLength="72" x="495" y="252">
+<text font-family="AppleSystemUIFont" font-size="12" textLength="72" x="495" y="301">
 Some Context
 </text>
 </g>
@@ -71,16 +91,16 @@ Some Context
 <title>
 G3
 </title>
-<rect fill="none" height="28" stroke="black" stroke-width="1" width="142" x="294" y="254"/>
-<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="25" x="328" y="275">
+<rect fill="none" height="28" stroke="black" stroke-width="1" width="142" x="294" y="303"/>
+<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="25" x="328" y="324">
 Sub1
 </text>
-<path class="border" d="M294,254 V204 H436 V254" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="15" x="301" y="225">
+<path class="border" d="M294,303 V253 H436 V303" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="15" x="301" y="274">
 G3
 </text>
-<use href="#module_icon" x="301" y="261"/>
-<text font-family="AppleSystemUIFont" font-size="12" textLength="128" x="301" y="245">
+<use href="#module_icon" x="301" y="310"/>
+<text font-family="AppleSystemUIFont" font-size="12" textLength="128" x="301" y="294">
 Conquer the submodules
 </text>
 </g>
@@ -88,20 +108,21 @@ Conquer the submodules
 <title>
 J1
 </title>
-<ellipse class="border" cx="531" cy="243" fill="none" rx="55" ry="41" stroke="black" stroke-width="1"/>
-<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="11" x="495" y="232">
+<ellipse class="border" cx="531" cy="292" fill="none" rx="55" ry="41" stroke="black" stroke-width="1"/>
+<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="11" x="495" y="281">
 J1
 </text>
-<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" x="581" y="279">
+<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" x="581" y="328">
 J
 </text>
-<text font-family="AppleSystemUIFont" font-size="12" textLength="72" x="495" y="252">
+<text font-family="AppleSystemUIFont" font-size="12" textLength="72" x="495" y="301">
 Some Context
 </text>
 </g>
-<path class="gsnedge gsninspby" d="M303,70 C303,100,303,81,303,101" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninctxt" d="M104,243 C104,243,446,243,466,243" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninctxt" d="M436,243 C436,243,446,243,466,243" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M303,161 C303,191,62,185,62,205" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M303,161 C303,191,365,174,365,194" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M283,70 C283,70,293,70,313,70" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M241,95 C241,125,303,130,303,150" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M104,292 C104,292,446,292,466,292" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M436,292 C436,292,446,292,466,292" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M303,210 C303,240,62,234,62,254" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M303,210 C303,240,365,223,365,243" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 </svg>
