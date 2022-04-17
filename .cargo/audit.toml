@@ -1,2 +1,3 @@
 [advisories]
+# RUSTSEC-2020-0159 is not considered an issue for this program.
 ignore = [ "RUSTSEC-2020-0159" ]

@@ -1,4 +1,4 @@
-<svg viewBox="0 0 268 322" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<svg viewBox="0 0 144 322" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 <symbol id="module_icon" viewbox="0 0 20 20">
 <rect fill="lightgrey" height="5" stroke="black" stroke-width="1" width="10" x="0" y="0"/>
 <rect fill="lightgrey" height="10" stroke="black" stroke-width="1" width="20" x="0" y="5"/>
@@ -18,8 +18,8 @@
 <title>
 Main
 </title>
-<path class="border" d="M144,114 h30 v10 L228,124 L228,168 L144,168 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="24" x="151" y="135">
+<path class="border" d="M20,20 h30 v10 L104,30 L104,74 L20,74 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="24" x="27" y="41">
 Main
 </text>
 </g>
@@ -32,25 +32,15 @@ Sub1
 Sub1
 </text>
 </g>
-<g class="gsnelem gsnmodule" id="node_Main">
-<title>
-Main
-</title>
-<path class="border" d="M144,114 h30 v10 L228,124 L228,168 L144,168 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="24" x="151" y="135">
-Main
-</text>
-</g>
 <g class="gsnelem gsnmodule" id="node_Sub3">
 <title>
 Sub3
 </title>
-<path class="border" d="M82,208 h30 v10 L166,218 L166,262 L82,262 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="26" x="89" y="229">
+<path class="border" d="M20,208 h30 v10 L104,218 L104,262 L20,262 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="26" x="27" y="229">
 Sub3
 </text>
 </g>
-<path class="gsnedge gsncomposite" d="M144,141 C144,141,134,141,114,141" fill="none" marker-end="url(#composite_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninctxt" d="M104,141 C104,141,114,141,134,141" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsncomposite" d="M62,168 C62,198,124,188,124,208" fill="none" marker-end="url(#composite_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M62,84 C62,104,62,94,62,114" fill="none" marker-end="url(#composite_arrow)" marker-start="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsncomposite" d="M62,168 C62,198,62,188,62,208" fill="none" marker-end="url(#composite_arrow)" stroke="black" stroke-width="1"/>
 </svg>

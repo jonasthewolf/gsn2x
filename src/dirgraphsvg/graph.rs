@@ -291,9 +291,13 @@ fn add_in_context_nodes(
                             })
                             .collect::<Vec<String>>()
                             .into_iter()
-                            .partition(|_| {
+                            .partition(|x| {
                                 i += 1;
-                                i % 2 == 0
+                                if previous_node_with_connection(x, n, v_ranks, edges) {
+                                    true
+                                } else {
+                                    i % 2 == 0
+                                }
                             });
                         match &left.len() {
                             1 => new_rank.push(NodePlace::Node(left.get(0).unwrap().to_owned())),
@@ -322,6 +326,42 @@ fn add_in_context_nodes(
             v_ranks.insert(h, n);
         }
     }
+}
+
+///
+///
+///
+///
+///
+fn previous_node_with_connection(
+    node: &str,
+    cur_node: &str,
+    cur_rank: &BTreeMap<usize, NodePlace>,
+    edges: &BTreeMap<String, Vec<(String, EdgeType)>>,
+) -> bool {
+    cur_rank.values().any(|np| match np {
+        NodePlace::Node(id) => {
+            if id != cur_node {
+                if let Some(targets) = edges.get(id) {
+                    targets.iter().any(|(tid, _)| tid == node)
+                } else {
+                    false
+                }
+            } else {
+                false
+            }
+        }
+        NodePlace::MultipleNodes(mn) => {
+            for id in mn {
+                if id != cur_node {
+                    if let Some(targets) = edges.get(id) {
+                        return targets.iter().any(|(tid, _)| tid == node);
+                    }
+                }
+            }
+            false
+        }
+    })
 }
 
 ///
