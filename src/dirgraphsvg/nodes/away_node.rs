@@ -291,3 +291,15 @@ impl AwayNode {
         }
     }
 }
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    fn test_set_forced_level() {
+        let mut node = AwayNode::new("id", "text", "module", AwayType::Goal, None, None);
+        node.set_forced_level(3);
+        assert_eq!(node.get_forced_level(), Some(3));
+    }
+}

@@ -186,3 +186,21 @@ impl EllipticalNode {
         }
     }
 }
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    fn test_set_forced_level() {
+        let mut node = EllipticalNode::new("id", "text", None, true, None, None);
+        node.set_forced_level(3);
+        assert_eq!(node.get_forced_level(), Some(3));
+    }
+
+    #[test]
+    fn test_get_id() {
+        let node = EllipticalNode::new("id", "text", None, true, None, None);
+        assert_eq!(node.get_id(), "id");
+    }
+}
