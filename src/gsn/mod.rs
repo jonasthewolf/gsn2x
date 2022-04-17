@@ -134,8 +134,6 @@ pub fn calculate_module_dependencies(
 
 ///
 ///
-/// TODO Continue here
-/// Checking the modules one after the other does not work.
 ///
 fn add_dependencies(
     children: &Vec<String>,
@@ -165,7 +163,7 @@ fn add_dependencies(
                 otherway_module = &cur_node.module;
                 normal_dir = false;
             } else {
-                // What about both true? Cannot happen anymore
+                // What about both true? Cannot happen, since we covered this in the match statement below.
                 // Both none
                 let e = dependencies
                     .entry(cur_node.module.to_owned())
