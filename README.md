@@ -125,7 +125,8 @@ It is intentional that information is only added for a view, but not hidden to e
 
 ## Stylesheets for SVG rendering
 
-You can provide (multiple) custom stylesheets for SVG via the `-s` or `--stylesheet` options.
+You can provide (multiple) custom stylesheets for SVG via the `-s` or `--stylesheet` options. 
+The path is not interpreted by gsn2x and, thus, is relative to the SVG if relative.
 
 Every element will also be addressable by `id`. The `id` is the same as the YAML id.
 
@@ -171,8 +172,8 @@ Check messages for individual modules can be omitted using the `-x` option.
 The argument view of individual modules will show "away" elements if elements from other modules are referenced.
 
 In addition to the default argument view for each module, there are two output files generated (if more than one input file is provided):
-1) Complete View (complete.svg)
-2) Architecture View (architecture.svg)
+1) Complete View (default to: complete.svg)
+2) Architecture View (default to: architecture.svg)
 
 If the argument view should not be updated, use the `-N` option.
 If the complete view should not be output, use the `-F` option.
@@ -195,9 +196,9 @@ See [example](examples/modular/architecture.svg) here.
 
 ### Example:
     
-    gsn2x -f full.dot -a arch.dot -m sub1.yml main.yml sub1.yml sub3.yml sub5.yml  
+    gsn2x -f full.svg -a arch.svg -m sub1.yml main.yml sub1.yml sub3.yml sub5.yml  
 
-This will generate the argument view for each module, the complete view (`-f full.dot`) of all modules and the architecture view (`-a arch.dot`). In the complete view, the elements of the `sub1` module will be represented by a module.
+This will generate the argument view for each module, the complete view (`-f full.svg`) of all modules and the architecture view (`-a arch.svg`). In the complete view, the elements of the `sub1` module will be represented by a module.
 
 ## List of evidences
 
