@@ -340,7 +340,6 @@ impl<'a> DirGraph<'a> {
                                 .move_relative(0, support_distance),
                         )
                     } else {
-                        // s.get_vertical_rank() == t.get_vertical_rank()
                         if s_pos.x - s.get_width() / 2 > t_pos.x + t.get_width() / 2 {
                             (
                                 s.get_coordinates(&Port::West)
