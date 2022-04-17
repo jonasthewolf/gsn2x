@@ -174,7 +174,6 @@ impl<'a> DirGraph<'a> {
     /// 5) Center nodes and draw them
     /// 6) Draw the edges
     ///
-    /// TODO There are still situations with overlapping edges e.g. for incontext nodes
     ///
     ///
     fn layout(mut self) -> Self {
@@ -242,7 +241,7 @@ impl<'a> DirGraph<'a> {
                             });
                             y_n += n_height + self.margin.top + self.margin.bottom;
                         }
-                        x += x_max;
+                        x += x_max + self.margin.left + self.margin.right;
                     }
                 }
             }
