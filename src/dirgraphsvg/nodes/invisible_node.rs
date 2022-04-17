@@ -154,6 +154,4 @@ mod test {
         assert_eq!(node.get_width(), 3);
         assert_eq!(node.get_height(), 5);
     }
-
-
 }
