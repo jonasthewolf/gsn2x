@@ -229,7 +229,7 @@ impl Node for AwayNode {
         if let Some(adm) = admonition {
             let decorator = Text::new()
                 .set("x", self.x + self.width / 2 - PADDING_HORIZONTAL)
-                .set("y", self.y - self.height / 2 + self.mod_height)
+                .set("y", self.y - self.height / 2)
                 .set("font-weight", "bold")
                 .set("font-size", font.size)
                 .set("font-family", font.name.as_str())
