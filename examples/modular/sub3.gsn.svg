@@ -14,6 +14,7 @@
 <marker id="incontextof_arrow" markerHeight="9" markerUnits="users_posaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
 <polyline fill="none" points="0 0, 10 4.5, 0 9, 0 0" stroke="black" stroke-width="1"/>
 </marker>
+<a href="modular.css" rel="stylesheet" type="text/css"/>
 <g class="gsnelem gsnawaygoal gsn_module_Sub1" id="node_G3">
 <title>
 G3
