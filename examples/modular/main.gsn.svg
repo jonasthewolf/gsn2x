@@ -40,7 +40,7 @@ Sub1
 A1
 </text>
 <use href="#module_icon" x="330" y="99"/>
-<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" x="400" y="34">
+<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" x="400" y="20">
 A
 </text>
 <text font-family="AppleSystemUIFont" font-size="12" textLength="44" x="330" y="82">

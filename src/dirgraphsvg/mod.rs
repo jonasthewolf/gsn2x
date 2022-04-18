@@ -339,29 +339,26 @@ impl<'a> DirGraph<'a> {
                             t.get_coordinates(&Port::South)
                                 .move_relative(0, support_distance),
                         )
+                    } else if s_pos.x - s.get_width() / 2 > t_pos.x + t.get_width() / 2 {
+                        (
+                            s.get_coordinates(&Port::West)
+                                .move_relative(-marker_start_height, 0),
+                            s.get_coordinates(&Port::West),
+                            t.get_coordinates(&Port::East)
+                                .move_relative(marker_end_height, 0),
+                            t.get_coordinates(&Port::East)
+                                .move_relative(support_distance, 0),
+                        )
                     } else {
-                        // s.get_vertical_rank() == t.get_vertical_rank()
-                        if s_pos.x - s.get_width() / 2 > t_pos.x + t.get_width() / 2 {
-                            (
-                                s.get_coordinates(&Port::West)
-                                    .move_relative(-marker_start_height, 0),
-                                s.get_coordinates(&Port::West),
-                                t.get_coordinates(&Port::East)
-                                    .move_relative(marker_end_height, 0),
-                                t.get_coordinates(&Port::East)
-                                    .move_relative(support_distance, 0),
-                            )
-                        } else {
-                            (
-                                s.get_coordinates(&Port::East)
-                                    .move_relative(marker_start_height, 0),
-                                s.get_coordinates(&Port::East),
-                                t.get_coordinates(&Port::West)
-                                    .move_relative(-marker_end_height, 0),
-                                t.get_coordinates(&Port::West)
-                                    .move_relative(-support_distance, 0),
-                            )
-                        }
+                        (
+                            s.get_coordinates(&Port::East)
+                                .move_relative(marker_start_height, 0),
+                            s.get_coordinates(&Port::East),
+                            t.get_coordinates(&Port::West)
+                                .move_relative(-marker_end_height, 0),
+                            t.get_coordinates(&Port::West)
+                                .move_relative(-support_distance, 0),
+                        )
                     };
                 let parameters = (start_sup.x, start_sup.y, end_sup.x, end_sup.y, end.x, end.y);
                 let data = Data::new()
@@ -609,5 +606,23 @@ mod test {
                 ..Default::default()
             })
             ._set_wrap(20);
+    }
+
+    #[test]
+    fn test_render_legend() {
+        let mut d = DirGraph::default();
+        let b1 = new_away_goal("id", "text", "module", None, None);
+        let mut nodes = BTreeMap::new();
+        nodes.insert("G1".to_owned(), b1 as Rc<RefCell<dyn Node>>);
+        d = d.add_nodes(nodes);
+        d = d.add_meta_information(&mut vec!["A1".to_owned(), "B2".to_owned()]);
+        let mut string_buffer = Vec::new();
+        d.write(&mut string_buffer).unwrap();
+        println!(
+            "{}",
+            std::str::from_utf8(string_buffer.as_slice())
+                .unwrap()
+                .to_string()
+        );
     }
 }

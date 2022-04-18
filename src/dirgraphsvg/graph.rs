@@ -294,6 +294,10 @@ fn add_in_context_nodes(
                             .partition(|x| {
                                 i += 1;
                                 if previous_node_with_connection(x, n, v_ranks, edges) {
+                                    // Make left/rigth distribution more even
+                                    if i % 2 == 1 {
+                                        i += 1;
+                                    }
                                     true
                                 } else {
                                     i % 2 == 0

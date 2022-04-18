@@ -140,4 +140,18 @@ mod test {
         n.set_forced_level(1);
         assert_eq!(n.get_forced_level(), None);
     }
+
+    #[test]
+    fn test_set_size() {
+        let mut node = InvisibleNode {
+            width: 0,
+            height: 0,
+            x: 0,
+            y: 0,
+            id: "".to_owned(),
+        };
+        node.set_size(3, 5);
+        assert_eq!(node.get_width(), 3);
+        assert_eq!(node.get_height(), 5);
+    }
 }

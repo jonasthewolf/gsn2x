@@ -143,6 +143,9 @@ impl Node for ContextNode {
         g
     }
 
+    ///
+    /// Intentionally ignore forced level for context nodes
+    ///
     fn get_forced_level(&self) -> Option<usize> {
         None
     }
@@ -163,5 +166,23 @@ impl ContextNode {
             x: 0,
             y: 0,
         }
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    fn test_set_forced_level() {
+        let mut node = ContextNode::new("id", "text", None, None);
+        node.set_forced_level(3);
+        assert_eq!(node.get_forced_level(), None);
+    }
+
+    #[test]
+    fn test_get_id() {
+        let node = ContextNode::new("id", "text", None, None);
+        assert_eq!(node.get_id(), "id");
     }
 }

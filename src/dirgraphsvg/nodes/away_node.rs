@@ -229,7 +229,7 @@ impl Node for AwayNode {
         if let Some(adm) = admonition {
             let decorator = Text::new()
                 .set("x", self.x + self.width / 2 - PADDING_HORIZONTAL)
-                .set("y", self.y - self.height / 2 + self.mod_height)
+                .set("y", self.y - self.height / 2)
                 .set("font-weight", "bold")
                 .set("font-size", font.size)
                 .set("font-family", font.name.as_str())
@@ -289,5 +289,17 @@ impl AwayNode {
             mod_height: 0,
             addon_height: 0,
         }
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    fn test_set_forced_level() {
+        let mut node = AwayNode::new("id", "text", "module", AwayType::Goal, None, None);
+        node.set_forced_level(3);
+        assert_eq!(node.get_forced_level(), Some(3));
     }
 }
