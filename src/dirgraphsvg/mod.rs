@@ -618,11 +618,6 @@ mod test {
         d = d.add_meta_information(&mut vec!["A1".to_owned(), "B2".to_owned()]);
         let mut string_buffer = Vec::new();
         d.write(&mut string_buffer).unwrap();
-        println!(
-            "{}",
-            std::str::from_utf8(string_buffer.as_slice())
-                .unwrap()
-                .to_string()
-        );
+        println!("{}", std::str::from_utf8(string_buffer.as_slice()).unwrap());
     }
 }

@@ -122,42 +122,38 @@ fn check_node_references(
 ///
 fn check_cycles(diag: &mut Diagnostics, nodes: &MyMap<String, GsnNode>) {
     let mut visited: BTreeSet<String> = BTreeSet::new();
-    let mut root_nodes = super::get_root_nodes(nodes);
+    let root_nodes = super::get_root_nodes(nodes);
     let cloned_root_nodes = root_nodes.to_vec();
     let mut stack = Vec::new();
+    let mut ancestors = Vec::new();
 
     for root in &root_nodes {
         visited.insert(root.to_owned());
+        stack.push((root.to_owned(), 0));
     }
-    stack.append(&mut root_nodes);
-    while let Some(p_id) = stack.pop() {
-        for child_node in nodes.get(&p_id).unwrap().supported_by.iter().flatten() {
-            if !child_node.starts_with("Sn") {
-                stack.push(child_node.to_owned());
-                if !visited.insert(child_node.to_owned()) {
-                    diag.add_error(
-                        None,
-                        format!("C04: Cycle detected at element {}.", child_node),
-                    );
-                    stack.clear();
-                    break;
-                }
-            } else {
-                // Remember the solutions for reachability analyis.
-                visited.insert(child_node.to_owned());
-            }
-            // Also remember the incontext elements for the reachability analysis below.
-            nodes
-                .get(child_node)
-                .unwrap()
-                .in_context_of
-                .iter()
-                .flatten()
-                .for_each(|x| {
-                    visited.insert(x.to_owned());
-                });
+    let mut depth = 0;
+    while let Some((p_id, rdepth)) = stack.pop() {
+        // Jump back to current ancestor
+        if rdepth < depth {
+            // It is not sufficient to pop here, since one could skip levels when cleaning up.
+            ancestors.resize(rdepth, "".to_owned());
+            depth = rdepth;
         }
-        // Also remember the incontext elements of the root ndoes for the reachability analysis below.
+        // Increase depth if current node has children that are not Solutions
+        if nodes
+            .get(&p_id)
+            .unwrap()
+            .supported_by
+            .iter()
+            .flatten()
+            .filter(|x| !x.starts_with("Sn"))
+            .count()
+            > 0
+        {
+            depth += 1;
+            ancestors.push(p_id.to_owned());
+        }
+        // Remember the incontext elements for the reachability analysis below.
         nodes
             .get(&p_id)
             .unwrap()
@@ -167,6 +163,30 @@ fn check_cycles(diag: &mut Diagnostics, nodes: &MyMap<String, GsnNode>) {
             .for_each(|x| {
                 visited.insert(x.to_owned());
             });
+        for child_node in nodes.get(&p_id).unwrap().supported_by.iter().flatten() {
+            // Remember the solutions for reachability analyis.
+            visited.insert(child_node.to_owned());
+            if !child_node.starts_with("Sn") {
+                if ancestors.contains(child_node) {
+                    diag.add_error(
+                        None,
+                        format!(
+                            "C04: Cycle detected at element {}. Cycle is {} -> {} -> {}.",
+                            &p_id,
+                            child_node,
+                            &ancestors
+                                .rsplit(|x| x == child_node)
+                                .next()
+                                .unwrap()
+                                .join(" -> "),
+                            child_node
+                        ),
+                    );
+                    break;
+                }
+                stack.push((child_node.to_owned(), depth));
+            }
+        }
     }
     let node_keys = BTreeSet::from_iter(nodes.keys().cloned());
     let unvisited: BTreeSet<&String> = node_keys.difference(&visited).collect();
@@ -348,7 +368,10 @@ mod test {
         assert_eq!(d.messages.len(), 1);
         assert_eq!(d.messages[0].module, None);
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
-        assert_eq!(d.messages[0].msg, "C04: Cycle detected at element G1.");
+        assert_eq!(
+            d.messages[0].msg,
+            "C04: Cycle detected at element G2. Cycle is G1 -> G2 -> G1."
+        );
         assert_eq!(d.errors, 1);
         assert_eq!(d.warnings, 0);
     }
@@ -387,6 +410,44 @@ mod test {
             "C01: There are no unreferenced elements found."
         );
         assert_eq!(d.errors, 1);
+        assert_eq!(d.warnings, 0);
+    }
+
+    #[test]
+    fn diamond() {
+        let mut d = Diagnostics::default();
+        let mut nodes = MyMap::<String, GsnNode>::new();
+        nodes.insert(
+            "G1".to_owned(),
+            GsnNode {
+                supported_by: Some(vec!["S1".to_owned()]),
+                ..Default::default()
+            },
+        );
+        nodes.insert(
+            "S1".to_owned(),
+            GsnNode {
+                supported_by: Some(vec!["G2".to_owned(), "G3".to_owned()]),
+                ..Default::default()
+            },
+        );
+        nodes.insert(
+            "G2".to_owned(),
+            GsnNode {
+                undeveloped: Some(true),
+                ..Default::default()
+            },
+        );
+        nodes.insert(
+            "G3".to_owned(),
+            GsnNode {
+                supported_by: Some(vec!["G2".to_owned()]),
+                ..Default::default()
+            },
+        );
+        check_nodes(&mut d, &nodes, None);
+        assert_eq!(d.messages.len(), 0);
+        assert_eq!(d.errors, 0);
         assert_eq!(d.warnings, 0);
     }
 
