@@ -326,11 +326,21 @@ pub(crate) fn render_evidences(
     }
     let width = (solutions.len() as f32).log10().ceil() as usize;
     for (i, (id, node)) in solutions.into_iter().enumerate() {
-        writeln!(output, "{:>width$}. {}: {}", i + 1, id, node.text)?;
+        writeln!(
+            output,
+            "{:>width$}. {}: {}",
+            i + 1,
+            id,
+            node.text
+                .replace('\n', &format!("\n{: >w$}", ' ', w = width + 4 + id.len()))
+        )?;
         let width = width + 2;
+        writeln!(output)?;
         writeln!(output, "{: >width$}{}", ' ', node.module)?;
+        writeln!(output)?;
         if let Some(url) = &node.url {
             writeln!(output, "{: >width$}{}", ' ', url)?;
+            writeln!(output)?;
         }
         for (layer, text) in node
             .additional
@@ -342,8 +352,12 @@ pub(crate) fn render_evidences(
                 "{: >width$}{}: {}",
                 ' ',
                 layer.to_ascii_uppercase(),
-                text
+                text.replace(
+                    '\n',
+                    &format!("\n{: >w$}", ' ', w = width + 2 + layer.len())
+                )
             )?;
+            writeln!(output)?;
         }
     }
 
