@@ -543,8 +543,8 @@ impl<'a> DirGraph<'a> {
         if let Some(meta) = &self.meta_information {
             let mut g = setup_basics("gsn_module", &Some(vec!["gsnmodule".to_owned()]), &None);
             let title = Title::new().add(svg::node::Text::new("Module Information"));
-
-            g = g.add(title);
+            use svg::Node;
+            g.append(title);
 
             let mut text_height = 0;
             let mut text_width = 0;
@@ -578,7 +578,7 @@ impl<'a> DirGraph<'a> {
                     .set("font-size", self.font.size)
                     .set("font-family", self.font.name.as_str())
                     .add(svg::node::Text::new(t));
-                g = g.add(text);
+                g.append(text);
             }
             self.document = self.document.add(g);
         }
@@ -593,11 +593,11 @@ mod test {
     #[test]
     fn call_unused() {
         let d = DirGraph::default();
-        let b1 = new_away_goal("id", "text", "module", None, None);
+        let b1 = new_away_goal("id", "text", "module", None, None, None);
         d._add_css_sytlesheet("css")
             ._add_edge(
                 b1.clone(),
-                new_away_goal("id2", "text", "module", None, None),
+                new_away_goal("id2", "text", "module", None, None, None),
                 EdgeType::OneWay(SingleEdge::SupportedBy),
             )
             ._add_node(b1)
@@ -611,7 +611,7 @@ mod test {
     #[test]
     fn test_render_legend() {
         let mut d = DirGraph::default();
-        let b1 = new_away_goal("id", "text", "module", None, None);
+        let b1 = new_away_goal("id", "text", "module", None, None, None);
         let mut nodes = BTreeMap::new();
         nodes.insert("G1".to_owned(), b1 as Rc<RefCell<dyn Node>>);
         d = d.add_nodes(nodes);

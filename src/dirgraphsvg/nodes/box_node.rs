@@ -101,7 +101,7 @@ impl Node for BoxNode {
         }
     }
 
-    fn render(&mut self, font: &FontInfo) -> svg::node::element::Group {
+    fn render(&mut self, font: &FontInfo) -> svg::node::element::Element {
         let mut g = setup_basics(&self.identifier, &self.classes, &self.url);
 
         let title = Title::new().add(svg::node::Text::new(&self.identifier));
@@ -155,7 +155,10 @@ impl Node for BoxNode {
             .set("font-family", font.name.as_str())
             .add(svg::node::Text::new(&self.identifier));
 
-        g = g.add(title).add(border).add(id);
+        use svg::Node;
+        g.append(title);
+        g.append(border);
+        g.append(id);
 
         for (n, t) in self.text.lines().enumerate() {
             let text = Text::new()
@@ -171,7 +174,7 @@ impl Node for BoxNode {
                 .set("font-size", font.size)
                 .set("font-family", font.name.as_str())
                 .add(svg::node::Text::new(t));
-            g = g.add(text);
+            g.append(text);
         }
 
         if self.undeveloped {
@@ -186,7 +189,7 @@ impl Node for BoxNode {
                 .set("stroke", "black")
                 .set("stroke-width", 1u32)
                 .set("d", data);
-            g = g.add(undev);
+            g.append(undev);
         }
         g
     }

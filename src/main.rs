@@ -314,7 +314,7 @@ fn print_outputs(
                 &mut output_file,
                 matches,
                 module_name,
-                module,
+                modules,
                 &nodes,
                 stylesheets
                     .iter()

@@ -58,8 +58,8 @@ impl Node for InvisibleNode {
         // Intentionally left emtpy
     }
 
-    fn render(&mut self, _: &crate::dirgraphsvg::FontInfo) -> svg::node::element::Group {
-        Group::new() // Empty groups are not rendered.
+    fn render(&mut self, _: &crate::dirgraphsvg::FontInfo) -> svg::node::element::Element {
+        Group::new().into() // Empty groups are not rendered.
     }
 }
 

@@ -31,10 +31,12 @@ Main Goal
 <title>
 A1
 </title>
+<a xlink:href="sub1.gsn.svg#node_A1">
 <rect fill="none" height="28" stroke="black" stroke-width="1" width="84" x="323" y="92"/>
 <text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="25" x="357" y="113">
 Sub1
 </text>
+</a>
 <path class="border" d="M323,92 V41 A42,21,0,0,1,407,41 V92" fill="none" stroke="black" stroke-width="1"/>
 <text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="12" x="330" y="62">
 A1
@@ -106,10 +108,12 @@ Some Context
 <title>
 G3
 </title>
+<a xlink:href="sub1.gsn.svg#node_G3">
 <rect fill="none" height="28" stroke="black" stroke-width="1" width="142" x="444" y="303"/>
 <text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="25" x="478" y="324">
 Sub1
 </text>
+</a>
 <path class="border" d="M444,303 V253 H586 V303" fill="none" stroke="black" stroke-width="1"/>
 <text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="15" x="451" y="274">
 G3
