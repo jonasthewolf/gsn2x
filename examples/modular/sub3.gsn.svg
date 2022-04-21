@@ -19,10 +19,12 @@
 <title>
 G3
 </title>
+<a xlink:href="sub1.gsn.svg#node_G3">
 <rect fill="none" height="28" stroke="black" stroke-width="1" width="142" x="20" y="70"/>
 <text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="25" x="54" y="91">
 Sub1
 </text>
+</a>
 <path class="border" d="M20,70 V20 H162 V70" fill="none" stroke="black" stroke-width="1"/>
 <text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="15" x="27" y="41">
 G3

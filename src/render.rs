@@ -65,6 +65,7 @@ pub fn svg_from_gsn_node(
 pub fn away_svg_from_gsn_node(
     id: &str,
     gsn_node: &GsnNode,
+    module: &Module,
 ) -> Rc<RefCell<dyn crate::dirgraphsvg::nodes::Node>> {
     let layer_classes: Option<Vec<String>> = gsn_node
         .additional
@@ -88,11 +89,15 @@ pub fn away_svg_from_gsn_node(
         .chain(vec![mod_class].into_iter().map(Some))
         .collect();
 
+    let mut module_url = get_module_url(&module.filename);
+    module_url.push('#');
+    module_url.push_str(&format!("node_{}", escape_text(id)));
     match id {
         id if id.starts_with('G') => new_away_goal(
             id,
             &gsn_node.text,
             &gsn_node.module,
+            Some(module_url),
             gsn_node.url.to_owned(),
             classes,
         ),
@@ -100,6 +105,7 @@ pub fn away_svg_from_gsn_node(
             id,
             &gsn_node.text,
             &gsn_node.module,
+            Some(module_url),
             gsn_node.url.to_owned(),
             classes,
         ),
@@ -114,6 +120,7 @@ pub fn away_svg_from_gsn_node(
             id,
             &gsn_node.text,
             &gsn_node.module,
+            Some(module_url),
             gsn_node.url.to_owned(),
             classes,
         ),
@@ -121,6 +128,7 @@ pub fn away_svg_from_gsn_node(
             id,
             &gsn_node.text,
             &gsn_node.module,
+            Some(module_url),
             gsn_node.url.to_owned(),
             classes,
         ),
@@ -128,11 +136,21 @@ pub fn away_svg_from_gsn_node(
             id,
             &gsn_node.text,
             &gsn_node.module,
+            Some(module_url),
             gsn_node.url.to_owned(),
             classes,
         ),
         _ => unreachable!(),
     }
+}
+
+///
+///
+///
+fn get_module_url(path: &str) -> String {
+    let mut mod_url = std::path::PathBuf::from(&path);
+    mod_url.set_extension("svg");
+    mod_url.file_name().unwrap().to_string_lossy().to_string()
 }
 
 ///
@@ -159,7 +177,7 @@ pub fn render_architecture(
                         .and_then(|m| m.brief.to_owned())
                         .unwrap_or_else(|| "".to_owned())
                         .as_str(),
-                    None,
+                    Some(get_module_url(&module.filename)),
                     None,
                 ) as Rc<RefCell<dyn Node>>,
             )
@@ -233,7 +251,7 @@ pub fn render_argument(
     output: &mut impl Write,
     matches: &clap::ArgMatches,
     module_name: &str,
-    module: &Module,
+    modules: &HashMap<String, Module>,
     nodes: &MyMap<String, GsnNode>,
     stylesheets: Option<Vec<&str>>,
 ) -> Result<(), anyhow::Error> {
@@ -248,7 +266,12 @@ pub fn render_argument(
         &mut nodes
             .iter()
             .filter(|(_, node)| node.module != module_name)
-            .map(|(id, node)| (id.to_owned(), away_svg_from_gsn_node(id, node)))
+            .map(|(id, node)| {
+                (
+                    id.to_owned(),
+                    away_svg_from_gsn_node(id, node, modules.get(&node.module).unwrap()),
+                )
+            })
             .collect(),
     );
 
@@ -290,7 +313,7 @@ pub fn render_argument(
     // Add meta information if requested
     if !matches.is_present("NO_LEGEND") {
         let mut meta_info = vec![format!("Generated on {}", Utc::now())];
-        if let Some(meta) = &module.meta {
+        if let Some(meta) = &modules.get(module_name).unwrap().meta {
             meta_info.insert(0, format!("Module: {}", meta.name));
             if meta.brief.is_some() {
                 meta_info.insert(1, meta.brief.as_deref().unwrap().to_owned());

@@ -1,6 +1,6 @@
 use std::{cell::RefCell, rc::Rc};
 
-use svg::node::element::{Group, Link};
+use svg::node::element::{Element, Group, Link};
 
 use crate::dirgraphsvg::{util::point2d::Point2D, FontInfo};
 
@@ -35,7 +35,7 @@ pub trait Node {
     fn get_coordinates(&self, port: &Port) -> Point2D;
     fn get_forced_level(&self) -> Option<usize>;
     fn set_forced_level(&mut self, level: usize);
-    fn render(&mut self, font: &FontInfo) -> svg::node::element::Group;
+    fn render(&mut self, font: &FontInfo) -> svg::node::element::Element;
 }
 
 ///
@@ -70,7 +70,11 @@ pub(crate) fn get_port_default_coordinates(
 ///
 ///
 ///
-pub(crate) fn setup_basics(id: &str, classes: &Option<Vec<String>>, url: &Option<String>) -> Group {
+pub(crate) fn setup_basics(
+    id: &str,
+    classes: &Option<Vec<String>>,
+    url: &Option<String>,
+) -> Element {
     let mut g = Group::new().set(
         "id",
         format!("node_{}", crate::dirgraphsvg::util::escape_text(id)),
@@ -80,9 +84,10 @@ pub(crate) fn setup_basics(id: &str, classes: &Option<Vec<String>>, url: &Option
     }
     if let Some(url) = &url {
         let link = Link::new();
-        g = g.add(link.set("xlink:href", url.as_str()));
+        link.set("xlink:href", url.as_str()).add(g).into()
+    } else {
+        g.into()
     }
-    g
 }
 
 ///
@@ -117,6 +122,7 @@ pub fn new_away_assumption(
     id: &str,
     text: &str,
     module: &str,
+    module_url: Option<String>,
     url: Option<String>,
     classes: Option<Vec<String>>,
 ) -> Rc<RefCell<AwayNode>> {
@@ -128,6 +134,7 @@ pub fn new_away_assumption(
         id,
         text,
         module,
+        module_url,
         AwayType::Assumption,
         url,
         Some(new_classes),
@@ -167,6 +174,7 @@ pub fn new_away_justification(
     id: &str,
     text: &str,
     module: &str,
+    module_url: Option<String>,
     url: Option<String>,
     classes: Option<Vec<String>>,
 ) -> Rc<RefCell<AwayNode>> {
@@ -178,6 +186,7 @@ pub fn new_away_justification(
         id,
         text,
         module,
+        module_url,
         AwayType::Justification,
         url,
         Some(new_classes),
@@ -216,6 +225,7 @@ pub fn new_away_solution(
     id: &str,
     text: &str,
     module: &str,
+    module_url: Option<String>,
     url: Option<String>,
     classes: Option<Vec<String>>,
 ) -> Rc<RefCell<AwayNode>> {
@@ -227,6 +237,7 @@ pub fn new_away_solution(
         id,
         text,
         module,
+        module_url,
         AwayType::Solution,
         url,
         Some(new_classes),
@@ -293,6 +304,7 @@ pub fn new_away_goal(
     id: &str,
     text: &str,
     module: &str,
+    module_url: Option<String>,
     url: Option<String>,
     classes: Option<Vec<String>>,
 ) -> Rc<RefCell<AwayNode>> {
@@ -304,6 +316,7 @@ pub fn new_away_goal(
         id,
         text,
         module,
+        module_url,
         AwayType::Goal,
         url,
         Some(new_classes),
@@ -340,6 +353,7 @@ pub fn new_away_context(
     id: &str,
     text: &str,
     module: &str,
+    module_url: Option<String>,
     url: Option<String>,
     classes: Option<Vec<String>>,
 ) -> Rc<RefCell<AwayNode>> {
@@ -351,6 +365,7 @@ pub fn new_away_context(
         id,
         text,
         module,
+        module_url,
         AwayType::Context,
         url,
         Some(new_classes),

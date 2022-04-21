@@ -104,7 +104,7 @@ impl Node for EllipticalNode {
         get_port_default_coordinates(self.x, self.y, self.width, self.height, port)
     }
 
-    fn render(&mut self, font: &FontInfo) -> svg::node::element::Group {
+    fn render(&mut self, font: &FontInfo) -> svg::node::element::Element {
         let mut g = setup_basics(&self.identifier, &self.classes, &self.url);
 
         let title = Title::new().add(svg::node::Text::new(&self.identifier));
@@ -131,7 +131,10 @@ impl Node for EllipticalNode {
             .set("font-family", font.name.as_str())
             .add(svg::node::Text::new(&self.identifier));
 
-        g = g.add(title).add(border).add(id);
+        use svg::Node;
+        g.append(title);
+        g.append(border);
+        g.append(id);
         if let Some(adm) = &self.admonition {
             let decorator = Text::new()
                 .set("x", self.x + self.width / 2 - 5)
@@ -140,7 +143,7 @@ impl Node for EllipticalNode {
                 .set("font-size", font.size)
                 .set("font-family", font.name.as_str())
                 .add(svg::node::Text::new(adm));
-            g = g.add(decorator);
+            g.append(decorator);
         }
 
         let mut text_y = self.y - self.text_height / 2 + TEXT_OFFSET;
@@ -153,7 +156,7 @@ impl Node for EllipticalNode {
                 .set("font-size", font.size)
                 .set("font-family", font.name.as_str())
                 .add(svg::node::Text::new(t));
-            g = g.add(text);
+            g.append(text);
         }
         g
     }

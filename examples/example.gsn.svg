@@ -105,8 +105,8 @@ A
 Argument 1
 </text>
 </g>
-<g class="gsnelem gsnsltn gsn_module_examples_example_gsn_yaml" id="node_Sn1">
-<a xlink:href="https://github.com/jonasthewolf/gsn2x"/>
+<a xlink:href="https://github.com/jonasthewolf/gsn2x">
+<g class="gsnelem gsnsltn gsn_module_examples_example_gsn_yaml" id="node_Sn1"/>
 <title>
 Sn1
 </title>
@@ -117,7 +117,7 @@ Sn1
 <text font-family="AppleSystemUIFont" font-size="12" textLength="49" x="581" y="252">
 Solution 1
 </text>
-</g>
+</a>
 <g class="gsnelem gsnstgy gsn_module_examples_example_gsn_yaml" id="node_S2">
 <title>
 S2

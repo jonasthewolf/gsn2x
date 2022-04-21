@@ -19,10 +19,12 @@
 <title>
 G1
 </title>
+<a xlink:href="main.gsn.svg#node_G1">
 <rect fill="none" height="28" stroke="black" stroke-width="1" width="84" x="88" y="72"/>
 <text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="24" x="122" y="93">
 Main
 </text>
+</a>
 <path class="border" d="M88,72 V22 H172 V72" fill="none" stroke="black" stroke-width="1"/>
 <text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="13" x="95" y="43">
 G1
@@ -64,10 +66,12 @@ Divide and Conquer
 <title>
 C2
 </title>
+<a xlink:href="sub3.gsn.svg#node_C2">
 <rect fill="none" height="28" stroke="black" stroke-width="1" width="84" x="144" y="207"/>
 <text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="26" x="178" y="228">
 Sub3
 </text>
+</a>
 <path class="border" d="M144,207 V157 C144,153,148,149,152,149 h68 C224,149,228,153,228,157 V207" fill="none" stroke="black" stroke-width="1"/>
 <text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="14" x="151" y="178">
 C2
@@ -93,10 +97,12 @@ Conquer the submodules
 <title>
 J1
 </title>
+<a xlink:href="main.gsn.svg#node_J1">
 <rect fill="none" height="28" stroke="black" stroke-width="1" width="86" x="450" y="214"/>
 <text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="24" x="484" y="235">
 Main
 </text>
+</a>
 <path class="border" d="M450,214 V163 A43,21,0,0,1,536,163 V214" fill="none" stroke="black" stroke-width="1"/>
 <text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="11" x="457" y="184">
 J1
@@ -114,10 +120,12 @@ Some Context
 <title>
 Sn1
 </title>
+<a xlink:href="sub3.gsn.svg#node_Sn1">
 <rect fill="none" height="28" stroke="black" stroke-width="1" width="84" x="298" y="374"/>
 <text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="26" x="332" y="395">
 Sub3
 </text>
+</a>
 <path class="border" d="M298,374 V324 A42,42,0,0,1,382,324 V374" fill="none" stroke="black" stroke-width="1"/>
 <text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="18" x="305" y="345">
 Sn1

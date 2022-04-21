@@ -1,4 +1,4 @@
-use svg::node::element::{path::Data, Path, Rectangle, Text, Title, Use};
+use svg::node::element::{path::Data, Link, Path, Rectangle, Text, Title, Use};
 
 use crate::dirgraphsvg::FontInfo;
 
@@ -21,6 +21,7 @@ pub struct AwayNode {
     identifier: String,
     text: String,
     module: String,
+    module_url: Option<String>,
     node_type: AwayType,
     url: Option<String>,
     classes: Option<Vec<String>>,
@@ -115,7 +116,7 @@ impl Node for AwayNode {
         }
     }
 
-    fn render(&mut self, font: &FontInfo) -> svg::node::element::Group {
+    fn render(&mut self, font: &FontInfo) -> svg::node::element::Element {
         let mut g = setup_basics(&self.identifier, &self.classes, &self.url);
 
         let title = Title::new().add(svg::node::Text::new(&self.identifier));
@@ -205,21 +206,30 @@ impl Node for AwayNode {
             .set("font-family", font.name.as_str())
             .add(svg::node::Text::new(&self.identifier));
 
-        g = g
-            .add(title)
-            .add(module_box)
-            .add(module_text)
-            .add(upper_line)
-            .add(id)
-            .add(
-                Use::new()
-                    .set("href", "#module_icon")
-                    .set("x", self.x - self.width / 2 + PADDING_HORIZONTAL)
-                    .set(
-                        "y",
-                        self.y + self.height / 2 - self.mod_height - PADDING_VERTICAL,
-                    ),
-            );
+        use svg::Node;
+        g.append(title);
+        if let Some(module_url) = &self.module_url {
+            let mut module_link = Link::new();
+            module_link = module_link
+                .set("xlink:href", module_url.as_str())
+                .add(module_box)
+                .add(module_text);
+            g.append(module_link);
+        } else {
+            g.append(module_box);
+            g.append(module_text);
+        }
+        g.append(upper_line);
+        g.append(id);
+        g.append(
+            Use::new()
+                .set("href", "#module_icon")
+                .set("x", self.x - self.width / 2 + PADDING_HORIZONTAL)
+                .set(
+                    "y",
+                    self.y + self.height / 2 - self.mod_height - PADDING_VERTICAL,
+                ),
+        );
 
         let admonition = match self.node_type {
             AwayType::Assumption => Some("A"),
@@ -234,7 +244,7 @@ impl Node for AwayNode {
                 .set("font-size", font.size)
                 .set("font-family", font.name.as_str())
                 .add(svg::node::Text::new(adm));
-            g = g.add(decorator);
+            g.append(decorator);
         }
 
         for (n, t) in self.text.lines().enumerate() {
@@ -248,7 +258,7 @@ impl Node for AwayNode {
                 .set("font-size", font.size)
                 .set("font-family", font.name.as_str())
                 .add(svg::node::Text::new(t));
-            g = g.add(text);
+            g.append(text);
         }
 
         g
@@ -268,6 +278,7 @@ impl AwayNode {
         id: &str,
         text: &str,
         module: &str,
+        module_url: Option<String>,
         node_type: AwayType,
         url: Option<String>,
         classes: Option<Vec<String>>,
@@ -284,6 +295,7 @@ impl AwayNode {
             y: 0,
             forced_level: None,
             module: module.to_owned(),
+            module_url,
             node_type,
             mod_width: 0,
             mod_height: 0,
@@ -298,7 +310,7 @@ mod test {
 
     #[test]
     fn test_set_forced_level() {
-        let mut node = AwayNode::new("id", "text", "module", AwayType::Goal, None, None);
+        let mut node = AwayNode::new("id", "text", "module", None, AwayType::Goal, None, None);
         node.set_forced_level(3);
         assert_eq!(node.get_forced_level(), Some(3));
     }
