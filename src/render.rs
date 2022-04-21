@@ -328,9 +328,12 @@ pub(crate) fn render_evidences(
     for (i, (id, node)) in solutions.into_iter().enumerate() {
         writeln!(output, "{:>width$}. {}: {}", i + 1, id, node.text)?;
         let width = width + 2;
+        writeln!(output)?;
         writeln!(output, "{: >width$}{}", ' ', node.module)?;
+        writeln!(output)?;
         if let Some(url) = &node.url {
             writeln!(output, "{: >width$}{}", ' ', url)?;
+            writeln!(output)?;
         }
         for (layer, text) in node
             .additional
@@ -344,6 +347,7 @@ pub(crate) fn render_evidences(
                 layer.to_ascii_uppercase(),
                 text
             )?;
+            writeln!(output)?;
         }
     }
 
