@@ -1,13 +1,19 @@
 use crate::dirgraphsvg::edges::EdgeType;
-use crate::dirgraphsvg::{escape_text, nodes::*};
+use crate::dirgraphsvg::{escape_node_id, escape_text, nodes::*};
 use crate::gsn::{get_levels, GsnNode, Module};
 use crate::yaml_fix::MyMap;
 use chrono::Utc;
 use std::cell::RefCell;
 use std::collections::{BTreeMap, HashMap};
 use std::io::Write;
+use std::path::{Component, PathBuf};
 use std::rc::Rc;
 
+///
+///
+///
+///
+///
 pub fn svg_from_gsn_node(
     id: &str,
     gsn_node: &GsnNode,
@@ -62,10 +68,16 @@ pub fn svg_from_gsn_node(
     }
 }
 
+///
+///
+///
+///
+///
 pub fn away_svg_from_gsn_node(
     id: &str,
     gsn_node: &GsnNode,
     module: &Module,
+    source_module: &Module,
 ) -> Rc<RefCell<dyn crate::dirgraphsvg::nodes::Node>> {
     let layer_classes: Option<Vec<String>> = gsn_node
         .additional
@@ -89,9 +101,9 @@ pub fn away_svg_from_gsn_node(
         .chain(vec![mod_class].into_iter().map(Some))
         .collect();
 
-    let mut module_url = get_module_url(&module.filename);
+    let mut module_url = get_relative_module_url(&module.filename, &source_module.filename);
     module_url.push('#');
-    module_url.push_str(&format!("node_{}", escape_text(id)));
+    module_url.push_str(&escape_node_id(id));
     match id {
         id if id.starts_with('G') => new_away_goal(
             id,
@@ -147,10 +159,27 @@ pub fn away_svg_from_gsn_node(
 ///
 ///
 ///
-fn get_module_url(path: &str) -> String {
-    let mut mod_url = std::path::PathBuf::from(&path);
-    mod_url.set_extension("svg");
-    mod_url.file_name().unwrap().to_string_lossy().to_string()
+fn get_relative_module_url(target: &str, source: &str) -> String {
+    let source_canon = std::path::PathBuf::from(&source)
+        .parent()
+        .unwrap()
+        .canonicalize()
+        .unwrap();
+    let target_canon = std::path::PathBuf::from(&target).canonicalize().unwrap();
+    let source_comps: Vec<Component> = source_canon.components().collect();
+    let mut source_comps_iter = source_comps.iter();
+    let target_comps = target_canon.components();
+    let mut diff_comps: PathBuf = target_comps
+        .skip_while(|t| source_comps_iter.next().map(|x| x == t).unwrap_or(false))
+        .collect();
+    let mut prefix = match source_comps_iter.count() {
+        x if x == 0 => "./".to_owned(),
+        x if x > 0 => "../".repeat(x + 1),
+        _ => unreachable!(),
+    };
+    diff_comps.set_extension("svg");
+    prefix.push_str(diff_comps.to_str().unwrap());
+    prefix
 }
 
 ///
@@ -177,7 +206,7 @@ pub fn render_architecture(
                         .and_then(|m| m.brief.to_owned())
                         .unwrap_or_else(|| "".to_owned())
                         .as_str(),
-                    Some(get_module_url(&module.filename)),
+                    Some(get_relative_module_url(&module.filename, &module.filename)),
                     None,
                 ) as Rc<RefCell<dyn Node>>,
             )
@@ -269,7 +298,12 @@ pub fn render_argument(
             .map(|(id, node)| {
                 (
                     id.to_owned(),
-                    away_svg_from_gsn_node(id, node, modules.get(&node.module).unwrap()),
+                    away_svg_from_gsn_node(
+                        id,
+                        node,
+                        modules.get(&node.module).unwrap(),
+                        modules.get(module_name).unwrap(),
+                    ),
                 )
             })
             .collect(),

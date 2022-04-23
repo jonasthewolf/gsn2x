@@ -11,6 +11,8 @@ use self::{
     elliptical_node::EllipticalNode,
 };
 
+use super::util::escape_node_id;
+
 pub mod away_node;
 pub mod box_node;
 pub mod context_node;
@@ -75,10 +77,7 @@ pub(crate) fn setup_basics(
     classes: &Option<Vec<String>>,
     url: &Option<String>,
 ) -> Element {
-    let mut g = Group::new().set(
-        "id",
-        format!("node_{}", crate::dirgraphsvg::util::escape_text(id)),
-    );
+    let mut g = Group::new().set("id", escape_node_id(id));
     if let Some(classes) = &classes {
         g = g.set("class", classes.join(" "))
     }

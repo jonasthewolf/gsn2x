@@ -20,6 +20,14 @@ pub fn escape_text(input: &str) -> String {
         .replace('~', "_")
 }
 
+///
+///
+///
+///
+pub fn escape_node_id(id: &str) -> String {
+    format!("node_{}", escape_text(id))
+}
+
 #[cfg(test)]
 mod test {
     use super::escape_text;
