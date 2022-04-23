@@ -19,7 +19,7 @@
 <title>
 G1
 </title>
-<a xlink:href="main.gsn.svg#node_G1">
+<a xlink:href="./main.gsn.svg#node_G1">
 <rect fill="none" height="28" stroke="black" stroke-width="1" width="84" x="88" y="72"/>
 <text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="24" x="122" y="93">
 Main
@@ -66,7 +66,7 @@ Divide and Conquer
 <title>
 C2
 </title>
-<a xlink:href="sub3.gsn.svg#node_C2">
+<a xlink:href="./sub3.gsn.svg#node_C2">
 <rect fill="none" height="28" stroke="black" stroke-width="1" width="84" x="144" y="207"/>
 <text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="26" x="178" y="228">
 Sub3
@@ -97,7 +97,7 @@ Conquer the submodules
 <title>
 J1
 </title>
-<a xlink:href="main.gsn.svg#node_J1">
+<a xlink:href="./main.gsn.svg#node_J1">
 <rect fill="none" height="28" stroke="black" stroke-width="1" width="86" x="450" y="214"/>
 <text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="24" x="484" y="235">
 Main
@@ -120,7 +120,7 @@ Some Context
 <title>
 Sn1
 </title>
-<a xlink:href="sub3.gsn.svg#node_Sn1">
+<a xlink:href="./sub3.gsn.svg#node_Sn1">
 <rect fill="none" height="28" stroke="black" stroke-width="1" width="84" x="298" y="374"/>
 <text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="26" x="332" y="395">
 Sub3

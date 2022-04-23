@@ -3,7 +3,7 @@ mod graph;
 pub mod nodes;
 mod util;
 use std::{cell::RefCell, collections::BTreeMap, rc::Rc};
-pub use util::escape_text;
+pub use util::{escape_node_id, escape_text};
 
 use edges::{EdgeType, SingleEdge};
 use graph::{get_forced_levels, rank_nodes, NodePlace};
