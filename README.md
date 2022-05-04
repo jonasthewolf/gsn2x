@@ -158,7 +158,7 @@ See the [example](examples/example.gsn.yaml) for usage. The strategies S1 and S2
 It is recommended to use `level` only for goals, since related contexts, 
 justifications and assumptions are automatically put on the same level.
 
-## Modular Extension
+## Modular extension
 
 gsn2x partially supports the Modular Extension of the GSN standard (see [Standard support](#standard-support)).
 Module Interfaces (Section 1:4.6) and Inter-Module Contracts (Section 1:4.7) are not supported.
@@ -179,7 +179,7 @@ If the argument view should not be updated, use the `-N` option.
 If the complete view should not be output, use the `-F` option.
 If the architecture view should not be output, use the `-A` option.
 
-### Complete View
+### Complete view
 
 The complete view is a similar to an argument view for a single module, 
 but showing all modules within the same diagram. The modules are "unrolled". 
@@ -188,7 +188,7 @@ by additionally adding those modules with the `-m` option. -->
 
 See [example](examples/modular/complete.svg) here.
 
-### Architecture View
+### Architecture view
 
 The architecture view only shows the selected modules and their dependencies.
 
@@ -210,7 +210,7 @@ The format can be used in Markdown and reStructuredText files.
 
 If the list of evidences should not be output, use the `-E` option.
 
-## Optional Module Information
+## Optional module information
 
 It is possible to add additional `module` information in the source YAML.
 This allows describing the module`s name and an optional brief description.
@@ -246,3 +246,51 @@ This table shows the support of `gsn2x` for the different parts of the standard.
 |Modular Extension            | :part_alternation_mark: partially, see [Modular Extension](#modular-extension) |
 |Confidence Argument Extension| :x: not planned                                                                |
 |Dialectic Extension          | :x: not planned                                                                |
+
+## Design goals
+
+I noticed that it might make sense to add some information about the goals I have set for myself for this project:
+
+- Simplicity
+
+   I would like to keep things simple. Simple for me and others.
+
+   That means the input format should be simple to learn and edit.
+
+
+- Standard conformance
+
+  I would like the program output to be very close to the GSN standard.
+
+  I don't want to redefine the semantics or add additional ones. 
+  The standard was created that as many people as possible have some common grounds.
+  If I added new fancy stuff, everyone might have a different interpretation of that again.
+
+- As few dependencies as possible
+
+  Since I understand that this tool might be used in some corporate environemnt where usage of 
+  free and open-source software might be limited, I try to keep the dependencies of this program 
+  as few as possible.
+
+## History
+
+I also noticed that (also for myself) it is good to note down some history of the project:
+
+- It all started out in 2017 with the need for graphically representing some argumentation at work.
+  I wrote an extremly small Python script that used a jinja template to transform the YAML syntax
+  into something Graphviz could understand.
+
+  From there Graphviz could generate different output formats. That's where the `x` in `gsn2x` is from.
+
+- It got obvious that some validation, especially on the uniqueness and reference resolution is needed
+  to handle larger argumentations.
+  
+  I did not want to write them in Python, but in my favorite programming language Rust (released in July 2021)
+  
+- I desparately tried adding the modular extension by convincing Graphviz to draw what I want, but I failed.
+  I finally made decided to no longer output DOT, but directly generate SVGs from the program.
+  This required writing a specialized version for rendering the tree on my own which ended up in version 2 
+  finally released in April 2022.
+
+Any feedback, especially the use-case in your company is very much appreciated.
+
