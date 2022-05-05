@@ -200,6 +200,12 @@ fn read_inputs(
             BufReader::new(File::open(&input).context(format!("Failed to open file {}", input))?);
 
         let mut n: MyMap<String, GsnDocumentNode> = serde_yaml::from_reader(reader)
+            .map_err(|e| {
+                anyhow!(format!(
+                    "No valid GSN element can be found starting from line {}",
+                    e.location().unwrap().line()
+                ))
+            })
             .context(format!("Failed to parse YAML from file {}", input))?;
         let meta: Option<ModuleInformation> = match n.remove_entry(MODULE_INFOMRATION_NODE) {
             Some((_, GsnDocumentNode::ModuleInformation(x))) => Some(x),
