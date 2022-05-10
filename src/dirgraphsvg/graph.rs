@@ -1,7 +1,7 @@
 use std::{
     borrow::BorrowMut,
     cell::RefCell,
-    collections::{BTreeMap, BTreeSet},
+    collections::{BTreeMap, BTreeSet, HashSet},
     rc::Rc,
 };
 
@@ -404,6 +404,11 @@ fn get_depths<'a>(
 ) -> BTreeMap<&'a str, usize> {
     let mut depths = BTreeMap::new();
     let mut current_nodes = get_root_nodes(nodes, edges);
+    let mut visited_nodes = HashSet::new();
+
+    current_nodes.iter().for_each(|&n| {
+        visited_nodes.insert(n);
+    });
 
     let mut depth = 0usize;
     while !current_nodes.is_empty() {
@@ -422,7 +427,11 @@ fn get_depths<'a>(
                         | EdgeType::TwoWay((SingleEdge::Composite, _)) => Some(target.as_str()),
                         _ => None,
                     })
+                    .filter(|&n| !visited_nodes.contains(n))
                     .collect();
+                c_nodes.iter().for_each(|&n| {
+                    visited_nodes.insert(n);
+                });
                 child_nodes.append(&mut c_nodes);
             }
         }
