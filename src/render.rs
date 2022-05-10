@@ -160,11 +160,8 @@ pub fn away_svg_from_gsn_node(
 ///
 ///
 fn get_relative_module_url(target: &str, source: &str) -> String {
-    let source_canon = std::path::PathBuf::from(&source)
-        .parent()
-        .unwrap()
-        .canonicalize()
-        .unwrap();
+    let source_canon = std::path::PathBuf::from(&source).canonicalize().unwrap();
+    let source_canon = source_canon.parent().unwrap();
     let target_canon = std::path::PathBuf::from(&target).canonicalize().unwrap();
     let source_comps: Vec<Component> = source_canon.components().collect();
     let mut source_comps_iter = source_comps.iter();
