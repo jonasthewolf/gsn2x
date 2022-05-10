@@ -382,9 +382,10 @@ pub(crate) fn get_forced_levels<'a>(
     let mut forced_levels = BTreeMap::new();
     let depths = get_depths(nodes, edges);
     for nodes in levels.values() {
-        let max_depth = nodes.iter().map(|n| depths.get(n).unwrap()).max().unwrap();
-        for node in nodes {
-            forced_levels.insert(*node, *max_depth);
+        if let Some(max_depth) = nodes.iter().filter_map(|n| depths.get(n)).max() {
+            for node in nodes {
+                forced_levels.insert(*node, *max_depth);
+            }
         }
     }
     forced_levels

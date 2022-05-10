@@ -3,3 +3,6 @@
 /coverage/
 **/.DS_Store
 dirgraphsvg/Cargo.lock
+*.svg
+evidences.md
+*.yaml
