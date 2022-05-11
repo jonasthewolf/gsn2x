@@ -10,4 +10,4 @@ cargo run -- -N -E -F -G examples/modular/main.gsn.yaml examples/modular/sub1.gs
 cargo run -- -A -E -F -G -s modular.css examples/modular/main.gsn.yaml examples/modular/sub1.gsn.yaml examples/modular/sub3.gsn.yaml
 
 # complete_view
-cargo run -- -N -E -F -G examples/modular/main.gsn.yaml examples/modular/sub1.gsn.yaml examples/modular/sub3.gsn.yaml
+cargo run -- -N -E -A -G examples/modular/main.gsn.yaml examples/modular/sub1.gsn.yaml examples/modular/sub3.gsn.yaml
