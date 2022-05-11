@@ -284,6 +284,7 @@ fn add_in_context_nodes(
     edges: &BTreeMap<String, Vec<(String, EdgeType)>>,
     ranks: &mut BTreeMap<usize, BTreeMap<usize, NodePlace>>,
 ) {
+    let mut visited_nodes: BTreeSet<String> = BTreeSet::new();
     for v_ranks in ranks.values_mut() {
         let mut new_rank = Vec::new();
         for n in v_ranks.values() {
@@ -293,6 +294,7 @@ fn add_in_context_nodes(
                         let mut i = 0;
                         let (left, right): (Vec<String>, Vec<String>) = target
                             .iter()
+                            .filter(|(tn, _)| !visited_nodes.contains(tn))
                             .filter_map(|(tn, et)| match et {
                                 EdgeType::OneWay(SingleEdge::InContextOf) => Some(tn.to_owned()),
                                 _ => None,
@@ -311,6 +313,8 @@ fn add_in_context_nodes(
                                     i % 2 == 0
                                 }
                             });
+                        right.to_vec().into_iter().for_each(|x| {visited_nodes.insert(x);});
+                        left.to_vec().into_iter().for_each(|x| {visited_nodes.insert(x);});
                         match &left.len() {
                             1 => new_rank.push(NodePlace::Node(left.get(0).unwrap().to_owned())),
                             2.. => new_rank.push(NodePlace::MultipleNodes(

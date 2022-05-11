@@ -214,7 +214,9 @@ If the list of evidences should not be output, use the `-E` option.
 
 It is possible to add additional `module` information in the source YAML.
 This allows describing the module`s name and an optional brief description.
-Even arbitrary information can be added.
+Even arbitrary information can be added. 
+
+`name` and `brief` are mandatory if a `module` is added.
 
 ```yaml
 
@@ -285,7 +287,8 @@ I also noticed that (also for myself) it is good to note down some history of th
 - It got obvious that some validation, especially on the uniqueness and reference resolution is needed
   to handle larger argumentations.
   
-  I did not want to write them in Python, but in my favorite programming language Rust (released in July 2021)
+  I did not want to write them in Python, but in my favorite programming language Rust.
+  I released the first Rust version in July 2021.
   
 - I desparately tried adding the modular extension by convincing Graphviz to draw what I want, but I failed.
   I finally made decided to no longer output DOT, but directly generate SVGs from the program.
