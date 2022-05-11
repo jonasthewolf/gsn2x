@@ -294,11 +294,11 @@ fn add_in_context_nodes(
                         let mut i = 0;
                         let (left, right): (Vec<String>, Vec<String>) = target
                             .iter()
-                            .filter(|(tn, _)| !visited_nodes.contains(tn))
                             .filter_map(|(tn, et)| match et {
                                 EdgeType::OneWay(SingleEdge::InContextOf) => Some(tn.to_owned()),
                                 _ => None,
                             })
+                            .filter(|tn| !visited_nodes.contains(tn))
                             .collect::<Vec<String>>()
                             .into_iter()
                             .partition(|x| {
@@ -313,12 +313,6 @@ fn add_in_context_nodes(
                                     i % 2 == 0
                                 }
                             });
-                        right.iter().cloned().into_iter().for_each(|x| {
-                            visited_nodes.insert(x);
-                        });
-                        left.iter().cloned().into_iter().for_each(|x| {
-                            visited_nodes.insert(x);
-                        });
                         match &left.len() {
                             1 => new_rank.push(NodePlace::Node(left.get(0).unwrap().to_owned())),
                             2.. => new_rank.push(NodePlace::MultipleNodes(
@@ -342,8 +336,18 @@ fn add_in_context_nodes(
             }
         }
         v_ranks.clear();
-        for (h, n) in new_rank.into_iter().enumerate() {
-            v_ranks.insert(h, n);
+        for (h, np) in new_rank.into_iter().enumerate() {
+            // Only add visited nodes here, when changing vertical rank.
+            // If done within one horizontal rank, the above logic will fail.
+            match &np {
+                NodePlace::Node(n) => {
+                    visited_nodes.insert(n.to_owned());
+                }
+                NodePlace::MultipleNodes(ns) => ns.iter().for_each(|n| {
+                    visited_nodes.insert(n.to_owned());
+                }),
+            }
+            v_ranks.insert(h, np);
         }
     }
 }
