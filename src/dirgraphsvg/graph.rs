@@ -313,8 +313,12 @@ fn add_in_context_nodes(
                                     i % 2 == 0
                                 }
                             });
-                        right.to_vec().into_iter().for_each(|x| {visited_nodes.insert(x);});
-                        left.to_vec().into_iter().for_each(|x| {visited_nodes.insert(x);});
+                        right.iter().cloned().into_iter().for_each(|x| {
+                            visited_nodes.insert(x);
+                        });
+                        left.iter().cloned().into_iter().for_each(|x| {
+                            visited_nodes.insert(x);
+                        });
                         match &left.len() {
                             1 => new_rank.push(NodePlace::Node(left.get(0).unwrap().to_owned())),
                             2.. => new_rank.push(NodePlace::MultipleNodes(
