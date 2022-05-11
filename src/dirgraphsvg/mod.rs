@@ -152,7 +152,11 @@ impl<'a> DirGraph<'a> {
         self
     }
 
-    pub fn write(mut self, allow_cycle: bool, output: impl std::io::Write) -> Result<(), std::io::Error> {
+    pub fn write(
+        mut self,
+        allow_cycle: bool,
+        output: impl std::io::Write,
+    ) -> Result<(), std::io::Error> {
         self = self.setup_basics();
         self = self.setup_stylesheets();
         self = self.layout(allow_cycle);

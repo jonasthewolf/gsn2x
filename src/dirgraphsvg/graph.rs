@@ -241,7 +241,6 @@ fn find_next_child_node(
                 | EdgeType::TwoWay((SingleEdge::Composite, _)) => Some(id.to_owned()),
                 _ => None,
             })
-            
             .find(|id| !visited_nodes.contains(id))
         {
             let node = nodes.get(&opt_child).unwrap();
