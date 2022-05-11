@@ -53,6 +53,7 @@ impl NodePlace {
 pub(crate) fn rank_nodes<'a>(
     nodes: &'a mut BTreeMap<String, Rc<RefCell<dyn Node>>>,
     edges: &'a mut BTreeMap<String, Vec<(String, EdgeType)>>,
+    allow_cycle: bool,
 ) -> BTreeMap<usize, BTreeMap<usize, NodePlace>> {
     let mut ranks = BTreeMap::new();
     let mut visited_nodes: BTreeSet<String> = BTreeSet::new();
@@ -100,6 +101,7 @@ pub(crate) fn rank_nodes<'a>(
                 &visited_nodes,
                 &current_node,
                 &edge_map,
+                allow_cycle,
             ) {
                 stack.push((current_node.to_owned(), current_rank));
 
@@ -221,11 +223,15 @@ fn find_next_child_node(
     visited_nodes: &BTreeSet<String>,
     current: &str,
     edge_map: &BTreeMap<String, BTreeSet<String>>,
+    allow_cycle: bool,
 ) -> Option<(String, usize)> {
     if let Some(p) = edges.get(current) {
         if let Some(opt_child) = p
             .iter()
-            .filter(|(id, _)| count_unvisited_parents(edge_map, visited_nodes, id) == 0)
+            .filter(|(id, _)| match allow_cycle {
+                false => count_unvisited_parents(edge_map, visited_nodes, id) == 0,
+                true => true,
+            })
             .filter_map(|(id, et)| match et {
                 EdgeType::OneWay(SingleEdge::SupportedBy)
                 | EdgeType::OneWay(SingleEdge::Composite)
@@ -235,6 +241,7 @@ fn find_next_child_node(
                 | EdgeType::TwoWay((SingleEdge::Composite, _)) => Some(id.to_owned()),
                 _ => None,
             })
+            
             .find(|id| !visited_nodes.contains(id))
         {
             let node = nodes.get(&opt_child).unwrap();

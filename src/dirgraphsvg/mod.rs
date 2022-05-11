@@ -152,10 +152,10 @@ impl<'a> DirGraph<'a> {
         self
     }
 
-    pub fn write(mut self, output: impl std::io::Write) -> Result<(), std::io::Error> {
+    pub fn write(mut self, allow_cycle: bool, output: impl std::io::Write) -> Result<(), std::io::Error> {
         self = self.setup_basics();
         self = self.setup_stylesheets();
-        self = self.layout();
+        self = self.layout(allow_cycle);
         self.document = self
             .document
             .set("viewBox", (0u32, 0u32, self.width, self.height));
@@ -176,7 +176,7 @@ impl<'a> DirGraph<'a> {
     ///
     ///
     ///
-    fn layout(mut self) -> Self {
+    fn layout(mut self, allow_cycle: bool) -> Self {
         // Calculate node size
         self.nodes
             .values()
@@ -193,7 +193,7 @@ impl<'a> DirGraph<'a> {
         }
 
         // Rank nodes
-        let ranks = rank_nodes(&mut self.nodes, &mut self.edges);
+        let ranks = rank_nodes(&mut self.nodes, &mut self.edges, allow_cycle);
         self.width = 0;
         self.height = 0;
 
@@ -617,7 +617,7 @@ mod test {
         d = d.add_nodes(nodes);
         d = d.add_meta_information(&mut vec!["A1".to_owned(), "B2".to_owned()]);
         let mut string_buffer = Vec::new();
-        d.write(&mut string_buffer).unwrap();
+        d.write(false, &mut string_buffer).unwrap();
         println!("{}", std::str::from_utf8(string_buffer.as_slice()).unwrap());
     }
 }
