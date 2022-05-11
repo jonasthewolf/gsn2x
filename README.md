@@ -35,9 +35,11 @@ The following Goal Structuring Notation (GSN) core elements are supported:
 Every element is defined by a prefix (as shown in the list above) and a number.
 Actually, the number can be an arbitrary identifier then.
 
-The (optional) `supportedBy` gives a list of the supporting arguments. Thus, Goal, Strategy and Solution can be listed here.
+The only mandatory attribute is `text` that is the textual contents of the element.
 
-The (optional) `inContextOf` links Justifications, Contexts or Assumptions. 
+An optional `supportedBy` gives a list of the supporting arguments. Thus, Goal, Strategy and Solution can be listed here.
+
+An optional `inContextOf` links Justifications, Contexts or Assumptions. 
 
 Every element may have an optional `url` attribute that creates a navigation link in the resulting SVG.
 This should support finding information more easily.
