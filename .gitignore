@@ -1,8 +1,8 @@
-**/target/
-*.prof*
-/coverage/
 **/.DS_Store
-dirgraphsvg/Cargo.lock
-*.svg
+**/target/
+/coverage/
+/.vscode/
 evidences.md
+*.prof*
+*.svg
 *.yaml

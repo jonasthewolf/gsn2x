@@ -230,7 +230,9 @@ fn find_next_child_node(
             .iter()
             .filter(|(id, _)| match allow_cycle {
                 false => count_unvisited_parents(edge_map, visited_nodes, id) == 0,
-                true => true,
+                true => true, // Architecture view may contain circles.
+                              // We have to skip this this filter, otherwise we end in an endless loop.
+                              // We need to start ranking nodes even not all parents are drawn to break the circle.
             })
             .filter_map(|(id, et)| match et {
                 EdgeType::OneWay(SingleEdge::SupportedBy)
