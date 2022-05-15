@@ -230,7 +230,6 @@ impl<'a> DirGraph<'a> {
             .sum::<u32>()
             + self.margin.top;
         let max_width_y = y;
-        dbg!(y);
 
         // Position nodes on max width rank
         x = self.margin.left;
@@ -243,7 +242,6 @@ impl<'a> DirGraph<'a> {
             );
         }
         y += sizes.get(&max_width_index).unwrap().1 + self.margin.bottom;
-        dbg!(y);
 
         // Position nodes below
         for idx in max_width_index + 1..ranks.len() {
@@ -251,7 +249,6 @@ impl<'a> DirGraph<'a> {
             let height_max = sizes.get(&idx).unwrap().1 - self.margin.top - self.margin.bottom;
             x = self.margin.left;
             for np in rank.values() {
-                dbg!(np);
                 match np {
                     NodePlace::Node(id) => {
                         let mut n = self.nodes.get(id).unwrap().borrow_mut();
@@ -259,7 +256,7 @@ impl<'a> DirGraph<'a> {
                         let x_p = self.get_center_of_parents(id, &edge_map, max_width);
                         x = std::cmp::max(x_m, x_p);
                         n.set_position(&Point2D {
-                            x: dbg!(x),
+                            x,
                             y: y + height_max / 2,
                         });
                         x += n.get_width() / 2 + self.margin.left + self.margin.right;
@@ -285,28 +282,25 @@ impl<'a> DirGraph<'a> {
                 }
             }
             y += height_max + self.margin.top + self.margin.bottom;
-            dbg!(y);
         }
 
         // Position nodes above
         y = max_width_y;
         for idx in (0..max_width_index).rev() {
-            dbg!(idx);
             let rank = ranks.get(&idx).unwrap();
             let height_max = sizes.get(&idx).unwrap().1 - self.margin.top - self.margin.bottom;
             x = self.margin.left;
-            dbg!(y);
-            y -= dbg!(height_max + self.margin.top + self.margin.bottom);
+            y -= height_max + self.margin.top + self.margin.bottom;
             for np in rank.values() {
-                dbg!(&np);
                 match np {
                     NodePlace::Node(id) => {
                         let mut n = self.nodes.get(id).unwrap().borrow_mut();
-                        let x_p = self.get_center_of_children(id, max_width);
+                        let x_c = self.get_center_of_children(id, max_width);
+                        let x_p = self.get_center_of_parents(id, &edge_map, max_width);
                         let x_m = x + n.get_width() / 2;
-                        x = std::cmp::max(x_m, x_p.unwrap_or(x_m));
+                        x = std::cmp::max(x_m, x_c.unwrap_or(x_p));
                         n.set_position(&Point2D {
-                            x: dbg!(x),
+                            x,
                             y: y + height_max / 2,
                         });
                         x += n.get_width() / 2 + self.margin.left + self.margin.right;

@@ -6,10 +6,10 @@ use std::{
 
 use crate::dirgraphsvg::{
     edges::{EdgeType, SingleEdge},
-    nodes::{invisible_node::InvisibleNode, Node},
+    nodes::{Node},
 };
 
-use super::{util::point2d::Point2D, Margin};
+// use super::{util::point2d::Point2D, Margin};
 
 #[derive(Debug)]
 pub enum NodePlace {
@@ -29,36 +29,36 @@ impl NodePlace {
         }
     }
 
-    pub(crate) fn set_position(
-        &mut self,
-        nodes: &BTreeMap<String, Rc<RefCell<dyn Node>>>,
-        margin: &Margin,
-        pos: Point2D,
-    ) {
-        match self {
-            NodePlace::Node(id) => {
-                let mut n = nodes.get(id).unwrap().borrow_mut();
-                n.set_position(&Point2D { x: pos.x, y: pos.y });
-            }
-            NodePlace::MultipleNodes(ids) => {
-                let x_max = ids
-                    .iter()
-                    .map(|id| nodes.get(id).unwrap().borrow().get_width())
-                    .max()
-                    .unwrap();
-                let mut y_n = pos.y;
-                for id in ids {
-                    let mut n = nodes.get(id).unwrap().borrow_mut();
-                    let n_height = n.get_height();
-                    n.set_position(&Point2D {
-                        x: pos.x,
-                        y: y_n + n_height / 2,
-                    });
-                    y_n += n_height + margin.top + margin.bottom;
-                }
-            }
-        }
-    }
+    // pub(crate) fn set_position(
+    //     &mut self,
+    //     nodes: &BTreeMap<String, Rc<RefCell<dyn Node>>>,
+    //     margin: &Margin,
+    //     pos: Point2D,
+    // ) {
+    //     match self {
+    //         NodePlace::Node(id) => {
+    //             let mut n = nodes.get(id).unwrap().borrow_mut();
+    //             n.set_position(&Point2D { x: pos.x, y: pos.y });
+    //         }
+    //         NodePlace::MultipleNodes(ids) => {
+    //             let x_max = ids
+    //                 .iter()
+    //                 .map(|id| nodes.get(id).unwrap().borrow().get_width())
+    //                 .max()
+    //                 .unwrap();
+    //             let mut y_n = pos.y;
+    //             for id in ids {
+    //                 let mut n = nodes.get(id).unwrap().borrow_mut();
+    //                 let n_height = n.get_height();
+    //                 n.set_position(&Point2D {
+    //                     x: pos.x,
+    //                     y: y_n + n_height / 2,
+    //                 });
+    //                 y_n += n_height + margin.top + margin.bottom;
+    //             }
+    //         }
+    //     }
+    // }
 
     pub(crate) fn get_x(&self, nodes: &BTreeMap<String, Rc<RefCell<dyn Node>>>) -> u32 {
         match self {
@@ -110,6 +110,9 @@ pub(crate) fn rank_nodes<'a>(
     } else {
         n_ids.iter().map(|x| x.to_owned()).collect()
     };
+
+    let max_depths = get_max_depths(edges, &root_nodes);
+
     // Perform depth first search for SupportedBy child nodes.
     for (horiz_rank, n) in root_nodes.into_iter().enumerate() {
         visited_nodes.insert(n.to_owned());
@@ -126,7 +129,7 @@ pub(crate) fn rank_nodes<'a>(
             current_node = p_id.to_owned();
             current_rank = p_r;
             while let Some(child_node) =
-                find_next_child_node(edges, &visited_nodes, &current_node, &edge_map, allow_cycle)
+                find_next_child_node(edges, &visited_nodes, &current_node, &edge_map, &max_depths, allow_cycle)
             {
                 stack.push((current_node.to_owned(), current_rank));
 
@@ -134,44 +137,44 @@ pub(crate) fn rank_nodes<'a>(
                     determine_child_rank(nodes, &child_node, &edge_map, &rank_map, current_rank);
 
                 // TODO improve: instead of searching, we could just remember ;-)
-                let mut last_h_rank = ranks
-                    .get_mut(&current_rank)
-                    .unwrap()
-                    .iter()
-                    .find(|(_, np)| match np {
-                        NodePlace::Node(n) => n == &current_node,
-                        NodePlace::MultipleNodes(_) => false,
-                    })
-                    .map(|(&hr, _)| hr)
-                    .unwrap();
+                // let mut last_h_rank = ranks
+                //     .get_mut(&current_rank)
+                //     .unwrap()
+                //     .iter()
+                //     .find(|(_, np)| match np {
+                //         NodePlace::Node(n) => n == &current_node,
+                //         NodePlace::MultipleNodes(_) => false,
+                //     })
+                //     .map(|(&hr, _)| hr)
+                //     .unwrap();
                 // Add invisible nodes on the vertical ranks if at least one rank is skipped
-                for i in current_rank + 1..child_rank {
-                    // let vertical_rank = ranks.entry(i).or_insert(BTreeMap::new());
-                    // let cloned_node =
-                    //     clone_invisible_node(nodes, &NodePlace::Node(child_node.to_owned()));
-                    // last_h_rank = vertical_rank.len();
-                    // vertical_rank
-                    //     .insert(vertical_rank.len(), NodePlace::Node(cloned_node.to_owned()));
-                    // Remove original edge
-                    // let orig_edges = edges.get_mut(&current_node).unwrap();
-                    // let orig_edge_id = orig_edges
-                    //     .iter()
-                    //     .position(|e| {
-                    //         e == &(
-                    //             child_node.to_owned(),
-                    //             EdgeType::OneWay(SingleEdge::SupportedBy),
-                    //         )
-                    //     })
-                    //     .unwrap();
-                    // orig_edges.remove(orig_edge_id);
-                    // // Add two new edges.
-                    // orig_edges.push((cloned_node.to_owned(), EdgeType::Invisible));
-                    // let new_entry = edges.entry(cloned_node.to_owned()).or_insert(Vec::new());
-                    // new_entry.push((
-                    //     child_node.to_owned(),
-                    //     EdgeType::OneWay(SingleEdge::SupportedBy),
-                    // ));
-                }
+                // for i in current_rank + 1..child_rank {
+                // let vertical_rank = ranks.entry(i).or_insert(BTreeMap::new());
+                // let cloned_node =
+                //     clone_invisible_node(nodes, &NodePlace::Node(child_node.to_owned()));
+                // last_h_rank = vertical_rank.len();
+                // vertical_rank
+                //     .insert(vertical_rank.len(), NodePlace::Node(cloned_node.to_owned()));
+                // Remove original edge
+                // let orig_edges = edges.get_mut(&current_node).unwrap();
+                // let orig_edge_id = orig_edges
+                //     .iter()
+                //     .position(|e| {
+                //         e == &(
+                //             child_node.to_owned(),
+                //             EdgeType::OneWay(SingleEdge::SupportedBy),
+                //         )
+                //     })
+                //     .unwrap();
+                // orig_edges.remove(orig_edge_id);
+                // // Add two new edges.
+                // orig_edges.push((cloned_node.to_owned(), EdgeType::Invisible));
+                // let new_entry = edges.entry(cloned_node.to_owned()).or_insert(Vec::new());
+                // new_entry.push((
+                //     child_node.to_owned(),
+                //     EdgeType::OneWay(SingleEdge::SupportedBy),
+                // ));
+                // }
 
                 // Move nodes to the right if child rank contains too few nodes
                 // let vertical_rank = ranks.entry(child_rank).or_insert(BTreeMap::new());
@@ -228,46 +231,46 @@ fn determine_child_rank(
 ///
 ///
 ///
-fn clone_invisible_node(
-    nodes: &mut BTreeMap<String, Rc<RefCell<dyn Node>>>,
-    origin: &NodePlace,
-) -> String {
-    match origin {
-        NodePlace::Node(n) => {
-            let mut invisible_node = InvisibleNode::from(nodes.get(n).unwrap());
-            let mut invisible_node_id = invisible_node.get_id().to_owned();
-            let mut i = 0;
-            while nodes.contains_key(&invisible_node_id) {
-                invisible_node_id = format!("{}{}", invisible_node.get_id(), i);
-                i += 1;
-            }
-            invisible_node.set_id(&invisible_node_id);
-            nodes.insert(
-                invisible_node.get_id().to_owned(),
-                Rc::new(RefCell::new(invisible_node)),
-            );
-            invisible_node_id
-        }
-        NodePlace::MultipleNodes(ns) => {
-            let mut invisible_node = InvisibleNode::from(nodes.get(ns.get(0).unwrap()).unwrap());
-            let (max_height, max_width) = ns
-                .iter()
-                .map(|n| {
-                    let nb = nodes.get(n).unwrap().borrow();
-                    (nb.get_width(), nb.get_height())
-                })
-                .max()
-                .unwrap();
-            //invisible_node.borrow_mut().set_size(max_width, max_height);
-            let invisible_node_id = ns.join("_");
-            nodes.insert(
-                invisible_node.get_id().to_owned(),
-                Rc::new(RefCell::new(invisible_node)),
-            );
-            invisible_node_id
-        }
-    }
-}
+// fn clone_invisible_node(
+//     nodes: &mut BTreeMap<String, Rc<RefCell<dyn Node>>>,
+//     origin: &NodePlace,
+// ) -> String {
+//     match origin {
+//         NodePlace::Node(n) => {
+//             let mut invisible_node = InvisibleNode::from(nodes.get(n).unwrap());
+//             let mut invisible_node_id = invisible_node.get_id().to_owned();
+//             let mut i = 0;
+//             while nodes.contains_key(&invisible_node_id) {
+//                 invisible_node_id = format!("{}{}", invisible_node.get_id(), i);
+//                 i += 1;
+//             }
+//             invisible_node.set_id(&invisible_node_id);
+//             nodes.insert(
+//                 invisible_node.get_id().to_owned(),
+//                 Rc::new(RefCell::new(invisible_node)),
+//             );
+//             invisible_node_id
+//         }
+//         NodePlace::MultipleNodes(ns) => {
+//             let mut invisible_node = InvisibleNode::from(nodes.get(ns.get(0).unwrap()).unwrap());
+//             let (max_height, max_width) = ns
+//                 .iter()
+//                 .map(|n| {
+//                     let nb = nodes.get(n).unwrap().borrow();
+//                     (nb.get_width(), nb.get_height())
+//                 })
+//                 .max()
+//                 .unwrap();
+//             //invisible_node.borrow_mut().set_size(max_width, max_height);
+//             let invisible_node_id = ns.join("_");
+//             nodes.insert(
+//                 invisible_node.get_id().to_owned(),
+//                 Rc::new(RefCell::new(invisible_node)),
+//             );
+//             invisible_node_id
+//         }
+//     }
+// }
 
 ///
 ///
@@ -279,10 +282,13 @@ fn find_next_child_node(
     visited_nodes: &BTreeSet<String>,
     current: &str,
     edge_map: &BTreeMap<String, BTreeSet<String>>,
+    max_depth: &BTreeMap<String, usize>,
     allow_cycle: bool,
 ) -> Option<String> {
     if let Some(p) = edges.get(current) {
-        if let Some(opt_child) = p
+        let mut x = p.to_vec();
+        x.sort_by(|a,b| max_depth.get(&b.0).cmp(&max_depth.get(&a.0)));
+        if let Some(opt_child) = x
             .iter()
             .filter(|(id, _)| match allow_cycle {
                 false => count_unvisited_parents(edge_map, visited_nodes, id) == 0,
@@ -554,4 +560,54 @@ pub fn calculate_parent_node_map(
         }
     }
     parent_map
+}
+
+///
+///
+///
+///
+///
+fn get_max_depths(
+    edges: &BTreeMap<String, Vec<(String, EdgeType)>>,
+    root_nodes: &Vec<String>,
+) -> BTreeMap<String, usize> {
+    let mut visited_nodes: BTreeSet<String> = BTreeSet::new();
+    let mut max_depths = BTreeMap::new();
+    for root_node in root_nodes.iter() {
+        visited_nodes.insert(root_node.to_owned());
+        let mut stack = Vec::new();
+        let mut current_node = root_node.to_owned();
+        let mut current_rank: usize;
+        stack.push((current_node.to_owned(), 0));
+        while let Some((p_id, p_r)) = stack.pop() {
+            current_node = p_id.to_owned();
+            current_rank = p_r;
+            while let Some(Some(child_node)) = edges
+                .get(&current_node)
+                .map(|e| e
+                .iter()
+                .filter_map(|(id, et)| match et {
+                    EdgeType::OneWay(SingleEdge::SupportedBy)
+                    | EdgeType::OneWay(SingleEdge::Composite)
+                    | EdgeType::TwoWay((_, SingleEdge::SupportedBy))
+                    | EdgeType::TwoWay((SingleEdge::SupportedBy, _))
+                    | EdgeType::TwoWay((_, SingleEdge::Composite))
+                    | EdgeType::TwoWay((SingleEdge::Composite, _)) => Some(id.to_owned()),
+                    _ => None,
+                })
+                .find(|id| !visited_nodes.contains(id)))
+            {
+                stack.push((current_node.to_owned(), current_rank));
+                visited_nodes.insert(child_node.to_owned());
+                current_node = child_node;
+                current_rank += 1; // Naively assume +1 only, we don't care about forced levels or skipping here.
+            }
+            // Record maximum depth
+            for s in &stack {
+                max_depths.entry(s.0.to_owned()).and_modify(|v| { *v = std::cmp::max(*v ,current_rank) }).or_insert(current_rank);
+            }
+            max_depths.entry(p_id.to_owned()).and_modify(|v| { *v = std::cmp::max(*v ,current_rank) }).or_insert(current_rank);
+        }
+    }
+    max_depths
 }
