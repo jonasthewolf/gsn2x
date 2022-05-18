@@ -160,12 +160,11 @@ impl<'a> DirGraph<'a> {
 
     pub fn write(
         mut self,
-        allow_cycle: bool,
         output: impl std::io::Write,
     ) -> Result<(), std::io::Error> {
         self = self.setup_basics();
         self = self.setup_stylesheets();
-        self = self.layout(allow_cycle);
+        self = self.layout();
         self.document = self
             .document
             .set("viewBox", (0u32, 0u32, self.width, self.height));
@@ -186,7 +185,7 @@ impl<'a> DirGraph<'a> {
     ///
     ///
     ///
-    fn layout(mut self, allow_cycle: bool) -> Self {
+    fn layout(mut self) -> Self {
         // Calculate node size
         self.nodes
             .values()
@@ -204,7 +203,7 @@ impl<'a> DirGraph<'a> {
 
         // Rank nodes
         let edge_map = calculate_parent_node_map(&self.edges);
-        let ranks = rank_nodes(&mut self.nodes, &mut self.edges, allow_cycle);
+        let ranks = rank_nodes(&mut self.nodes, &mut self.edges);
 
         // Calculate width and maximum height of all ranks including margins
         let mut sizes: BTreeMap<usize, (u32, u32)> = BTreeMap::new();
@@ -219,8 +218,8 @@ impl<'a> DirGraph<'a> {
         let max_width = sizes.values().map(|&(w, _)| w).max().unwrap();
         let max_width_index = *sizes.iter().max_by_key(|(_, (w, _))| w).unwrap().0;
 
-        let mut x = 0;
-        let mut y = 0;
+        let mut x;
+        let mut y;
 
         // Calculate y up to maximum width rank
         y = sizes
@@ -477,7 +476,7 @@ impl<'a> DirGraph<'a> {
                 let s = self.nodes.get(source).unwrap().borrow();
                 let t = self.nodes.get(target).unwrap().borrow();
                 let (marker_start_height, marker_end_height, support_distance) = match edge_type {
-                    EdgeType::Invisible => (0i32, 0i32, 3i32 * MARKER_HEIGHT as i32),
+                    // EdgeType::Invisible => (0i32, 0i32, 3i32 * MARKER_HEIGHT as i32),
                     EdgeType::OneWay(_) => {
                         (0i32, MARKER_HEIGHT as i32, 3i32 * MARKER_HEIGHT as i32)
                     }
@@ -550,7 +549,7 @@ impl<'a> DirGraph<'a> {
                     }
                     EdgeType::OneWay(SingleEdge::Composite)
                     | EdgeType::TwoWay((_, SingleEdge::Composite)) => Some("url(#composite_arrow)"),
-                    EdgeType::Invisible => None,
+                    // EdgeType::Invisible => None,
                 };
                 let arrow_start_id = match &edge_type {
                     EdgeType::TwoWay((SingleEdge::InContextOf, _)) => {
@@ -580,7 +579,7 @@ impl<'a> DirGraph<'a> {
                         //| EdgeType::TwoWay((SingleEdge::Composite, _))
                         classes.push_str(" gsncomposite")
                     }
-                    EdgeType::Invisible => classes.push_str(" gsninvis"),
+                    // EdgeType::Invisible => classes.push_str(" gsninvis"),
                 };
                 let mut e = Path::new()
                     .set("d", data)
@@ -792,7 +791,7 @@ mod test {
         d = d.add_nodes(nodes);
         d = d.add_meta_information(&mut vec!["A1".to_owned(), "B2".to_owned()]);
         let mut string_buffer = Vec::new();
-        d.write(false, &mut string_buffer).unwrap();
+        d.write(&mut string_buffer).unwrap();
         println!("{}", std::str::from_utf8(string_buffer.as_slice()).unwrap());
     }
 }

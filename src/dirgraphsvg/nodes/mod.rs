@@ -17,7 +17,6 @@ pub mod away_node;
 pub mod box_node;
 pub mod context_node;
 pub mod elliptical_node;
-pub(crate) mod invisible_node;
 
 #[derive(PartialEq)]
 pub enum Port {

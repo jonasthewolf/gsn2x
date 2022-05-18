@@ -74,6 +74,7 @@ impl NodePlace {
     }
 }
 
+#[derive(Debug)]
 struct NodeInfo<'a> {
     rank: Option<usize>,
     max_child_rank: Option<usize>,
@@ -81,6 +82,7 @@ struct NodeInfo<'a> {
     visited: bool,
 }
 
+#[derive(Debug)]
 struct NodeInfoMap<'a>(BTreeMap<String, NodeInfo<'a>>);
 
 impl<'a> std::ops::DerefMut for NodeInfoMap<'a> {
@@ -133,37 +135,8 @@ impl<'a> NodeInfoMap<'a> {
             }
         }
 
-        for &root_node in root_nodes.iter() {
-            let mut stack = Vec::new();
-            node_info.set_rank(root_node, 0);
-            stack.push(root_node);
-            node_info.visit_node(root_node);
-            while let Some(parent_id) = stack.pop() {
-                let mut current_node = parent_id;
-                let mut current_rank = node_info.get_rank(current_node).unwrap();
-                while let Some(child_node) =
-                    find_next_child_node(nodes, edges, &node_info, &current_node, false)
-                {
-                    node_info.set_rank(current_node, current_rank);
-                    stack.push(current_node);
-                    node_info.visit_node(child_node);
-                    current_rank = dbg!(determine_child_rank(
-                        nodes,
-                        &node_info,
-                        &child_node,
-                        current_rank
-                    ));
-                    current_node = dbg!(&child_node);
-                }
-                node_info.set_max_child_rank(current_node, current_rank);
-                // Record maximum depth
-                for s in &stack {
-                    node_info.set_max_child_rank(s, current_rank);
-                }
-                node_info.set_max_child_rank(parent_id, current_rank);
-            }
-        }
-        node_info.unvisit_nodes();
+        node_info.find_ranks(nodes, edges, root_nodes);
+        node_info.set_max_child_rank();
         node_info
     }
 
@@ -171,16 +144,38 @@ impl<'a> NodeInfoMap<'a> {
     ///
     ///
     ///
-    fn set_max_child_rank(&mut self, current_node: &str, current_rank: usize) {
-        self.0.entry(current_node.to_owned()).and_modify(|v| {
-            v.max_child_rank = std::cmp::max(v.max_child_rank, Some(current_rank + 1))
-        });
+    fn set_max_child_rank(&mut self) {
+        let mut max_map = BTreeMap::new();
+        // Assign own rank as initial maximum child rank
+        self.0.values_mut().for_each(|ni| ni.max_child_rank = ni.rank );
+        loop {
+            let mut changed = false;
+            for (_, ni) in &self.0 {
+                for parent in &ni.parents {
+                    max_map
+                        .entry(parent.to_owned())
+                        .and_modify(|v| {
+                            let v_prev = *v;
+                            *v = std::cmp::max(*v, ni.max_child_rank);
+                            if v_prev != *v {
+                                changed = true;
+                            }
+                        })
+                        .or_insert(ni.rank);
+                }
+            }
+            max_map.iter_mut().for_each(|(&k, v)| {
+                self.0.get_mut(k).unwrap().max_child_rank = *v;
+            });
+            dbg!(changed);
+            if !changed { break; }
+        }
     }
 
     ///
-    /// 
-    /// 
-    /// 
+    ///
+    ///
+    ///
     fn set_rank(&mut self, current_node: &str, current_rank: usize) {
         self.0.entry(current_node.to_owned()).and_modify(|v| {
             v.rank = Some(current_rank);
@@ -188,9 +183,9 @@ impl<'a> NodeInfoMap<'a> {
     }
 
     ///
-    /// 
-    /// 
-    /// 
+    ///
+    ///
+    ///
     fn get_rank(&self, current_node: &str) -> Option<usize> {
         let v = self.0.get(current_node).unwrap();
         v.rank
@@ -215,6 +210,79 @@ impl<'a> NodeInfoMap<'a> {
             ni.visited = false;
         });
     }
+
+    ///
+    ///
+    ///
+    ///
+    fn find_ranks(
+        &mut self,
+        nodes: &BTreeMap<String, Rc<RefCell<dyn Node>>>,
+        edges: &BTreeMap<String, Vec<(String, EdgeType)>>,
+        root_nodes: &Vec<&str>,
+    ) {
+        for &root_node in root_nodes.iter() {
+            let mut stack = Vec::new();
+            self.set_rank(root_node, 0);
+            stack.push(root_node);
+            self.visit_node(root_node);
+            while let Some(parent_id) = stack.pop() {
+                let mut current_node = parent_id;
+                let mut current_rank = self.get_rank(current_node).unwrap();
+                while let Some(child_node) =
+                    find_next_child_node(nodes, edges, &*self, &current_node, true)
+                {
+                    self.set_rank(current_node, current_rank);
+                    stack.push(current_node);
+                    self.visit_node(child_node);
+                    current_rank = determine_child_rank(nodes, &*self, &child_node, current_rank);
+                    current_node = &child_node;
+                    self.set_rank(current_node, current_rank);
+                }
+            }
+        }
+        self.unvisit_nodes();
+    }
+
+    ///
+    ///
+    ///
+    ///
+    fn rank_nodes(
+        &mut self,
+        nodes: &BTreeMap<String, Rc<RefCell<dyn Node>>>,
+        edges: &BTreeMap<String, Vec<(String, EdgeType)>>,
+        root_nodes: &Vec<&str>,
+    ) -> BTreeMap<usize, BTreeMap<usize, NodePlace>> {
+        let mut ranks = BTreeMap::new();
+        for (horiz_rank, &root_node) in root_nodes.iter().enumerate() {
+            let mut stack = Vec::new();
+            stack.push(root_node);
+            self.visit_node(root_node);
+            let vertical_rank = ranks
+                .entry(self.get_rank(root_node).unwrap())
+                .or_insert_with(BTreeMap::new);
+            vertical_rank.insert(horiz_rank, NodePlace::Node(root_node.to_owned()));
+            while let Some(parent_id) = stack.pop() {
+                let mut current_node = parent_id;
+                while let Some(child_node) =
+                    find_next_child_node(nodes, edges, &*self, &current_node, false)
+                {
+                    stack.push(current_node);
+                    let vertical_rank = ranks
+                        .entry(self.get_rank(child_node).unwrap())
+                        .or_insert(BTreeMap::new());
+                    vertical_rank
+                        .insert(vertical_rank.len(), NodePlace::Node(child_node.to_owned()));
+
+                    self.visit_node(child_node);
+                    current_node = &child_node;
+                }
+            }
+        }
+        self.unvisit_nodes();
+        ranks
+    }
 }
 
 ///
@@ -225,11 +293,7 @@ impl<'a> NodeInfoMap<'a> {
 pub(crate) fn rank_nodes<'a>(
     nodes: &'a mut BTreeMap<String, Rc<RefCell<dyn Node>>>,
     edges: &'a mut BTreeMap<String, Vec<(String, EdgeType)>>,
-    allow_cycle: bool,
 ) -> BTreeMap<usize, BTreeMap<usize, NodePlace>> {
-    let mut ranks = BTreeMap::new();
-    let mut rank_map = BTreeMap::<String, usize>::new();
-
     // Copy IDs
     let mut n_ids: BTreeSet<String> = nodes
         .iter()
@@ -253,40 +317,8 @@ pub(crate) fn rank_nodes<'a>(
     };
 
     let mut node_info = NodeInfoMap::new(nodes, edges, &root_nodes);
+    let mut ranks = node_info.rank_nodes(nodes, edges, &root_nodes);
 
-    // let max_depths = get_max_depths(nodes, edges, &root_nodes, edge_map, &rank_map);
-
-    // Perform depth first search for SupportedBy child nodes.
-    for (horiz_rank, n) in root_nodes.into_iter().enumerate() {
-        node_info.visit_node(n);
-        rank_map.insert(n.to_owned(), 0);
-        {
-            let vertical_rank = ranks.entry(0).or_insert(BTreeMap::new());
-            vertical_rank.insert(horiz_rank, NodePlace::Node(n.to_owned()));
-        }
-        let mut stack = Vec::new();
-        let mut current_node = n;
-        let mut current_rank;
-        stack.push((current_node, 0));
-        while let Some((p_id, p_r)) = stack.pop() {
-            current_node = p_id;
-            current_rank = p_r;
-            while let Some(child_node) =
-                find_next_child_node(nodes, edges, &node_info, &current_node, allow_cycle)
-            {
-                stack.push((current_node, current_rank));
-
-                let child_rank = determine_child_rank(nodes, &node_info, &child_node, current_rank);
-
-                let vertical_rank = ranks.entry(child_rank).or_insert(BTreeMap::new());
-                vertical_rank.insert(vertical_rank.len(), NodePlace::Node(child_node.to_owned()));
-                node_info.visit_node(child_node);
-                rank_map.insert(child_node.to_owned(), child_rank);
-                current_node = &child_node.as_ref();
-                current_rank = child_rank;
-            }
-        }
-    }
     add_in_context_nodes(edges, &mut ranks);
     ranks
 }
@@ -325,10 +357,9 @@ fn determine_child_rank(
     r
 }
 
-
 ///
 ///
-/// Finds the next child node and returns it together with its rank.
+/// Finds the next child node and returns it.
 /// The rank could be constraint by the forced level.
 ///
 fn find_next_child_node<'a, 'b>(
@@ -341,13 +372,14 @@ fn find_next_child_node<'a, 'b>(
     if let Some(p) = edges.get(current) {
         let mut x = p.to_vec();
         if !allow_unranked_parent {
-            x.sort_by(|a, b| {
-                node_info
-                    .get(&b.0.to_owned())
-                    .unwrap()
-                    .max_child_rank
-                    .cmp(&node_info.get(&a.0.to_owned()).unwrap().max_child_rank)
+            x.sort_by_key(|a| {
+                (
+                    // Reverse since higher values should be ranked earlier
+                    std::cmp::Reverse(node_info.get(&a.0).unwrap().max_child_rank), 
+                    a.0.to_owned(),
+                )
             });
+            dbg!(&x);
         }
         if let Some(opt_child) = x
             .iter()

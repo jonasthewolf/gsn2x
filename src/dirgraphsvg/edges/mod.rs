@@ -35,7 +35,7 @@ impl BitOr for SingleEdge {
 pub enum EdgeType {
     OneWay(SingleEdge),
     TwoWay((SingleEdge, SingleEdge)),
-    Invisible,
+    // Invisible,
 }
 
 #[cfg(test)]
@@ -44,8 +44,8 @@ mod test {
 
     #[test]
     fn cloning() {
-        let e = EdgeType::Invisible;
-        assert_eq!(e.clone(), e);
+        // let e = EdgeType::Invisible;
+        // assert_eq!(e.clone(), e);
         let si = SingleEdge::Composite;
         assert_eq!(si.clone(), si);
     }
