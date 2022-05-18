@@ -204,7 +204,7 @@ impl<'a> DirGraph<'a> {
 
         // Rank nodes
         let edge_map = calculate_parent_node_map(&self.edges);
-        let ranks = rank_nodes(&mut self.nodes, &mut self.edges, &edge_map, allow_cycle);
+        let ranks = rank_nodes(&mut self.nodes, &mut self.edges, allow_cycle);
 
         // Calculate width and maximum height of all ranks including margins
         let mut sizes: BTreeMap<usize, (u32, u32)> = BTreeMap::new();
