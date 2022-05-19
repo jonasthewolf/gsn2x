@@ -300,7 +300,6 @@ impl<'a> NodeInfoMap<'a> {
         root_nodes: &[&str],
         cycles_allowed: bool,
     ) -> BTreeMap<usize, BTreeMap<usize, NodePlace>> {
-        dbg!(&self.0);
         let mut ranks = BTreeMap::new();
         for (horiz_rank, &root_node) in root_nodes.iter().enumerate() {
             let mut stack = vec![root_node];
