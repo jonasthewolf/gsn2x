@@ -220,7 +220,7 @@ pub fn render_architecture(
         dg = dg.add_css_sytlesheets(&mut css);
     }
 
-    dg.write(output)?;
+    dg.write(output, true)?;
 
     Ok(())
 }
@@ -260,7 +260,7 @@ pub fn render_complete(
         dg = dg.add_css_sytlesheets(&mut css);
     }
 
-    dg.write(output)?;
+    dg.write(output, false)?;
 
     Ok(())
 }
@@ -357,7 +357,7 @@ pub fn render_argument(
         dg = dg.add_meta_information(&mut meta_info);
     }
 
-    dg.write(output)?;
+    dg.write(output, false)?;
 
     Ok(())
 }

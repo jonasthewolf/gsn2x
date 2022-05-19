@@ -153,23 +153,27 @@ impl<'a> NodeInfoMap<'a> {
         forced_levels: &BTreeMap<&'a str, Vec<&'a str>>,
     ) {
         for forced_nodes in forced_levels.values() {
-            if let Some(max_depth) = forced_nodes.iter().filter_map(|&n| self.get_rank(n)).max() {
-                for &node in forced_nodes {
-                    let diff_rank = self.get_rank(node).unwrap().abs_diff(max_depth);
-                    if diff_rank > 0 {
-                        self.set_rank(node, max_depth);
-                        let mut stack = vec![node];
-                        self.visit_node(node);
-                        while let Some(parent_id) = stack.pop() {
-                            let mut current_node = parent_id;
-                            while let Some(child_node) =
-                                find_next_child_node(nodes, edges, &*self, current_node, true)
-                            {
-                                stack.push(current_node);
-                                self.visit_node(child_node);
-                                let current_rank = self.get_rank(child_node).unwrap() + diff_rank;
-                                self.set_rank(child_node, current_rank);
-                                current_node = child_node;
+            if forced_nodes.iter().all(|&n| self.0.contains_key(n)) {
+                if let Some(max_depth) = forced_nodes.iter().filter_map(|&n| self.get_rank(n)).max()
+                {
+                    for &node in forced_nodes {
+                        let diff_rank = self.get_rank(node).unwrap().abs_diff(max_depth);
+                        if diff_rank > 0 {
+                            self.set_rank(node, max_depth);
+                            let mut stack = vec![node];
+                            self.visit_node(node);
+                            while let Some(parent_id) = stack.pop() {
+                                let mut current_node = parent_id;
+                                while let Some(child_node) =
+                                    find_next_child_node(nodes, edges, &*self, current_node, true)
+                                {
+                                    stack.push(current_node);
+                                    self.visit_node(child_node);
+                                    let current_rank =
+                                        self.get_rank(child_node).unwrap() + diff_rank;
+                                    self.set_rank(child_node, current_rank);
+                                    current_node = child_node;
+                                }
                             }
                         }
                     }
@@ -294,7 +298,9 @@ impl<'a> NodeInfoMap<'a> {
         nodes: &BTreeMap<String, Rc<RefCell<dyn Node>>>,
         edges: &BTreeMap<String, Vec<(String, EdgeType)>>,
         root_nodes: &[&str],
+        cycles_allowed: bool,
     ) -> BTreeMap<usize, BTreeMap<usize, NodePlace>> {
+        dbg!(&self.0);
         let mut ranks = BTreeMap::new();
         for (horiz_rank, &root_node) in root_nodes.iter().enumerate() {
             let mut stack = vec![root_node];
@@ -306,7 +312,7 @@ impl<'a> NodeInfoMap<'a> {
             while let Some(parent_id) = stack.pop() {
                 let mut current_node = parent_id;
                 while let Some(child_node) =
-                    find_next_child_node(nodes, edges, &*self, current_node, false)
+                    find_next_child_node(nodes, edges, &*self, current_node, cycles_allowed)
                 {
                     stack.push(current_node);
                     let vertical_rank = ranks
@@ -334,6 +340,7 @@ pub(crate) fn rank_nodes<'a>(
     nodes: &'a mut BTreeMap<String, Rc<RefCell<dyn Node>>>,
     edges: &'a mut BTreeMap<String, Vec<(String, EdgeType)>>,
     forced_levels: &BTreeMap<&'a str, Vec<&'a str>>,
+    cycles_allowed: bool,
 ) -> BTreeMap<usize, BTreeMap<usize, NodePlace>> {
     // Copy IDs
     let mut n_ids: BTreeSet<String> = nodes
@@ -358,7 +365,7 @@ pub(crate) fn rank_nodes<'a>(
     };
 
     let mut node_info = NodeInfoMap::new(nodes, edges, &root_nodes, forced_levels);
-    let mut ranks = node_info.rank_nodes(nodes, edges, &root_nodes);
+    let mut ranks = node_info.rank_nodes(nodes, edges, &root_nodes, cycles_allowed);
 
     add_in_context_nodes(edges, &mut ranks);
     ranks

@@ -158,10 +158,10 @@ impl<'a> DirGraph<'a> {
         self
     }
 
-    pub fn write(mut self, output: impl std::io::Write) -> Result<(), std::io::Error> {
+    pub fn write(mut self, output: impl std::io::Write, cycles_allowed: bool) -> Result<(), std::io::Error> {
         self = self.setup_basics();
         self = self.setup_stylesheets();
-        self = self.layout();
+        self = self.layout(cycles_allowed);
         self.document = self
             .document
             .set("viewBox", (0u32, 0u32, self.width, self.height));
@@ -182,7 +182,7 @@ impl<'a> DirGraph<'a> {
     ///
     ///
     ///
-    fn layout(mut self) -> Self {
+    fn layout(mut self, cycles_allowed: bool) -> Self {
         // Calculate node size
         self.nodes
             .values()
@@ -190,7 +190,7 @@ impl<'a> DirGraph<'a> {
 
         // Rank nodes
         let edge_map = calculate_parent_node_map(&self.edges);
-        let ranks = rank_nodes(&mut self.nodes, &mut self.edges, &self.forced_levels);
+        let ranks = rank_nodes(&mut self.nodes, &mut self.edges, &self.forced_levels, cycles_allowed);
 
         // Calculate width and maximum height of all ranks including margins
         let mut sizes: BTreeMap<usize, (u32, u32)> = BTreeMap::new();
@@ -776,7 +776,7 @@ mod test {
         d = d.add_nodes(nodes);
         d = d.add_meta_information(&mut vec!["A1".to_owned(), "B2".to_owned()]);
         let mut string_buffer = Vec::new();
-        d.write(&mut string_buffer).unwrap();
+        d.write(&mut string_buffer, false).unwrap();
         println!("{}", std::str::from_utf8(string_buffer.as_slice()).unwrap());
     }
 }
