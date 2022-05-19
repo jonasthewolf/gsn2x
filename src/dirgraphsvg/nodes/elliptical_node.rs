@@ -22,7 +22,6 @@ pub struct EllipticalNode {
     lines: Vec<(u32, u32)>,
     x: u32,
     y: u32,
-    forced_level: Option<usize>,
 }
 
 impl Node for EllipticalNode {
@@ -92,13 +91,6 @@ impl Node for EllipticalNode {
         self.height
     }
 
-    fn get_forced_level(&self) -> Option<usize> {
-        self.forced_level
-    }
-
-    fn set_forced_level(&mut self, level: usize) {
-        self.forced_level = Some(level)
-    }
 
     fn get_coordinates(&self, port: &super::Port) -> Point2D {
         get_port_default_coordinates(self.x, self.y, self.width, self.height, port)
@@ -185,7 +177,6 @@ impl EllipticalNode {
             lines: vec![],
             x: 0,
             y: 0,
-            forced_level: None,
         }
     }
 }
@@ -193,13 +184,6 @@ impl EllipticalNode {
 #[cfg(test)]
 mod test {
     use super::*;
-
-    #[test]
-    fn test_set_forced_level() {
-        let mut node = EllipticalNode::new("id", "text", None, true, None, None);
-        node.set_forced_level(3);
-        assert_eq!(node.get_forced_level(), Some(3));
-    }
 
     #[test]
     fn test_get_id() {

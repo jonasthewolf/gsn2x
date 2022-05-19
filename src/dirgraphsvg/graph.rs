@@ -343,10 +343,8 @@ pub(crate) fn rank_nodes<'a>(
 ) -> BTreeMap<usize, BTreeMap<usize, NodePlace>> {
     // Copy IDs
     let mut n_ids: BTreeSet<String> = nodes
-        .iter()
-        // Filter nodes with forced level larger than 0
-        .filter(|(_, node)| !matches!(node.borrow().get_forced_level(), Some(x) if x != 0))
-        .map(|(id, _)| id.to_owned())
+        .keys()
+        .cloned()
         .collect();
     // Find root nodes
     for t_edges in edges.values() {

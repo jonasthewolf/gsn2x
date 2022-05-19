@@ -21,7 +21,6 @@ pub struct BoxNode {
     lines: Vec<(u32, u32)>,
     x: u32,
     y: u32,
-    forced_level: Option<usize>,
     is_module_node: bool,
 }
 
@@ -194,13 +193,6 @@ impl Node for BoxNode {
         g
     }
 
-    fn get_forced_level(&self) -> Option<usize> {
-        self.forced_level
-    }
-
-    fn set_forced_level(&mut self, level: usize) {
-        self.forced_level = Some(level);
-    }
 }
 
 impl BoxNode {
@@ -225,7 +217,6 @@ impl BoxNode {
             lines: vec![],
             x: 0,
             y: 0,
-            forced_level: None,
             is_module_node,
         }
     }

@@ -30,7 +30,6 @@ pub struct AwayNode {
     lines: Vec<(u32, u32)>,
     x: u32,
     y: u32,
-    forced_level: Option<usize>,
     mod_width: u32,
     mod_height: u32,
     addon_height: u32,
@@ -264,13 +263,6 @@ impl Node for AwayNode {
         g
     }
 
-    fn get_forced_level(&self) -> Option<usize> {
-        self.forced_level
-    }
-
-    fn set_forced_level(&mut self, level: usize) {
-        self.forced_level = Some(level);
-    }
 }
 
 impl AwayNode {
@@ -293,7 +285,6 @@ impl AwayNode {
             lines: vec![],
             x: 0,
             y: 0,
-            forced_level: None,
             module: module.to_owned(),
             module_url,
             node_type,
@@ -304,14 +295,3 @@ impl AwayNode {
     }
 }
 
-#[cfg(test)]
-mod test {
-    use super::*;
-
-    #[test]
-    fn test_set_forced_level() {
-        let mut node = AwayNode::new("id", "text", "module", None, AwayType::Goal, None, None);
-        node.set_forced_level(3);
-        assert_eq!(node.get_forced_level(), Some(3));
-    }
-}
