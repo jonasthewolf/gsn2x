@@ -158,7 +158,11 @@ impl<'a> DirGraph<'a> {
         self
     }
 
-    pub fn write(mut self, output: impl std::io::Write, cycles_allowed: bool) -> Result<(), std::io::Error> {
+    pub fn write(
+        mut self,
+        output: impl std::io::Write,
+        cycles_allowed: bool,
+    ) -> Result<(), std::io::Error> {
         self = self.setup_basics();
         self = self.setup_stylesheets();
         self = self.layout(cycles_allowed);
@@ -190,11 +194,32 @@ impl<'a> DirGraph<'a> {
 
         // Rank nodes
         let edge_map = calculate_parent_node_map(&self.edges);
-        let ranks = rank_nodes(&mut self.nodes, &mut self.edges, &self.forced_levels, cycles_allowed);
+        let ranks = rank_nodes(
+            &mut self.nodes,
+            &mut self.edges,
+            &self.forced_levels,
+            cycles_allowed,
+        );
 
+        self = self.render_nodes(&ranks, edge_map);
+
+        // Draw edges
+        self.render_edges()
+        // self
+    }
+
+    ///
+    ///
+    ///
+    ///
+    fn render_nodes(
+        mut self,
+        ranks: &BTreeMap<usize, BTreeMap<usize, NodePlace>>,
+        edge_map: BTreeMap<String, BTreeSet<String>>,
+    ) -> Self {
         // Calculate width and maximum height of all ranks including margins
         let mut sizes: BTreeMap<usize, (i32, i32)> = BTreeMap::new();
-        for (rank_index, rank) in &ranks {
+        for (rank_index, rank) in ranks {
             let cur_width: i32 = rank
                 .values()
                 .map(|np| np.get_max_width(&self.nodes) + self.margin.left + self.margin.right)
@@ -204,7 +229,6 @@ impl<'a> DirGraph<'a> {
         }
         let max_width = sizes.values().map(|&(w, _)| w).max().unwrap();
         let max_width_index = *sizes.iter().max_by_key(|(_, (w, _))| w).unwrap().0;
-
         // Calculate y up to maximum width rank
         let mut y = sizes
             .values()
@@ -213,7 +237,6 @@ impl<'a> DirGraph<'a> {
             .sum::<i32>()
             + self.margin.top;
         let max_width_y = y;
-
         // Position nodes on max width rank
         let mut x = self.margin.left;
         for np in ranks.get(&max_width_index).unwrap().values() {
@@ -225,7 +248,6 @@ impl<'a> DirGraph<'a> {
             );
         }
         y += sizes.get(&max_width_index).unwrap().1 + self.margin.bottom;
-
         // Position nodes below
         for idx in max_width_index + 1..ranks.len() {
             let rank = ranks.get(&idx).unwrap();
@@ -266,7 +288,6 @@ impl<'a> DirGraph<'a> {
             }
             y += height_max + self.margin.top + self.margin.bottom;
         }
-
         // Position nodes above
         y = max_width_y;
         for idx in (0..max_width_index).rev() {
@@ -309,7 +330,6 @@ impl<'a> DirGraph<'a> {
                 }
             }
         }
-
         // Draw the nodes
         for rank in ranks.values() {
             for np in rank.values() {
@@ -327,7 +347,6 @@ impl<'a> DirGraph<'a> {
                 }
             }
         }
-
         // Set size of document
         self.width = ranks
             .values()
@@ -338,10 +357,7 @@ impl<'a> DirGraph<'a> {
             .max()
             .unwrap();
         self.height = sizes.values().map(|&(_, h)| h).sum();
-
-        // Draw edges
-        self.render_edges()
-        // self
+        self
     }
 
     ///
