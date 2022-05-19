@@ -16,7 +16,7 @@ pub enum NodePlace {
 }
 
 impl NodePlace {
-    pub(crate) fn get_max_width(&self, nodes: &BTreeMap<String, Rc<RefCell<dyn Node>>>) -> u32 {
+    pub(crate) fn get_max_width(&self, nodes: &BTreeMap<String, Rc<RefCell<dyn Node>>>) -> i32 {
         match self {
             NodePlace::Node(n) => nodes.get(n).unwrap().borrow().get_width(),
             NodePlace::MultipleNodes(np) => np
@@ -58,7 +58,7 @@ impl NodePlace {
     //     }
     // }
 
-    pub(crate) fn get_x(&self, nodes: &BTreeMap<String, Rc<RefCell<dyn Node>>>) -> u32 {
+    pub(crate) fn get_x(&self, nodes: &BTreeMap<String, Rc<RefCell<dyn Node>>>) -> i32 {
         match self {
             NodePlace::Node(n) => {
                 let n = nodes.get(n).unwrap().borrow();

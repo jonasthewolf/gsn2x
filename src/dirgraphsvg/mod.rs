@@ -27,10 +27,10 @@ use self::graph::calculate_parent_node_map;
 const MARKER_HEIGHT: u32 = 10;
 
 pub struct Margin {
-    pub top: u32,
-    pub right: u32,
-    pub bottom: u32,
-    pub left: u32,
+    pub top: i32,
+    pub right: i32,
+    pub bottom: i32,
+    pub left: i32,
 }
 
 impl Default for Margin {
@@ -51,8 +51,8 @@ pub struct FontInfo {
 }
 
 pub struct DirGraph<'a> {
-    width: u32,
-    height: u32,
+    width: i32,
+    height: i32,
     margin: Margin,
     wrap: u32,
     font: FontInfo,
@@ -193,9 +193,9 @@ impl<'a> DirGraph<'a> {
         let ranks = rank_nodes(&mut self.nodes, &mut self.edges, &self.forced_levels, cycles_allowed);
 
         // Calculate width and maximum height of all ranks including margins
-        let mut sizes: BTreeMap<usize, (u32, u32)> = BTreeMap::new();
+        let mut sizes: BTreeMap<usize, (i32, i32)> = BTreeMap::new();
         for (rank_index, rank) in &ranks {
-            let cur_width: u32 = rank
+            let cur_width: i32 = rank
                 .values()
                 .map(|np| np.get_max_width(&self.nodes) + self.margin.left + self.margin.right)
                 .sum();
@@ -210,7 +210,7 @@ impl<'a> DirGraph<'a> {
             .values()
             .take(max_width_index)
             .map(|(_, h)| h)
-            .sum::<u32>()
+            .sum::<i32>()
             + self.margin.top;
         let max_width_y = y;
 
@@ -348,7 +348,7 @@ impl<'a> DirGraph<'a> {
     ///
     ///
     ///
-    fn place_nodeplace(&mut self, np: &NodePlace, x: u32, y: u32, max_height: u32) -> u32 {
+    fn place_nodeplace(&mut self, np: &NodePlace, x: i32, y: i32, max_height: i32) -> i32 {
         let mut new_x = x;
         match np {
             NodePlace::Node(id) => {
@@ -390,8 +390,8 @@ impl<'a> DirGraph<'a> {
         &self,
         current_node: &str,
         edge_map: &BTreeMap<String, BTreeSet<String>>,
-        max_width: u32,
-    ) -> u32 {
+        max_width: i32,
+    ) -> i32 {
         let mut min = max_width;
         let mut max = 0;
         if let Some(parents) = edge_map.get(current_node) {
@@ -408,7 +408,7 @@ impl<'a> DirGraph<'a> {
     ///
     ///
     ///
-    fn get_center_of_children(&self, current_node: &str, max_width: u32) -> Option<u32> {
+    fn get_center_of_children(&self, current_node: &str, max_width: i32) -> Option<i32> {
         let mut min = max_width;
         let mut max = 0;
         if let Some(children) = self.edges.get(current_node) {
@@ -435,15 +435,15 @@ impl<'a> DirGraph<'a> {
     /// Get the maximum height of ∏a rank
     ///
     ///
-    fn get_max_height(&self, rank: &BTreeMap<usize, NodePlace>) -> u32 {
+    fn get_max_height(&self, rank: &BTreeMap<usize, NodePlace>) -> i32 {
         rank.values()
             .map(|id| match id {
                 NodePlace::Node(id) => self.nodes.get(id).unwrap().borrow().get_height(),
                 NodePlace::MultipleNodes(ids) => {
                     ids.iter()
                         .map(|id| self.nodes.get(id).unwrap().borrow().get_height())
-                        .sum::<u32>()
-                        + (self.margin.top + self.margin.bottom) * (ids.len() - 1) as u32
+                        .sum::<i32>()
+                        + (self.margin.top + self.margin.bottom) * (ids.len() - 1) as i32
                 }
             })
             .max()
@@ -719,11 +719,11 @@ impl<'a> DirGraph<'a> {
                 text_width = std::cmp::max(text_width, width);
             }
 
-            if self.width < text_width + 20 {
-                self.width = text_width + 40;
+            if self.width < text_width + 20i32 {
+                self.width = text_width + 40i32;
             }
-            if self.height < text_height + 20 {
-                self.height = text_height + 40;
+            if self.height < text_height + 20i32 {
+                self.height = text_height + 40i32;
             }
             let x = self.width - text_width - 20;
             let y_base = self.height - text_height - 20;

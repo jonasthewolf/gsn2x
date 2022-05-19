@@ -4,9 +4,9 @@ use crate::dirgraphsvg::FontInfo;
 
 use super::{get_port_default_coordinates, setup_basics, Node, Point2D};
 
-const PADDING: u32 = 5;
-const TEXT_OFFSET: u32 = 20;
-const MIN_SIZE: u32 = 50;
+const PADDING: i32 = 5;
+const TEXT_OFFSET: i32 = 20;
+const MIN_SIZE: i32 = 50;
 
 pub struct EllipticalNode {
     identifier: String,
@@ -15,13 +15,13 @@ pub struct EllipticalNode {
     circle: bool,
     url: Option<String>,
     classes: Option<Vec<String>>,
-    width: u32,
-    height: u32,
-    text_width: u32,
-    text_height: u32,
-    lines: Vec<(u32, u32)>,
-    x: u32,
-    y: u32,
+    width: i32,
+    height: i32,
+    text_width: i32,
+    text_height: i32,
+    lines: Vec<(i32, i32)>,
+    x: i32,
+    y: i32,
 }
 
 impl Node for EllipticalNode {
@@ -53,16 +53,16 @@ impl Node for EllipticalNode {
                 + self.text_height
                 + self.text_height / 4) as f64)
                 .sqrt();
-            self.width = std::cmp::max(MIN_SIZE, (2 * PADDING + r_width as u32) * 2);
-            self.height = std::cmp::max(MIN_SIZE, (2 * PADDING + r_width as u32) * 2);
+            self.width = std::cmp::max(MIN_SIZE, (2 * PADDING + r_width as i32) * 2);
+            self.height = std::cmp::max(MIN_SIZE, (2 * PADDING + r_width as i32) * 2);
         } else {
             self.width = std::cmp::max(
                 MIN_SIZE,
-                PADDING * 2 + ((self.text_width as f32 * 1.414) as u32),
+                PADDING * 2 + ((self.text_width as f32 * 1.414) as i32),
             );
             self.height = std::cmp::max(
                 self.height,
-                PADDING * 2 + ((self.text_height as f32 * 1.414) as u32),
+                PADDING * 2 + ((self.text_height as f32 * 1.414) as i32),
             );
         }
     }
@@ -83,11 +83,11 @@ impl Node for EllipticalNode {
         self.identifier.as_ref()
     }
 
-    fn get_width(&self) -> u32 {
+    fn get_width(&self) -> i32 {
         self.width
     }
 
-    fn get_height(&self) -> u32 {
+    fn get_height(&self) -> i32 {
         self.height
     }
 

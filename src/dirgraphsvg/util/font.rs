@@ -22,7 +22,7 @@ pub fn get_font(font_name: &str) -> Result<rusttype::Font<'static>> {
     font.ok_or_else(|| Error::msg("Font not found"))
 }
 
-pub fn text_bounding_box(font: &Font, text: &str, size: f32) -> (u32, u32) {
+pub fn text_bounding_box(font: &Font, text: &str, size: f32) -> (i32, i32) {
     let scale = rusttype::Scale::uniform(size);
     let width = font
         .layout(text, scale, rusttype::point(0.0, 0.0))
@@ -34,7 +34,7 @@ pub fn text_bounding_box(font: &Font, text: &str, size: f32) -> (u32, u32) {
     let v_metrics = font.v_metrics(scale);
     let height = (v_metrics.ascent - v_metrics.descent).ceil() + v_metrics.line_gap;
 
-    ((width as f32 * 1.1) as u32, (height as f32 * 1.1) as u32) // Do magic: rusttype seems to be roughly 11 percent too small
+    ((width as f32 * 1.1) as i32, (height as f32 * 1.1) as i32) // Do magic: rusttype seems to be roughly 11 percent too small
 }
 
 #[cfg(test)]

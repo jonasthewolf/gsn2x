@@ -29,8 +29,8 @@ pub enum Port {
 pub trait Node {
     fn get_id(&self) -> &str;
     fn calculate_size(&mut self, font: &FontInfo, suggested_char_wrap: u32);
-    fn get_width(&self) -> u32;
-    fn get_height(&self) -> u32;
+    fn get_width(&self) -> i32;
+    fn get_height(&self) -> i32;
     fn set_position(&mut self, pos: &Point2D);
     fn get_position(&self) -> Point2D;
     fn get_coordinates(&self, port: &Port) -> Point2D;
@@ -42,23 +42,23 @@ pub trait Node {
 ///
 ///
 pub(crate) fn get_port_default_coordinates(
-    x: u32,
-    y: u32,
-    width: u32,
-    height: u32,
+    x: i32,
+    y: i32,
+    width: i32,
+    height: i32,
     port: &Port,
 ) -> Point2D {
     Point2D {
         x: match port {
             Port::North => x,
-            Port::East => x + width / 2,
+            Port::East => x + (width / 2) as i32,
             Port::South => x,
-            Port::West => x - width / 2,
+            Port::West => x - (width / 2) as i32,
         },
         y: match port {
-            Port::North => y - height / 2,
+            Port::North => y - (height / 2) as i32,
             Port::East => y,
-            Port::South => y + height / 2,
+            Port::South => y + (height / 2) as i32,
             Port::West => y,
         },
     }
