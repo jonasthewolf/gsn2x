@@ -10,7 +10,7 @@ use std::{
 pub use util::{escape_node_id, escape_text};
 
 use edges::{EdgeType, SingleEdge};
-use graph::{get_forced_levels, rank_nodes, NodePlace};
+use graph::{rank_nodes, NodePlace};
 use nodes::{setup_basics, Node, Port};
 use rusttype::Font;
 use svg::{
@@ -158,10 +158,7 @@ impl<'a> DirGraph<'a> {
         self
     }
 
-    pub fn write(
-        mut self,
-        output: impl std::io::Write,
-    ) -> Result<(), std::io::Error> {
+    pub fn write(mut self, output: impl std::io::Write) -> Result<(), std::io::Error> {
         self = self.setup_basics();
         self = self.setup_stylesheets();
         self = self.layout();
@@ -191,19 +188,9 @@ impl<'a> DirGraph<'a> {
             .values()
             .for_each(|n| n.borrow_mut().calculate_size(&self.font, self.wrap));
 
-        // Create forced levels
-        let forced_levels = get_forced_levels(&self.nodes, &self.edges, &self.forced_levels);
-        for (node, level) in forced_levels {
-            self.nodes
-                .get(&*node)
-                .unwrap()
-                .borrow_mut()
-                .set_forced_level(level);
-        }
-
         // Rank nodes
         let edge_map = calculate_parent_node_map(&self.edges);
-        let ranks = rank_nodes(&mut self.nodes, &mut self.edges);
+        let ranks = rank_nodes(&mut self.nodes, &mut self.edges, &self.forced_levels);
 
         // Calculate width and maximum height of all ranks including margins
         let mut sizes: BTreeMap<usize, (u32, u32)> = BTreeMap::new();
@@ -212,17 +199,14 @@ impl<'a> DirGraph<'a> {
                 .values()
                 .map(|np| np.get_max_width(&self.nodes) + self.margin.left + self.margin.right)
                 .sum();
-            let cur_height = self.margin.top + self.get_max_height(&rank) + self.margin.bottom;
+            let cur_height = self.margin.top + self.get_max_height(rank) + self.margin.bottom;
             sizes.insert(*rank_index, (cur_width, cur_height));
         }
         let max_width = sizes.values().map(|&(w, _)| w).max().unwrap();
         let max_width_index = *sizes.iter().max_by_key(|(_, (w, _))| w).unwrap().0;
 
-        let mut x;
-        let mut y;
-
         // Calculate y up to maximum width rank
-        y = sizes
+        let mut y = sizes
             .values()
             .take(max_width_index)
             .map(|(_, h)| h)
@@ -231,8 +215,8 @@ impl<'a> DirGraph<'a> {
         let max_width_y = y;
 
         // Position nodes on max width rank
-        x = self.margin.left;
-        for (_, np) in ranks.get(&max_width_index).unwrap() {
+        let mut x = self.margin.left;
+        for np in ranks.get(&max_width_index).unwrap().values() {
             x = self.place_nodeplace(
                 np,
                 x,
@@ -428,12 +412,14 @@ impl<'a> DirGraph<'a> {
         let mut min = max_width;
         let mut max = 0;
         if let Some(children) = self.edges.get(current_node) {
-            for (child, _) in children.iter().filter(|(_, et)| match et {
-                EdgeType::OneWay(SingleEdge::SupportedBy)
-                | EdgeType::TwoWay((_, SingleEdge::SupportedBy))
-                | EdgeType::OneWay(SingleEdge::Composite)
-                | EdgeType::TwoWay((_, SingleEdge::Composite)) => true,
-                _ => false,
+            for (child, _) in children.iter().filter(|(_, et)| {
+                matches!(
+                    et,
+                    EdgeType::OneWay(SingleEdge::SupportedBy)
+                        | EdgeType::TwoWay((_, SingleEdge::SupportedBy))
+                        | EdgeType::OneWay(SingleEdge::Composite)
+                        | EdgeType::TwoWay((_, SingleEdge::Composite))
+                )
             }) {
                 let pos = self.nodes.get(child).unwrap().borrow().get_position();
                 min = std::cmp::min(min, pos.x);
@@ -578,8 +564,7 @@ impl<'a> DirGraph<'a> {
                         // Already covered by all other matches
                         //| EdgeType::TwoWay((SingleEdge::Composite, _))
                         classes.push_str(" gsncomposite")
-                    }
-                    // EdgeType::Invisible => classes.push_str(" gsninvis"),
+                    } // EdgeType::Invisible => classes.push_str(" gsninvis"),
                 };
                 let mut e = Path::new()
                     .set("d", data)
