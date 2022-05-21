@@ -18,8 +18,7 @@ pub fn check_nodes(
             check_levels(diag, nodes);
             check_cycles(diag, nodes);
         })
-        .or::<()>(Ok(()))
-        .unwrap();
+        .unwrap_or(());
 }
 
 ///
