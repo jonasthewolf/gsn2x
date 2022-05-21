@@ -205,10 +205,8 @@ impl<'a> DirGraph<'a> {
 
         // Draw edges
         self.render_edges()
-        // self
     }
 
-    ///
     ///
     ///
     ///
@@ -217,119 +215,60 @@ impl<'a> DirGraph<'a> {
         ranks: &BTreeMap<usize, BTreeMap<usize, NodePlace>>,
         edge_map: BTreeMap<String, BTreeSet<String>>,
     ) -> Self {
-        // Calculate width and maximum height of all ranks including margins
-        let mut sizes: BTreeMap<usize, (i32, i32)> = BTreeMap::new();
-        for (rank_index, rank) in ranks {
-            let cur_width: i32 = rank
-                .values()
-                .map(|np| np.get_max_width(&self.nodes) + self.margin.left + self.margin.right)
-                .sum();
-            let cur_height = self.margin.top + self.get_max_height(rank) + self.margin.bottom;
-            sizes.insert(*rank_index, (cur_width, cur_height));
-        }
-        let max_width = sizes.values().map(|&(w, _)| w).max().unwrap();
-        let max_width_index = *sizes.iter().max_by_key(|(_, (w, _))| w).unwrap().0;
-        // Calculate y up to maximum width rank
-        let mut y = sizes
-            .values()
-            .take(max_width_index)
-            .map(|(_, h)| h)
-            .sum::<i32>()
-            + self.margin.top;
-        let max_width_y = y;
-        // Position nodes on max width rank
-        let mut x = self.margin.left;
-        for np in ranks.get(&max_width_index).unwrap().values() {
-            x = self.place_nodeplace(
-                np,
-                x,
-                y,
-                sizes.get(&max_width_index).unwrap().1 - self.margin.top - self.margin.bottom,
-            );
-        }
-        y += sizes.get(&max_width_index).unwrap().1 + self.margin.bottom;
-        // Position nodes below
-        for idx in max_width_index + 1..ranks.len() {
-            let rank = ranks.get(&idx).unwrap();
-            let height_max = sizes.get(&idx).unwrap().1 - self.margin.top - self.margin.bottom;
-            x = self.margin.left;
-            for np in rank.values() {
-                match np {
-                    NodePlace::Node(id) => {
-                        let mut n = self.nodes.get(id).unwrap().borrow_mut();
-                        let x_m = x + n.get_width() / 2;
-                        let x_p = self.get_center_of_parents(id, &edge_map, max_width);
-                        x = std::cmp::max(x_m, x_p);
-                        n.set_position(&Point2D {
-                            x,
-                            y: y + height_max / 2,
-                        });
-                        x += n.get_width() / 2 + self.margin.left + self.margin.right;
-                    }
-                    NodePlace::MultipleNodes(ids) => {
-                        let x_max = ids
-                            .iter()
-                            .map(|id| self.nodes.get(id).unwrap().borrow().get_width())
-                            .max()
-                            .unwrap();
-                        let mut y_n = y;
-                        for id in ids {
-                            let mut n = self.nodes.get(id).unwrap().borrow_mut();
-                            let n_height = n.get_height();
-                            n.set_position(&Point2D {
-                                x: x + x_max / 2,
-                                y: y_n + n_height / 2,
-                            });
-                            y_n += n_height + self.margin.top + self.margin.bottom;
-                        }
-                        x += x_max + self.margin.left + self.margin.right;
-                    }
-                }
+        let mut y = self.margin.top;
+        // Initial setup
+        for v_rank in ranks.values() {
+            let mut x = self.margin.left;
+            let dy_max = self.get_max_height(v_rank);
+            y += dy_max / 2;
+            for np in v_rank.values() {
+                let w = np.get_max_width(&self.nodes);
+                x += w / 2;
+                np.set_position(&self.nodes, &self.margin, Point2D { x, y });
+                x += w / 2 + self.margin.left + self.margin.right;
             }
-            y += height_max + self.margin.top + self.margin.bottom;
+            y += self.margin.bottom + dy_max / 2 + self.margin.top;
         }
-        // Position nodes above
-        y = max_width_y;
-        for idx in (0..max_width_index).rev() {
-            let rank = ranks.get(&idx).unwrap();
-            let height_max = sizes.get(&idx).unwrap().1 - self.margin.top - self.margin.bottom;
-            x = self.margin.left;
-            y -= height_max + self.margin.top + self.margin.bottom;
-            for np in rank.values() {
-                match np {
-                    NodePlace::Node(id) => {
-                        let mut n = self.nodes.get(id).unwrap().borrow_mut();
-                        let x_c = self.get_center_of_children(id, max_width);
-                        let x_p = self.get_center_of_parents(id, &edge_map, max_width);
-                        let x_m = x + n.get_width() / 2;
-                        x = std::cmp::max(x_m, x_c.unwrap_or(x_p));
-                        n.set_position(&Point2D {
-                            x,
-                            y: y + height_max / 2,
-                        });
-                        x += n.get_width() / 2 + self.margin.left + self.margin.right;
-                    }
-                    NodePlace::MultipleNodes(ids) => {
-                        let x_max = ids
-                            .iter()
-                            .map(|id| self.nodes.get(id).unwrap().borrow().get_width())
-                            .max()
-                            .unwrap();
-                        let mut y_n = y;
-                        for id in ids {
-                            let mut n = self.nodes.get(id).unwrap().borrow_mut();
-                            let n_height = n.get_height();
-                            n.set_position(&Point2D {
-                                x: x + x_max / 2,
-                                y: y_n + n_height / 2,
-                            });
-                            y_n += n_height + self.margin.top + self.margin.bottom;
+        // Iteratively move nodes horizontally until no movement detected
+        // TODO limit by e.g. 20
+        loop {
+            let mut changed = false;
+            let mut y = self.margin.top;
+            for v_rank in ranks.values() {
+                let mut x = self.margin.left;
+                let dy_max = self.get_max_height(v_rank);
+                y += dy_max / 2;
+                for np in v_rank.values() {
+                    let old_x = np.get_x(&self.nodes);
+                    let w = np.get_max_width(&self.nodes);
+                    x += w / 2;
+                    if let Some(x_new) = self.should_parent_move(np, &edge_map) {
+                        x = std::cmp::max(x, x_new);
+                        if x != old_x {
+                            changed = true;
                         }
-                        x += x_max + self.margin.left + self.margin.right;
+                    } else if let Some(x_new) = self.should_child_move(np, &edge_map) {
+                        x = std::cmp::max(x, x_new);
+                        if x != old_x {
+                            changed = true;
+                            dbg!(np);
+                            dbg!(old_x);
+                            dbg!(x);
+                        }
+                    } else {
+                        // Don't move
                     }
+
+                    np.set_position(&self.nodes, &self.margin, Point2D { x, y });
+                    x += w / 2 + self.margin.left + self.margin.right;
                 }
+                y += self.margin.bottom + dy_max / 2 + self.margin.top;
+            }
+            if !changed {
+                break;
             }
         }
+
         // Draw the nodes
         for rank in ranks.values() {
             for np in rank.values() {
@@ -347,7 +286,7 @@ impl<'a> DirGraph<'a> {
                 }
             }
         }
-        // Set size of document
+        // Calculate size of document
         self.width = ranks
             .values()
             .map(|rank| {
@@ -355,100 +294,188 @@ impl<'a> DirGraph<'a> {
                 n.get_x(&self.nodes) + n.get_max_width(&self.nodes)
             })
             .max()
-            .unwrap();
-        self.height = sizes.values().map(|&(_, h)| h).sum();
+            .unwrap_or(0);
+        self.height = ranks
+            .values()
+            .map(|rank| self.margin.top + self.get_max_height(rank) + self.margin.bottom)
+            .sum();
         self
     }
 
     ///
+    /// TODO update and move from graph.rs
     ///
     ///
-    ///
-    fn place_nodeplace(&mut self, np: &NodePlace, x: i32, y: i32, max_height: i32) -> i32 {
-        let mut new_x = x;
-        match np {
-            NodePlace::Node(id) => {
-                let mut n = self.nodes.get(id).unwrap().borrow_mut();
-                let pos = Point2D {
-                    x: x + n.get_width() / 2,
-                    y: y + max_height / 2,
-                };
-                n.set_position(&pos);
-                new_x += self.margin.left + n.get_width() + self.margin.right;
-            }
-            NodePlace::MultipleNodes(ids) => {
-                let x_max = ids
-                    .iter()
-                    .map(|id| self.nodes.get(id).unwrap().borrow().get_width())
-                    .max()
-                    .unwrap();
-                let mut y_n = y;
-                for id in ids {
-                    let mut n = self.nodes.get(id).unwrap().borrow_mut();
-                    let n_height = n.get_height();
-                    n.set_position(&Point2D {
-                        x: x + x_max / 2,
-                        y: y_n + n_height / 2,
-                    });
-                    y_n += n_height + self.margin.top + self.margin.bottom;
-                }
-                new_x += self.margin.left + x_max + self.margin.right;
-            }
-        }
-        new_x
-    }
+    // fn place_nodeplace(&mut self, np: &NodePlace, x: i32, y: i32, max_height: i32) -> i32 {
+    //     let mut new_x = x;
+    //     match np {
+    //         NodePlace::Node(id) => {
+    //             let mut n = self.nodes.get(id).unwrap().borrow_mut();
+    //             let pos = Point2D {
+    //                 x: x + n.get_width() / 2,
+    //                 y: y + max_height / 2,
+    //             };
+    //             n.set_position(&pos);
+    //             new_x += self.margin.left + n.get_width() + self.margin.right;
+    //         }
+    //         NodePlace::MultipleNodes(ids) => {
+    //             let x_max = ids
+    //                 .iter()
+    //                 .map(|id| self.nodes.get(id).unwrap().borrow().get_width())
+    //                 .max()
+    //                 .unwrap();
+    //             let mut y_n = y;
+    //             for id in ids {
+    //                 let mut n = self.nodes.get(id).unwrap().borrow_mut();
+    //                 let n_height = n.get_height();
+    //                 n.set_position(&Point2D {
+    //                     x: x + x_max / 2,
+    //                     y: y_n + n_height / 2,
+    //                 });
+    //                 y_n += n_height + self.margin.top + self.margin.bottom;
+    //             }
+    //             new_x += self.margin.left + x_max + self.margin.right;
+    //         }
+    //     }
+    //     new_x
+    // }
 
     ///
     ///
     ///
     ///
-    fn get_center_of_parents(
+    fn should_child_move(
         &self,
-        current_node: &str,
+        node_place: &NodePlace,
         edge_map: &BTreeMap<String, BTreeSet<String>>,
-        max_width: i32,
-    ) -> i32 {
-        let mut min = max_width;
-        let mut max = 0;
-        if let Some(parents) = edge_map.get(current_node) {
-            for parent in parents {
-                let pos = self.nodes.get(parent).unwrap().borrow().get_position();
-                min = std::cmp::min(min, pos.x);
-                max = std::cmp::max(max, pos.x);
+    ) -> Option<i32> {
+        match node_place {
+            NodePlace::Node(current_node) => {
+                let parents: Vec<&String> = edge_map
+                    .get(current_node)
+                    .iter()
+                    .cloned()
+                    .flatten()
+                    .collect();
+                let parents_children = parents
+                    .iter()
+                    .map(|&c| {
+                        self.edges
+                            .get(c)
+                            .unwrap()
+                            .iter()
+                            .filter(|(_, et)| {
+                                matches!(
+                                    et,
+                                    EdgeType::OneWay(SingleEdge::SupportedBy)
+                                        | EdgeType::TwoWay((_, SingleEdge::SupportedBy))
+                                        | EdgeType::OneWay(SingleEdge::Composite)
+                                        | EdgeType::TwoWay((_, SingleEdge::Composite))
+                                )
+                            })
+                            .count()
+                    })
+                    .max()
+                    .unwrap_or(0);
+                if parents.len() < parents_children {
+                    None
+                } else {
+                    let mm: Vec<i32> = parents
+                        .iter()
+                        .map(|&parent| self.nodes.get(parent).unwrap().borrow().get_position().x)
+                        .collect();
+                    if mm.is_empty() {
+                        // Can happen in rare theoretical, minimal cases.
+                        None
+                    } else {
+                        let min = *mm.iter().min().unwrap();
+                        let max = *mm.iter().max().unwrap();
+                        Some((min + max) / 2)
+                    }
+                }
             }
+            NodePlace::MultipleNodes(_) => None,
         }
-        (min + max) / 2
     }
 
     ///
+    /// Get center of children that have only one parent
     ///
     ///
-    ///
-    fn get_center_of_children(&self, current_node: &str, max_width: i32) -> Option<i32> {
-        let mut min = max_width;
-        let mut max = 0;
-        if let Some(children) = self.edges.get(current_node) {
-            for (child, _) in children.iter().filter(|(_, et)| {
-                matches!(
-                    et,
-                    EdgeType::OneWay(SingleEdge::SupportedBy)
+    fn should_parent_move(
+        &self,
+        node_place: &NodePlace,
+        edge_map: &BTreeMap<String, BTreeSet<String>>,
+    ) -> Option<i32> {
+        match node_place {
+            NodePlace::Node(current_node) => {
+                let cur_edges: Vec<&(String, EdgeType)> = self
+                    .edges
+                    .get(current_node)
+                    .iter()
+                    .cloned()
+                    .flatten()
+                    .collect();
+                let supby_children = cur_edges
+                    .iter()
+                    .filter_map(|(c, et)| match et {
+                        EdgeType::OneWay(SingleEdge::SupportedBy)
                         | EdgeType::TwoWay((_, SingleEdge::SupportedBy))
                         | EdgeType::OneWay(SingleEdge::Composite)
-                        | EdgeType::TwoWay((_, SingleEdge::Composite))
-                )
-            }) {
-                let pos = self.nodes.get(child).unwrap().borrow().get_position();
-                min = std::cmp::min(min, pos.x);
-                max = std::cmp::max(max, pos.x);
+                        | EdgeType::TwoWay((_, SingleEdge::Composite)) => Some(c.as_str()),
+                        _ => None,
+                    })
+                    .collect::<Vec<&str>>();
+                match supby_children.len() {
+                    0 => None, // Node is actually not a parent and, thus, should not move
+                    1 => {
+                        // Exactly one child
+                        let child = *supby_children.get(0).unwrap();
+                        let child_num_parents = edge_map.get(child).unwrap().len(); // TODO remove inContext nodes here.
+                        let x_parent = self
+                            .nodes
+                            .get(current_node)
+                            .unwrap()
+                            .borrow()
+                            .get_position()
+                            .x;
+                        let x_child = self.nodes.get(child).unwrap().borrow().get_position().x;
+                        if child_num_parents > 1 || x_parent > x_child {
+                            None
+                        } else {
+                            Some(x_child)
+                        }
+                    }
+                    _ =>
+                    // More than one child
+                    {
+                        let childrens_parent = supby_children
+                            .iter()
+                            .map(|&c| edge_map.get(c).unwrap().len()) // TODO Remove in context nodes here
+                            .max()
+                            .unwrap();
+                        if childrens_parent > supby_children.len() {
+                            None
+                        } else {
+                            let mm: Vec<i32> = supby_children
+                                .iter()
+                                .map(|&child| {
+                                    self.nodes.get(child).unwrap().borrow().get_position().x
+                                })
+                                .collect();
+                            let min = mm.iter().min().unwrap(); // TODO Check if mm can be empty
+                            let max = mm.iter().max().unwrap();
+                            Some((min + max) / 2)
+                        }
+                    }
+                }
             }
-            Some((min + max) / 2)
-        } else {
-            None
+            NodePlace::MultipleNodes(_) => None, // MultipleNode cannot be supportedBy nodes
         }
     }
 
     ///
-    /// Get the maximum height of ∏a rank
+    /// Get the maximum height of a rank
     ///
     ///
     fn get_max_height(&self, rank: &BTreeMap<usize, NodePlace>) -> i32 {

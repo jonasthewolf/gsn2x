@@ -9,6 +9,8 @@ use crate::dirgraphsvg::{
     nodes::Node,
 };
 
+use super::{Margin, util::point2d::Point2D};
+
 #[derive(Debug)]
 pub enum NodePlace {
     Node(String),
@@ -27,36 +29,39 @@ impl NodePlace {
         }
     }
 
-    // pub(crate) fn set_position(
-    //     &mut self,
-    //     nodes: &BTreeMap<String, Rc<RefCell<dyn Node>>>,
-    //     margin: &Margin,
-    //     pos: Point2D,
-    // ) {
-    //     match self {
-    //         NodePlace::Node(id) => {
-    //             let mut n = nodes.get(id).unwrap().borrow_mut();
-    //             n.set_position(&Point2D { x: pos.x, y: pos.y });
-    //         }
-    //         NodePlace::MultipleNodes(ids) => {
-    //             let x_max = ids
-    //                 .iter()
-    //                 .map(|id| nodes.get(id).unwrap().borrow().get_width())
-    //                 .max()
-    //                 .unwrap();
-    //             let mut y_n = pos.y;
-    //             for id in ids {
-    //                 let mut n = nodes.get(id).unwrap().borrow_mut();
-    //                 let n_height = n.get_height();
-    //                 n.set_position(&Point2D {
-    //                     x: pos.x,
-    //                     y: y_n + n_height / 2,
-    //                 });
-    //                 y_n += n_height + margin.top + margin.bottom;
-    //             }
-    //         }
-    //     }
-    // }
+    ///
+    /// Position point to the center of the node
+    /// 
+    /// 
+    pub(crate) fn set_position(
+        &self,
+        nodes: &BTreeMap<String, Rc<RefCell<dyn Node>>>,
+        margin: &Margin,
+        pos: Point2D,
+    ) {
+        match self {
+            NodePlace::Node(id) => {
+                let mut n = nodes.get(id).unwrap().borrow_mut();
+                n.set_position(&Point2D { x: pos.x, y: pos.y });
+            }
+            NodePlace::MultipleNodes(ids) => {
+                let max_h = ids.iter()
+                        .map(|id| nodes.get(id).unwrap().borrow().get_height())
+                        .sum::<i32>()
+                        + (margin.top + margin.bottom) * (ids.len() - 1) as i32;
+                let mut y_n = pos.y - max_h / 2;
+                for id in ids {
+                    let mut n = nodes.get(id).unwrap().borrow_mut();
+                    let h = n.get_height();
+                    n.set_position(&Point2D {
+                        x: pos.x,
+                        y: y_n + h / 2, // TODO Really correct?
+                    });
+                    y_n += h + margin.top + margin.bottom;
+                }
+            }
+        }
+    }
 
     pub(crate) fn get_x(&self, nodes: &BTreeMap<String, Rc<RefCell<dyn Node>>>) -> i32 {
         match self {
