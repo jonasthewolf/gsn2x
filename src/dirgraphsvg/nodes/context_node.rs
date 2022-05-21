@@ -145,7 +145,6 @@ impl Node for ContextNode {
         }
         g
     }
-
 }
 
 impl ContextNode {
@@ -167,7 +166,6 @@ impl ContextNode {
 #[cfg(test)]
 mod test {
     use super::*;
-
 
     #[test]
     fn test_get_id() {

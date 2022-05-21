@@ -2,11 +2,7 @@ pub mod edges;
 mod graph;
 pub mod nodes;
 mod util;
-use std::{
-    cell::RefCell,
-    collections::{BTreeMap, BTreeSet},
-    rc::Rc,
-};
+use std::{cell::RefCell, collections::BTreeMap, rc::Rc};
 pub use util::{escape_node_id, escape_text};
 
 use edges::{EdgeType, SingleEdge};
@@ -22,7 +18,7 @@ use util::{
     point2d::Point2D,
 };
 
-use self::graph::calculate_parent_node_map;
+use self::graph::calculate_parent_edge_map;
 
 const MARKER_HEIGHT: u32 = 10;
 
@@ -187,13 +183,12 @@ impl<'a> DirGraph<'a> {
     ///
     ///
     fn layout(mut self, cycles_allowed: bool) -> Self {
-        // Calculate node size
+        // Calculate node sizes
         self.nodes
             .values()
             .for_each(|n| n.borrow_mut().calculate_size(&self.font, self.wrap));
 
         // Rank nodes
-        let edge_map = calculate_parent_node_map(&self.edges);
         let ranks = rank_nodes(
             &mut self.nodes,
             &mut self.edges,
@@ -201,7 +196,8 @@ impl<'a> DirGraph<'a> {
             cycles_allowed,
         );
 
-        self = self.render_nodes(&ranks, edge_map);
+        // Draw nodes
+        self = self.render_nodes(&ranks);
 
         // Draw edges
         self.render_edges()
@@ -210,27 +206,13 @@ impl<'a> DirGraph<'a> {
     ///
     ///
     ///
-    fn render_nodes(
-        mut self,
-        ranks: &BTreeMap<usize, BTreeMap<usize, NodePlace>>,
-        edge_map: BTreeMap<String, BTreeSet<String>>,
-    ) -> Self {
-        let mut y = self.margin.top;
-        // Initial setup
-        for v_rank in ranks.values() {
-            let mut x = self.margin.left;
-            let dy_max = self.get_max_height(v_rank);
-            y += dy_max / 2;
-            for np in v_rank.values() {
-                let w = np.get_max_width(&self.nodes);
-                x += w / 2;
-                np.set_position(&self.nodes, &self.margin, Point2D { x, y });
-                x += w / 2 + self.margin.left + self.margin.right;
-            }
-            y += self.margin.bottom + dy_max / 2 + self.margin.top;
-        }
+    fn render_nodes(mut self, ranks: &BTreeMap<usize, BTreeMap<usize, NodePlace>>) -> Self {
+        // Generate edge map from children to parents
+        let edge_map = calculate_parent_edge_map(&self.edges);
         // Iteratively move nodes horizontally until no movement detected
         // TODO limit by e.g. 20
+        let mut first_run = true;
+        let mut limiter = 4;
         loop {
             let mut changed = false;
             let mut y = self.margin.top;
@@ -239,34 +221,31 @@ impl<'a> DirGraph<'a> {
                 let dy_max = self.get_max_height(v_rank);
                 y += dy_max / 2;
                 for np in v_rank.values() {
-                    let old_x = np.get_x(&self.nodes);
                     let w = np.get_max_width(&self.nodes);
-                    x += w / 2;
-                    if let Some(x_new) = self.should_parent_move(np, &edge_map) {
-                        x = std::cmp::max(x, x_new);
-                        if x != old_x {
-                            changed = true;
+                    let old_x = np.get_x(&self.nodes);
+                    x = std::cmp::max(x + w / 2, old_x);
+                    if !first_run {
+                        if let Some(new_x) = self.has_node_to_be_moved(np, &edge_map) {
+                            if new_x != old_x {
+                                x = std::cmp::max(x, new_x);
+                                changed = true;
+                            }
                         }
-                    } else if let Some(x_new) = self.should_child_move(np, &edge_map) {
-                        x = std::cmp::max(x, x_new);
-                        if x != old_x {
-                            changed = true;
-                            dbg!(np);
-                            dbg!(old_x);
-                            dbg!(x);
-                        }
-                    } else {
-                        // Don't move
                     }
-
                     np.set_position(&self.nodes, &self.margin, Point2D { x, y });
                     x += w / 2 + self.margin.left + self.margin.right;
                 }
                 y += self.margin.bottom + dy_max / 2 + self.margin.top;
             }
-            if !changed {
+            if !(first_run || changed) {
                 break;
             }
+            if limiter == 0 {
+                eprintln!("This should not have happened. Rendering a diagram took too long. Please report");
+                break;
+            }
+            first_run = false;
+            limiter -= 1;
         }
 
         // Draw the nodes
@@ -300,6 +279,23 @@ impl<'a> DirGraph<'a> {
             .map(|rank| self.margin.top + self.get_max_height(rank) + self.margin.bottom)
             .sum();
         self
+    }
+
+    ///
+    ///
+    ///
+    ///
+    ///
+    fn has_node_to_be_moved(
+        &self,
+        np: &NodePlace,
+        edge_map: &BTreeMap<String, Vec<(String, EdgeType)>>,
+    ) -> Option<i32> {
+        if let Some(x_new) = self.should_parent_move(np, edge_map) {
+            Some(x_new)
+        } else {
+            self.should_child_move(np, edge_map)
+        }
     }
 
     ///
@@ -347,19 +343,30 @@ impl<'a> DirGraph<'a> {
     fn should_child_move(
         &self,
         node_place: &NodePlace,
-        edge_map: &BTreeMap<String, BTreeSet<String>>,
+        edge_map: &BTreeMap<String, Vec<(String, EdgeType)>>,
     ) -> Option<i32> {
         match node_place {
             NodePlace::Node(current_node) => {
-                let parents: Vec<&String> = edge_map
+                // Collect all nodes pointing to current_node
+                let parents: Vec<&(String, EdgeType)> = edge_map
                     .get(current_node)
                     .iter()
                     .cloned()
                     .flatten()
+                    .filter(|(_, et)| {
+                        matches!(
+                            et,
+                            EdgeType::OneWay(SingleEdge::SupportedBy)
+                                | EdgeType::TwoWay((_, SingleEdge::SupportedBy))
+                                | EdgeType::OneWay(SingleEdge::Composite)
+                                | EdgeType::TwoWay((_, SingleEdge::Composite))
+                        )
+                    })
                     .collect();
+                // Collect all nodes that are pointed to by the parents of current_node
                 let parents_children = parents
                     .iter()
-                    .map(|&c| {
+                    .map(|&(c, _)| {
                         self.edges
                             .get(c)
                             .unwrap()
@@ -382,7 +389,9 @@ impl<'a> DirGraph<'a> {
                 } else {
                     let mm: Vec<i32> = parents
                         .iter()
-                        .map(|&parent| self.nodes.get(parent).unwrap().borrow().get_position().x)
+                        .map(|&(parent, _)| {
+                            self.nodes.get(parent).unwrap().borrow().get_position().x
+                        }) // TODO Remove context nodes too?
                         .collect();
                     if mm.is_empty() {
                         // Can happen in rare theoretical, minimal cases.
@@ -390,6 +399,7 @@ impl<'a> DirGraph<'a> {
                     } else {
                         let min = *mm.iter().min().unwrap();
                         let max = *mm.iter().max().unwrap();
+                        // eprintln!("Child {} of nodes {} should move to {}", current_node, parents.iter().map(|(a,_)| a.as_str()).collect::<Vec<&str>>().join(","), (min+max)/2);
                         Some((min + max) / 2)
                     }
                 }
@@ -399,16 +409,22 @@ impl<'a> DirGraph<'a> {
     }
 
     ///
-    /// Get center of children that have only one parent
-    ///
+    /// There are two cases:
+    /// 1) 1:1 => The parent (current_node) has exactly one child.
+    ///           This child has exactly current_node as its own parent.
+    ///           Move the parent if it is further to the left than its child.
+    /// 2) 1:n => The parent (current_node) has multiple children.
+    ///           It has to have more children than each child parents to be moved.
+    ///           Move the parent to the center of all (supportedBy) child nodes.
     ///
     fn should_parent_move(
         &self,
         node_place: &NodePlace,
-        edge_map: &BTreeMap<String, BTreeSet<String>>,
+        edge_map: &BTreeMap<String, Vec<(String, EdgeType)>>,
     ) -> Option<i32> {
         match node_place {
             NodePlace::Node(current_node) => {
+                // Collect all children
                 let cur_edges: Vec<&(String, EdgeType)> = self
                     .edges
                     .get(current_node)
@@ -416,6 +432,7 @@ impl<'a> DirGraph<'a> {
                     .cloned()
                     .flatten()
                     .collect();
+                // Filter them for supportedBy nodes
                 let supby_children = cur_edges
                     .iter()
                     .filter_map(|(c, et)| match et {
@@ -427,22 +444,36 @@ impl<'a> DirGraph<'a> {
                     })
                     .collect::<Vec<&str>>();
                 match supby_children.len() {
-                    0 => None, // Node is actually not a parent and, thus, should not move
+                    0 => None, // Node is actually not a parent and, thus, should not be moved here
                     1 => {
                         // Exactly one child
                         let child = *supby_children.get(0).unwrap();
-                        let child_num_parents = edge_map.get(child).unwrap().len(); // TODO remove inContext nodes here.
-                        let x_parent = self
-                            .nodes
-                            .get(current_node)
+                        let child_num_parents = edge_map
+                            .get(child)
                             .unwrap()
-                            .borrow()
-                            .get_position()
-                            .x;
+                            .iter()
+                            .filter(|(_, ct)| {
+                                matches!(
+                                    ct,
+                                    EdgeType::OneWay(SingleEdge::SupportedBy)
+                                        | EdgeType::TwoWay((_, SingleEdge::SupportedBy))
+                                        | EdgeType::OneWay(SingleEdge::Composite)
+                                        | EdgeType::TwoWay((_, SingleEdge::Composite))
+                                )
+                            })
+                            .count();
+                        // let x_parent = self
+                        //     .nodes
+                        //     .get(current_node)
+                        //     .unwrap()
+                        //     .borrow()
+                        //     .get_position()
+                        //     .x;
                         let x_child = self.nodes.get(child).unwrap().borrow().get_position().x;
-                        if child_num_parents > 1 || x_parent > x_child {
+                        if child_num_parents > 1 {
                             None
                         } else {
+                            // eprintln!("Parent {} of single node {} should move to {}", current_node, child, x_child);
                             Some(x_child)
                         }
                     }
@@ -451,7 +482,22 @@ impl<'a> DirGraph<'a> {
                     {
                         let childrens_parent = supby_children
                             .iter()
-                            .map(|&c| edge_map.get(c).unwrap().len()) // TODO Remove in context nodes here
+                            .map(|&child| {
+                                edge_map
+                                    .get(child)
+                                    .unwrap()
+                                    .iter()
+                                    .filter(|(_, ct)| {
+                                        matches!(
+                                            ct,
+                                            EdgeType::OneWay(SingleEdge::SupportedBy)
+                                                | EdgeType::TwoWay((_, SingleEdge::SupportedBy))
+                                                | EdgeType::OneWay(SingleEdge::Composite)
+                                                | EdgeType::TwoWay((_, SingleEdge::Composite))
+                                        )
+                                    })
+                                    .count()
+                            })
                             .max()
                             .unwrap();
                         if childrens_parent > supby_children.len() {
@@ -463,9 +509,14 @@ impl<'a> DirGraph<'a> {
                                     self.nodes.get(child).unwrap().borrow().get_position().x
                                 })
                                 .collect();
-                            let min = mm.iter().min().unwrap(); // TODO Check if mm can be empty
-                            let max = mm.iter().max().unwrap();
-                            Some((min + max) / 2)
+                            if mm.is_empty() {
+                                None
+                            } else {
+                                let min = mm.iter().min().unwrap();
+                                let max = mm.iter().max().unwrap();
+                                // eprintln!("Parent {} of nodes {} should move to {}", current_node, supby_children.join(","), (min+max)/2);
+                                Some((min + max) / 2)
+                            }
                         }
                     }
                 }

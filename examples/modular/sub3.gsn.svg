@@ -50,14 +50,14 @@ Context 2
 <title>
 Sn1
 </title>
-<ellipse class="border" cx="91" cy="194" fill="none" rx="35" ry="35" stroke="black" stroke-width="1"/>
-<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="18" x="67" y="183">
+<ellipse class="border" cx="91" cy="173" fill="none" rx="35" ry="35" stroke="black" stroke-width="1"/>
+<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="18" x="67" y="162">
 Sn1
 </text>
-<text font-family="AppleSystemUIFont" font-size="12" textLength="49" x="67" y="203">
+<text font-family="AppleSystemUIFont" font-size="12" textLength="49" x="67" y="182">
 Solution 1
 </text>
 </g>
 <path class="gsnedge gsninctxt" d="M162,59 C162,59,172,59,192,59" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M91,98 C91,128,91,129,91,149" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M91,98 C91,128,91,108,91,128" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 </svg>

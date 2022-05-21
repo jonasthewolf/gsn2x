@@ -47,7 +47,10 @@ impl Node for BoxNode {
                 crate::dirgraphsvg::util::font::text_bounding_box(&font.font, t, font.size);
             self.lines.push((width, height));
             text_height += height;
-            text_width = std::cmp::max(text_width, width + PADDING_HORIZONTAL * 2 + (self.skew * 2) as i32);
+            text_width = std::cmp::max(
+                text_width,
+                width + PADDING_HORIZONTAL * 2 + (self.skew * 2) as i32,
+            );
         }
         self.width = std::cmp::max(self.width, text_width);
         self.height = std::cmp::max(
@@ -192,7 +195,6 @@ impl Node for BoxNode {
         }
         g
     }
-
 }
 
 impl BoxNode {

@@ -9,7 +9,7 @@ use crate::dirgraphsvg::{
     nodes::Node,
 };
 
-use super::{Margin, util::point2d::Point2D};
+use super::{util::point2d::Point2D, Margin};
 
 #[derive(Debug)]
 pub enum NodePlace {
@@ -31,8 +31,8 @@ impl NodePlace {
 
     ///
     /// Position point to the center of the node
-    /// 
-    /// 
+    ///
+    ///
     pub(crate) fn set_position(
         &self,
         nodes: &BTreeMap<String, Rc<RefCell<dyn Node>>>,
@@ -42,13 +42,21 @@ impl NodePlace {
         match self {
             NodePlace::Node(id) => {
                 let mut n = nodes.get(id).unwrap().borrow_mut();
-                n.set_position(&Point2D { x: pos.x, y: pos.y });
+                let old_pos = n.get_position();
+                if old_pos != pos {
+                    eprintln!(
+                        "Set pos of {}: from {},{} to {},{}",
+                        id, old_pos.x, old_pos.y, pos.x, pos.y
+                    );
+                }
+                n.set_position(&pos);
             }
             NodePlace::MultipleNodes(ids) => {
-                let max_h = ids.iter()
-                        .map(|id| nodes.get(id).unwrap().borrow().get_height())
-                        .sum::<i32>()
-                        + (margin.top + margin.bottom) * (ids.len() - 1) as i32;
+                let max_h = ids
+                    .iter()
+                    .map(|id| nodes.get(id).unwrap().borrow().get_height())
+                    .sum::<i32>()
+                    + (margin.top + margin.bottom) * (ids.len() - 1) as i32;
                 let mut y_n = pos.y - max_h / 2;
                 for id in ids {
                     let mut n = nodes.get(id).unwrap().borrow_mut();
@@ -347,10 +355,7 @@ pub(crate) fn rank_nodes<'a>(
     cycles_allowed: bool,
 ) -> BTreeMap<usize, BTreeMap<usize, NodePlace>> {
     // Copy IDs
-    let mut n_ids: BTreeSet<String> = nodes
-        .keys()
-        .cloned()
-        .collect();
+    let mut n_ids: BTreeSet<String> = nodes.keys().cloned().collect();
     // Find root nodes
     for t_edges in edges.values() {
         for (target, _) in t_edges {
@@ -502,7 +507,7 @@ fn add_in_context_nodes(
                             .into_iter()
                             .partition(|x| {
                                 i += 1;
-                                if previous_node_with_connection(x, n, v_ranks, edges) {
+                                if previous_node_with_connection(x, n, &new_rank, edges) {
                                     // Make left/rigth distribution more even
                                     if i % 2 == 1 {
                                         i += 1;
@@ -512,23 +517,31 @@ fn add_in_context_nodes(
                                     i % 2 == 0
                                 }
                             });
+                        // Visit nodes
+                        left.iter().for_each(|n| {
+                            visited_nodes.insert(n.to_owned());
+                        });
+                        right.iter().for_each(|n| {
+                            visited_nodes.insert(n.to_owned());
+                        });
                         match &left.len() {
+                            0 => (),
                             1 => new_rank.push(NodePlace::Node(left.get(0).unwrap().to_owned())),
-                            2.. => new_rank.push(NodePlace::MultipleNodes(
+                            _ => new_rank.push(NodePlace::MultipleNodes(
                                 left.iter().map(|x| x.to_owned()).collect(),
                             )),
-                            _ => (),
                         }
                         new_rank.push(NodePlace::Node(n.to_owned()));
                         match &right.len() {
+                            0 => (),
                             1 => new_rank.push(NodePlace::Node(right.get(0).unwrap().to_owned())),
-                            2.. => new_rank.push(NodePlace::MultipleNodes(
+                            _ => new_rank.push(NodePlace::MultipleNodes(
                                 right.iter().map(|x| x.to_owned()).collect(),
                             )),
-                            _ => (),
                         }
                     } else {
                         new_rank.push(NodePlace::Node(n.to_owned()));
+                        visited_nodes.insert(n.to_owned());
                     }
                 }
                 NodePlace::MultipleNodes(_) => (),
@@ -536,16 +549,6 @@ fn add_in_context_nodes(
         }
         v_ranks.clear();
         for (h, np) in new_rank.into_iter().enumerate() {
-            // Only add visited nodes here, when changing vertical rank.
-            // If done within one horizontal rank, the above logic will fail.
-            match &np {
-                NodePlace::Node(n) => {
-                    visited_nodes.insert(n.to_owned());
-                }
-                NodePlace::MultipleNodes(ns) => ns.iter().for_each(|n| {
-                    visited_nodes.insert(n.to_owned());
-                }),
-            }
             v_ranks.insert(h, np);
         }
     }
@@ -559,10 +562,10 @@ fn add_in_context_nodes(
 fn previous_node_with_connection(
     node: &str,
     cur_node: &str,
-    cur_rank: &BTreeMap<usize, NodePlace>,
+    cur_rank: &[NodePlace],
     edges: &BTreeMap<String, Vec<(String, EdgeType)>>,
 ) -> bool {
-    cur_rank.values().any(|np| match np {
+    cur_rank.iter().any(|np| match np {
         NodePlace::Node(id) => {
             if id != cur_node {
                 if let Some(targets) = edges.get(id) {
@@ -592,16 +595,16 @@ fn previous_node_with_connection(
 ///
 ///
 ///
-pub fn calculate_parent_node_map(
+pub fn calculate_parent_edge_map(
     edges: &BTreeMap<String, Vec<(String, EdgeType)>>,
-) -> BTreeMap<String, BTreeSet<String>> {
+) -> BTreeMap<String, Vec<(String, EdgeType)>> {
     let mut parent_map = BTreeMap::new();
     for (child, target_edges) in edges {
-        for (target_edge, _) in target_edges {
+        for (target_edge, target_type) in target_edges {
             parent_map
                 .entry(target_edge.to_owned())
-                .or_insert_with(BTreeSet::new)
-                .insert(child.to_owned());
+                .or_insert_with(Vec::new)
+                .push((child.to_owned(), *target_type));
         }
     }
     parent_map

@@ -262,7 +262,6 @@ impl Node for AwayNode {
 
         g
     }
-
 }
 
 impl AwayNode {
@@ -294,4 +293,3 @@ impl AwayNode {
         }
     }
 }
-
