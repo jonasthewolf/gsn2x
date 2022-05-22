@@ -210,10 +210,10 @@ impl<'a> DirGraph<'a> {
         // Generate edge map from children to parents
         let edge_map = calculate_parent_edge_map(&self.edges);
         // Iteratively move nodes horizontally until no movement detected
-        // TODO limit by e.g. 20
         let mut first_run = true;
-        let mut limiter = 4;
+        let mut limiter = 150; // Arbitrary value
         loop {
+            dbg!(limiter);
             let mut changed = false;
             let mut y = self.margin.top;
             for v_rank in ranks.values() {
@@ -226,8 +226,9 @@ impl<'a> DirGraph<'a> {
                     x = std::cmp::max(x + w / 2, old_x);
                     if !first_run {
                         if let Some(new_x) = self.has_node_to_be_moved(np, &edge_map) {
-                            if new_x != old_x {
+                            if new_x > x {
                                 x = std::cmp::max(x, new_x);
+                                // eprintln!("Changed {:?} {} {} {}", &np, x, old_x, new_x);
                                 changed = true;
                             }
                         }
@@ -241,7 +242,7 @@ impl<'a> DirGraph<'a> {
                 break;
             }
             if limiter == 0 {
-                eprintln!("This should not have happened. Rendering a diagram took too long. Please report");
+                eprintln!("This should not have happened. Rendering a diagram took too many interations ({}). Please report as an issue on github.com.", limiter);
                 break;
             }
             first_run = false;

@@ -42,13 +42,13 @@ impl NodePlace {
         match self {
             NodePlace::Node(id) => {
                 let mut n = nodes.get(id).unwrap().borrow_mut();
-                let old_pos = n.get_position();
-                if old_pos != pos {
-                    eprintln!(
-                        "Set pos of {}: from {},{} to {},{}",
-                        id, old_pos.x, old_pos.y, pos.x, pos.y
-                    );
-                }
+                // let old_pos = n.get_position();
+                // if old_pos != pos {
+                //     eprintln!(
+                //         "Set pos of {}: from {},{} to {},{}",
+                //         id, old_pos.x, old_pos.y, pos.x, pos.y
+                //     );
+                // }
                 n.set_position(&pos);
             }
             NodePlace::MultipleNodes(ids) => {
@@ -63,7 +63,7 @@ impl NodePlace {
                     let h = n.get_height();
                     n.set_position(&Point2D {
                         x: pos.x,
-                        y: y_n + h / 2, // TODO Really correct?
+                        y: y_n + h / 2,
                     });
                     y_n += h + margin.top + margin.bottom;
                 }
