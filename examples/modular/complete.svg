@@ -1,4 +1,4 @@
-<svg viewBox="0 0 746 485" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<svg viewBox="0 0 598 445" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 <symbol id="module_icon" viewbox="0 0 20 20">
 <rect fill="lightgrey" height="5" stroke="black" stroke-width="1" width="10" x="0" y="0"/>
 <rect fill="lightgrey" height="10" stroke="black" stroke-width="1" width="20" x="0" y="5"/>
@@ -18,11 +18,11 @@
 <title>
 G1
 </title>
-<path class="border" d="M265,36 L349,36 L349,86 L265,86 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="13" x="272" y="57">
+<path class="border" d="M320,36 L404,36 L404,86 L320,86 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="13" x="327" y="57">
 G1
 </text>
-<text font-family="AppleSystemUIFont" font-size="12" textLength="51" x="272" y="77">
+<text font-family="AppleSystemUIFont" font-size="12" textLength="51" x="327" y="77">
 Main Goal
 </text>
 </g>
@@ -30,14 +30,14 @@ Main Goal
 <title>
 A1
 </title>
-<ellipse class="border" cx="425" cy="61" fill="none" rx="36" ry="41" stroke="black" stroke-width="1"/>
-<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="12" x="403" y="50">
+<ellipse class="border" cx="480" cy="61" fill="none" rx="36" ry="41" stroke="black" stroke-width="1"/>
+<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="12" x="458" y="50">
 A1
 </text>
-<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" x="456" y="97">
+<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" x="511" y="97">
 A
 </text>
-<text font-family="AppleSystemUIFont" font-size="12" textLength="44" x="403" y="70">
+<text font-family="AppleSystemUIFont" font-size="12" textLength="44" x="458" y="70">
 TestABC
 </text>
 </g>
@@ -45,26 +45,50 @@ TestABC
 <title>
 S1
 </title>
-<path class="border" d="M306,142 L435,142 L420,192 L291,192 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="12" x="313" y="163">
+<path class="border" d="M305,142 L434,142 L419,192 L290,192 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="12" x="312" y="163">
 S1
 </text>
-<text font-family="AppleSystemUIFont" font-size="12" textLength="101" x="298" y="183">
+<text font-family="AppleSystemUIFont" font-size="12" textLength="101" x="297" y="183">
 Divide and Conquer
+</text>
+</g>
+<g class="gsnelem gsnctxt gsn_module_Sub3" id="node_C2">
+<title>
+C2
+</title>
+<path class="border" d="M30,250 L90,250 C100,250,100,296,90,296 L30,296 C20,296,20,250,30,250" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="14" x="30" y="269">
+C2
+</text>
+<text font-family="AppleSystemUIFont" font-size="12" textLength="49" x="30" y="289">
+Context 2
+</text>
+</g>
+<g class="gsnelem gsngoal gsn_module_Sub1" id="node_G3">
+<title>
+G3
+</title>
+<path class="border" d="M140,248 L282,248 L282,298 L140,298 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="15" x="147" y="269">
+G3
+</text>
+<text font-family="AppleSystemUIFont" font-size="12" textLength="128" x="147" y="289">
+Conquer the submodules
 </text>
 </g>
 <g class="gsnelem gsnjust gsn_module_Main" id="node_J1">
 <title>
 J1
 </title>
-<ellipse class="border" cx="349" cy="274" fill="none" rx="55" ry="41" stroke="black" stroke-width="1"/>
-<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="11" x="313" y="263">
+<ellipse class="border" cx="377" cy="273" fill="none" rx="55" ry="41" stroke="black" stroke-width="1"/>
+<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="11" x="341" y="262">
 J1
 </text>
-<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" x="399" y="310">
+<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" x="427" y="309">
 J
 </text>
-<text font-family="AppleSystemUIFont" font-size="12" textLength="72" x="313" y="283">
+<text font-family="AppleSystemUIFont" font-size="12" textLength="72" x="341" y="282">
 Some Context
 </text>
 </g>
@@ -72,73 +96,33 @@ Some Context
 <title>
 G2
 </title>
-<path class="border" d="M170,246 L254,246 L254,302 L170,302 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="14" x="177" y="267">
+<path class="border" d="M472,245 L556,245 L556,301 L472,301 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="14" x="479" y="266">
 G2
 </text>
-<text font-family="AppleSystemUIFont" font-size="12" textLength="31" x="177" y="287">
+<text font-family="AppleSystemUIFont" font-size="12" textLength="31" x="479" y="286">
 Divide
 </text>
-<path d="M212,302 l5,5 l-5,5 l-5,-5 z" fill="none" stroke="black" stroke-width="1"/>
+<path d="M514,301 l5,5 l-5,5 l-5,-5 z" fill="none" stroke="black" stroke-width="1"/>
 </g>
-<g class="gsnelem gsnjust gsn_module_Main" id="node_J1">
-<title>
-J1
-</title>
-<ellipse class="border" cx="349" cy="274" fill="none" rx="55" ry="41" stroke="black" stroke-width="1"/>
-<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="11" x="313" y="263">
-J1
-</text>
-<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" x="399" y="310">
-J
-</text>
-<text font-family="AppleSystemUIFont" font-size="12" textLength="72" x="313" y="283">
-Some Context
-</text>
-</g>
-<g class="gsnelem gsngoal gsn_module_Sub1" id="node_G3">
-<title>
-G3
-</title>
-<path class="border" d="M444,249 L586,249 L586,299 L444,299 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="15" x="451" y="270">
-G3
-</text>
-<text font-family="AppleSystemUIFont" font-size="12" textLength="128" x="451" y="290">
-Conquer the submodules
-</text>
-</g>
-<g class="gsnelem gsnctxt gsn_module_Sub3" id="node_C2">
-<title>
-C2
-</title>
-<path class="border" d="M636,251 L696,251 C706,251,706,297,696,297 L636,297 C626,297,626,251,636,251" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="14" x="636" y="270">
-C2
-</text>
-<text font-family="AppleSystemUIFont" font-size="12" textLength="49" x="636" y="290">
-Context 2
-</text>
-</g>
-<g/>
 <g class="gsnelem gsnsltn gsn_module_Sub3" id="node_Sn1">
 <title>
 Sn1
 </title>
-<ellipse class="border" cx="425" cy="390" fill="none" rx="35" ry="35" stroke="black" stroke-width="1"/>
-<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="18" x="401" y="379">
+<ellipse class="border" cx="211" cy="389" fill="none" rx="35" ry="35" stroke="black" stroke-width="1"/>
+<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="18" x="187" y="378">
 Sn1
 </text>
-<text font-family="AppleSystemUIFont" font-size="12" textLength="49" x="401" y="399">
+<text font-family="AppleSystemUIFont" font-size="12" textLength="49" x="187" y="398">
 Solution 1
 </text>
 </g>
-<path class="gsnedge gsninctxt" d="M349,61 C349,61,359,61,379,61" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M307,86 C307,116,363,112,363,132" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninctxt" d="M254,274 C254,274,264,274,284,274" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninctxt" d="M444,274 C444,274,434,274,414,274" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninctxt" d="M586,274 C586,274,596,274,616,274" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M515,299 C515,329,425,325,425,345" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M363,192 C363,222,212,216,212,236" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M363,192 C363,222,515,219,515,239" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M404,61 C404,61,414,61,434,61" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M362,86 C362,116,362,112,362,132" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M472,273 C472,273,462,273,442,273" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M282,273 C282,273,292,273,312,273" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M140,273 C140,273,130,273,110,273" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M211,298 C211,328,211,324,211,344" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M362,192 C362,222,514,215,514,235" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M362,192 C362,222,211,218,211,238" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 </svg>

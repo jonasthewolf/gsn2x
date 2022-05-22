@@ -4,10 +4,10 @@ use crate::dirgraphsvg::FontInfo;
 
 use super::{get_port_default_coordinates, setup_basics, Node, Point2D, Port};
 
-const PADDING_VERTICAL: u32 = 7;
-const PADDING_HORIZONTAL: u32 = 7;
-const TEXT_OFFSET: u32 = 20;
-const MODULE_IMAGE: u32 = 20;
+const PADDING_VERTICAL: i32 = 7;
+const PADDING_HORIZONTAL: i32 = 7;
+const TEXT_OFFSET: i32 = 20;
+const MODULE_IMAGE: i32 = 20;
 
 pub enum AwayType {
     Goal,
@@ -25,15 +25,14 @@ pub struct AwayNode {
     node_type: AwayType,
     url: Option<String>,
     classes: Option<Vec<String>>,
-    width: u32,
-    height: u32,
-    lines: Vec<(u32, u32)>,
-    x: u32,
-    y: u32,
-    forced_level: Option<usize>,
-    mod_width: u32,
-    mod_height: u32,
-    addon_height: u32,
+    width: i32,
+    height: i32,
+    lines: Vec<(i32, i32)>,
+    x: i32,
+    y: i32,
+    mod_width: i32,
+    mod_height: i32,
+    addon_height: i32,
 }
 
 impl Node for AwayNode {
@@ -80,10 +79,10 @@ impl Node for AwayNode {
         ); // +3 to make padding at bottom larger
         self.addon_height = match self.node_type {
             AwayType::Goal => 0,
-            AwayType::Solution => (self.width as f32 * 0.5) as u32,
-            AwayType::Context => (self.width as f32 * 0.1) as u32,
-            AwayType::Assumption => (self.width as f32 * 0.25) as u32,
-            AwayType::Justification => (self.width as f32 * 0.25) as u32,
+            AwayType::Solution => (self.width as f32 * 0.5) as i32,
+            AwayType::Context => (self.width as f32 * 0.1) as i32,
+            AwayType::Assumption => (self.width as f32 * 0.25) as i32,
+            AwayType::Justification => (self.width as f32 * 0.25) as i32,
         };
         self.height += self.addon_height;
     }
@@ -92,11 +91,11 @@ impl Node for AwayNode {
         self.identifier.as_ref()
     }
 
-    fn get_width(&self) -> u32 {
+    fn get_width(&self) -> i32 {
         self.width
     }
 
-    fn get_height(&self) -> u32 {
+    fn get_height(&self) -> i32 {
         self.height
     }
 
@@ -252,7 +251,7 @@ impl Node for AwayNode {
                 .set("x", self.x - self.width / 2 + PADDING_HORIZONTAL)
                 .set(
                     "y",
-                    start_id + TEXT_OFFSET + (n as u32 + 1) * self.lines.get(n + 1).unwrap().1,
+                    start_id + TEXT_OFFSET + (n as i32 + 1) * self.lines.get(n + 1).unwrap().1,
                 )
                 .set("textLength", self.lines.get(n + 1).unwrap().0)
                 .set("font-size", font.size)
@@ -262,14 +261,6 @@ impl Node for AwayNode {
         }
 
         g
-    }
-
-    fn get_forced_level(&self) -> Option<usize> {
-        self.forced_level
-    }
-
-    fn set_forced_level(&mut self, level: usize) {
-        self.forced_level = Some(level);
     }
 }
 
@@ -293,7 +284,6 @@ impl AwayNode {
             lines: vec![],
             x: 0,
             y: 0,
-            forced_level: None,
             module: module.to_owned(),
             module_url,
             node_type,
@@ -301,17 +291,5 @@ impl AwayNode {
             mod_height: 0,
             addon_height: 0,
         }
-    }
-}
-
-#[cfg(test)]
-mod test {
-    use super::*;
-
-    #[test]
-    fn test_set_forced_level() {
-        let mut node = AwayNode::new("id", "text", "module", None, AwayType::Goal, None, None);
-        node.set_forced_level(3);
-        assert_eq!(node.get_forced_level(), Some(3));
     }
 }

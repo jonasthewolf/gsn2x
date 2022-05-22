@@ -4,19 +4,19 @@ use crate::dirgraphsvg::FontInfo;
 
 use super::{get_port_default_coordinates, setup_basics, Node, Point2D};
 
-const PADDING: u32 = 5;
-const TEXT_OFFSET: u32 = 20;
+const PADDING: i32 = 5;
+const TEXT_OFFSET: i32 = 20;
 
 pub struct ContextNode {
     identifier: String,
     text: String,
     url: Option<String>,
     classes: Option<Vec<String>>,
-    width: u32,
-    height: u32,
-    lines: Vec<(u32, u32)>,
-    x: u32,
-    y: u32,
+    width: i32,
+    height: i32,
+    lines: Vec<(i32, i32)>,
+    x: i32,
+    y: i32,
 }
 
 impl Node for ContextNode {
@@ -65,11 +65,11 @@ impl Node for ContextNode {
         self.identifier.as_ref()
     }
 
-    fn get_width(&self) -> u32 {
+    fn get_width(&self) -> i32 {
         self.width
     }
 
-    fn get_height(&self) -> u32 {
+    fn get_height(&self) -> i32 {
         self.height
     }
 
@@ -135,7 +135,7 @@ impl Node for ContextNode {
                     self.y - self.height / 2
                         + PADDING
                         + TEXT_OFFSET
-                        + (n as u32 + 1) * self.lines.get(n + 1).unwrap().1,
+                        + (n as i32 + 1) * self.lines.get(n + 1).unwrap().1,
                 )
                 .set("textLength", self.lines.get(n + 1).unwrap().0)
                 .set("font-size", font.size)
@@ -145,15 +145,6 @@ impl Node for ContextNode {
         }
         g
     }
-
-    ///
-    /// Intentionally ignore forced level for context nodes
-    ///
-    fn get_forced_level(&self) -> Option<usize> {
-        None
-    }
-
-    fn set_forced_level(&mut self, _: usize) {}
 }
 
 impl ContextNode {
@@ -175,13 +166,6 @@ impl ContextNode {
 #[cfg(test)]
 mod test {
     use super::*;
-
-    #[test]
-    fn test_set_forced_level() {
-        let mut node = ContextNode::new("id", "text", None, None);
-        node.set_forced_level(3);
-        assert_eq!(node.get_forced_level(), None);
-    }
 
     #[test]
     fn test_get_id() {

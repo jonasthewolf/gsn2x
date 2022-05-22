@@ -4,10 +4,10 @@ use crate::dirgraphsvg::FontInfo;
 
 use super::{get_port_default_coordinates, setup_basics, Node, Point2D, Port};
 
-const PADDING_VERTICAL: u32 = 7;
-const PADDING_HORIZONTAL: u32 = 7;
-const TEXT_OFFSET: u32 = 20;
-const MOUDLE_TAB_HEIGHT: u32 = 10;
+const PADDING_VERTICAL: i32 = 7;
+const PADDING_HORIZONTAL: i32 = 7;
+const TEXT_OFFSET: i32 = 20;
+const MOUDLE_TAB_HEIGHT: i32 = 10;
 
 pub struct BoxNode {
     identifier: String,
@@ -16,12 +16,11 @@ pub struct BoxNode {
     skew: u32,
     url: Option<String>,
     classes: Option<Vec<String>>,
-    width: u32,
-    height: u32,
-    lines: Vec<(u32, u32)>,
-    x: u32,
-    y: u32,
-    forced_level: Option<usize>,
+    width: i32,
+    height: i32,
+    lines: Vec<(i32, i32)>,
+    x: i32,
+    y: i32,
     is_module_node: bool,
 }
 
@@ -31,7 +30,7 @@ impl Node for BoxNode {
     /// Height: 5 padding on each side, minimum 30, id line height (max. 20) + height of each text line
     ///
     fn calculate_size(&mut self, font: &FontInfo, suggested_char_wrap: u32) {
-        self.width = PADDING_HORIZONTAL * 2 + 70 + self.skew * 2; // Padding of 5 on both sides
+        self.width = PADDING_HORIZONTAL * 2 + 70 + (self.skew * 2) as i32; // Padding of 5 on both sides
         self.height = PADDING_VERTICAL * 2 + 30; // Padding of 5 on both sides
         self.text =
             crate::dirgraphsvg::util::wordwrap::wordwrap(&self.text, suggested_char_wrap, "\n");
@@ -48,7 +47,10 @@ impl Node for BoxNode {
                 crate::dirgraphsvg::util::font::text_bounding_box(&font.font, t, font.size);
             self.lines.push((width, height));
             text_height += height;
-            text_width = std::cmp::max(text_width, width + PADDING_HORIZONTAL * 2 + self.skew * 2);
+            text_width = std::cmp::max(
+                text_width,
+                width + PADDING_HORIZONTAL * 2 + (self.skew * 2) as i32,
+            );
         }
         self.width = std::cmp::max(self.width, text_width);
         self.height = std::cmp::max(
@@ -67,11 +69,11 @@ impl Node for BoxNode {
         self.identifier.as_ref()
     }
 
-    fn get_width(&self) -> u32 {
+    fn get_width(&self) -> i32 {
         self.width
     }
 
-    fn get_height(&self) -> u32 {
+    fn get_height(&self) -> i32 {
         self.height
     }
 
@@ -79,9 +81,9 @@ impl Node for BoxNode {
         let mut coords =
             get_port_default_coordinates(self.x, self.y, self.width, self.height, port);
         if port == &super::Port::East {
-            coords.x -= self.skew / 2;
+            coords.x -= (self.skew / 2) as i32;
         } else if port == &super::Port::West {
-            coords.x += self.skew / 2;
+            coords.x += (self.skew / 2) as i32;
         }
         if port == &super::Port::North && self.is_module_node {
             coords.y += MOUDLE_TAB_HEIGHT;
@@ -121,12 +123,12 @@ impl Node for BoxNode {
         } else {
             Data::new()
                 .move_to((
-                    self.x - self.width / 2 + self.skew,
+                    self.x - self.width / 2 + self.skew as i32,
                     self.y - self.height / 2,
                 ))
                 .line_to((self.x + self.width / 2, self.y - self.height / 2))
                 .line_to((
-                    self.x + self.width / 2 - self.skew,
+                    self.x + self.width / 2 - self.skew as i32,
                     self.y + self.height / 2,
                 ))
                 .line_to((self.x - self.width / 2, self.y + self.height / 2))
@@ -143,7 +145,7 @@ impl Node for BoxNode {
         let id = Text::new()
             .set(
                 "x",
-                self.x - self.width / 2 + PADDING_HORIZONTAL + self.skew,
+                self.x - self.width / 2 + PADDING_HORIZONTAL + self.skew as i32,
             )
             .set(
                 "y",
@@ -168,7 +170,7 @@ impl Node for BoxNode {
                     self.y - self.height / 2
                         + PADDING_VERTICAL
                         + TEXT_OFFSET
-                        + (n as u32 + 1) * self.lines.get(n + 1).unwrap().1,
+                        + (n as i32 + 1) * self.lines.get(n + 1).unwrap().1,
                 )
                 .set("textLength", self.lines.get(n + 1).unwrap().0)
                 .set("font-size", font.size)
@@ -192,14 +194,6 @@ impl Node for BoxNode {
             g.append(undev);
         }
         g
-    }
-
-    fn get_forced_level(&self) -> Option<usize> {
-        self.forced_level
-    }
-
-    fn set_forced_level(&mut self, level: usize) {
-        self.forced_level = Some(level);
     }
 }
 
@@ -225,7 +219,6 @@ impl BoxNode {
             lines: vec![],
             x: 0,
             y: 0,
-            forced_level: None,
             is_module_node,
         }
     }

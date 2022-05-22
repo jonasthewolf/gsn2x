@@ -6,7 +6,7 @@ use std::{cell::RefCell, collections::BTreeMap, rc::Rc};
 pub use util::{escape_node_id, escape_text};
 
 use edges::{EdgeType, SingleEdge};
-use graph::{get_forced_levels, rank_nodes, NodePlace};
+use graph::{rank_nodes, NodePlace};
 use nodes::{setup_basics, Node, Port};
 use rusttype::Font;
 use svg::{
@@ -18,13 +18,15 @@ use util::{
     point2d::Point2D,
 };
 
+use self::graph::calculate_parent_edge_map;
+
 const MARKER_HEIGHT: u32 = 10;
 
 pub struct Margin {
-    pub top: u32,
-    pub right: u32,
-    pub bottom: u32,
-    pub left: u32,
+    pub top: i32,
+    pub right: i32,
+    pub bottom: i32,
+    pub left: i32,
 }
 
 impl Default for Margin {
@@ -45,8 +47,8 @@ pub struct FontInfo {
 }
 
 pub struct DirGraph<'a> {
-    width: u32,
-    height: u32,
+    width: i32,
+    height: i32,
     margin: Margin,
     wrap: u32,
     font: FontInfo,
@@ -154,12 +156,12 @@ impl<'a> DirGraph<'a> {
 
     pub fn write(
         mut self,
-        allow_cycle: bool,
         output: impl std::io::Write,
+        cycles_allowed: bool,
     ) -> Result<(), std::io::Error> {
         self = self.setup_basics();
         self = self.setup_stylesheets();
-        self = self.layout(allow_cycle);
+        self = self.layout(cycles_allowed);
         self.document = self
             .document
             .set("viewBox", (0u32, 0u32, self.width, self.height));
@@ -180,118 +182,366 @@ impl<'a> DirGraph<'a> {
     ///
     ///
     ///
-    fn layout(mut self, allow_cycle: bool) -> Self {
-        // Calculate node size
+    fn layout(mut self, cycles_allowed: bool) -> Self {
+        // Calculate node sizes
         self.nodes
             .values()
             .for_each(|n| n.borrow_mut().calculate_size(&self.font, self.wrap));
 
-        // Create forced levels
-        let forced_levels = get_forced_levels(&self.nodes, &self.edges, &self.forced_levels);
-        for (node, level) in forced_levels {
-            self.nodes
-                .get(&*node)
-                .unwrap()
-                .borrow_mut()
-                .set_forced_level(level);
-        }
-
         // Rank nodes
-        let ranks = rank_nodes(&mut self.nodes, &mut self.edges, allow_cycle);
-        self.width = 0;
-        self.height = 0;
+        let ranks = rank_nodes(
+            &mut self.nodes,
+            &mut self.edges,
+            &self.forced_levels,
+            cycles_allowed,
+        );
 
-        // Position nodes
-        let mut x = self.margin.left;
-        let mut y = self.margin.top;
-        for rank in ranks.values() {
-            let height_max = rank
-                .values()
-                .map(|id| match id {
-                    NodePlace::Node(id) => self.nodes.get(id).unwrap().borrow().get_height(),
-                    NodePlace::MultipleNodes(ids) => {
-                        ids.iter()
-                            .map(|id| self.nodes.get(id).unwrap().borrow().get_height())
-                            .sum::<u32>()
-                            + (self.margin.top + self.margin.bottom) * (ids.len() - 1) as u32
-                    }
-                })
-                .max()
-                .unwrap();
-            for np in rank.values() {
-                match np {
-                    NodePlace::Node(id) => {
-                        let mut n = self.nodes.get(id).unwrap().borrow_mut();
-                        x += n.get_width() / 2;
-                        n.set_position(&Point2D {
-                            x,
-                            y: y + height_max / 2,
-                        });
-                        x += n.get_width() / 2 + self.margin.left + self.margin.right;
-                    }
-                    NodePlace::MultipleNodes(ids) => {
-                        let x_max = ids
-                            .iter()
-                            .map(|id| self.nodes.get(id).unwrap().borrow().get_width())
-                            .max()
-                            .unwrap();
-                        let mut y_n = y;
-                        for id in ids {
-                            let mut n = self.nodes.get(id).unwrap().borrow_mut();
-                            let n_height = n.get_height();
-                            n.set_position(&Point2D {
-                                x: x + x_max / 2,
-                                y: y_n + n_height / 2,
-                            });
-                            y_n += n_height + self.margin.top + self.margin.bottom;
+        // Draw nodes
+        self = self.render_nodes(&ranks);
+
+        // Draw edges
+        self.render_edges()
+    }
+
+    ///
+    ///
+    ///
+    fn render_nodes(mut self, ranks: &BTreeMap<usize, BTreeMap<usize, NodePlace>>) -> Self {
+        // Generate edge map from children to parents
+        let edge_map = calculate_parent_edge_map(&self.edges);
+        // Iteratively move nodes horizontally until no movement detected
+        let mut first_run = true;
+        let mut limiter = 150; // Arbitrary value
+        loop {
+            let mut changed = false;
+            let mut y = self.margin.top;
+            for v_rank in ranks.values() {
+                let mut x = self.margin.left;
+                let dy_max = self.get_max_height(v_rank);
+                y += dy_max / 2;
+                for np in v_rank.values() {
+                    let w = np.get_max_width(&self.nodes);
+                    let old_x = np.get_x(&self.nodes);
+                    x = std::cmp::max(x + w / 2, old_x);
+                    if !first_run {
+                        if let Some(new_x) = self.has_node_to_be_moved(np, &edge_map) {
+                            if new_x > x {
+                                x = std::cmp::max(x, new_x);
+                                // eprintln!("Changed {:?} {} {} {}", &np, x, old_x, new_x);
+                                changed = true;
+                            }
                         }
-                        x += x_max + self.margin.left + self.margin.right;
                     }
+                    np.set_position(&self.nodes, &self.margin, Point2D { x, y });
+                    x += w / 2 + self.margin.left + self.margin.right;
                 }
+                y += self.margin.bottom + dy_max / 2 + self.margin.top;
             }
-            self.width = std::cmp::max(self.width, x);
-            x = self.margin.left;
-            y += height_max + self.margin.top + self.margin.bottom;
+            if !(first_run || changed) {
+                break;
+            }
+            if limiter == 0 {
+                eprintln!("This should not have happened. Rendering a diagram took too many interations ({}). Please report as an issue on github.com.", limiter);
+                break;
+            }
+            first_run = false;
+            limiter -= 1;
         }
-        self.height = y + self.margin.bottom;
 
-        // Center nodes and draw them
+        // Draw the nodes
         for rank in ranks.values() {
-            let last_node_place = rank.iter().last().unwrap().1;
-            let delta_x = (self.width
-                - self.margin.left
-                - self.margin.right
-                - (last_node_place.get_x(&self.nodes)
-                    + last_node_place.get_max_width(&self.nodes)))
-                / 2;
             for np in rank.values() {
                 match np {
                     NodePlace::Node(id) => {
                         let mut n = self.nodes.get(id).unwrap().borrow_mut();
-                        let cur_pos = n.get_position();
-                        n.set_position(&Point2D {
-                            x: cur_pos.x + delta_x,
-                            y: cur_pos.y,
-                        });
                         self.document = self.document.add(n.render(&self.font));
                     }
                     NodePlace::MultipleNodes(ids) => {
                         for id in ids {
                             let mut n = self.nodes.get(id).unwrap().borrow_mut();
-                            let cur_pos = n.get_position();
-                            n.set_position(&Point2D {
-                                x: cur_pos.x + delta_x,
-                                y: cur_pos.y,
-                            });
                             self.document = self.document.add(n.render(&self.font));
                         }
                     }
                 }
             }
         }
+        // Calculate size of document
+        self.width = ranks
+            .values()
+            .map(|rank| {
+                let n = rank.values().last().unwrap();
+                n.get_x(&self.nodes) + n.get_max_width(&self.nodes)
+            })
+            .max()
+            .unwrap_or(0);
+        self.height = ranks
+            .values()
+            .map(|rank| self.margin.top + self.get_max_height(rank) + self.margin.bottom)
+            .sum();
+        self
+    }
 
-        // Draw edges
-        self.render_edges()
+    ///
+    ///
+    ///
+    ///
+    ///
+    fn has_node_to_be_moved(
+        &self,
+        np: &NodePlace,
+        edge_map: &BTreeMap<String, Vec<(String, EdgeType)>>,
+    ) -> Option<i32> {
+        if let Some(x_new) = self.should_parent_move(np, edge_map) {
+            Some(x_new)
+        } else {
+            self.should_child_move(np, edge_map)
+        }
+    }
+
+    ///
+    /// TODO update and move from graph.rs
+    ///
+    ///
+    // fn place_nodeplace(&mut self, np: &NodePlace, x: i32, y: i32, max_height: i32) -> i32 {
+    //     let mut new_x = x;
+    //     match np {
+    //         NodePlace::Node(id) => {
+    //             let mut n = self.nodes.get(id).unwrap().borrow_mut();
+    //             let pos = Point2D {
+    //                 x: x + n.get_width() / 2,
+    //                 y: y + max_height / 2,
+    //             };
+    //             n.set_position(&pos);
+    //             new_x += self.margin.left + n.get_width() + self.margin.right;
+    //         }
+    //         NodePlace::MultipleNodes(ids) => {
+    //             let x_max = ids
+    //                 .iter()
+    //                 .map(|id| self.nodes.get(id).unwrap().borrow().get_width())
+    //                 .max()
+    //                 .unwrap();
+    //             let mut y_n = y;
+    //             for id in ids {
+    //                 let mut n = self.nodes.get(id).unwrap().borrow_mut();
+    //                 let n_height = n.get_height();
+    //                 n.set_position(&Point2D {
+    //                     x: x + x_max / 2,
+    //                     y: y_n + n_height / 2,
+    //                 });
+    //                 y_n += n_height + self.margin.top + self.margin.bottom;
+    //             }
+    //             new_x += self.margin.left + x_max + self.margin.right;
+    //         }
+    //     }
+    //     new_x
+    // }
+
+    ///
+    ///
+    ///
+    ///
+    fn should_child_move(
+        &self,
+        node_place: &NodePlace,
+        edge_map: &BTreeMap<String, Vec<(String, EdgeType)>>,
+    ) -> Option<i32> {
+        match node_place {
+            NodePlace::Node(current_node) => {
+                // Collect all nodes pointing to current_node
+                let parents: Vec<&(String, EdgeType)> = edge_map
+                    .get(current_node)
+                    .iter()
+                    .cloned()
+                    .flatten()
+                    .filter(|(_, et)| {
+                        matches!(
+                            et,
+                            EdgeType::OneWay(SingleEdge::SupportedBy)
+                                | EdgeType::TwoWay((_, SingleEdge::SupportedBy))
+                                | EdgeType::OneWay(SingleEdge::Composite)
+                                | EdgeType::TwoWay((_, SingleEdge::Composite))
+                        )
+                    })
+                    .collect();
+                // Collect all nodes that are pointed to by the parents of current_node
+                let parents_children = parents
+                    .iter()
+                    .map(|&(c, _)| {
+                        self.edges
+                            .get(c)
+                            .unwrap()
+                            .iter()
+                            .filter(|(_, et)| {
+                                matches!(
+                                    et,
+                                    EdgeType::OneWay(SingleEdge::SupportedBy)
+                                        | EdgeType::TwoWay((_, SingleEdge::SupportedBy))
+                                        | EdgeType::OneWay(SingleEdge::Composite)
+                                        | EdgeType::TwoWay((_, SingleEdge::Composite))
+                                )
+                            })
+                            .count()
+                    })
+                    .max()
+                    .unwrap_or(0);
+                if parents.len() < parents_children {
+                    None
+                } else {
+                    let mm: Vec<i32> = parents
+                        .iter()
+                        .map(|&(parent, _)| {
+                            self.nodes.get(parent).unwrap().borrow().get_position().x
+                        }) // TODO Remove context nodes too?
+                        .collect();
+                    if mm.is_empty() {
+                        // Can happen in rare theoretical, minimal cases.
+                        None
+                    } else {
+                        let min = *mm.iter().min().unwrap();
+                        let max = *mm.iter().max().unwrap();
+                        // eprintln!("Child {} of nodes {} should move to {}", current_node, parents.iter().map(|(a,_)| a.as_str()).collect::<Vec<&str>>().join(","), (min+max)/2);
+                        Some((min + max) / 2)
+                    }
+                }
+            }
+            NodePlace::MultipleNodes(_) => None,
+        }
+    }
+
+    ///
+    /// There are two cases:
+    /// 1) 1:1 => The parent (current_node) has exactly one child.
+    ///           This child has exactly current_node as its own parent.
+    ///           Move the parent if it is further to the left than its child.
+    /// 2) 1:n => The parent (current_node) has multiple children.
+    ///           It has to have more children than each child parents to be moved.
+    ///           Move the parent to the center of all (supportedBy) child nodes.
+    ///
+    fn should_parent_move(
+        &self,
+        node_place: &NodePlace,
+        edge_map: &BTreeMap<String, Vec<(String, EdgeType)>>,
+    ) -> Option<i32> {
+        match node_place {
+            NodePlace::Node(current_node) => {
+                // Collect all children
+                let cur_edges: Vec<&(String, EdgeType)> = self
+                    .edges
+                    .get(current_node)
+                    .iter()
+                    .cloned()
+                    .flatten()
+                    .collect();
+                // Filter them for supportedBy nodes
+                let supby_children = cur_edges
+                    .iter()
+                    .filter_map(|(c, et)| match et {
+                        EdgeType::OneWay(SingleEdge::SupportedBy)
+                        | EdgeType::TwoWay((_, SingleEdge::SupportedBy))
+                        | EdgeType::OneWay(SingleEdge::Composite)
+                        | EdgeType::TwoWay((_, SingleEdge::Composite)) => Some(c.as_str()),
+                        _ => None,
+                    })
+                    .collect::<Vec<&str>>();
+                match supby_children.len() {
+                    0 => None, // Node is actually not a parent and, thus, should not be moved here
+                    1 => {
+                        // Exactly one child
+                        let child = *supby_children.get(0).unwrap();
+                        let child_num_parents = edge_map
+                            .get(child)
+                            .unwrap()
+                            .iter()
+                            .filter(|(_, ct)| {
+                                matches!(
+                                    ct,
+                                    EdgeType::OneWay(SingleEdge::SupportedBy)
+                                        | EdgeType::TwoWay((_, SingleEdge::SupportedBy))
+                                        | EdgeType::OneWay(SingleEdge::Composite)
+                                        | EdgeType::TwoWay((_, SingleEdge::Composite))
+                                )
+                            })
+                            .count();
+                        // let x_parent = self
+                        //     .nodes
+                        //     .get(current_node)
+                        //     .unwrap()
+                        //     .borrow()
+                        //     .get_position()
+                        //     .x;
+                        let x_child = self.nodes.get(child).unwrap().borrow().get_position().x;
+                        if child_num_parents > 1 {
+                            None
+                        } else {
+                            // eprintln!("Parent {} of single node {} should move to {}", current_node, child, x_child);
+                            Some(x_child)
+                        }
+                    }
+                    _ =>
+                    // More than one child
+                    {
+                        let childrens_parent = supby_children
+                            .iter()
+                            .map(|&child| {
+                                edge_map
+                                    .get(child)
+                                    .unwrap()
+                                    .iter()
+                                    .filter(|(_, ct)| {
+                                        matches!(
+                                            ct,
+                                            EdgeType::OneWay(SingleEdge::SupportedBy)
+                                                | EdgeType::TwoWay((_, SingleEdge::SupportedBy))
+                                                | EdgeType::OneWay(SingleEdge::Composite)
+                                                | EdgeType::TwoWay((_, SingleEdge::Composite))
+                                        )
+                                    })
+                                    .count()
+                            })
+                            .max()
+                            .unwrap();
+                        if childrens_parent > supby_children.len() {
+                            None
+                        } else {
+                            let mm: Vec<i32> = supby_children
+                                .iter()
+                                .map(|&child| {
+                                    self.nodes.get(child).unwrap().borrow().get_position().x
+                                })
+                                .collect();
+                            if mm.is_empty() {
+                                None
+                            } else {
+                                let min = mm.iter().min().unwrap();
+                                let max = mm.iter().max().unwrap();
+                                // eprintln!("Parent {} of nodes {} should move to {}", current_node, supby_children.join(","), (min+max)/2);
+                                Some((min + max) / 2)
+                            }
+                        }
+                    }
+                }
+            }
+            NodePlace::MultipleNodes(_) => None, // MultipleNode cannot be supportedBy nodes
+        }
+    }
+
+    ///
+    /// Get the maximum height of a rank
+    ///
+    ///
+    fn get_max_height(&self, rank: &BTreeMap<usize, NodePlace>) -> i32 {
+        rank.values()
+            .map(|id| match id {
+                NodePlace::Node(id) => self.nodes.get(id).unwrap().borrow().get_height(),
+                NodePlace::MultipleNodes(ids) => {
+                    ids.iter()
+                        .map(|id| self.nodes.get(id).unwrap().borrow().get_height())
+                        .sum::<i32>()
+                        + (self.margin.top + self.margin.bottom) * (ids.len() - 1) as i32
+                }
+            })
+            .max()
+            .unwrap()
     }
 
     ///
@@ -306,7 +556,7 @@ impl<'a> DirGraph<'a> {
                 let s = self.nodes.get(source).unwrap().borrow();
                 let t = self.nodes.get(target).unwrap().borrow();
                 let (marker_start_height, marker_end_height, support_distance) = match edge_type {
-                    EdgeType::Invisible => (0i32, 0i32, 3i32 * MARKER_HEIGHT as i32),
+                    // EdgeType::Invisible => (0i32, 0i32, 3i32 * MARKER_HEIGHT as i32),
                     EdgeType::OneWay(_) => {
                         (0i32, MARKER_HEIGHT as i32, 3i32 * MARKER_HEIGHT as i32)
                     }
@@ -379,7 +629,7 @@ impl<'a> DirGraph<'a> {
                     }
                     EdgeType::OneWay(SingleEdge::Composite)
                     | EdgeType::TwoWay((_, SingleEdge::Composite)) => Some("url(#composite_arrow)"),
-                    EdgeType::Invisible => None,
+                    // EdgeType::Invisible => None,
                 };
                 let arrow_start_id = match &edge_type {
                     EdgeType::TwoWay((SingleEdge::InContextOf, _)) => {
@@ -408,8 +658,7 @@ impl<'a> DirGraph<'a> {
                         // Already covered by all other matches
                         //| EdgeType::TwoWay((SingleEdge::Composite, _))
                         classes.push_str(" gsncomposite")
-                    }
-                    EdgeType::Invisible => classes.push_str(" gsninvis"),
+                    } // EdgeType::Invisible => classes.push_str(" gsninvis"),
                 };
                 let mut e = Path::new()
                     .set("d", data)
@@ -564,11 +813,11 @@ impl<'a> DirGraph<'a> {
                 text_width = std::cmp::max(text_width, width);
             }
 
-            if self.width < text_width + 20 {
-                self.width = text_width + 40;
+            if self.width < text_width + 20i32 {
+                self.width = text_width + 40i32;
             }
-            if self.height < text_height + 20 {
-                self.height = text_height + 40;
+            if self.height < text_height + 20i32 {
+                self.height = text_height + 40i32;
             }
             let x = self.width - text_width - 20;
             let y_base = self.height - text_height - 20;
@@ -621,7 +870,7 @@ mod test {
         d = d.add_nodes(nodes);
         d = d.add_meta_information(&mut vec!["A1".to_owned(), "B2".to_owned()]);
         let mut string_buffer = Vec::new();
-        d.write(false, &mut string_buffer).unwrap();
+        d.write(&mut string_buffer, false).unwrap();
         println!("{}", std::str::from_utf8(string_buffer.as_slice()).unwrap());
     }
 }
