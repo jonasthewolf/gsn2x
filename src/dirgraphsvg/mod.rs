@@ -213,7 +213,6 @@ impl<'a> DirGraph<'a> {
         let mut first_run = true;
         let mut limiter = 150; // Arbitrary value
         loop {
-            dbg!(limiter);
             let mut changed = false;
             let mut y = self.margin.top;
             for v_rank in ranks.values() {
