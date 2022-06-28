@@ -96,19 +96,6 @@ struct NodeInfo<'a> {
 #[derive(Debug)]
 struct NodeInfoMap<'a>(BTreeMap<String, NodeInfo<'a>>);
 
-impl<'a> std::ops::DerefMut for NodeInfoMap<'a> {
-    fn deref_mut(&mut self) -> &mut Self::Target {
-        &mut self.0
-    }
-}
-
-impl<'a> std::ops::Deref for NodeInfoMap<'a> {
-    type Target = BTreeMap<String, NodeInfo<'a>>;
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-
 impl<'a> NodeInfoMap<'a> {
     ///
     ///
@@ -141,7 +128,7 @@ impl<'a> NodeInfoMap<'a> {
         // Look up parents for each node
         for (child, target_edges) in edges {
             for (target_edge, _) in target_edges {
-                node_info.entry(target_edge.to_owned()).and_modify(|e| {
+                node_info.0.entry(target_edge.to_owned()).and_modify(|e| {
                     e.parents.insert(child);
                 });
             }
@@ -178,7 +165,7 @@ impl<'a> NodeInfoMap<'a> {
                             while let Some(parent_id) = stack.pop() {
                                 let mut current_node = parent_id;
                                 while let Some(child_node) =
-                                    find_next_child_node(nodes, edges, &*self, current_node, true)
+                                    find_next_child_node(nodes, edges, &self.0, current_node, true)
                                 {
                                     stack.push(current_node);
                                     self.visit_node(child_node);
@@ -288,12 +275,12 @@ impl<'a> NodeInfoMap<'a> {
                 let mut current_node = parent_id;
                 let mut current_rank = self.get_rank(current_node).unwrap();
                 while let Some(child_node) =
-                    find_next_child_node(nodes, edges, &*self, current_node, true)
+                    find_next_child_node(nodes, edges, &self.0, current_node, true)
                 {
                     self.set_rank(current_node, current_rank);
                     stack.push(current_node);
                     self.visit_node(child_node);
-                    current_rank = determine_child_rank(&*self, child_node, current_rank);
+                    current_rank = determine_child_rank(&self.0, child_node, current_rank);
                     self.set_rank(child_node, current_rank);
                     current_node = child_node;
                 }
@@ -324,7 +311,7 @@ impl<'a> NodeInfoMap<'a> {
             while let Some(parent_id) = stack.pop() {
                 let mut current_node = parent_id;
                 while let Some(child_node) =
-                    find_next_child_node(nodes, edges, &*self, current_node, cycles_allowed)
+                    find_next_child_node(nodes, edges, &self.0, current_node, cycles_allowed)
                 {
                     stack.push(current_node);
                     let vertical_rank = ranks
