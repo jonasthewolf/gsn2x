@@ -392,3 +392,25 @@ pub fn new_module(
         Some(new_classes),
     )))
 }
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    fn test_new_module() {
+        let m = new_module(
+            "id",
+            "text",
+            Some("url".to_owned()),
+            Some(vec!["classa".to_owned()]),
+        );
+        assert_eq!(m.borrow().get_id(), "id");
+    }
+
+    #[test]
+    fn test_setup_basics() {
+        let b = setup_basics("myid", &None, &None);
+        assert_eq!(b.get_attributes()["id"].to_string(), "node_myid".to_owned());
+    }
+}
