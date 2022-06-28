@@ -54,7 +54,7 @@ fn check_root_nodes(
                 );
             }
         }
-        x if x == 0 && nodes.len() > 0 => {
+        x if x == 0 && !nodes.is_empty() => {
             diag.add_error(
                 None,
                 "C01: There are no unreferenced elements found.".to_owned(),

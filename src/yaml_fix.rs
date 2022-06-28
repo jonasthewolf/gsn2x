@@ -1,4 +1,5 @@
 use serde::de::{Deserialize, Deserializer, MapAccess, Visitor};
+use std::collections::btree_map::Entry;
 use std::collections::BTreeMap;
 use std::marker::PhantomData;
 
@@ -59,9 +60,16 @@ where
         // While there are entries remaining in the input, add them
         // into our map.
         while let Some((key, value)) = access.next_entry()? {
-            let errmsg = format!("Element {} is already existing", key);
-            if map.0.insert(key, value).is_some() {
-                return Err(serde::de::Error::custom(errmsg));
+            match map.0.entry(key) {
+                Entry::Vacant(e) => {
+                    e.insert(value);
+                }
+                Entry::Occupied(e) => {
+                    return Err(serde::de::Error::custom(format!(
+                        "Element {} already exists.",
+                        e.key()
+                    )));
+                }
             }
         }
 
@@ -105,7 +113,7 @@ mod test {
         assert!(m.is_err());
         assert_eq!(
             format!("{:?}", m),
-            "Err(Message(\"Element x is already existing\", Some(Pos { marker: Marker { index: 1, line: 1, col: 1 }, path: \".\" })))"
+            "Err(Message(\"Element x already exists.\", Some(Pos { marker: Marker { index: 1, line: 1, col: 1 }, path: \".\" })))"
         );
     }
     #[test]
