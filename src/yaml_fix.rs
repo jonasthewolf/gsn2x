@@ -1,69 +1,47 @@
 use serde::de::{Deserialize, Deserializer, MapAccess, Visitor};
 use std::collections::BTreeMap;
-use std::fmt::Debug;
 use std::marker::PhantomData;
 
 // Copied and adapted from https://serde.rs/deserialize-map.html
 // to work around an issue in serde_yaml that does not check for duplicate keys in input YAML.
 // Duplicate keys are no valid YAML but this is ignored by serde_yaml.
 
-#[derive(Default, PartialEq)]
-pub struct MyMap<K, V>(BTreeMap<K, V>)
+#[derive(Default, Debug, PartialEq)]
+pub struct YamlFixMap<K, V>(BTreeMap<K, V>)
 where
     K: Ord;
 
-impl<K: Ord + Debug, V: Debug> Debug for MyMap<K, V> {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> Result<(), std::fmt::Error> {
-        self.0.fmt(f)
+impl<K: Ord, V> YamlFixMap<K, V> {
+    pub fn new() -> YamlFixMap<K, V> {
+        YamlFixMap(BTreeMap::<K, V>::new())
+    }
+
+    pub fn into_inner(self) -> BTreeMap<K, V> {
+        self.0
     }
 }
 
-impl<K: Ord, V> MyMap<K, V> {
-    pub fn new() -> MyMap<K, V> {
-        MyMap(BTreeMap::<K, V>::new())
-    }
-}
-
-impl<K, V> std::ops::Deref for MyMap<K, V>
+struct YamlFixMapVisitor<K, V>
 where
     K: Ord,
 {
-    type Target = BTreeMap<K, V>;
-    fn deref(&self) -> &BTreeMap<K, V> {
-        &self.0
-    }
+    marker: PhantomData<fn() -> YamlFixMap<K, V>>,
 }
 
-impl<K, V> std::ops::DerefMut for MyMap<K, V>
-where
-    K: Ord,
-{
-    fn deref_mut(&mut self) -> &mut BTreeMap<K, V> {
-        &mut self.0
-    }
-}
-
-struct MyMapVisitor<K, V>
-where
-    K: Ord,
-{
-    marker: PhantomData<fn() -> MyMap<K, V>>,
-}
-
-impl<K: Ord, V> MyMapVisitor<K, V> {
+impl<K: Ord, V> YamlFixMapVisitor<K, V> {
     fn new() -> Self {
-        MyMapVisitor {
+        YamlFixMapVisitor {
             marker: PhantomData,
         }
     }
 }
 
-impl<'de, K, V> Visitor<'de> for MyMapVisitor<K, V>
+impl<'de, K, V> Visitor<'de> for YamlFixMapVisitor<K, V>
 where
     K: Deserialize<'de> + Ord + std::fmt::Display,
     V: Deserialize<'de>,
 {
-    type Value = MyMap<K, V>;
+    type Value = YamlFixMap<K, V>;
 
     fn expecting(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
         formatter.write_str("a map with unique keys")
@@ -76,7 +54,7 @@ where
     where
         M: MapAccess<'de>,
     {
-        let mut map = MyMap::new();
+        let mut map = YamlFixMap::new();
 
         // While there are entries remaining in the input, add them
         // into our map.
@@ -92,7 +70,7 @@ where
 }
 
 // This is the trait that informs Serde how to deserialize MyMap.
-impl<'de, K, V> Deserialize<'de> for MyMap<K, V>
+impl<'de, K, V> Deserialize<'de> for YamlFixMap<K, V>
 where
     K: Deserialize<'de> + Ord + std::fmt::Display,
     V: Deserialize<'de>,
@@ -103,7 +81,7 @@ where
     {
         // Instantiate our Visitor and ask the Deserializer to drive
         // it over the input data, resulting in an instance of MyMap.
-        deserializer.deserialize_map(MyMapVisitor::new())
+        deserializer.deserialize_map(YamlFixMapVisitor::new())
     }
 }
 
@@ -114,16 +92,16 @@ mod test {
     #[test]
     fn format() {
         let btm = BTreeMap::<String, String>::new();
-        let mm = MyMap(btm.clone());
+        let mm = YamlFixMap(btm.clone()).into_inner();
         assert_eq!(format!("{:?}", mm), format!("{:?}", btm));
     }
     #[test]
     fn debug() {
-        assert!(MyMap::<String, String>::new() == MyMap::<String, String>::new());
+        assert!(YamlFixMap::<String, String>::new() == YamlFixMap::<String, String>::new());
     }
     #[test]
-    fn dupliacte() {
-        let m = serde_yaml::from_str::<MyMap<String, String>>("x:\n\nx:");
+    fn duplicate() {
+        let m = serde_yaml::from_str::<YamlFixMap<String, String>>("x:\n\nx:");
         assert!(m.is_err());
         assert_eq!(
             format!("{:?}", m),
@@ -133,7 +111,7 @@ mod test {
     #[test]
     fn unknown_format() {
         let input = "- A\n\n- B\n\n- C\n";
-        let res = serde_yaml::from_str::<MyMap<String, String>>(input);
+        let res = serde_yaml::from_str::<YamlFixMap<String, String>>(input);
         assert!(res.is_err());
         assert_eq!(
             format!("{:?}", res),

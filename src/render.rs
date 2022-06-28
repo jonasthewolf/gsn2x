@@ -1,7 +1,6 @@
 use crate::dirgraphsvg::edges::EdgeType;
 use crate::dirgraphsvg::{escape_node_id, escape_text, nodes::*};
 use crate::gsn::{get_levels, GsnNode, Module};
-use crate::yaml_fix::MyMap;
 use chrono::Utc;
 use std::cell::RefCell;
 use std::collections::{BTreeMap, HashMap};
@@ -233,7 +232,7 @@ pub fn render_architecture(
 pub fn render_complete(
     output: &mut impl Write,
     _matches: &clap::ArgMatches,
-    nodes: &MyMap<String, GsnNode>,
+    nodes: &BTreeMap<String, GsnNode>,
     stylesheets: Option<Vec<&str>>,
 ) -> Result<(), anyhow::Error> {
     // let masked_modules_opt = matches
@@ -278,7 +277,7 @@ pub fn render_argument(
     matches: &clap::ArgMatches,
     module_name: &str,
     modules: &HashMap<String, Module>,
-    nodes: &MyMap<String, GsnNode>,
+    nodes: &BTreeMap<String, GsnNode>,
     stylesheets: Option<Vec<&str>>,
 ) -> Result<(), anyhow::Error> {
     let mut dg = crate::dirgraphsvg::DirGraph::default();
@@ -364,7 +363,7 @@ pub fn render_argument(
 
 pub(crate) fn render_evidences(
     output: &mut impl Write,
-    nodes: &MyMap<String, GsnNode>,
+    nodes: &BTreeMap<String, GsnNode>,
     layers: &Option<Vec<&str>>,
 ) -> Result<(), anyhow::Error> {
     writeln!(output)?;

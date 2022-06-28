@@ -1,6 +1,5 @@
 use super::GsnNode;
 use crate::diagnostics::Diagnostics;
-use crate::yaml_fix::MyMap;
 use std::collections::{BTreeMap, BTreeSet};
 
 ///
@@ -9,7 +8,7 @@ use std::collections::{BTreeMap, BTreeSet};
 ///
 pub fn check_nodes(
     diag: &mut Diagnostics,
-    nodes: &MyMap<String, GsnNode>,
+    nodes: &BTreeMap<String, GsnNode>,
     excluded_modules: Option<Vec<&str>>,
 ) {
     check_node_references(diag, nodes, excluded_modules);
@@ -28,7 +27,7 @@ pub fn check_nodes(
 ///
 fn check_root_nodes(
     diag: &mut Diagnostics,
-    nodes: &MyMap<String, GsnNode>,
+    nodes: &BTreeMap<String, GsnNode>,
 ) -> Result<Vec<String>, ()> {
     let root_nodes = super::get_root_nodes(nodes);
     match root_nodes.len() {
@@ -78,7 +77,7 @@ fn check_root_nodes(
 ///
 fn check_node_references(
     diag: &mut Diagnostics,
-    nodes: &MyMap<String, GsnNode>,
+    nodes: &BTreeMap<String, GsnNode>,
     excluded_modules: Option<Vec<&str>>,
 ) {
     let ex_mods = excluded_modules.iter().flatten().collect::<Vec<_>>();
@@ -119,7 +118,7 @@ fn check_node_references(
 /// It also detects if there is a cycle in an independent graph.
 ///
 ///
-fn check_cycles(diag: &mut Diagnostics, nodes: &MyMap<String, GsnNode>) {
+fn check_cycles(diag: &mut Diagnostics, nodes: &BTreeMap<String, GsnNode>) {
     let mut visited: BTreeSet<String> = BTreeSet::new();
     let root_nodes = super::get_root_nodes(nodes);
     let cloned_root_nodes = root_nodes.to_vec();
@@ -211,7 +210,7 @@ fn check_cycles(diag: &mut Diagnostics, nodes: &MyMap<String, GsnNode>) {
 ///
 ///
 ///
-fn check_levels(diag: &mut Diagnostics, nodes: &MyMap<String, GsnNode>) {
+fn check_levels(diag: &mut Diagnostics, nodes: &BTreeMap<String, GsnNode>) {
     let mut levels = BTreeMap::<&str, usize>::new();
     for node in nodes.values() {
         if let Some(l) = &node.level {
@@ -229,7 +228,7 @@ fn check_levels(diag: &mut Diagnostics, nodes: &MyMap<String, GsnNode>) {
 /// are actually used at at least one node.
 /// Also checks if no reserved words are used, like 'level' or 'text'
 ///
-pub fn check_layers(diag: &mut Diagnostics, nodes: &MyMap<String, GsnNode>, layers: &[&str]) {
+pub fn check_layers(diag: &mut Diagnostics, nodes: &BTreeMap<String, GsnNode>, layers: &[&str]) {
     let reserved_words = [
         "text",
         "inContextOf",
@@ -270,7 +269,7 @@ mod test {
     #[test]
     fn unresolved_ref_context() {
         let mut d = Diagnostics::default();
-        let mut nodes = MyMap::<String, GsnNode>::new();
+        let mut nodes = BTreeMap::<String, GsnNode>::new();
         nodes.insert(
             "G1".to_owned(),
             GsnNode {
@@ -294,7 +293,7 @@ mod test {
     #[test]
     fn unresolved_ref_support() {
         let mut d = Diagnostics::default();
-        let mut nodes = MyMap::<String, GsnNode>::new();
+        let mut nodes = BTreeMap::<String, GsnNode>::new();
         nodes.insert(
             "G1".to_owned(),
             GsnNode {
@@ -317,7 +316,7 @@ mod test {
     #[test]
     fn unreferenced_id() {
         let mut d = Diagnostics::default();
-        let mut nodes = MyMap::<String, GsnNode>::new();
+        let mut nodes = BTreeMap::<String, GsnNode>::new();
         nodes.insert(
             "G1".to_owned(),
             GsnNode {
@@ -341,7 +340,7 @@ mod test {
     #[test]
     fn simple_cycle() {
         let mut d = Diagnostics::default();
-        let mut nodes = MyMap::<String, GsnNode>::new();
+        let mut nodes = BTreeMap::<String, GsnNode>::new();
         nodes.insert(
             "G0".to_owned(),
             GsnNode {
@@ -378,7 +377,7 @@ mod test {
     #[test]
     fn simple_cycle_2() {
         let mut d = Diagnostics::default();
-        let mut nodes = MyMap::<String, GsnNode>::new();
+        let mut nodes = BTreeMap::<String, GsnNode>::new();
         nodes.insert(
             "G1".to_owned(),
             GsnNode {
@@ -415,7 +414,7 @@ mod test {
     #[test]
     fn diamond() {
         let mut d = Diagnostics::default();
-        let mut nodes = MyMap::<String, GsnNode>::new();
+        let mut nodes = BTreeMap::<String, GsnNode>::new();
         nodes.insert(
             "G1".to_owned(),
             GsnNode {
@@ -453,7 +452,7 @@ mod test {
     #[test]
     fn independent_cycle() {
         let mut d = Diagnostics::default();
-        let mut nodes = MyMap::<String, GsnNode>::new();
+        let mut nodes = BTreeMap::<String, GsnNode>::new();
         nodes.insert(
             "G1".to_owned(),
             GsnNode {
@@ -524,7 +523,7 @@ mod test {
     #[test]
     fn wrong_root() {
         let mut d = Diagnostics::default();
-        let mut nodes = MyMap::<String, GsnNode>::new();
+        let mut nodes = BTreeMap::<String, GsnNode>::new();
         nodes.insert("Sn1".to_owned(), GsnNode::default());
         check_nodes(&mut d, &nodes, None);
         assert_eq!(d.messages.len(), 1);
@@ -541,9 +540,9 @@ mod test {
     #[test]
     fn layer_exists() {
         let mut d = Diagnostics::default();
-        let mut nodes = MyMap::<String, GsnNode>::new();
+        let mut nodes = BTreeMap::<String, GsnNode>::new();
 
-        let mut admap = MyMap::new();
+        let mut admap = BTreeMap::new();
         admap.insert("layer1".to_owned(), "dontcare".to_owned());
         nodes.insert(
             "Sn1".to_owned(),
@@ -561,7 +560,7 @@ mod test {
     #[test]
     fn layer_does_not_exist() {
         let mut d = Diagnostics::default();
-        let mut nodes = MyMap::<String, GsnNode>::new();
+        let mut nodes = BTreeMap::<String, GsnNode>::new();
 
         nodes.insert("Sn1".to_owned(), GsnNode::default());
         check_layers(&mut d, &nodes, &["layer1"]);
@@ -579,9 +578,9 @@ mod test {
     #[test]
     fn only_one_layer_exists() {
         let mut d = Diagnostics::default();
-        let mut nodes = MyMap::<String, GsnNode>::new();
+        let mut nodes = BTreeMap::<String, GsnNode>::new();
 
-        let mut admap = MyMap::new();
+        let mut admap = BTreeMap::new();
         admap.insert("layer1".to_owned(), "dontcare".to_owned());
         nodes.insert(
             "Sn1".to_owned(),
@@ -605,9 +604,9 @@ mod test {
     #[test]
     fn layer_reserved() {
         let mut d = Diagnostics::default();
-        let mut nodes = MyMap::<String, GsnNode>::new();
+        let mut nodes = BTreeMap::<String, GsnNode>::new();
 
-        let mut admap = MyMap::new();
+        let mut admap = BTreeMap::new();
         admap.insert("layer1".to_owned(), "dontcare".to_owned());
         nodes.insert(
             "Sn1".to_owned(),
@@ -637,7 +636,7 @@ mod test {
     #[test]
     fn level_only_once() {
         let mut d = Diagnostics::default();
-        let mut nodes = MyMap::<String, GsnNode>::new();
+        let mut nodes = BTreeMap::<String, GsnNode>::new();
         nodes.insert(
             "G1".to_owned(),
             GsnNode {
@@ -658,7 +657,7 @@ mod test {
     #[test]
     fn empty_document() {
         let mut d = Diagnostics::default();
-        let nodes = MyMap::<String, GsnNode>::new();
+        let nodes = BTreeMap::<String, GsnNode>::new();
         assert!(check_root_nodes(&mut d, &nodes).is_ok());
         assert_eq!(d.messages.len(), 0);
     }

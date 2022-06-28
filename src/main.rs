@@ -1,6 +1,6 @@
 use anyhow::{anyhow, Context, Result};
 use clap::Arg;
-use std::collections::HashMap;
+use std::collections::{BTreeMap, HashMap};
 use std::fs::File;
 use std::io::BufReader;
 
@@ -13,7 +13,6 @@ mod yaml_fix;
 use diagnostics::Diagnostics;
 use dirgraphsvg::escape_text;
 use gsn::{GsnDocumentNode, GsnNode, Module, ModuleInformation};
-use yaml_fix::MyMap;
 
 const MODULE_INFOMRATION_NODE: &str = "module";
 
@@ -158,7 +157,7 @@ fn main() -> Result<()> {
     let matches = app.get_matches();
     let mut diags = Diagnostics::default();
     let inputs: Vec<&str> = matches.values_of("INPUT").unwrap().collect();
-    let mut nodes = MyMap::<String, GsnNode>::new();
+    let mut nodes = BTreeMap::<String, GsnNode>::new();
     let layers = matches
         .values_of("LAYERS")
         .map(|x| x.collect::<Vec<&str>>());
@@ -191,7 +190,7 @@ fn main() -> Result<()> {
 ///
 fn read_inputs(
     inputs: &[&str],
-    nodes: &mut MyMap<String, GsnNode>,
+    nodes: &mut BTreeMap<String, GsnNode>,
     modules: &mut HashMap<String, Module>,
     diags: &mut Diagnostics,
 ) -> Result<(), anyhow::Error> {
@@ -199,7 +198,8 @@ fn read_inputs(
         let reader =
             BufReader::new(File::open(&input).context(format!("Failed to open file {}", input))?);
 
-        let mut n: MyMap<String, GsnDocumentNode> = serde_yaml::from_reader(reader)
+        let mut n: BTreeMap<String, GsnDocumentNode> = serde_yaml::from_reader(reader)
+            .map(|n: yaml_fix::YamlFixMap<String, GsnDocumentNode>| n.into_inner())
             .map_err(|e| {
                 anyhow!(format!(
                     "No valid GSN element can be found starting from line {}",
@@ -273,7 +273,7 @@ fn read_inputs(
 ///
 ///
 fn validate_and_check(
-    nodes: &MyMap<String, GsnNode>,
+    nodes: &BTreeMap<String, GsnNode>,
     modules: &HashMap<String, Module>,
     diags: &mut Diagnostics,
     excluded_modules: Option<Vec<&str>>,
@@ -302,7 +302,7 @@ fn validate_and_check(
 ///
 fn print_outputs(
     matches: &clap::ArgMatches,
-    nodes: MyMap<String, GsnNode>,
+    nodes: BTreeMap<String, GsnNode>,
     modules: &HashMap<String, Module>,
     layers: &Option<Vec<&str>>,
     stylesheets: Option<Vec<&str>>,

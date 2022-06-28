@@ -1,5 +1,4 @@
 use crate::dirgraphsvg::edges::{EdgeType, SingleEdge};
-use crate::yaml_fix::MyMap;
 use serde::Deserialize;
 use std::collections::{BTreeMap, BTreeSet};
 
@@ -21,7 +20,7 @@ pub struct GsnNode {
     pub(crate) url: Option<String>,
     pub(crate) level: Option<String>,
     #[serde(flatten)]
-    pub(crate) additional: MyMap<String, String>,
+    pub(crate) additional: BTreeMap<String, String>,
     #[serde(skip_deserializing)]
     pub(crate) module: String,
 }
@@ -53,7 +52,7 @@ pub struct ModuleInformation {
     pub(crate) name: String,
     pub(crate) brief: Option<String>,
     #[serde(flatten)]
-    pub(crate) additional: MyMap<String, String>,
+    pub(crate) additional: BTreeMap<String, String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -72,7 +71,7 @@ pub struct Module {
 /// Get root nodes
 /// These are the unreferenced nodes.
 ///
-fn get_root_nodes(nodes: &MyMap<String, GsnNode>) -> Vec<String> {
+fn get_root_nodes(nodes: &BTreeMap<String, GsnNode>) -> Vec<String> {
     // Usage of BTreeSet, since root nodes might be used in output and that should be deterministic
     let mut root_nodes: BTreeSet<String> = nodes.keys().cloned().collect();
     for node in nodes.values() {
@@ -94,7 +93,7 @@ fn get_root_nodes(nodes: &MyMap<String, GsnNode>) -> Vec<String> {
 ///
 /// Gathers all different 'level' attributes from all nodes.
 ///
-pub fn get_levels(nodes: &MyMap<String, GsnNode>) -> BTreeMap<&str, Vec<&str>> {
+pub fn get_levels(nodes: &BTreeMap<String, GsnNode>) -> BTreeMap<&str, Vec<&str>> {
     let mut levels = BTreeMap::<&str, Vec<&str>>::new();
     for (id, node) in nodes.iter() {
         if let Some(l) = &node.level {
@@ -110,7 +109,7 @@ pub fn get_levels(nodes: &MyMap<String, GsnNode>) -> BTreeMap<&str, Vec<&str>> {
 ///
 ///
 pub fn calculate_module_dependencies(
-    nodes: &MyMap<String, GsnNode>,
+    nodes: &BTreeMap<String, GsnNode>,
 ) -> BTreeMap<String, BTreeMap<String, EdgeType>> {
     let mut res = BTreeMap::<String, BTreeMap<String, EdgeType>>::new();
 
@@ -137,7 +136,7 @@ pub fn calculate_module_dependencies(
 ///
 fn add_dependencies(
     children: &Vec<String>,
-    nodes: &MyMap<String, GsnNode>,
+    nodes: &BTreeMap<String, GsnNode>,
     cur_node: &GsnNode,
     dependencies: &mut BTreeMap<String, BTreeMap<String, EdgeType>>,
     dep_type: SingleEdge,
@@ -197,7 +196,7 @@ mod test {
 
     #[test]
     fn no_level_exists() {
-        let mut nodes = MyMap::<String, GsnNode>::new();
+        let mut nodes = BTreeMap::<String, GsnNode>::new();
         nodes.insert("Sn1".to_owned(), Default::default());
         let output = get_levels(&nodes);
         assert!(output.is_empty());
@@ -205,7 +204,7 @@ mod test {
 
     #[test]
     fn two_levels_exist() {
-        let mut nodes = MyMap::<String, GsnNode>::new();
+        let mut nodes = BTreeMap::<String, GsnNode>::new();
         nodes.insert(
             "Sn1".to_owned(),
             GsnNode {
