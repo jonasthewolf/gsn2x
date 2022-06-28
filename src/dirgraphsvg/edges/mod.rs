@@ -44,10 +44,21 @@ mod test {
 
     #[test]
     fn cloning() {
-        // let e = EdgeType::Invisible;
-        // assert_eq!(e.clone(), e);
         let si = SingleEdge::Composite;
         assert_eq!(si.clone(), si);
+    }
+
+    #[test]
+    fn merging() {
+        let si1 = SingleEdge::InContextOf;
+        let si2 = SingleEdge::SupportedBy;
+        let si3 = SingleEdge::Composite;
+        assert_eq!(si1 | si1, si1);
+        assert_eq!(si1 | si2, si3);
+        assert_eq!(si1 | si3, si3);
+        assert_eq!(si2 | si2, si2);
+        assert_eq!(si2 | si3, si3);
+        assert_eq!(si3 | si3, si3);
     }
 
     #[test]
