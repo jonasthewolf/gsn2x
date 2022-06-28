@@ -1,6 +1,6 @@
 use anyhow::{anyhow, Context, Result};
 use clap::Arg;
-use std::collections::HashMap;
+use std::collections::{HashMap, BTreeMap};
 use std::fs::File;
 use std::io::BufReader;
 
@@ -158,7 +158,7 @@ fn main() -> Result<()> {
     let matches = app.get_matches();
     let mut diags = Diagnostics::default();
     let inputs: Vec<&str> = matches.values_of("INPUT").unwrap().collect();
-    let mut nodes = MyMap::<String, GsnNode>::new();
+    let mut nodes = BTreeMap::<String, GsnNode>::new();
     let layers = matches
         .values_of("LAYERS")
         .map(|x| x.collect::<Vec<&str>>());
@@ -185,13 +185,19 @@ fn main() -> Result<()> {
     output_messages(&diags)
 }
 
+fn parse_file(reader: impl std::io::Read) -> Result<BTreeMap<String, GsnDocumentNode>, anyhow::Error> {
+    serde_yaml::from_reader(reader)
+        .map(|n: MyMap<String, GsnDocumentNode>| n.into_inner())
+        .map_err(|e| anyhow!("No valid GSN element can be found starting from line {}", e.location().unwrap().line()))
+}
+
 ///
 /// Read inputs
 ///
 ///
 fn read_inputs(
     inputs: &[&str],
-    nodes: &mut MyMap<String, GsnNode>,
+    nodes: &mut BTreeMap<String, GsnNode>,
     modules: &mut HashMap<String, Module>,
     diags: &mut Diagnostics,
 ) -> Result<(), anyhow::Error> {
@@ -199,14 +205,7 @@ fn read_inputs(
         let reader =
             BufReader::new(File::open(&input).context(format!("Failed to open file {}", input))?);
 
-        let mut n: MyMap<String, GsnDocumentNode> = serde_yaml::from_reader(reader)
-            .map_err(|e| {
-                anyhow!(format!(
-                    "No valid GSN element can be found starting from line {}",
-                    e.location().unwrap().line()
-                ))
-            })
-            .context(format!("Failed to parse YAML from file {}", input))?;
+        let mut n = parse_file(reader).context(format!("Failed to parse YAML from file {}", input))?;
         let meta: Option<ModuleInformation> = match n.remove_entry(MODULE_INFOMRATION_NODE) {
             Some((_, GsnDocumentNode::ModuleInformation(x))) => Some(x),
             _ => None,
@@ -273,7 +272,7 @@ fn read_inputs(
 ///
 ///
 fn validate_and_check(
-    nodes: &MyMap<String, GsnNode>,
+    nodes: &BTreeMap<String, GsnNode>,
     modules: &HashMap<String, Module>,
     diags: &mut Diagnostics,
     excluded_modules: Option<Vec<&str>>,
@@ -302,7 +301,7 @@ fn validate_and_check(
 ///
 fn print_outputs(
     matches: &clap::ArgMatches,
-    nodes: MyMap<String, GsnNode>,
+    nodes: BTreeMap<String, GsnNode>,
     modules: &HashMap<String, Module>,
     layers: &Option<Vec<&str>>,
     stylesheets: Option<Vec<&str>>,

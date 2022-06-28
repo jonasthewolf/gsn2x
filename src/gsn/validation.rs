@@ -1,13 +1,12 @@
 use super::GsnNode;
 use crate::diagnostics::{DiagType, Diagnostics};
-use crate::yaml_fix::MyMap;
-use std::collections::HashSet;
+use std::collections::{HashSet, BTreeMap};
 
 ///
 /// Validate all ids and nodes
 ///
 ///
-pub fn validate_module(diag: &mut Diagnostics, module: &str, nodes: &MyMap<String, GsnNode>) {
+pub fn validate_module(diag: &mut Diagnostics, module: &str, nodes: &BTreeMap<String, GsnNode>) {
     for (id, node) in nodes.iter().filter(|(_, n)| n.module == module) {
         // Validate if key is one of the known prefixes
         validate_id(diag, module, id);
@@ -160,7 +159,7 @@ mod test {
     #[test]
     fn self_ref_context() {
         let mut d = Diagnostics::default();
-        let mut nodes = MyMap::<String, GsnNode>::new();
+        let mut nodes = BTreeMap::<String, GsnNode>::new();
         nodes.insert(
             "C1".to_owned(),
             GsnNode {
@@ -189,7 +188,7 @@ mod test {
     #[test]
     fn self_ref_support() {
         let mut d = Diagnostics::default();
-        let mut nodes = MyMap::<String, GsnNode>::new();
+        let mut nodes = BTreeMap::<String, GsnNode>::new();
         nodes.insert(
             "G1".to_owned(),
             GsnNode {
@@ -212,7 +211,7 @@ mod test {
     #[test]
     fn self_ref_wrong_context() {
         let mut d = Diagnostics::default();
-        let mut nodes = MyMap::<String, GsnNode>::new();
+        let mut nodes = BTreeMap::<String, GsnNode>::new();
         nodes.insert(
             "C1".to_owned(),
             GsnNode {
@@ -241,7 +240,7 @@ mod test {
     #[test]
     fn self_ref_wrong_support() {
         let mut d = Diagnostics::default();
-        let mut nodes = MyMap::<String, GsnNode>::new();
+        let mut nodes = BTreeMap::<String, GsnNode>::new();
         nodes.insert(
             "G1".to_owned(),
             GsnNode {
@@ -271,7 +270,7 @@ mod test {
     #[test]
     fn duplicate_ref_context() {
         let mut d = Diagnostics::default();
-        let mut nodes = MyMap::<String, GsnNode>::new();
+        let mut nodes = BTreeMap::<String, GsnNode>::new();
         nodes.insert(
             "G1".to_owned(),
             GsnNode {
@@ -297,7 +296,7 @@ mod test {
     #[test]
     fn duplicate_ref_support() {
         let mut d = Diagnostics::default();
-        let mut nodes = MyMap::<String, GsnNode>::new();
+        let mut nodes = BTreeMap::<String, GsnNode>::new();
         nodes.insert(
             "G1".to_owned(),
             GsnNode {
@@ -327,7 +326,7 @@ mod test {
     #[test]
     fn wrong_ref_context() {
         let mut d = Diagnostics::default();
-        let mut nodes = MyMap::<String, GsnNode>::new();
+        let mut nodes = BTreeMap::<String, GsnNode>::new();
         nodes.insert(
             "G1".to_owned(),
             GsnNode {
@@ -378,7 +377,7 @@ mod test {
     #[test]
     fn wrong_ref_support() {
         let mut d = Diagnostics::default();
-        let mut nodes = MyMap::<String, GsnNode>::new();
+        let mut nodes = BTreeMap::<String, GsnNode>::new();
         nodes.insert(
             "G1".to_owned(),
             GsnNode {
@@ -416,7 +415,7 @@ mod test {
     #[test]
     fn undeveloped_goal() {
         let mut d = Diagnostics::default();
-        let mut nodes = MyMap::<String, GsnNode>::new();
+        let mut nodes = BTreeMap::<String, GsnNode>::new();
         nodes.insert("G1".to_owned(), GsnNode::default());
         nodes.insert(
             "G2".to_owned(),
@@ -440,7 +439,7 @@ mod test {
     #[test]
     fn undeveloped_strategy() {
         let mut d = Diagnostics::default();
-        let mut nodes = MyMap::<String, GsnNode>::new();
+        let mut nodes = BTreeMap::<String, GsnNode>::new();
         nodes.insert("S1".to_owned(), GsnNode::default());
         nodes.insert(
             "S2".to_owned(),
@@ -464,7 +463,7 @@ mod test {
     #[test]
     fn wrong_undeveloped() {
         let mut d = Diagnostics::default();
-        let mut nodes = MyMap::<String, GsnNode>::new();
+        let mut nodes = BTreeMap::<String, GsnNode>::new();
         nodes.insert(
             "G1".to_owned(),
             GsnNode {

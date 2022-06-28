@@ -22,24 +22,9 @@ impl<K: Ord, V> MyMap<K, V> {
     pub fn new() -> MyMap<K, V> {
         MyMap(BTreeMap::<K, V>::new())
     }
-}
 
-impl<K, V> std::ops::Deref for MyMap<K, V>
-where
-    K: Ord,
-{
-    type Target = BTreeMap<K, V>;
-    fn deref(&self) -> &BTreeMap<K, V> {
-        &self.0
-    }
-}
-
-impl<K, V> std::ops::DerefMut for MyMap<K, V>
-where
-    K: Ord,
-{
-    fn deref_mut(&mut self) -> &mut BTreeMap<K, V> {
-        &mut self.0
+    pub fn into_inner(self) -> BTreeMap<K, V> {
+        self.0
     }
 }
 
