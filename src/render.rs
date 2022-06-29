@@ -40,7 +40,7 @@ pub fn svg_from_gsn_node(
         id if id.starts_with('G') => new_goal(
             id,
             &gsn_node.text,
-            gsn_node.undeveloped.unwrap_or(false),
+            gsn_node.undeveloped,
             gsn_node.url.to_owned(),
             classes,
         ),
@@ -50,7 +50,7 @@ pub fn svg_from_gsn_node(
         id if id.starts_with('S') => new_strategy(
             id,
             &gsn_node.text,
-            gsn_node.undeveloped.unwrap_or(false),
+            gsn_node.undeveloped,
             gsn_node.url.to_owned(),
             classes,
         ),
@@ -123,7 +123,7 @@ pub fn away_svg_from_gsn_node(
         id if id.starts_with('S') => new_strategy(
             id,
             &gsn_node.text,
-            gsn_node.undeveloped.unwrap_or(false),
+            gsn_node.undeveloped,
             gsn_node.url.to_owned(),
             classes,
         ),

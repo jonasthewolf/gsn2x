@@ -15,7 +15,8 @@ pub struct GsnNode {
     pub(crate) text: String,
     pub(crate) in_context_of: Option<Vec<String>>,
     pub(crate) supported_by: Option<Vec<String>>,
-    pub(crate) undeveloped: Option<bool>,
+    #[serde(default)]
+    pub(crate) undeveloped: bool,
     pub(crate) classes: Option<Vec<String>>,
     pub(crate) url: Option<String>,
     pub(crate) level: Option<String>,
