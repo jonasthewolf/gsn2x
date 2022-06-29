@@ -162,7 +162,7 @@ fn check_cycles(diag: &mut Diagnostics, nodes: &BTreeMap<String, GsnNode>) {
                 visited.insert(x.to_owned());
             });
         for child_node in nodes.get(&p_id).unwrap().supported_by.iter().flatten() {
-            // Remember the solutions for reachability analyis.
+            // Remember the solutions for reachability analysis.
             visited.insert(child_node.to_owned());
             if !child_node.starts_with("Sn") {
                 if ancestors.contains(child_node) {

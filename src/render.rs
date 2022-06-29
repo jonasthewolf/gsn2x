@@ -216,7 +216,7 @@ pub fn render_architecture(
     dg = dg.add_nodes(svg_nodes).add_edges(&mut edges);
 
     if let Some(mut css) = stylesheets {
-        dg = dg.add_css_sytlesheets(&mut css);
+        dg = dg.add_css_stylesheets(&mut css);
     }
 
     dg.write(output, true)?;
@@ -256,7 +256,7 @@ pub fn render_complete(
         .add_levels(&get_levels(nodes));
 
     if let Some(mut css) = stylesheets {
-        dg = dg.add_css_sytlesheets(&mut css);
+        dg = dg.add_css_stylesheets(&mut css);
     }
 
     dg.write(output, false)?;
@@ -337,7 +337,7 @@ pub fn render_argument(
         .add_levels(&get_levels(nodes));
 
     if let Some(mut css) = stylesheets {
-        dg = dg.add_css_sytlesheets(&mut css);
+        dg = dg.add_css_stylesheets(&mut css);
     }
 
     // Add meta information if requested

@@ -33,7 +33,7 @@ fn validate_id(diag: &mut Diagnostics, module: &str, id: &str) {
             DiagType::Error,
             Some(module),
             format!(
-                "V01: Elememt {} is of unknown type. Please see README for supported types",
+                "V01: Element {} is of unknown type. Please see README for supported types",
                 id
             ),
         );
@@ -85,7 +85,7 @@ fn validate_references(diag: &mut Diagnostics, module: &str, id: &str, node: &Gs
 }
 
 ///
-/// Vallidate references.
+/// Validate references.
 ///
 /// - Check if node does not reference itself.
 /// - Check if a list of references only contains unique values.
@@ -141,7 +141,7 @@ mod test {
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
         assert_eq!(
             d.messages[0].msg,
-            "V01: Elememt X1 is of unknown type. Please see README for supported types"
+            "V01: Element X1 is of unknown type. Please see README for supported types"
         );
         assert_eq!(d.errors, 1);
         assert_eq!(d.warnings, 0);

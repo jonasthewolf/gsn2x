@@ -495,7 +495,7 @@ fn add_in_context_nodes(
                             .partition(|x| {
                                 i += 1;
                                 if previous_node_with_connection(x, n, &new_rank, edges) {
-                                    // Make left/rigth distribution more even
+                                    // Make left/right distribution more even
                                     if i % 2 == 1 {
                                         i += 1;
                                     }

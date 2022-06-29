@@ -102,12 +102,12 @@ impl<'a> DirGraph<'a> {
         self
     }
 
-    pub fn _add_css_sytlesheet(mut self, css: &'a str) -> Self {
+    pub fn _add_css_stylesheet(mut self, css: &'a str) -> Self {
         self.css_stylesheets.push(css);
         self
     }
 
-    pub fn add_css_sytlesheets(mut self, css: &mut Vec<&'a str>) -> Self {
+    pub fn add_css_stylesheets(mut self, css: &mut Vec<&'a str>) -> Self {
         self.css_stylesheets.append(css);
         self
     }
@@ -241,7 +241,7 @@ impl<'a> DirGraph<'a> {
                 break;
             }
             if limiter == 0 {
-                eprintln!("This should not have happened. Rendering a diagram took too many interations ({}). Please report as an issue on github.com.", limiter);
+                eprintln!("This should not have happened. Rendering a diagram took too many iterations ({}). Please report as an issue on github.com.", limiter);
                 break;
             }
             first_run = false;
@@ -847,7 +847,7 @@ mod test {
     fn call_unused() {
         let d = DirGraph::default();
         let b1 = new_away_goal("id", "text", "module", None, None, None);
-        d._add_css_sytlesheet("css")
+        d._add_css_stylesheet("css")
             ._add_edge(
                 b1.clone(),
                 new_away_goal("id2", "text", "module", None, None, None),
