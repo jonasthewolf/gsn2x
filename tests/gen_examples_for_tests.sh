@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # argument_view
-cargo run -- examples/example.gsn.yaml -G
+cargo run -- examples/example.gsn.yaml -G -s examples/example.css -t
 
 # arch_view
 cargo run -- -N -E -F -G examples/modular/main.gsn.yaml examples/modular/sub1.gsn.yaml examples/modular/sub3.gsn.yaml

@@ -2,6 +2,7 @@ pub mod edges;
 mod graph;
 pub mod nodes;
 mod util;
+use anyhow::Context;
 use std::{cell::RefCell, collections::BTreeMap, rc::Rc};
 pub use util::{escape_node_id, escape_text};
 
@@ -10,7 +11,10 @@ use graph::{rank_nodes, NodePlace};
 use nodes::{setup_basics, Node, Port};
 use rusttype::Font;
 use svg::{
-    node::element::{path::Data, Link, Marker, Path, Polyline, Rectangle, Symbol, Text, Title},
+    node::element::{
+        path::Data, Definitions, Link, Marker, Path, Polyline, Rectangle, Style, Symbol, Text,
+        Title,
+    },
     Document,
 };
 use util::{
@@ -53,6 +57,7 @@ pub struct DirGraph<'a> {
     wrap: u32,
     font: FontInfo,
     css_stylesheets: Vec<&'a str>,
+    embed_stylesheets: bool,
     forced_levels: BTreeMap<&'a str, Vec<&'a str>>,
     nodes: BTreeMap<String, Rc<RefCell<dyn Node>>>,
     edges: BTreeMap<String, Vec<(String, EdgeType)>>,
@@ -73,6 +78,7 @@ impl<'a> Default for DirGraph<'a> {
                 size: 12.0,
             },
             css_stylesheets: Vec::new(),
+            embed_stylesheets: false,
             forced_levels: BTreeMap::new(),
             nodes: BTreeMap::new(),
             edges: BTreeMap::new(),
@@ -109,6 +115,11 @@ impl<'a> DirGraph<'a> {
 
     pub fn add_css_stylesheets(mut self, css: &mut Vec<&'a str>) -> Self {
         self.css_stylesheets.append(css);
+        self
+    }
+
+    pub fn embed_stylesheets(mut self, embed: bool) -> Self {
+        self.embed_stylesheets = embed;
         self
     }
 
@@ -778,12 +789,28 @@ impl<'a> DirGraph<'a> {
     ///
     ///
     fn setup_stylesheets(mut self) -> Self {
-        for css in &self.css_stylesheets {
-            let l = Link::default()
-                .set("rel", "stylesheet")
-                .set("href", *css)
-                .set("type", "text/css");
-            self.document = self.document.add(l);
+        if !self.css_stylesheets.is_empty() {
+            if self.embed_stylesheets {
+                let mut defs = Definitions::default();
+                for css in &self.css_stylesheets {
+                    let css_str = std::fs::read_to_string(css)
+                        .context(format!("Failed to open CSS file {} for embedding", css))
+                        .unwrap();
+                    let style =
+                        Style::new(format!("<![CDATA[{}]]>", css_str)).set("type", "text/css");
+                    defs = defs.add(style);
+                }
+                self.document = self.document.add(defs);
+            } else {
+                // Only link them
+                for css in &self.css_stylesheets {
+                    let l = Link::default()
+                        .set("rel", "stylesheet")
+                        .set("href", *css)
+                        .set("type", "text/css");
+                    self.document = self.document.add(l);
+                }
+            }
         }
         self
     }

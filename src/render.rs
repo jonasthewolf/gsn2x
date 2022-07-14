@@ -186,6 +186,7 @@ pub fn render_architecture(
     modules: &HashMap<String, Module>,
     dependencies: BTreeMap<String, BTreeMap<String, EdgeType>>,
     stylesheets: Option<Vec<&str>>,
+    embed_stylesheets: bool,
 ) -> Result<(), anyhow::Error> {
     let mut dg = crate::dirgraphsvg::DirGraph::default();
     let svg_nodes: BTreeMap<String, Rc<RefCell<dyn Node>>> = modules
@@ -216,7 +217,9 @@ pub fn render_architecture(
     dg = dg.add_nodes(svg_nodes).add_edges(&mut edges);
 
     if let Some(mut css) = stylesheets {
-        dg = dg.add_css_stylesheets(&mut css);
+        dg = dg
+            .embed_stylesheets(embed_stylesheets)
+            .add_css_stylesheets(&mut css);
     }
 
     dg.write(output, true)?;
@@ -234,6 +237,7 @@ pub fn render_complete(
     _matches: &clap::ArgMatches,
     nodes: &BTreeMap<String, GsnNode>,
     stylesheets: Option<Vec<&str>>,
+    embed_stylesheets: bool,
 ) -> Result<(), anyhow::Error> {
     // let masked_modules_opt = matches
     //     .values_of("MASK_MODULE")
@@ -256,7 +260,9 @@ pub fn render_complete(
         .add_levels(&get_levels(nodes));
 
     if let Some(mut css) = stylesheets {
-        dg = dg.add_css_stylesheets(&mut css);
+        dg = dg
+            .embed_stylesheets(embed_stylesheets)
+            .add_css_stylesheets(&mut css);
     }
 
     dg.write(output, false)?;
@@ -279,6 +285,7 @@ pub fn render_argument(
     modules: &HashMap<String, Module>,
     nodes: &BTreeMap<String, GsnNode>,
     stylesheets: Option<Vec<&str>>,
+    embed_stylesheets: bool,
 ) -> Result<(), anyhow::Error> {
     let mut dg = crate::dirgraphsvg::DirGraph::default();
     let mut svg_nodes: BTreeMap<String, Rc<RefCell<dyn Node>>> = nodes
@@ -337,7 +344,9 @@ pub fn render_argument(
         .add_levels(&get_levels(nodes));
 
     if let Some(mut css) = stylesheets {
-        dg = dg.add_css_stylesheets(&mut css);
+        dg = dg
+            .embed_stylesheets(embed_stylesheets)
+            .add_css_stylesheets(&mut css);
     }
 
     // Add meta information if requested
