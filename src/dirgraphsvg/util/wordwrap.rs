@@ -63,7 +63,7 @@ mod test {
     }
 
     #[test]
-    fn wrapstring() {
+    fn wrap_string() {
         let input = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt";
         let expected = concat!(
             "Lorem ipsum dolor sit amet, consetetur sadipscing<br align=\"left\"/>",
@@ -74,7 +74,7 @@ mod test {
     }
 
     #[test]
-    fn withnewlines() {
+    fn with_newlines() {
         let input = "Lorem ipsum dolor sit amet,\nconsetetur sadipscing\nelitr, sed diam nonumy eirmod tempor invidunt";
         let expected = concat!(
             "Lorem ipsum dolor sit amet,<br align=\"left\"/>",

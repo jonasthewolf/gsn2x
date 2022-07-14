@@ -14,7 +14,7 @@ use diagnostics::Diagnostics;
 use dirgraphsvg::escape_text;
 use gsn::{GsnDocumentNode, GsnNode, Module, ModuleInformation};
 
-const MODULE_INFOMRATION_NODE: &str = "module";
+const MODULE_INFORMATION_NODE: &str = "module";
 
 ///
 /// Main entry point.
@@ -207,7 +207,7 @@ fn read_inputs(
                 ))
             })
             .context(format!("Failed to parse YAML from file {}", input))?;
-        let meta: Option<ModuleInformation> = match n.remove_entry(MODULE_INFOMRATION_NODE) {
+        let meta: Option<ModuleInformation> = match n.remove_entry(MODULE_INFORMATION_NODE) {
             Some((_, GsnDocumentNode::ModuleInformation(x))) => Some(x),
             _ => None,
         };

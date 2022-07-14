@@ -48,7 +48,7 @@ mod test {
     }
 
     #[test]
-    fn non_exisiting_font_() {
+    fn non_existing_font() {
         assert!(get_font("ahopefullycrazyenoughfontnamethatdoesnotexistanywhere").is_err());
     }
 

@@ -7,7 +7,7 @@ use super::{get_port_default_coordinates, setup_basics, Node, Point2D, Port};
 const PADDING_VERTICAL: i32 = 7;
 const PADDING_HORIZONTAL: i32 = 7;
 const TEXT_OFFSET: i32 = 20;
-const MOUDLE_TAB_HEIGHT: i32 = 10;
+const MODULE_TAB_HEIGHT: i32 = 10;
 
 pub struct BoxNode {
     identifier: String,
@@ -61,7 +61,7 @@ impl Node for BoxNode {
             self.height += 5;
         }
         if self.is_module_node {
-            self.height += MOUDLE_TAB_HEIGHT;
+            self.height += MODULE_TAB_HEIGHT;
         }
     }
 
@@ -86,7 +86,7 @@ impl Node for BoxNode {
             coords.x += (self.skew / 2) as i32;
         }
         if port == &super::Port::North && self.is_module_node {
-            coords.y += MOUDLE_TAB_HEIGHT;
+            coords.y += MODULE_TAB_HEIGHT;
         }
         coords
     }
@@ -112,10 +112,10 @@ impl Node for BoxNode {
             Data::new()
                 .move_to((self.x - self.width / 2, self.y - self.height / 2))
                 .horizontal_line_by(30)
-                .vertical_line_by(MOUDLE_TAB_HEIGHT)
+                .vertical_line_by(MODULE_TAB_HEIGHT)
                 .line_to((
                     self.x + self.width / 2,
-                    self.y - self.height / 2 + MOUDLE_TAB_HEIGHT,
+                    self.y - self.height / 2 + MODULE_TAB_HEIGHT,
                 ))
                 .line_to((self.x + self.width / 2, self.y + self.height / 2))
                 .line_to((self.x - self.width / 2, self.y + self.height / 2))
