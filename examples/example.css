@@ -1,2 +1,4 @@
 
-.gsnelem { background-color: white; }
+@media (prefers-color-scheme: dark) {
+  .gsnelem { background-color: white; }
+}

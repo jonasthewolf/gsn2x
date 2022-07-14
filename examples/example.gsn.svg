@@ -16,9 +16,10 @@
 </marker>
 <defs>
 <style type="text/css">
-
-.gsnelem { background-color: white; }
-
+<![CDATA[
+@media (prefers-color-scheme: dark) {
+  .gsnelem { background-color: white; }
+}]]>
 </style>
 </defs>
 <g class="gsnelem gsngoal gsn_module_examples_example_gsn_yaml" id="node_G1">

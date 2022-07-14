@@ -2,6 +2,7 @@ pub mod edges;
 mod graph;
 pub mod nodes;
 mod util;
+use anyhow::Context;
 use std::{cell::RefCell, collections::BTreeMap, rc::Rc};
 pub use util::{escape_node_id, escape_text};
 
@@ -792,8 +793,11 @@ impl<'a> DirGraph<'a> {
             if self.embed_stylesheets {
                 let mut defs = Definitions::default();
                 for css in &self.css_stylesheets {
-                    let css_str = std::fs::read_to_string(css).unwrap(); // TODO Improve error handling
-                    let style = Style::new(css_str).set("type", "text/css");
+                    let css_str = std::fs::read_to_string(css)
+                        .context(format!("Failed to open CSS file {} for embedding", css))
+                        .unwrap();
+                    let style =
+                        Style::new(format!("<![CDATA[{}]]>", css_str)).set("type", "text/css");
                     defs = defs.add(style);
                 }
                 self.document = self.document.add(defs);
