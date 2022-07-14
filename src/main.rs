@@ -109,7 +109,7 @@ fn main() -> Result<()> {
         )
         .arg(
             Arg::new("LAYERS")
-                .help("Output additional layer.")
+                .help("Output additional layer. Can be used multiple times.")
                 .short('l')
                 .long("layer")
                 .takes_value(true)
@@ -120,11 +120,21 @@ fn main() -> Result<()> {
         )
         .arg(
             Arg::new("STYLESHEETS")
-                .help("Sets a stylesheet that is used in SVG output.")
+                .help("Links a stylesheet in SVG output. Can be used multiple times.")
                 .short('s')
                 .long("stylesheet")
                 .takes_value(true)
                 .multiple_occurrences(true)
+                .conflicts_with("CHECKONLY")
+                .help_heading("OUTPUT MODIFICATION"),
+        )
+        .arg(
+            Arg::new("EMBED_CSS")
+                .help("Embed stylehseets instead of linking them.")
+                .short('t')
+                .long("embed-css")
+                .takes_value(false)
+                .multiple_occurrences(false)
                 .conflicts_with("CHECKONLY")
                 .help_heading("OUTPUT MODIFICATION"),
         )
@@ -164,6 +174,7 @@ fn main() -> Result<()> {
     let stylesheets = matches
         .values_of("STYLESHEETS")
         .map(|x| x.collect::<Vec<&str>>());
+    let embed_stylesheets = matches.is_present("EMBED_CSS");
     let excluded_modules = matches
         .values_of("EXCLUDED_MODULE")
         .map(|x| x.collect::<Vec<&str>>());
@@ -178,7 +189,14 @@ fn main() -> Result<()> {
 
     if diags.errors == 0 && !matches.is_present("CHECKONLY") {
         // Output argument view
-        print_outputs(&matches, nodes, &modules, &layers, stylesheets)?;
+        print_outputs(
+            &matches,
+            nodes,
+            &modules,
+            &layers,
+            stylesheets,
+            embed_stylesheets,
+        )?;
     }
     // Output diagnostic messages
     output_messages(&diags)
@@ -306,6 +324,7 @@ fn print_outputs(
     modules: &HashMap<String, Module>,
     layers: &Option<Vec<&str>>,
     stylesheets: Option<Vec<&str>>,
+    embed_stylesheets: bool,
 ) -> Result<(), anyhow::Error> {
     if !matches.is_present("NO_ARGUMENT_VIEW") {
         for (module_name, module) in modules {
@@ -327,6 +346,7 @@ fn print_outputs(
                     .flatten()
                     .map(|x| Some(x.to_owned()))
                     .collect(),
+                embed_stylesheets,
             )?;
         }
     }
@@ -350,6 +370,7 @@ fn print_outputs(
                     .flatten()
                     .map(|x| Some(x.to_owned()))
                     .collect(),
+                embed_stylesheets,
             )?;
         }
         if !matches.is_present("NO_COMPLETE_VIEW") {
@@ -361,7 +382,13 @@ fn print_outputs(
                 .unwrap();
             let mut output_file = File::create(output_filename)
                 .context(format!("Failed to open output file {}", output_filename))?;
-            render::render_complete(&mut output_file, matches, &nodes, stylesheets)?;
+            render::render_complete(
+                &mut output_file,
+                matches,
+                &nodes,
+                stylesheets,
+                embed_stylesheets,
+            )?;
         }
     }
     if !matches.is_present("NO_EVIDENCES") {
