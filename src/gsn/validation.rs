@@ -43,8 +43,8 @@ fn validate_id(diag: &mut Diagnostics, module: &str, id: &str) {
 ///
 /// Validate all references
 ///
-/// - Check in_context references for wellformedness
-/// - Check supported_by references for wellformedness
+/// - Check in_context references for well-formedness
+/// - Check supported_by references for well-formedness
 /// - Check if undeveloped is correctly set
 ///
 fn validate_references(diag: &mut Diagnostics, module: &str, id: &str, node: &GsnNode) {

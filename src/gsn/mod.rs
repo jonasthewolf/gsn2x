@@ -51,6 +51,7 @@ impl GsnNode {
 pub struct ModuleInformation {
     pub(crate) name: String,
     pub(crate) brief: Option<String>,
+    pub(crate) extends: Option<Vec<ExtendsModule>>,
     #[serde(flatten)]
     pub(crate) additional: BTreeMap<String, String>,
 }
@@ -65,6 +66,12 @@ pub enum GsnDocumentNode {
 pub struct Module {
     pub filename: String,
     pub meta: Option<ModuleInformation>,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct ExtendsModule {
+    pub module: String,
+    pub develops: BTreeMap<String, Vec<String>>,
 }
 
 ///
