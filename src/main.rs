@@ -297,9 +297,9 @@ fn validate_and_check(
     excluded_modules: Option<Vec<&str>>,
     layers: &Option<Vec<&str>>,
 ) {
-    for module in modules.keys() {
+    for (module_name, module_info) in modules {
         // Validation for well-formedness is done unconditionally.
-        gsn::validation::validate_module(diags, module, nodes);
+        gsn::validation::validate_module(diags, module_name, module_info, nodes);
         if diags.errors > 0 {
             break;
         }

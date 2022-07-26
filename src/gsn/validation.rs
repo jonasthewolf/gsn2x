@@ -1,4 +1,4 @@
-use super::GsnNode;
+use super::{GsnNode, Module};
 use crate::diagnostics::{DiagType, Diagnostics};
 use std::collections::{BTreeMap, HashSet};
 
@@ -6,14 +6,21 @@ use std::collections::{BTreeMap, HashSet};
 /// Validate all ids and nodes
 ///
 ///
-pub fn validate_module(diag: &mut Diagnostics, module: &str, nodes: &BTreeMap<String, GsnNode>) {
-    for (id, node) in nodes.iter().filter(|(_, n)| n.module == module) {
+pub fn validate_module(
+    diag: &mut Diagnostics,
+    module_name: &str,
+    module_info: &Module,
+    nodes: &BTreeMap<String, GsnNode>,
+) {
+    for (id, node) in nodes.iter().filter(|(_, n)| n.module == module_name) {
         // Validate if key is one of the known prefixes
-        validate_id(diag, module, id);
+        validate_id(diag, module_name, id);
         // Validate all references of node
-        validate_references(diag, module, id, node);
+        validate_references(diag, module_name, id, node);
     }
+    validate_module_extensions(module_info, nodes, module_name, diag);
 }
+
 
 ///
 /// Validate id
@@ -50,7 +57,7 @@ fn validate_id(diag: &mut Diagnostics, module: &str, id: &str) {
 fn validate_references(diag: &mut Diagnostics, module: &str, id: &str, node: &GsnNode) {
     if let Some(in_context) = node.in_context_of.as_ref() {
         let mut valid_refs = vec![];
-        // Only goals and strategies can have contexts, assumptions and goals
+        // Only goals and strategies can have contexts, assumptions and justifications
         if id.starts_with('S') || id.starts_with('G') {
             valid_refs.append(&mut vec!["J", "A", "C"]);
         }
@@ -129,6 +136,56 @@ fn validate_reference(
     }
 }
 
+/// 
+/// Validate module extensions
+/// 
+/// 
+/// 
+fn validate_module_extensions(module_info: &Module, nodes: &BTreeMap<String, GsnNode>, module_name: &str, diag: &mut Diagnostics) {
+    if let Some(meta) = &module_info.meta {
+        if let Some(extensions) = &meta.extends {
+            for ext in extensions {
+                for (foreign_id, local_ids) in &ext.develops {
+                    for local_id in local_ids {
+                        if !nodes
+                            .iter()
+                            .filter(|(_, n)| n.module == module_name)
+                            .any(|(id, _)| id == local_id)
+                        {
+                            diag.add_msg(
+                            DiagType::Error,
+                            Some(module_name),
+                            format!(
+                                "V07: Element {} in module {} supposed to develop {} in module {} does not exist.",
+                                local_id,
+                                module_name,
+                                foreign_id,
+                                ext.module
+                            ),
+                        );
+                        }
+                        if !(local_id.starts_with("Sn")
+                            || local_id.starts_with('S')
+                            || local_id.starts_with('G'))
+                        {
+                            diag.add_msg(
+                            DiagType::Error,
+                            Some(module_name),
+                            format!(
+                                "V07: Element {} is of wrong type. Only Strategies, Goals and Solutions can develop other Goals and Strategies.",
+                                local_id
+                            ),
+                        );
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+
 #[cfg(test)]
 mod test {
     use super::*;
@@ -167,7 +224,7 @@ mod test {
                 ..Default::default()
             },
         );
-        validate_module(&mut d, "", &nodes);
+        validate_module(&mut d, "", &Module { filename: "".to_owned(), meta: None }, &nodes);
         assert_eq!(d.messages.len(), 2);
         assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
@@ -196,7 +253,7 @@ mod test {
                 ..Default::default()
             },
         );
-        validate_module(&mut d, "", &nodes);
+        validate_module(&mut d, "", &Module { filename: "".to_owned(), meta: None }, &nodes);
         assert_eq!(d.messages.len(), 1);
         assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
@@ -219,7 +276,7 @@ mod test {
                 ..Default::default()
             },
         );
-        validate_module(&mut d, "", &nodes);
+        validate_module(&mut d, "", &Module { filename: "".to_owned(), meta: None }, &nodes);
         assert_eq!(d.messages.len(), 2);
         assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
@@ -249,7 +306,7 @@ mod test {
                 ..Default::default()
             },
         );
-        validate_module(&mut d, "", &nodes);
+        validate_module(&mut d, "", &Module { filename: "".to_owned(), meta: None }, &nodes);
         assert_eq!(d.messages.len(), 2);
         assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
@@ -281,7 +338,7 @@ mod test {
         );
         nodes.insert("Sn1".to_owned(), GsnNode::default());
         nodes.insert("C1".to_owned(), GsnNode::default());
-        validate_module(&mut d, "", &nodes);
+        validate_module(&mut d, "", &Module { filename: "".to_owned(), meta: None }, &nodes);
         assert_eq!(d.messages.len(), 1);
         assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Warning);
@@ -311,7 +368,7 @@ mod test {
                 ..Default::default()
             },
         );
-        validate_module(&mut d, "", &nodes);
+        validate_module(&mut d, "", &Module { filename: "".to_owned(), meta: None }, &nodes);
         assert_eq!(d.messages.len(), 1);
         assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Warning);
@@ -350,7 +407,7 @@ mod test {
             },
         );
         nodes.insert("Sn1".to_owned(), GsnNode::default());
-        validate_module(&mut d, "", &nodes);
+        validate_module(&mut d, "", &Module { filename: "".to_owned(), meta: None }, &nodes);
         assert_eq!(d.messages.len(), 3);
         assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
@@ -388,7 +445,7 @@ mod test {
         nodes.insert("C1".to_owned(), GsnNode::default());
         nodes.insert("J1".to_owned(), GsnNode::default());
         nodes.insert("A1".to_owned(), GsnNode::default());
-        validate_module(&mut d, "", &nodes);
+        validate_module(&mut d, "", &Module { filename: "".to_owned(), meta: None }, &nodes);
         assert_eq!(d.messages.len(), 3);
         assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
@@ -424,7 +481,7 @@ mod test {
                 ..Default::default()
             },
         );
-        validate_module(&mut d, "", &nodes);
+        validate_module(&mut d, "", &Module { filename: "".to_owned(), meta: None }, &nodes);
         assert_eq!(d.messages.len(), 2);
         assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Warning);
@@ -448,7 +505,7 @@ mod test {
                 ..Default::default()
             },
         );
-        validate_module(&mut d, "", &nodes);
+        validate_module(&mut d, "", &Module { filename: "".to_owned(), meta: None }, &nodes);
         assert_eq!(d.messages.len(), 2);
         assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Warning);
@@ -473,7 +530,7 @@ mod test {
             },
         );
         nodes.insert("Sn2".to_owned(), GsnNode::default());
-        validate_module(&mut d, "", &nodes);
+        validate_module(&mut d, "", &Module { filename: "".to_owned(), meta: None }, &nodes);
         assert_eq!(d.messages.len(), 1);
         assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
