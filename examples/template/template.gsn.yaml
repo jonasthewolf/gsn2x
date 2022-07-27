@@ -1,0 +1,7 @@
+module:
+  name: template
+  brief: Template for an assurance case
+
+G1:
+  text: A claim somebody else should support
+  undeveloped: true
