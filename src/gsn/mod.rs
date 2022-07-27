@@ -110,15 +110,15 @@ pub fn extend_modules(
                                 );
                             } else {
                                 match nodes.get_mut(foreign_id) {
-                                    Some(foreign_node) => {
-                                        foreign_node.supported_by =
-                                            Some(local_ids.to_vec());
-                                    }
                                     None => {
                                         diags.add_error(
                                             Some(module_name),
                                             format!("C10: Element {} does not exist, but is supposed to be extended by {}.", foreign_id, local_ids.join(",")),
                                         );
+                                    }
+                                    Some(foreign_node) => {
+                                        foreign_node.supported_by =
+                                            Some(local_ids.to_vec());
                                     }
                                 }
                             }
