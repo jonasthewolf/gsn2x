@@ -21,7 +21,6 @@ pub fn validate_module(
     validate_module_extensions(module_info, nodes, module_name, diag);
 }
 
-
 ///
 /// Validate id
 ///
@@ -136,12 +135,17 @@ fn validate_reference(
     }
 }
 
-/// 
+///
 /// Validate module extensions
-/// 
-/// 
-/// 
-fn validate_module_extensions(module_info: &Module, nodes: &BTreeMap<String, GsnNode>, module_name: &str, diag: &mut Diagnostics) {
+///
+///
+///
+fn validate_module_extensions(
+    module_info: &Module,
+    nodes: &BTreeMap<String, GsnNode>,
+    module_name: &str,
+    diag: &mut Diagnostics,
+) {
     if let Some(meta) = &module_info.meta {
         if let Some(extensions) = &meta.extends {
             for ext in extensions {
@@ -184,8 +188,6 @@ fn validate_module_extensions(module_info: &Module, nodes: &BTreeMap<String, Gsn
     }
 }
 
-
-
 #[cfg(test)]
 mod test {
     use super::*;
@@ -224,7 +226,15 @@ mod test {
                 ..Default::default()
             },
         );
-        validate_module(&mut d, "", &Module { filename: "".to_owned(), meta: None }, &nodes);
+        validate_module(
+            &mut d,
+            "",
+            &Module {
+                filename: "".to_owned(),
+                meta: None,
+            },
+            &nodes,
+        );
         assert_eq!(d.messages.len(), 2);
         assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
@@ -253,7 +263,15 @@ mod test {
                 ..Default::default()
             },
         );
-        validate_module(&mut d, "", &Module { filename: "".to_owned(), meta: None }, &nodes);
+        validate_module(
+            &mut d,
+            "",
+            &Module {
+                filename: "".to_owned(),
+                meta: None,
+            },
+            &nodes,
+        );
         assert_eq!(d.messages.len(), 1);
         assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
@@ -276,7 +294,15 @@ mod test {
                 ..Default::default()
             },
         );
-        validate_module(&mut d, "", &Module { filename: "".to_owned(), meta: None }, &nodes);
+        validate_module(
+            &mut d,
+            "",
+            &Module {
+                filename: "".to_owned(),
+                meta: None,
+            },
+            &nodes,
+        );
         assert_eq!(d.messages.len(), 2);
         assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
@@ -306,7 +332,15 @@ mod test {
                 ..Default::default()
             },
         );
-        validate_module(&mut d, "", &Module { filename: "".to_owned(), meta: None }, &nodes);
+        validate_module(
+            &mut d,
+            "",
+            &Module {
+                filename: "".to_owned(),
+                meta: None,
+            },
+            &nodes,
+        );
         assert_eq!(d.messages.len(), 2);
         assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
@@ -338,7 +372,15 @@ mod test {
         );
         nodes.insert("Sn1".to_owned(), GsnNode::default());
         nodes.insert("C1".to_owned(), GsnNode::default());
-        validate_module(&mut d, "", &Module { filename: "".to_owned(), meta: None }, &nodes);
+        validate_module(
+            &mut d,
+            "",
+            &Module {
+                filename: "".to_owned(),
+                meta: None,
+            },
+            &nodes,
+        );
         assert_eq!(d.messages.len(), 1);
         assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Warning);
@@ -368,7 +410,15 @@ mod test {
                 ..Default::default()
             },
         );
-        validate_module(&mut d, "", &Module { filename: "".to_owned(), meta: None }, &nodes);
+        validate_module(
+            &mut d,
+            "",
+            &Module {
+                filename: "".to_owned(),
+                meta: None,
+            },
+            &nodes,
+        );
         assert_eq!(d.messages.len(), 1);
         assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Warning);
@@ -407,7 +457,15 @@ mod test {
             },
         );
         nodes.insert("Sn1".to_owned(), GsnNode::default());
-        validate_module(&mut d, "", &Module { filename: "".to_owned(), meta: None }, &nodes);
+        validate_module(
+            &mut d,
+            "",
+            &Module {
+                filename: "".to_owned(),
+                meta: None,
+            },
+            &nodes,
+        );
         assert_eq!(d.messages.len(), 3);
         assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
@@ -445,7 +503,15 @@ mod test {
         nodes.insert("C1".to_owned(), GsnNode::default());
         nodes.insert("J1".to_owned(), GsnNode::default());
         nodes.insert("A1".to_owned(), GsnNode::default());
-        validate_module(&mut d, "", &Module { filename: "".to_owned(), meta: None }, &nodes);
+        validate_module(
+            &mut d,
+            "",
+            &Module {
+                filename: "".to_owned(),
+                meta: None,
+            },
+            &nodes,
+        );
         assert_eq!(d.messages.len(), 3);
         assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
@@ -481,7 +547,15 @@ mod test {
                 ..Default::default()
             },
         );
-        validate_module(&mut d, "", &Module { filename: "".to_owned(), meta: None }, &nodes);
+        validate_module(
+            &mut d,
+            "",
+            &Module {
+                filename: "".to_owned(),
+                meta: None,
+            },
+            &nodes,
+        );
         assert_eq!(d.messages.len(), 2);
         assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Warning);
@@ -505,7 +579,15 @@ mod test {
                 ..Default::default()
             },
         );
-        validate_module(&mut d, "", &Module { filename: "".to_owned(), meta: None }, &nodes);
+        validate_module(
+            &mut d,
+            "",
+            &Module {
+                filename: "".to_owned(),
+                meta: None,
+            },
+            &nodes,
+        );
         assert_eq!(d.messages.len(), 2);
         assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Warning);
@@ -530,7 +612,15 @@ mod test {
             },
         );
         nodes.insert("Sn2".to_owned(), GsnNode::default());
-        validate_module(&mut d, "", &Module { filename: "".to_owned(), meta: None }, &nodes);
+        validate_module(
+            &mut d,
+            "",
+            &Module {
+                filename: "".to_owned(),
+                meta: None,
+            },
+            &nodes,
+        );
         assert_eq!(d.messages.len(), 1);
         assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Error);

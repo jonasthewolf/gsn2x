@@ -185,7 +185,7 @@ fn main() -> Result<()> {
     read_inputs(&inputs, &mut nodes, &mut modules, &mut diags)?;
 
     // Validate
-    validate_and_check(&nodes, &modules, &mut diags, excluded_modules, &layers);
+    validate_and_check(&mut nodes, &modules, &mut diags, excluded_modules, &layers);
 
     if diags.errors == 0 && !matches.is_present("CHECKONLY") {
         // Output argument view
@@ -291,7 +291,7 @@ fn read_inputs(
 ///
 ///
 fn validate_and_check(
-    nodes: &BTreeMap<String, GsnNode>,
+    nodes: &mut BTreeMap<String, GsnNode>,
     modules: &HashMap<String, Module>,
     diags: &mut Diagnostics,
     excluded_modules: Option<Vec<&str>>,
@@ -305,6 +305,7 @@ fn validate_and_check(
         }
     }
     if diags.errors == 0 {
+        gsn::extend_modules(diags, nodes, modules);
         gsn::check::check_nodes(diags, nodes, excluded_modules);
         if let Some(lays) = &layers {
             gsn::check::check_layers(diags, nodes, lays);
