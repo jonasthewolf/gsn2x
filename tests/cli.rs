@@ -166,7 +166,7 @@ mod integrations {
         let mut cmd = Command::cargo_bin("gsn2x")?;
         cmd.arg("-c")
             .arg("examples/template/template.gsn.yaml")
-            .arg("examples/template/inval1_instance.gsn.yaml");
+            .arg("tests/inval1_instance.gsn.yaml");
         cmd.assert().failure().stderr(predicate::str::contains(
             "Error: 2 errors and 1 warnings detected.",
         ));
@@ -178,7 +178,7 @@ mod integrations {
         let mut cmd = Command::cargo_bin("gsn2x")?;
         cmd.arg("-c")
             .arg("examples/template/template.gsn.yaml")
-            .arg("examples/template/inval2_instance.gsn.yaml");
+            .arg("tests/inval2_instance.gsn.yaml");
         cmd.assert().failure().stderr(predicate::str::contains(
             "Error: 1 errors and 1 warnings detected.",
         ));
@@ -190,7 +190,7 @@ mod integrations {
         let mut cmd = Command::cargo_bin("gsn2x")?;
         cmd.arg("-c")
             .arg("examples/template/template.gsn.yaml")
-            .arg("examples/template/inval3_instance.gsn.yaml");
+            .arg("tests/inval3_instance.gsn.yaml");
         cmd.assert().failure().stderr(predicate::str::contains(
             "Error: 1 errors and 1 warnings detected.",
         ));
