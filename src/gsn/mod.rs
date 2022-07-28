@@ -97,7 +97,7 @@ pub fn extend_modules(
                         );
                     }
                     for (foreign_id, local_ids) in &ext.develops {
-                        if let Some(foreign_node) = nodes.get(foreign_id) {
+                        if let Some(foreign_node) = nodes.get_mut(foreign_id) {
                             if foreign_node.module != ext.module {
                                 diags.add_error(
                                     Some(module_name),
@@ -109,17 +109,7 @@ pub fn extend_modules(
                                     format!("C10: Element {} is not undeveloped, but is supposed to be extended by {}.", foreign_id, local_ids.join(",")),
                                 );
                             } else {
-                                match nodes.get_mut(foreign_id) {
-                                    None => {
-                                        diags.add_error(
-                                            Some(module_name),
-                                            format!("C10: Element {} does not exist, but is supposed to be extended by {}.", foreign_id, local_ids.join(",")),
-                                        );
-                                    }
-                                    Some(foreign_node) => {
-                                        foreign_node.supported_by = Some(local_ids.to_vec());
-                                    }
-                                }
+                                foreign_node.supported_by = Some(local_ids.to_vec());
                             }
                         } else {
                             diags.add_error(
