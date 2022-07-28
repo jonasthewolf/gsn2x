@@ -225,7 +225,7 @@ fn read_inputs(
                 ))
             })
             .context(format!("Failed to parse YAML from file {}", input))?;
-        let meta: Option<ModuleInformation> = match n.remove_entry(MODULE_INFORMATION_NODE) {
+        let mut meta: Option<ModuleInformation> = match n.remove_entry(MODULE_INFORMATION_NODE) {
             Some((_, GsnDocumentNode::ModuleInformation(x))) => Some(x),
             _ => None,
         };
@@ -233,7 +233,14 @@ fn read_inputs(
         let module = if let Some(m) = &meta {
             m.name.to_owned()
         } else {
-            escape_text(input)
+            let module_name = escape_text(input);
+            meta = Some(ModuleInformation {
+                name: module_name.to_owned(),
+                brief: None,
+                extends: None,
+                additional: BTreeMap::new(),
+            });
+            module_name
         };
 
         if let std::collections::hash_map::Entry::Vacant(e) = modules.entry(module.to_owned()) {

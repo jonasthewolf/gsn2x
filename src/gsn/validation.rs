@@ -643,9 +643,9 @@ mod test {
         develops.insert("G1".to_owned(), vec!["G2".to_owned()]);
         validate_module(
             &mut d,
-            "",
+            "mod",
             &Module {
-                filename: "".to_owned(),
+                filename: "mod".to_owned(),
                 meta: Some(ModuleInformation {
                     name: "mod".to_owned(),
                     brief: Some("brief".to_owned()),
@@ -659,11 +659,11 @@ mod test {
             &nodes,
         );
         assert_eq!(d.messages.len(), 1);
-        assert_eq!(d.messages[0].module, Some("".to_owned()));
+        assert_eq!(d.messages[0].module, Some("mod".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
         assert_eq!(
             d.messages[0].msg,
-            "V07: Element G2 in module  supposed to develop G1 in module mod2 does not exist."
+            "V07: Element G2 in module mod supposed to develop G1 in module mod2 does not exist."
         );
         assert_eq!(d.errors, 1);
         assert_eq!(d.warnings, 0);
