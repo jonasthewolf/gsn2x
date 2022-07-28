@@ -117,8 +117,7 @@ pub fn extend_modules(
                                         );
                                     }
                                     Some(foreign_node) => {
-                                        foreign_node.supported_by =
-                                            Some(local_ids.to_vec());
+                                        foreign_node.supported_by = Some(local_ids.to_vec());
                                     }
                                 }
                             }

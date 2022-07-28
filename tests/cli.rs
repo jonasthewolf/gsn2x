@@ -327,6 +327,4 @@ mod integrations {
         temp.close()?;
         Ok(())
     }
-
-
 }

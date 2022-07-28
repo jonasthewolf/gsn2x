@@ -151,7 +151,19 @@ fn validate_module_extensions(
             for ext in extensions {
                 for (foreign_id, local_ids) in &ext.develops {
                     for local_id in local_ids {
-                        if !nodes
+                        if !(local_id.starts_with("Sn")
+                            || local_id.starts_with('S')
+                            || local_id.starts_with('G'))
+                        {
+                            diag.add_msg(
+                            DiagType::Error,
+                            Some(module_name),
+                            format!(
+                                "V07: Element {} is of wrong type. Only Strategies, Goals and Solutions can develop other Goals and Strategies.",
+                                local_id
+                            ),
+                        );
+                        } else if !nodes
                             .iter()
                             .filter(|(_, n)| n.module == module_name)
                             .any(|(id, _)| id == local_id)
@@ -167,19 +179,8 @@ fn validate_module_extensions(
                                 ext.module
                             ),
                         );
-                        }
-                        if !(local_id.starts_with("Sn")
-                            || local_id.starts_with('S')
-                            || local_id.starts_with('G'))
-                        {
-                            diag.add_msg(
-                            DiagType::Error,
-                            Some(module_name),
-                            format!(
-                                "V07: Element {} is of wrong type. Only Strategies, Goals and Solutions can develop other Goals and Strategies.",
-                                local_id
-                            ),
-                        );
+                        } else {
+                            // All fine.
                         }
                     }
                 }
@@ -190,6 +191,8 @@ fn validate_module_extensions(
 
 #[cfg(test)]
 mod test {
+    use crate::gsn::{ExtendsModule, ModuleInformation};
+
     use super::*;
     #[test]
     fn unknown_id() {
@@ -627,6 +630,74 @@ mod test {
         assert_eq!(
             d.messages[0].msg,
             "V03: Undeveloped element G1 has supporting arguments."
+        );
+        assert_eq!(d.errors, 1);
+        assert_eq!(d.warnings, 0);
+    }
+
+    #[test]
+    fn wrong_extension() {
+        let mut d = Diagnostics::default();
+        let nodes = BTreeMap::<String, GsnNode>::new();
+        let mut develops = BTreeMap::new();
+        develops.insert("G1".to_owned(), vec!["G2".to_owned()]);
+        validate_module(
+            &mut d,
+            "",
+            &Module {
+                filename: "".to_owned(),
+                meta: Some(ModuleInformation {
+                    name: "mod".to_owned(),
+                    brief: Some("brief".to_owned()),
+                    extends: Some(vec![ExtendsModule {
+                        module: "mod2".to_owned(),
+                        develops,
+                    }]),
+                    additional: BTreeMap::new(),
+                }),
+            },
+            &nodes,
+        );
+        assert_eq!(d.messages.len(), 1);
+        assert_eq!(d.messages[0].module, Some("".to_owned()));
+        assert_eq!(d.messages[0].diag_type, DiagType::Error);
+        assert_eq!(
+            d.messages[0].msg,
+            "V07: Element G2 in module  supposed to develop G1 in module mod2 does not exist."
+        );
+        assert_eq!(d.errors, 1);
+        assert_eq!(d.warnings, 0);
+    }
+
+    #[test]
+    fn wrong_extension_type() {
+        let mut d = Diagnostics::default();
+        let nodes = BTreeMap::<String, GsnNode>::new();
+        let mut develops = BTreeMap::new();
+        develops.insert("G1".to_owned(), vec!["X2".to_owned()]);
+        validate_module(
+            &mut d,
+            "",
+            &Module {
+                filename: "".to_owned(),
+                meta: Some(ModuleInformation {
+                    name: "mod".to_owned(),
+                    brief: Some("brief".to_owned()),
+                    extends: Some(vec![ExtendsModule {
+                        module: "mod2".to_owned(),
+                        develops,
+                    }]),
+                    additional: BTreeMap::new(),
+                }),
+            },
+            &nodes,
+        );
+        assert_eq!(d.messages.len(), 1);
+        assert_eq!(d.messages[0].module, Some("".to_owned()));
+        assert_eq!(d.messages[0].diag_type, DiagType::Error);
+        assert_eq!(
+            d.messages[0].msg,
+            "V07: Element X2 is of wrong type. Only Strategies, Goals and Solutions can develop other Goals and Strategies."
         );
         assert_eq!(d.errors, 1);
         assert_eq!(d.warnings, 0);
