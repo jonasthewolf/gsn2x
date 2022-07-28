@@ -152,6 +152,64 @@ mod integrations {
     }
 
     #[test]
+    fn validate_template_instance() -> Result<(), Box<dyn std::error::Error>> {
+        let mut cmd = Command::cargo_bin("gsn2x")?;
+        cmd.arg("-c")
+            .arg("examples/template/template.gsn.yaml")
+            .arg("examples/template/instance.gsn.yaml");
+        cmd.assert().success();
+        Ok(())
+    }
+
+    #[test]
+    fn validate_template_invalid_instance1() -> Result<(), Box<dyn std::error::Error>> {
+        let mut cmd = Command::cargo_bin("gsn2x")?;
+        cmd.arg("-c")
+            .arg("examples/template/template.gsn.yaml")
+            .arg("tests/inval1_instance.gsn.yaml");
+        cmd.assert().failure().stderr(predicate::str::contains(
+            "Error: 2 errors and 1 warnings detected.",
+        ));
+        Ok(())
+    }
+
+    #[test]
+    fn validate_template_invalid_instance2() -> Result<(), Box<dyn std::error::Error>> {
+        let mut cmd = Command::cargo_bin("gsn2x")?;
+        cmd.arg("-c")
+            .arg("examples/template/template.gsn.yaml")
+            .arg("tests/inval2_instance.gsn.yaml");
+        cmd.assert().failure().stderr(predicate::str::contains(
+            "Error: 1 errors and 1 warnings detected.",
+        ));
+        Ok(())
+    }
+
+    #[test]
+    fn validate_template_invalid_instance3() -> Result<(), Box<dyn std::error::Error>> {
+        let mut cmd = Command::cargo_bin("gsn2x")?;
+        cmd.arg("-c")
+            .arg("examples/template/template.gsn.yaml")
+            .arg("tests/inval3_instance.gsn.yaml");
+        cmd.assert().failure().stderr(predicate::str::contains(
+            "Error: 1 errors and 1 warnings detected.",
+        ));
+        Ok(())
+    }
+
+    #[test]
+    fn validate_template_invalid_instance4() -> Result<(), Box<dyn std::error::Error>> {
+        let mut cmd = Command::cargo_bin("gsn2x")?;
+        cmd.arg("-c")
+            .arg("examples/template/template.gsn.yaml")
+            .arg("tests/inval4_instance.gsn.yaml");
+        cmd.assert().failure().stderr(predicate::str::contains(
+            "Error: 1 errors and 1 warnings detected.",
+        ));
+        Ok(())
+    }
+
+    #[test]
     fn no_evidences() -> Result<(), Box<dyn std::error::Error>> {
         let mut cmd = Command::cargo_bin("gsn2x")?;
         let evidence_file = assert_fs::NamedTempFile::new("evidences.md")?;

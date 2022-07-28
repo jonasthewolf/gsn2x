@@ -73,8 +73,9 @@ The tool automatically performs the following validation checks on the input YAM
  - V03: Goals and Strategies marked as undeveloped, must have no supporting arguments.
  - V04: All elements listed under `supportedBy` and `inContextOf` must be known elements types and semantically sensible
         (e.g. a Justification cannot be listed under `supportedBy`).
- - V05: All referenced elelemts in `supportedBy` and `inContextOf` must be unique i.e., no duplicates in the list.
- - V06: All referenced elelemts in `supportedBy` and `inContextOf` must not refer to the element itself.
+ - V05: All referenced elements in `supportedBy` and `inContextOf` must be unique i.e., no duplicates in the list.
+ - V06: All referenced elements in `supportedBy` and `inContextOf` must not refer to the element itself.
+ - V07: All elements listed as extending other elements must be known elements of the current module and semantically sensible (see V04).
  - C01: There should be only one but must be at least one top-level element (G,S,C,J,A,Sn) unreferenced. 
  - C02: The top-level element must be a Goal. A top-level element is an element that is not referenced by any other element.
  - C03: All referenced elements in `supportedBy` and `inContextOf` must exist.
@@ -84,10 +85,12 @@ The tool automatically performs the following validation checks on the input YAM
  - C07: All IDs must be unique across all modules.
  - C08: All elements must be reachable from the root elements.
         This message can e.g. happen if there are multiple independent graphs where one contains circular references only.
+ - C09: All extended modules must exist.
+ - C10: All extended elements must exist in the named module and must be undeveloped.
 
 The checks (Cxx) always apply to the complete set of input files.
 
-Uniqueness of keys is automatically enforced by the YAML format.
+Uniqueness of keys (i.e. element IDs) is automatically enforced by the YAML format.
 
 Error messages and warnings are printed to stderr.
 
@@ -127,7 +130,7 @@ It is intentional that information is only added for a view, but not hidden to e
 
 ## Stylesheets for SVG rendering
 
-You can provide (multiple) custom stylesheets for SVG via the `-s` or `--stylesheet` options. 
+You can provide (multiple) custom CSS stylesheets for SVG via the `-s` or `--stylesheet` options. 
 The path is not interpreted by gsn2x and, thus, is relative to the SVG if relative.
 
 Every element will also be addressable by `id`. The `id` is the same as the YAML id.
@@ -138,6 +141,8 @@ The complete diagram is assigned `gsndiagram` class.
 
 You can assign additional classes by adding the `classes:` attribute. It must be a list of classes you want to assign. 
 Additional layers will be added as CSS classes, too. A `layer1` will e.g. be added as `gsnlay_layer1`.
+
+When using `-t` or `--embed-css` instead of `-s` the CSS stylesheets will be embedded in the SVG. The path is interpreted as relative to the current working directory then.
 
 ### Example
 
@@ -168,7 +173,7 @@ Module Interfaces (Section 1:4.6) and Inter-Module Contracts (Section 1:4.7) are
 Each module is a separate file. The name of the module is the file name (incl. the path provided to the gsn2x command line).
 
 If modules are used, all related module files must be provided to the command line of gsn2x.
-Element IDs must be unique accross all modules. Checks will by default be performed accross all modules.
+Element IDs must be unique across all modules. Checks will by default be performed across all modules.
 Check messages for individual modules can be omitted using the `-x` option.
 
 The argument view of individual modules will show "away" elements if elements from other modules are referenced.
@@ -201,6 +206,43 @@ See [example](examples/modular/architecture.svg) here.
     gsn2x -f full.svg -a arch.svg -m sub1.yml main.yml sub1.yml sub3.yml sub5.yml  
 
 This will generate the argument view for each module, the complete view (`-f full.svg`) of all modules and the architecture view (`-a arch.svg`). In the complete view, the elements of the `sub1` module will be represented by a module.
+
+### Developing undeveloped elements from other modules
+
+In a customer supplier relationship it may be helpful to develop otherwise undeveloped elements from other modules.
+This allows creating distributed assurance cases.
+
+Example for a module with undeveloped elements:
+
+```yaml
+module:
+  name: template 
+  brief: Template for an assurance case
+
+G1:
+  text: A claim somebody else should support
+  undeveloped: true
+```
+
+Example for developing those elements in another module:
+
+```yaml
+module:
+  name: instance
+  brief: Extending instance
+  extends: 
+    - module: template
+      develops:
+        G1: [G2]
+
+G2:
+  text: This is the argument provided by somebody else.
+  supportedBy: [Sn1]
+
+Sn1:
+  text: A solution
+```
+
 
 ## List of evidences
 
@@ -259,8 +301,10 @@ I noticed that it might make sense to add some information about the goals I hav
 
    I would like to keep things simple. Simple for me and others.
 
-   That means the input format should be simple to learn and edit.
-
+   That means the input format should be simple to learn and edit manually in any editor. 
+   I also did not want invent a new DSL (domain-specific language) for that purpose.
+   YAML (input file format) might not be the best format, but it serves as a good tradeoff for my purposes.
+   Moreover, it can be parsed by other programs easily, too.
 
 - Standard conformance
 
@@ -272,7 +316,7 @@ I noticed that it might make sense to add some information about the goals I hav
 
 - As few dependencies as possible
 
-  Since I understand that this tool might be used in some corporate environemnt where usage of 
+  Since I understand that this tool might be used in some corporate environment where usage of 
   free and open-source software might be limited, I try to keep the dependencies of this program 
   as few as possible.
 
@@ -281,18 +325,18 @@ I noticed that it might make sense to add some information about the goals I hav
 I also noticed that (also for myself) it is good to note down some history of the project:
 
 - It all started out in 2017 with the need for graphically representing some argumentation at work.
-  I wrote an extremly small Python script that used a jinja template to transform the YAML syntax
+  I wrote an extremely small Python script that used a jinja template to transform the YAML syntax
   into something Graphviz could understand.
 
   From there Graphviz could generate different output formats. That's where the `x` in `gsn2x` is from.
 
 - It got obvious that some validation, especially on the uniqueness and reference resolution is needed
-  to handle larger argumentations.
+  to handle larger argumentation.
   
   I did not want to write them in Python, but in my favorite programming language Rust.
   I released the first Rust version in July 2021.
   
-- I desparately tried adding the modular extension by convincing Graphviz to draw what I want, but I failed.
+- I desperately tried adding the modular extension by convincing Graphviz to draw what I want, but I failed.
   I finally made decided to no longer output DOT, but directly generate SVGs from the program.
   This required writing a specialized version for rendering the tree on my own which ended up in version 2 
   finally released in April 2022.

@@ -185,7 +185,7 @@ fn main() -> Result<()> {
     read_inputs(&inputs, &mut nodes, &mut modules, &mut diags)?;
 
     // Validate
-    validate_and_check(&nodes, &modules, &mut diags, excluded_modules, &layers);
+    validate_and_check(&mut nodes, &modules, &mut diags, excluded_modules, &layers);
 
     if diags.errors == 0 && !matches.is_present("CHECKONLY") {
         // Output argument view
@@ -225,7 +225,7 @@ fn read_inputs(
                 ))
             })
             .context(format!("Failed to parse YAML from file {}", input))?;
-        let meta: Option<ModuleInformation> = match n.remove_entry(MODULE_INFORMATION_NODE) {
+        let mut meta: Option<ModuleInformation> = match n.remove_entry(MODULE_INFORMATION_NODE) {
             Some((_, GsnDocumentNode::ModuleInformation(x))) => Some(x),
             _ => None,
         };
@@ -233,7 +233,14 @@ fn read_inputs(
         let module = if let Some(m) = &meta {
             m.name.to_owned()
         } else {
-            escape_text(input)
+            let module_name = escape_text(input);
+            meta = Some(ModuleInformation {
+                name: module_name.to_owned(),
+                brief: None,
+                extends: None,
+                additional: BTreeMap::new(),
+            });
+            module_name
         };
 
         if let std::collections::hash_map::Entry::Vacant(e) = modules.entry(module.to_owned()) {
@@ -291,20 +298,21 @@ fn read_inputs(
 ///
 ///
 fn validate_and_check(
-    nodes: &BTreeMap<String, GsnNode>,
+    nodes: &mut BTreeMap<String, GsnNode>,
     modules: &HashMap<String, Module>,
     diags: &mut Diagnostics,
     excluded_modules: Option<Vec<&str>>,
     layers: &Option<Vec<&str>>,
 ) {
-    for module in modules.keys() {
-        // Validation for wellformedness is done unconditionally.
-        gsn::validation::validate_module(diags, module, nodes);
+    for (module_name, module_info) in modules {
+        // Validation for well-formedness is done unconditionally.
+        gsn::validation::validate_module(diags, module_name, module_info, nodes);
         if diags.errors > 0 {
             break;
         }
     }
     if diags.errors == 0 {
+        gsn::extend_modules(diags, nodes, modules);
         gsn::check::check_nodes(diags, nodes, excluded_modules);
         if let Some(lays) = &layers {
             gsn::check::check_layers(diags, nodes, lays);

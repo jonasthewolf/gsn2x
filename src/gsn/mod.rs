@@ -1,6 +1,9 @@
-use crate::dirgraphsvg::edges::{EdgeType, SingleEdge};
+use crate::{
+    diagnostics::Diagnostics,
+    dirgraphsvg::edges::{EdgeType, SingleEdge},
+};
 use serde::Deserialize;
-use std::collections::{BTreeMap, BTreeSet};
+use std::collections::{BTreeMap, BTreeSet, HashMap};
 
 pub mod check;
 pub mod validation;
@@ -51,6 +54,7 @@ impl GsnNode {
 pub struct ModuleInformation {
     pub(crate) name: String,
     pub(crate) brief: Option<String>,
+    pub(crate) extends: Option<Vec<ExtendsModule>>,
     #[serde(flatten)]
     pub(crate) additional: BTreeMap<String, String>,
 }
@@ -65,6 +69,59 @@ pub enum GsnDocumentNode {
 pub struct Module {
     pub filename: String,
     pub meta: Option<ModuleInformation>,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct ExtendsModule {
+    pub module: String,
+    pub develops: BTreeMap<String, Vec<String>>,
+}
+
+///
+///
+///
+///
+pub fn extend_modules(
+    diags: &mut Diagnostics,
+    nodes: &mut BTreeMap<String, GsnNode>,
+    modules: &HashMap<String, Module>,
+) {
+    for (module_name, module_info) in modules {
+        if let Some(meta) = &module_info.meta {
+            if let Some(extensions) = &meta.extends {
+                for ext in extensions {
+                    if !modules.contains_key(&ext.module) {
+                        diags.add_error(
+                            Some(module_name),
+                            format!("C09: Module {} is not found, but is supposed to be extended by module {}.", ext.module, module_name),
+                        );
+                    }
+                    for (foreign_id, local_ids) in &ext.develops {
+                        if let Some(foreign_node) = nodes.get_mut(foreign_id) {
+                            if foreign_node.module != ext.module {
+                                diags.add_error(
+                                    Some(module_name),
+                                    format!("C10: Element {} does not exist in module {}, but is supposed to be extended by {}.", foreign_id, ext.module, local_ids.join(",")),
+                                );
+                            } else if foreign_node.undeveloped != Some(true) {
+                                diags.add_error(
+                                    Some(module_name),
+                                    format!("C10: Element {} is not undeveloped, but is supposed to be extended by {}.", foreign_id, local_ids.join(",")),
+                                );
+                            } else {
+                                foreign_node.supported_by = Some(local_ids.to_vec());
+                            }
+                        } else {
+                            diags.add_error(
+                                Some(module_name),
+                                format!("C10: Element {} does not exist, but is supposed to be extended by {}.", foreign_id, local_ids.join(",")),
+                            );
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 ///
