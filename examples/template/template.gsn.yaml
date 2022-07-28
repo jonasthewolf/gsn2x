@@ -2,6 +2,17 @@ module:
   name: template
   brief: Template for an assurance case
 
+G0:
+  text: A super claim
+  supportedBy: [G1, G4]
+
 G1:
   text: A claim somebody else should support
   undeveloped: true
+
+G4:
+  text: A claim supported here.
+  supportedBy: [Sn42]
+
+Sn42:
+  text: The silver bullet.

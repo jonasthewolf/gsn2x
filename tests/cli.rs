@@ -198,6 +198,18 @@ mod integrations {
     }
 
     #[test]
+    fn validate_template_invalid_instance4() -> Result<(), Box<dyn std::error::Error>> {
+        let mut cmd = Command::cargo_bin("gsn2x")?;
+        cmd.arg("-c")
+            .arg("examples/template/template.gsn.yaml")
+            .arg("tests/inval4_instance.gsn.yaml");
+        cmd.assert().failure().stderr(predicate::str::contains(
+            "Error: 1 errors and 1 warnings detected.",
+        ));
+        Ok(())
+    }
+
+    #[test]
     fn no_evidences() -> Result<(), Box<dyn std::error::Error>> {
         let mut cmd = Command::cargo_bin("gsn2x")?;
         let evidence_file = assert_fs::NamedTempFile::new("evidences.md")?;
