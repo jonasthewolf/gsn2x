@@ -113,7 +113,7 @@ mod test {
         assert!(m.is_err());
         assert_eq!(
             format!("{:?}", m),
-            "Err(Message(\"Element x already exists.\", Some(Pos { marker: Marker { index: 1, line: 1, col: 1 }, path: \".\" })))"
+            "Err(Error(\"Element x already exists.\", line: 1, column: 1))"
         );
     }
     #[test]
@@ -123,7 +123,7 @@ mod test {
         assert!(res.is_err());
         assert_eq!(
             format!("{:?}", res),
-            "Err(Message(\"invalid type: sequence, expected a map with unique keys\", Some(Pos { marker: Marker { index: 0, line: 1, col: 0 }, path: \".\" })))"
+            "Err(Error(\"invalid type: sequence, expected a map with unique keys\", line: 1, column: 1))"
         );
     }
 }

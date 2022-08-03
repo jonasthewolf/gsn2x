@@ -2,7 +2,7 @@
 name = "gsn2x"
 description = "Tool to create a graphical representation from a Goal Structuring Notation in YAML format."
 authors = ["Jonas Wolf <jonas.wolf@jonaswolf.org>"]
-version = "2.3.0"
+version = "2.3.1"
 edition = "2021"
 license = "CC-BY-4.0"
 repository = "https://github.com/jonasthewolf/gsn2x"
@@ -14,7 +14,7 @@ anyhow = "1.0"
 chrono = { version = "0.4", default-features = false, features = ["clock"]}
 clap = { version = "3.2", features = ["cargo"] }
 serde = { version = "1.0", features = ["derive"] }
-serde_yaml = "0.8"
+serde_yaml = "0.9"
 svg = "0.10"
 font-kit = "0.11"
 rusttype = "0.9"
@@ -23,4 +23,4 @@ rusttype = "0.9"
 assert_cmd = "2.0"
 assert_fs = "1.0"
 predicates = "2.1"
-regex = "1.5"
+regex = "1.6"
