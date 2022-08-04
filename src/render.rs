@@ -1,6 +1,7 @@
 use crate::dirgraphsvg::edges::EdgeType;
 use crate::dirgraphsvg::{escape_node_id, escape_text, nodes::*};
 use crate::gsn::{get_levels, GsnNode, Module};
+use anyhow::Result;
 use chrono::Utc;
 use std::cell::RefCell;
 use std::collections::{BTreeMap, HashMap};
@@ -187,7 +188,7 @@ pub fn render_architecture(
     dependencies: BTreeMap<String, BTreeMap<String, EdgeType>>,
     stylesheets: Option<Vec<&str>>,
     embed_stylesheets: bool,
-) -> Result<(), anyhow::Error> {
+) -> Result<()> {
     let mut dg = crate::dirgraphsvg::DirGraph::default();
     let svg_nodes: BTreeMap<String, Rc<RefCell<dyn Node>>> = modules
         .iter()
@@ -238,7 +239,7 @@ pub fn render_complete(
     nodes: &BTreeMap<String, GsnNode>,
     stylesheets: Option<Vec<&str>>,
     embed_stylesheets: bool,
-) -> Result<(), anyhow::Error> {
+) -> Result<()> {
     // let masked_modules_opt = matches
     //     .values_of("MASK_MODULE")
     //     .map(|x| x.map(|y| y.to_owned()).collect::<Vec<String>>());
@@ -286,7 +287,7 @@ pub fn render_argument(
     nodes: &BTreeMap<String, GsnNode>,
     stylesheets: Option<Vec<&str>>,
     embed_stylesheets: bool,
-) -> Result<(), anyhow::Error> {
+) -> Result<()> {
     let mut dg = crate::dirgraphsvg::DirGraph::default();
     let mut svg_nodes: BTreeMap<String, Rc<RefCell<dyn Node>>> = nodes
         .iter()
@@ -374,7 +375,7 @@ pub(crate) fn render_evidences(
     output: &mut impl Write,
     nodes: &BTreeMap<String, GsnNode>,
     layers: &Option<Vec<&str>>,
-) -> Result<(), anyhow::Error> {
+) -> Result<()> {
     writeln!(output)?;
     writeln!(output, "List of Evidences")?;
     writeln!(output)?;

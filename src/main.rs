@@ -211,7 +211,7 @@ fn read_inputs(
     nodes: &mut BTreeMap<String, GsnNode>,
     modules: &mut HashMap<String, Module>,
     diags: &mut Diagnostics,
-) -> Result<(), anyhow::Error> {
+) -> Result<()> {
     for input in inputs {
         let reader =
             BufReader::new(File::open(&input).context(format!("Failed to open file {}", input))?);
@@ -288,7 +288,11 @@ fn read_inputs(
             }
         }
     }
-    Ok(())
+    if nodes.is_empty() {
+        Err(anyhow!("No input elements found."))
+    } else {
+        Ok(())
+    }
 }
 
 ///
@@ -333,7 +337,7 @@ fn print_outputs(
     layers: &Option<Vec<&str>>,
     stylesheets: Option<Vec<&str>>,
     embed_stylesheets: bool,
-) -> Result<(), anyhow::Error> {
+) -> Result<()> {
     if !matches.is_present("NO_ARGUMENT_VIEW") {
         for (module_name, module) in modules {
             let mut pbuf = std::path::PathBuf::from(&module.filename);
