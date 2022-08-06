@@ -1,7 +1,8 @@
-[![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
-[![CI/CD](https://github.com/jonasthewolf/gsn2x/actions/workflows/rust.yml/badge.svg)](https://github.com/jonasthewolf/gsn2x/actions/workflows/rust.yml)
-[![codecov](https://codecov.io/gh/jonasthewolf/gsn2x/branch/master/graph/badge.svg?token=YQKUQQOYS3)](https://codecov.io/gh/jonasthewolf/gsn2x)
-[![](https://tokei.rs/b1/github/jonasthewolf/gsn2x)](https://github.com/jonasthewolf/gsn2x)
+[![License: CC BY 4.0](https://img.shields.io/github/license/jonasthewolf/gsn2x)](https://creativecommons.org/licenses/by/4.0/)
+[![CI](https://img.shields.io/github/workflow/status/jonasthewolf/gsn2x/CI?label=CI)](https://github.com/jonasthewolf/gsn2x/actions/workflows/rust.yml)
+[![codecov](https://img.shields.io/codecov/c/github/jonasthewolf/gsn2x/master?token=YQKUQQOYS3)](https://codecov.io/gh/jonasthewolf/gsn2x)
+[![](https://img.shields.io/tokei/lines/github/jonasthewolf/gsn2x)](https://github.com/jonasthewolf/gsn2x)
+[![](https://img.shields.io/github/downloads/jonasthewolf/gsn2x/total)]
 
 # gsn2x
 
@@ -276,8 +277,7 @@ module:
 The module information is printed as part of a legend for the argument view.
 
 You can use the `-G` option to suppress the legend completely, 
-or the `-g` option to limit it to `name`, `brief` and 
-the time and date of generation of the SVG.
+or the `-g` option to limit it to `name`, `brief` and the time and date of generation of the SVG.
 
 ## Standard support
 
@@ -325,7 +325,7 @@ I noticed that it might make sense to add some information about the goals I hav
 I also noticed that (also for myself) it is good to note down some history of the project:
 
 - It all started out in 2017 with the need for graphically representing some argumentation at work.
-  I wrote an extremely small Python script that used a jinja template to transform the YAML syntax
+  I wrote a tiny Python script that used a jinja template to transform the YAML syntax
   into something Graphviz could understand.
 
   From there Graphviz could generate different output formats. That's where the `x` in `gsn2x` is from.
@@ -333,7 +333,7 @@ I also noticed that (also for myself) it is good to note down some history of th
 - It got obvious that some validation, especially on the uniqueness and reference resolution is needed
   to handle larger argumentation.
   
-  I did not want to write them in Python, but in my favorite programming language Rust.
+  I did not want to write those validations in Python, but in my favorite programming language Rust.
   I released the first Rust version in July 2021.
   
 - I desperately tried adding the modular extension by convincing Graphviz to draw what I want, but I failed.
