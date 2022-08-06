@@ -2,7 +2,7 @@
 [![CI](https://img.shields.io/github/workflow/status/jonasthewolf/gsn2x/CI?label=CI)](https://github.com/jonasthewolf/gsn2x/actions/workflows/rust.yml)
 [![codecov](https://img.shields.io/codecov/c/github/jonasthewolf/gsn2x/master?token=YQKUQQOYS3)](https://codecov.io/gh/jonasthewolf/gsn2x)
 ![LoC](https://img.shields.io/tokei/lines/github/jonasthewolf/gsn2x)
-![Downloads](https://img.shields.io/github/downloads/jonasthewolf/gsn2x/total)
+[![Downloads](https://img.shields.io/github/downloads/jonasthewolf/gsn2x/total)](https://github.com/jonasthewolf/gsn2x/releases)
 
 # gsn2x
 
