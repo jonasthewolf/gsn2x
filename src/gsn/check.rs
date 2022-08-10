@@ -9,7 +9,7 @@ use std::collections::{BTreeMap, BTreeSet};
 pub fn check_nodes(
     diag: &mut Diagnostics,
     nodes: &BTreeMap<String, GsnNode>,
-    excluded_modules: Option<Vec<&str>>,
+    excluded_modules: &[&str],
 ) {
     check_node_references(diag, nodes, excluded_modules);
     check_root_nodes(diag, nodes)
@@ -78,12 +78,11 @@ fn check_root_nodes(
 fn check_node_references(
     diag: &mut Diagnostics,
     nodes: &BTreeMap<String, GsnNode>,
-    excluded_modules: Option<Vec<&str>>,
+    excluded_modules: &[&str],
 ) {
-    let ex_mods = excluded_modules.iter().flatten().collect::<Vec<_>>();
     for (id, node) in nodes
         .iter()
-        .filter(|(_, n)| !ex_mods.contains(&&n.module.as_str()))
+        .filter(|(_, n)| !excluded_modules.contains(&n.module.as_str()))
     {
         if let Some(context) = node.in_context_of.as_ref() {
             context
@@ -263,6 +262,8 @@ pub fn check_layers(diag: &mut Diagnostics, nodes: &BTreeMap<String, GsnNode>, l
 
 #[cfg(test)]
 mod test {
+    use std::vec;
+
     use super::*;
     use crate::diagnostics::DiagType;
 
@@ -278,7 +279,7 @@ mod test {
                 ..Default::default()
             },
         );
-        check_nodes(&mut d, &nodes, None);
+        check_nodes(&mut d, &nodes, &vec![]);
         assert_eq!(d.messages.len(), 1);
         assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
@@ -301,7 +302,7 @@ mod test {
                 ..Default::default()
             },
         );
-        check_nodes(&mut d, &nodes, None);
+        check_nodes(&mut d, &nodes, &vec![]);
         assert_eq!(d.messages.len(), 1);
         assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
@@ -325,7 +326,7 @@ mod test {
             },
         );
         nodes.insert("C1".to_owned(), GsnNode::default());
-        check_nodes(&mut d, &nodes, None);
+        check_nodes(&mut d, &nodes, &vec![]);
         assert_eq!(d.messages.len(), 1);
         assert_eq!(d.messages[0].module, None);
         assert_eq!(d.messages[0].diag_type, DiagType::Warning);
@@ -399,7 +400,7 @@ mod test {
                 ..Default::default()
             },
         );
-        check_nodes(&mut d, &nodes, None);
+        check_nodes(&mut d, &nodes, &vec![]);
         assert_eq!(d.messages.len(), 1);
         assert_eq!(d.messages[0].module, None);
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
@@ -443,7 +444,7 @@ mod test {
                 ..Default::default()
             },
         );
-        check_nodes(&mut d, &nodes, None);
+        check_nodes(&mut d, &nodes, &vec![]);
         assert_eq!(d.messages.len(), 0);
         assert_eq!(d.errors, 0);
         assert_eq!(d.warnings, 0);
@@ -508,7 +509,7 @@ mod test {
                 ..Default::default()
             },
         );
-        check_nodes(&mut d, &nodes, None);
+        check_nodes(&mut d, &nodes, &vec![]);
         assert_eq!(d.messages.len(), 1);
         assert_eq!(d.messages[0].module, None);
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
@@ -525,7 +526,7 @@ mod test {
         let mut d = Diagnostics::default();
         let mut nodes = BTreeMap::<String, GsnNode>::new();
         nodes.insert("Sn1".to_owned(), GsnNode::default());
-        check_nodes(&mut d, &nodes, None);
+        check_nodes(&mut d, &nodes, &vec![]);
         assert_eq!(d.messages.len(), 1);
         assert_eq!(d.messages[0].module, None);
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
@@ -645,7 +646,7 @@ mod test {
                 ..Default::default()
             },
         );
-        check_nodes(&mut d, &nodes, None);
+        check_nodes(&mut d, &nodes, &vec![]);
         assert_eq!(d.messages.len(), 1);
         assert_eq!(d.messages[0].module, None);
         assert_eq!(d.messages[0].diag_type, DiagType::Warning);

@@ -12,7 +12,7 @@ use nodes::{setup_basics, Node, Port};
 use rusttype::Font;
 use svg::{
     node::element::{
-        path::Data, Definitions, Link, Marker, Path, Polyline, Rectangle, Style, Symbol, Text,
+        path::Data, Link, Marker, Path, Polyline, Rectangle, Style, Symbol, Text,
         Title,
     },
     Document,
@@ -167,7 +167,7 @@ impl<'a> DirGraph<'a> {
 
     pub fn write(
         mut self,
-        output: impl std::io::Write,
+        mut output: impl std::io::Write,
         cycles_allowed: bool,
     ) -> Result<(), std::io::Error> {
         self = self.setup_basics();
@@ -177,6 +177,7 @@ impl<'a> DirGraph<'a> {
             .document
             .set("viewBox", (0u32, 0u32, self.width, self.height));
         self = self.render_legend();
+        output.write_all("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n".as_bytes())?;
         svg::write(output, &self.document)?;
         Ok(())
     }
@@ -705,7 +706,7 @@ impl<'a> DirGraph<'a> {
             .set("refX", 0f32)
             .set("refY", 4.5f32)
             .set("orient", "auto-start-reverse")
-            .set("markerUnits", "users_posaceOnUse")
+            .set("markerUnits", "userSpaceOnUse")
             .add(supportedby_polyline);
 
         let incontext_polyline = Polyline::new()
@@ -720,7 +721,7 @@ impl<'a> DirGraph<'a> {
             .set("refX", 0f32)
             .set("refY", 4.5f32)
             .set("orient", "auto-start-reverse")
-            .set("markerUnits", "users_posaceOnUse")
+            .set("markerUnits", "userSpaceOnUse")
             .add(incontext_polyline);
 
         let composite_polyline1 = Polyline::new()
@@ -745,7 +746,7 @@ impl<'a> DirGraph<'a> {
             .set("refX", 0f32)
             .set("refY", 4.5f32)
             .set("orient", "auto-start-reverse")
-            .set("markerUnits", "users_posaceOnUse")
+            .set("markerUnits", "userSpaceOnUse")
             .add(composite_polyline1)
             .add(composite_polyline2)
             .add(composite_polyline3);
@@ -768,7 +769,7 @@ impl<'a> DirGraph<'a> {
             .set("fill", "lightgrey");
         let module_image = Symbol::new()
             .set("id", "module_icon")
-            .set("viewbox", "0 0 20 20")
+            .set("viewBox", "0 0 20 20")
             .add(mi_r1)
             .add(mi_r2);
         self.document = self.document.add(module_image);
@@ -791,16 +792,14 @@ impl<'a> DirGraph<'a> {
     fn setup_stylesheets(mut self) -> Self {
         if !self.css_stylesheets.is_empty() {
             if self.embed_stylesheets {
-                let mut defs = Definitions::default();
                 for css in &self.css_stylesheets {
                     let css_str = std::fs::read_to_string(css)
                         .context(format!("Failed to open CSS file {} for embedding", css))
                         .unwrap();
                     let style =
                         Style::new(format!("<![CDATA[{}]]>", css_str)).set("type", "text/css");
-                    defs = defs.add(style);
+                    self.document = self.document.add(style);
                 }
-                self.document = self.document.add(defs);
             } else {
                 // Only link them
                 for css in &self.css_stylesheets {
