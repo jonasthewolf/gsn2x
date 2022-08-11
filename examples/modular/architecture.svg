@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg viewBox="0 0 146 282" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<symbol id="module_icon" viewBox="0 0 20 20">
+<svg viewBox="0 0 146 282" xmlns="http://www.w3.org/2000/svg">
+<symbol id="module_icon">
 <rect fill="lightgrey" height="5" stroke="black" stroke-width="1" width="10" x="0" y="0"/>
 <rect fill="lightgrey" height="10" stroke="black" stroke-width="1" width="20" x="0" y="5"/>
 </symbol>
@@ -15,7 +15,7 @@
 <marker id="incontextof_arrow" markerHeight="9" markerUnits="userSpaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
 <polyline fill="none" points="0 0, 10 4.5, 0 9, 0 0" stroke="black" stroke-width="1"/>
 </marker>
-<a xlink:href="./main.gsn.svg">
+<a href="./main.gsn.svg">
 <g class="gsnelem gsnmodule" id="node_Main"/>
 <title>
 Main
@@ -25,7 +25,7 @@ Main
 Main
 </text>
 </a>
-<a xlink:href="./sub1.gsn.svg">
+<a href="./sub1.gsn.svg">
 <g class="gsnelem gsnmodule" id="node_Sub1"/>
 <title>
 Sub1
@@ -35,7 +35,7 @@ Sub1
 Sub1
 </text>
 </a>
-<a xlink:href="./sub3.gsn.svg">
+<a href="./sub3.gsn.svg">
 <g class="gsnelem gsnmodule" id="node_Sub3"/>
 <title>
 Sub3

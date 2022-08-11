@@ -12,8 +12,7 @@ use nodes::{setup_basics, Node, Port};
 use rusttype::Font;
 use svg::{
     node::element::{
-        path::Data, Link, Marker, Path, Polyline, Rectangle, Style, Symbol, Text,
-        Title,
+        path::Data, Marker, Path, Polyline, Rectangle, Style, Symbol, Text, Title,
     },
     Document,
 };
@@ -767,16 +766,9 @@ impl<'a> DirGraph<'a> {
             .set("stroke", "black")
             .set("stroke-width", 1u32)
             .set("fill", "lightgrey");
-        let module_image = Symbol::new()
-            .set("id", "module_icon")
-            .set("viewBox", "0 0 20 20")
-            .add(mi_r1)
-            .add(mi_r2);
+        let module_image = Symbol::new().set("id", "module_icon").add(mi_r1).add(mi_r2);
         self.document = self.document.add(module_image);
 
-        self.document = self
-            .document
-            .set("xmlns:xlink", "http://www.w3.org/1999/xlink");
         self.document = self
             .document
             .add(composite_arrow)
@@ -802,13 +794,14 @@ impl<'a> DirGraph<'a> {
                 }
             } else {
                 // Only link them
-                for css in &self.css_stylesheets {
-                    let l = Link::default()
-                        .set("rel", "stylesheet")
-                        .set("href", *css)
-                        .set("type", "text/css");
-                    self.document = self.document.add(l);
-                }
+                let style = Style::new(
+                    self.css_stylesheets
+                        .iter()
+                        .map(|x| format!("@import (\"{x}\")"))
+                        .collect::<Vec<_>>()
+                        .join("\n"),
+                );
+                self.document = self.document.add(style);
             }
         }
         self

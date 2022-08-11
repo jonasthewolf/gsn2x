@@ -9,7 +9,7 @@
 This little program renders [Goal Structuring Notation](https://scsc.uk/gsn) in a YAML format to a scalable vector graphics (SVG) image.
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="examples/example.gsn.svg" style="filter:invert()">
+  <source media="(prefers-color-scheme: dark)" srcset="examples/example.gsn.svg">
   <source media="(prefers-color-scheme: light)" srcset="examples/example.gsn.svg">
   <img alt="Example" src="examples/example.gsn.svg">
 </picture>

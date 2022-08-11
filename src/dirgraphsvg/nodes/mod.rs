@@ -80,7 +80,7 @@ pub(crate) fn setup_basics(
     }
     if let Some(url) = &url {
         let link = Link::new();
-        link.set("xlink:href", url.as_str()).add(g).into()
+        link.set("href", url.as_str()).add(g).into()
     } else {
         g.into()
     }

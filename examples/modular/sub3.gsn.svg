@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg viewBox="0 0 322 229" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<symbol id="module_icon" viewBox="0 0 20 20">
+<svg viewBox="0 0 322 229" xmlns="http://www.w3.org/2000/svg">
+<symbol id="module_icon">
 <rect fill="lightgrey" height="5" stroke="black" stroke-width="1" width="10" x="0" y="0"/>
 <rect fill="lightgrey" height="10" stroke="black" stroke-width="1" width="20" x="0" y="5"/>
 </symbol>
@@ -15,12 +15,14 @@
 <marker id="incontextof_arrow" markerHeight="9" markerUnits="userSpaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
 <polyline fill="none" points="0 0, 10 4.5, 0 9, 0 0" stroke="black" stroke-width="1"/>
 </marker>
-<a href="modular.css" rel="stylesheet" type="text/css"/>
+<style>
+@import ("modular.css")
+</style>
 <g class="gsnelem gsnawaygoal gsn_module_Sub1" id="node_G3">
 <title>
 G3
 </title>
-<a xlink:href="./sub1.gsn.svg#node_G3">
+<a href="./sub1.gsn.svg#node_G3">
 <rect fill="none" height="28" stroke="black" stroke-width="1" width="142" x="20" y="70"/>
 <text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="25" x="54" y="91">
 Sub1

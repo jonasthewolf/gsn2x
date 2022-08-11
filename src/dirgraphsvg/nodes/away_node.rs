@@ -210,7 +210,7 @@ impl Node for AwayNode {
         if let Some(module_url) = &self.module_url {
             let mut module_link = Link::new();
             module_link = module_link
-                .set("xlink:href", module_url.as_str())
+                .set("href", module_url.as_str())
                 .add(module_box)
                 .add(module_text);
             g.append(module_link);
