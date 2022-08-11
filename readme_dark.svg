@@ -3,5 +3,5 @@
     <style>
         g { fill: red; }
     </style>
-    <use href="examples/example.gsn.svg"/>
+    <use href="examples/example.gsn.svg" x="0" y="0"/>
 </svg>
