@@ -11,7 +11,7 @@ pub struct ContextNode {
     identifier: String,
     text: String,
     url: Option<String>,
-    classes: Option<Vec<String>>,
+    classes: Vec<String>,
     width: i32,
     height: i32,
     lines: Vec<(i32, i32)>,
@@ -114,9 +114,9 @@ impl Node for ContextNode {
             .set("x", self.x - self.width / 2 + PADDING + 5)
             .set(
                 "y",
-                self.y - self.height / 2 + PADDING + self.lines.get(0).unwrap().1,
+                self.y - self.height / 2 + PADDING + self.lines.first().unwrap().1,
             )
-            .set("textLength", self.lines.get(0).unwrap().0)
+            .set("textLength", self.lines.first().unwrap().0)
             .set("font-weight", "bold")
             .set("font-size", font.size)
             .set("font-family", font.name.as_str())
@@ -148,7 +148,7 @@ impl Node for ContextNode {
 }
 
 impl ContextNode {
-    pub fn new(id: &str, text: &str, url: Option<String>, classes: Option<Vec<String>>) -> Self {
+    pub fn new(id: &str, text: &str, url: Option<String>, classes: Vec<String>) -> Self {
         ContextNode {
             identifier: id.to_owned(),
             text: text.to_owned(),
@@ -169,7 +169,7 @@ mod test {
 
     #[test]
     fn test_get_id() {
-        let node = ContextNode::new("id", "text", None, None);
+        let node = ContextNode::new("id", "text", None, vec![]);
         assert_eq!(node.get_id(), "id");
     }
 }

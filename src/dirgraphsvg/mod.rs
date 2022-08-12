@@ -11,10 +11,7 @@ use graph::{rank_nodes, NodePlace};
 use nodes::{setup_basics, Node, Port};
 use rusttype::Font;
 use svg::{
-    node::element::{
-        path::Data, Definitions, Link, Marker, Path, Polyline, Rectangle, Style, Symbol, Text,
-        Title,
-    },
+    node::element::{path::Data, Marker, Path, Polyline, Rectangle, Style, Symbol, Text, Title},
     Document,
 };
 use util::{
@@ -167,7 +164,7 @@ impl<'a> DirGraph<'a> {
 
     pub fn write(
         mut self,
-        output: impl std::io::Write,
+        mut output: impl std::io::Write,
         cycles_allowed: bool,
     ) -> Result<(), std::io::Error> {
         self = self.setup_basics();
@@ -177,6 +174,7 @@ impl<'a> DirGraph<'a> {
             .document
             .set("viewBox", (0u32, 0u32, self.width, self.height));
         self = self.render_legend();
+        output.write_all("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n".as_bytes())?;
         svg::write(output, &self.document)?;
         Ok(())
     }
@@ -458,7 +456,7 @@ impl<'a> DirGraph<'a> {
                     0 => None, // Node is actually not a parent and, thus, should not be moved here
                     1 => {
                         // Exactly one child
-                        let child = *supby_children.get(0).unwrap();
+                        let child = *supby_children.first().unwrap();
                         let child_num_parents = edge_map
                             .get(child)
                             .unwrap()
@@ -705,7 +703,7 @@ impl<'a> DirGraph<'a> {
             .set("refX", 0f32)
             .set("refY", 4.5f32)
             .set("orient", "auto-start-reverse")
-            .set("markerUnits", "users_posaceOnUse")
+            .set("markerUnits", "userSpaceOnUse")
             .add(supportedby_polyline);
 
         let incontext_polyline = Polyline::new()
@@ -720,7 +718,7 @@ impl<'a> DirGraph<'a> {
             .set("refX", 0f32)
             .set("refY", 4.5f32)
             .set("orient", "auto-start-reverse")
-            .set("markerUnits", "users_posaceOnUse")
+            .set("markerUnits", "userSpaceOnUse")
             .add(incontext_polyline);
 
         let composite_polyline1 = Polyline::new()
@@ -745,7 +743,7 @@ impl<'a> DirGraph<'a> {
             .set("refX", 0f32)
             .set("refY", 4.5f32)
             .set("orient", "auto-start-reverse")
-            .set("markerUnits", "users_posaceOnUse")
+            .set("markerUnits", "userSpaceOnUse")
             .add(composite_polyline1)
             .add(composite_polyline2)
             .add(composite_polyline3);
@@ -766,16 +764,9 @@ impl<'a> DirGraph<'a> {
             .set("stroke", "black")
             .set("stroke-width", 1u32)
             .set("fill", "lightgrey");
-        let module_image = Symbol::new()
-            .set("id", "module_icon")
-            .set("viewbox", "0 0 20 20")
-            .add(mi_r1)
-            .add(mi_r2);
+        let module_image = Symbol::new().set("id", "module_icon").add(mi_r1).add(mi_r2);
         self.document = self.document.add(module_image);
 
-        self.document = self
-            .document
-            .set("xmlns:xlink", "http://www.w3.org/1999/xlink");
         self.document = self
             .document
             .add(composite_arrow)
@@ -791,25 +782,24 @@ impl<'a> DirGraph<'a> {
     fn setup_stylesheets(mut self) -> Self {
         if !self.css_stylesheets.is_empty() {
             if self.embed_stylesheets {
-                let mut defs = Definitions::default();
                 for css in &self.css_stylesheets {
                     let css_str = std::fs::read_to_string(css)
                         .context(format!("Failed to open CSS file {} for embedding", css))
                         .unwrap();
                     let style =
                         Style::new(format!("<![CDATA[{}]]>", css_str)).set("type", "text/css");
-                    defs = defs.add(style);
+                    self.document = self.document.add(style);
                 }
-                self.document = self.document.add(defs);
             } else {
                 // Only link them
-                for css in &self.css_stylesheets {
-                    let l = Link::default()
-                        .set("rel", "stylesheet")
-                        .set("href", *css)
-                        .set("type", "text/css");
-                    self.document = self.document.add(l);
-                }
+                let style = Style::new(
+                    self.css_stylesheets
+                        .iter()
+                        .map(|x| format!("@import (\"{x}\")"))
+                        .collect::<Vec<_>>()
+                        .join("\n"),
+                );
+                self.document = self.document.add(style);
             }
         }
         self
@@ -821,7 +811,7 @@ impl<'a> DirGraph<'a> {
     ///
     fn render_legend(mut self) -> Self {
         if let Some(meta) = &self.meta_information {
-            let mut g = setup_basics("gsn_module", &Some(vec!["gsnmodule".to_owned()]), &None);
+            let mut g = setup_basics("gsn_module", &["gsnmodule".to_owned()], &None);
             let title = Title::new().add(svg::node::Text::new("Module Information"));
             use svg::Node;
             g.append(title);
@@ -873,11 +863,11 @@ mod test {
     #[test]
     fn call_unused() {
         let d = DirGraph::default();
-        let b1 = new_away_goal("id", "text", "module", None, None, None);
+        let b1 = new_away_goal("id", "text", "module", None, None, vec![]);
         d._add_css_stylesheet("css")
             ._add_edge(
                 b1.clone(),
-                new_away_goal("id2", "text", "module", None, None, None),
+                new_away_goal("id2", "text", "module", None, None, vec![]),
                 EdgeType::OneWay(SingleEdge::SupportedBy),
             )
             ._add_node(b1)
@@ -891,7 +881,7 @@ mod test {
     #[test]
     fn test_render_legend() {
         let mut d = DirGraph::default();
-        let b1 = new_away_goal("id", "text", "module", None, None, None);
+        let b1 = new_away_goal("id", "text", "module", None, None, vec![]);
         let mut nodes = BTreeMap::new();
         nodes.insert("G1".to_owned(), b1 as Rc<RefCell<dyn Node>>);
         d = d.add_nodes(nodes);

@@ -15,7 +15,7 @@ pub struct BoxNode {
     undeveloped: bool,
     skew: u32,
     url: Option<String>,
-    classes: Option<Vec<String>>,
+    classes: Vec<String>,
     width: i32,
     height: i32,
     lines: Vec<(i32, i32)>,
@@ -149,9 +149,9 @@ impl Node for BoxNode {
             )
             .set(
                 "y",
-                self.y - self.height / 2 + PADDING_VERTICAL + self.lines.get(0).unwrap().1,
+                self.y - self.height / 2 + PADDING_VERTICAL + self.lines.first().unwrap().1,
             )
-            .set("textLength", self.lines.get(0).unwrap().0)
+            .set("textLength", self.lines.first().unwrap().0)
             .set("font-weight", "bold")
             .set("font-size", font.size)
             .set("font-family", font.name.as_str())
@@ -205,7 +205,7 @@ impl BoxNode {
         skew: u32,
         is_module_node: bool,
         url: Option<String>,
-        classes: Option<Vec<String>>,
+        classes: Vec<String>,
     ) -> Self {
         BoxNode {
             identifier: id.to_owned(),

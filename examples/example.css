@@ -1,4 +1,2 @@
-
-@media (prefers-color-scheme: dark) {
-  .gsnelem { background-color: white; }
-}
+/* CSS to invert SVG for dark mode */ 
+svg { filter: invert(100%); }

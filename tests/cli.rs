@@ -97,11 +97,7 @@ mod integrations {
         temp.copy_from("examples", &["example.gsn.yaml"])?;
         let input_file = temp.child("example.gsn.yaml");
         let output_file = temp.child("example.gsn.svg");
-        cmd.arg(input_file.as_os_str())
-            .arg("-G")
-            .arg("-s")
-            .arg("examples/example.css")
-            .arg("-t");
+        cmd.arg(input_file.as_os_str()).arg("-G");
         cmd.assert().success();
         assert!(are_struct_similar_svgs(
             std::path::Path::new("examples/example.gsn.svg").as_os_str(),
