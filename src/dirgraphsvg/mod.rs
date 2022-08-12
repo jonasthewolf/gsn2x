@@ -11,9 +11,7 @@ use graph::{rank_nodes, NodePlace};
 use nodes::{setup_basics, Node, Port};
 use rusttype::Font;
 use svg::{
-    node::element::{
-        path::Data, Marker, Path, Polyline, Rectangle, Style, Symbol, Text, Title,
-    },
+    node::element::{path::Data, Marker, Path, Polyline, Rectangle, Style, Symbol, Text, Title},
     Document,
 };
 use util::{
@@ -458,7 +456,7 @@ impl<'a> DirGraph<'a> {
                     0 => None, // Node is actually not a parent and, thus, should not be moved here
                     1 => {
                         // Exactly one child
-                        let child = *supby_children.get(0).unwrap();
+                        let child = *supby_children.first().unwrap();
                         let child_num_parents = edge_map
                             .get(child)
                             .unwrap()
@@ -813,7 +811,7 @@ impl<'a> DirGraph<'a> {
     ///
     fn render_legend(mut self) -> Self {
         if let Some(meta) = &self.meta_information {
-            let mut g = setup_basics("gsn_module", &Some(vec!["gsnmodule".to_owned()]), &None);
+            let mut g = setup_basics("gsn_module", &["gsnmodule".to_owned()], &None);
             let title = Title::new().add(svg::node::Text::new("Module Information"));
             use svg::Node;
             g.append(title);
@@ -865,11 +863,11 @@ mod test {
     #[test]
     fn call_unused() {
         let d = DirGraph::default();
-        let b1 = new_away_goal("id", "text", "module", None, None, None);
+        let b1 = new_away_goal("id", "text", "module", None, None, vec![]);
         d._add_css_stylesheet("css")
             ._add_edge(
                 b1.clone(),
-                new_away_goal("id2", "text", "module", None, None, None),
+                new_away_goal("id2", "text", "module", None, None, vec![]),
                 EdgeType::OneWay(SingleEdge::SupportedBy),
             )
             ._add_node(b1)
@@ -883,7 +881,7 @@ mod test {
     #[test]
     fn test_render_legend() {
         let mut d = DirGraph::default();
-        let b1 = new_away_goal("id", "text", "module", None, None, None);
+        let b1 = new_away_goal("id", "text", "module", None, None, vec![]);
         let mut nodes = BTreeMap::new();
         nodes.insert("G1".to_owned(), b1 as Rc<RefCell<dyn Node>>);
         d = d.add_nodes(nodes);

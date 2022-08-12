@@ -7,7 +7,7 @@ use std::marker::PhantomData;
 // to work around an issue in serde_yaml that does not check for duplicate keys in input YAML.
 // Duplicate keys are no valid YAML but this is ignored by serde_yaml.
 
-#[derive(Default, Debug, PartialEq)]
+#[derive(Default, Debug, Eq, PartialEq)]
 pub struct YamlFixMap<K, V>(BTreeMap<K, V>)
 where
     K: Ord;

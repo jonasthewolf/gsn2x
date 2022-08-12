@@ -24,7 +24,7 @@ pub struct AwayNode {
     module_url: Option<String>,
     node_type: AwayType,
     url: Option<String>,
-    classes: Option<Vec<String>>,
+    classes: Vec<String>,
     width: i32,
     height: i32,
     lines: Vec<(i32, i32)>,
@@ -198,8 +198,8 @@ impl Node for AwayNode {
 
         let id = Text::new()
             .set("x", self.x - self.width / 2 + PADDING_HORIZONTAL)
-            .set("y", start_id + self.lines.get(0).unwrap().1)
-            .set("textLength", self.lines.get(0).unwrap().0)
+            .set("y", start_id + self.lines.first().unwrap().1)
+            .set("textLength", self.lines.first().unwrap().0)
             .set("font-weight", "bold")
             .set("font-size", font.size)
             .set("font-family", font.name.as_str())
@@ -272,7 +272,7 @@ impl AwayNode {
         module_url: Option<String>,
         node_type: AwayType,
         url: Option<String>,
-        classes: Option<Vec<String>>,
+        classes: Vec<String>,
     ) -> Self {
         AwayNode {
             identifier: id.to_owned(),

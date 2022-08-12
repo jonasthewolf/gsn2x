@@ -279,7 +279,7 @@ mod test {
                 ..Default::default()
             },
         );
-        check_nodes(&mut d, &nodes, &vec![]);
+        check_nodes(&mut d, &nodes, &[]);
         assert_eq!(d.messages.len(), 1);
         assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
@@ -302,7 +302,7 @@ mod test {
                 ..Default::default()
             },
         );
-        check_nodes(&mut d, &nodes, &vec![]);
+        check_nodes(&mut d, &nodes, &[]);
         assert_eq!(d.messages.len(), 1);
         assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
@@ -326,7 +326,7 @@ mod test {
             },
         );
         nodes.insert("C1".to_owned(), GsnNode::default());
-        check_nodes(&mut d, &nodes, &vec![]);
+        check_nodes(&mut d, &nodes, &[]);
         assert_eq!(d.messages.len(), 1);
         assert_eq!(d.messages[0].module, None);
         assert_eq!(d.messages[0].diag_type, DiagType::Warning);
@@ -400,7 +400,7 @@ mod test {
                 ..Default::default()
             },
         );
-        check_nodes(&mut d, &nodes, &vec![]);
+        check_nodes(&mut d, &nodes, &[]);
         assert_eq!(d.messages.len(), 1);
         assert_eq!(d.messages[0].module, None);
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
@@ -444,7 +444,7 @@ mod test {
                 ..Default::default()
             },
         );
-        check_nodes(&mut d, &nodes, &vec![]);
+        check_nodes(&mut d, &nodes, &[]);
         assert_eq!(d.messages.len(), 0);
         assert_eq!(d.errors, 0);
         assert_eq!(d.warnings, 0);
@@ -509,7 +509,7 @@ mod test {
                 ..Default::default()
             },
         );
-        check_nodes(&mut d, &nodes, &vec![]);
+        check_nodes(&mut d, &nodes, &[]);
         assert_eq!(d.messages.len(), 1);
         assert_eq!(d.messages[0].module, None);
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
@@ -526,7 +526,7 @@ mod test {
         let mut d = Diagnostics::default();
         let mut nodes = BTreeMap::<String, GsnNode>::new();
         nodes.insert("Sn1".to_owned(), GsnNode::default());
-        check_nodes(&mut d, &nodes, &vec![]);
+        check_nodes(&mut d, &nodes, &[]);
         assert_eq!(d.messages.len(), 1);
         assert_eq!(d.messages[0].module, None);
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
@@ -646,7 +646,7 @@ mod test {
                 ..Default::default()
             },
         );
-        check_nodes(&mut d, &nodes, &vec![]);
+        check_nodes(&mut d, &nodes, &[]);
         assert_eq!(d.messages.len(), 1);
         assert_eq!(d.messages[0].module, None);
         assert_eq!(d.messages[0].diag_type, DiagType::Warning);

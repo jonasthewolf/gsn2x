@@ -10,7 +10,7 @@ use std::io::Write;
 use std::path::{Component, PathBuf};
 use std::rc::Rc;
 
-#[derive(Default, PartialEq)]
+#[derive(Default, Eq, PartialEq)]
 pub enum RenderLegend {
     No,
     #[default]
@@ -97,8 +97,8 @@ pub fn svg_from_gsn_node(
         .iter()
         .chain(layer_classes.iter())
         .flatten()
-        .map(|x| Some(x.to_owned()))
-        .chain(vec![mod_class].into_iter().map(Some))
+        .chain(vec![mod_class].iter())
+        .cloned()
         .collect();
     match id {
         id if id.starts_with('G') => new_goal(
@@ -160,8 +160,8 @@ pub fn away_svg_from_gsn_node(
         .iter()
         .chain(layer_classes.iter())
         .flatten()
-        .map(|x| Some(x.to_owned()))
-        .chain(vec![mod_class].into_iter().map(Some))
+        .chain(vec![mod_class].iter())
+        .cloned()
         .collect();
 
     let mut module_url = get_relative_module_url(&module.filename, &source_module.filename);
@@ -267,7 +267,7 @@ pub fn render_architecture(
                         .unwrap_or_else(|| "".to_owned())
                         .as_str(),
                     Some(get_relative_module_url(&module.filename, &module.filename)),
-                    None,
+                    vec![],
                 ) as Rc<RefCell<dyn Node>>,
             )
         })

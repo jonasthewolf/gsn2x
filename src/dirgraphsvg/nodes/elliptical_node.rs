@@ -14,7 +14,7 @@ pub struct EllipticalNode {
     admonition: Option<String>,
     circle: bool,
     url: Option<String>,
-    classes: Option<Vec<String>>,
+    classes: Vec<String>,
     width: i32,
     height: i32,
     text_width: i32,
@@ -114,9 +114,9 @@ impl Node for EllipticalNode {
             .set("x", self.x - self.text_width / 2)
             .set(
                 "y",
-                self.y - self.text_height / 2 + self.lines.get(0).unwrap().1,
+                self.y - self.text_height / 2 + self.lines.first().unwrap().1,
             )
-            .set("textLength", self.lines.get(0).unwrap().0)
+            .set("textLength", self.lines.first().unwrap().0)
             .set("font-weight", "bold")
             .set("font-size", font.size)
             .set("font-family", font.name.as_str())
@@ -160,7 +160,7 @@ impl EllipticalNode {
         admonition: Option<String>,
         circle: bool,
         url: Option<String>,
-        classes: Option<Vec<String>>,
+        classes: Vec<String>,
     ) -> Self {
         EllipticalNode {
             identifier: id.to_owned(),
@@ -186,7 +186,7 @@ mod test {
 
     #[test]
     fn test_get_id() {
-        let node = EllipticalNode::new("id", "text", None, true, None, None);
+        let node = EllipticalNode::new("id", "text", None, true, None, vec![]);
         assert_eq!(node.get_id(), "id");
     }
 }

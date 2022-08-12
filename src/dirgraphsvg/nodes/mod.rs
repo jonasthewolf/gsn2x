@@ -18,7 +18,7 @@ pub mod box_node;
 pub mod context_node;
 pub mod elliptical_node;
 
-#[derive(PartialEq)]
+#[derive(Eq, PartialEq)]
 pub enum Port {
     North,
     East,
@@ -69,15 +69,9 @@ pub(crate) fn get_port_default_coordinates(
 ///
 ///
 ///
-pub(crate) fn setup_basics(
-    id: &str,
-    classes: &Option<Vec<String>>,
-    url: &Option<String>,
-) -> Element {
+pub(crate) fn setup_basics(id: &str, classes: &[String], url: &Option<String>) -> Element {
     let mut g = Group::new().set("id", escape_node_id(id));
-    if let Some(classes) = &classes {
-        g = g.set("class", classes.join(" "))
-    }
+    g = g.set("class", classes.join(" "));
     if let Some(url) = &url {
         let link = Link::new();
         link.set("href", url.as_str()).add(g).into()
@@ -94,19 +88,17 @@ pub fn new_assumption(
     id: &str,
     text: &str,
     url: Option<String>,
-    classes: Option<Vec<String>>,
+    mut classes: Vec<String>,
 ) -> Rc<RefCell<EllipticalNode>> {
     let mut new_classes: Vec<String> = vec!["gsnelem".to_owned(), "gsnasmp".to_owned()];
-    if let Some(classes) = classes {
-        classes.into_iter().for_each(|c| new_classes.push(c));
-    }
+    new_classes.append(&mut classes);
     Rc::new(RefCell::new(EllipticalNode::new(
         id,
         text,
         Some("A".to_owned()),
         false,
         url,
-        Some(new_classes),
+        new_classes,
     )))
 }
 
@@ -120,12 +112,10 @@ pub fn new_away_assumption(
     module: &str,
     module_url: Option<String>,
     url: Option<String>,
-    classes: Option<Vec<String>>,
+    mut classes: Vec<String>,
 ) -> Rc<RefCell<AwayNode>> {
     let mut new_classes: Vec<String> = vec!["gsnelem".to_owned(), "gsnawayasmp".to_owned()];
-    if let Some(classes) = classes {
-        classes.into_iter().for_each(|c| new_classes.push(c));
-    }
+    new_classes.append(&mut classes);
     Rc::new(RefCell::new(AwayNode::new(
         id,
         text,
@@ -133,7 +123,7 @@ pub fn new_away_assumption(
         module_url,
         AwayType::Assumption,
         url,
-        Some(new_classes),
+        new_classes,
     )))
 }
 
@@ -145,19 +135,17 @@ pub fn new_justification(
     id: &str,
     text: &str,
     url: Option<String>,
-    classes: Option<Vec<String>>,
+    mut classes: Vec<String>,
 ) -> Rc<RefCell<EllipticalNode>> {
     let mut new_classes: Vec<String> = vec!["gsnelem".to_owned(), "gsnjust".to_owned()];
-    if let Some(classes) = classes {
-        classes.into_iter().for_each(|c| new_classes.push(c));
-    }
+    new_classes.append(&mut classes);
     Rc::new(RefCell::new(EllipticalNode::new(
         id,
         text,
         Some("J".to_owned()),
         false,
         url,
-        Some(new_classes),
+        new_classes,
     )))
 }
 
@@ -172,12 +160,10 @@ pub fn new_away_justification(
     module: &str,
     module_url: Option<String>,
     url: Option<String>,
-    classes: Option<Vec<String>>,
+    mut classes: Vec<String>,
 ) -> Rc<RefCell<AwayNode>> {
     let mut new_classes: Vec<String> = vec!["gsnelem".to_owned(), "gsnawayjust".to_owned()];
-    if let Some(classes) = classes {
-        classes.into_iter().for_each(|c| new_classes.push(c));
-    }
+    new_classes.append(&mut classes);
     Rc::new(RefCell::new(AwayNode::new(
         id,
         text,
@@ -185,7 +171,7 @@ pub fn new_away_justification(
         module_url,
         AwayType::Justification,
         url,
-        Some(new_classes),
+        new_classes,
     )))
 }
 
@@ -197,19 +183,17 @@ pub fn new_solution(
     id: &str,
     text: &str,
     url: Option<String>,
-    classes: Option<Vec<String>>,
+    mut classes: Vec<String>,
 ) -> Rc<RefCell<EllipticalNode>> {
     let mut new_classes: Vec<String> = vec!["gsnelem".to_owned(), "gsnsltn".to_owned()];
-    if let Some(classes) = classes {
-        classes.into_iter().for_each(|c| new_classes.push(c));
-    }
+    new_classes.append(&mut classes);
     Rc::new(RefCell::new(EllipticalNode::new(
         id,
         text,
         None,
         true,
         url,
-        Some(new_classes),
+        new_classes,
     )))
 }
 
@@ -223,12 +207,10 @@ pub fn new_away_solution(
     module: &str,
     module_url: Option<String>,
     url: Option<String>,
-    classes: Option<Vec<String>>,
+    mut classes: Vec<String>,
 ) -> Rc<RefCell<AwayNode>> {
     let mut new_classes: Vec<String> = vec!["gsnelem".to_owned(), "gsnawaysltn".to_owned()];
-    if let Some(classes) = classes {
-        classes.into_iter().for_each(|c| new_classes.push(c));
-    }
+    new_classes.append(&mut classes);
     Rc::new(RefCell::new(AwayNode::new(
         id,
         text,
@@ -236,7 +218,7 @@ pub fn new_away_solution(
         module_url,
         AwayType::Solution,
         url,
-        Some(new_classes),
+        new_classes,
     )))
 }
 
@@ -249,12 +231,10 @@ pub fn new_strategy(
     text: &str,
     undeveloped: bool,
     url: Option<String>,
-    classes: Option<Vec<String>>,
+    mut classes: Vec<String>,
 ) -> Rc<RefCell<BoxNode>> {
     let mut new_classes: Vec<String> = vec!["gsnelem".to_owned(), "gsnstgy".to_owned()];
-    if let Some(classes) = classes {
-        classes.into_iter().for_each(|c| new_classes.push(c));
-    }
+    new_classes.append(&mut classes);
     Rc::new(RefCell::new(BoxNode::new(
         id,
         text,
@@ -262,7 +242,7 @@ pub fn new_strategy(
         15,
         false,
         url,
-        Some(new_classes),
+        new_classes,
     )))
 }
 
@@ -275,12 +255,10 @@ pub fn new_goal(
     text: &str,
     undeveloped: bool,
     url: Option<String>,
-    classes: Option<Vec<String>>,
+    mut classes: Vec<String>,
 ) -> Rc<RefCell<BoxNode>> {
     let mut new_classes: Vec<String> = vec!["gsnelem".to_owned(), "gsngoal".to_owned()];
-    if let Some(classes) = classes {
-        classes.into_iter().for_each(|c| new_classes.push(c));
-    }
+    new_classes.append(&mut classes);
     Rc::new(RefCell::new(BoxNode::new(
         id,
         text,
@@ -288,7 +266,7 @@ pub fn new_goal(
         0,
         false,
         url,
-        Some(new_classes),
+        new_classes,
     )))
 }
 
@@ -302,12 +280,10 @@ pub fn new_away_goal(
     module: &str,
     module_url: Option<String>,
     url: Option<String>,
-    classes: Option<Vec<String>>,
+    mut classes: Vec<String>,
 ) -> Rc<RefCell<AwayNode>> {
     let mut new_classes: Vec<String> = vec!["gsnelem".to_owned(), "gsnawaygoal".to_owned()];
-    if let Some(classes) = classes {
-        classes.into_iter().for_each(|c| new_classes.push(c));
-    }
+    new_classes.append(&mut classes);
     Rc::new(RefCell::new(AwayNode::new(
         id,
         text,
@@ -315,7 +291,7 @@ pub fn new_away_goal(
         module_url,
         AwayType::Goal,
         url,
-        Some(new_classes),
+        new_classes,
     )))
 }
 
@@ -327,18 +303,11 @@ pub fn new_context(
     id: &str,
     text: &str,
     url: Option<String>,
-    classes: Option<Vec<String>>,
+    mut classes: Vec<String>,
 ) -> Rc<RefCell<ContextNode>> {
     let mut new_classes: Vec<String> = vec!["gsnelem".to_owned(), "gsnctxt".to_owned()];
-    if let Some(classes) = classes {
-        classes.into_iter().for_each(|c| new_classes.push(c));
-    }
-    Rc::new(RefCell::new(ContextNode::new(
-        id,
-        text,
-        url,
-        Some(new_classes),
-    )))
+    new_classes.append(&mut classes);
+    Rc::new(RefCell::new(ContextNode::new(id, text, url, new_classes)))
 }
 
 ///
@@ -351,12 +320,10 @@ pub fn new_away_context(
     module: &str,
     module_url: Option<String>,
     url: Option<String>,
-    classes: Option<Vec<String>>,
+    mut classes: Vec<String>,
 ) -> Rc<RefCell<AwayNode>> {
     let mut new_classes: Vec<String> = vec!["gsnelem".to_owned(), "gsnawayctxt".to_owned()];
-    if let Some(classes) = classes {
-        classes.into_iter().for_each(|c| new_classes.push(c));
-    }
+    new_classes.append(&mut classes);
     Rc::new(RefCell::new(AwayNode::new(
         id,
         text,
@@ -364,7 +331,7 @@ pub fn new_away_context(
         module_url,
         AwayType::Context,
         url,
-        Some(new_classes),
+        new_classes,
     )))
 }
 
@@ -376,12 +343,10 @@ pub fn new_module(
     id: &str,
     text: &str,
     url: Option<String>,
-    classes: Option<Vec<String>>,
+    mut classes: Vec<String>,
 ) -> Rc<RefCell<BoxNode>> {
     let mut new_classes: Vec<String> = vec!["gsnelem".to_owned(), "gsnmodule".to_owned()];
-    if let Some(classes) = classes {
-        classes.into_iter().for_each(|c| new_classes.push(c));
-    }
+    new_classes.append(&mut classes);
     Rc::new(RefCell::new(BoxNode::new(
         id,
         text,
@@ -389,7 +354,7 @@ pub fn new_module(
         0,
         true,
         url,
-        Some(new_classes),
+        new_classes,
     )))
 }
 
@@ -403,14 +368,14 @@ mod test {
             "id",
             "text",
             Some("url".to_owned()),
-            Some(vec!["classa".to_owned()]),
+            vec!["classa".to_owned()],
         );
         assert_eq!(m.borrow().get_id(), "id");
     }
 
     #[test]
     fn test_setup_basics() {
-        let b = setup_basics("myid", &None, &None);
+        let b = setup_basics("myid", &[], &None);
         assert_eq!(b.get_attributes()["id"].to_string(), "node_myid".to_owned());
     }
 }

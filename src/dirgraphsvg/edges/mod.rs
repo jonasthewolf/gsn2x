@@ -1,6 +1,6 @@
 use std::ops::BitOr;
 
-#[derive(Clone, Copy, Debug, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum SingleEdge {
     InContextOf,
     SupportedBy,
@@ -31,7 +31,7 @@ impl BitOr for SingleEdge {
     }
 }
 
-#[derive(Clone, Copy, Debug, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum EdgeType {
     OneWay(SingleEdge),
     TwoWay((SingleEdge, SingleEdge)),

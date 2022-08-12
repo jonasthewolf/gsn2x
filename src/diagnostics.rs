@@ -1,6 +1,6 @@
 use std::fmt::Display;
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, Eq, PartialEq)]
 pub enum DiagType {
     Warning,
     Error,
