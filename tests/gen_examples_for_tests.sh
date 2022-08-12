@@ -1,6 +1,8 @@
 #!/bin/sh
 
 # argument_view
+cargo run -- examples/example.gsn.yaml -G 
+cp examples/example.gsn.svg examples/example.gsn_dark.svg
 cargo run -- examples/example.gsn.yaml -G -s examples/example.css -t
 
 # arch_view

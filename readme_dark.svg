@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg viewBox="0 0 1052 538" xmlns="http://www.w3.org/2000/svg">
-    <style>
-        g { fill: red; }
-    </style>
-    <use href="examples/example.gsn.svg" x="0" y="0"/>
-</svg>

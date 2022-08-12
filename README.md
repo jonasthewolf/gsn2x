@@ -9,7 +9,7 @@
 This little program renders [Goal Structuring Notation](https://scsc.uk/gsn) in a YAML format to a scalable vector graphics (SVG) image.
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="readme_dark.svg">
+  <source media="(prefers-color-scheme: dark)" srcset="examples/example.gsn_dark.svg">
   <source media="(prefers-color-scheme: light)" srcset="examples/example.gsn.svg">
   <img alt="Example" src="examples/example.gsn.svg">
 </picture>
@@ -182,6 +182,8 @@ Element IDs must be unique across all modules. Checks will by default be perform
 Check messages for individual modules can be omitted using the `-x` option.
 
 The argument view of individual modules will show "away" elements if elements from other modules are referenced.
+
+Note: There is no "away strategy" in the standard.
 
 In addition to the default argument view for each module, there are two output files generated (if more than one input file is provided):
 1) Complete View (default to: complete.svg)
