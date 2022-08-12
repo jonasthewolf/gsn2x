@@ -80,7 +80,68 @@ impl From<&ArgMatches> for RenderOptions {
 pub fn svg_from_gsn_node(
     id: &str,
     gsn_node: &GsnNode,
+    layers: &[String],
 ) -> Rc<RefCell<dyn crate::dirgraphsvg::nodes::Node>> {
+    let classes = node_classes_from_node(gsn_node);
+    // Add layer to node output
+    let node_text = node_text_from_node_and_layers(gsn_node, layers);
+    // Create node
+    match id {
+        id if id.starts_with('G') => new_goal(
+            id,
+            &node_text,
+            gsn_node.undeveloped.unwrap_or(false),
+            gsn_node.url.to_owned(),
+            classes,
+        ),
+        id if id.starts_with("Sn") => {
+            new_solution(id, &node_text, gsn_node.url.to_owned(), classes)
+        }
+        id if id.starts_with('S') => new_strategy(
+            id,
+            &node_text,
+            gsn_node.undeveloped.unwrap_or(false),
+            gsn_node.url.to_owned(),
+            classes,
+        ),
+        id if id.starts_with('C') => new_context(id, &node_text, gsn_node.url.to_owned(), classes),
+        id if id.starts_with('A') => {
+            new_assumption(id, &node_text, gsn_node.url.to_owned(), classes)
+        }
+        id if id.starts_with('J') => {
+            new_justification(id, &node_text, gsn_node.url.to_owned(), classes)
+        }
+        _ => unreachable!(),
+    }
+}
+
+///
+/// Create SVG node text from GsnNode and layer information
+///
+///
+fn node_text_from_node_and_layers(gsn_node: &GsnNode, layers: &[String]) -> String {
+    let mut node_text = gsn_node.text.to_owned();
+    let mut additional_text = vec![];
+    for layer in layers {
+        if let Some(layer_text) = gsn_node.additional.get(layer) {
+            additional_text.push(format!(
+                "\n{}: {}",
+                layer.to_ascii_uppercase(),
+                layer_text.replace('\n', " ")
+            ));
+        }
+    }
+    if !additional_text.is_empty() {
+        node_text.push_str("\n\n");
+        node_text.push_str(&additional_text.join("\n"));
+    }
+    node_text
+}
+
+///
+///
+///
+fn node_classes_from_node(gsn_node: &GsnNode) -> Vec<String> {
     let layer_classes: Option<Vec<String>> = gsn_node
         .additional
         .keys()
@@ -97,38 +158,10 @@ pub fn svg_from_gsn_node(
         .iter()
         .chain(layer_classes.iter())
         .flatten()
-        .chain(vec![mod_class].iter())
+        .chain(&[mod_class])
         .cloned()
         .collect();
-    match id {
-        id if id.starts_with('G') => new_goal(
-            id,
-            &gsn_node.text,
-            gsn_node.undeveloped.unwrap_or(false),
-            gsn_node.url.to_owned(),
-            classes,
-        ),
-        id if id.starts_with("Sn") => {
-            new_solution(id, &gsn_node.text, gsn_node.url.to_owned(), classes)
-        }
-        id if id.starts_with('S') => new_strategy(
-            id,
-            &gsn_node.text,
-            gsn_node.undeveloped.unwrap_or(false),
-            gsn_node.url.to_owned(),
-            classes,
-        ),
-        id if id.starts_with('C') => {
-            new_context(id, &gsn_node.text, gsn_node.url.to_owned(), classes)
-        }
-        id if id.starts_with('A') => {
-            new_assumption(id, &gsn_node.text, gsn_node.url.to_owned(), classes)
-        }
-        id if id.starts_with('J') => {
-            new_justification(id, &gsn_node.text, gsn_node.url.to_owned(), classes)
-        }
-        _ => unreachable!(),
-    }
+    classes
 }
 
 ///
@@ -141,36 +174,22 @@ pub fn away_svg_from_gsn_node(
     gsn_node: &GsnNode,
     module: &Module,
     source_module: &Module,
+    layers: &[String],
 ) -> Rc<RefCell<dyn crate::dirgraphsvg::nodes::Node>> {
-    let layer_classes: Option<Vec<String>> = gsn_node
-        .additional
-        .keys()
-        .map(|k| {
-            let mut t = escape_text(&k.to_ascii_lowercase());
-            t.insert_str(0, "gsn_");
-            Some(t.to_owned())
-        })
-        .collect();
-
-    let mut mod_class = gsn_node.module.to_owned();
-    mod_class.insert_str(0, "gsn_module_");
-
-    let classes = gsn_node
-        .classes
-        .iter()
-        .chain(layer_classes.iter())
-        .flatten()
-        .chain(vec![mod_class].iter())
-        .cloned()
-        .collect();
+    let classes = node_classes_from_node(gsn_node);
 
     let mut module_url = get_relative_module_url(&module.filename, &source_module.filename);
     module_url.push('#');
     module_url.push_str(&escape_node_id(id));
+
+    // Add layer to node output
+    let node_text = node_text_from_node_and_layers(gsn_node, layers);
+
+    // Create node
     match id {
         id if id.starts_with('G') => new_away_goal(
             id,
-            &gsn_node.text,
+            &node_text,
             &gsn_node.module,
             Some(module_url),
             gsn_node.url.to_owned(),
@@ -178,7 +197,7 @@ pub fn away_svg_from_gsn_node(
         ),
         id if id.starts_with("Sn") => new_away_solution(
             id,
-            &gsn_node.text,
+            &node_text,
             &gsn_node.module,
             Some(module_url),
             gsn_node.url.to_owned(),
@@ -186,14 +205,14 @@ pub fn away_svg_from_gsn_node(
         ),
         id if id.starts_with('S') => new_strategy(
             id,
-            &gsn_node.text,
+            &node_text,
             gsn_node.undeveloped.unwrap_or(false),
             gsn_node.url.to_owned(),
             classes,
         ),
         id if id.starts_with('C') => new_away_context(
             id,
-            &gsn_node.text,
+            &node_text,
             &gsn_node.module,
             Some(module_url),
             gsn_node.url.to_owned(),
@@ -201,7 +220,7 @@ pub fn away_svg_from_gsn_node(
         ),
         id if id.starts_with('A') => new_away_assumption(
             id,
-            &gsn_node.text,
+            &node_text,
             &gsn_node.module,
             Some(module_url),
             gsn_node.url.to_owned(),
@@ -209,7 +228,7 @@ pub fn away_svg_from_gsn_node(
         ),
         id if id.starts_with('J') => new_away_justification(
             id,
-            &gsn_node.text,
+            &node_text,
             &gsn_node.module,
             Some(module_url),
             gsn_node.url.to_owned(),
@@ -317,7 +336,12 @@ pub fn render_complete(
         .collect();
     let svg_nodes: BTreeMap<String, Rc<RefCell<dyn Node>>> = nodes
         .iter()
-        .map(|(id, node)| (id.to_owned(), svg_from_gsn_node(id, node)))
+        .map(|(id, node)| {
+            (
+                id.to_owned(),
+                svg_from_gsn_node(id, node, &render_options.layers),
+            )
+        })
         .collect();
     dg = dg
         .add_nodes(svg_nodes)
@@ -356,7 +380,12 @@ pub fn render_argument(
     let mut svg_nodes: BTreeMap<String, Rc<RefCell<dyn Node>>> = nodes
         .iter()
         .filter(|(_, node)| node.module == module_name)
-        .map(|(id, node)| (id.to_owned(), svg_from_gsn_node(id, node)))
+        .map(|(id, node)| {
+            (
+                id.to_owned(),
+                svg_from_gsn_node(id, node, &render_options.layers),
+            )
+        })
         .collect();
 
     svg_nodes.append(
@@ -371,6 +400,7 @@ pub fn render_argument(
                         node,
                         modules.get(&node.module).unwrap(),
                         modules.get(module_name).unwrap(),
+                        &render_options.layers,
                     ),
                 )
             })
