@@ -3,13 +3,13 @@ mod graph;
 pub mod nodes;
 mod util;
 use anyhow::Context;
+use glyph_brush_layout::ab_glyph::FontVec;
 use std::{cell::RefCell, collections::BTreeMap, rc::Rc};
 pub use util::{escape_node_id, escape_text};
 
 use edges::{EdgeType, SingleEdge};
 use graph::{rank_nodes, NodePlace};
 use nodes::{setup_basics, Node, Port};
-use rusttype::Font;
 use svg::{
     node::element::{path::Data, Marker, Path, Polyline, Rectangle, Style, Symbol, Text, Title},
     Document,
@@ -42,7 +42,7 @@ impl Default for Margin {
 }
 
 pub struct FontInfo {
-    font: Font<'static>,
+    font: FontVec,
     name: String,
     size: f32,
 }
