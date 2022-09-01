@@ -65,8 +65,8 @@ mod test {
     #[test]
     fn bounding_box() {
         let font = get_default_font().unwrap();
-        let (w, h) = text_bounding_box(&font, "text", 12.0);
-        assert!(w.abs_diff(19) < 5);
-        assert!(h.abs_diff(14) < 5);
+        let (w, h) = dbg!(text_bounding_box(&font, "text", 12.0));
+        assert!(w.abs_diff(21) < 5);
+        assert!(h.abs_diff(15) < 5);
     }
 }
