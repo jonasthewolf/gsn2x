@@ -38,13 +38,7 @@ pub fn text_bounding_box(font: &FontVec, text: &str, size: f32) -> (i32, i32) {
         )
         .last()
         .map(|g| (g.glyph.position.x as i32, g.glyph.position.y as i32))
-        // .map(|g| g.position().x + g.unpositioned().h_metrics().advance_width)
         .unwrap_or((0, 0))
-
-    // let v_metrics = font.v_metrics(scale);
-    // let height = (v_metrics.ascent - v_metrics.descent).ceil() + v_metrics.line_gap;
-
-    // ((width as f32 * 1.1) as i32, (height as f32 * 1.1) as i32) // Do magic: rusttype seems to be roughly 11 percent too small
 }
 
 #[cfg(test)]
@@ -66,7 +60,7 @@ mod test {
     fn bounding_box() {
         let font = get_default_font().unwrap();
         let (w, h) = dbg!(text_bounding_box(&font, "text", 12.0));
-        assert!(w.abs_diff(21) < 5);
+        assert!(w.abs_diff(20) < 5);
         assert!(h.abs_diff(15) < 5);
     }
 }
