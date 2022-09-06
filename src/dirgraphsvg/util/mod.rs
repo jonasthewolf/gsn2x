@@ -28,6 +28,25 @@ pub fn escape_node_id(id: &str) -> String {
     format!("node_{}", escape_text(id))
 }
 
+///
+/// Escape characters that are invalid in XML (SVG)
+///
+/// To prevent double escaping, undo escaping that is already in the string.
+///
+pub fn escape_url(input: &str) -> String {
+    input
+        .replace("&amp;", "&")
+        .replace('&', "&amp;")
+        .replace("&lt;", "<")
+        .replace('<', "&lt;")
+        .replace("&gt;", "&")
+        .replace('>', "&gt;")
+        .replace("&apos;", "\'")
+        .replace('\'', "&apos;")
+        .replace("&quot;", "\"")
+        .replace('"', "&quot;")
+}
+
 #[cfg(test)]
 mod test {
     use super::escape_text;

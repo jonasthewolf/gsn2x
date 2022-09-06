@@ -1,6 +1,6 @@
 use svg::node::element::{path::Data, Link, Path, Rectangle, Text, Title, Use};
 
-use crate::dirgraphsvg::FontInfo;
+use crate::dirgraphsvg::{util::escape_url, FontInfo};
 
 use super::{get_port_default_coordinates, setup_basics, Node, Point2D, Port};
 
@@ -210,7 +210,7 @@ impl Node for AwayNode {
         if let Some(module_url) = &self.module_url {
             let mut module_link = Link::new();
             module_link = module_link
-                .set("href", module_url.as_str())
+                .set("href", escape_url(module_url.as_str()))
                 .add(module_box)
                 .add(module_text);
             g.append(module_link);

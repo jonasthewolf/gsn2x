@@ -11,7 +11,7 @@ use self::{
     elliptical_node::EllipticalNode,
 };
 
-use super::util::escape_node_id;
+use super::util::{escape_node_id, escape_url};
 
 pub mod away_node;
 pub mod box_node;
@@ -74,7 +74,7 @@ pub(crate) fn setup_basics(id: &str, classes: &[String], url: &Option<String>) -
     g = g.set("class", classes.join(" "));
     if let Some(url) = &url {
         let link = Link::new();
-        link.set("href", url.as_str()).add(g).into()
+        link.set("href", escape_url(url.as_str())).add(g).into()
     } else {
         g.into()
     }
