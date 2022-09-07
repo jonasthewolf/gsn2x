@@ -113,7 +113,7 @@ mod test {
         assert!(m.is_err());
         assert_eq!(
             format!("{:?}", m),
-            "Err(Error(\"Element x already exists.\", line: 1, column: 1))"
+            "Err(Error(\"Element x already exists\", line: 1, column: 1))"
         );
     }
     #[test]
