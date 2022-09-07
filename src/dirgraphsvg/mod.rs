@@ -170,10 +170,11 @@ impl<'a> DirGraph<'a> {
         self = self.setup_basics();
         self = self.setup_stylesheets();
         self = self.layout(cycles_allowed);
+        // Order is important here. render_legend may modify self.width and self.height
+        self = self.render_legend();
         self.document = self
             .document
             .set("viewBox", (0u32, 0u32, self.width, self.height));
-        self = self.render_legend();
         output.write_all("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n".as_bytes())?;
         svg::write(output, &self.document)?;
         Ok(())
@@ -832,9 +833,7 @@ impl<'a> DirGraph<'a> {
             if self.width < text_width + 20i32 {
                 self.width = text_width + 40i32;
             }
-            if self.height < text_height + 20i32 {
-                self.height = text_height + 40i32;
-            }
+            self.height += text_height + 40i32;
             let x = self.width - text_width - 20;
             let y_base = self.height - text_height - 20;
             let mut y_running = 0;
