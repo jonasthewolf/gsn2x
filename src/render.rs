@@ -448,7 +448,7 @@ pub fn render_argument(
 
     // Add meta information if requested
     if render_options.legend != RenderLegend::No {
-        let mut meta_info = vec![format!("Generated on {}", Utc::now())];
+        let mut meta_info = vec![format!("Generated on: {}", Utc::now())];
         if let Some(meta) = &modules.get(module_name).unwrap().meta {
             meta_info.insert(0, format!("Module: {}", meta.name));
             if meta.brief.is_some() {

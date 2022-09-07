@@ -220,8 +220,9 @@ impl<'a> DirGraph<'a> {
         let edge_map = calculate_parent_edge_map(&self.edges);
         // Iteratively move nodes horizontally until no movement detected
         let mut first_run = true;
-        let mut limiter = 150; // Arbitrary value
-        loop {
+
+        const LIMIT: i32 = 150; // Arbitrary value
+        for limiter in 1..=LIMIT { 
             let mut changed = false;
             let mut y = self.margin.top;
             for v_rank in ranks.values() {
@@ -249,12 +250,10 @@ impl<'a> DirGraph<'a> {
             if !(first_run || changed) {
                 break;
             }
-            if limiter == 0 {
-                eprintln!("This should not have happened. Rendering a diagram took too many iterations ({}). Please report as an issue on github.com.", limiter);
-                break;
-            }
             first_run = false;
-            limiter -= 1;
+            if changed && limiter == LIMIT {
+                eprintln!("Rendering a diagram took too many iterations ({}). See README.md for hints how to solve this situation.", limiter);
+            }
         }
 
         // Draw the nodes
