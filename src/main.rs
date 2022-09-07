@@ -225,8 +225,10 @@ fn read_inputs(
                 anyhow!(format!(
                     "No valid GSN element can be found starting from line {}.\n\
                      This typically means that the YAML is completely invalid, or \n\
-                     the `text:` attribute is missing for an element.",
-                    e.location().unwrap().line()
+                     the `text:` attribute is missing for an element.\n\
+                     Original error message: {}.",
+                    e.location().unwrap().line(),
+                    e.to_string()
                 ))
             })
             .context(format!("Failed to parse YAML from file {}", input))?;

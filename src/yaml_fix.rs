@@ -66,7 +66,7 @@ where
                 }
                 Entry::Occupied(e) => {
                     return Err(serde::de::Error::custom(format!(
-                        "Element {} already exists.",
+                        "Element {} already exists",
                         e.key()
                     )));
                 }
