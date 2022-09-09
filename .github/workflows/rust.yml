@@ -40,7 +40,6 @@ jobs:
       uses: actions-rs/audit-check@v1
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
-        args: --all
   
   license_check:
     runs-on: ubuntu-latest
