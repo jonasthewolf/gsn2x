@@ -228,7 +228,7 @@ fn read_inputs(
                      the `text:` attribute is missing for an element.\n\
                      Original error message: {}.",
                     e.location().unwrap().line(),
-                    e.to_string()
+                    e
                 ))
             })
             .context(format!("Failed to parse YAML from file {}", input))?;

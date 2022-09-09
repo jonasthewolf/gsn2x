@@ -67,14 +67,14 @@ Context 1
 <title>
 J1
 </title>
-<ellipse class="border" cx="88" cy="246" fill="none" rx="68" ry="42" stroke="black" stroke-width="1"/>
-<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="8" x="43" y="235">
+<ellipse class="border" cx="198" cy="246" fill="none" rx="68" ry="42" stroke="black" stroke-width="1"/>
+<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="8" x="153" y="235">
 J1
 </text>
-<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" x="151" y="283">
+<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" x="261" y="283">
 J
 </text>
-<text font-family="AppleSystemUIFont" font-size="12" textLength="90" x="43" y="255">
+<text font-family="AppleSystemUIFont" font-size="12" textLength="90" x="153" y="255">
 Justification 1
 </text>
 </g>
@@ -287,7 +287,7 @@ Solution 2
 <path class="gsnedge gsninspby" d="M490,396 C490,426,363,422,363,442" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsninspby" d="M490,396 C490,426,487,422,487,442" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsninctxt" d="M413,246 C413,246,430,246,450,246" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninctxt" d="M313,246 C313,246,186,246,166,246" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M313,246 C313,246,296,246,276,246" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsninspby" d="M363,272 C363,302,236,314,236,334" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsninspby" d="M363,272 C363,302,490,314,490,334" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsninspby" d="M778,272 C778,302,614,314,614,334" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>

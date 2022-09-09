@@ -223,7 +223,7 @@ impl<'a> DirGraph<'a> {
         let mut first_run = true;
 
         const LIMIT: i32 = 150; // Arbitrary value
-        for limiter in 1..=LIMIT { 
+        for limiter in 1..=LIMIT {
             let mut changed = false;
             let mut y = self.margin.top;
             for v_rank in ranks.values() {
@@ -300,7 +300,9 @@ impl<'a> DirGraph<'a> {
         np: &NodePlace,
         edge_map: &BTreeMap<String, Vec<(String, EdgeType)>>,
     ) -> Option<i32> {
-        if let Some(x_new) = self.should_parent_move(np, edge_map) {
+        if let Some(x_new) = self.should_in_context_node_move(np, edge_map) {
+            Some(x_new)
+        } else if let Some(x_new) = self.should_parent_move(np, edge_map) {
             Some(x_new)
         } else {
             self.should_child_move(np, edge_map)
@@ -308,42 +310,85 @@ impl<'a> DirGraph<'a> {
     }
 
     ///
-    /// TODO update and move from graph.rs
     ///
     ///
-    // fn place_nodeplace(&mut self, np: &NodePlace, x: i32, y: i32, max_height: i32) -> i32 {
-    //     let mut new_x = x;
-    //     match np {
-    //         NodePlace::Node(id) => {
-    //             let mut n = self.nodes.get(id).unwrap().borrow_mut();
-    //             let pos = Point2D {
-    //                 x: x + n.get_width() / 2,
-    //                 y: y + max_height / 2,
-    //             };
-    //             n.set_position(&pos);
-    //             new_x += self.margin.left + n.get_width() + self.margin.right;
-    //         }
-    //         NodePlace::MultipleNodes(ids) => {
-    //             let x_max = ids
-    //                 .iter()
-    //                 .map(|id| self.nodes.get(id).unwrap().borrow().get_width())
-    //                 .max()
-    //                 .unwrap();
-    //             let mut y_n = y;
-    //             for id in ids {
-    //                 let mut n = self.nodes.get(id).unwrap().borrow_mut();
-    //                 let n_height = n.get_height();
-    //                 n.set_position(&Point2D {
-    //                     x: x + x_max / 2,
-    //                     y: y_n + n_height / 2,
-    //                 });
-    //                 y_n += n_height + self.margin.top + self.margin.bottom;
-    //             }
-    //             new_x += self.margin.left + x_max + self.margin.right;
-    //         }
-    //     }
-    //     new_x
-    // }
+    ///
+    ///
+    fn should_in_context_node_move(
+        &self,
+        np: &NodePlace,
+        edge_map: &BTreeMap<String, Vec<(String, EdgeType)>>,
+    ) -> Option<i32> {
+        match np {
+            NodePlace::Node(current_node) => {
+                let parent = edge_map
+                    .get(current_node)
+                    .into_iter()
+                    .flatten()
+                    .filter(|(_, ct)| {
+                        matches!(
+                            ct,
+                            EdgeType::OneWay(SingleEdge::InContextOf)
+                                | EdgeType::TwoWay((_, SingleEdge::InContextOf))
+                                | EdgeType::OneWay(SingleEdge::Composite)
+                                | EdgeType::TwoWay((_, SingleEdge::Composite))
+                        )
+                    })
+                    .map(|(n, _)| n)
+                    .last();
+                let current_x = self
+                    .nodes
+                    .get(current_node)
+                    .unwrap()
+                    .borrow()
+                    .get_position()
+                    .x;
+                match parent.map(|p| self.nodes.get(p).unwrap().borrow()) {
+                    Some(n) if n.get_position().x > current_x => Some(
+                        n.get_position().x
+                            - n.get_width() / 2
+                            - self.margin.left
+                            - self.margin.right
+                            - self.nodes.get(current_node).unwrap().borrow().get_width() / 2,
+                    ),
+                    Some(_) => None, // Nodes to the right will automatically be shifted
+                    None => None,
+                }
+            }
+            NodePlace::MultipleNodes(current_nodes) => {
+                // Currently, it is only possible that inContext nodes with the same parent end up in
+                // in a MultipleNodes node place. Thus, it is sufficient to check for the parent of
+                // the first contained node.
+                let parent = edge_map
+                    .get(current_nodes.first().unwrap())
+                    .into_iter()
+                    .flatten()
+                    .filter(|(_, ct)| {
+                        matches!(
+                            ct,
+                            EdgeType::OneWay(SingleEdge::InContextOf)
+                                | EdgeType::TwoWay((_, SingleEdge::InContextOf))
+                                | EdgeType::OneWay(SingleEdge::Composite)
+                                | EdgeType::TwoWay((_, SingleEdge::Composite))
+                        )
+                    })
+                    .map(|(n, _)| n)
+                    .last();
+                let current_x = np.get_x(&self.nodes);
+                match parent.map(|p| self.nodes.get(p).unwrap().borrow()) {
+                    Some(n) if n.get_position().x > current_x => Some(
+                        n.get_position().x
+                            - n.get_width() / 2
+                            - self.margin.left
+                            - self.margin.right
+                            - np.get_max_width(&self.nodes) / 2,
+                    ),
+                    Some(_) => None, // Nodes to the right will automatically be shifted
+                    None => None,
+                }
+            }
+        }
+    }
 
     ///
     ///
@@ -400,7 +445,7 @@ impl<'a> DirGraph<'a> {
                         .iter()
                         .map(|&(parent, _)| {
                             self.nodes.get(parent).unwrap().borrow().get_position().x
-                        }) // TODO Remove context nodes too?
+                        })
                         .collect();
                     if mm.is_empty() {
                         // Can happen in rare theoretical, minimal cases.
