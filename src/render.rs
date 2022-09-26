@@ -424,14 +424,12 @@ pub fn render_argument(
         .filter(|(_, targets)| !targets.is_empty())
         .collect();
 
-    svg_nodes = svg_nodes
-        .into_iter()
-        .filter(|(id, _)| {
+    svg_nodes
+        .retain(|id, _| {
             edges.contains_key(id)
                 || edges.values().flatten().any(|(x, _)| x == id)
                 || nodes.get(id).unwrap().module == module_name
-        })
-        .collect();
+        });
 
     dg = dg
         .add_nodes(svg_nodes)
