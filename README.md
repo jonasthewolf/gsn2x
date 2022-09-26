@@ -85,7 +85,7 @@ The tool automatically performs the following validation checks on the input YAM
  - C02: The top-level element must be a Goal. A top-level element is an element that is not referenced by any other element.
  - C03: All referenced elements in `supportedBy` and `inContextOf` must exist.
  - C04: There must be no circular `supportedBy` references.
- - C05: The should be more than one usage of the same `level`.
+ - C05: There should be more than one usage of the same `level`.
  - C06: All module names must be unique.
  - C07: All IDs must be unique across all modules.
  - C08: All elements must be reachable from the root elements.
@@ -313,14 +313,19 @@ This table shows the support of `gsn2x` for the different parts of the standard.
 
 I noticed that it might make sense to add some information about the goals I have set for myself for this project:
 
+- Everything-as-code
+
+  The tool should work in a continuos integration environment.
+  The input format should be diff-able to support common git workflows with pull/merge requests.
+
 - Simplicity
 
-   I would like to keep things simple. Simple for me and others.
+  I would like to keep things simple. Simple for me and others.
 
-   That means the input format should be simple to learn and edit manually in any editor. 
-   I also did not want invent a new DSL (domain-specific language) for that purpose.
-   YAML (input file format) might not be the best format, but it serves as a good tradeoff for my purposes.
-   Moreover, it can be parsed by other programs easily, too.
+  That means the input format should be simple to learn and edit manually in any editor. 
+  I also did not want invent a new DSL (domain-specific language) for that purpose.
+  YAML (input file format) might not be the best format, but it serves as a good tradeoff for my purposes.
+  Moreover, it can be parsed by other programs easily, too.
 
 - Standard conformance
 
