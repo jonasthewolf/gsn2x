@@ -1,5 +1,5 @@
 use anyhow::{anyhow, Context, Result};
-use clap::Arg;
+use clap::{Arg, ArgAction};
 use render::RenderOptions;
 use std::collections::{BTreeMap, HashMap};
 use std::fs::File;
@@ -27,7 +27,7 @@ fn main() -> Result<()> {
         .arg(
             Arg::new("INPUT")
                 .help("Sets the input file(s) to use.")
-                .multiple_occurrences(true)
+                .action(ArgAction::Append)
                 .required(true),
         )
         .arg(
@@ -35,6 +35,7 @@ fn main() -> Result<()> {
                 .help("Only check the input file(s), but do not output graphs.")
                 .short('c')
                 .long("check")
+                .action(ArgAction::SetTrue)
                 .help_heading("CHECKS"),
         )
         .arg(
@@ -42,8 +43,7 @@ fn main() -> Result<()> {
                 .help("Exclude this module from reference checks.")
                 .short('x')
                 .long("exclude")
-                .multiple_occurrences(true)
-                .takes_value(true)
+                .action(ArgAction::Append)
                 .help_heading("CHECKS"),
         )
         .arg(
@@ -51,6 +51,7 @@ fn main() -> Result<()> {
                 .help("Do not output of argument view for provided input files.")
                 .short('N')
                 .long("no-arg")
+                .action(ArgAction::SetTrue)
                 .help_heading("OUTPUT"),
         )
         .arg(
@@ -58,7 +59,7 @@ fn main() -> Result<()> {
                 .help("Output the complete view to <COMPLETE_VIEW>.")
                 .short('f')
                 .long("full")
-                .takes_value(true)
+                .action(ArgAction::Set)
                 .conflicts_with_all(&["CHECKONLY", "NO_COMPLETE_VIEW"])
                 .help_heading("OUTPUT"),
         )
@@ -67,7 +68,7 @@ fn main() -> Result<()> {
                 .help("Do not output the complete view.")
                 .short('F')
                 .long("no-full")
-                .takes_value(false)
+                .action(ArgAction::SetTrue)
                 .conflicts_with("COMPLETE_VIEW")
                 .help_heading("OUTPUT"),
         )
@@ -76,7 +77,7 @@ fn main() -> Result<()> {
                 .help("Output the architecture view to <ARCHITECTURE_VIEW>.")
                 .short('a')
                 .long("arch")
-                .takes_value(true)
+                .action(ArgAction::Set)
                 .conflicts_with_all(&["CHECKONLY", "NO_ARCHITECTURE_VIEW"])
                 .help_heading("OUTPUT"),
         )
@@ -85,7 +86,7 @@ fn main() -> Result<()> {
                 .help("Do not output the architecture view.")
                 .short('A')
                 .long("no-arch")
-                .takes_value(false)
+                .action(ArgAction::SetTrue)
                 .conflicts_with("ARCHITECTURE_VIEW")
                 .help_heading("OUTPUT"),
         )
@@ -94,8 +95,7 @@ fn main() -> Result<()> {
                 .help("Output list of all evidences to <EVIDENCES>.")
                 .short('e')
                 .long("evidences")
-                .takes_value(true)
-                .multiple_occurrences(false)
+                .action(ArgAction::Append)
                 .conflicts_with_all(&["CHECKONLY", "NO_EVIDENCES"])
                 .help_heading("OUTPUT"),
         )
@@ -104,8 +104,7 @@ fn main() -> Result<()> {
                 .help("Do not output list of all evidences.")
                 .short('E')
                 .long("no-evidences")
-                .takes_value(false)
-                .multiple_occurrences(false)
+                .action(ArgAction::SetTrue)
                 .conflicts_with("EVIDENCES")
                 .help_heading("OUTPUT"),
         )
@@ -114,8 +113,7 @@ fn main() -> Result<()> {
                 .help("Output additional layer. Can be used multiple times.")
                 .short('l')
                 .long("layer")
-                .takes_value(true)
-                .multiple_occurrences(true)
+                .action(ArgAction::Append)
                 .use_value_delimiter(true)
                 .conflicts_with("CHECKONLY")
                 .help_heading("OUTPUT MODIFICATION"),
@@ -125,8 +123,7 @@ fn main() -> Result<()> {
                 .help("Links a stylesheet in SVG output. Can be used multiple times.")
                 .short('s')
                 .long("stylesheet")
-                .takes_value(true)
-                .multiple_occurrences(true)
+                .action(ArgAction::Append)
                 .conflicts_with("CHECKONLY")
                 .help_heading("OUTPUT MODIFICATION"),
         )
@@ -135,8 +132,7 @@ fn main() -> Result<()> {
                 .help("Embed stylehseets instead of linking them.")
                 .short('t')
                 .long("embed-css")
-                .takes_value(false)
-                .multiple_occurrences(false)
+                .action(ArgAction::SetTrue)
                 .conflicts_with("CHECKONLY")
                 .help_heading("OUTPUT MODIFICATION"),
         )
@@ -155,6 +151,7 @@ fn main() -> Result<()> {
                 .help("Do not output a legend based on module information.")
                 .short('G')
                 .long("no-legend")
+                .action(ArgAction::SetTrue)
                 .conflicts_with("CHECKONLY")
                 .help_heading("OUTPUT MODIFICATION"),
         )
@@ -163,6 +160,7 @@ fn main() -> Result<()> {
                 .help("Output a legend based on all module information.")
                 .short('g')
                 .long("full-legend")
+                .action(ArgAction::SetTrue)
                 .conflicts_with("CHECKONLY")
                 .help_heading("OUTPUT MODIFICATION"),
         );
@@ -196,7 +194,7 @@ fn main() -> Result<()> {
     // Validate
     validate_and_check(&mut nodes, &modules, &mut diags, &excluded_modules, &layers);
 
-    if diags.errors == 0 && !matches.is_present("CHECKONLY") {
+    if diags.errors == 0 && !matches.get_flag("CHECKONLY") {
         let render_options = RenderOptions::from(&matches);
         // Output views
         print_outputs(nodes, &modules, &render_options)?;
