@@ -35,9 +35,9 @@ pub struct RenderOptions {
 
 impl From<&ArgMatches> for RenderOptions {
     fn from(matches: &ArgMatches) -> Self {
-        let legend = if matches.is_present("NO_LEGEND") {
+        let legend = if matches.get_flag("NO_LEGEND") {
             RenderLegend::No
-        } else if matches.is_present("FULL_LEGEND") {
+        } else if matches.get_flag("FULL_LEGEND") {
             RenderLegend::Full
         } else {
             RenderLegend::Short
@@ -60,14 +60,14 @@ impl From<&ArgMatches> for RenderOptions {
                 .collect::<Vec<_>>(),
             layers,
             legend,
-            embed_stylesheets: matches.is_present("EMBED_CSS"),
+            embed_stylesheets: matches.get_flag("EMBED_CSS"),
             architecture_filename,
             evidences_filename,
             complete_filename,
-            skip_argument: matches.is_present("NO_ARGUMENT_VIEW"),
-            skip_architecture: matches.is_present("NO_ARCHITECTURE_VIEW"),
-            skip_evidences: matches.is_present("NO_EVIDENCES"),
-            skip_complete: matches.is_present("NO_COMPLETE_VIEW"),
+            skip_argument: matches.get_flag("NO_ARGUMENT_VIEW"),
+            skip_architecture: matches.get_flag("NO_ARCHITECTURE_VIEW"),
+            skip_evidences: matches.get_flag("NO_EVIDENCES"),
+            skip_complete: matches.get_flag("NO_COMPLETE_VIEW"),
         }
     }
 }
@@ -424,12 +424,11 @@ pub fn render_argument(
         .filter(|(_, targets)| !targets.is_empty())
         .collect();
 
-    svg_nodes
-        .retain(|id, _| {
-            edges.contains_key(id)
-                || edges.values().flatten().any(|(x, _)| x == id)
-                || nodes.get(id).unwrap().module == module_name
-        });
+    svg_nodes.retain(|id, _| {
+        edges.contains_key(id)
+            || edges.values().flatten().any(|(x, _)| x == id)
+            || nodes.get(id).unwrap().module == module_name
+    });
 
     dg = dg
         .add_nodes(svg_nodes)
