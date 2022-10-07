@@ -3,6 +3,7 @@ mod graph;
 pub mod nodes;
 mod util;
 use anyhow::Context;
+use glyph_brush_layout::ab_glyph::FontVec;
 use std::{cell::RefCell, collections::BTreeMap, rc::Rc};
 pub use util::{escape_node_id, escape_text};
 
@@ -13,9 +14,12 @@ use svg::{
     node::element::{path::Data, Marker, Path, Polyline, Rectangle, Style, Symbol, Text, Title},
     Document,
 };
-use util::point2d::Point2D;
+use util::{
+    font::{get_default_font, get_font},
+    point2d::Point2D,
+};
 
-use self::{graph::calculate_parent_edge_map, util::font::FontInfo};
+use self::graph::calculate_parent_edge_map;
 
 const MARKER_HEIGHT: u32 = 10;
 
@@ -35,6 +39,12 @@ impl Default for Margin {
             left: 20,
         }
     }
+}
+
+pub struct FontInfo {
+    font: FontVec,
+    name: String,
+    size: f32,
 }
 
 pub struct DirGraph<'a> {
@@ -59,7 +69,11 @@ impl<'a> Default for DirGraph<'a> {
             height: 297,
             margin: Margin::default(),
             wrap: 40,
-            font: FontInfo::default(),
+            font: FontInfo {
+                font: get_default_font().unwrap(),
+                name: util::font::DEFAULT_FONT_FAMILY_NAME.to_owned(),
+                size: 12.0,
+            },
             css_stylesheets: Vec::new(),
             embed_stylesheets: false,
             forced_levels: BTreeMap::new(),
@@ -79,6 +93,15 @@ impl<'a> DirGraph<'a> {
 
     pub fn _set_margin(mut self, margin: Margin) -> Self {
         self.margin = margin;
+        self
+    }
+
+    pub fn _set_font(mut self, font: &str, size: f32) -> Self {
+        self.font = FontInfo {
+            font: get_font(font).unwrap(),
+            name: font.to_owned(),
+            size,
+        };
         self
     }
 
@@ -842,8 +865,11 @@ impl<'a> DirGraph<'a> {
             let mut text_width = 0;
             let mut lines = Vec::new();
             for t in meta {
-                let (width, height) =
-                    crate::dirgraphsvg::util::font::text_bounding_box(&self.font, t, false);
+                let (width, height) = crate::dirgraphsvg::util::font::text_bounding_box(
+                    &self.font.font,
+                    t,
+                    self.font.size,
+                );
                 lines.push((width, height));
                 text_height += height;
                 text_width = std::cmp::max(text_width, width);
@@ -888,6 +914,7 @@ mod test {
                 EdgeType::OneWay(SingleEdge::SupportedBy),
             )
             ._add_node(b1)
+            ._set_font(super::util::font::DEFAULT_FONT_FAMILY_NAME, 12.0)
             ._set_margin(Margin {
                 ..Default::default()
             })

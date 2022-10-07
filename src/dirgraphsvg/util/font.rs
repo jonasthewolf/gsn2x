@@ -1,89 +1,43 @@
 use anyhow::{Error, Result};
-use font_kit::{
-    family_name::FamilyName,
-    properties::{Properties, Stretch, Style, Weight},
-    source::SystemSource,
-};
+use font_kit::source::SystemSource;
 use glyph_brush_layout::{
-    ab_glyph::{FontVec, PxScale},
+    ab_glyph::{Font, FontVec},
     FontId, GlyphPositioner, Layout, SectionGeometry, SectionText,
 };
 
-#[cfg(any(target_os = "windows", target_os = "macos"))]
-pub static DEFAULT_FONT_FAMILY_NAME: &str = "Arial";
+#[cfg(target_os = "windows")]
+pub static DEFAULT_FONT_FAMILY_NAME: &str = "ArialMT";
+#[cfg(target_os = "macos")]
+pub static DEFAULT_FONT_FAMILY_NAME: &str = "AppleSystemUIFont";
 #[cfg(not(any(target_os = "windows", target_os = "macos")))]
 pub static DEFAULT_FONT_FAMILY_NAME: &str = "DejaVuSans";
 
-pub struct FontInfo {
-    font: FontVec,
-    font_bold: FontVec,
-    font_italic: FontVec,
-    pub name: String,
-    pub size: f32,
+pub fn get_default_font() -> Result<FontVec> {
+    get_font(DEFAULT_FONT_FAMILY_NAME)
 }
 
-impl Default for FontInfo {
-    fn default() -> Self {
-        FontInfo {
-            font: get_default_font(false, false).unwrap(),
-            font_bold: get_default_font(true, false).unwrap(),
-            font_italic: get_default_font(false, true).unwrap(),
-            name: DEFAULT_FONT_FAMILY_NAME.to_owned(),
-            size: 12.0,
-        }
-    }
-}
-
-pub fn get_default_font(bold: bool, italic: bool) -> Result<FontVec> {
-    get_font(DEFAULT_FONT_FAMILY_NAME, bold, italic)
-}
-
-pub fn get_font(font_name: &str, bold: bool, italic: bool) -> Result<FontVec> {
-    let mut props = Properties::new();
-    props = *props.stretch(Stretch::NORMAL);
-    if bold {
-        props = *props.weight(Weight::BOLD);
-    }
-    if italic {
-        props = *props.style(Style::Italic);
-    }
+pub fn get_font(font_name: &str) -> Result<FontVec> {
     let f = SystemSource::new()
-        .select_best_match(&[FamilyName::Title(font_name.to_owned())], &props)?
+        .select_by_postscript_name(font_name)?
         .load()?;
     let fd = f.copy_font_data().unwrap();
     FontVec::try_from_vec(fd.to_vec()).map_err(Error::from)
 }
 
-pub fn text_bounding_box(font_info: &FontInfo, text: &str, bold: bool) -> (i32, i32) {
-    // let scale = font_info.font.pt_to_px_scale(font_info.size).unwrap();
-    let kern = if bold {
-        text.chars().count() as i32 * 4
-    } else {
-        (text.chars().count() as f32 * 1.5) as i32
-    };
-    let line_gap = 5;
-    let font_id = if bold { 1 } else { 0 };
+pub fn text_bounding_box(font: &FontVec, text: &str, size: f32) -> (i32, i32) {
+    let scale = font.pt_to_px_scale(size).unwrap();
     Layout::default_single_line()
         .calculate_glyphs(
-            &[
-                &font_info.font,
-                &font_info.font_bold,
-                &font_info.font_italic,
-            ],
+            &[&font],
             &SectionGeometry::default(),
             &[SectionText {
                 text,
-                scale: PxScale::from(font_info.size),
-                font_id: FontId(font_id),
+                scale,
+                font_id: FontId(0),
             }],
         )
         .last()
-        .map(|g| {
-            (
-                g.glyph.position.x as i32 + kern,
-                g.glyph.position.y as i32 + line_gap,
-            )
-        })
+        .map(|g| (g.glyph.position.x as i32, g.glyph.position.y as i32))
         .unwrap_or((0, 0))
 }
 
@@ -94,23 +48,18 @@ mod test {
 
     #[test]
     fn default_font_exists() {
-        assert!(get_default_font(false, false).is_ok());
+        assert!(get_default_font().is_ok());
     }
 
     #[test]
     fn non_existing_font() {
-        assert!(get_font(
-            "ahopefullycrazyenoughfontnamethatdoesnotexistanywhere",
-            false,
-            false
-        )
-        .is_err());
+        assert!(get_font("ahopefullycrazyenoughfontnamethatdoesnotexistanywhere").is_err());
     }
 
     #[test]
     fn bounding_box() {
-        let font_info = FontInfo::default();
-        let (w, h) = dbg!(text_bounding_box(&font_info, "text", false));
+        let font = get_default_font().unwrap();
+        let (w, h) = dbg!(text_bounding_box(&font, "text", 12.0));
         assert!(w.abs_diff(20) <= 5);
         assert!(h.abs_diff(15) <= 5);
     }

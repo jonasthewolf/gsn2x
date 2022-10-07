@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg viewBox="0 0 1086 544" xmlns="http://www.w3.org/2000/svg">
+<svg viewBox="0 0 1135 556" xmlns="http://www.w3.org/2000/svg">
 <symbol id="module_icon">
 <rect fill="lightgrey" height="5" stroke="black" stroke-width="1" width="10" x="0" y="0"/>
 <rect fill="lightgrey" height="10" stroke="black" stroke-width="1" width="20" x="0" y="5"/>
@@ -23,11 +23,11 @@ svg { filter: invert(100%); }]]>
 <title>
 G1
 </title>
-<path class="border" d="M569,20 L653,20 L653,70 L569,70 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" textLength="16" x="576" y="41">
+<path class="border" d="M598,20 L682,20 L682,72 L598,72 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="12" x="605" y="42">
 G1
 </text>
-<text font-family="Arial" font-size="12" textLength="34" x="576" y="61">
+<text font-family="AppleSystemUIFont" font-size="12" textLength="37" x="605" y="62">
 Goal 1
 </text>
 </g>
@@ -35,11 +35,11 @@ Goal 1
 <title>
 G2
 </title>
-<path class="border" d="M301,110 L385,110 L385,160 L301,160 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" textLength="16" x="308" y="131">
+<path class="border" d="M321,112 L405,112 L405,164 L321,164 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="12" x="328" y="134">
 G2
 </text>
-<text font-family="Arial" font-size="12" textLength="34" x="308" y="151">
+<text font-family="AppleSystemUIFont" font-size="12" textLength="37" x="328" y="154">
 Goal 2
 </text>
 </g>
@@ -47,11 +47,11 @@ Goal 2
 <title>
 G3
 </title>
-<path class="border" d="M838,110 L922,110 L922,160 L838,160 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" textLength="16" x="845" y="131">
+<path class="border" d="M875,112 L959,112 L959,164 L875,164 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="12" x="882" y="134">
 G3
 </text>
-<text font-family="Arial" font-size="12" textLength="34" x="845" y="151">
+<text font-family="AppleSystemUIFont" font-size="12" textLength="37" x="882" y="154">
 Goal 3
 </text>
 </g>
@@ -59,11 +59,11 @@ Goal 3
 <title>
 C1
 </title>
-<path class="border" d="M972,112 L1034,112 C1044,112,1044,158,1034,158 L972,158 C962,158,962,112,972,112" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" textLength="15" x="972" y="131">
+<path class="border" d="M1009,114 L1079,114 C1089,114,1089,162,1079,162 L1009,162 C999,162,999,114,1009,114" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="11" x="1009" y="134">
 C1
 </text>
-<text font-family="Arial" font-size="12" textLength="53" x="972" y="151">
+<text font-family="AppleSystemUIFont" font-size="12" textLength="61" x="1009" y="154">
 Context 1
 </text>
 </g>
@@ -71,14 +71,14 @@ Context 1
 <title>
 J1
 </title>
-<ellipse class="border" cx="184" cy="241" fill="none" rx="62" ry="41" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" textLength="13" x="144" y="230">
+<ellipse class="border" cx="198" cy="246" fill="none" rx="68" ry="42" stroke="black" stroke-width="1"/>
+<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="8" x="153" y="235">
 J1
 </text>
-<text font-family="Arial" font-size="12" font-weight="bold" x="241" y="277">
+<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" x="261" y="283">
 J
 </text>
-<text font-family="Arial" font-size="12" textLength="81" x="144" y="250">
+<text font-family="AppleSystemUIFont" font-size="12" textLength="90" x="153" y="255">
 Justification 1
 </text>
 </g>
@@ -86,11 +86,11 @@ Justification 1
 <title>
 S1
 </title>
-<path class="border" d="M301,216 L400,216 L385,266 L286,266 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" textLength="15" x="308" y="237">
+<path class="border" d="M321,220 L420,220 L405,272 L306,272 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="10" x="328" y="242">
 S1
 </text>
-<text font-family="Arial" font-size="12" textLength="57" x="293" y="257">
+<text font-family="AppleSystemUIFont" font-size="12" textLength="64" x="313" y="262">
 Strategy 1
 </text>
 </g>
@@ -98,14 +98,14 @@ Strategy 1
 <title>
 A1
 </title>
-<ellipse class="border" cx="490" cy="241" fill="none" rx="50" ry="41" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" textLength="15" x="458" y="230">
+<ellipse class="border" cx="516" cy="246" fill="none" rx="56" ry="42" stroke="black" stroke-width="1"/>
+<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="10" x="480" y="235">
 A1
 </text>
-<text font-family="Arial" font-size="12" font-weight="bold" x="535" y="277">
+<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" x="567" y="283">
 A
 </text>
-<text font-family="Arial" font-size="12" textLength="64" x="458" y="250">
+<text font-family="AppleSystemUIFont" font-size="12" textLength="73" x="480" y="255">
 Argument 1
 </text>
 </g>
@@ -113,11 +113,11 @@ Argument 1
 <title>
 S2
 </title>
-<path class="border" d="M702,216 L801,216 L786,266 L687,266 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" textLength="15" x="709" y="237">
+<path class="border" d="M736,220 L835,220 L820,272 L721,272 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="10" x="743" y="242">
 S2
 </text>
-<text font-family="Arial" font-size="12" textLength="57" x="694" y="257">
+<text font-family="AppleSystemUIFont" font-size="12" textLength="64" x="728" y="262">
 Strategy 2
 </text>
 </g>
@@ -126,11 +126,11 @@ Strategy 2
 <title>
 Sn1
 </title>
-<ellipse class="border" cx="880" cy="241" fill="none" rx="39" ry="39" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" textLength="25" x="852" y="230">
+<ellipse class="border" cx="917" cy="246" fill="none" rx="42" ry="42" stroke="black" stroke-width="1"/>
+<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="19" x="886" y="235">
 Sn1
 </text>
-<text font-family="Arial" font-size="12" textLength="56" x="852" y="250">
+<text font-family="AppleSystemUIFont" font-size="12" textLength="63" x="886" y="255">
 Solution 1
 </text>
 </a>
@@ -138,14 +138,14 @@ Solution 1
 <title>
 A2
 </title>
-<ellipse class="border" cx="79" cy="363" fill="none" rx="59" ry="41" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" textLength="15" x="41" y="352">
+<ellipse class="border" cx="87" cy="370" fill="none" rx="67" ry="42" stroke="black" stroke-width="1"/>
+<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="10" x="43" y="359">
 A2
 </text>
-<text font-family="Arial" font-size="12" font-weight="bold" x="133" y="399">
+<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" x="149" y="407">
 A
 </text>
-<text font-family="Arial" font-size="12" textLength="77" x="41" y="372">
+<text font-family="AppleSystemUIFont" font-size="12" textLength="89" x="43" y="379">
 Assumption 2
 </text>
 </g>
@@ -153,11 +153,11 @@ Assumption 2
 <title>
 G5
 </title>
-<path class="border" d="M178,338 L262,338 L262,388 L178,388 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" textLength="16" x="185" y="359">
+<path class="border" d="M194,344 L278,344 L278,396 L194,396 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="12" x="201" y="366">
 G5
 </text>
-<text font-family="Arial" font-size="12" textLength="34" x="185" y="379">
+<text font-family="AppleSystemUIFont" font-size="12" textLength="37" x="201" y="386">
 Goal 5
 </text>
 </g>
@@ -165,14 +165,14 @@ Goal 5
 <title>
 C2
 </title>
-<path class="border" d="M312,333 L374,333 C384,333,384,393,374,393 L312,393 C302,393,302,333,312,333" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" textLength="15" x="312" y="352">
+<path class="border" d="M328,339 L398,339 C408,339,408,401,398,401 L328,401 C318,401,318,339,328,339" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="11" x="328" y="359">
 C2
 </text>
-<text font-family="Arial" font-size="12" textLength="53" x="312" y="372">
+<text font-family="AppleSystemUIFont" font-size="12" textLength="61" x="328" y="379">
 Context 2
 </text>
-<text font-family="Arial" font-size="12" textLength="46" x="312" y="386">
+<text font-family="AppleSystemUIFont" font-size="12" textLength="50" x="328" y="394">
 Multiline
 </text>
 </g>
@@ -180,11 +180,11 @@ Multiline
 <title>
 G6
 </title>
-<path class="border" d="M424,338 L508,338 L508,388 L424,388 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" textLength="16" x="431" y="359">
+<path class="border" d="M448,344 L532,344 L532,396 L448,396 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="12" x="455" y="366">
 G6
 </text>
-<text font-family="Arial" font-size="12" textLength="34" x="431" y="379">
+<text font-family="AppleSystemUIFont" font-size="12" textLength="37" x="455" y="386">
 Goal 6
 </text>
 </g>
@@ -192,11 +192,11 @@ Goal 6
 <title>
 G4
 </title>
-<path class="border" d="M548,338 L632,338 L632,388 L548,388 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" textLength="16" x="555" y="359">
+<path class="border" d="M572,344 L656,344 L656,396 L572,396 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="12" x="579" y="366">
 G4
 </text>
-<text font-family="Arial" font-size="12" textLength="34" x="555" y="379">
+<text font-family="AppleSystemUIFont" font-size="12" textLength="37" x="579" y="386">
 Goal 4
 </text>
 </g>
@@ -204,14 +204,14 @@ Goal 4
 <title>
 J2
 </title>
-<ellipse class="border" cx="734" cy="363" fill="none" rx="62" ry="41" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" textLength="13" x="694" y="352">
+<ellipse class="border" cx="764" cy="370" fill="none" rx="68" ry="42" stroke="black" stroke-width="1"/>
+<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="8" x="719" y="359">
 J2
 </text>
-<text font-family="Arial" font-size="12" font-weight="bold" x="791" y="399">
+<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" x="827" y="407">
 J
 </text>
-<text font-family="Arial" font-size="12" textLength="81" x="694" y="372">
+<text font-family="AppleSystemUIFont" font-size="12" textLength="90" x="719" y="379">
 Justification 2
 </text>
 </g>
@@ -219,24 +219,24 @@ Justification 2
 <title>
 G7
 </title>
-<path class="border" d="M836,335 L960,335 L960,391 L836,391 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" textLength="16" x="843" y="356">
+<path class="border" d="M872,342 L1014,342 L1014,398 L872,398 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="12" x="879" y="364">
 G7
 </text>
-<text font-family="Arial" font-size="12" textLength="110" x="843" y="376">
+<text font-family="AppleSystemUIFont" font-size="12" textLength="129" x="879" y="384">
 Undeveloped Goal
 </text>
-<path d="M898,391 l5,5 l-5,5 l-5,-5 z" fill="none" stroke="black" stroke-width="1"/>
+<path d="M943,398 l5,5 l-5,5 l-5,-5 z" fill="none" stroke="black" stroke-width="1"/>
 </g>
 <g class="gsnelem gsnsltn gsn_module_examples_example_gsn_yaml" id="node_Sn4">
 <title>
 Sn4
 </title>
-<ellipse class="border" cx="59" cy="483" fill="none" rx="39" ry="39" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" textLength="25" x="31" y="472">
+<ellipse class="border" cx="62" cy="494" fill="none" rx="42" ry="42" stroke="black" stroke-width="1"/>
+<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="19" x="31" y="483">
 Sn4
 </text>
-<text font-family="Arial" font-size="12" textLength="56" x="31" y="492">
+<text font-family="AppleSystemUIFont" font-size="12" textLength="63" x="31" y="503">
 Solution 4
 </text>
 </g>
@@ -244,11 +244,11 @@ Solution 4
 <title>
 Sn3
 </title>
-<ellipse class="border" cx="343" cy="483" fill="none" rx="39" ry="39" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" textLength="25" x="315" y="472">
+<ellipse class="border" cx="363" cy="494" fill="none" rx="42" ry="42" stroke="black" stroke-width="1"/>
+<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="19" x="332" y="483">
 Sn3
 </text>
-<text font-family="Arial" font-size="12" textLength="56" x="315" y="492">
+<text font-family="AppleSystemUIFont" font-size="12" textLength="63" x="332" y="503">
 Solution 3
 </text>
 </g>
@@ -256,11 +256,11 @@ Solution 3
 <title>
 Sn5
 </title>
-<ellipse class="border" cx="461" cy="483" fill="none" rx="39" ry="39" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" textLength="25" x="433" y="472">
+<ellipse class="border" cx="487" cy="494" fill="none" rx="42" ry="42" stroke="black" stroke-width="1"/>
+<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="19" x="456" y="483">
 Sn5
 </text>
-<text font-family="Arial" font-size="12" textLength="56" x="433" y="492">
+<text font-family="AppleSystemUIFont" font-size="12" textLength="63" x="456" y="503">
 Solution 5
 </text>
 </g>
@@ -268,32 +268,32 @@ Solution 5
 <title>
 Sn2
 </title>
-<ellipse class="border" cx="590" cy="483" fill="none" rx="39" ry="39" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" textLength="25" x="562" y="472">
+<ellipse class="border" cx="614" cy="494" fill="none" rx="42" ry="42" stroke="black" stroke-width="1"/>
+<text font-family="AppleSystemUIFont" font-size="12" font-weight="bold" textLength="19" x="583" y="483">
 Sn2
 </text>
-<text font-family="Arial" font-size="12" textLength="56" x="562" y="492">
+<text font-family="AppleSystemUIFont" font-size="12" textLength="63" x="583" y="503">
 Solution 2
 </text>
 </g>
-<path class="gsnedge gsninspby" d="M611,70 C611,100,343,80,343,100" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M611,70 C611,100,880,80,880,100" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M611,70 C611,100,744,186,744,206" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M343,160 C343,190,343,186,343,206" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninctxt" d="M922,135 C922,135,932,135,952,135" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M880,160 C880,190,880,172,880,192" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninctxt" d="M632,363 C632,363,642,363,662,363" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M590,388 C590,418,590,414,590,434" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninctxt" d="M262,363 C262,363,272,363,292,363" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninctxt" d="M178,363 C178,363,168,363,148,363" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M220,388 C220,418,343,414,343,434" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M220,388 C220,418,59,414,59,434" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M466,388 C466,418,343,414,343,434" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M466,388 C466,418,461,414,461,434" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninctxt" d="M393,241 C393,241,410,241,430,241" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninctxt" d="M293,241 C293,241,276,241,256,241" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M343,266 C343,296,220,308,220,328" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M343,266 C343,296,466,308,466,328" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M744,266 C744,296,590,308,590,328" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M744,266 C744,296,898,305,898,325" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M640,72 C640,102,363,82,363,102" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M640,72 C640,102,917,82,917,102" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M640,72 C640,102,778,190,778,210" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M363,164 C363,194,363,190,363,210" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M959,138 C959,138,969,138,989,138" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M917,164 C917,194,917,174,917,194" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M656,370 C656,370,666,370,686,370" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M614,396 C614,426,614,422,614,442" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M278,370 C278,370,288,370,308,370" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M194,370 C194,370,184,370,164,370" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M236,396 C236,426,363,422,363,442" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M236,396 C236,426,62,422,62,442" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M490,396 C490,426,363,422,363,442" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M490,396 C490,426,487,422,487,442" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M413,246 C413,246,430,246,450,246" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M313,246 C313,246,296,246,276,246" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M363,272 C363,302,236,314,236,334" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M363,272 C363,302,490,314,490,334" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M778,272 C778,302,614,314,614,334" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M778,272 C778,302,943,312,943,332" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 </svg>
