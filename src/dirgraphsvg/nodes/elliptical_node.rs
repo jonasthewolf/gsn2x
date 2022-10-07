@@ -1,6 +1,6 @@
 use svg::node::element::{Ellipse, Text, Title};
 
-use crate::dirgraphsvg::FontInfo;
+use crate::dirgraphsvg::util::font::FontInfo;
 
 use super::{get_port_default_coordinates, setup_basics, Node, Point2D};
 
@@ -32,18 +32,15 @@ impl Node for EllipticalNode {
         self.text =
             crate::dirgraphsvg::util::wordwrap::wordwrap(&self.text, suggested_char_wrap, "\n");
         // Calculate bounding box of identifier
-        let (t_width, t_height) = crate::dirgraphsvg::util::font::text_bounding_box(
-            &font.font,
-            &self.identifier,
-            font.size,
-        );
+        let (t_width, t_height) =
+            crate::dirgraphsvg::util::font::text_bounding_box(font, &self.identifier, true);
         self.lines.push((t_width, t_height));
         // +3 to make padding at bottom larger
         self.text_height = t_height + TEXT_OFFSET + 3;
         self.text_width = t_width;
         for t in self.text.lines() {
             let (line_width, line_height) =
-                crate::dirgraphsvg::util::font::text_bounding_box(&font.font, t, font.size);
+                crate::dirgraphsvg::util::font::text_bounding_box(font, t, false);
             self.lines.push((line_width, line_height));
             self.text_height += line_height;
             self.text_width = std::cmp::max(self.text_width, line_width);
