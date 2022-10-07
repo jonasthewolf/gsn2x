@@ -1,5 +1,6 @@
 #[cfg(test)]
 mod integrations {
+    use anyhow::{Context, Result};
     use assert_cmd::prelude::*;
     use assert_fs::fixture::PathCopy;
     use assert_fs::prelude::*;
@@ -11,11 +12,13 @@ mod integrations {
         left: &std::ffi::OsStr,
         right: &std::ffi::OsStr,
         replace_regex: Option<Vec<(Regex, &str)>>,
-    ) -> Result<bool, std::io::Error> {
+    ) -> Result<bool> {
         let left: &std::path::Path = left.as_ref();
         let right: &std::path::Path = right.as_ref();
-        let left_c = std::fs::read_to_string(left)?;
-        let right_c = std::fs::read_to_string(right)?;
+        let left_c =
+            std::fs::read_to_string(left).with_context(|| format!("Filename {:?}", left))?;
+        let right_c =
+            std::fs::read_to_string(right).with_context(|| format!("Filename {:?}", right))?;
         let mut same = true;
 
         if dbg!(left_c.chars().filter(|&c| c == '\n').count())
@@ -50,10 +53,7 @@ mod integrations {
         Ok(same)
     }
 
-    fn are_struct_similar_svgs(
-        left: &std::ffi::OsStr,
-        right: &std::ffi::OsStr,
-    ) -> Result<bool, std::io::Error> {
+    fn are_struct_similar_svgs(left: &std::ffi::OsStr, right: &std::ffi::OsStr) -> Result<bool> {
         // Order is important.
         let replaces = vec![
             (
