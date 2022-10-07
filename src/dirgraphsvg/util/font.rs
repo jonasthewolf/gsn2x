@@ -55,7 +55,6 @@ pub fn get_font(font_name: &str, bold: bool, italic: bool) -> Result<FontVec> {
 }
 
 pub fn text_bounding_box(font_info: &FontInfo, text: &str, bold: bool) -> (i32, i32) {
-    // let scale = font_info.font.pt_to_px_scale(font_info.size).unwrap();
     let kern = if bold {
         text.chars().count() as i32 * 4
     } else {

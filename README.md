@@ -15,6 +15,9 @@ This little program renders [Goal Structuring Notation](https://scsc.uk/gsn) in 
 </picture>
 
 Feel free to use it and please let me know. Same applies if you have feature requests, bug reports or contributions.
+    
+**You can find pre-built binaries for Windows, Linux and MacOS on the [releases page](https://github.com/jonasthewolf/gsn2x/releases).**
+
 
 ## Usage
 
@@ -23,9 +26,6 @@ You can create an SVG like this:
     gsn2x <yourgsnfile.yaml> 
 
 The output is an argument view in SVG format and automatically written to `<yourgsnfile.svg>`. If more than one input file is provided, they are treated as [modules](#modular-extension).
-
-    
-**You can find pre-built binaries for Windows, Linux and MacOS on the [releases page](https://github.com/jonasthewolf/gsn2x/releases).**
 
 ## Syntax in YAML
 
