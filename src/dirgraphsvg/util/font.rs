@@ -9,7 +9,10 @@ use glyph_brush_layout::{
     FontId, GlyphPositioner, Layout, SectionGeometry, SectionText,
 };
 
+#[cfg(any(target_os = "windows", target_os = "macos"))]
 pub static DEFAULT_FONT_FAMILY_NAME: &str = "Arial";
+#[cfg(not(any(target_os = "windows", target_os = "macos")))]
+pub static DEFAULT_FONT_FAMILY_NAME: &str = "DejaVuSans";
 
 pub struct FontInfo {
     font: FontVec,
