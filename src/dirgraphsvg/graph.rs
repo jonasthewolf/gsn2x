@@ -417,6 +417,21 @@ fn find_next_child_node<'a, 'b>(
                 (
                     // Reverse since higher values should be ranked earlier
                     std::cmp::Reverse(node_info.get(&a.0).unwrap().max_child_rank),
+                    // Rank nodes earlier if they have multiple parents
+                    std::cmp::Reverse(
+                        edges
+                            .iter()
+                            // Get already ranked parents
+                            .filter_map(|(parent, children)| {
+                                node_info.get(parent).unwrap().rank.map(|_| children)
+                            })
+                            .flatten()
+                            // See if they have a SupportedBy relation to the current child
+                            .filter(|(child, et)| {
+                                child == &a.0 && et == &EdgeType::OneWay(SingleEdge::SupportedBy)
+                            })
+                            .count(),
+                    ),
                     // Sort alphabetically next
                     a.0.to_owned(),
                 )
@@ -427,7 +442,7 @@ fn find_next_child_node<'a, 'b>(
             .filter(|(id, _)| match allow_unranked_parent {
                 false => count_unvisited_parents(node_info, id) == 0,
                 true => true, // Architecture view may contain circles.
-                              // We have to skip this this filter, otherwise we end in an endless loop.
+                              // We have to skip this filter, otherwise we end in an endless loop.
                               // We need to start ranking nodes even not all parents are drawn to break the circle.
             })
             .filter_map(|(id, et)| match et {
