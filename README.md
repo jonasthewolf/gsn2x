@@ -133,6 +133,29 @@ Please note that using `module` and passing it as a layer option will also not w
 
 It is intentional that information is only added for a view, but not hidden to ensure consistency of the GSN in all variants.
 
+## More influence on the layout of elements
+
+### Vertical placement
+
+To influence the rendered image, you can add an identifier to a GSN element with the `level` attribute. 
+All elements with the same identifier for `level` will now show up on the same vertical level. 
+
+This is especially useful, if e.g., two goals or strategies are on the same logical level, 
+but have a different "depth" in the argumentation (i.e. a different number of goals or strategies in their path to the root goal).
+
+See the [example](examples/example.gsn.yaml) for usage. The strategies S1 and S2 are on the same level.
+
+It is recommended to use `level` only for goals, since related contexts, 
+justifications and assumptions are automatically put on the same level.
+
+### Horizontal placement
+
+There can be situations (e.g. a n:m relation between goals and solutions) that lead to weird looking graphs.
+You may even encounter the following message `Rendering a diagram took too many iterations. See README.md for hints how to solve this situation.`
+
+The order of the GSN elements on the same horizontal rank can be influenced by their ID.
+The elements are sorted lexicographically. Thus, a goal `G1` if placed on the same vertical level is placed before `G2`.
+
 ## Stylesheets for SVG rendering
 
 You can provide (multiple) custom CSS stylesheets for SVG via the `-s` or `--stylesheet` options. 
@@ -157,28 +180,6 @@ G1:
   classes: [additionalclass1, additionalclass2]
 ```
 
-## Influencing layout of elements
-
-### Vertical placement
-
-To influence the rendered image, you can add an identifier to a GSN element with the `level` attribute. 
-All elements with the same identifier for `level` will now show up on the same vertical level. 
-
-This is especially useful, if e.g., two goals or strategies are on the same logical level, 
-but have a different "depth" in the argumentation (i.e. a different number of goals or strategies in their path to the root goal).
-
-See the [example](examples/example.gsn.yaml) for usage. The strategies S1 and S2 are on the same level.
-
-It is recommended to use `level` only for goals, since related contexts, 
-justifications and assumptions are automatically put on the same level.
-
-### Horizontal placement
-
-There can be situations (e.g. a n:m relation between goals and solutions) that lead to weird looking graphs.
-You may even encounter the following message `Rendering a diagram took too many iterations. See README.md for hints how to solve this situation.`
-
-The order of the GSN elements on the same horizontal rank can be influenced by their ID.
-The elements are sorted lexicographically. Thus, a goal `G1` if placed on the same vertical level is placed before `G2`.
 
 ## Modular extension
 
