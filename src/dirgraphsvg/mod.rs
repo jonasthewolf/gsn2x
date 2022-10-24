@@ -368,7 +368,15 @@ impl<'a> DirGraph<'a> {
     }
 
     ///
-    ///
+    /// Check if a child node should be moved to the right.
+    /// 
+    /// If the current node has more than one parent, center the current node.
+    /// If the current node has exactly one parent, move it directly beneath its parent.
+    /// This is exactly the same as centering to the parent nodes.
+    /// Move children that don't have own children.
+    /// 
+    /// 
+    /// Only inContext nodes can be MultipleNodes, thus, we don't need to think about them here.
     ///
     ///
     fn should_child_move(
@@ -394,6 +402,18 @@ impl<'a> DirGraph<'a> {
                         )
                     })
                     .collect();
+                // Collect all child nodes of the current_node
+                let children = self.edges.get(current_node).into_iter().flatten()
+                    .filter(|(_, et)| {
+                        matches!(
+                            et,
+                            EdgeType::OneWay(SingleEdge::SupportedBy)
+                                | EdgeType::TwoWay((_, SingleEdge::SupportedBy))
+                                | EdgeType::OneWay(SingleEdge::Composite)
+                                | EdgeType::TwoWay((_, SingleEdge::Composite))
+                        )
+                    })
+                    .count();
                 // Collect all nodes that are pointed to by the parents of current_node
                 let parents_children = parents
                     .iter()
@@ -415,6 +435,15 @@ impl<'a> DirGraph<'a> {
                     })
                     .max()
                     .unwrap_or(0);
+
+                // DEBUG DEBUG DEBUG
+                if current_node == "Sn4" {
+                    dbg!(&parents);
+                    dbg!(&parents_children);
+                    dbg!(&children);
+                }
+                // DEBUG DEBUG DEBUG
+
                 if parents.len() < parents_children {
                     None
                 } else {
@@ -435,19 +464,33 @@ impl<'a> DirGraph<'a> {
                     }
                 }
             }
-            NodePlace::MultipleNodes(_) => None,
+            NodePlace::MultipleNodes(_) => None, 
         }
     }
 
     ///
-    /// There are two cases:
-    /// 1) 1:1 => The parent (current_node) has exactly one child.
-    ///           This child has exactly current_node as its own parent.
-    ///           Move the parent if it is further to the left than its child.
-    /// 2) 1:n => The parent (current_node) has multiple children.
-    ///           It has to have more children than each child parents to be moved.
-    ///           Move the parent to the center of all (supportedBy) child nodes.
-    ///
+    /// Check if a parent node should be moved.
+    /// Since we start moving nodes to the right from the top, we need to consider the 1:1 case here.
+    /// However, especially Solutions that don't have children, but are only child nodes, have to 
+    /// be considered in `should_child_move`.
+    /// 
+    /// There are three cases:
+    /// 1) 0:_ => The node is not a parent and, thus, must not be moved here
+    /// 2) 1:1 => The parent (current_node) has exactly one child.
+    ///           If this child has exactly current_node as its own parent,
+    ///           move the parent to the center of its (supportedBy) child node.
+    ///           This case is no different than the 1:n case.
+    /// 3) 1:n => The parent (current_node) has multiple children.
+    ///           If any of the children has another parent, left align the parent.
+    ///           If all children only have this node as parent, 
+    ///           move the parent to the center of all (supportedBy) child nodes.
+    /// 
+    /// TODO FIX implementation to follow the design above.
+    /// 
+    /// We only need to consider single nodes (NodePlace::Node), because
+    /// MultipleNode cannot be supportedBy nodes. They are only inContext nodes.
+    /// 
+    /// 
     fn should_parent_move(
         &self,
         node_place: &NodePlace,
@@ -455,17 +498,12 @@ impl<'a> DirGraph<'a> {
     ) -> Option<i32> {
         match node_place {
             NodePlace::Node(current_node) => {
-                // Collect all children
-                let cur_edges: Vec<&(String, EdgeType)> = self
+                // Collect all supportedBy children
+                let supby_children = self
                     .edges
                     .get(current_node)
-                    .iter()
-                    .cloned()
+                    .into_iter()
                     .flatten()
-                    .collect();
-                // Filter them for supportedBy nodes
-                let supby_children = cur_edges
-                    .iter()
                     .filter_map(|(c, et)| match et {
                         EdgeType::OneWay(SingleEdge::SupportedBy)
                         | EdgeType::TwoWay((_, SingleEdge::SupportedBy))
@@ -479,6 +517,7 @@ impl<'a> DirGraph<'a> {
                     1 => {
                         // Exactly one child
                         let child = *supby_children.first().unwrap();
+                        // Count the number of parents the one child node has
                         let child_num_parents = edge_map
                             .get(child)
                             .unwrap()
@@ -511,7 +550,8 @@ impl<'a> DirGraph<'a> {
                     _ =>
                     // More than one child
                     {
-                        let childrens_parent = supby_children
+                        // Count the maximum number of parents the children of the current nodes have.
+                        let num_parents_of_children = supby_children
                             .iter()
                             .map(|&child| {
                                 edge_map
@@ -531,7 +571,7 @@ impl<'a> DirGraph<'a> {
                             })
                             .max()
                             .unwrap();
-                        if childrens_parent > supby_children.len() {
+                        if num_parents_of_children > 1 {
                             None
                         } else {
                             let mm: Vec<i32> = supby_children
@@ -552,7 +592,7 @@ impl<'a> DirGraph<'a> {
                     }
                 }
             }
-            NodePlace::MultipleNodes(_) => None, // MultipleNode cannot be supportedBy nodes
+            NodePlace::MultipleNodes(_) => None, 
         }
     }
 
