@@ -438,7 +438,9 @@ impl<'a> DirGraph<'a> {
                             .count()
                     })
                     .max()
-                    .unwrap_or(0);
+                    .unwrap_or(0); 
+                
+                // TODO Don't move child if parent only has children that don't have other parents
 
                 if children != 0 && parents.len() < parents_children {
                     None
