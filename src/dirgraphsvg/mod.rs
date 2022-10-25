@@ -199,7 +199,7 @@ impl<'a> DirGraph<'a> {
         // Iteratively move nodes horizontally until no movement detected
         let mut first_run = true;
 
-        const LIMIT: i32 = 150; // Arbitrary value
+        const LIMIT: i32 = 150; // Arbitrary value (TODO consider using number of nodes squared)
         for limiter in 1..=LIMIT {
             let mut changed = false;
             let mut y = self.margin.top;
@@ -369,13 +369,13 @@ impl<'a> DirGraph<'a> {
 
     ///
     /// Check if a child node should be moved to the right.
-    /// 
+    ///
     /// If the current node has more than one parent, center the current node.
     /// If the current node has exactly one parent, move it directly beneath its parent.
     /// This is exactly the same as centering to the parent nodes.
     /// Move children that don't have own children.
-    /// 
-    /// 
+    ///
+    ///
     /// Only inContext nodes can be MultipleNodes, thus, we don't need to think about them here.
     ///
     ///
@@ -387,7 +387,7 @@ impl<'a> DirGraph<'a> {
         match node_place {
             NodePlace::Node(current_node) => {
                 // Collect all nodes pointing to current_node
-                let parents: Vec<&(String, EdgeType)> = edge_map
+                let parents = edge_map
                     .get(current_node)
                     .iter()
                     .cloned()
@@ -401,9 +401,13 @@ impl<'a> DirGraph<'a> {
                                 | EdgeType::TwoWay((_, SingleEdge::Composite))
                         )
                     })
-                    .collect();
+                    .collect::<Vec<&(String, EdgeType)>>();
                 // Collect all child nodes of the current_node
-                let children = self.edges.get(current_node).into_iter().flatten()
+                let children = self
+                    .edges
+                    .get(current_node)
+                    .into_iter()
+                    .flatten()
                     .filter(|(_, et)| {
                         matches!(
                             et,
@@ -436,15 +440,7 @@ impl<'a> DirGraph<'a> {
                     .max()
                     .unwrap_or(0);
 
-                // DEBUG DEBUG DEBUG
-                if current_node == "Sn4" {
-                    dbg!(&parents);
-                    dbg!(&parents_children);
-                    dbg!(&children);
-                }
-                // DEBUG DEBUG DEBUG
-
-                if parents.len() < parents_children {
+                if children != 0 && parents.len() < parents_children {
                     None
                 } else {
                     let mm: Vec<i32> = parents
@@ -464,33 +460,22 @@ impl<'a> DirGraph<'a> {
                     }
                 }
             }
-            NodePlace::MultipleNodes(_) => None, 
+            NodePlace::MultipleNodes(_) => None,
         }
     }
 
     ///
     /// Check if a parent node should be moved.
     /// Since we start moving nodes to the right from the top, we need to consider the 1:1 case here.
-    /// However, especially Solutions that don't have children, but are only child nodes, have to 
+    /// However, especially Solutions that don't have children, but are only child nodes, have to
     /// be considered in `should_child_move`.
-    /// 
-    /// There are three cases:
-    /// 1) 0:_ => The node is not a parent and, thus, must not be moved here
-    /// 2) 1:1 => The parent (current_node) has exactly one child.
-    ///           If this child has exactly current_node as its own parent,
-    ///           move the parent to the center of its (supportedBy) child node.
-    ///           This case is no different than the 1:n case.
-    /// 3) 1:n => The parent (current_node) has multiple children.
-    ///           If any of the children has another parent, left align the parent.
-    ///           If all children only have this node as parent, 
-    ///           move the parent to the center of all (supportedBy) child nodes.
-    /// 
-    /// TODO FIX implementation to follow the design above.
-    /// 
+    ///
+    /// If node has children center them over all nodes that only have this one as parent.
+    ///
     /// We only need to consider single nodes (NodePlace::Node), because
     /// MultipleNode cannot be supportedBy nodes. They are only inContext nodes.
-    /// 
-    /// 
+    ///
+    ///
     fn should_parent_move(
         &self,
         node_place: &NodePlace,
@@ -504,6 +489,24 @@ impl<'a> DirGraph<'a> {
                     .get(current_node)
                     .into_iter()
                     .flatten()
+                    // Filter children that have more than one parent
+                    .filter(|(c, _)| {
+                        edge_map
+                            .get(c)
+                            .unwrap()
+                            .iter()
+                            .filter(|(_, et)| {
+                                matches!(
+                                    et,
+                                    EdgeType::OneWay(SingleEdge::SupportedBy)
+                                        | EdgeType::TwoWay((_, SingleEdge::SupportedBy))
+                                        | EdgeType::OneWay(SingleEdge::Composite)
+                                        | EdgeType::TwoWay((_, SingleEdge::Composite))
+                                )
+                            })
+                            .count()
+                            == 1
+                    })
                     .filter_map(|(c, et)| match et {
                         EdgeType::OneWay(SingleEdge::SupportedBy)
                         | EdgeType::TwoWay((_, SingleEdge::SupportedBy))
@@ -511,88 +514,20 @@ impl<'a> DirGraph<'a> {
                         | EdgeType::TwoWay((_, SingleEdge::Composite)) => Some(c.as_str()),
                         _ => None,
                     })
-                    .collect::<Vec<&str>>();
-                match supby_children.len() {
-                    0 => None, // Node is actually not a parent and, thus, should not be moved here
-                    1 => {
-                        // Exactly one child
-                        let child = *supby_children.first().unwrap();
-                        // Count the number of parents the one child node has
-                        let child_num_parents = edge_map
-                            .get(child)
-                            .unwrap()
-                            .iter()
-                            .filter(|(_, ct)| {
-                                matches!(
-                                    ct,
-                                    EdgeType::OneWay(SingleEdge::SupportedBy)
-                                        | EdgeType::TwoWay((_, SingleEdge::SupportedBy))
-                                        | EdgeType::OneWay(SingleEdge::Composite)
-                                        | EdgeType::TwoWay((_, SingleEdge::Composite))
-                                )
-                            })
-                            .count();
-                        // let x_parent = self
-                        //     .nodes
-                        //     .get(current_node)
-                        //     .unwrap()
-                        //     .borrow()
-                        //     .get_position()
-                        //     .x;
-                        let x_child = self.nodes.get(child).unwrap().borrow().get_position().x;
-                        if child_num_parents > 1 {
-                            None
-                        } else {
-                            // eprintln!("Parent {} of single node {} should move to {}", current_node, child, x_child);
-                            Some(x_child)
-                        }
-                    }
-                    _ =>
-                    // More than one child
-                    {
-                        // Count the maximum number of parents the children of the current nodes have.
-                        let num_parents_of_children = supby_children
-                            .iter()
-                            .map(|&child| {
-                                edge_map
-                                    .get(child)
-                                    .unwrap()
-                                    .iter()
-                                    .filter(|(_, ct)| {
-                                        matches!(
-                                            ct,
-                                            EdgeType::OneWay(SingleEdge::SupportedBy)
-                                                | EdgeType::TwoWay((_, SingleEdge::SupportedBy))
-                                                | EdgeType::OneWay(SingleEdge::Composite)
-                                                | EdgeType::TwoWay((_, SingleEdge::Composite))
-                                        )
-                                    })
-                                    .count()
-                            })
-                            .max()
-                            .unwrap();
-                        if num_parents_of_children > 1 {
-                            None
-                        } else {
-                            let mm: Vec<i32> = supby_children
-                                .iter()
-                                .map(|&child| {
-                                    self.nodes.get(child).unwrap().borrow().get_position().x
-                                })
-                                .collect();
-                            if mm.is_empty() {
-                                None
-                            } else {
-                                let min = mm.iter().min().unwrap();
-                                let max = mm.iter().max().unwrap();
-                                // eprintln!("Parent {} of nodes {} should move to {}", current_node, supby_children.join(","), (min+max)/2);
-                                Some((min + max) / 2)
-                            }
-                        }
-                    }
+                    // Map to their current x position
+                    .map(|child| self.nodes.get(child).unwrap().borrow().get_position().x)
+                    .collect::<Vec<i32>>();
+                
+                if supby_children.is_empty() {
+                    None // Node is actually not a parent and, thus, should not be moved here
+                } else {
+                    let min = supby_children.iter().min().unwrap();
+                    let max = supby_children.iter().max().unwrap();
+                    // eprintln!("Parent {} should move to {}", current_node, (min+max)/2);
+                    Some((min + max) / 2)
                 }
             }
-            NodePlace::MultipleNodes(_) => None, 
+            NodePlace::MultipleNodes(_) => None,
         }
     }
 
