@@ -593,8 +593,8 @@ fn previous_node_with_connection(
 }
 
 ///
-///
-///
+/// `edges` is a map of parent node id to a vector of edges (child, type)
+/// The returned parent map is a map of child node it to a vector of edges (parent, type)
 ///
 ///
 pub fn calculate_parent_edge_map(
