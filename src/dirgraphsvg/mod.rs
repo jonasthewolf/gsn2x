@@ -190,13 +190,12 @@ impl<'a> DirGraph<'a> {
     }
 
     ///
-    ///
+    /// Iteratively move nodes horizontally until no movement detected
     ///  
     ///
     fn render_nodes(mut self, ranks: &BTreeMap<usize, BTreeMap<usize, NodePlace>>) -> Self {
         // Generate edge map from children to parents
         let edge_map = calculate_parent_edge_map(&self.edges);
-        // Iteratively move nodes horizontally until no movement detected
         let mut first_run = true;
 
         // This number should be safe that it yields a final, good looking image
@@ -269,7 +268,7 @@ impl<'a> DirGraph<'a> {
     }
 
     ///
-    /// Must node me moved to create a better looking diagram?
+    /// Must node be moved to create a better looking diagram?
     ///
     /// Check if it should be moved, since it is an inContext node.
     /// Then check if it should be moved, since it is in a parent role.
@@ -462,7 +461,8 @@ impl<'a> DirGraph<'a> {
                             .map(|(c, _)| c)
                     })
                     .collect::<Vec<&String>>();
-                // Do the children of the current node's parents have other nodes?
+                // Do the children of the current node's parents have other nodes as parents?
+                // true means they have other parents
                 let parents_children_parents = parents_children
                     .iter()
                     .flat_map(|&c| {
@@ -483,12 +483,25 @@ impl<'a> DirGraph<'a> {
                     })
                     .any(|p| !parents.contains(&p));
 
+                // Get the parents minimum position and all the children of those parents maximum
+                let parents_min_x = parents
+                    .iter()
+                    .map(|&p| self.nodes.get(p).unwrap().borrow().get_position().x)
+                    .min()
+                    .unwrap_or(0);
+                let child_xs = parents_children
+                    .iter()
+                    .map(|&p| self.nodes.get(p).unwrap().borrow().get_position().x)
+                    .collect::<Vec<i32>>();
+                let child_x_max = *child_xs.iter().max().unwrap_or(&0);
+
                 // Move child if there are equal or more parents than children of the current node's parents
                 // Or move child if parent has children that have other parents
                 // (In other words: Don't move child if parent only has children that don't have other parents)
-
+                // Of if parent is already move so far to the right that all children are more to the left than their parents
                 if parents.len() >= parents_max_children
                     || (children == 0 && parents_children_parents)
+                    || (children == 0 && parents_min_x > child_x_max)
                 {
                     let mm: Vec<i32> = parents
                         .iter()
