@@ -1,7 +1,7 @@
 use crate::dirgraphsvg::edges::EdgeType;
 use crate::dirgraphsvg::{escape_node_id, escape_text, nodes::*};
 use crate::gsn::{get_levels, GsnNode, Module};
-use anyhow::Result;
+use anyhow::{anyhow, Result};
 use chrono::Utc;
 use clap::ArgMatches;
 use std::cell::RefCell;
@@ -175,10 +175,10 @@ pub fn away_svg_from_gsn_node(
     module: &Module,
     source_module: &Module,
     layers: &[String],
-) -> Rc<RefCell<dyn crate::dirgraphsvg::nodes::Node>> {
+) -> Result<Rc<RefCell<dyn crate::dirgraphsvg::nodes::Node>>> {
     let classes = node_classes_from_node(gsn_node);
 
-    let mut module_url = get_relative_module_url(&module.filename, &source_module.filename);
+    let mut module_url = get_relative_module_url(&module.filename, &source_module.filename)?;
     module_url.push('#');
     module_url.push_str(&escape_node_id(id));
 
@@ -186,7 +186,7 @@ pub fn away_svg_from_gsn_node(
     let node_text = node_text_from_node_and_layers(gsn_node, layers);
 
     // Create node
-    match id {
+    Ok(match id {
         id if id.starts_with('G') => new_away_goal(
             id,
             &node_text,
@@ -235,16 +235,18 @@ pub fn away_svg_from_gsn_node(
             classes,
         ),
         _ => unreachable!(), // Prefixes are checked during validation.
-    }
+    })
 }
 
 ///
 ///
 ///
-fn get_relative_module_url(target: &str, source: &str) -> String {
-    let source_canon = std::path::PathBuf::from(&source).canonicalize().unwrap();
-    let source_canon = source_canon.parent().unwrap();
-    let target_canon = std::path::PathBuf::from(&target).canonicalize().unwrap();
+fn get_relative_module_url(target: &str, source: &str) -> Result<String> {
+    let source_canon = std::path::PathBuf::from(&source).canonicalize()?;
+    let source_canon = source_canon
+        .parent()
+        .ok_or_else(|| anyhow!("No parent for {}", source))?;
+    let target_canon = std::path::PathBuf::from(&target).canonicalize()?;
     let source_comps: Vec<Component> = source_canon.components().collect();
     let mut source_comps_iter = source_comps.iter();
     let target_comps = target_canon.components();
@@ -257,8 +259,8 @@ fn get_relative_module_url(target: &str, source: &str) -> String {
         _ => unreachable!(),
     };
     diff_comps.set_extension("svg");
-    prefix.push_str(diff_comps.to_str().unwrap());
-    prefix
+    prefix.push_str(&diff_comps.to_string_lossy());
+    Ok(prefix)
 }
 
 ///
@@ -285,7 +287,7 @@ pub fn render_architecture(
                         .and_then(|m| m.brief.to_owned())
                         .unwrap_or_else(|| "".to_owned())
                         .as_str(),
-                    Some(get_relative_module_url(&module.filename, &module.filename)),
+                    get_relative_module_url(&module.filename, &module.filename).ok(),
                     vec![],
                 ) as Rc<RefCell<dyn Node>>,
             )
@@ -393,18 +395,19 @@ pub fn render_argument(
             .iter()
             .filter(|(_, node)| node.module != module_name)
             .map(|(id, node)| {
-                (
+                Ok((
                     id.to_owned(),
                     away_svg_from_gsn_node(
                         id,
                         node,
+                        // unwraps are ok, since node.module and modules are consistently created
                         modules.get(&node.module).unwrap(),
                         modules.get(module_name).unwrap(),
                         &render_options.layers,
-                    ),
-                )
+                    )?,
+                ))
             })
-            .collect(),
+            .collect::<Result<BTreeMap<_, _>>>()?,
     );
 
     let mut edges: BTreeMap<String, Vec<(String, EdgeType)>> = nodes
@@ -416,6 +419,7 @@ pub fn render_argument(
                     .into_iter()
                     .filter(|(target, _)| {
                         !(node.module != module_name
+                            // unwrap is ok, since all references are checked at the beginning
                             && nodes.get(target).unwrap().module != module_name)
                     })
                     .collect::<Vec<(String, EdgeType)>>(),
@@ -427,6 +431,7 @@ pub fn render_argument(
     svg_nodes.retain(|id, _| {
         edges.contains_key(id)
             || edges.values().flatten().any(|(x, _)| x == id)
+            // unwrap is ok, since all references are checked at the beginning
             || nodes.get(id).unwrap().module == module_name
     });
 
@@ -446,10 +451,10 @@ pub fn render_argument(
     // Add meta information if requested
     if render_options.legend != RenderLegend::No {
         let mut meta_info = vec![format!("Generated on: {}", Utc::now())];
-        if let Some(meta) = &modules.get(module_name).unwrap().meta {
+        if let Some(Some(meta)) = &modules.get(module_name).map(|x| &x.meta) {
             meta_info.insert(0, format!("Module: {}", meta.name));
-            if meta.brief.is_some() {
-                meta_info.insert(1, meta.brief.as_deref().unwrap().to_owned());
+            if let Some(brief) = &meta.brief {
+                meta_info.insert(1, brief.to_owned());
             }
             if render_options.legend == RenderLegend::Full {
                 let add = format!("{:?}", meta.additional);

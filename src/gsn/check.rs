@@ -43,7 +43,7 @@ fn check_root_nodes(
             );
         }
         x if x == 1 => {
-            let rootn = root_nodes.get(0).unwrap();
+            let rootn = root_nodes.get(0).unwrap(); // unwrap is ok, since we just checked that there is an element in Vec
             if !rootn.starts_with('G') {
                 diag.add_error(
                     None,
@@ -139,7 +139,7 @@ fn check_cycles(diag: &mut Diagnostics, nodes: &BTreeMap<String, GsnNode>) {
         // Increase depth if current node has children that are not Solutions
         if nodes
             .get(&p_id)
-            .unwrap()
+            .unwrap() // unwrap is ok, since all references have been checked already
             .supported_by
             .iter()
             .flatten()
@@ -160,6 +160,7 @@ fn check_cycles(diag: &mut Diagnostics, nodes: &BTreeMap<String, GsnNode>) {
             .for_each(|x| {
                 visited.insert(x.to_owned());
             });
+        // unwrap is ok, since all references have been checked already
         for child_node in nodes.get(&p_id).unwrap().supported_by.iter().flatten() {
             // Remember the solutions for reachability analysis.
             visited.insert(child_node.to_owned());
@@ -174,7 +175,7 @@ fn check_cycles(diag: &mut Diagnostics, nodes: &BTreeMap<String, GsnNode>) {
                             &ancestors
                                 .rsplit(|x| x == child_node)
                                 .next()
-                                .unwrap()
+                                .unwrap() // unwrap is ok, since it is checked above that `ancestors` contains `child_node`
                                 .join(" -> "),
                             child_node
                         ),

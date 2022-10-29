@@ -18,6 +18,12 @@ pub enum NodePlace {
 }
 
 impl NodePlace {
+    ///
+    /// Get (maximum) width of NodePlace
+    ///
+    /// Panics if a node in NodePlace does not exist or if NodePlace with multiple nodes is empty.
+    ///
+    ///
     pub(crate) fn get_max_width(&self, nodes: &BTreeMap<String, Rc<RefCell<dyn Node>>>) -> i32 {
         match self {
             NodePlace::Node(n) => nodes.get(n).unwrap().borrow().get_width(),
@@ -39,16 +45,10 @@ impl NodePlace {
         margin: &Margin,
         pos: Point2D,
     ) {
+        // Unwraps are ok, since NodePlace are only created from existing nodes
         match self {
             NodePlace::Node(id) => {
                 let mut n = nodes.get(id).unwrap().borrow_mut();
-                // let old_pos = n.get_position();
-                // if old_pos != pos {
-                //     eprintln!(
-                //         "Set pos of {}: from {},{} to {},{}",
-                //         id, old_pos.x, old_pos.y, pos.x, pos.y
-                //     );
-                // }
                 n.set_position(&pos);
             }
             NodePlace::MultipleNodes(ids) => {
@@ -71,7 +71,15 @@ impl NodePlace {
         }
     }
 
+    ///
+    /// Get x value of NodePlace
+    ///
+    /// MultipleNodes have the same x, thus, just the value of the first node is used.
+    /// MultipleNodes are never empty.
+    ///
+    ///
     pub(crate) fn get_x(&self, nodes: &BTreeMap<String, Rc<RefCell<dyn Node>>>) -> i32 {
+        // Unwraps are ok, since NodePlace are only created from existing nodes
         match self {
             NodePlace::Node(n) => {
                 let n = nodes.get(n).unwrap().borrow();

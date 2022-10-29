@@ -199,6 +199,7 @@ fn add_dependencies(
     dep_type: SingleEdge,
 ) {
     for child in children {
+        // Unwrap is ok, since node names in `nodes` always exist
         let other_module = &nodes.get(child).unwrap().module;
         if &cur_node.module != other_module {
             let oneway = dependencies
@@ -220,13 +221,15 @@ fn add_dependencies(
                 normal_dir = false;
             } else {
                 // What about both true? Cannot happen, since we covered this in the match statement below.
-                // Both none
+                // Here, both are false
                 let e = dependencies
                     .entry(cur_node.module.to_owned())
                     .or_insert(BTreeMap::new());
                 e.entry(other_module.to_owned())
                     .or_insert(EdgeType::OneWay(dep_type));
             }
+            // unwrap is ok, since oneway_module is either newly inserted (else-case above),
+            // or found in `dependencies` before the if-else if-else.
             let e = dependencies.get_mut(oneway_module).unwrap();
             e.entry(otherway_module.to_owned())
                 .and_modify(|x| {
