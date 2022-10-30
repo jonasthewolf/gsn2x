@@ -81,7 +81,7 @@ mod integrations {
     }
 
     #[test]
-    fn file_doesnt_exist() -> Result<(), Box<dyn std::error::Error>> {
+    fn file_doesnt_exist() -> Result<()> {
         let mut cmd = Command::cargo_bin("gsn2x")?;
         cmd.arg("test/file/doesnt/exist");
         cmd.assert()
@@ -91,7 +91,7 @@ mod integrations {
     }
 
     #[test]
-    fn argument_view() -> Result<(), Box<dyn std::error::Error>> {
+    fn argument_view() -> Result<()> {
         let mut cmd = Command::cargo_bin("gsn2x")?;
         let temp = assert_fs::TempDir::new()?;
         temp.copy_from("examples", &["example.gsn.yaml"])?;
@@ -108,7 +108,7 @@ mod integrations {
     }
 
     #[test]
-    fn validate_multiple_only() -> Result<(), Box<dyn std::error::Error>> {
+    fn validate_multiple_only() -> Result<()> {
         let mut cmd = Command::cargo_bin("gsn2x")?;
         cmd.arg("-c")
             .arg("examples/modular/main.gsn.yaml")
@@ -122,7 +122,7 @@ mod integrations {
     }
 
     #[test]
-    fn validate_multiple_only_error() -> Result<(), Box<dyn std::error::Error>> {
+    fn validate_multiple_only_error() -> Result<()> {
         let mut cmd = Command::cargo_bin("gsn2x")?;
         cmd.arg("-c")
             .arg("examples/modular/main.gsn.yaml")
@@ -134,7 +134,7 @@ mod integrations {
     }
 
     #[test]
-    fn validate_multiple_only_error_exclude() -> Result<(), Box<dyn std::error::Error>> {
+    fn validate_multiple_only_error_exclude() -> Result<()> {
         let mut cmd = Command::cargo_bin("gsn2x")?;
         cmd.arg("-c")
             .arg("examples/modular/main.gsn.yaml")
@@ -148,7 +148,7 @@ mod integrations {
     }
 
     #[test]
-    fn validate_template_instance() -> Result<(), Box<dyn std::error::Error>> {
+    fn validate_template_instance() -> Result<()> {
         let mut cmd = Command::cargo_bin("gsn2x")?;
         cmd.arg("-c")
             .arg("examples/template/template.gsn.yaml")
@@ -158,7 +158,7 @@ mod integrations {
     }
 
     #[test]
-    fn validate_template_invalid_instance1() -> Result<(), Box<dyn std::error::Error>> {
+    fn validate_template_invalid_instance1() -> Result<()> {
         let mut cmd = Command::cargo_bin("gsn2x")?;
         cmd.arg("-c")
             .arg("examples/template/template.gsn.yaml")
@@ -170,7 +170,7 @@ mod integrations {
     }
 
     #[test]
-    fn validate_template_invalid_instance2() -> Result<(), Box<dyn std::error::Error>> {
+    fn validate_template_invalid_instance2() -> Result<()> {
         let mut cmd = Command::cargo_bin("gsn2x")?;
         cmd.arg("-c")
             .arg("examples/template/template.gsn.yaml")
@@ -182,7 +182,7 @@ mod integrations {
     }
 
     #[test]
-    fn validate_template_invalid_instance3() -> Result<(), Box<dyn std::error::Error>> {
+    fn validate_template_invalid_instance3() -> Result<()> {
         let mut cmd = Command::cargo_bin("gsn2x")?;
         cmd.arg("-c")
             .arg("examples/template/template.gsn.yaml")
@@ -194,7 +194,7 @@ mod integrations {
     }
 
     #[test]
-    fn validate_template_invalid_instance4() -> Result<(), Box<dyn std::error::Error>> {
+    fn validate_template_invalid_instance4() -> Result<()> {
         let mut cmd = Command::cargo_bin("gsn2x")?;
         cmd.arg("-c")
             .arg("examples/template/template.gsn.yaml")
@@ -206,7 +206,7 @@ mod integrations {
     }
 
     #[test]
-    fn no_evidences() -> Result<(), Box<dyn std::error::Error>> {
+    fn no_evidences() -> Result<()> {
         let mut cmd = Command::cargo_bin("gsn2x")?;
         let evidence_file = assert_fs::NamedTempFile::new("evidences.md")?;
         cmd.arg("-N")
@@ -227,7 +227,7 @@ mod integrations {
     }
 
     #[test]
-    fn some_evidences() -> Result<(), Box<dyn std::error::Error>> {
+    fn some_evidences() -> Result<()> {
         let mut cmd = Command::cargo_bin("gsn2x")?;
         let evidence_file = assert_fs::NamedTempFile::new("evidences.md")?;
         cmd.arg("-e")
@@ -250,7 +250,7 @@ mod integrations {
     }
 
     #[test]
-    fn arch_view() -> Result<(), Box<dyn std::error::Error>> {
+    fn arch_view() -> Result<()> {
         let mut cmd = Command::cargo_bin("gsn2x")?;
         let temp = assert_fs::TempDir::new()?.into_persistent();
         temp.copy_from("examples/modular", &["*.yaml"])?;
@@ -275,7 +275,7 @@ mod integrations {
     }
 
     #[test]
-    fn multiple_view() -> Result<(), Box<dyn std::error::Error>> {
+    fn multiple_view() -> Result<()> {
         let mut cmd = Command::cargo_bin("gsn2x")?;
         let temp = assert_fs::TempDir::new()?.into_persistent();
         temp.copy_from("examples/modular", &["*.yaml"])?;
@@ -312,7 +312,7 @@ mod integrations {
     }
 
     #[test]
-    fn complete_view() -> Result<(), Box<dyn std::error::Error>> {
+    fn complete_view() -> Result<()> {
         let mut cmd = Command::cargo_bin("gsn2x")?;
         let temp = assert_fs::TempDir::new()?.into_persistent();
         temp.copy_from("examples/modular", &["*.yaml"])?;
@@ -335,4 +335,38 @@ mod integrations {
         temp.close()?;
         Ok(())
     }
+
+    #[test]
+    fn empty_input() -> Result<()> {
+        let mut cmd = Command::cargo_bin("gsn2x")?;
+        cmd.arg("tests/empty.yaml");
+        cmd.assert()
+            .failure()
+            .stderr(predicate::str::contains("Error: No input elements found"));
+        Ok(())
+    }
+
+    
+
+    #[test]
+    fn invalid_input1() -> Result<()> {
+        let mut cmd = Command::cargo_bin("gsn2x")?;
+        cmd.arg("tests/invalid1.yaml");
+        cmd.assert()
+            .failure()
+            .stderr(predicate::str::contains("Error: Failed to parse YAML from file"));
+        Ok(())
+    }
+
+    #[test]
+    fn invalid_input2() -> Result<()> {
+        let mut cmd = Command::cargo_bin("gsn2x")?;
+        cmd.arg("tests/invalid2.yaml");
+        cmd.assert()
+            .failure()
+            .stderr(predicate::str::contains("Error: Failed to parse YAML from file"));
+        Ok(())
+    }
+
+
 }
