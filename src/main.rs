@@ -167,9 +167,10 @@ fn main() -> Result<()> {
     let matches = app.get_matches();
     let inputs: Vec<&str> = matches
         .get_many::<String>("INPUT")
-        .unwrap()
+        .into_iter()
+        .flatten()
         .map(AsRef::as_ref)
-        .collect(); // unwrap is ok, since inputs are required.
+        .collect();
     let layers = matches
         .get_many::<String>("LAYERS")
         .into_iter()
@@ -225,7 +226,9 @@ fn read_inputs(
                      This typically means that the YAML is completely invalid, or \n\
                      the `text:` attribute is missing for an element.\n\
                      Original error message: {}.",
-                    e.location().unwrap().line(),
+                    e.location()
+                        .map(|e| e.line().to_string())
+                        .unwrap_or_else(|| "unknown".to_owned()),
                     e
                 ))
             })
@@ -260,7 +263,7 @@ fn read_inputs(
                     "C06: Module name {} in {} was already present in {}.",
                     module,
                     input,
-                    modules.get(&module).unwrap().filename
+                    modules.get(&module).unwrap().filename // unwrap is ok, otherwise Entry would not have been Vacant
                 ),
             );
         }
@@ -285,7 +288,7 @@ fn read_inputs(
                             "C07: Element {} in {} was already present in {}.",
                             k,
                             input,
-                            nodes.get(&k).unwrap().module
+                            nodes.get(&k).unwrap().module // unwrap is ok, otherwise Entry would not have been Vacant
                         ),
                     );
                     break;
@@ -391,7 +394,7 @@ fn print_outputs(
         }
     }
     if !render_options.skip_evidences {
-        // TODO Check unwrap
+        // Unwrap is ok, since `modules` contains at least one module
         let pbuf = std::path::PathBuf::from(&modules.iter().next().unwrap().1.filename)
             .with_file_name("evidences.md");
         let output_filename = render_options
