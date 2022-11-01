@@ -463,25 +463,25 @@ impl<'a> DirGraph<'a> {
                     .collect::<Vec<&String>>();
                 // Do the children of the current node's parents have other nodes as parents?
                 // true means they have other parents
-                let parents_children_parents = parents_children
-                    .iter()
-                    .flat_map(|&c| {
-                        edge_map
-                            .get(c)
-                            .into_iter()
-                            .flatten()
-                            .filter(|(_, et)| {
-                                matches!(
-                                    et,
-                                    EdgeType::OneWay(SingleEdge::SupportedBy)
-                                        | EdgeType::TwoWay((_, SingleEdge::SupportedBy))
-                                        | EdgeType::OneWay(SingleEdge::Composite)
-                                        | EdgeType::TwoWay((_, SingleEdge::Composite))
-                                )
-                            })
-                            .map(|(p, _)| p)
-                    })
-                    .any(|p| !parents.contains(&p));
+                // let parents_children_parents = parents_children
+                //     .iter()
+                //     .flat_map(|&c| {
+                //         edge_map
+                //             .get(c)
+                //             .into_iter()
+                //             .flatten()
+                //             .filter(|(_, et)| {
+                //                 matches!(
+                //                     et,
+                //                     EdgeType::OneWay(SingleEdge::SupportedBy)
+                //                         | EdgeType::TwoWay((_, SingleEdge::SupportedBy))
+                //                         | EdgeType::OneWay(SingleEdge::Composite)
+                //                         | EdgeType::TwoWay((_, SingleEdge::Composite))
+                //                 )
+                //             })
+                //             .map(|(p, _)| p)
+                //     })
+                //     .any(|p| !parents.contains(&p));
 
                 // Get the parents minimum position and all the children of those parents maximum
                 let parents_min_x = parents
@@ -500,7 +500,7 @@ impl<'a> DirGraph<'a> {
                 // (In other words: Don't move child if parent only has children that don't have other parents)
                 // Of if parent is already move so far to the right that all children are more to the left than their parents
                 if parents.len() >= parents_max_children
-                    || (children == 0 && parents_children_parents)
+                    // || (children == 0 && parents_children_parents)
                     || (children == 0 && parents_min_x > child_x_max)
                 {
                     let mm: Vec<i32> = parents
