@@ -346,15 +346,13 @@ mod integrations {
         Ok(())
     }
 
-    
-
     #[test]
     fn invalid_input1() -> Result<()> {
         let mut cmd = Command::cargo_bin("gsn2x")?;
         cmd.arg("tests/invalid1.yaml");
-        cmd.assert()
-            .failure()
-            .stderr(predicate::str::contains("Error: Failed to parse YAML from file"));
+        cmd.assert().failure().stderr(predicate::str::contains(
+            "Error: Failed to parse YAML from file",
+        ));
         Ok(())
     }
 
@@ -362,11 +360,9 @@ mod integrations {
     fn invalid_input2() -> Result<()> {
         let mut cmd = Command::cargo_bin("gsn2x")?;
         cmd.arg("tests/invalid2.yaml");
-        cmd.assert()
-            .failure()
-            .stderr(predicate::str::contains("Error: Failed to parse YAML from file"));
+        cmd.assert().failure().stderr(predicate::str::contains(
+            "Error: Failed to parse YAML from file",
+        ));
         Ok(())
     }
-
-
 }

@@ -142,9 +142,14 @@ impl<'a> NodeInfoMap<'a> {
             }
         }
 
-        node_info.find_ranks(nodes, edges, root_nodes);
-        node_info.constrain_by_forced_levels(nodes, edges, forced_levels);
-        node_info.set_max_child_rank();
+        loop {
+            let changed = node_info.find_ranks(nodes, edges, root_nodes);
+            node_info.constrain_by_forced_levels(nodes, edges, forced_levels);
+            node_info.set_max_child_rank();
+            if !changed {
+                break;
+            }
+        }
         node_info
     }
 
@@ -204,9 +209,9 @@ impl<'a> NodeInfoMap<'a> {
         loop {
             let mut changed = false;
             for ni in self.0.values() {
-                for parent in &ni.parents {
+                for &parent in &ni.parents {
                     max_map
-                        .entry(parent.to_owned())
+                        .entry(parent)
                         .and_modify(|v| {
                             let v_prev = *v;
                             *v = std::cmp::max(*v, ni.max_child_rank);
@@ -228,12 +233,19 @@ impl<'a> NodeInfoMap<'a> {
 
     ///
     ///
+    /// Returns true if rank has changed
     ///
-    ///
-    fn set_rank(&mut self, current_node: &str, current_rank: usize) {
+    fn set_rank(&mut self, current_node: &str, current_rank: usize) -> bool {
+        let mut changed = false;
         self.0.entry(current_node.to_owned()).and_modify(|v| {
-            v.rank = Some(current_rank);
+            if v.rank == Some(current_rank) {
+                changed = false;
+            } else {
+                v.rank = Some(current_rank);
+                changed = true;
+            }
         });
+        changed
     }
 
     ///
@@ -267,14 +279,15 @@ impl<'a> NodeInfoMap<'a> {
 
     ///
     ///
-    ///
+    /// Returns true if any rank has changed.
     ///
     fn find_ranks(
         &mut self,
         nodes: &BTreeMap<String, Rc<RefCell<dyn Node>>>,
         edges: &BTreeMap<String, Vec<(String, EdgeType)>>,
         root_nodes: &[&str],
-    ) {
+    ) -> bool {
+        let mut changed = false;
         for &root_node in root_nodes.iter() {
             self.set_rank(root_node, 0);
             let mut stack = vec![root_node];
@@ -288,13 +301,14 @@ impl<'a> NodeInfoMap<'a> {
                     self.set_rank(current_node, current_rank);
                     stack.push(current_node);
                     self.visit_node(child_node);
-                    current_rank = determine_child_rank(&self.0, child_node, current_rank);
-                    self.set_rank(child_node, current_rank);
+                    current_rank = determine_child_rank(&mut self.0, child_node, current_rank);
+                    changed |= self.set_rank(child_node, current_rank);
                     current_node = child_node;
                 }
             }
         }
         self.unvisit_nodes();
+        changed
     }
 
     ///
@@ -378,31 +392,32 @@ pub(crate) fn rank_nodes<'a>(
 ///
 ///
 fn determine_child_rank(
-    node_info: &BTreeMap<String, NodeInfo>,
+    node_info: &mut BTreeMap<String, NodeInfo>,
     child_node: &str,
     current_rank: usize,
 ) -> usize {
     // If one parent is on the same rank, put the child one rank further down.
     let max_parent_rank = node_info
         .get(child_node)
-        .unwrap()
+        .unwrap() // All nodes exist in node_info map
         .parents
         .iter()
-        .map(|p| {
-            node_info
-                .get(p.to_owned())
-                .map(|p| p.rank)
-                .unwrap() // All nodes exist in node_info map
-                .unwrap_or(current_rank)
-        })
+        .filter_map(
+            |p| node_info.get(p.to_owned()).map(|p| p.rank).unwrap(), // All nodes exist in node_info map
+        )
         .max()
-        .unwrap();
+        .map(|x| x + 1);
 
-    let r = node_info
-        .get(child_node)
-        .map(|ni| ni.rank)
-        .unwrap()
-        .unwrap_or_else(|| std::cmp::max(current_rank + 1, max_parent_rank + 1));
+    let r = [
+        Some(current_rank + 1),
+        max_parent_rank,
+        node_info.get(child_node).map(|ni| ni.rank).unwrap(), // All nodes exist in node_info map
+    ]
+    .iter()
+    .filter_map(|&x| x)
+    .max()
+    .unwrap(); // unwrap is ok, since r is never empty.
+
     r
 }
 
@@ -420,31 +435,30 @@ fn find_next_child_node<'a, 'b>(
 ) -> Option<&'a str> {
     if let Some(p) = edges.get(current) {
         let mut x = p.to_vec();
-        if !allow_unranked_parent {
-            x.sort_by_key(|a| {
-                (
-                    // Reverse since higher values should be ranked earlier
-                    std::cmp::Reverse(node_info.get(&a.0).unwrap().max_child_rank),
-                    // Rank nodes earlier if they have multiple parents
-                    std::cmp::Reverse(
-                        edges
-                            .iter()
-                            // Get already ranked parents
-                            .filter_map(|(parent, children)| {
-                                node_info.get(parent).unwrap().rank.map(|_| children)
-                            })
-                            .flatten()
-                            // See if they have a SupportedBy relation to the current child
-                            .filter(|(child, et)| {
-                                child == &a.0 && et == &EdgeType::OneWay(SingleEdge::SupportedBy)
-                            })
-                            .count(),
-                    ),
-                    // Sort alphabetically next
-                    a.0.to_owned(),
-                )
-            });
-        }
+        x.sort_by_key(|a| {
+            (
+                // Reverse since higher values should be ranked earlier
+                std::cmp::Reverse(node_info.get(&a.0).unwrap().max_child_rank),
+                // Rank nodes earlier if they have multiple parents
+                std::cmp::Reverse(
+                    edges
+                        .iter()
+                        // Get already ranked parents
+                        .filter_map(|(parent, children)| {
+                            node_info.get(parent).unwrap().rank.map(|_| children)
+                        })
+                        .flatten()
+                        // See if they have a SupportedBy relation to the current child
+                        .filter(|(child, et)| {
+                            child == &a.0 && et == &EdgeType::OneWay(SingleEdge::SupportedBy)
+                        })
+                        .count(),
+                ),
+                // Sort alphabetically next
+                a.0.to_owned(),
+            )
+        });
+
         if let Some(opt_child) = x
             .iter()
             .filter(|(id, _)| match allow_unranked_parent {
@@ -464,7 +478,7 @@ fn find_next_child_node<'a, 'b>(
             })
             .find(|id| !node_info.get(id.to_owned()).unwrap().visited)
         {
-            return Some(nodes.keys().find(|&x| x == opt_child).unwrap());
+            return nodes.keys().find(|&x| x == opt_child).map(|x| x.as_str());
             // return Some(opt_child);
         }
     }
