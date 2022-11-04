@@ -80,15 +80,16 @@ jobs:
     - uses: ericcornelissen/git-tag-annotation-action@v2
       id: tag_data
     - name: Patch version for pre-release
+      id: githash
       # if: github.event_name != 'pull_request'
-      env:
-        GSN2X_VERSION: ${GITHUB_SHA::6}
-      run: echo ${GSN2X_VERSION}
+      run: echo "name=GSN2X_VERSION::${GITHUB_SHA::6}" > $GITHUB_OUTPUT
     - name: Build
       run: cargo build --verbose
     - name: Test
       run: cargo test --verbose
     - name: Release build
+      env:
+        GSN2X_VERSION: ${{ steps.githash.outputs.GSN2X_VERSION }}
       run: cargo build --release --verbose
     - name: Strip binaries
       if: hashFiles('target/release/gsn2x')
