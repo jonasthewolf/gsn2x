@@ -61,7 +61,7 @@ pub fn text_bounding_box(font_info: &FontInfo, text: &str, bold: bool) -> (i32, 
         (text.chars().count() as f32 * 1.5) as i32
     };
     let line_gap = 5;
-    let font_id = if bold { 1 } else { 0 };
+    let font_id = usize::from(bold);
     Layout::default_single_line()
         .calculate_glyphs(
             &[

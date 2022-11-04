@@ -60,7 +60,7 @@ fn main() -> Result<()> {
                 .short('f')
                 .long("full")
                 .action(ArgAction::Set)
-                .conflicts_with_all(&["CHECKONLY", "NO_COMPLETE_VIEW"])
+                .conflicts_with_all(["CHECKONLY", "NO_COMPLETE_VIEW"])
                 .help_heading("OUTPUT"),
         )
         .arg(
@@ -78,7 +78,7 @@ fn main() -> Result<()> {
                 .short('a')
                 .long("arch")
                 .action(ArgAction::Set)
-                .conflicts_with_all(&["CHECKONLY", "NO_ARCHITECTURE_VIEW"])
+                .conflicts_with_all(["CHECKONLY", "NO_ARCHITECTURE_VIEW"])
                 .help_heading("OUTPUT"),
         )
         .arg(
@@ -96,7 +96,7 @@ fn main() -> Result<()> {
                 .short('e')
                 .long("evidences")
                 .action(ArgAction::Append)
-                .conflicts_with_all(&["CHECKONLY", "NO_EVIDENCES"])
+                .conflicts_with_all(["CHECKONLY", "NO_EVIDENCES"])
                 .help_heading("OUTPUT"),
         )
         .arg(
@@ -216,7 +216,7 @@ fn read_inputs(
 ) -> Result<()> {
     for input in inputs {
         let reader =
-            BufReader::new(File::open(&input).context(format!("Failed to open file {}", input))?);
+            BufReader::new(File::open(input).context(format!("Failed to open file {}", input))?);
 
         let mut n: BTreeMap<String, GsnDocumentNode> = serde_yaml::from_reader(reader)
             .map(|n: yaml_fix::YamlFixMap<String, GsnDocumentNode>| n.into_inner())

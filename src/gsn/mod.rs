@@ -154,7 +154,7 @@ pub fn get_levels(nodes: &BTreeMap<String, GsnNode>) -> BTreeMap<&str, Vec<&str>
     let mut levels = BTreeMap::<&str, Vec<&str>>::new();
     for (id, node) in nodes.iter() {
         if let Some(l) = &node.level {
-            levels.entry(l.trim()).or_insert(Vec::new()).push(id);
+            levels.entry(l.trim()).or_default().push(id);
         }
     }
     levels
@@ -222,9 +222,7 @@ fn add_dependencies(
             } else {
                 // What about both true? Cannot happen, since we covered this in the match statement below.
                 // Here, both are false
-                let e = dependencies
-                    .entry(cur_node.module.to_owned())
-                    .or_insert(BTreeMap::new());
+                let e = dependencies.entry(cur_node.module.to_owned()).or_default();
                 e.entry(other_module.to_owned())
                     .or_insert(EdgeType::OneWay(dep_type));
             }

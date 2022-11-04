@@ -20,7 +20,7 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v3
     - uses: actions-rs/toolchain@v1
       with:
         toolchain: stable
@@ -28,9 +28,9 @@ jobs:
         override: true
         components: clippy
     - name: Rust Cache
-      uses: Swatinem/rust-cache@v1
+      uses: Swatinem/rust-cache@v2
       with:
-        sharedKey: ci
+        shared-key: ci
     - name: Annotate commit with clippy warnings
       uses: actions-rs/clippy-check@v1
       with:
@@ -45,16 +45,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - uses: actions-rs/toolchain@v1
       with:
         toolchain: stable
         profile: minimal
         override: true
     - name: Rust Cache
-      uses: Swatinem/rust-cache@v1
+      uses: Swatinem/rust-cache@v2
       with:
-        sharedKey: ci
+        shared-key: ci
     - name: License check
       run: |
         cargo install cargo-lichking
@@ -67,21 +67,30 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - uses: actions-rs/toolchain@v1
       with:
         toolchain: stable
         profile: minimal
         override: true
     - name: Rust Cache
-      uses: Swatinem/rust-cache@v1
+      uses: Swatinem/rust-cache@v2
       with:
-        sharedKey: ci
+        shared-key: ci
+    - uses: ericcornelissen/git-tag-annotation-action@v2
+      id: tag_data
+    - name: Patch version for pre-release
+      id: githash
+      if: github.event_name != 'pull_request'
+      run: |
+        echo "GSN2X_VERSION=${GITHUB_SHA::6}" >> $GITHUB_OUTPUT
     - name: Build
       run: cargo build --verbose
     - name: Test
       run: cargo test --verbose
     - name: Release build
+      env:
+        GSN2X_VERSION: ${{ steps.githash.outputs.GSN2X_VERSION }}
       run: cargo build --release --verbose
     - name: Strip binaries
       if: hashFiles('target/release/gsn2x')
@@ -94,7 +103,7 @@ jobs:
         strip target/release/gsn2x.exe
         copy target/release/gsn2x.exe gsn2x-${{ runner.os }}.exe
     - name: Upload artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: gsn2x
         path: gsn2x-${{ runner.os }}*
@@ -125,12 +134,12 @@ jobs:
     if: ${{ startsWith(github.ref, 'refs/tags/') }}
 
     steps:
-    - uses: actions/checkout@v1
-    - uses: ericcornelissen/git-tag-annotation-action@v1
+    - uses: actions/checkout@v3
+    - uses: ericcornelissen/git-tag-annotation-action@v2
       id: tag_data
     - name: Get the version
       id: get_version
-      run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+      run: echo "name=VERSION::${GITHUB_REF/refs\/tags\//}" > $GITHUB_OUTPUT
     - name: Download artifacts
       uses: actions/download-artifact@v2
       with:
@@ -150,7 +159,7 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - uses: actions-rs/toolchain@v1
       with:
         toolchain: stable
@@ -158,9 +167,9 @@ jobs:
         override: true
         components: llvm-tools-preview
     - name: Rust Cache
-      uses: Swatinem/rust-cache@v1
+      uses: Swatinem/rust-cache@v2
       with:
-        sharedKey: ci
+        shared-key: ci
     - name: Coverage measurement
       continue-on-error: true
       run: |

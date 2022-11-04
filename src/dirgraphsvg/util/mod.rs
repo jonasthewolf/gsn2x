@@ -8,16 +8,7 @@ pub mod wordwrap;
 ///
 ///
 pub fn escape_text(input: &str) -> String {
-    input
-        .replace('.', "_")
-        .replace('-', "_")
-        .replace(' ', "_")
-        .replace('/', "_")
-        .replace('\\', "_")
-        .replace(':', "_")
-        .replace('\'', "_")
-        .replace('"', "_")
-        .replace('~', "_")
+    input.replace(['.', '-', ' ', '/', '\\', ':', '\'', '"', '~'], "_")
 }
 
 ///
