@@ -167,7 +167,7 @@ jobs:
     - name: Rust Cache
       uses: Swatinem/rust-cache@v2
       with:
-        sharedKey: ci
+        shared-key: ci
     - name: Coverage measurement
       continue-on-error: true
       run: |
