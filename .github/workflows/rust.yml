@@ -77,6 +77,15 @@ jobs:
       uses: Swatinem/rust-cache@v1
       with:
         sharedKey: ci
+    - uses: ericcornelissen/git-tag-annotation-action@v1
+      id: tag_data
+    - name: Get the version
+      id: get_version
+      run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+    - name: Patch version for pre-release
+      if: github.event_name != 'pull_request'
+      env:
+        GSN2X_VERSION: ${GITHUB_SHA::6}
     - name: Build
       run: cargo build --verbose
     - name: Test
