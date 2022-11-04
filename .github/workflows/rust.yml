@@ -83,7 +83,7 @@ jobs:
       id: githash
       # if: github.event_name != 'pull_request'
       run: |
-        echo "name=GSN2X_VERSION::${GITHUB_SHA}" > $GITHUB_OUTPUT
+        echo "GSN2X_VERSION=${GITHUB_SHA::6}" >> $GITHUB_OUTPUT
     - name: Build
       run: cargo build --verbose
     - name: Test
@@ -91,9 +91,7 @@ jobs:
     - name: Release build
       env:
         GSN2X_VERSION: ${{ steps.githash.outputs.GSN2X_VERSION }}
-      run: |
-        echo $GSN2X_VERSION
-        cargo build --release --verbose
+      run: cargo build --release --verbose
     - name: Strip binaries
       if: hashFiles('target/release/gsn2x')
       run: |
