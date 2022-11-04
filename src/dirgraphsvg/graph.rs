@@ -336,9 +336,8 @@ impl<'a> NodeInfoMap<'a> {
                     find_next_child_node(nodes, edges, &self.0, current_node, cycles_allowed)
                 {
                     stack.push(current_node);
-                    let vertical_rank = ranks
-                        .entry(self.get_rank(child_node).unwrap())
-                        .or_insert(BTreeMap::new());
+                    let vertical_rank =
+                        ranks.entry(self.get_rank(child_node).unwrap()).or_default();
                     vertical_rank
                         .insert(vertical_rank.len(), NodePlace::Node(child_node.to_owned()));
 
