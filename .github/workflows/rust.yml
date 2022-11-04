@@ -82,7 +82,9 @@ jobs:
     - name: Patch version for pre-release
       id: githash
       # if: github.event_name != 'pull_request'
-      run: echo "name=GSN2X_VERSION::${GITHUB_SHA::6}" > $GITHUB_OUTPUT
+      run: |
+        echo "name=GSN2X_VERSION::${GITHUB_SHA::6}" > $GITHUB_OUTPUT
+        cat $GITHUB_OUTPUT
     - name: Build
       run: cargo build --verbose
     - name: Test
