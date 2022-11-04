@@ -83,7 +83,7 @@ jobs:
       # if: github.event_name != 'pull_request'
       env:
         GSN2X_VERSION: ${GITHUB_SHA::6}
-      run: echo 
+      run: echo ""
     - name: Build
       run: cargo build --verbose
     - name: Test
