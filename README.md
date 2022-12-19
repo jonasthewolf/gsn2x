@@ -1,5 +1,5 @@
 [![License: CC BY 4.0](https://img.shields.io/github/license/jonasthewolf/gsn2x)](https://creativecommons.org/licenses/by/4.0/)
-[![CI](https://img.shields.io/github/actions/workflow/status/jonasthewolf/gsn2x/workflows/rust.yml?label=CI?branch=master)](https://github.com/jonasthewolf/gsn2x/actions/workflows/rust.yml)
+[![CI](https://img.shields.io/github/actions/workflow/status/jonasthewolf/gsn2x/rust.yml?branch=master&label=CI)](https://github.com/jonasthewolf/gsn2x/actions/workflows/rust.yml)
 [![codecov](https://img.shields.io/codecov/c/github/jonasthewolf/gsn2x/master?token=YQKUQQOYS3)](https://codecov.io/gh/jonasthewolf/gsn2x)
 ![LoC](https://img.shields.io/tokei/lines/github/jonasthewolf/gsn2x)
 [![Downloads](https://img.shields.io/github/downloads/jonasthewolf/gsn2x/total)](https://github.com/jonasthewolf/gsn2x/releases)
