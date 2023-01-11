@@ -51,14 +51,14 @@ pub(crate) fn get_port_default_coordinates(
     Point2D {
         x: match port {
             Port::North => x,
-            Port::East => x + (width / 2) as i32,
+            Port::East => x + (width / 2),
             Port::South => x,
-            Port::West => x - (width / 2) as i32,
+            Port::West => x - (width / 2),
         },
         y: match port {
-            Port::North => y - (height / 2) as i32,
+            Port::North => y - (height / 2),
             Port::East => y,
-            Port::South => y + (height / 2) as i32,
+            Port::South => y + (height / 2),
             Port::West => y,
         },
     }
