@@ -38,10 +38,7 @@ fn validate_id(diag: &mut Diagnostics, module: &str, id: &str) {
         diag.add_msg(
             DiagType::Error,
             Some(module),
-            format!(
-                "V01: Element {} is of unknown type. Please see README for supported types",
-                id
-            ),
+            format!("V01: Element {id} is of unknown type. Please see README for supported types"),
         );
     }
 }
@@ -79,14 +76,14 @@ fn validate_references(diag: &mut Diagnostics, module: &str, id: &str, node: &Gs
         if Some(true) == node.undeveloped {
             diag.add_error(
                 Some(module),
-                format!("V03: Undeveloped element {} has supporting arguments.", id),
+                format!("V03: Undeveloped element {id} has supporting arguments."),
             );
         }
     } else if (id.starts_with('S') && !id.starts_with("Sn") || id.starts_with('G'))
         && (Some(false) == node.undeveloped || node.undeveloped.is_none())
     {
         // No "supported by" entries, but Strategy and Goal => undeveloped
-        diag.add_warning(Some(module), format!("V02: Element {} is undeveloped.", id));
+        diag.add_warning(Some(module), format!("V02: Element {id} is undeveloped."));
     }
 }
 
@@ -111,25 +108,19 @@ fn validate_reference(
         if n == node {
             diag.add_error(
                 Some(module),
-                format!("V06: Element {} references itself in {}.", node, diag_str),
+                format!("V06: Element {node} references itself in {diag_str}."),
             );
         }
         if !set.insert(n) {
             diag.add_warning(
                 Some(module),
-                format!(
-                    "V05: Element {} has duplicate entry {} in {}.",
-                    node, n, diag_str
-                ),
+                format!("V05: Element {node} has duplicate entry {n} in {diag_str}."),
             );
         }
         if !valid_refs.iter().any(|&r| n.starts_with(r)) {
             diag.add_error(
                 Some(module),
-                format!(
-                    "V04: Element {} has invalid type of reference {} in {}.",
-                    node, n, diag_str
-                ),
+                format!("V04: Element {node} has invalid type of reference {n} in {diag_str}."),
             );
         }
     }
@@ -159,8 +150,7 @@ fn validate_module_extensions(
                             DiagType::Error,
                             Some(module_name),
                             format!(
-                                "V07: Element {} is of wrong type. Only Strategies, Goals and Solutions can develop other Goals and Strategies.",
-                                local_id
+                                "V07: Element {local_id} is of wrong type. Only Strategies, Goals and Solutions can develop other Goals and Strategies."
                             ),
                         );
                         } else if !nodes

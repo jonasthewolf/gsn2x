@@ -216,7 +216,7 @@ fn read_inputs(
 ) -> Result<()> {
     for input in inputs {
         let reader =
-            BufReader::new(File::open(input).context(format!("Failed to open file {}", input))?);
+            BufReader::new(File::open(input).context(format!("Failed to open file {input}"))?);
 
         let mut n: BTreeMap<String, GsnDocumentNode> = serde_yaml::from_reader(reader)
             .map(|n: yaml_fix::YamlFixMap<String, GsnDocumentNode>| n.into_inner())
@@ -232,7 +232,7 @@ fn read_inputs(
                     e
                 ))
             })
-            .context(format!("Failed to parse YAML from file {}", input))?;
+            .context(format!("Failed to parse YAML from file {input}"))?;
         let mut meta: Option<ModuleInformation> = match n.remove_entry(MODULE_INFORMATION_NODE) {
             Some((_, GsnDocumentNode::ModuleInformation(x))) => Some(x),
             _ => None,
@@ -417,7 +417,7 @@ fn print_outputs(
 ///
 fn output_messages(diags: &Diagnostics) -> Result<()> {
     for msg in &diags.messages {
-        eprintln!("{}", msg);
+        eprintln!("{msg}");
     }
     if diags.errors == 0 {
         if diags.warnings > 0 {

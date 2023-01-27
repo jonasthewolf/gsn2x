@@ -19,7 +19,7 @@ impl Display for DiagMsg {
             DiagType::Warning => write!(f, "Warning:")?,
         }
         if let Some(module) = &self.module {
-            write!(f, " ({})", module)?;
+            write!(f, " ({module})")?;
         }
         write!(f, " {}", self.msg)
     }

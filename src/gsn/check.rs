@@ -47,10 +47,7 @@ fn check_root_nodes(
             if !rootn.starts_with('G') {
                 diag.add_error(
                     None,
-                    format!(
-                        "C02: The root element should be a goal, but {} was found.",
-                        rootn
-                    ),
+                    format!("C02: The root element should be a goal, but {rootn} was found."),
                 );
             }
         }
@@ -220,7 +217,7 @@ fn check_levels(diag: &mut Diagnostics, nodes: &BTreeMap<String, GsnNode>) {
     levels
         .iter()
         .filter(|(_, &count)| count == 1)
-        .for_each(|(l, _)| diag.add_warning(None, format!("C05: Level {} is only used once.", l)));
+        .for_each(|(l, _)| diag.add_warning(None, format!("C05: Level {l} is only used once.")));
 }
 
 ///
@@ -242,7 +239,7 @@ pub fn check_layers(diag: &mut Diagnostics, nodes: &BTreeMap<String, GsnNode>, l
         if reserved_words.contains(l) {
             diag.add_error(
                 None,
-                format!("{} is a reserved attribute and cannot be used as layer.", l),
+                format!("{l} is a reserved attribute and cannot be used as layer."),
             );
             continue;
         }
@@ -252,10 +249,7 @@ pub fn check_layers(diag: &mut Diagnostics, nodes: &BTreeMap<String, GsnNode>, l
         {
             diag.add_warning(
                 None,
-                format!(
-                    "Layer {} is not used in file. No additional output will be generated.",
-                    l
-                ),
+                format!("Layer {l} is not used in file. No additional output will be generated."),
             );
         }
     }

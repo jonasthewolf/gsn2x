@@ -230,7 +230,7 @@ impl<'a> DirGraph<'a> {
             }
             first_run = false;
             if changed && limiter == limit {
-                eprintln!("Rendering a diagram took too many iterations ({}). See README.md for hints how to solve this situation.", limiter);
+                eprintln!("Rendering a diagram took too many iterations ({limiter}). See README.md for hints how to solve this situation.");
             }
         }
 
@@ -841,10 +841,10 @@ impl<'a> DirGraph<'a> {
             if self.embed_stylesheets {
                 for css in &self.css_stylesheets {
                     let css_str = std::fs::read_to_string(css)
-                        .context(format!("Failed to open CSS file {} for embedding", css))
+                        .context(format!("Failed to open CSS file {css} for embedding"))
                         .unwrap();
                     let style =
-                        Style::new(format!("<![CDATA[{}]]>", css_str)).set("type", "text/css");
+                        Style::new(format!("<![CDATA[{css_str}]]>")).set("type", "text/css");
                     self.document = self.document.add(style);
                 }
             } else {

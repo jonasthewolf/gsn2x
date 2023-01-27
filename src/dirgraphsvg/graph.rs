@@ -425,10 +425,10 @@ fn determine_child_rank(
 /// Finds the next child node and returns it.
 /// The rank could be constraint by the forced level.
 ///
-fn find_next_child_node<'a, 'b>(
+fn find_next_child_node<'a>(
     nodes: &'a BTreeMap<String, Rc<RefCell<dyn Node>>>,
     edges: &'a BTreeMap<String, Vec<(String, EdgeType)>>,
-    node_info: &'b BTreeMap<String, NodeInfo>,
+    node_info: &BTreeMap<String, NodeInfo>,
     current: &str,
     allow_unranked_parent: bool,
 ) -> Option<&'a str> {

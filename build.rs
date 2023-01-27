@@ -4,7 +4,7 @@ fn main() {
     if let Ok(val) = std::env::var("GSN2X_VERSION") {
         if !val.trim().is_empty() {
             let version = env!("CARGO_PKG_VERSION");
-            println!("cargo:rustc-env=CARGO_PKG_VERSION={}-{}", version, val);    
+            println!("cargo:rustc-env=CARGO_PKG_VERSION={version}-{val}");
         }
     }
     println!("cargo:rerun-if-env-changed=GSN2X_VERSION");
