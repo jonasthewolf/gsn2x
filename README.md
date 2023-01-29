@@ -150,11 +150,12 @@ justifications and assumptions are automatically put on the same level.
 
 ### Horizontal placement
 
-There can be situations (e.g. a n:m relation between goals and solutions) that lead to weird looking graphs.
-You may even encounter the following message `Rendering a diagram took too many iterations. See README.md for hints how to solve this situation.`
-
 The order of the GSN elements on the same horizontal rank can be influenced by their ID.
 The elements are sorted lexicographically. Thus, a goal `G1` if placed on the same vertical level is placed before `G2`.
+
+There can be situations (e.g. a n:m relation between goals and solutions) that lead to weird looking graphs.
+You may even encounter the following message `Rendering a diagram took too many iterations. See README.md for hints how to solve this situation.`. In such cases, please file an issue on GitHub, so I can see how the algorithm can be improved.
+
 
 ## Stylesheets for SVG rendering
 
@@ -221,9 +222,9 @@ See [example](examples/modular/architecture.svg) here.
 
 ### Example:
     
-    gsn2x -f full.svg -a arch.svg -m sub1.yml main.yml sub1.yml sub3.yml sub5.yml  
+    gsn2x -f full.svg -a arch.svg main.yml sub1.yml sub3.yml
 
-This will generate the argument view for each module, the complete view (`-f full.svg`) of all modules and the architecture view (`-a arch.svg`). In the complete view, the elements of the `sub1` module will be represented by a module.
+This will generate the argument view for each module, the complete view (`-f full.svg`) of all modules and the architecture view (`-a arch.svg`). <!-- In the complete view, the elements of the `sub1` module will be represented by a module. -->
 
 ### Developing undeveloped elements from other modules
 
