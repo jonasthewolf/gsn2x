@@ -8,12 +8,13 @@ const PADDING_VERTICAL: i32 = 7;
 const PADDING_HORIZONTAL: i32 = 7;
 const TEXT_OFFSET: i32 = 20;
 const MODULE_TAB_HEIGHT: i32 = 10;
+const UNDEVELOPED_DIAMOND: i32 = 5;
 
 pub struct BoxNode {
     identifier: String,
     text: String,
     undeveloped: bool,
-    skew: u32,
+    skew: i32,
     url: Option<String>,
     classes: Vec<String>,
     width: i32,
@@ -30,7 +31,7 @@ impl Node for BoxNode {
     /// Height: 5 padding on each side, minimum 30, id line height (max. 20) + height of each text line
     ///
     fn calculate_size(&mut self, font: &FontInfo, suggested_char_wrap: u32) {
-        self.width = PADDING_HORIZONTAL * 2 + 70 + (self.skew * 2) as i32; // Padding of 5 on both sides
+        self.width = PADDING_HORIZONTAL * 2 + 70 + self.skew * 2; // Padding of 5 on both sides
         self.height = PADDING_VERTICAL * 2 + 30; // Padding of 5 on both sides
         self.text =
             crate::dirgraphsvg::util::wordwrap::wordwrap(&self.text, suggested_char_wrap, "\n");
@@ -43,10 +44,7 @@ impl Node for BoxNode {
             let (width, height) = crate::dirgraphsvg::util::font::text_bounding_box(font, t, false);
             self.lines.push((width, height));
             text_height += height;
-            text_width = std::cmp::max(
-                text_width,
-                width + PADDING_HORIZONTAL * 2 + (self.skew * 2) as i32,
-            );
+            text_width = std::cmp::max(text_width, width + PADDING_HORIZONTAL * 2 + self.skew * 2);
         }
         self.width = std::cmp::max(self.width, text_width);
         self.height = std::cmp::max(
@@ -54,7 +52,7 @@ impl Node for BoxNode {
             PADDING_VERTICAL * 2 + TEXT_OFFSET + text_height + 3,
         ); // +3 to make padding at bottom larger
         if self.undeveloped {
-            self.height += 5;
+            self.height += UNDEVELOPED_DIAMOND;
         }
         if self.is_module_node {
             self.height += MODULE_TAB_HEIGHT;
@@ -76,11 +74,6 @@ impl Node for BoxNode {
     fn get_coordinates(&self, port: &Port) -> Point2D {
         let mut coords =
             get_port_default_coordinates(self.x, self.y, self.width, self.height, port);
-        if port == &super::Port::East {
-            coords.x -= (self.skew / 2) as i32;
-        } else if port == &super::Port::West {
-            coords.x += (self.skew / 2) as i32;
-        }
         if port == &super::Port::North && self.is_module_node {
             coords.y += MODULE_TAB_HEIGHT;
         }
@@ -119,15 +112,21 @@ impl Node for BoxNode {
         } else {
             Data::new()
                 .move_to((
-                    self.x - self.width / 2 + self.skew as i32,
+                    self.x - self.width / 2 + self.skew / 2,
                     self.y - self.height / 2,
                 ))
-                .line_to((self.x + self.width / 2, self.y - self.height / 2))
                 .line_to((
-                    self.x + self.width / 2 - self.skew as i32,
+                    self.x + self.width / 2 + self.skew / 2,
+                    self.y - self.height / 2,
+                ))
+                .line_to((
+                    self.x + self.width / 2 - self.skew / 2,
                     self.y + self.height / 2,
                 ))
-                .line_to((self.x - self.width / 2, self.y + self.height / 2))
+                .line_to((
+                    self.x - self.width / 2 - self.skew / 2,
+                    self.y + self.height / 2,
+                ))
                 .close()
         };
 
@@ -138,11 +137,10 @@ impl Node for BoxNode {
             .set("d", data)
             .set("class", "border");
 
+        let x = self.x - (self.width - self.skew) / 2 + PADDING_HORIZONTAL;
+
         let id = Text::new()
-            .set(
-                "x",
-                self.x - self.width / 2 + PADDING_HORIZONTAL + self.skew as i32,
-            )
+            .set("x", x)
             .set(
                 "y",
                 self.y - self.height / 2 + PADDING_VERTICAL + self.lines.first().unwrap().1,
@@ -159,8 +157,9 @@ impl Node for BoxNode {
         g.append(id);
 
         for (n, t) in self.text.lines().enumerate() {
+            let x = self.x - (self.width - self.skew) / 2 + PADDING_HORIZONTAL;
             let text = Text::new()
-                .set("x", self.x - self.width / 2 + PADDING_HORIZONTAL)
+                .set("x", x)
                 .set(
                     "y",
                     self.y - self.height / 2
@@ -178,9 +177,9 @@ impl Node for BoxNode {
         if self.undeveloped {
             let data = Data::new()
                 .move_to((self.x, self.y + self.height / 2))
-                .line_by((5i32, 5i32))
-                .line_by((-5i32, 5i32))
-                .line_by((-5i32, -5i32))
+                .line_by((UNDEVELOPED_DIAMOND, UNDEVELOPED_DIAMOND))
+                .line_by((-UNDEVELOPED_DIAMOND, UNDEVELOPED_DIAMOND))
+                .line_by((-UNDEVELOPED_DIAMOND, -UNDEVELOPED_DIAMOND))
                 .close();
             let undev = Path::new()
                 .set("fill", "none")
@@ -198,7 +197,7 @@ impl BoxNode {
         id: &str,
         text: &str,
         undeveloped: bool,
-        skew: u32,
+        skew: i32,
         is_module_node: bool,
         url: Option<String>,
         classes: Vec<String>,

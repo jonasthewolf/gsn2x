@@ -5,7 +5,7 @@ pub fn wordwrap(s: &str, width: u32, wrapstr: &str) -> String {
     let mut out = Vec::<String>::new();
     for line in s.lines() {
         let mut cur_line = String::new();
-        for word in line.split_ascii_whitespace() {
+        for word in line.split_whitespace() {
             if cur_line.len() + word.len() > width as usize {
                 out.push(cur_line);
                 cur_line = String::new();
@@ -50,14 +50,14 @@ mod test {
     #[test]
     fn shorter() {
         let input = "Lorem ipsum dolor sit amet, consetetur";
-        let expected = "Lorem ipsum dolor sit amet, consetetur".to_owned(); // make explicit heap allocation to prevent Short value
+        let expected = "Lorem ipsum dolor sit amet, consetetur".to_owned(); 
         let out = wordwrap(input, 50, "\n");
         assert_eq!(out, expected);
     }
     #[test]
     fn empty_line() {
         let input = " ";
-        let expected = "".to_owned(); // make explicit heap allocation to prevent Short value
+        let expected = "".to_owned();
         let out = wordwrap(input, 50, "\n");
         assert_eq!(out, expected);
     }

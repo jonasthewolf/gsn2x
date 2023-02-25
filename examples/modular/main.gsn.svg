@@ -56,11 +56,11 @@ TestABC
 <title>
 S1
 </title>
-<path class="border" d="M160,160 L307,160 L292,210 L145,210 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" textLength="15" x="167" y="181">
+<path class="border" d="M152,160 L314,160 L300,210 L138,210 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" textLength="15" x="160" y="181">
 S1
 </text>
-<text font-family="Arial" font-size="12" textLength="118" x="152" y="201">
+<text font-family="Arial" font-size="12" textLength="118" x="160" y="201">
 Divide and Conquer
 </text>
 </g>

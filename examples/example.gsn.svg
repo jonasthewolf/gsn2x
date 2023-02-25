@@ -82,11 +82,11 @@ Justification 1
 <title>
 S1
 </title>
-<path class="border" d="M301,216 L400,216 L385,266 L286,266 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" textLength="15" x="308" y="237">
+<path class="border" d="M293,216 L407,216 L393,266 L279,266 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" textLength="15" x="301" y="237">
 S1
 </text>
-<text font-family="Arial" font-size="12" textLength="57" x="293" y="257">
+<text font-family="Arial" font-size="12" textLength="57" x="301" y="257">
 Strategy 1
 </text>
 </g>
@@ -109,11 +109,11 @@ Argument 1
 <title>
 S2
 </title>
-<path class="border" d="M702,216 L801,216 L786,266 L687,266 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" textLength="15" x="709" y="237">
+<path class="border" d="M694,216 L808,216 L794,266 L680,266 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" textLength="15" x="702" y="237">
 S2
 </text>
-<text font-family="Arial" font-size="12" textLength="57" x="694" y="257">
+<text font-family="Arial" font-size="12" textLength="57" x="702" y="257">
 Strategy 2
 </text>
 </g>
@@ -286,8 +286,8 @@ Solution 2
 <path class="gsnedge gsninspby" d="M220,388 C220,418,220,414,220,434" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsninspby" d="M466,388 C466,418,343,414,343,434" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsninspby" d="M466,388 C466,418,466,414,466,434" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninctxt" d="M393,241 C393,241,410,241,430,241" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninctxt" d="M293,241 C293,241,276,241,256,241" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M400,241 C400,241,410,241,430,241" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M286,241 C286,241,276,241,256,241" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsninspby" d="M343,266 C343,296,220,308,220,328" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsninspby" d="M343,266 C343,296,466,308,466,328" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsninspby" d="M744,266 C744,296,590,308,590,328" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
