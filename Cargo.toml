@@ -22,5 +22,5 @@ glyph_brush_layout = "0.2"
 [dev-dependencies]
 assert_cmd = "2.0"
 assert_fs = "1.0"
-predicates = "2.1"
+predicates = "3.0"
 regex = "1.7"
