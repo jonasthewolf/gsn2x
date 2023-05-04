@@ -207,7 +207,7 @@ pub fn away_svg_from_gsn_node(
             id,
             &node_text,
             gsn_node.undeveloped.unwrap_or(false),
-            gsn_node.url.to_owned(),
+            Some(module_url), // Use module_url if Strategy is not defined in current module.
             classes,
         ),
         id if id.starts_with('C') => new_away_context(
