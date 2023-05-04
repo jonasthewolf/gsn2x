@@ -52,7 +52,8 @@ A
 TestABC
 </text>
 </g>
-<g class="gsnelem gsnstgy gsn_module_Main" id="node_S1">
+<a href="./main.gsn.svg#node_S1">
+<g class="gsnelem gsnstgy gsn_module_Main" id="node_S1"/>
 <title>
 S1
 </title>
@@ -63,7 +64,7 @@ S1
 <text font-family="Arial" font-size="12" textLength="118" x="271" y="77">
 Divide and Conquer
 </text>
-</g>
+</a>
 <g class="gsnelem gsnawayctxt gsn_module_Sub3" id="node_C2">
 <title>
 C2
