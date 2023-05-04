@@ -92,15 +92,13 @@ jobs:
       env:
         GSN2X_VERSION: ${{ steps.githash.outputs.GSN2X_VERSION }}
       run: cargo build --release --verbose
-    - name: Strip binaries
+    - name: Copy binaries
       if: hashFiles('target/release/gsn2x')
       run: |
-        strip target/release/gsn2x
         cp target/release/gsn2x gsn2x-${{ runner.os }}
-    - name: Strip binaries (Windows)
+    - name: Copy binaries (Windows)
       if: hashFiles('target/release/gsn2x.exe')
       run: |
-        strip target/release/gsn2x.exe
         copy target/release/gsn2x.exe gsn2x-${{ runner.os }}.exe
     - name: Upload artifact
       uses: actions/upload-artifact@v3
