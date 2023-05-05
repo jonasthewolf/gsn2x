@@ -30,19 +30,19 @@ impl Node for BoxNode {
     /// Width: 5 padding on each side, minimum 50, maximum line length of text or identifier
     /// Height: 5 padding on each side, minimum 30, id line height (max. 20) + height of each text line
     ///
-    fn calculate_size(&mut self, font: &FontInfo, suggested_char_wrap: u32) {
+    fn calculate_size(&mut self, font: &FontInfo, char_wrap: u32, binding_char_wrap: bool) {
         self.width = PADDING_HORIZONTAL * 2 + 70 + self.skew * 2; // Padding of 5 on both sides
         self.height = PADDING_VERTICAL * 2 + 30; // Padding of 5 on both sides
-        self.text =
-            crate::dirgraphsvg::util::wordwrap::wordwrap(&self.text, suggested_char_wrap, "\n");
+        let text = crate::dirgraphsvg::util::wordwrap::wordwrap(&self.text, char_wrap, "\n");
         let (t_width, t_height) =
             crate::dirgraphsvg::util::font::text_bounding_box(font, &self.identifier, true);
-        self.lines.push((t_width, t_height));
+        let mut lines = vec![];
+        lines.push((t_width, t_height));
         let mut text_height = 0;
         let mut text_width = t_width + PADDING_HORIZONTAL * 2;
-        for t in self.text.lines() {
+        for t in text.lines() {
             let (width, height) = crate::dirgraphsvg::util::font::text_bounding_box(font, t, false);
-            self.lines.push((width, height));
+            lines.push((width, height));
             text_height += height;
             text_width = std::cmp::max(text_width, width + PADDING_HORIZONTAL * 2 + self.skew * 2);
         }
@@ -56,6 +56,10 @@ impl Node for BoxNode {
         }
         if self.is_module_node {
             self.height += MODULE_TAB_HEIGHT;
+        }
+        if binding_char_wrap {
+            self.text = text;
+            self.lines = lines;
         }
     }
 

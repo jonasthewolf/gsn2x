@@ -28,7 +28,7 @@ pub enum Port {
 
 pub trait Node {
     fn get_id(&self) -> &str;
-    fn calculate_size(&mut self, font: &FontInfo, suggested_char_wrap: u32);
+    fn calculate_size(&mut self, font: &FontInfo, char_wrap: u32, binding_char_wrap: bool);
     fn get_width(&self) -> i32;
     fn get_height(&self) -> i32;
     fn set_position(&mut self, pos: &Point2D);
@@ -78,6 +78,32 @@ pub(crate) fn setup_basics(id: &str, classes: &[String], url: &Option<String>) -
     } else {
         g.into()
     }
+}
+
+///
+///
+///
+///
+pub(crate) fn optimize_size(node: &Rc<RefCell<dyn Node>>, font: &FontInfo) {
+    let mut n = node.borrow_mut();
+    let mut min_width = i32::MAX;
+    let mut min_height = i32::MAX;
+    let mut min_wrap = 5;
+    for wrap in 15..70 {
+        n.calculate_size(font, wrap, false);
+        let w = n.get_width();
+        let h = n.get_height();
+        // let area = w * h;
+        if w >= h || (w <= min_width && h <= min_height)
+        /* && area <= min_area */
+        {
+            // min_area = area;
+            min_width = w;
+            min_height = h;
+            min_wrap = wrap;
+        }
+    }
+    n.calculate_size(font, min_wrap, true);
 }
 
 ///

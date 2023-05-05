@@ -40,21 +40,21 @@ impl Node for AwayNode {
     /// Width: 5 padding on each side, minimum 50, maximum line length of text or identifier
     /// Height: 5 padding on each side, minimum 30, id line height (max. 20) + height of each text line
     ///
-    fn calculate_size(&mut self, font: &FontInfo, suggested_char_wrap: u32) {
-        self.width = 70; // Padding of 5 on both sides
+    fn calculate_size(&mut self, font: &FontInfo, char_wrap: u32, binding_char_wrap: bool) {
+        self.width = PADDING_HORIZONTAL * 2 + 70; // Padding of 5 on both sides
         self.height = PADDING_VERTICAL * 2 + 30; // Padding of 5 on both sides
-        self.text =
-            crate::dirgraphsvg::util::wordwrap::wordwrap(&self.text, suggested_char_wrap, "\n");
+        let text = crate::dirgraphsvg::util::wordwrap::wordwrap(&self.text, char_wrap, "\n");
         let (t_width, t_height) =
             crate::dirgraphsvg::util::font::text_bounding_box(font, &self.identifier, true);
-        self.lines.push((t_width, t_height));
+        let mut lines = vec![];
+        lines.push((t_width, t_height));
         let mut text_height = 0;
-        let mut text_width = t_width;
-        for t in self.text.lines() {
+        let mut text_width = t_width + PADDING_HORIZONTAL * 2;
+        for t in text.lines() {
             let (width, height) = crate::dirgraphsvg::util::font::text_bounding_box(font, t, false);
-            self.lines.push((width, height));
+            lines.push((width, height));
             text_height += height;
-            text_width = std::cmp::max(text_width, width);
+            text_width = std::cmp::max(text_width, width + PADDING_HORIZONTAL * 2);
         }
         let (mod_width, mod_height) =
             crate::dirgraphsvg::util::font::text_bounding_box(font, &self.module, false);
@@ -63,7 +63,7 @@ impl Node for AwayNode {
         self.width = *[
             self.width,
             text_width,
-            mod_width + MODULE_IMAGE + PADDING_HORIZONTAL,
+            mod_width + MODULE_IMAGE + PADDING_HORIZONTAL * 2,
         ]
         .iter()
         .max()
@@ -73,14 +73,19 @@ impl Node for AwayNode {
             self.height,
             PADDING_VERTICAL * 4 + TEXT_OFFSET + text_height + 3 + self.mod_height,
         ); // +3 to make padding at bottom larger
-        self.addon_height = match self.node_type {
+        let addon_height = match self.node_type {
             AwayType::Goal => 0,
             AwayType::Solution => (self.width as f32 * 0.5) as i32,
             AwayType::Context => (self.width as f32 * 0.1) as i32,
             AwayType::Assumption => (self.width as f32 * 0.25) as i32,
             AwayType::Justification => (self.width as f32 * 0.25) as i32,
         };
-        self.height += self.addon_height;
+        self.height += addon_height;
+        if binding_char_wrap {
+            self.text = text;
+            self.lines = lines;
+            self.addon_height = addon_height;
+        }
     }
 
     fn get_id(&self) -> &str {

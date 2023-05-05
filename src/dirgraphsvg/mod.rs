@@ -41,7 +41,6 @@ pub struct DirGraph<'a> {
     width: i32,
     height: i32,
     margin: Margin,
-    wrap: u32,
     font: FontInfo,
     css_stylesheets: Vec<&'a str>,
     embed_stylesheets: bool,
@@ -58,7 +57,6 @@ impl<'a> Default for DirGraph<'a> {
             width: 210,
             height: 297,
             margin: Margin::default(),
-            wrap: 40,
             font: FontInfo::default(),
             css_stylesheets: Vec::new(),
             embed_stylesheets: false,
@@ -72,11 +70,6 @@ impl<'a> Default for DirGraph<'a> {
 }
 
 impl<'a> DirGraph<'a> {
-    pub fn _set_wrap(mut self, wrap: u32) -> Self {
-        self.wrap = wrap;
-        self
-    }
-
     pub fn _set_margin(mut self, margin: Margin) -> Self {
         self.margin = margin;
         self
@@ -172,7 +165,7 @@ impl<'a> DirGraph<'a> {
         // Calculate node sizes
         self.nodes
             .values()
-            .for_each(|n| n.borrow_mut().calculate_size(&self.font, self.wrap));
+            .for_each(|n| nodes::optimize_size(n, &self.font));
 
         // Rank nodes
         let ranks = rank_nodes(
@@ -925,8 +918,7 @@ mod test {
             ._add_node(b1)
             ._set_margin(Margin {
                 ..Default::default()
-            })
-            ._set_wrap(20);
+            });
     }
 
     #[test]
