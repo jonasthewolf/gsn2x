@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg viewBox="0 0 634 453" xmlns="http://www.w3.org/2000/svg">
+<svg viewBox="0 0 634 469" xmlns="http://www.w3.org/2000/svg">
 <symbol id="module_icon">
 <rect fill="lightgrey" height="5" stroke="black" stroke-width="1" width="10" x="0" y="0"/>
 <rect fill="lightgrey" height="10" stroke="black" stroke-width="1" width="20" x="0" y="5"/>
@@ -110,11 +110,11 @@ Divide
 <title>
 Sn1
 </title>
-<ellipse class="border" cx="222" cy="393" fill="none" rx="39" ry="39" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" textLength="25" x="194" y="382">
+<ellipse class="border" cx="222" cy="401" fill="none" rx="47" ry="47" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" textLength="25" x="194" y="390">
 Sn1
 </text>
-<text font-family="Arial" font-size="12" textLength="56" x="194" y="402">
+<text font-family="Arial" font-size="12" textLength="56" x="194" y="410">
 Solution 1
 </text>
 </g>

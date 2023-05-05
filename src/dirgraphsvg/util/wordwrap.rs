@@ -7,7 +7,10 @@ pub fn wordwrap(s: &str, width: u32, wrapstr: &str) -> String {
         let mut cur_line = String::new();
         for word in line.split_whitespace() {
             if cur_line.len() + word.len() > width as usize {
-                out.push(cur_line);
+                if !cur_line.is_empty() {
+                    // Relevant if cur_line.len = 0 and word.len > width
+                    out.push(cur_line);
+                }
                 cur_line = String::new();
             } else if !cur_line.is_empty() {
                 cur_line.push(' ');
@@ -50,7 +53,7 @@ mod test {
     #[test]
     fn shorter() {
         let input = "Lorem ipsum dolor sit amet, consetetur";
-        let expected = "Lorem ipsum dolor sit amet, consetetur".to_owned(); 
+        let expected = "Lorem ipsum dolor sit amet, consetetur".to_owned();
         let out = wordwrap(input, 50, "\n");
         assert_eq!(out, expected);
     }
@@ -83,5 +86,12 @@ mod test {
         );
         let out = wordwrap(input, 50, "<br align=\"left\"/>");
         assert_eq!(out, expected);
+    }
+
+    #[test]
+    fn even_shorter() {
+        let input = "Devide";
+        let out = wordwrap(input, 5, "\n");
+        assert_eq!(input, out);
     }
 }

@@ -27,28 +27,27 @@ pub struct EllipticalNode {
 impl Node for EllipticalNode {
     ///
     ///
-    fn calculate_size(&mut self, font: &FontInfo, suggested_char_wrap: u32) {
+    fn calculate_size(&mut self, font: &FontInfo, char_wrap: u32, binding_char_wrap: bool) {
         // Wrap text
-        self.text =
-            crate::dirgraphsvg::util::wordwrap::wordwrap(&self.text, suggested_char_wrap, "\n");
+        let text = crate::dirgraphsvg::util::wordwrap::wordwrap(&self.text, char_wrap, "\n");
         // Calculate bounding box of identifier
         let (t_width, t_height) =
             crate::dirgraphsvg::util::font::text_bounding_box(font, &self.identifier, true);
-        self.lines.push((t_width, t_height));
+        let mut lines = vec![];
+        lines.push((t_width, t_height));
         // +3 to make padding at bottom larger
         self.text_height = t_height + TEXT_OFFSET + 3;
         self.text_width = t_width;
-        for t in self.text.lines() {
+        for t in text.lines() {
             let (line_width, line_height) =
                 crate::dirgraphsvg::util::font::text_bounding_box(font, t, false);
-            self.lines.push((line_width, line_height));
+            lines.push((line_width, line_height));
             self.text_height += line_height;
             self.text_width = std::cmp::max(self.text_width, line_width);
         }
         if self.circle {
             let r_width = ((self.text_width * self.text_width / 4
-                + self.text_height
-                + self.text_height / 4) as f64)
+                + self.text_height * self.text_height / 4) as f64)
                 .sqrt();
             self.width = std::cmp::max(MIN_SIZE, (2 * PADDING + r_width as i32) * 2);
             self.height = std::cmp::max(MIN_SIZE, (2 * PADDING + r_width as i32) * 2);
@@ -61,6 +60,10 @@ impl Node for EllipticalNode {
                 self.height,
                 PADDING * 2 + ((self.text_height as f32 * 1.414) as i32),
             );
+        }
+        if binding_char_wrap {
+            self.text = text;
+            self.lines = lines;
         }
     }
 
