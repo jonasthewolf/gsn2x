@@ -109,7 +109,7 @@ impl Node {
             text_height: 0,
         };
 
-        for wrap in 5..70 {
+        for wrap in 7..70 {
             let size_context = self.calculate_size(font, wrap);
             if size_context.width > size_context.height
                 || (size_context.width <= min_width && size_context.height <= min_height)
