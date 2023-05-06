@@ -111,6 +111,7 @@ impl Node {
 
         // Minimum number should be low.
         // However, if too low, the test in CI will fail, since size for fonts on different OSes lead to different line numbers.
+        // as of 2023-05-06: 10 seems to be a good number
         for wrap in 10..70 {
             let size_context = self.calculate_size(font, wrap);
             if size_context.width > size_context.height
