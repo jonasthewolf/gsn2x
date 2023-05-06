@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 568 242" xmlns="http://www.w3.org/2000/svg">
+<symbol id="module_icon">
+<rect fill="lightgrey" height="5" stroke="black" stroke-width="1" width="10" x="0" y="0"/>
+<rect fill="lightgrey" height="10" stroke="black" stroke-width="1" width="20" x="0" y="5"/>
+</symbol>
+<marker id="composite_arrow" markerHeight="9" markerUnits="userSpaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
+<polyline fill="none" points="0 0, 6 4.5, 0 9" stroke="black" stroke-width="1"/>
+<polyline fill="none" points="4 0, 10 4.5, 4 9" stroke="black" stroke-width="1"/>
+<polyline fill="none" points="0 4.5, 10 4.5" stroke="black" stroke-width="1"/>
+</marker>
+<marker id="supportedby_arrow" markerHeight="9" markerUnits="userSpaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
+<polyline fill="black" points="0 0, 10 4.5, 0 9"/>
+</marker>
+<marker id="incontextof_arrow" markerHeight="9" markerUnits="userSpaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
+<polyline fill="none" points="0 0, 10 4.5, 0 9, 0 0" stroke="black" stroke-width="1"/>
+</marker>
+<g class="gsn_module_tests_multi_context_gsn_yaml" id="node_C2">
+<title>
+C2
+</title>
+<path class="border" d="M30,64 L134,64 C144,64,144,110,134,110 L30,110 C20,110,20,64,30,64" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="37" y="83">
+C2
+</text>
+<text font-family="Arial" font-size="12" x="37" y="100">
+Context 2
+</text>
+</g>
+<g class="gsn_module_tests_multi_context_gsn_yaml" id="node_G1">
+<title>
+G1
+</title>
+<path class="border" d="M184,61 L342,61 L342,113 L184,113 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="191" y="80">
+G1
+</text>
+<text font-family="Arial" font-size="12" x="191" y="97">
+Goal with many contexts
+</text>
+<path d="M263,113 l5,5 l-5,5 l-5,-5 z" fill="none" stroke="black" stroke-width="1"/>
+</g>
+<g class="gsn_module_tests_multi_context_gsn_yaml" id="node_C1">
+<title>
+C1
+</title>
+<path class="border" d="M392,20 L496,20 C506,20,506,66,496,66 L392,66 C382,66,382,20,392,20" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="399" y="39">
+C1
+</text>
+<text font-family="Arial" font-size="12" x="399" y="56">
+Context 1
+</text>
+</g>
+<g class="gsn_module_tests_multi_context_gsn_yaml" id="node_C3">
+<title>
+C3
+</title>
+<path class="border" d="M392,107 L496,107 C506,107,506,153,496,153 L392,153 C382,153,382,107,392,107" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="399" y="126">
+C3
+</text>
+<text font-family="Arial" font-size="12" x="399" y="143">
+Context 3
+</text>
+</g>
+<path class="gsnedge gsninctxt" d="M342,87 C342,87,352,43,372,43" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M184,87 C184,87,174,87,154,87" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M342,87 C342,87,352,130,372,130" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<g class="gsnmodule" id="node_gsn_module">
+<title>
+Module Information
+</title>
+<text font-family="Arial" font-size="12" x="255" y="208">
+Module: tests_multi_context_gsn_yaml
+</text>
+<text font-family="Arial" font-size="12" x="255" y="222">
+Generated on: 2023-05-06 18:59:44.364730 UTC
+</text>
+</g>
+</svg>

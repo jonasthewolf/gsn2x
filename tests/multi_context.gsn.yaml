@@ -1,0 +1,14 @@
+
+G1:
+  text: Goal with many contexts
+  inContextOf: [C1, C2, C3]
+  undeveloped: true
+
+C1:
+  text: Context 1
+  
+C2:
+  text: Context 2
+
+C3:
+  text: Context 3

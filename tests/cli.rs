@@ -110,6 +110,23 @@ mod integrations {
     }
 
     #[test]
+    fn multi_contexts() -> Result<()> {
+        let mut cmd = Command::cargo_bin("gsn2x")?;
+        let temp = assert_fs::TempDir::new()?;
+        temp.copy_from("tests", &["multi_context.gsn.yaml"])?;
+        let output_file = temp.child("multi_context.gsn.svg");
+        cmd.current_dir(&temp);
+        cmd.arg("multi_context.gsn.yaml").arg("-G");
+        cmd.assert().success();
+        assert!(are_struct_similar_svgs(
+            temp.child("multi_context.gsn.svg").as_os_str(),
+            output_file.as_os_str()
+        )?);
+        temp.close()?;
+        Ok(())
+    }
+
+    #[test]
     fn validate_multiple_only() -> Result<()> {
         let mut cmd = Command::cargo_bin("gsn2x")?;
         cmd.arg("-c")

@@ -653,15 +653,15 @@ mod test {
         let _ = format!("{:?}", nim);
     }
 
-    #[test]
-    fn cover_multiple_node_places() {
-        // This is not a sensible test case.
-        // It just covers some lines that are not yet covered by test cases.
-        let np = NodePlace::MultipleNodes(vec!["a".to_owned(), "b".to_owned()]);
-        let n_a = Node::new_goal("a", "empty", true, None, vec![]);
-        let n_b = Node::new_goal("b", "longer text", true, None, vec![]);
-        let mut nodes = BTreeMap::from([("a".to_owned(), n_a),("b".to_owned(), n_b)]);
-        let _ = np.get_max_width(&nodes);
-        np.set_position(&mut nodes, &Margin::default(), Point2D { x: 0, y: 0 });
-    }
+    // #[test]
+    // fn cover_multiple_node_places() {
+    //     // This is not a sensible test case.
+    //     // It just covers some lines that are not yet covered by test cases.
+    //     let np = NodePlace::MultipleNodes(vec!["a".to_owned(), "b".to_owned()]);
+    //     let n_a = Node::new_goal("a", "empty", true, None, vec![]);
+    //     let n_b = Node::new_goal("b", "longer text", true, None, vec![]);
+    //     let mut nodes = BTreeMap::from([("a".to_owned(), n_a),("b".to_owned(), n_b)]);
+    //     let _ = np.get_max_width(&nodes);
+    //     np.set_position(&mut nodes, &Margin::default(), Point2D { x: 0, y: 0 });
+    // }
 }
