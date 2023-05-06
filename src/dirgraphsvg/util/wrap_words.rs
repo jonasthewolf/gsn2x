@@ -1,7 +1,7 @@
 ///
 /// Wraps `s` at each `width`-th character adding `wrapstr` as a kind of line ending.
 ///
-pub fn wordwrap(s: &str, width: u32, wrapstr: &str) -> String {
+pub fn wrap_words(s: &str, width: u32, wrapstr: &str) -> String {
     let mut out = Vec::<String>::new();
     for line in s.lines() {
         let mut cur_line = String::new();
@@ -47,21 +47,21 @@ mod test {
             "no sea takimata sanctus est Lorem ipsum dolor sit\n",
             "amet."
         );
-        let out = wordwrap(input, 50, "\n");
+        let out = wrap_words(input, 50, "\n");
         assert_eq!(out, expected);
     }
     #[test]
     fn shorter() {
         let input = "Lorem ipsum dolor sit amet, consetetur";
         let expected = "Lorem ipsum dolor sit amet, consetetur".to_owned();
-        let out = wordwrap(input, 50, "\n");
+        let out = wrap_words(input, 50, "\n");
         assert_eq!(out, expected);
     }
     #[test]
     fn empty_line() {
         let input = " ";
         let expected = "".to_owned();
-        let out = wordwrap(input, 50, "\n");
+        let out = wrap_words(input, 50, "\n");
         assert_eq!(out, expected);
     }
 
@@ -72,7 +72,7 @@ mod test {
             "Lorem ipsum dolor sit amet, consetetur sadipscing<br align=\"left\"/>",
             "elitr, sed diam nonumy eirmod tempor invidunt",
         );
-        let out = wordwrap(input, 50, "<br align=\"left\"/>");
+        let out = wrap_words(input, 50, "<br align=\"left\"/>");
         assert_eq!(out, expected);
     }
 
@@ -84,14 +84,14 @@ mod test {
             "consetetur sadipscing<br align=\"left\"/>",
             "elitr, sed diam nonumy eirmod tempor invidunt",
         );
-        let out = wordwrap(input, 50, "<br align=\"left\"/>");
+        let out = wrap_words(input, 50, "<br align=\"left\"/>");
         assert_eq!(out, expected);
     }
 
     #[test]
     fn even_shorter() {
         let input = "Devide";
-        let out = wordwrap(input, 5, "\n");
+        let out = wrap_words(input, 5, "\n");
         assert_eq!(input, out);
     }
 }

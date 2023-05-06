@@ -3,17 +3,19 @@ mod graph;
 pub mod nodes;
 mod util;
 use anyhow::Context;
-use std::{cell::RefCell, collections::BTreeMap, rc::Rc};
+use std::collections::BTreeMap;
 pub use util::{escape_node_id, escape_text};
 
 use edges::{EdgeType, SingleEdge};
 use graph::{rank_nodes, NodePlace};
 use nodes::{setup_basics, Node, Port};
 use svg::{
-    node::element::{path::Data, Marker, Path, Polyline, Rectangle, Style, Symbol, Text, Title},
+    node::element::{path::Data, Marker, Path, Polyline, Rectangle, Style, Symbol, Title},
     Document,
 };
 use util::point2d::Point2D;
+
+use crate::dirgraphsvg::nodes::add_text;
 
 use self::{graph::calculate_parent_edge_map, util::font::FontInfo};
 
@@ -45,7 +47,7 @@ pub struct DirGraph<'a> {
     css_stylesheets: Vec<&'a str>,
     embed_stylesheets: bool,
     forced_levels: BTreeMap<&'a str, Vec<&'a str>>,
-    nodes: BTreeMap<String, Rc<RefCell<dyn Node>>>,
+    nodes: BTreeMap<String, Node>,
     edges: BTreeMap<String, Vec<(String, EdgeType)>>,
     document: Document,
     meta_information: Option<Vec<String>>,
@@ -90,28 +92,8 @@ impl<'a> DirGraph<'a> {
         self
     }
 
-    pub fn add_nodes(mut self, mut nodes: BTreeMap<String, Rc<RefCell<dyn Node>>>) -> Self {
+    pub fn add_nodes(mut self, mut nodes: BTreeMap<String, Node>) -> Self {
         self.nodes.append(&mut nodes);
-        self
-    }
-
-    pub fn _add_node(mut self, node: Rc<RefCell<dyn Node>>) -> Self {
-        self.nodes
-            .insert(node.borrow().get_id().to_owned(), node.clone());
-        self
-    }
-
-    pub fn _add_edge(
-        mut self,
-        source: Rc<RefCell<dyn Node>>,
-        target: Rc<RefCell<dyn Node>>,
-        edge_type: EdgeType,
-    ) -> Self {
-        let entry = self
-            .edges
-            .entry(source.borrow().get_id().to_owned())
-            .or_default();
-        entry.push((target.borrow().get_id().to_owned(), edge_type));
         self
     }
 
@@ -164,8 +146,8 @@ impl<'a> DirGraph<'a> {
     fn layout(mut self, cycles_allowed: bool) -> Self {
         // Calculate node sizes
         self.nodes
-            .values()
-            .for_each(|n| nodes::optimize_size(n, &self.font));
+            .values_mut()
+            .for_each(|n| n.calculate_optimal_size(&self.font));
 
         // Rank nodes
         let ranks = rank_nodes(
@@ -213,7 +195,7 @@ impl<'a> DirGraph<'a> {
                             }
                         }
                     }
-                    np.set_position(&self.nodes, &self.margin, Point2D { x, y });
+                    np.set_position(&mut self.nodes, &self.margin, Point2D { x, y });
                     x += w / 2 + self.margin.left + self.margin.right;
                 }
                 y += self.margin.bottom + dy_max / 2 + self.margin.top;
@@ -232,12 +214,12 @@ impl<'a> DirGraph<'a> {
             for np in rank.values() {
                 match np {
                     NodePlace::Node(id) => {
-                        let mut n = self.nodes.get(id).unwrap().borrow_mut();
+                        let n = self.nodes.get_mut(id).unwrap();
                         self.document = self.document.add(n.render(&self.font));
                     }
                     NodePlace::MultipleNodes(ids) => {
                         for id in ids {
-                            let mut n = self.nodes.get(id).unwrap().borrow_mut();
+                            let n = self.nodes.get_mut(id).unwrap();
                             self.document = self.document.add(n.render(&self.font));
                         }
                     }
@@ -308,20 +290,14 @@ impl<'a> DirGraph<'a> {
                     })
                     .map(|(n, _)| n)
                     .last();
-                let current_x = self
-                    .nodes
-                    .get(current_node)
-                    .unwrap()
-                    .borrow()
-                    .get_position()
-                    .x;
-                match parent.map(|p| self.nodes.get(p).unwrap().borrow()) {
+                let current_x = self.nodes.get(current_node).unwrap().get_position().x;
+                match parent.map(|p| self.nodes.get(p).unwrap()) {
                     Some(n) if n.get_position().x > current_x => Some(
                         n.get_position().x
                             - n.get_width() / 2
                             - self.margin.left
                             - self.margin.right
-                            - self.nodes.get(current_node).unwrap().borrow().get_width() / 2,
+                            - self.nodes.get(current_node).unwrap().get_width() / 2,
                     ),
                     Some(_) => None, // Nodes to the right will automatically be shifted
                     None => None,
@@ -347,7 +323,7 @@ impl<'a> DirGraph<'a> {
                     .map(|(n, _)| n)
                     .last();
                 let current_x = np.get_x(&self.nodes);
-                match parent.map(|p| self.nodes.get(p).unwrap().borrow()) {
+                match parent.map(|p| self.nodes.get(p).unwrap()) {
                     Some(n) if n.get_position().x > current_x => Some(
                         n.get_position().x
                             - n.get_width() / 2
@@ -479,12 +455,12 @@ impl<'a> DirGraph<'a> {
                 // Get the parents minimum position and all the children of those parents maximum
                 let parents_min_x = parents
                     .iter()
-                    .map(|&p| self.nodes.get(p).unwrap().borrow().get_position().x)
+                    .map(|&p| self.nodes.get(p).unwrap().get_position().x)
                     .min()
                     .unwrap_or(0);
                 let child_xs = parents_children
                     .iter()
-                    .map(|&p| self.nodes.get(p).unwrap().borrow().get_position().x)
+                    .map(|&p| self.nodes.get(p).unwrap().get_position().x)
                     .collect::<Vec<i32>>();
                 let child_x_max = *child_xs.iter().max().unwrap_or(&0);
 
@@ -498,7 +474,7 @@ impl<'a> DirGraph<'a> {
                 {
                     let mm: Vec<i32> = parents
                         .iter()
-                        .map(|&parent| self.nodes.get(parent).unwrap().borrow().get_position().x)
+                        .map(|&parent| self.nodes.get(parent).unwrap().get_position().x)
                         .collect();
                     if mm.is_empty() {
                         // Can happen in rare theoretical, minimal cases.
@@ -568,7 +544,7 @@ impl<'a> DirGraph<'a> {
                         _ => None,
                     })
                     // Map to their current x position
-                    .map(|child| self.nodes.get(child).unwrap().borrow().get_position().x)
+                    .map(|child| self.nodes.get(child).unwrap().get_position().x)
                     .collect::<Vec<i32>>();
 
                 if supby_children.is_empty() {
@@ -591,10 +567,10 @@ impl<'a> DirGraph<'a> {
     fn get_max_height(&self, rank: &BTreeMap<usize, NodePlace>) -> i32 {
         rank.values()
             .map(|id| match id {
-                NodePlace::Node(id) => self.nodes.get(id).unwrap().borrow().get_height(),
+                NodePlace::Node(id) => self.nodes.get(id).unwrap().get_height(),
                 NodePlace::MultipleNodes(ids) => {
                     ids.iter()
-                        .map(|id| self.nodes.get(id).unwrap().borrow().get_height())
+                        .map(|id| self.nodes.get(id).unwrap().get_height())
                         .sum::<i32>()
                         + (self.margin.top + self.margin.bottom) * (ids.len() - 1) as i32
                 }
@@ -612,8 +588,8 @@ impl<'a> DirGraph<'a> {
     fn render_edges(mut self) -> Self {
         for (source, targets) in &self.edges {
             for (target, edge_type) in targets {
-                let s = self.nodes.get(source).unwrap().borrow();
-                let t = self.nodes.get(target).unwrap().borrow();
+                let s = self.nodes.get(source).unwrap();
+                let t = self.nodes.get(target).unwrap();
                 let (marker_start_height, marker_end_height, support_distance) = match edge_type {
                     // EdgeType::Invisible => (0i32, 0i32, 3i32 * MARKER_HEIGHT as i32),
                     EdgeType::OneWay(_) => {
@@ -884,16 +860,9 @@ impl<'a> DirGraph<'a> {
             let x = self.width - text_width - 20;
             let y_base = self.height - text_height - 20;
             let mut y_running = 0;
-            for (t, (w, h)) in meta.iter().zip(lines) {
+            for (text, (_, h)) in meta.iter().zip(lines) {
                 y_running += h;
-                let text = Text::new()
-                    .set("x", x)
-                    .set("y", y_base + y_running)
-                    .set("textLength", w)
-                    .set("font-size", self.font.size)
-                    .set("font-family", self.font.name.as_str())
-                    .add(svg::node::Text::new(t));
-                g.append(text);
+                g = add_text(g, text, x, y_base + y_running, &self.font, false);
             }
             self.document = self.document.add(g);
         }
@@ -903,30 +872,22 @@ impl<'a> DirGraph<'a> {
 
 #[cfg(test)]
 mod test {
-    use super::{nodes::new_away_goal, *};
+    use super::*;
 
     #[test]
     fn call_unused() {
         let d = DirGraph::default();
-        let b1 = new_away_goal("id", "text", "module", None, None, vec![]);
-        d._add_css_stylesheet("css")
-            ._add_edge(
-                b1.clone(),
-                new_away_goal("id2", "text", "module", None, None, vec![]),
-                EdgeType::OneWay(SingleEdge::SupportedBy),
-            )
-            ._add_node(b1)
-            ._set_margin(Margin {
-                ..Default::default()
-            });
+        d._add_css_stylesheet("css")._set_margin(Margin {
+            ..Default::default()
+        });
     }
 
     #[test]
     fn test_render_legend() {
         let mut d = DirGraph::default();
-        let b1 = new_away_goal("id", "text", "module", None, None, vec![]);
+        let b1 = Node::new_away_goal("id", "text", "module", None, None, vec![]);
         let mut nodes = BTreeMap::new();
-        nodes.insert("G1".to_owned(), b1 as Rc<RefCell<dyn Node>>);
+        nodes.insert("G1".to_owned(), b1);
         d = d.add_nodes(nodes);
         d = d.add_meta_information(&mut vec!["A1".to_owned(), "B2".to_owned()]);
         let mut string_buffer = Vec::new();

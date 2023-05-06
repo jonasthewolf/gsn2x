@@ -1,8 +1,4 @@
-use std::{
-    cell::RefCell,
-    collections::{BTreeMap, BTreeSet},
-    rc::Rc,
-};
+use std::collections::{BTreeMap, BTreeSet};
 
 use crate::dirgraphsvg::{
     edges::{EdgeType, SingleEdge},
@@ -24,12 +20,12 @@ impl NodePlace {
     /// Panics if a node in NodePlace does not exist or if NodePlace with multiple nodes is empty.
     ///
     ///
-    pub(crate) fn get_max_width(&self, nodes: &BTreeMap<String, Rc<RefCell<dyn Node>>>) -> i32 {
+    pub(crate) fn get_max_width(&self, nodes: &BTreeMap<String, Node>) -> i32 {
         match self {
-            NodePlace::Node(n) => nodes.get(n).unwrap().borrow().get_width(),
+            NodePlace::Node(n) => nodes.get(n).unwrap().get_width(),
             NodePlace::MultipleNodes(np) => np
                 .iter()
-                .map(|n| nodes.get(n).unwrap().borrow().get_width())
+                .map(|n| nodes.get(n).unwrap().get_width())
                 .max()
                 .unwrap(),
         }
@@ -41,25 +37,25 @@ impl NodePlace {
     ///
     pub(crate) fn set_position(
         &self,
-        nodes: &BTreeMap<String, Rc<RefCell<dyn Node>>>,
+        nodes: &mut BTreeMap<String, Node>,
         margin: &Margin,
         pos: Point2D,
     ) {
         // Unwraps are ok, since NodePlace are only created from existing nodes
         match self {
             NodePlace::Node(id) => {
-                let mut n = nodes.get(id).unwrap().borrow_mut();
+                let n = nodes.get_mut(id).unwrap();
                 n.set_position(&pos);
             }
             NodePlace::MultipleNodes(ids) => {
                 let max_h = ids
                     .iter()
-                    .map(|id| nodes.get(id).unwrap().borrow().get_height())
+                    .map(|id| nodes.get(id).unwrap().get_height())
                     .sum::<i32>()
                     + (margin.top + margin.bottom) * (ids.len() - 1) as i32;
                 let mut y_n = pos.y - max_h / 2;
                 for id in ids {
-                    let mut n = nodes.get(id).unwrap().borrow_mut();
+                    let n = nodes.get_mut(id).unwrap();
                     let h = n.get_height();
                     n.set_position(&Point2D {
                         x: pos.x,
@@ -78,15 +74,15 @@ impl NodePlace {
     /// MultipleNodes are never empty.
     ///
     ///
-    pub(crate) fn get_x(&self, nodes: &BTreeMap<String, Rc<RefCell<dyn Node>>>) -> i32 {
+    pub(crate) fn get_x(&self, nodes: &BTreeMap<String, Node>) -> i32 {
         // Unwraps are ok, since NodePlace are only created from existing nodes
         match self {
             NodePlace::Node(n) => {
-                let n = nodes.get(n).unwrap().borrow();
+                let n = nodes.get(n).unwrap();
                 n.get_position().x
             }
             NodePlace::MultipleNodes(np) => {
-                let n = nodes.get(np.first().unwrap()).unwrap().borrow();
+                let n = nodes.get(np.first().unwrap()).unwrap();
                 n.get_position().x
             }
         }
@@ -111,7 +107,7 @@ impl<'a> NodeInfoMap<'a> {
     ///
     ///
     fn new(
-        nodes: &'a BTreeMap<String, Rc<RefCell<dyn Node>>>,
+        nodes: &'a BTreeMap<String, Node>,
         edges: &'a BTreeMap<String, Vec<(String, EdgeType)>>,
         root_nodes: &[&'a str],
         forced_levels: &BTreeMap<&'a str, Vec<&'a str>>,
@@ -161,7 +157,7 @@ impl<'a> NodeInfoMap<'a> {
     ///
     fn constrain_by_forced_levels(
         &mut self,
-        nodes: &BTreeMap<String, Rc<RefCell<dyn Node>>>,
+        nodes: &BTreeMap<String, Node>,
         edges: &BTreeMap<String, Vec<(String, EdgeType)>>,
         forced_levels: &BTreeMap<&'a str, Vec<&'a str>>,
     ) {
@@ -283,7 +279,7 @@ impl<'a> NodeInfoMap<'a> {
     ///
     fn find_ranks(
         &mut self,
-        nodes: &BTreeMap<String, Rc<RefCell<dyn Node>>>,
+        nodes: &BTreeMap<String, Node>,
         edges: &BTreeMap<String, Vec<(String, EdgeType)>>,
         root_nodes: &[&str],
     ) -> bool {
@@ -317,7 +313,7 @@ impl<'a> NodeInfoMap<'a> {
     ///
     fn rank_nodes(
         &mut self,
-        nodes: &BTreeMap<String, Rc<RefCell<dyn Node>>>,
+        nodes: &BTreeMap<String, Node>,
         edges: &BTreeMap<String, Vec<(String, EdgeType)>>,
         root_nodes: &[&str],
         cycles_allowed: bool,
@@ -357,7 +353,7 @@ impl<'a> NodeInfoMap<'a> {
 ///
 ///
 pub(crate) fn rank_nodes<'a>(
-    nodes: &'a mut BTreeMap<String, Rc<RefCell<dyn Node>>>,
+    nodes: &'a mut BTreeMap<String, Node>,
     edges: &'a mut BTreeMap<String, Vec<(String, EdgeType)>>,
     forced_levels: &BTreeMap<&'a str, Vec<&'a str>>,
     cycles_allowed: bool,
@@ -426,7 +422,7 @@ fn determine_child_rank(
 /// The rank could be constraint by the forced level.
 ///
 fn find_next_child_node<'a>(
-    nodes: &'a BTreeMap<String, Rc<RefCell<dyn Node>>>,
+    nodes: &'a BTreeMap<String, Node>,
     edges: &'a BTreeMap<String, Vec<(String, EdgeType)>>,
     node_info: &BTreeMap<String, NodeInfo>,
     current: &str,

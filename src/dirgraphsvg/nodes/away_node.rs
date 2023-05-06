@@ -1,15 +1,17 @@
-use svg::node::element::{path::Data, Link, Path, Rectangle, Text, Title, Use};
+use svg::node::element::{path::Data, Element, Link, Path, Rectangle, Text, Title, Use};
 
-use crate::dirgraphsvg::{util::escape_url, util::font::FontInfo};
+use crate::dirgraphsvg::{
+    nodes::{add_text, OFFSET_IDENTIFIER},
+    util::escape_url,
+    util::font::{text_bounding_box, FontInfo},
+};
 
-use super::{get_port_default_coordinates, setup_basics, Node, Point2D, Port};
+use super::{Node, SizeContext, PADDING_HORIZONTAL, PADDING_VERTICAL};
 
-const PADDING_VERTICAL: i32 = 7;
-const PADDING_HORIZONTAL: i32 = 7;
-const TEXT_OFFSET: i32 = 20;
 const MODULE_IMAGE: i32 = 20;
 
-pub enum AwayType {
+#[derive(Debug)]
+pub enum AwayNodeType {
     Goal,
     Solution,
     Context,
@@ -17,153 +19,160 @@ pub enum AwayType {
     Justification,
 }
 
-pub struct AwayNode {
-    identifier: String,
-    text: String,
-    module: String,
-    module_url: Option<String>,
-    node_type: AwayType,
-    url: Option<String>,
-    classes: Vec<String>,
-    width: i32,
-    height: i32,
-    lines: Vec<(i32, i32)>,
-    x: i32,
-    y: i32,
-    mod_width: i32,
-    mod_height: i32,
-    addon_height: i32,
+pub(crate) struct AwayType {
+    pub(super) module: String,
+    pub(super) module_url: Option<String>,
+    pub(super) away_type: AwayNodeType,
+    pub(super) mod_height: i32,
 }
 
-impl Node for AwayNode {
+///
+///         -+----             ...........
+///          |             .....         .....
+///   addon  |           ...                 ...
+///   height |        ....                     ....
+///          |       ..                           ..
+///          +---    +------------------------------+
+///     Pad  |       |                              |
+///  y_start +--     |  +------------------------+  |
+///          |       |  |                        |  |
+///          |       |  |                        |  |
+///    text  |       |  |                        |  |
+///   height |       |  |                        |  |
+///          |       |  |                        |  |
+///          |       |  |                        |  |
+///          |       |  |                        |  |
+///          +--     |  +------------------------+  |
+///     Pad  |       |                              |
+/// y_module +---    +------------------------------+
+///     Pad  |       |                              |
+///          +--     |  +------------------------+  |
+///   mod    |       |  |                        |  |
+///   height |       |  |  XXXX                  |  |
+///          |       |  |                        |  |
+///          +--     |  +------------------------+  |
+///     Pad  |       |                              |
+///         -+----   +------------------------------+
+///    
+///                  | Pad                      Pad |
+///                  +--+------------------------+--+
+///                  |           width              |
+///
+
+impl AwayType {
     ///
-    /// Width: 5 padding on each side, minimum 50, maximum line length of text or identifier
-    /// Height: 5 padding on each side, minimum 30, id line height (max. 20) + height of each text line
     ///
-    fn calculate_size(&mut self, font: &FontInfo, char_wrap: u32, binding_char_wrap: bool) {
-        self.width = PADDING_HORIZONTAL * 2 + 70; // Padding of 5 on both sides
-        self.height = PADDING_VERTICAL * 2 + 30; // Padding of 5 on both sides
-        let text = crate::dirgraphsvg::util::wordwrap::wordwrap(&self.text, char_wrap, "\n");
-        let (t_width, t_height) =
-            crate::dirgraphsvg::util::font::text_bounding_box(font, &self.identifier, true);
-        let mut lines = vec![];
-        lines.push((t_width, t_height));
-        let mut text_height = 0;
-        let mut text_width = t_width + PADDING_HORIZONTAL * 2;
-        for t in text.lines() {
-            let (width, height) = crate::dirgraphsvg::util::font::text_bounding_box(font, t, false);
-            lines.push((width, height));
-            text_height += height;
-            text_width = std::cmp::max(text_width, width + PADDING_HORIZONTAL * 2);
-        }
-        let (mod_width, mod_height) =
-            crate::dirgraphsvg::util::font::text_bounding_box(font, &self.module, false);
-        self.mod_width = mod_width;
-        self.mod_height = mod_height;
-        self.width = *[
-            self.width,
-            text_width,
-            mod_width + MODULE_IMAGE + PADDING_HORIZONTAL * 2,
+    ///
+    pub(super) fn get_minimum_size(&self) -> (i32, i32) {
+        (PADDING_HORIZONTAL * 2 + 70, PADDING_VERTICAL * 2 + 30)
+    }
+
+    ///
+    ///
+    ///
+    pub(super) fn calculate_size(
+        &self,
+        font: &FontInfo,
+        min_width: i32,
+        min_height: i32,
+        size_context: &mut SizeContext,
+    ) -> (i32, i32) {
+        // no wrapping of module names
+        let (mod_width, _) = text_bounding_box(font, &self.module, false);
+
+        let width = *[
+            min_width,
+            size_context.text_width + PADDING_HORIZONTAL * 2,
+            mod_width + MODULE_IMAGE + PADDING_HORIZONTAL * 3, // Padding + Module Image + Padding + Module text + Padding
         ]
         .iter()
         .max()
-        .unwrap()
-            + PADDING_HORIZONTAL * 2;
-        self.height = std::cmp::max(
-            self.height,
-            PADDING_VERTICAL * 4 + TEXT_OFFSET + text_height + 3 + self.mod_height,
-        ); // +3 to make padding at bottom larger
-        let addon_height = match self.node_type {
-            AwayType::Goal => 0,
-            AwayType::Solution => (self.width as f32 * 0.5) as i32,
-            AwayType::Context => (self.width as f32 * 0.1) as i32,
-            AwayType::Assumption => (self.width as f32 * 0.25) as i32,
-            AwayType::Justification => (self.width as f32 * 0.25) as i32,
+        .unwrap();
+        let addon_height = self.get_addon_height(width);
+        let mut height = std::cmp::max(
+            min_height,
+            PADDING_VERTICAL * 2
+                + size_context.text_height
+                + std::cmp::max(self.mod_height, MODULE_IMAGE)
+                + PADDING_VERTICAL * 2,
+        );
+        height += addon_height;
+        (width, height)
+    }
+
+    ///
+    /// 
+    /// 
+    /// 
+    fn get_addon_height(&self, width: i32) -> i32 {
+        let addon_height = match self.away_type {
+            AwayNodeType::Goal => 0,
+            AwayNodeType::Solution => (width as f32 * 0.5) as i32,
+            AwayNodeType::Context => (width as f32 * 0.1) as i32,
+            AwayNodeType::Assumption => (width as f32 * 0.25) as i32,
+            AwayNodeType::Justification => (width as f32 * 0.25) as i32,
         };
-        self.height += addon_height;
-        if binding_char_wrap {
-            self.text = text;
-            self.lines = lines;
-            self.addon_height = addon_height;
-        }
+        addon_height
     }
 
-    fn get_id(&self) -> &str {
-        self.identifier.as_ref()
-    }
+    ///
+    ///
+    ///
+    ///
+    pub(super) fn render(&self, node: &Node, font: &FontInfo, mut ctxt: Element) -> Element {
+        let title = Title::new().add(svg::node::Text::new(&node.identifier));
 
-    fn get_width(&self) -> i32 {
-        self.width
-    }
+        use svg::Node;
+        ctxt.append(title);
 
-    fn get_height(&self) -> i32 {
-        self.height
-    }
+        let addon_height = self.get_addon_height(node.width);
 
-    fn get_coordinates(&self, port: &Port) -> Point2D {
-        get_port_default_coordinates(self.x, self.y, self.width, self.height, port)
-    }
+        let y_module = node.y + node.height / 2 - 2 * PADDING_VERTICAL - self.mod_height;
+        let y_id = node.y - node.height / 2 + addon_height + PADDING_VERTICAL;
 
-    fn set_position(&mut self, pos: &Point2D) {
-        self.x = pos.x;
-        self.y = pos.y;
-    }
 
-    fn get_position(&self) -> Point2D {
-        Point2D {
-            x: self.x,
-            y: self.y,
-        }
-    }
-
-    fn render(&mut self, font: &FontInfo) -> svg::node::element::Element {
-        let mut g = setup_basics(&self.identifier, &self.classes, &self.url);
-
-        let title = Title::new().add(svg::node::Text::new(&self.identifier));
-
-        let start_y = self.y + self.height / 2 - 2 * PADDING_VERTICAL - self.mod_height;
-        let start_id = self.y + self.addon_height - self.height / 2 + PADDING_VERTICAL;
-
-        let data = match self.node_type {
-            AwayType::Goal => Data::new()
-                .move_to((self.x - self.width / 2, start_y))
-                .vertical_line_to(self.y - self.height / 2)
-                .horizontal_line_to(self.x + self.width / 2)
-                .vertical_line_to(start_y),
-            AwayType::Solution | AwayType::Assumption | AwayType::Justification => Data::new()
-                .move_to((self.x - self.width / 2, start_y))
-                .vertical_line_to(self.y - self.height / 2 + self.addon_height)
-                .elliptical_arc_to((
-                    self.width / 2,
-                    self.addon_height,
-                    0,
-                    0,
-                    1,
-                    self.x + self.width / 2,
-                    self.y - self.height / 2 + self.addon_height,
-                ))
-                .vertical_line_to(start_y),
-            AwayType::Context => Data::new()
-                .move_to((self.x - self.width / 2, start_y))
-                .vertical_line_to(self.y - self.height / 2 + self.addon_height)
+        let data = match self.away_type {
+            AwayNodeType::Goal => Data::new()
+                .move_to((node.x - node.width / 2, y_module))
+                .vertical_line_to(node.y - node.height / 2)
+                .horizontal_line_to(node.x + node.width / 2)
+                .vertical_line_to(y_module),
+            AwayNodeType::Solution | AwayNodeType::Assumption | AwayNodeType::Justification => {
+                Data::new()
+                    .move_to((node.x - node.width / 2, y_module))
+                    .vertical_line_to(node.y - node.height / 2 + addon_height)
+                    .elliptical_arc_to((
+                        node.width / 2,
+                        addon_height,
+                        0,
+                        0,
+                        1,
+                        node.x + node.width / 2,
+                        node.y - node.height / 2 + addon_height,
+                    ))
+                    .vertical_line_to(y_module)
+            }
+            AwayNodeType::Context => Data::new()
+                .move_to((node.x - node.width / 2, y_module))
+                .vertical_line_to(node.y - node.height / 2 + addon_height)
                 .cubic_curve_to((
-                    self.x - self.width / 2,
-                    self.y - self.height / 2 + self.addon_height / 2,
-                    self.x - self.width / 2 + self.addon_height / 2,
-                    self.y - self.height / 2,
-                    self.x - self.width / 2 + self.addon_height,
-                    self.y - self.height / 2,
+                    node.x - node.width / 2,
+                    node.y - node.height / 2 + addon_height / 2,
+                    node.x - node.width / 2 + addon_height / 2,
+                    node.y - node.height / 2,
+                    node.x - node.width / 2 + addon_height,
+                    node.y - node.height / 2,
                 ))
-                .horizontal_line_by(self.width - 2 * self.addon_height)
+                .horizontal_line_by(node.width - 2 * addon_height)
                 .cubic_curve_to((
-                    self.x + self.width / 2 - self.addon_height / 2,
-                    self.y - self.height / 2,
-                    self.x + self.width / 2,
-                    self.y - self.height / 2 + self.addon_height / 2,
-                    self.x + self.width / 2,
-                    self.y - self.height / 2 + self.addon_height,
+                    node.x + node.width / 2 - addon_height / 2,
+                    node.y - node.height / 2,
+                    node.x + node.width / 2,
+                    node.y - node.height / 2 + addon_height / 2,
+                    node.x + node.width / 2,
+                    node.y - node.height / 2 + addon_height,
                 ))
-                .vertical_line_to(start_y),
+                .vertical_line_to(y_module),
         };
 
         let upper_line = Path::new()
@@ -172,125 +181,85 @@ impl Node for AwayNode {
             .set("stroke-width", 1u32)
             .set("d", data)
             .set("class", "border");
+        ctxt.append(upper_line);
 
+        let x = node.x - node.width / 2 + PADDING_HORIZONTAL;
+        let mut y = y_id + font.size as i32;
+        // Identifier
+        ctxt = add_text(ctxt, &node.identifier, x, y, &font, true);
+        y += OFFSET_IDENTIFIER;
+
+        // Text
+        for text in node.text.lines() {
+            y += font.size as i32;
+            ctxt = add_text(ctxt, text, x, y, &font, false);
+        }
+
+        // It is a box to be able to add a link to it
         let module_box = Rectangle::new()
-            .set("x", self.x - self.width / 2)
+            .set("x", node.x - node.width / 2)
             .set(
                 "y",
-                self.y + self.height / 2 - 2 * PADDING_VERTICAL - self.mod_height,
+                node.y + node.height / 2 - (2 * PADDING_VERTICAL + self.mod_height),
             )
-            .set("width", self.width)
+            .set("width", node.width)
             .set("height", 2 * PADDING_VERTICAL + self.mod_height)
             .set("fill", "none")
             .set("stroke", "black")
             .set("stroke-width", 1u32);
 
+        // TODO rework add_text to support this use-case
         let module_text = Text::new()
             .set(
                 "x",
-                self.x - self.width / 2 + 2 * PADDING_HORIZONTAL + MODULE_IMAGE,
+                node.x - node.width / 2 + PADDING_HORIZONTAL + MODULE_IMAGE + PADDING_HORIZONTAL,
             )
-            .set("y", self.y + self.height / 2 - PADDING_VERTICAL)
-            .set("textLength", self.mod_width)
+            .set("y", node.y + node.height / 2 - PADDING_VERTICAL)
             .set("font-weight", "bold")
             .set("font-size", font.size)
             .set("font-family", font.name.as_str())
             .add(svg::node::Text::new(&self.module));
 
-        let id = Text::new()
-            .set("x", self.x - self.width / 2 + PADDING_HORIZONTAL)
-            .set("y", start_id + self.lines.first().unwrap().1)
-            .set("textLength", self.lines.first().unwrap().0)
-            .set("font-weight", "bold")
-            .set("font-size", font.size)
-            .set("font-family", font.name.as_str())
-            .add(svg::node::Text::new(&self.identifier));
-
-        use svg::Node;
-        g.append(title);
+        // Module text and links
         if let Some(module_url) = &self.module_url {
             let mut module_link = Link::new();
             module_link = module_link
                 .set("href", escape_url(module_url.as_str()))
                 .add(module_box)
                 .add(module_text);
-            g.append(module_link);
+            ctxt.append(module_link);
         } else {
-            g.append(module_box);
-            g.append(module_text);
+            ctxt.append(module_box);
+            ctxt.append(module_text);
         }
-        g.append(upper_line);
-        g.append(id);
-        g.append(
+        // Module icon
+        ctxt.append(
             Use::new()
                 .set("href", "#module_icon")
-                .set("x", self.x - self.width / 2 + PADDING_HORIZONTAL)
+                .set("x", node.x - node.width / 2 + PADDING_HORIZONTAL)
                 .set(
                     "y",
-                    self.y + self.height / 2 - self.mod_height - PADDING_VERTICAL,
+                    node.y + node.height / 2 - self.mod_height - PADDING_VERTICAL,
                 ),
         );
 
-        let admonition = match self.node_type {
-            AwayType::Assumption => Some("A"),
-            AwayType::Justification => Some("J"),
+        // Add admonition letter
+        let admonition = match self.away_type {
+            AwayNodeType::Assumption => Some("A"),
+            AwayNodeType::Justification => Some("J"),
             _ => None,
         };
         if let Some(adm) = admonition {
-            let decorator = Text::new()
-                .set("x", self.x + self.width / 2 - PADDING_HORIZONTAL)
-                .set("y", self.y - self.height / 2)
-                .set("font-weight", "bold")
-                .set("font-size", font.size)
-                .set("font-family", font.name.as_str())
-                .add(svg::node::Text::new(adm));
-            g.append(decorator);
+            ctxt = add_text(
+                ctxt,
+                adm,
+                node.x + node.width / 2 - PADDING_HORIZONTAL,
+                node.y - node.height / 2,
+                &font,
+                true,
+            );
         }
 
-        for (n, t) in self.text.lines().enumerate() {
-            let text = Text::new()
-                .set("x", self.x - self.width / 2 + PADDING_HORIZONTAL)
-                .set(
-                    "y",
-                    start_id + TEXT_OFFSET + (n as i32 + 1) * self.lines.get(n + 1).unwrap().1,
-                )
-                .set("textLength", self.lines.get(n + 1).unwrap().0)
-                .set("font-size", font.size)
-                .set("font-family", font.name.as_str())
-                .add(svg::node::Text::new(t));
-            g.append(text);
-        }
-
-        g
-    }
-}
-
-impl AwayNode {
-    pub fn new(
-        id: &str,
-        text: &str,
-        module: &str,
-        module_url: Option<String>,
-        node_type: AwayType,
-        url: Option<String>,
-        classes: Vec<String>,
-    ) -> Self {
-        AwayNode {
-            identifier: id.to_owned(),
-            text: text.to_owned(),
-            url,
-            classes,
-            width: 0,
-            height: 0,
-            lines: vec![],
-            x: 0,
-            y: 0,
-            module: module.to_owned(),
-            module_url,
-            node_type,
-            mod_width: 0,
-            mod_height: 0,
-            addon_height: 0,
-        }
+        ctxt
     }
 }

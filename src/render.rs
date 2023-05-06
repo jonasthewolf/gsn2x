@@ -1,14 +1,13 @@
 use crate::dirgraphsvg::edges::EdgeType;
-use crate::dirgraphsvg::{escape_node_id, escape_text, nodes::*};
+use crate::dirgraphsvg::{escape_node_id, escape_text, nodes::Node};
 use crate::gsn::{get_levels, GsnNode, Module};
 use anyhow::{anyhow, Result};
 use chrono::Utc;
 use clap::ArgMatches;
-use std::cell::RefCell;
+
 use std::collections::{BTreeMap, HashMap};
 use std::io::Write;
 use std::path::{Component, PathBuf};
-use std::rc::Rc;
 
 #[derive(Default, Eq, PartialEq)]
 pub enum RenderLegend {
@@ -77,17 +76,13 @@ impl From<&ArgMatches> for RenderOptions {
 ///
 ///
 ///
-pub fn svg_from_gsn_node(
-    id: &str,
-    gsn_node: &GsnNode,
-    layers: &[String],
-) -> Rc<RefCell<dyn crate::dirgraphsvg::nodes::Node>> {
+pub fn svg_from_gsn_node(id: &str, gsn_node: &GsnNode, layers: &[String]) -> Node {
     let classes = node_classes_from_node(gsn_node);
     // Add layer to node output
     let node_text = node_text_from_node_and_layers(gsn_node, layers);
     // Create node
     match id {
-        id if id.starts_with('G') => new_goal(
+        id if id.starts_with('G') => Node::new_goal(
             id,
             &node_text,
             gsn_node.undeveloped.unwrap_or(false),
@@ -95,21 +90,23 @@ pub fn svg_from_gsn_node(
             classes,
         ),
         id if id.starts_with("Sn") => {
-            new_solution(id, &node_text, gsn_node.url.to_owned(), classes)
+            Node::new_solution(id, &node_text, gsn_node.url.to_owned(), classes)
         }
-        id if id.starts_with('S') => new_strategy(
+        id if id.starts_with('S') => Node::new_strategy(
             id,
             &node_text,
             gsn_node.undeveloped.unwrap_or(false),
             gsn_node.url.to_owned(),
             classes,
         ),
-        id if id.starts_with('C') => new_context(id, &node_text, gsn_node.url.to_owned(), classes),
+        id if id.starts_with('C') => {
+            Node::new_context(id, &node_text, gsn_node.url.to_owned(), classes)
+        }
         id if id.starts_with('A') => {
-            new_assumption(id, &node_text, gsn_node.url.to_owned(), classes)
+            Node::new_assumption(id, &node_text, gsn_node.url.to_owned(), classes)
         }
         id if id.starts_with('J') => {
-            new_justification(id, &node_text, gsn_node.url.to_owned(), classes)
+            Node::new_justification(id, &node_text, gsn_node.url.to_owned(), classes)
         }
         _ => unreachable!(),
     }
@@ -175,7 +172,7 @@ pub fn away_svg_from_gsn_node(
     module: &Module,
     source_module: &Module,
     layers: &[String],
-) -> Result<Rc<RefCell<dyn crate::dirgraphsvg::nodes::Node>>> {
+) -> Result<Node> {
     let classes = node_classes_from_node(gsn_node);
 
     let mut module_url = get_relative_module_url(&module.filename, &source_module.filename)?;
@@ -187,7 +184,7 @@ pub fn away_svg_from_gsn_node(
 
     // Create node
     Ok(match id {
-        id if id.starts_with('G') => new_away_goal(
+        id if id.starts_with('G') => Node::new_away_goal(
             id,
             &node_text,
             &gsn_node.module,
@@ -195,7 +192,7 @@ pub fn away_svg_from_gsn_node(
             gsn_node.url.to_owned(),
             classes,
         ),
-        id if id.starts_with("Sn") => new_away_solution(
+        id if id.starts_with("Sn") => Node::new_away_solution(
             id,
             &node_text,
             &gsn_node.module,
@@ -203,14 +200,14 @@ pub fn away_svg_from_gsn_node(
             gsn_node.url.to_owned(),
             classes,
         ),
-        id if id.starts_with('S') => new_strategy(
+        id if id.starts_with('S') => Node::new_strategy(
             id,
             &node_text,
             gsn_node.undeveloped.unwrap_or(false),
             Some(module_url), // Use module_url if Strategy is not defined in current module.
             classes,
         ),
-        id if id.starts_with('C') => new_away_context(
+        id if id.starts_with('C') => Node::new_away_context(
             id,
             &node_text,
             &gsn_node.module,
@@ -218,7 +215,7 @@ pub fn away_svg_from_gsn_node(
             gsn_node.url.to_owned(),
             classes,
         ),
-        id if id.starts_with('A') => new_away_assumption(
+        id if id.starts_with('A') => Node::new_away_assumption(
             id,
             &node_text,
             &gsn_node.module,
@@ -226,7 +223,7 @@ pub fn away_svg_from_gsn_node(
             gsn_node.url.to_owned(),
             classes,
         ),
-        id if id.starts_with('J') => new_away_justification(
+        id if id.starts_with('J') => Node::new_away_justification(
             id,
             &node_text,
             &gsn_node.module,
@@ -273,13 +270,13 @@ pub fn render_architecture(
     render_options: &RenderOptions,
 ) -> Result<()> {
     let mut dg = crate::dirgraphsvg::DirGraph::default();
-    let svg_nodes: BTreeMap<String, Rc<RefCell<dyn Node>>> = modules
+    let svg_nodes: BTreeMap<String, Node> = modules
         .iter()
         .filter(|(k, _)| dependencies.contains_key(k.to_owned()))
         .map(|(k, module)| {
             (
                 k.to_owned(),
-                new_module(
+                Node::new_module(
                     k,
                     module
                         .meta
@@ -289,7 +286,7 @@ pub fn render_architecture(
                         .as_str(),
                     get_relative_module_url(&module.filename, &module.filename).ok(),
                     vec![],
-                ) as Rc<RefCell<dyn Node>>,
+                ),
             )
         })
         .collect();
@@ -336,7 +333,7 @@ pub fn render_complete(
         // TODO continue masking here
         .map(|(id, node)| (id.to_owned(), node.get_edges()))
         .collect();
-    let svg_nodes: BTreeMap<String, Rc<RefCell<dyn Node>>> = nodes
+    let svg_nodes: BTreeMap<String, Node> = nodes
         .iter()
         .map(|(id, node)| {
             (
@@ -379,7 +376,7 @@ pub fn render_argument(
     render_options: &RenderOptions,
 ) -> Result<()> {
     let mut dg = crate::dirgraphsvg::DirGraph::default();
-    let mut svg_nodes: BTreeMap<String, Rc<RefCell<dyn Node>>> = nodes
+    let mut svg_nodes: BTreeMap<String, Node> = nodes
         .iter()
         .filter(|(_, node)| node.module == module_name)
         .map(|(id, node)| {

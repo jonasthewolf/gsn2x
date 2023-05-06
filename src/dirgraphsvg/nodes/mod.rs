@@ -1,22 +1,18 @@
-use std::{cell::RefCell, rc::Rc};
-
 use svg::node::element::{Element, Group, Link};
 
 use crate::dirgraphsvg::{util::point2d::Point2D, FontInfo};
 
 use self::{
-    away_node::{AwayNode, AwayType},
-    box_node::BoxNode,
-    context_node::ContextNode,
-    elliptical_node::EllipticalNode,
+    away_node::{AwayNodeType, AwayType},
+    box_node::BoxType,
+    elliptical_node::EllipticalType,
 };
 
-use super::util::{escape_node_id, escape_url};
+use super::util::{escape_node_id, escape_url, font::text_bounding_box};
 
-pub mod away_node;
-pub mod box_node;
-pub mod context_node;
-pub mod elliptical_node;
+mod away_node;
+mod box_node;
+mod elliptical_node;
 
 #[derive(Eq, PartialEq)]
 pub enum Port {
@@ -26,41 +22,434 @@ pub enum Port {
     West,
 }
 
-pub trait Node {
-    fn get_id(&self) -> &str;
-    fn calculate_size(&mut self, font: &FontInfo, char_wrap: u32, binding_char_wrap: bool);
-    fn get_width(&self) -> i32;
-    fn get_height(&self) -> i32;
-    fn set_position(&mut self, pos: &Point2D);
-    fn get_position(&self) -> Point2D;
-    fn get_coordinates(&self, port: &Port) -> Point2D;
-    fn render(&mut self, font: &FontInfo) -> svg::node::element::Element;
+enum NodeType {
+    BoxNode(BoxType),
+    EllipticalNode(EllipticalType),
+    AwayNode(AwayType),
 }
 
-///
-///
-///
-///
-pub(crate) fn get_port_default_coordinates(
+pub struct Node {
     x: i32,
     y: i32,
     width: i32,
     height: i32,
-    port: &Port,
-) -> Point2D {
-    Point2D {
-        x: match port {
-            Port::North => x,
-            Port::East => x + (width / 2),
-            Port::South => x,
-            Port::West => x - (width / 2),
-        },
-        y: match port {
-            Port::North => y - (height / 2),
-            Port::East => y,
-            Port::South => y + (height / 2),
-            Port::West => y,
-        },
+    identifier: String,
+    text: String,
+    url: Option<String>,
+    classes: Vec<String>,
+    node_type: NodeType,
+}
+
+struct SizeContext {
+    width: i32,
+    height: i32,
+    text: String,
+    text_width: i32,
+    text_height: i32,
+}
+
+const PADDING_VERTICAL: i32 = 7;
+const PADDING_HORIZONTAL: i32 = 7;
+const OFFSET_IDENTIFIER: i32 = 5;
+const MODULE_TAB_HEIGHT: i32 = 10;
+
+impl Node {
+    pub fn get_width(&self) -> i32 {
+        self.width
+    }
+
+    pub fn get_height(&self) -> i32 {
+        self.height
+    }
+
+    pub fn get_coordinates(&self, port: &Port) -> Point2D {
+        let mut coords = Point2D {
+            x: match port {
+                Port::North => self.x,
+                Port::East => self.x + (self.width / 2),
+                Port::South => self.x,
+                Port::West => self.x - (self.width / 2),
+            },
+            y: match port {
+                Port::North => self.y - (self.height / 2),
+                Port::East => self.y,
+                Port::South => self.y + (self.height / 2),
+                Port::West => self.y,
+            },
+        };
+        if let NodeType::BoxNode(BoxType::Module) = &self.node_type {
+            if port == &super::Port::North {
+                coords.y += MODULE_TAB_HEIGHT;
+            }
+        }
+
+        coords
+    }
+
+    pub fn set_position(&mut self, pos: &Point2D) {
+        self.x = pos.x;
+        self.y = pos.y;
+    }
+
+    pub fn get_position(&self) -> Point2D {
+        Point2D {
+            x: self.x,
+            y: self.y,
+        }
+    }
+
+    pub fn calculate_optimal_size(&mut self, font: &FontInfo) {
+        let mut min_width = i32::MAX;
+        let mut min_height = i32::MAX;
+        let mut min_size = SizeContext {
+            width: 0,
+            height: 0,
+            text: "".to_owned(),
+            text_width: 0,
+            text_height: 0,
+        };
+        for wrap in 15..70 {
+            let size_context = self.calculate_size(font, wrap);
+            let w = self.get_width();
+            let h = self.get_height();
+            if w >= h || (w <= min_width && h <= min_height) {
+                min_width = w;
+                min_height = h;
+                min_size = size_context;
+            }
+        }
+        // Set minimum size
+        self.width = min_size.width;
+        self.height = min_size.height;
+        self.text = min_size.text;
+        match &mut self.node_type {
+            NodeType::BoxNode(_) => (),
+            NodeType::EllipticalNode(x) => {
+                x.text_width = min_size.text_width;
+                x.text_height = min_size.text_height;
+            }
+            NodeType::AwayNode(x) => {
+                (_, x.mod_height) = text_bounding_box(font, &x.module, false);
+            }
+        }
+    }
+
+    ///
+    ///
+    ///
+    ///
+    fn calculate_size(&mut self, font: &FontInfo, char_wrap: u32) -> SizeContext {
+        let (width, height) = match &self.node_type {
+            NodeType::BoxNode(x) => x.get_minimum_size(),
+            NodeType::EllipticalNode(x) => x.get_minimum_size(),
+            NodeType::AwayNode(x) => x.get_minimum_size(),
+        };
+        let mut size_context = self.calculate_text_size(font, char_wrap);
+        (size_context.width, size_context.height) = match &self.node_type {
+            NodeType::BoxNode(x) => x.calculate_size(font, width, height, &mut size_context),
+            NodeType::EllipticalNode(x) => x.calculate_size(font, width, height, &mut size_context),
+            NodeType::AwayNode(x) => x.calculate_size(font, width, height, &mut size_context),
+        };
+        size_context
+    }
+
+    ///
+    /// Calculate size of text without padding
+    ///
+    /// Height: Identifier + Offset + Text lines (wrapped)
+    /// Width: Max of Identifier or longest Text line
+    ///
+    ///
+    fn calculate_text_size(&self, font: &FontInfo, char_wrap: u32) -> SizeContext {
+        use crate::dirgraphsvg::util::wrap_words::wrap_words;
+
+        let text = wrap_words(&self.text, char_wrap, "\n");
+        // First row is identifier, thus treated differently
+        let (head_width, head_height) = text_bounding_box(font, &self.identifier, true);
+        let mut text_height = head_height + OFFSET_IDENTIFIER;
+        let mut text_width = head_width;
+        for text_line in text.lines() {
+            let (line_width, line_height) = text_bounding_box(font, text_line, false);
+            text_height += line_height;
+            text_width = std::cmp::max(text_width, line_width);
+        }
+        SizeContext {
+            width: 0,
+            height: 0,
+            text,
+            text_width,
+            text_height,
+        }
+    }
+
+    pub fn render(&mut self, font: &FontInfo) -> Element {
+        let mut context = setup_basics(&self.identifier, &self.classes, &self.url);
+        context = match &self.node_type {
+            NodeType::BoxNode(x) => x.render(self, font, context),
+            NodeType::EllipticalNode(x) => x.render(self, font, context),
+            NodeType::AwayNode(x) => x.render(self, font, context),
+        };
+        context
+    }
+
+    fn new(
+        identifier: &str,
+        text: &str,
+        url: Option<String>,
+        classes: Vec<String>,
+        add_class: &str,
+    ) -> Self {
+        let mut new_classes: Vec<String> = vec!["gsnelem".to_owned(), add_class.to_owned()];
+        new_classes.append(&mut classes.iter().cloned().collect());
+
+        Node {
+            x: 0,
+            y: 0,
+            width: 0,
+            height: 0,
+            identifier: identifier.to_owned(),
+            text: text.to_owned(),
+            url,
+            classes,
+            node_type: NodeType::BoxNode(BoxType::Context),
+        }
+    }
+
+    ///
+    ///
+    pub fn new_assumption(
+        identifier: &str,
+        text: &str,
+        url: Option<String>,
+        classes: Vec<String>,
+    ) -> Self {
+        let mut n = Node::new(identifier, text, url, classes, "gsnasmp");
+        n.node_type = NodeType::EllipticalNode(EllipticalType {
+            admonition: Some("A".to_owned()),
+            circle: false,
+            text_width: 0,
+            text_height: 0,
+        });
+        n
+    }
+
+    ///
+    ///
+    ///
+    ///
+    pub fn new_away_assumption(
+        identifier: &str,
+        text: &str,
+        module: &str,
+        module_url: Option<String>,
+        url: Option<String>,
+        classes: Vec<String>,
+    ) -> Self {
+        let mut n = Node::new(identifier, text, url, classes, "gsnawayasmp");
+        n.node_type = NodeType::AwayNode(AwayType {
+            module: module.to_owned(),
+            module_url,
+            away_type: AwayNodeType::Assumption,
+            mod_height: 0,
+        });
+        n
+    }
+
+    ///
+    ///
+    ///
+    ///
+    pub fn new_justification(
+        identifier: &str,
+        text: &str,
+        url: Option<String>,
+        classes: Vec<String>,
+    ) -> Self {
+        let mut n = Node::new(identifier, text, url, classes, "gsnjust");
+        n.node_type = NodeType::EllipticalNode(EllipticalType {
+            admonition: Some("J".to_owned()),
+            circle: false,
+            text_width: 0,
+            text_height: 0,
+        });
+        n
+    }
+
+    ///
+    ///
+    ///
+    ///
+    ///
+    pub fn new_away_justification(
+        identifier: &str,
+        text: &str,
+        module: &str,
+        module_url: Option<String>,
+        url: Option<String>,
+        classes: Vec<String>,
+    ) -> Self {
+        let mut n = Node::new(identifier, text, url, classes, "gsnawayjust");
+        n.node_type = NodeType::AwayNode(AwayType {
+            module: module.to_owned(),
+            module_url,
+            away_type: AwayNodeType::Justification,
+            mod_height: 0,
+        });
+        n
+    }
+
+    ///
+    ///
+    ///
+    ///
+    pub fn new_solution(
+        identifier: &str,
+        text: &str,
+        url: Option<String>,
+        classes: Vec<String>,
+    ) -> Self {
+        let mut n = Node::new(identifier, text, url, classes, "gsnsltn");
+        n.node_type = NodeType::EllipticalNode(EllipticalType {
+            admonition: None,
+            circle: true,
+            text_width: 0,
+            text_height: 0,
+        });
+        n
+    }
+
+    ///
+    ///
+    ///
+    ///
+    pub fn new_away_solution(
+        identifier: &str,
+        text: &str,
+        module: &str,
+        module_url: Option<String>,
+        url: Option<String>,
+        classes: Vec<String>,
+    ) -> Self {
+        let mut n = Node::new(identifier, text, url, classes, "gsnawaysltn");
+        n.node_type = NodeType::AwayNode(AwayType {
+            module: module.to_owned(),
+            module_url,
+            away_type: AwayNodeType::Solution,
+            mod_height: 0,
+        });
+        n
+    }
+
+    ///
+    ///
+    ///
+    ///
+    pub fn new_strategy(
+        identifier: &str,
+        text: &str,
+        undeveloped: bool,
+        url: Option<String>,
+        classes: Vec<String>,
+    ) -> Self {
+        let mut n = Node::new(identifier, text, url, classes, "gsnstgy");
+        if undeveloped {
+            n.node_type = NodeType::BoxNode(BoxType::Undeveloped(15));
+        } else {
+            n.node_type = NodeType::BoxNode(BoxType::Normal(15));
+        }
+        n
+    }
+
+    ///
+    ///
+    ///
+    ///
+    pub fn new_goal(
+        identifier: &str,
+        text: &str,
+        undeveloped: bool,
+        url: Option<String>,
+        classes: Vec<String>,
+    ) -> Self {
+        let mut n = Node::new(identifier, text, url, classes, "gsngoal");
+        if undeveloped {
+            n.node_type = NodeType::BoxNode(BoxType::Undeveloped(0));
+        } else {
+            n.node_type = NodeType::BoxNode(BoxType::Normal(0));
+        }
+        n
+    }
+
+    ///
+    ///
+    ///
+    ///
+    pub fn new_away_goal(
+        identifier: &str,
+        text: &str,
+        module: &str,
+        module_url: Option<String>,
+        url: Option<String>,
+        classes: Vec<String>,
+    ) -> Self {
+        let mut n = Node::new(identifier, text, url, classes, "gsnawaygoal");
+        n.node_type = NodeType::AwayNode(AwayType {
+            module: module.to_owned(),
+            module_url,
+            away_type: AwayNodeType::Goal,
+            mod_height: 0,
+        });
+        n
+    }
+
+    ///
+    ///
+    ///
+    ///
+    pub fn new_context(
+        identifier: &str,
+        text: &str,
+        url: Option<String>,
+        classes: Vec<String>,
+    ) -> Self {
+        Node::new(identifier, text, url, classes, "gsnctxt")
+    }
+
+    ///
+    ///
+    ///
+    ///
+    pub fn new_away_context(
+        identifier: &str,
+        text: &str,
+        module: &str,
+        module_url: Option<String>,
+        url: Option<String>,
+        classes: Vec<String>,
+    ) -> Self {
+        let mut n = Node::new(identifier, text, url, classes, "gsnawayctxt");
+        n.node_type = NodeType::AwayNode(AwayType {
+            module: module.to_owned(),
+            module_url,
+            away_type: AwayNodeType::Context,
+            mod_height: 0,
+        });
+        n
+    }
+
+    ///
+    ///
+    ///
+    ///
+    pub fn new_module(
+        identifier: &str,
+        text: &str,
+        url: Option<String>,
+        classes: Vec<String>,
+    ) -> Self {
+        let mut n = Node::new(identifier, text, url, classes, "gsnmodule");
+        n.node_type = NodeType::BoxNode(BoxType::Module);
+        n
     }
 }
 
@@ -84,320 +473,32 @@ pub(crate) fn setup_basics(id: &str, classes: &[String], url: &Option<String>) -
 ///
 ///
 ///
-pub(crate) fn optimize_size(node: &Rc<RefCell<dyn Node>>, font: &FontInfo) {
-    let mut n = node.borrow_mut();
-    let mut min_width = i32::MAX;
-    let mut min_height = i32::MAX;
-    let mut min_wrap = 5;
-    for wrap in 15..70 {
-        n.calculate_size(font, wrap, false);
-        let w = n.get_width();
-        let h = n.get_height();
-        // let area = w * h;
-        if w >= h || (w <= min_width && h <= min_height)
-        /* && area <= min_area */
-        {
-            // min_area = area;
-            min_width = w;
-            min_height = h;
-            min_wrap = wrap;
-        }
+pub(crate) fn add_text(
+    mut ctxt: Element,
+    text: &str,
+    x: i32,
+    y: i32,
+    font: &FontInfo,
+    bold: bool,
+) -> Element {
+    use svg::node::element::Text;
+    let mut text = Text::new()
+        .set("x", x)
+        .set("y", y)
+        .set("font-size", font.size)
+        .set("font-family", font.name.as_str())
+        .add(svg::node::Text::new(text));
+    if bold {
+        text = text.set("font-weight", "bold");
     }
-    n.calculate_size(font, min_wrap, true);
-}
-
-///
-///
-///
-///
-pub fn new_assumption(
-    id: &str,
-    text: &str,
-    url: Option<String>,
-    mut classes: Vec<String>,
-) -> Rc<RefCell<EllipticalNode>> {
-    let mut new_classes: Vec<String> = vec!["gsnelem".to_owned(), "gsnasmp".to_owned()];
-    new_classes.append(&mut classes);
-    Rc::new(RefCell::new(EllipticalNode::new(
-        id,
-        text,
-        Some("A".to_owned()),
-        false,
-        url,
-        new_classes,
-    )))
-}
-
-///
-///
-///
-///
-pub fn new_away_assumption(
-    id: &str,
-    text: &str,
-    module: &str,
-    module_url: Option<String>,
-    url: Option<String>,
-    mut classes: Vec<String>,
-) -> Rc<RefCell<AwayNode>> {
-    let mut new_classes: Vec<String> = vec!["gsnelem".to_owned(), "gsnawayasmp".to_owned()];
-    new_classes.append(&mut classes);
-    Rc::new(RefCell::new(AwayNode::new(
-        id,
-        text,
-        module,
-        module_url,
-        AwayType::Assumption,
-        url,
-        new_classes,
-    )))
-}
-
-///
-///
-///
-///
-pub fn new_justification(
-    id: &str,
-    text: &str,
-    url: Option<String>,
-    mut classes: Vec<String>,
-) -> Rc<RefCell<EllipticalNode>> {
-    let mut new_classes: Vec<String> = vec!["gsnelem".to_owned(), "gsnjust".to_owned()];
-    new_classes.append(&mut classes);
-    Rc::new(RefCell::new(EllipticalNode::new(
-        id,
-        text,
-        Some("J".to_owned()),
-        false,
-        url,
-        new_classes,
-    )))
-}
-
-///
-///
-///
-///
-///
-pub fn new_away_justification(
-    id: &str,
-    text: &str,
-    module: &str,
-    module_url: Option<String>,
-    url: Option<String>,
-    mut classes: Vec<String>,
-) -> Rc<RefCell<AwayNode>> {
-    let mut new_classes: Vec<String> = vec!["gsnelem".to_owned(), "gsnawayjust".to_owned()];
-    new_classes.append(&mut classes);
-    Rc::new(RefCell::new(AwayNode::new(
-        id,
-        text,
-        module,
-        module_url,
-        AwayType::Justification,
-        url,
-        new_classes,
-    )))
-}
-
-///
-///
-///
-///
-pub fn new_solution(
-    id: &str,
-    text: &str,
-    url: Option<String>,
-    mut classes: Vec<String>,
-) -> Rc<RefCell<EllipticalNode>> {
-    let mut new_classes: Vec<String> = vec!["gsnelem".to_owned(), "gsnsltn".to_owned()];
-    new_classes.append(&mut classes);
-    Rc::new(RefCell::new(EllipticalNode::new(
-        id,
-        text,
-        None,
-        true,
-        url,
-        new_classes,
-    )))
-}
-
-///
-///
-///
-///
-pub fn new_away_solution(
-    id: &str,
-    text: &str,
-    module: &str,
-    module_url: Option<String>,
-    url: Option<String>,
-    mut classes: Vec<String>,
-) -> Rc<RefCell<AwayNode>> {
-    let mut new_classes: Vec<String> = vec!["gsnelem".to_owned(), "gsnawaysltn".to_owned()];
-    new_classes.append(&mut classes);
-    Rc::new(RefCell::new(AwayNode::new(
-        id,
-        text,
-        module,
-        module_url,
-        AwayType::Solution,
-        url,
-        new_classes,
-    )))
-}
-
-///
-///
-///
-///
-pub fn new_strategy(
-    id: &str,
-    text: &str,
-    undeveloped: bool,
-    url: Option<String>,
-    mut classes: Vec<String>,
-) -> Rc<RefCell<BoxNode>> {
-    let mut new_classes: Vec<String> = vec!["gsnelem".to_owned(), "gsnstgy".to_owned()];
-    new_classes.append(&mut classes);
-    Rc::new(RefCell::new(BoxNode::new(
-        id,
-        text,
-        undeveloped,
-        15,
-        false,
-        url,
-        new_classes,
-    )))
-}
-
-///
-///
-///
-///
-pub fn new_goal(
-    id: &str,
-    text: &str,
-    undeveloped: bool,
-    url: Option<String>,
-    mut classes: Vec<String>,
-) -> Rc<RefCell<BoxNode>> {
-    let mut new_classes: Vec<String> = vec!["gsnelem".to_owned(), "gsngoal".to_owned()];
-    new_classes.append(&mut classes);
-    Rc::new(RefCell::new(BoxNode::new(
-        id,
-        text,
-        undeveloped,
-        0,
-        false,
-        url,
-        new_classes,
-    )))
-}
-
-///
-///
-///
-///
-pub fn new_away_goal(
-    id: &str,
-    text: &str,
-    module: &str,
-    module_url: Option<String>,
-    url: Option<String>,
-    mut classes: Vec<String>,
-) -> Rc<RefCell<AwayNode>> {
-    let mut new_classes: Vec<String> = vec!["gsnelem".to_owned(), "gsnawaygoal".to_owned()];
-    new_classes.append(&mut classes);
-    Rc::new(RefCell::new(AwayNode::new(
-        id,
-        text,
-        module,
-        module_url,
-        AwayType::Goal,
-        url,
-        new_classes,
-    )))
-}
-
-///
-///
-///
-///
-pub fn new_context(
-    id: &str,
-    text: &str,
-    url: Option<String>,
-    mut classes: Vec<String>,
-) -> Rc<RefCell<ContextNode>> {
-    let mut new_classes: Vec<String> = vec!["gsnelem".to_owned(), "gsnctxt".to_owned()];
-    new_classes.append(&mut classes);
-    Rc::new(RefCell::new(ContextNode::new(id, text, url, new_classes)))
-}
-
-///
-///
-///
-///
-pub fn new_away_context(
-    id: &str,
-    text: &str,
-    module: &str,
-    module_url: Option<String>,
-    url: Option<String>,
-    mut classes: Vec<String>,
-) -> Rc<RefCell<AwayNode>> {
-    let mut new_classes: Vec<String> = vec!["gsnelem".to_owned(), "gsnawayctxt".to_owned()];
-    new_classes.append(&mut classes);
-    Rc::new(RefCell::new(AwayNode::new(
-        id,
-        text,
-        module,
-        module_url,
-        AwayType::Context,
-        url,
-        new_classes,
-    )))
-}
-
-///
-///
-///
-///
-pub fn new_module(
-    id: &str,
-    text: &str,
-    url: Option<String>,
-    mut classes: Vec<String>,
-) -> Rc<RefCell<BoxNode>> {
-    let mut new_classes: Vec<String> = vec!["gsnelem".to_owned(), "gsnmodule".to_owned()];
-    new_classes.append(&mut classes);
-    Rc::new(RefCell::new(BoxNode::new(
-        id,
-        text,
-        false,
-        0,
-        true,
-        url,
-        new_classes,
-    )))
+    use svg::Node;
+    ctxt.append(text);
+    ctxt
 }
 
 #[cfg(test)]
 mod test {
     use super::*;
-
-    #[test]
-    fn test_new_module() {
-        let m = new_module(
-            "id",
-            "text",
-            Some("url".to_owned()),
-            vec!["classa".to_owned()],
-        );
-        assert_eq!(m.borrow().get_id(), "id");
-    }
 
     #[test]
     fn test_setup_basics() {
