@@ -110,6 +110,7 @@ pub fn extend_modules(
                                 );
                             } else {
                                 foreign_node.supported_by = Some(local_ids.to_vec());
+                                foreign_node.undeveloped = Some(false);
                             }
                         } else {
                             diags.add_error(
