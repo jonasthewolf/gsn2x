@@ -17,7 +17,6 @@ pub enum RenderLegend {
     Full,
 }
 
-#[derive(Default)]
 pub struct RenderOptions {
     pub stylesheets: Vec<String>,
     pub layers: Vec<String>,
