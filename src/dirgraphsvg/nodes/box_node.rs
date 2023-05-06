@@ -13,7 +13,7 @@ const CONTEXT_BUMP: i32 = 10;
 
 pub(crate) enum BoxType {
     Normal(i32),
-    Undeveloped(i32),
+    Undeveloped,
     Module,
     Context,
 }
@@ -44,7 +44,7 @@ impl BoxType {
         let mut height = std::cmp::max(min_height, size_context.text_height + 2 * PADDING_VERTICAL);
         match &self {
             BoxType::Normal(_) => (),
-            BoxType::Undeveloped(_) => {
+            BoxType::Undeveloped => {
                 height += UNDEVELOPED_DIAMOND;
             }
             BoxType::Module => {
@@ -68,11 +68,17 @@ impl BoxType {
         ctxt.append(title);
 
         let data = match &self {
-            BoxType::Normal(skew) | BoxType::Undeveloped(skew) => Data::new()
+            BoxType::Normal(skew) => Data::new()
                 .move_to((node.x - node.width / 2 + skew / 2, node.y - node.height / 2))
                 .line_to((node.x + node.width / 2 + skew / 2, node.y - node.height / 2))
                 .line_to((node.x + node.width / 2 - skew / 2, node.y + node.height / 2))
                 .line_to((node.x - node.width / 2 - skew / 2, node.y + node.height / 2))
+                .close(),
+            BoxType::Undeveloped => Data::new()
+                .move_to((node.x - node.width / 2, node.y - node.height / 2))
+                .line_to((node.x + node.width / 2, node.y - node.height / 2))
+                .line_to((node.x + node.width / 2, node.y + node.height / 2))
+                .line_to((node.x - node.width / 2, node.y + node.height / 2))
                 .close(),
             BoxType::Module => Data::new()
                 .move_to((node.x - node.width / 2, node.y - node.height / 2))
@@ -142,7 +148,7 @@ impl BoxType {
             ctxt = add_text(ctxt, text, x, y, font, false);
         }
 
-        if let BoxType::Undeveloped(_) = self {
+        if let BoxType::Undeveloped = self {
             let data = Data::new()
                 .move_to((node.x, node.y + node.height / 2))
                 .line_by((UNDEVELOPED_DIAMOND, UNDEVELOPED_DIAMOND))
