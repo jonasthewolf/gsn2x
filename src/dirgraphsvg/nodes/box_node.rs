@@ -134,12 +134,12 @@ impl BoxType {
             y += MODULE_TAB_HEIGHT;
         }
         y += font.size as i32;
-        ctxt = add_text(ctxt, &node.identifier, x, y, &font, true);
+        ctxt = add_text(ctxt, &node.identifier, x, y, font, true);
         y += OFFSET_IDENTIFIER;
 
         for text in node.text.lines() {
             y += font.size as i32;
-            ctxt = add_text(ctxt, text, x, y, &font, false);
+            ctxt = add_text(ctxt, text, x, y, font, false);
         }
 
         if let BoxType::Undeveloped(_) = self {

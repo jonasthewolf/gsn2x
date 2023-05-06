@@ -81,12 +81,12 @@ impl EllipticalType {
 
         let x = node.x - self.text_width / 2;
         let mut y = node.y - self.text_height / 2 + PADDING_HORIZONTAL;
-        ctxt = add_text(ctxt, &node.identifier, x, y, &font, true);
+        ctxt = add_text(ctxt, &node.identifier, x, y, font, true);
 
         y += OFFSET_IDENTIFIER;
         for text in node.text.lines() {
             y += font.size as i32;
-            ctxt = add_text(ctxt, text, x, y, &font, false);
+            ctxt = add_text(ctxt, text, x, y, font, false);
         }
 
         if let Some(adm) = &self.admonition {
@@ -95,7 +95,7 @@ impl EllipticalType {
                 adm,
                 node.x + node.width / 2 - 5,
                 node.y + node.height / 2 - 5,
-                &font,
+                font,
                 true,
             );
         }

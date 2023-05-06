@@ -23,9 +23,9 @@ pub enum Port {
 }
 
 enum NodeType {
-    BoxNode(BoxType),
-    EllipticalNode(EllipticalType),
-    AwayNode(AwayType),
+    Box(BoxType),
+    Ellipsis(EllipticalType),
+    Away(AwayType),
 }
 
 pub struct Node {
@@ -77,7 +77,7 @@ impl Node {
                 Port::West => self.y,
             },
         };
-        if let NodeType::BoxNode(BoxType::Module) = &self.node_type {
+        if let NodeType::Box(BoxType::Module) = &self.node_type {
             if port == &super::Port::North {
                 coords.y += MODULE_TAB_HEIGHT;
             }
@@ -123,12 +123,12 @@ impl Node {
         self.height = min_size.height;
         self.text = min_size.text;
         match &mut self.node_type {
-            NodeType::BoxNode(_) => (),
-            NodeType::EllipticalNode(x) => {
+            NodeType::Box(_) => (),
+            NodeType::Ellipsis(x) => {
                 x.text_width = min_size.text_width;
                 x.text_height = min_size.text_height;
             }
-            NodeType::AwayNode(x) => {
+            NodeType::Away(x) => {
                 (_, x.mod_height) = text_bounding_box(font, &x.module, false);
             }
         }
@@ -140,15 +140,15 @@ impl Node {
     ///
     fn calculate_size(&mut self, font: &FontInfo, char_wrap: u32) -> SizeContext {
         let (width, height) = match &self.node_type {
-            NodeType::BoxNode(x) => x.get_minimum_size(),
-            NodeType::EllipticalNode(x) => x.get_minimum_size(),
-            NodeType::AwayNode(x) => x.get_minimum_size(),
+            NodeType::Box(x) => x.get_minimum_size(),
+            NodeType::Ellipsis(x) => x.get_minimum_size(),
+            NodeType::Away(x) => x.get_minimum_size(),
         };
         let mut size_context = self.calculate_text_size(font, char_wrap);
         (size_context.width, size_context.height) = match &self.node_type {
-            NodeType::BoxNode(x) => x.calculate_size(font, width, height, &mut size_context),
-            NodeType::EllipticalNode(x) => x.calculate_size(font, width, height, &mut size_context),
-            NodeType::AwayNode(x) => x.calculate_size(font, width, height, &mut size_context),
+            NodeType::Box(x) => x.calculate_size(font, width, height, &mut size_context),
+            NodeType::Ellipsis(x) => x.calculate_size(font, width, height, &mut size_context),
+            NodeType::Away(x) => x.calculate_size(font, width, height, &mut size_context),
         };
         size_context
     }
@@ -185,9 +185,9 @@ impl Node {
     pub fn render(&mut self, font: &FontInfo) -> Element {
         let mut context = setup_basics(&self.identifier, &self.classes, &self.url);
         context = match &self.node_type {
-            NodeType::BoxNode(x) => x.render(self, font, context),
-            NodeType::EllipticalNode(x) => x.render(self, font, context),
-            NodeType::AwayNode(x) => x.render(self, font, context),
+            NodeType::Box(x) => x.render(self, font, context),
+            NodeType::Ellipsis(x) => x.render(self, font, context),
+            NodeType::Away(x) => x.render(self, font, context),
         };
         context
     }
@@ -200,7 +200,7 @@ impl Node {
         add_class: &str,
     ) -> Self {
         let mut new_classes: Vec<String> = vec!["gsnelem".to_owned(), add_class.to_owned()];
-        new_classes.append(&mut classes.iter().cloned().collect());
+        new_classes.append(&mut classes.to_vec());
 
         Node {
             x: 0,
@@ -211,7 +211,7 @@ impl Node {
             text: text.to_owned(),
             url,
             classes,
-            node_type: NodeType::BoxNode(BoxType::Context),
+            node_type: NodeType::Box(BoxType::Context),
         }
     }
 
@@ -224,7 +224,7 @@ impl Node {
         classes: Vec<String>,
     ) -> Self {
         let mut n = Node::new(identifier, text, url, classes, "gsnasmp");
-        n.node_type = NodeType::EllipticalNode(EllipticalType {
+        n.node_type = NodeType::Ellipsis(EllipticalType {
             admonition: Some("A".to_owned()),
             circle: false,
             text_width: 0,
@@ -246,7 +246,7 @@ impl Node {
         classes: Vec<String>,
     ) -> Self {
         let mut n = Node::new(identifier, text, url, classes, "gsnawayasmp");
-        n.node_type = NodeType::AwayNode(AwayType {
+        n.node_type = NodeType::Away(AwayType {
             module: module.to_owned(),
             module_url,
             away_type: AwayNodeType::Assumption,
@@ -266,7 +266,7 @@ impl Node {
         classes: Vec<String>,
     ) -> Self {
         let mut n = Node::new(identifier, text, url, classes, "gsnjust");
-        n.node_type = NodeType::EllipticalNode(EllipticalType {
+        n.node_type = NodeType::Ellipsis(EllipticalType {
             admonition: Some("J".to_owned()),
             circle: false,
             text_width: 0,
@@ -289,7 +289,7 @@ impl Node {
         classes: Vec<String>,
     ) -> Self {
         let mut n = Node::new(identifier, text, url, classes, "gsnawayjust");
-        n.node_type = NodeType::AwayNode(AwayType {
+        n.node_type = NodeType::Away(AwayType {
             module: module.to_owned(),
             module_url,
             away_type: AwayNodeType::Justification,
@@ -309,7 +309,7 @@ impl Node {
         classes: Vec<String>,
     ) -> Self {
         let mut n = Node::new(identifier, text, url, classes, "gsnsltn");
-        n.node_type = NodeType::EllipticalNode(EllipticalType {
+        n.node_type = NodeType::Ellipsis(EllipticalType {
             admonition: None,
             circle: true,
             text_width: 0,
@@ -331,7 +331,7 @@ impl Node {
         classes: Vec<String>,
     ) -> Self {
         let mut n = Node::new(identifier, text, url, classes, "gsnawaysltn");
-        n.node_type = NodeType::AwayNode(AwayType {
+        n.node_type = NodeType::Away(AwayType {
             module: module.to_owned(),
             module_url,
             away_type: AwayNodeType::Solution,
@@ -353,9 +353,9 @@ impl Node {
     ) -> Self {
         let mut n = Node::new(identifier, text, url, classes, "gsnstgy");
         if undeveloped {
-            n.node_type = NodeType::BoxNode(BoxType::Undeveloped(15));
+            n.node_type = NodeType::Box(BoxType::Undeveloped(15));
         } else {
-            n.node_type = NodeType::BoxNode(BoxType::Normal(15));
+            n.node_type = NodeType::Box(BoxType::Normal(15));
         }
         n
     }
@@ -373,9 +373,9 @@ impl Node {
     ) -> Self {
         let mut n = Node::new(identifier, text, url, classes, "gsngoal");
         if undeveloped {
-            n.node_type = NodeType::BoxNode(BoxType::Undeveloped(0));
+            n.node_type = NodeType::Box(BoxType::Undeveloped(0));
         } else {
-            n.node_type = NodeType::BoxNode(BoxType::Normal(0));
+            n.node_type = NodeType::Box(BoxType::Normal(0));
         }
         n
     }
@@ -393,7 +393,7 @@ impl Node {
         classes: Vec<String>,
     ) -> Self {
         let mut n = Node::new(identifier, text, url, classes, "gsnawaygoal");
-        n.node_type = NodeType::AwayNode(AwayType {
+        n.node_type = NodeType::Away(AwayType {
             module: module.to_owned(),
             module_url,
             away_type: AwayNodeType::Goal,
@@ -428,7 +428,7 @@ impl Node {
         classes: Vec<String>,
     ) -> Self {
         let mut n = Node::new(identifier, text, url, classes, "gsnawayctxt");
-        n.node_type = NodeType::AwayNode(AwayType {
+        n.node_type = NodeType::Away(AwayType {
             module: module.to_owned(),
             module_url,
             away_type: AwayNodeType::Context,
@@ -448,7 +448,7 @@ impl Node {
         classes: Vec<String>,
     ) -> Self {
         let mut n = Node::new(identifier, text, url, classes, "gsnmodule");
-        n.node_type = NodeType::BoxNode(BoxType::Module);
+        n.node_type = NodeType::Box(BoxType::Module);
         n
     }
 }

@@ -105,14 +105,13 @@ impl AwayType {
     /// 
     /// 
     fn get_addon_height(&self, width: i32) -> i32 {
-        let addon_height = match self.away_type {
+        match self.away_type {
             AwayNodeType::Goal => 0,
             AwayNodeType::Solution => (width as f32 * 0.5) as i32,
             AwayNodeType::Context => (width as f32 * 0.1) as i32,
             AwayNodeType::Assumption => (width as f32 * 0.25) as i32,
             AwayNodeType::Justification => (width as f32 * 0.25) as i32,
-        };
-        addon_height
+        }
     }
 
     ///
@@ -186,13 +185,13 @@ impl AwayType {
         let x = node.x - node.width / 2 + PADDING_HORIZONTAL;
         let mut y = y_id + font.size as i32;
         // Identifier
-        ctxt = add_text(ctxt, &node.identifier, x, y, &font, true);
+        ctxt = add_text(ctxt, &node.identifier, x, y, font, true);
         y += OFFSET_IDENTIFIER;
 
         // Text
         for text in node.text.lines() {
             y += font.size as i32;
-            ctxt = add_text(ctxt, text, x, y, &font, false);
+            ctxt = add_text(ctxt, text, x, y, font, false);
         }
 
         // It is a box to be able to add a link to it
@@ -255,7 +254,7 @@ impl AwayType {
                 adm,
                 node.x + node.width / 2 - PADDING_HORIZONTAL,
                 node.y - node.height / 2,
-                &font,
+                font,
                 true,
             );
         }
