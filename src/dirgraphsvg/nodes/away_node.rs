@@ -117,11 +117,11 @@ impl AwayType {
     ///
     ///
     ///
-    pub(super) fn render(&self, node: &Node, font: &FontInfo, mut ctxt: Element) -> Element {
+    pub(super) fn render(&self, node: &Node, font: &FontInfo, mut context: Element) -> Element {
         let title = Title::new().add(svg::node::Text::new(&node.identifier));
 
         use svg::Node;
-        ctxt.append(title);
+        context.append(title);
 
         let addon_height = self.get_addon_height(node.width);
 
@@ -178,18 +178,18 @@ impl AwayType {
             .set("stroke-width", 1u32)
             .set("d", data)
             .set("class", "border");
-        ctxt.append(upper_line);
+        context.append(upper_line);
 
         let x = node.x - node.width / 2 + PADDING_HORIZONTAL;
         let mut y = y_id + font.size as i32;
         // Identifier
-        ctxt = add_text(ctxt, &node.identifier, x, y, font, true);
+        context = add_text(context, &node.identifier, x, y, font, true);
         y += OFFSET_IDENTIFIER;
 
         // Text
         for text in node.text.lines() {
             y += font.size as i32;
-            ctxt = add_text(ctxt, text, x, y, font, false);
+            context = add_text(context, text, x, y, font, false);
         }
 
         // It is a box to be able to add a link to it
@@ -224,13 +224,13 @@ impl AwayType {
                 .set("href", escape_url(module_url.as_str()))
                 .add(module_box)
                 .add(module_text);
-            ctxt.append(module_link);
+            context.append(module_link);
         } else {
-            ctxt.append(module_box);
-            ctxt.append(module_text);
+            context.append(module_box);
+            context.append(module_text);
         }
         // Module icon
-        ctxt.append(
+        context.append(
             Use::new()
                 .set("href", "#module_icon")
                 .set("x", node.x - node.width / 2 + PADDING_HORIZONTAL)
@@ -247,8 +247,8 @@ impl AwayType {
             _ => None,
         };
         if let Some(adm) = admonition {
-            ctxt = add_text(
-                ctxt,
+            context = add_text(
+                context,
                 adm,
                 node.x + node.width / 2 - PADDING_HORIZONTAL,
                 node.y - node.height / 2,
@@ -257,6 +257,6 @@ impl AwayType {
             );
         }
 
-        ctxt
+        context
     }
 }
