@@ -15,4 +15,4 @@ cargo run -- -A -E -F -G -s modular.css examples/modular/main.gsn.yaml examples/
 cargo run -- -N -E -A -G examples/modular/main.gsn.yaml examples/modular/sub1.gsn.yaml examples/modular/sub3.gsn.yaml
 
 # multi context
-carg run -- -A -E -F -G tests/multi_context.gsn.yaml
+cargo run -- -A -E -F -G tests/multi_context.gsn.yaml

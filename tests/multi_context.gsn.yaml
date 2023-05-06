@@ -2,7 +2,7 @@
 G1:
   text: Goal with many contexts
   inContextOf: [C1, C2, C3]
-  undeveloped: true
+  supportedBy: [G2, G3]
 
 C1:
   text: Context 1
@@ -12,3 +12,32 @@ C2:
 
 C3:
   text: Context 3
+
+G2:
+  text: Another goal with contexts
+  inContextOf: [A1, J1]
+  undeveloped: true
+
+A1:
+  text: An assumption
+
+J1:
+  text: A justification
+
+G3:
+  text: Yet another goal with context
+  inContextOf: [J2, A2]
+  supportedBy: [G4]
+
+A2:
+  text: Another assumption
+
+J2:
+  text: Another justification
+
+G4:
+  text: Simple goal
+  supportedBy: [Sn1]
+
+Sn1:
+  text: A solution

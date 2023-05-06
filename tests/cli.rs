@@ -90,40 +90,79 @@ mod integrations {
         Ok(())
     }
 
-    #[test]
-    fn argument_view() -> Result<()> {
+    ///
+    /// This tricky setup is needed since the relative path is used for the module name.
+    /// The module name is used as SVG class.
+    /// The reference output is locally generated with the same setup.
+    /// 
+    fn check_if_outputs_are_similar(sub_dir: &str, input: &str, expected_output: &str) -> Result<()>{
         let mut cmd = Command::cargo_bin("gsn2x")?;
         let temp = assert_fs::TempDir::new()?;
-        let sub = temp.child("examples");
+        
+        // Copy input into subdirectory and name output file
+        let sub = temp.child(sub_dir);
         sub.create_dir_all()?;
-        sub.copy_from("examples", &["example.gsn.yaml"])?;
-        let output_file = sub.child("example.gsn.svg");
+        sub.copy_from(sub_dir, &[input])?;
+        let output_file = sub.child(expected_output);
+
+        // Copy expected output into temp dir (without subdirectory!) 
+        temp.copy_from(sub_dir, &[expected_output])?;
+        
+        // Start cargo from temporary directory
         cmd.current_dir(&temp);
-        cmd.arg("examples/example.gsn.yaml").arg("-G");
+        cmd.arg(format!("{sub_dir}/{input}")).arg("-G");
         cmd.assert().success();
         assert!(are_struct_similar_svgs(
-            temp.child("examples/example.gsn.svg").as_os_str(),
-            output_file.as_os_str()
+            output_file.as_os_str(),
+            temp.child(expected_output).as_os_str(),
         )?);
         temp.close()?;
         Ok(())
     }
 
     #[test]
-    fn multi_contexts() -> Result<()> {
+    fn legend_is_different() -> Result<()> {
+        const SUB_DIR: &'static str = "examples";
+        const INPUT_YAML: &'static str = "example.gsn.yaml";
+        const OUTPUT_SVG: &'static str = "example.gsn.svg";
+
         let mut cmd = Command::cargo_bin("gsn2x")?;
         let temp = assert_fs::TempDir::new()?;
-        temp.copy_from("tests", &["multi_context.gsn.yaml"])?;
-        let output_file = temp.child("multi_context.gsn.svg");
+
+        temp.copy_from(SUB_DIR, &[INPUT_YAML])?;
+        let input_file = temp.child(INPUT_YAML);
+        let output_file = temp.child(OUTPUT_SVG);
+        let output_file1 = temp.child("out1.svg");
+        let output_file2 = temp.child("out2.svg");
+        // Run program twice with full legend
         cmd.current_dir(&temp);
-        cmd.arg("multi_context.gsn.yaml").arg("-G");
+        cmd.arg(input_file.as_os_str());
         cmd.assert().success();
-        assert!(are_struct_similar_svgs(
-            temp.child("multi_context.gsn.svg").as_os_str(),
-            output_file.as_os_str()
-        )?);
+        std::fs::rename(&output_file, &output_file1)?;
+        cmd.assert().success();
+        std::fs::rename(&output_file, &output_file2)?;
+        
+        output_file1.assert(predicate::path::eq_file(output_file2.path()).not());
+
         temp.close()?;
         Ok(())
+    }
+
+    #[test]
+    fn argument_view() -> Result<()> {
+        const SUB_DIR: &'static str = "examples";
+        const INPUT_YAML: &'static str = "example.gsn.yaml";
+        const OUTPUT_SVG: &'static str = "example.gsn.svg";
+        check_if_outputs_are_similar(SUB_DIR, INPUT_YAML, OUTPUT_SVG)
+    }
+    
+    #[test]
+    fn multi_contexts() -> Result<()> {
+        const SUB_DIR: &'static str = "tests";
+        const INPUT_YAML: &'static str = "multi_context.gsn.yaml";
+        const OUTPUT_SVG: &'static str = "multi_context.gsn.svg";
+        
+        check_if_outputs_are_similar(SUB_DIR, INPUT_YAML, OUTPUT_SVG)
     }
 
     #[test]
@@ -271,7 +310,7 @@ mod integrations {
     #[test]
     fn arch_view() -> Result<()> {
         let mut cmd = Command::cargo_bin("gsn2x")?;
-        let temp = assert_fs::TempDir::new()?.into_persistent();
+        let temp = assert_fs::TempDir::new()?;
         temp.copy_from("examples/modular", &["*.yaml"])?;
         let input_file1 = temp.child("main.gsn.yaml");
         let input_file2 = temp.child("sub1.gsn.yaml");
@@ -296,7 +335,7 @@ mod integrations {
     #[test]
     fn multiple_view() -> Result<()> {
         let mut cmd = Command::cargo_bin("gsn2x")?;
-        let temp = assert_fs::TempDir::new()?.into_persistent();
+        let temp = assert_fs::TempDir::new()?;
         temp.copy_from("examples/modular", &["*.yaml"])?;
         let input_file1 = temp.child("main.gsn.yaml");
         let input_file2 = temp.child("sub1.gsn.yaml");
@@ -333,7 +372,7 @@ mod integrations {
     #[test]
     fn complete_view() -> Result<()> {
         let mut cmd = Command::cargo_bin("gsn2x")?;
-        let temp = assert_fs::TempDir::new()?.into_persistent();
+        let temp = assert_fs::TempDir::new()?;
         temp.copy_from("examples/modular", &["*.yaml"])?;
         let input_file1 = temp.child("main.gsn.yaml");
         let input_file2 = temp.child("sub1.gsn.yaml");
