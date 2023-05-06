@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg viewBox="0 0 146 282" xmlns="http://www.w3.org/2000/svg">
+<svg viewBox="0 0 176 282" xmlns="http://www.w3.org/2000/svg">
 <symbol id="module_icon">
 <rect fill="lightgrey" height="5" stroke="black" stroke-width="1" width="10" x="0" y="0"/>
 <rect fill="lightgrey" height="10" stroke="black" stroke-width="1" width="20" x="0" y="5"/>
@@ -16,35 +16,35 @@
 <polyline fill="none" points="0 0, 10 4.5, 0 9, 0 0" stroke="black" stroke-width="1"/>
 </marker>
 <a href="./main.gsn.svg">
-<g class="gsnelem gsnmodule" id="node_Main"/>
+<g class="" id="node_Main"/>
 <title>
 Main
 </title>
-<path class="border" d="M20,20 h30 v10 L104,30 L104,74 L20,74 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" textLength="33" x="27" y="41">
+<path class="border" d="M20,20 h30 v10 L124,30 L124,74 L20,74 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="27" y="49">
 Main
 </text>
 </a>
 <a href="./sub1.gsn.svg">
-<g class="gsnelem gsnmodule" id="node_Sub1"/>
+<g class="" id="node_Sub1"/>
 <title>
 Sub1
 </title>
-<path class="border" d="M20,114 h30 v10 L104,124 L104,168 L20,168 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" textLength="36" x="27" y="135">
+<path class="border" d="M20,114 h30 v10 L124,124 L124,168 L20,168 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="27" y="143">
 Sub1
 </text>
 </a>
 <a href="./sub3.gsn.svg">
-<g class="gsnelem gsnmodule" id="node_Sub3"/>
+<g class="" id="node_Sub3"/>
 <title>
 Sub3
 </title>
-<path class="border" d="M20,208 h30 v10 L104,218 L104,262 L20,262 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" textLength="36" x="27" y="229">
+<path class="border" d="M20,208 h30 v10 L124,218 L124,262 L20,262 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="27" y="237">
 Sub3
 </text>
 </a>
-<path class="gsnedge gsninctxt" d="M62,84 C62,104,62,94,62,114" fill="none" marker-end="url(#composite_arrow)" marker-start="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsncomposite" d="M62,168 C62,198,62,188,62,208" fill="none" marker-end="url(#composite_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M72,84 C72,104,72,94,72,114" fill="none" marker-end="url(#composite_arrow)" marker-start="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsncomposite" d="M72,168 C72,198,72,188,72,208" fill="none" marker-end="url(#composite_arrow)" stroke="black" stroke-width="1"/>
 </svg>
