@@ -94,20 +94,24 @@ mod integrations {
     /// This tricky setup is needed since the relative path is used for the module name.
     /// The module name is used as SVG class.
     /// The reference output is locally generated with the same setup.
-    /// 
-    fn check_if_outputs_are_similar(sub_dir: &str, input: &str, expected_output: &str) -> Result<()>{
+    ///
+    fn check_if_outputs_are_similar(
+        sub_dir: &str,
+        input: &str,
+        expected_output: &str,
+    ) -> Result<()> {
         let mut cmd = Command::cargo_bin("gsn2x")?;
         let temp = assert_fs::TempDir::new()?;
-        
+
         // Copy input into subdirectory and name output file
         let sub = temp.child(sub_dir);
         sub.create_dir_all()?;
         sub.copy_from(sub_dir, &[input])?;
         let output_file = sub.child(expected_output);
 
-        // Copy expected output into temp dir (without subdirectory!) 
+        // Copy expected output into temp dir (without subdirectory!)
         temp.copy_from(sub_dir, &[expected_output])?;
-        
+
         // Start cargo from temporary directory
         cmd.current_dir(&temp);
         cmd.arg(format!("{sub_dir}/{input}")).arg("-G");
@@ -141,7 +145,7 @@ mod integrations {
         std::fs::rename(&output_file, &output_file1)?;
         cmd.assert().success();
         std::fs::rename(&output_file, &output_file2)?;
-        
+
         output_file1.assert(predicate::path::eq_file(output_file2.path()).not());
 
         temp.close()?;
@@ -155,13 +159,13 @@ mod integrations {
         const OUTPUT_SVG: &'static str = "example.gsn.svg";
         check_if_outputs_are_similar(SUB_DIR, INPUT_YAML, OUTPUT_SVG)
     }
-    
+
     #[test]
     fn multi_contexts() -> Result<()> {
         const SUB_DIR: &'static str = "tests";
         const INPUT_YAML: &'static str = "multi_context.gsn.yaml";
         const OUTPUT_SVG: &'static str = "multi_context.gsn.svg";
-        
+
         check_if_outputs_are_similar(SUB_DIR, INPUT_YAML, OUTPUT_SVG)
     }
 
