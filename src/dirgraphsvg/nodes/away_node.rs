@@ -10,7 +10,6 @@ use super::{Node, SizeContext, PADDING_HORIZONTAL, PADDING_VERTICAL};
 
 const MODULE_IMAGE: i32 = 20;
 
-#[derive(Debug)]
 pub enum AwayNodeType {
     Goal,
     Solution,
