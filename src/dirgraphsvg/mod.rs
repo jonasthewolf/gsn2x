@@ -72,15 +72,6 @@ impl<'a> Default for DirGraph<'a> {
 }
 
 impl<'a> DirGraph<'a> {
-    pub fn _set_margin(mut self, margin: Margin) -> Self {
-        self.margin = margin;
-        self
-    }
-
-    pub fn _add_css_stylesheet(mut self, css: &'a str) -> Self {
-        self.css_stylesheets.push(css);
-        self
-    }
 
     pub fn add_css_stylesheets(mut self, css: &mut Vec<&'a str>) -> Self {
         self.css_stylesheets.append(css);
@@ -873,14 +864,6 @@ impl<'a> DirGraph<'a> {
 #[cfg(test)]
 mod test {
     use super::*;
-
-    #[test]
-    fn call_unused() {
-        let d = DirGraph::default();
-        d._add_css_stylesheet("css")._set_margin(Margin {
-            ..Default::default()
-        });
-    }
 
     #[test]
     fn test_render_legend() {
