@@ -94,13 +94,15 @@ mod integrations {
     fn argument_view() -> Result<()> {
         let mut cmd = Command::cargo_bin("gsn2x")?;
         let temp = assert_fs::TempDir::new()?;
-        temp.copy_from("examples", &["example.gsn.yaml"])?;
-        let input_file = temp.child("example.gsn.yaml");
-        let output_file = temp.child("example.gsn.svg");
-        cmd.arg(input_file.as_os_str()).arg("-G");
+        let sub = temp.child("examples");
+        sub.create_dir_all()?;
+        sub.copy_from("examples", &["example.gsn.yaml"])?;
+        let output_file = sub.child("example.gsn.svg");
+        cmd.current_dir(&temp);
+        cmd.arg("examples/example.gsn.yaml").arg("-G");
         cmd.assert().success();
         assert!(are_struct_similar_svgs(
-            std::path::Path::new("examples/example.gsn.svg").as_os_str(),
+            temp.child("examples/example.gsn.svg").as_os_str(),
             output_file.as_os_str()
         )?);
         temp.close()?;
