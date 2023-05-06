@@ -189,7 +189,7 @@ impl<'a> NodeInfoMap<'a> {
                 }
             }
         }
-        self.unvisit_nodes();
+        self.unvisited_nodes();
     }
 
     ///
@@ -267,7 +267,7 @@ impl<'a> NodeInfoMap<'a> {
     ///
     ///
     ///
-    fn unvisit_nodes(&mut self) {
+    fn unvisited_nodes(&mut self) {
         self.0.iter_mut().for_each(|(_, mut ni)| {
             ni.visited = false;
         });
@@ -303,7 +303,7 @@ impl<'a> NodeInfoMap<'a> {
                 }
             }
         }
-        self.unvisit_nodes();
+        self.unvisited_nodes();
         changed
     }
 
@@ -319,13 +319,13 @@ impl<'a> NodeInfoMap<'a> {
         cycles_allowed: bool,
     ) -> BTreeMap<usize, BTreeMap<usize, NodePlace>> {
         let mut ranks = BTreeMap::new();
-        for (horiz_rank, &root_node) in root_nodes.iter().enumerate() {
+        for (horizontal_rank, &root_node) in root_nodes.iter().enumerate() {
             let mut stack = vec![root_node];
             self.visit_node(root_node);
             let vertical_rank = ranks
                 .entry(self.get_rank(root_node).unwrap())
                 .or_insert_with(BTreeMap::new);
-            vertical_rank.insert(horiz_rank, NodePlace::Node(root_node.to_owned()));
+            vertical_rank.insert(horizontal_rank, NodePlace::Node(root_node.to_owned()));
             while let Some(parent_id) = stack.pop() {
                 let mut current_node = parent_id;
                 while let Some(child_node) =
@@ -342,7 +342,7 @@ impl<'a> NodeInfoMap<'a> {
                 }
             }
         }
-        self.unvisit_nodes();
+        self.unvisited_nodes();
         ranks
     }
 }
@@ -627,4 +627,39 @@ pub fn calculate_parent_edge_map(
         }
     }
     parent_map
+}
+
+#[cfg(test)]
+mod test {
+    use std::collections::{BTreeSet, BTreeMap};
+
+    use crate::dirgraphsvg::{nodes::Node, util::point2d::Point2D, Margin};
+
+    use super::{NodePlace, NodeInfo, NodeInfoMap};
+
+
+    #[test]
+    fn cover_debug() {
+        let np = NodePlace::Node("not relevant".to_owned());
+        let _ = format!("{:?}", np);
+        let ni = NodeInfo {
+            rank: None,
+            max_child_rank: None,
+            parents: BTreeSet::new(),
+            visited: false,
+        };
+        let _ = format!("{:?}", ni);
+        let nim = NodeInfoMap(BTreeMap::new());
+        let _ = format!("{:?}", nim);
+    }
+
+    #[test]
+    fn cover_multiple_node_places() {
+        let np = NodePlace::MultipleNodes(vec!["a".to_owned(), "b".to_owned()]);
+        let n_a = Node::new_goal("a", "empty", true, None, vec![]);
+        let n_b = Node::new_goal("b", "longer text", true, None, vec![]);
+        let mut nodes = BTreeMap::from([("a".to_owned(), n_a),("b".to_owned(), n_b)]);
+        let _ = np.get_max_width(&nodes);
+        np.set_position(&mut nodes, &Margin::default(), Point2D { x: 0, y: 0 });
+    }
 }

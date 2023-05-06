@@ -473,7 +473,7 @@ pub(crate) fn setup_basics(id: &str, classes: &[String], url: &Option<String>) -
 ///
 ///
 pub(crate) fn add_text(
-    mut ctxt: Element,
+    mut context: Element,
     text: &str,
     x: i32,
     y: i32,
@@ -491,8 +491,8 @@ pub(crate) fn add_text(
         text = text.set("font-weight", "bold");
     }
     use svg::Node;
-    ctxt.append(text);
-    ctxt
+    context.append(text);
+    context
 }
 
 #[cfg(test)]
@@ -501,7 +501,7 @@ mod test {
 
     #[test]
     fn test_setup_basics() {
-        let b = setup_basics("myid", &[], &None);
-        assert_eq!(b.get_attributes()["id"].to_string(), "node_myid".to_owned());
+        let b = setup_basics("my_id", &[], &None);
+        assert_eq!(b.get_attributes()["id"].to_string(), "node_my_id".to_owned());
     }
 }

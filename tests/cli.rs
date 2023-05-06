@@ -81,9 +81,9 @@ mod integrations {
     }
 
     #[test]
-    fn file_doesnt_exist() -> Result<()> {
+    fn file_does_not_exist() -> Result<()> {
         let mut cmd = Command::cargo_bin("gsn2x")?;
-        cmd.arg("test/file/doesnt/exist");
+        cmd.arg("test/file/does/not/exist");
         cmd.assert()
             .failure()
             .stderr(predicate::str::contains("Error: Failed to open file"));

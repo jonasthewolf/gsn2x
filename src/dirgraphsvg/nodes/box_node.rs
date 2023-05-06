@@ -62,10 +62,10 @@ impl BoxType {
     ///
     ///
     ///
-    pub(super) fn render(&self, node: &Node, font: &FontInfo, mut ctxt: Element) -> Element {
+    pub(super) fn render(&self, node: &Node, font: &FontInfo, mut context: Element) -> Element {
         let title = Title::new().add(svg::node::Text::new(&node.identifier));
         use svg::Node;
-        ctxt.append(title);
+        context.append(title);
 
         let data = match &self {
             BoxType::Normal(skew) => Data::new()
@@ -128,7 +128,7 @@ impl BoxType {
             .set("stroke-width", 1u32)
             .set("d", data)
             .set("class", "border");
-        ctxt.append(border);
+        context.append(border);
 
         let skew = if let BoxType::Normal(x) = self { *x } else { 0 };
         let mut x = node.x - (node.width - skew) / 2 + PADDING_HORIZONTAL;
@@ -140,12 +140,12 @@ impl BoxType {
             y += MODULE_TAB_HEIGHT;
         }
         y += font.size as i32;
-        ctxt = add_text(ctxt, &node.identifier, x, y, font, true);
+        context = add_text(context, &node.identifier, x, y, font, true);
         y += OFFSET_IDENTIFIER;
 
         for text in node.text.lines() {
             y += font.size as i32;
-            ctxt = add_text(ctxt, text, x, y, font, false);
+            context = add_text(context, text, x, y, font, false);
         }
 
         if let BoxType::Undeveloped = self {
@@ -160,8 +160,8 @@ impl BoxType {
                 .set("stroke", "black")
                 .set("stroke-width", 1u32)
                 .set("d", data);
-            ctxt.append(undeveloped_diamond);
+            context.append(undeveloped_diamond);
         }
-        ctxt
+        context
     }
 }
