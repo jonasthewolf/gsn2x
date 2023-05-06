@@ -522,3 +522,29 @@ pub(crate) fn render_evidences(
 
     Ok(())
 }
+
+#[cfg(test)]
+mod test {
+    use std::collections::BTreeMap;
+
+    use crate::gsn::GsnNode;
+
+    use super::svg_from_gsn_node;
+
+    #[test]
+    #[should_panic]
+    fn cover_unreachable() {
+        let gsn_node = GsnNode {
+            text: "".to_owned(),
+            in_context_of: None,
+            supported_by: None,
+            undeveloped: None,
+            classes: None,
+            url: None,
+            level: None,
+            additional: BTreeMap::new(),
+            module: "".to_owned(),
+        };
+        svg_from_gsn_node("X2", &gsn_node, &[]);
+    }
+}

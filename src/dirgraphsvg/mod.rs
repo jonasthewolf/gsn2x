@@ -72,7 +72,6 @@ impl<'a> Default for DirGraph<'a> {
 }
 
 impl<'a> DirGraph<'a> {
-
     pub fn add_css_stylesheets(mut self, css: &mut Vec<&'a str>) -> Self {
         self.css_stylesheets.append(css);
         self

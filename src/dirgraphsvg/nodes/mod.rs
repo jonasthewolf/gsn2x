@@ -502,6 +502,9 @@ mod test {
     #[test]
     fn test_setup_basics() {
         let b = setup_basics("my_id", &[], &None);
-        assert_eq!(b.get_attributes()["id"].to_string(), "node_my_id".to_owned());
+        assert_eq!(
+            b.get_attributes()["id"].to_string(),
+            "node_my_id".to_owned()
+        );
     }
 }

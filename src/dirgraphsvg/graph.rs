@@ -631,12 +631,11 @@ pub fn calculate_parent_edge_map(
 
 #[cfg(test)]
 mod test {
-    use std::collections::{BTreeSet, BTreeMap};
+    use std::collections::{BTreeMap, BTreeSet};
 
-    use crate::dirgraphsvg::{nodes::Node, util::point2d::Point2D, Margin};
+    // use crate::dirgraphsvg::{nodes::Node, util::point2d::Point2D, Margin};
 
-    use super::{NodePlace, NodeInfo, NodeInfoMap};
-
+    use super::{NodeInfo, NodeInfoMap, NodePlace};
 
     #[test]
     fn cover_debug() {
