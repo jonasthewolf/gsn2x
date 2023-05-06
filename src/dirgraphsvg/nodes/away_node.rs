@@ -101,9 +101,9 @@ impl AwayType {
     }
 
     ///
-    /// 
-    /// 
-    /// 
+    ///
+    ///
+    ///
     fn get_addon_height(&self, width: i32) -> i32 {
         match self.away_type {
             AwayNodeType::Goal => 0,
@@ -128,7 +128,6 @@ impl AwayType {
 
         let y_module = node.y + node.height / 2 - 2 * PADDING_VERTICAL - self.mod_height;
         let y_id = node.y - node.height / 2 + addon_height + PADDING_VERTICAL;
-
 
         let data = match self.away_type {
             AwayNodeType::Goal => Data::new()
