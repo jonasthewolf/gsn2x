@@ -25,10 +25,8 @@ pub struct RenderOptions {
     pub architecture_filename: Option<String>,
     pub evidences_filename: Option<String>,
     pub complete_filename: Option<String>,
+    pub output_directory: String,
     pub skip_argument: bool,
-    pub skip_architecture: bool,
-    pub skip_evidences: bool,
-    pub skip_complete: bool,
 }
 
 impl From<&ArgMatches> for RenderOptions {
@@ -46,9 +44,7 @@ impl From<&ArgMatches> for RenderOptions {
             .flatten()
             .cloned()
             .collect::<Vec<_>>();
-        let architecture_filename = matches.get_one::<String>("ARCHITECTURE_VIEW").cloned();
-        let complete_filename = matches.get_one::<String>("COMPLETE_VIEW").cloned();
-        let evidences_filename = matches.get_one::<String>("EVIDENCES").cloned();
+
         RenderOptions {
             stylesheets: matches
                 .get_many::<String>("STYLESHEETS")
@@ -59,13 +55,23 @@ impl From<&ArgMatches> for RenderOptions {
             layers,
             legend,
             embed_stylesheets: matches.get_flag("EMBED_CSS"),
-            architecture_filename,
-            evidences_filename,
-            complete_filename,
+            architecture_filename: match matches.get_flag("NO_ARCHITECTURE_VIEW") {
+                true => None,
+                false => matches.get_one::<String>("ARCHITECTURE_VIEW").cloned(),
+            },
+            evidences_filename: match matches.get_flag("NO_EVIDENCES") {
+                true => None,
+                false => matches.get_one::<String>("EVIDENCES").cloned(),
+            },
+            complete_filename: match matches.get_flag("NO_COMPLETE_VIEW") {
+                true => None,
+                false => matches.get_one::<String>("COMPLETE_VIEW").cloned(),
+            },
+            output_directory: matches
+                .get_one::<String>("OUTPUT_DIRECTORY")
+                .unwrap()
+                .to_owned(), // Default value is used.
             skip_argument: matches.get_flag("NO_ARGUMENT_VIEW"),
-            skip_architecture: matches.get_flag("NO_ARCHITECTURE_VIEW"),
-            skip_evidences: matches.get_flag("NO_EVIDENCES"),
-            skip_complete: matches.get_flag("NO_COMPLETE_VIEW"),
         }
     }
 }
