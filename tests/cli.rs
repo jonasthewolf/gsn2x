@@ -313,6 +313,7 @@ mod integrations {
 
     #[test]
     fn arch_view() -> Result<()> {
+        // FIXME test operates in wrong working directory. True for others!
         let mut cmd = Command::cargo_bin("gsn2x")?;
         let temp = assert_fs::TempDir::new()?;
         temp.copy_from("examples/modular", &["*.yaml"])?;
@@ -326,7 +327,9 @@ mod integrations {
             .arg("-N")
             .arg("-E")
             .arg("-F")
-            .arg("-G");
+            .arg("-G")
+            .arg("-o")
+            .arg(".");
         cmd.assert().success();
         assert!(are_struct_similar_svgs(
             std::path::Path::new("examples/modular/architecture.svg").as_os_str(),

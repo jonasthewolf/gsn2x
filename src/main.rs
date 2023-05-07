@@ -2,9 +2,9 @@ use anyhow::{anyhow, Context, Result};
 use clap::{Arg, ArgAction};
 use render::RenderOptions;
 use std::collections::{BTreeMap, HashMap};
-use std::fs::File;
+use std::fs::{create_dir_all, File};
 use std::io::BufReader;
-use std::path::PathBuf;
+use std::path::{PathBuf, StripPrefixError};
 
 mod diagnostics;
 mod dirgraphsvg;
@@ -60,6 +60,7 @@ fn main() -> Result<()> {
                 .short('f')
                 .long("full")
                 .action(ArgAction::Set)
+                .default_value("complete.svg")
                 .conflicts_with_all(["CHECKONLY", "NO_COMPLETE_VIEW"])
                 .help_heading("OUTPUT"),
         )
@@ -78,6 +79,7 @@ fn main() -> Result<()> {
                 .short('a')
                 .long("arch")
                 .action(ArgAction::Set)
+                .default_value("architecture.svg")
                 .conflicts_with_all(["CHECKONLY", "NO_ARCHITECTURE_VIEW"])
                 .help_heading("OUTPUT"),
         )
@@ -95,7 +97,8 @@ fn main() -> Result<()> {
                 .help("Output list of all evidences to <EVIDENCES>.")
                 .short('e')
                 .long("evidences")
-                .action(ArgAction::Append)
+                .action(ArgAction::Set)
+                .default_value("evidences.md")
                 .conflicts_with_all(["CHECKONLY", "NO_EVIDENCES"])
                 .help_heading("OUTPUT"),
         )
@@ -106,6 +109,16 @@ fn main() -> Result<()> {
                 .long("no-evidences")
                 .action(ArgAction::SetTrue)
                 .conflicts_with("EVIDENCES")
+                .help_heading("OUTPUT"),
+        )
+        .arg(
+            Arg::new("OUTPUT_DIRECTORY")
+                .help("")
+                .short('o')
+                .long("output-dir")
+                .action(ArgAction::Set)
+                .default_value(".")
+                .conflicts_with("CHECKONLY")
                 .help_heading("OUTPUT"),
         )
         .arg(
@@ -186,11 +199,14 @@ fn main() -> Result<()> {
 
     let mut diags = Diagnostics::default();
     let mut nodes = BTreeMap::<String, GsnNode>::new();
+
     // Module name to module mapping
     let mut modules: HashMap<String, Module> = HashMap::new();
 
     // Read input
-    read_inputs(&inputs, &mut nodes, &mut modules, &mut diags)?;
+    let common_ancestors = find_common_ancestors_in_paths(&inputs)?;
+    let all_inputs = prepare_input_paths(inputs)?;
+    read_inputs(&all_inputs, &mut nodes, &mut modules, &mut diags)?;
 
     // Validate
     validate_and_check(&mut nodes, &modules, &mut diags, &excluded_modules, &layers);
@@ -198,10 +214,93 @@ fn main() -> Result<()> {
     if diags.errors == 0 && !matches.get_flag("CHECKONLY") {
         let render_options = RenderOptions::from(&matches);
         // Output views
-        print_outputs(nodes, &modules, &render_options)?;
+        print_outputs(nodes, &modules, &render_options, common_ancestors)?;
     }
     // Output diagnostic messages
     output_messages(&diags)
+}
+
+///
+///
+/// The output is a list of tuples.
+/// 1. element of tuple: the filename as provided on the command line
+/// 2. element of tuple: the part that all input files have in common as relative paths
+/// This allows using the 2. prefixed with the output directory to make out-of-tree builds.
+///
+fn prepare_input_paths(inputs: Vec<&str>) -> Result<Vec<(String, String)>> {
+    let cwd = PathBuf::from(".").canonicalize()?;
+    let relative_inputs = inputs
+        .iter()
+        .map(|&i| {
+            let x = PathBuf::from(i);
+            if x.is_relative() {
+                Ok(i.to_owned())
+            } else {
+                let x = x.canonicalize().unwrap();
+                // let x = x.strip_prefix(common_ancestors).unwrap();
+                if x.starts_with(&cwd) {
+                    x.strip_prefix(&cwd)
+                        .map(|i| i.to_string_lossy().into_owned())
+                } else {
+                    Ok(x.to_string_lossy().into_owned())
+                }
+            }
+        })
+        .collect::<Result<Vec<String>, StripPrefixError>>()?;
+    let all_inputs = relative_inputs
+        .into_iter()
+        .zip(inputs)
+        .map(|(r, i)| (i.to_owned(), r))
+        .collect::<Vec<_>>();
+    // dbg!(&all_inputs);
+    Ok(all_inputs)
+}
+
+///
+///
+///
+///
+fn find_common_ancestors_in_paths(inputs: &[&str]) -> Result<PathBuf> {
+    let input_paths = inputs
+        .iter()
+        .map(|i| {
+            PathBuf::from(i)
+                .canonicalize()
+                .with_context(|| format!("Failed to open file {i}"))
+        })
+        .collect::<Result<Vec<_>, _>>()?;
+    let components = input_paths
+        .iter()
+        .map(|p| p.components().collect::<Vec<_>>())
+        .collect::<Vec<_>>();
+
+    let mut result = PathBuf::new();
+
+    if let Some(min_components) = components.iter().map(|c| c.len()).min() {
+        for component in 1..min_components {
+            if components
+                .iter()
+                .skip(1)
+                .scan(components[0][component], |orig, x| {
+                    if x[component] == *orig {
+                        Some(1)
+                    } else {
+                        None
+                    }
+                })
+                .count()
+                > 0
+            {
+                if component == 1 {
+                    result.push(components[0][0]);
+                }
+                result.push(components[0][component]);
+            } else {
+                break;
+            }
+        }
+    }
+    Ok(result)
 }
 
 ///
@@ -209,12 +308,12 @@ fn main() -> Result<()> {
 ///
 ///
 fn read_inputs(
-    inputs: &[&str],
+    inputs: &[(String, String)],
     nodes: &mut BTreeMap<String, GsnNode>,
     modules: &mut HashMap<String, Module>,
     diags: &mut Diagnostics,
 ) -> Result<()> {
-    for input in inputs {
+    for (input, relative_input) in inputs {
         let reader =
             BufReader::new(File::open(input).context(format!("Failed to open file {input}"))?);
 
@@ -241,7 +340,7 @@ fn read_inputs(
         let module = if let Some(m) = &meta {
             m.name.to_owned()
         } else {
-            let module_name = escape_text(input);
+            let module_name = escape_text(relative_input);
             meta = Some(ModuleInformation {
                 name: module_name.to_owned(),
                 brief: None,
@@ -253,7 +352,7 @@ fn read_inputs(
 
         if let std::collections::hash_map::Entry::Vacant(e) = modules.entry(module.to_owned()) {
             e.insert(Module {
-                filename: input.to_owned().to_owned(),
+                filename: relative_input.to_owned().to_owned(),
                 meta,
             });
         } else {
@@ -342,14 +441,18 @@ fn print_outputs(
     nodes: BTreeMap<String, GsnNode>,
     modules: &HashMap<String, Module>,
     render_options: &RenderOptions,
+    common_ancestors: PathBuf,
 ) -> Result<()> {
     if !render_options.skip_argument {
         for (module_name, module) in modules {
-            let pbuf = std::path::PathBuf::from(&module.filename).with_extension("svg");
-            let mut output_file = Box::new(
-                File::create(&pbuf)
-                    .context(format!("Failed to open output file {}", &pbuf.display()))?,
-            ) as Box<dyn std::io::Write>;
+            let output_path =
+                translate_to_output_path(render_options, &PathBuf::from(&module.filename))?
+                    .with_extension("svg");
+            // dbg!(&output_path);
+            let mut output_file = Box::new(File::create(&output_path).context(format!(
+                "Failed to open output file {}",
+                &output_path.display()
+            ))?) as Box<dyn std::io::Write>;
 
             render::render_argument(
                 &mut output_file,
@@ -361,54 +464,66 @@ fn print_outputs(
         }
     }
     if modules.len() > 1 {
-        if !render_options.skip_architecture {
-            // unwrap is ok, since we just checked that modules has at least two elements.
-            let pbuf = std::path::PathBuf::from(&modules.iter().next().unwrap().1.filename)
-                .with_file_name("architecture.svg");
-            let output_filename = render_options
-                .architecture_filename
-                .as_ref()
-                .map(PathBuf::from)
-                .unwrap_or_else(|| pbuf);
-            let mut output_file = File::create(&output_filename).context(format!(
+        if let Some(architecture_filename) = &render_options.architecture_filename {
+            let mut arch_output = PathBuf::from(&common_ancestors);
+            arch_output.push(architecture_filename);
+
+            let output_path = translate_to_output_path(render_options, &arch_output)?;
+            // dbg!(&output_path);
+            let mut output_file = File::create(&output_path).context(format!(
                 "Failed to open output file {}",
-                output_filename.display()
+                &output_path.display()
             ))?;
             let deps = crate::gsn::calculate_module_dependencies(&nodes);
             render::render_architecture(&mut output_file, modules, deps, render_options)?;
         }
-        if !render_options.skip_complete {
-            // unwrap is ok, since we just checked that modules has at least two elements.
-            let pbuf = std::path::PathBuf::from(&modules.iter().next().unwrap().1.filename)
-                .with_file_name("complete.svg");
-            let output_filename = render_options
-                .complete_filename
-                .as_ref()
-                .map(PathBuf::from)
-                .unwrap_or_else(|| pbuf);
-            let mut output_file = File::create(&output_filename).context(format!(
+        if let Some(complete_filename) = &render_options.complete_filename {
+            let mut comp_output = PathBuf::from(&common_ancestors);
+            comp_output.push(complete_filename);
+
+            let output_path = translate_to_output_path(render_options, &comp_output)?;
+            // dbg!(&output_path);
+            let mut output_file = File::create(&output_path).context(format!(
                 "Failed to open output file {}",
-                output_filename.display()
+                output_path.display()
             ))?;
             render::render_complete(&mut output_file, &nodes, render_options)?;
         }
     }
-    if !render_options.skip_evidences {
-        // Unwrap is ok, since `modules` contains at least one module
-        let pbuf = std::path::PathBuf::from(&modules.iter().next().unwrap().1.filename)
-            .with_file_name("evidences.md");
-        let output_filename = render_options
-            .evidences_filename
-            .as_ref()
-            .map(PathBuf::from)
-            .unwrap_or_else(|| pbuf);
-        let mut output_file = File::create(&output_filename).context(format!(
+    if let Some(evidences_filename) = &render_options.evidences_filename {
+        let mut evidence_output = PathBuf::from(&common_ancestors);
+        evidence_output.push(evidences_filename);
+
+        let output_path = translate_to_output_path(render_options, &evidence_output)?;
+        // dbg!(&output_path);
+        let mut output_file = File::create(&output_path).context(format!(
             "Failed to open output file {}",
-            output_filename.display()
+            output_path.display()
         ))?;
         render::render_evidences(&mut output_file, &nodes, render_options)?;
     }
     Ok(())
+}
+
+///
+/// input_filename may also contain a relative path.
+///
+///
+fn translate_to_output_path(
+    render_options: &RenderOptions,
+    input_filename: &PathBuf,
+) -> Result<PathBuf> {
+    let mut output_path = std::path::PathBuf::from(&render_options.output_directory);
+    // dbg!(&output_path);
+    // dbg!(&input_filename);
+    output_path.push(input_filename);
+    if let Some(dir) = output_path.parent() {
+        if !dir.exists() {
+            create_dir_all(dir)
+                .with_context(|| format!("Trying to create directory {}", dir.to_string_lossy()))?;
+        }
+    }
+    Ok(output_path)
 }
 
 ///
@@ -435,7 +550,10 @@ fn output_messages(diags: &Diagnostics) -> Result<()> {
 
 #[cfg(test)]
 mod test {
-    use crate::diagnostics::Diagnostics;
+    use std::path::PathBuf;
+
+    use crate::{diagnostics::Diagnostics, find_common_ancestors_in_paths};
+    use anyhow::Result;
 
     #[test]
     fn check_output_messages_errors() {
@@ -474,5 +592,28 @@ mod test {
         let res = crate::output_messages(&d);
         assert!(res.is_ok());
         assert_eq!(format!("{:?}", res), "Ok(())");
+    }
+
+    #[test]
+    fn common_ancestor_many() -> Result<()> {
+        let inputs = [
+            "examples/modular/sub1.gsn.yaml",
+            "examples/modular/main.gsn.yaml",
+        ];
+        let mut result = find_common_ancestors_in_paths(&inputs)?;
+        let cwd = PathBuf::from(".").canonicalize()?;
+        if result.starts_with(&cwd) {
+            result = result.strip_prefix(cwd)?.to_path_buf();
+        }
+        assert_eq!(result, PathBuf::from("examples/modular"));
+        Ok(())
+    }
+
+    #[test]
+    fn common_ancestor_single() -> Result<()> {
+        let inputs = ["examples/example.gsn.yaml"];
+        let result = find_common_ancestors_in_paths(&inputs)?;
+        assert_eq!(result, PathBuf::from(""));
+        Ok(())
     }
 }
