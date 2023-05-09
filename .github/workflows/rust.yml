@@ -70,6 +70,10 @@ jobs:
         - uses: actions-rs/toolchain@v1
           with:
             toolchain: stable
+        - name: Rust Cache
+          uses: Swatinem/rust-cache@v2
+          with:
+            shared-key: ci
         - run: cargo install mdbook
         - run: mdbook build doc
         - uses: JamesIves/github-pages-deploy-action@4.1.7
