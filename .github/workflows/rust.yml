@@ -71,11 +71,11 @@ jobs:
           with:
             toolchain: stable
         - run: cargo install mdbook
-        - run: mdbook build docs
+        - run: mdbook build doc
         - uses: JamesIves/github-pages-deploy-action@4.1.7
           with:
             branch: gh-pages # The branch the action should deploy to.
-            folder: docs/book # The folder the action should deploy.
+            folder: doc/book # The folder the action should deploy.
 
   build_test_deploy:
     strategy:
