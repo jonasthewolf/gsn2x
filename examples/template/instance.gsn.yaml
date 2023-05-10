@@ -1,0 +1,15 @@
+
+module:
+  name: instance
+  brief: Extending instance
+  extends: 
+    - module: template
+      develops:
+        G1: [G2]
+
+G2:
+  text: This is the argument provided by somebody else.
+  supportedBy: [Sn1]
+
+Sn1:
+  text: A solution

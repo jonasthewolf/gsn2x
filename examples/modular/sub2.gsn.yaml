@@ -1,0 +1,11 @@
+module:
+  name: Sub2
+  
+
+G1: 
+  text: Duplicate Goal
+  supportedBy: [Sn1]
+
+Sn1:
+  text: Bang
+  

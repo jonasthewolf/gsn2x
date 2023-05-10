@@ -1,0 +1,82 @@
+
+G1:
+ text: Goal 1
+ supportedBy: [G2, G3, S2]
+
+G2:
+ text: Goal 2
+ supportedBy: [S1]
+
+G4: 
+ text: Goal 4
+ inContextOf: [J2]
+ supportedBy: [Sn2]
+
+G3: 
+ text: Goal 3
+ supportedBy: [Sn1]
+ inContextOf: [C1]
+
+C1:
+ text: Context 1
+
+S1:
+ text: Strategy 1
+ supportedBy: [G5, G6]
+ inContextOf: [A1, J1]
+ level: "1"
+
+G5:
+ text: Goal 5
+ inContextOf: [C2, A2]
+ supportedBy: [Sn3, Sn4]
+
+C2: 
+ text: |
+        Context 2
+        Multiline
+
+G6: 
+ text: Goal 6
+ supportedBy: [Sn3, Sn5]
+
+A1: 
+ text: Argument 1
+
+Sn1: 
+ text: Solution 1
+ url: https://github.com/jonasthewolf/gsn2x
+
+Sn2: 
+ text: Solution 2
+ layer1: Additional information on layer 1
+ layer2: Additional information on layer 2
+
+Sn3: 
+ text: Solution 3
+ layer2: Additional information on layer 2
+
+Sn4: 
+ text: Solution 4
+
+Sn5: 
+ text: Solution 5
+
+J1: 
+ text: Justification 1
+
+J2:
+ text: Justification 2
+
+A2: 
+ text: Assumption 2
+ classes: [mycssclass, anotherclass]
+
+S2:
+ text: Strategy 2
+ supportedBy: [G4, G7]
+ level: "1"
+
+G7:
+ text: Undeveloped Goal
+ undeveloped: true

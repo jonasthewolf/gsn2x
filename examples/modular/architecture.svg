@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 176 282" xmlns="http://www.w3.org/2000/svg">
+<symbol id="module_icon">
+<rect fill="lightgrey" height="5" stroke="black" stroke-width="1" width="10" x="0" y="0"/>
+<rect fill="lightgrey" height="10" stroke="black" stroke-width="1" width="20" x="0" y="5"/>
+</symbol>
+<marker id="composite_arrow" markerHeight="9" markerUnits="userSpaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
+<polyline fill="none" points="0 0, 6 4.5, 0 9" stroke="black" stroke-width="1"/>
+<polyline fill="none" points="4 0, 10 4.5, 4 9" stroke="black" stroke-width="1"/>
+<polyline fill="none" points="0 4.5, 10 4.5" stroke="black" stroke-width="1"/>
+</marker>
+<marker id="supportedby_arrow" markerHeight="9" markerUnits="userSpaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
+<polyline fill="black" points="0 0, 10 4.5, 0 9"/>
+</marker>
+<marker id="incontextof_arrow" markerHeight="9" markerUnits="userSpaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
+<polyline fill="none" points="0 0, 10 4.5, 0 9, 0 0" stroke="black" stroke-width="1"/>
+</marker>
+<a href="./main.gsn.svg">
+<g class="" id="node_Main"/>
+<title>
+Main
+</title>
+<path class="border" d="M20,20 h30 v10 L124,30 L124,74 L20,74 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="27" y="49">
+Main
+</text>
+</a>
+<a href="./sub1.gsn.svg">
+<g class="" id="node_Sub1"/>
+<title>
+Sub1
+</title>
+<path class="border" d="M20,114 h30 v10 L124,124 L124,168 L20,168 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="27" y="143">
+Sub1
+</text>
+</a>
+<a href="./sub3.gsn.svg">
+<g class="" id="node_Sub3"/>
+<title>
+Sub3
+</title>
+<path class="border" d="M20,208 h30 v10 L124,218 L124,262 L20,262 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="27" y="237">
+Sub3
+</text>
+</a>
+<path class="gsnedge gsninctxt" d="M72,84 C72,104,72,94,72,114" fill="none" marker-end="url(#composite_arrow)" marker-start="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsncomposite" d="M72,168 C72,198,72,188,72,208" fill="none" marker-end="url(#composite_arrow)" stroke="black" stroke-width="1"/>
+</svg>

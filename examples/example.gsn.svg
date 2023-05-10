@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 1299 552" xmlns="http://www.w3.org/2000/svg">
+<symbol id="module_icon">
+<rect fill="lightgrey" height="5" stroke="black" stroke-width="1" width="10" x="0" y="0"/>
+<rect fill="lightgrey" height="10" stroke="black" stroke-width="1" width="20" x="0" y="5"/>
+</symbol>
+<marker id="composite_arrow" markerHeight="9" markerUnits="userSpaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
+<polyline fill="none" points="0 0, 6 4.5, 0 9" stroke="black" stroke-width="1"/>
+<polyline fill="none" points="4 0, 10 4.5, 4 9" stroke="black" stroke-width="1"/>
+<polyline fill="none" points="0 4.5, 10 4.5" stroke="black" stroke-width="1"/>
+</marker>
+<marker id="supportedby_arrow" markerHeight="9" markerUnits="userSpaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
+<polyline fill="black" points="0 0, 10 4.5, 0 9"/>
+</marker>
+<marker id="incontextof_arrow" markerHeight="9" markerUnits="userSpaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
+<polyline fill="none" points="0 0, 10 4.5, 0 9, 0 0" stroke="black" stroke-width="1"/>
+</marker>
+<g class="gsn_module_examples_example_gsn_yaml" id="node_G1">
+<title>
+G1
+</title>
+<path class="border" d="M659,20 L763,20 L763,66 L659,66 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="666" y="39">
+G1
+</text>
+<text font-family="Arial" font-size="12" x="666" y="56">
+Goal 1
+</text>
+</g>
+<g class="gsn_module_examples_example_gsn_yaml" id="node_G2">
+<title>
+G2
+</title>
+<path class="border" d="M350,106 L454,106 L454,152 L350,152 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="357" y="125">
+G2
+</text>
+<text font-family="Arial" font-size="12" x="357" y="142">
+Goal 2
+</text>
+</g>
+<g class="gsn_module_examples_example_gsn_yaml" id="node_G3">
+<title>
+G3
+</title>
+<path class="border" d="M969,106 L1073,106 L1073,152 L969,152 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="976" y="125">
+G3
+</text>
+<text font-family="Arial" font-size="12" x="976" y="142">
+Goal 3
+</text>
+</g>
+<g class="gsn_module_examples_example_gsn_yaml" id="node_C1">
+<title>
+C1
+</title>
+<path class="border" d="M1123,106 L1227,106 C1237,106,1237,152,1227,152 L1123,152 C1113,152,1113,106,1123,106" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="1130" y="125">
+C1
+</text>
+<text font-family="Arial" font-size="12" x="1130" y="142">
+Context 1
+</text>
+</g>
+<g class="gsn_module_examples_example_gsn_yaml" id="node_J1">
+<title>
+J1
+</title>
+<ellipse class="border" cx="224" cy="238" fill="none" rx="71" ry="37" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="184" y="229">
+J1
+</text>
+<text font-family="Arial" font-size="12" x="184" y="246">
+Justification 1
+</text>
+<text font-family="Arial" font-size="12" font-weight="bold" x="290" y="270">
+J
+</text>
+</g>
+<g class="gsn_module_examples_example_gsn_yaml" id="node_S1">
+<title>
+S1
+</title>
+<path class="border" d="M342,215 L476,215 L462,261 L328,261 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="350" y="234">
+S1
+</text>
+<text font-family="Arial" font-size="12" x="350" y="251">
+Strategy 1
+</text>
+</g>
+<g class="gsn_module_examples_example_gsn_yaml" id="node_A1">
+<title>
+A1
+</title>
+<ellipse class="border" cx="568" cy="238" fill="none" rx="59" ry="37" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="536" y="229">
+A1
+</text>
+<text font-family="Arial" font-size="12" x="536" y="246">
+Argument 1
+</text>
+<text font-family="Arial" font-size="12" font-weight="bold" x="622" y="270">
+A
+</text>
+</g>
+<g class="gsn_module_examples_example_gsn_yaml" id="node_S2">
+<title>
+S2
+</title>
+<path class="border" d="M808,215 L942,215 L928,261 L794,261 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="816" y="234">
+S2
+</text>
+<text font-family="Arial" font-size="12" x="816" y="251">
+Strategy 2
+</text>
+</g>
+<a href="https://github.com/jonasthewolf/gsn2x">
+<g class="gsn_module_examples_example_gsn_yaml" id="node_Sn1"/>
+<title>
+Sn1
+</title>
+<ellipse class="border" cx="1021" cy="238" fill="none" rx="46" ry="46" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="993" y="229">
+Sn1
+</text>
+<text font-family="Arial" font-size="12" x="993" y="246">
+Solution 1
+</text>
+</a>
+<g class="mycssclass anotherclass gsn_module_examples_example_gsn_yaml" id="node_A2">
+<title>
+A2
+</title>
+<ellipse class="border" cx="88" cy="361" fill="none" rx="68" ry="37" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="50" y="352">
+A2
+</text>
+<text font-family="Arial" font-size="12" x="50" y="369">
+Assumption 2
+</text>
+<text font-family="Arial" font-size="12" font-weight="bold" x="151" y="393">
+A
+</text>
+</g>
+<g class="gsn_module_examples_example_gsn_yaml" id="node_G5">
+<title>
+G5
+</title>
+<path class="border" d="M196,338 L300,338 L300,384 L196,384 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="203" y="357">
+G5
+</text>
+<text font-family="Arial" font-size="12" x="203" y="374">
+Goal 5
+</text>
+</g>
+<g class="gsn_module_examples_example_gsn_yaml" id="node_C2">
+<title>
+C2
+</title>
+<path class="border" d="M350,331 L454,331 C464,331,464,391,454,391 L350,391 C340,391,340,331,350,331" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="357" y="350">
+C2
+</text>
+<text font-family="Arial" font-size="12" x="357" y="367">
+Context 2
+</text>
+<text font-family="Arial" font-size="12" x="357" y="379">
+Multiline
+</text>
+</g>
+<g class="gsn_module_examples_example_gsn_yaml" id="node_G6">
+<title>
+G6
+</title>
+<path class="border" d="M504,338 L608,338 L608,384 L504,384 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="511" y="357">
+G6
+</text>
+<text font-family="Arial" font-size="12" x="511" y="374">
+Goal 6
+</text>
+</g>
+<g class="gsn_module_examples_example_gsn_yaml" id="node_G4">
+<title>
+G4
+</title>
+<path class="border" d="M648,338 L752,338 L752,384 L648,384 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="655" y="357">
+G4
+</text>
+<text font-family="Arial" font-size="12" x="655" y="374">
+Goal 4
+</text>
+</g>
+<g class="gsn_module_examples_example_gsn_yaml" id="node_J2">
+<title>
+J2
+</title>
+<ellipse class="border" cx="863" cy="361" fill="none" rx="71" ry="37" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="823" y="352">
+J2
+</text>
+<text font-family="Arial" font-size="12" x="823" y="369">
+Justification 2
+</text>
+<text font-family="Arial" font-size="12" font-weight="bold" x="929" y="393">
+J
+</text>
+</g>
+<g class="gsn_module_examples_example_gsn_yaml" id="node_G7">
+<title>
+G7
+</title>
+<path class="border" d="M974,335 L1098,335 L1098,387 L974,387 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="981" y="354">
+G7
+</text>
+<text font-family="Arial" font-size="12" x="981" y="371">
+Undeveloped Goal
+</text>
+<path d="M1036,387 l5,5 l-5,5 l-5,-5 z" fill="none" stroke="black" stroke-width="1"/>
+</g>
+<g class="gsn_module_examples_example_gsn_yaml" id="node_Sn4">
+<title>
+Sn4
+</title>
+<ellipse class="border" cx="248" cy="484" fill="none" rx="46" ry="46" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="220" y="475">
+Sn4
+</text>
+<text font-family="Arial" font-size="12" x="220" y="492">
+Solution 4
+</text>
+</g>
+<g class="gsn_layer2 gsn_module_examples_example_gsn_yaml" id="node_Sn3">
+<title>
+Sn3
+</title>
+<ellipse class="border" cx="402" cy="484" fill="none" rx="46" ry="46" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="374" y="475">
+Sn3
+</text>
+<text font-family="Arial" font-size="12" x="374" y="492">
+Solution 3
+</text>
+</g>
+<g class="gsn_module_examples_example_gsn_yaml" id="node_Sn5">
+<title>
+Sn5
+</title>
+<ellipse class="border" cx="556" cy="484" fill="none" rx="46" ry="46" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="528" y="475">
+Sn5
+</text>
+<text font-family="Arial" font-size="12" x="528" y="492">
+Solution 5
+</text>
+</g>
+<g class="gsn_layer1 gsn_layer2 gsn_module_examples_example_gsn_yaml" id="node_Sn2">
+<title>
+Sn2
+</title>
+<ellipse class="border" cx="700" cy="484" fill="none" rx="46" ry="46" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="672" y="475">
+Sn2
+</text>
+<text font-family="Arial" font-size="12" x="672" y="492">
+Solution 2
+</text>
+</g>
+<path class="gsnedge gsninspby" d="M711,66 C711,96,402,76,402,96" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M711,66 C711,96,1021,76,1021,96" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M711,66 C711,96,868,185,868,205" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M402,152 C402,182,402,185,402,205" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M1073,129 C1073,129,1083,129,1103,129" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M1021,152 C1021,182,1021,162,1021,182" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M752,361 C752,361,762,361,782,361" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M700,384 C700,414,700,408,700,428" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M300,361 C300,361,310,361,330,361" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M196,361 C196,361,186,361,166,361" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M248,384 C248,414,402,408,402,428" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M248,384 C248,414,248,408,248,428" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M556,384 C556,414,402,408,402,428" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M556,384 C556,414,556,408,556,428" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M469,238 C469,238,479,238,499,238" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M335,238 C335,238,325,238,305,238" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M402,261 C402,291,248,308,248,328" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M402,261 C402,291,556,308,556,328" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M868,261 C868,291,700,308,700,328" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M868,261 C868,291,1036,305,1036,325" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+</svg>

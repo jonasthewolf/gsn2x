@@ -1,0 +1,2 @@
+/* CSS to invert SVG for dark mode */ 
+svg { filter: invert(100%); }
