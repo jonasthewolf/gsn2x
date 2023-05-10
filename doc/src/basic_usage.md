@@ -3,7 +3,7 @@
 
 This little program renders [Goal Structuring Notation](https://scsc.uk/gsn) in a YAML format to a scalable vector graphics (SVG) image.
 
-![example](../../examples/example.gsn.svg)
+![example](examples/example.gsn.svg)
 
 Feel free to use it and please let me know. Same applies if you have feature requests, bug reports or contributions.
 
