@@ -5,6 +5,8 @@
 
 The tool automatically performs the following validation checks on the input YAML.
 
+Validations can be performed on individual input files.
+
 | ID  | Meaning                                                                                      |
 |-----|----------------------------------------------------------------------------------------------|
 | V01 | All IDs must start with a known prefix i.e., there are only known element types.             |
@@ -15,7 +17,7 @@ The tool automatically performs the following validation checks on the input YAM
 | V06 | All referenced elements in `supportedBy` and `inContextOf` must not refer to the element itself.            |
 | V07 | All elements listed as extending other elements must be known elements of the current module and semantically sensible (see V04). |
 
-
+The following checks apply to the complete set of input files.
 
 | ID  | Meaning                                                                                      |
 |-----|----------------------------------------------------------------------------------------------|
@@ -30,13 +32,18 @@ The tool automatically performs the following validation checks on the input YAM
 | C09 | All extended modules must exist.
 | C10 | All extended elements must exist in the named module and must be undeveloped.
 
-The checks (Cxx) always apply to the complete set of input files.
 
 Uniqueness of keys (i.e. element IDs) is automatically enforced by the YAML format.
 
-Error messages and warnings are printed to stderr.
 
 If called with option `-c` or `--check` the input file is only checked for validity, but the resulting graph is not written.
 The checks for references (Cxx) can be skipped for individual files by using the `-x` option.
 
-TODO Format of errors
+## Format of messages
+
+Error messages and warnings are printed to stderr.
+
+The following format is used:
+
+    (Warning|Error): \((?<module>.+)\) \((?<num>[CV][0-9][0-9])\): (?<msg>.+) 
+

@@ -1,16 +1,32 @@
 
 # Syntax in YAML
 
-The following Goal Structuring Notation (GSN) core elements are supported:
- - Goal (G), 
- - Assumption (A), 
- - Justification (J), 
- - Solution (Sn),
- - Context (C), and
- - Strategy (S)
+## Elements
 
-Every element is defined by a prefix (as shown in the list above) and a number.
-Actually, the number can be an arbitrary identifier then.
+The following Goal Structuring Notation (GSN) core elements are supported:
+
+| Element Type   | Prefix |
+|----------------|--------|
+| Goal           |   G    | 
+| Assumption     |   A    |
+| Justification  |   J    | 
+| Solution       |   Sn   |   
+| Context        |   C    |
+| Strategy       |   S    |
+
+Every element is defined by a prefix (as shown in the table above) and an arbitrary identifier then.
+
+### Examples
+ 
+```yaml
+G1:
+
+G-TopLevelGoal:
+
+C_A_certain_context:
+```
+
+## Attributes
 
 The only mandatory attribute is `text` that is the textual contents of the element.
 
@@ -24,7 +40,7 @@ This should support finding information more easily.
 Goals and Strategies can be undeveloped i.e., without supporting Goals, Strategies or Solutions.
 These elements should marked with `undeveloped: true`, otherwise validation will emit warnings.
 
-## Example
+### Example
 
 ```yaml
 G1:
@@ -40,3 +56,15 @@ C1:
 ```
 
 Please see [examples/example.gsn.yaml](examples/example.gsn.yaml) for an example of the used syntax.
+
+## Summary
+
+
+| Attribute      | Optional |
+|----------------|----------|
+| text           |    no    | 
+| supportedBy    |    yes   |
+| inContextOf    |    yes   | 
+| url            |    yes   |   
+| undeveloped    |    yes   |
+

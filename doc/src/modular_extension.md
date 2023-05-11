@@ -30,11 +30,16 @@ but showing all modules within the same diagram. The modules are "unrolled".
 <!-- Modules can be masked i.e., unrolling is prevented, 
 by additionally adding those modules with the `-m` option. -->
 
+![example complete](examples/modular/complete.svg)
+
 See [example](examples/modular/complete.svg) here.
 
 ## Architecture view
 
 The architecture view only shows the selected modules and their dependencies.
+THe architecture view is navigable to the module argument view.
+
+![example architecture](examples/modular/architecture.svg)
 
 See [example](examples/modular/architecture.svg) here.
 
