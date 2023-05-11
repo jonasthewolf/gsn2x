@@ -97,9 +97,13 @@ pub fn svg_from_gsn_node(id: &str, gsn_node: &GsnNode, layers: &[String]) -> Nod
         id if id.starts_with("Sn") => {
             Node::new_solution(id, &node_text, gsn_node.url.to_owned(), classes)
         }
-        id if id.starts_with('S') => {
-            Node::new_strategy(id, &node_text, gsn_node.url.to_owned(), classes)
-        }
+        id if id.starts_with('S') => Node::new_strategy(
+            id,
+            &node_text,
+            gsn_node.undeveloped.unwrap_or(false),
+            gsn_node.url.to_owned(),
+            classes,
+        ),
         id if id.starts_with('C') => {
             Node::new_context(id, &node_text, gsn_node.url.to_owned(), classes)
         }
@@ -204,6 +208,7 @@ pub fn away_svg_from_gsn_node(
         id if id.starts_with('S') => Node::new_strategy(
             id,
             &node_text,
+            gsn_node.undeveloped.unwrap_or(false),
             Some(module_url), // Use module_url if Strategy is not defined in current module.
             classes,
         ),

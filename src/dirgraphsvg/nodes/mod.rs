@@ -351,11 +351,16 @@ impl Node {
     pub fn new_strategy(
         identifier: &str,
         text: &str,
+        undeveloped: bool,
         url: Option<String>,
         classes: Vec<String>,
     ) -> Self {
         let mut n = Node::new(identifier, text, url, classes, "gsnstgy");
-        n.node_type = NodeType::Box(BoxType::Normal(15));
+        if undeveloped {
+            n.node_type = NodeType::Box(BoxType::Undeveloped(15));
+        } else {
+            n.node_type = NodeType::Box(BoxType::Normal(15));
+        }
         n
     }
 
@@ -372,7 +377,7 @@ impl Node {
     ) -> Self {
         let mut n = Node::new(identifier, text, url, classes, "gsngoal");
         if undeveloped {
-            n.node_type = NodeType::Box(BoxType::Undeveloped);
+            n.node_type = NodeType::Box(BoxType::Undeveloped(0));
         } else {
             n.node_type = NodeType::Box(BoxType::Normal(0));
         }
