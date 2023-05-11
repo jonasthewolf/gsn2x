@@ -97,9 +97,13 @@ pub fn svg_from_gsn_node(id: &str, gsn_node: &GsnNode, layers: &[String]) -> Nod
         id if id.starts_with("Sn") => {
             Node::new_solution(id, &node_text, gsn_node.url.to_owned(), classes)
         }
-        id if id.starts_with('S') => {
-            Node::new_strategy(id, &node_text, gsn_node.url.to_owned(), classes)
-        }
+        id if id.starts_with('S') => Node::new_strategy(
+            id,
+            &node_text,
+            gsn_node.undeveloped.unwrap_or(false),
+            gsn_node.url.to_owned(),
+            classes,
+        ),
         id if id.starts_with('C') => {
             Node::new_context(id, &node_text, gsn_node.url.to_owned(), classes)
         }
@@ -204,6 +208,7 @@ pub fn away_svg_from_gsn_node(
         id if id.starts_with('S') => Node::new_strategy(
             id,
             &node_text,
+            gsn_node.undeveloped.unwrap_or(false),
             Some(module_url), // Use module_url if Strategy is not defined in current module.
             classes,
         ),
@@ -257,6 +262,7 @@ fn get_relative_module_url(target: &str, source: &str) -> Result<String> {
     };
     diff_comps.set_extension("svg");
     prefix.push_str(&diff_comps.to_string_lossy());
+    dbg!(&prefix);
     Ok(prefix)
 }
 
@@ -268,6 +274,7 @@ pub fn render_architecture(
     modules: &HashMap<String, Module>,
     dependencies: BTreeMap<String, BTreeMap<String, EdgeType>>,
     render_options: &RenderOptions,
+    output_path: &str,
 ) -> Result<()> {
     let mut dg = crate::dirgraphsvg::DirGraph::default();
     let svg_nodes: BTreeMap<String, Node> = modules
@@ -284,7 +291,7 @@ pub fn render_architecture(
                         .and_then(|m| m.brief.to_owned())
                         .unwrap_or_else(|| "".to_owned())
                         .as_str(),
-                    get_relative_module_url(&module.filename, &module.filename).ok(),
+                    get_relative_module_url(&module.filename, output_path).ok(),
                     vec![],
                 ),
             )

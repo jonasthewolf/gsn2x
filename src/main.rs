@@ -237,7 +237,6 @@ fn prepare_input_paths(inputs: Vec<&str>) -> Result<Vec<(String, String)>> {
                 Ok(i.to_owned())
             } else {
                 let x = x.canonicalize().unwrap();
-                // let x = x.strip_prefix(common_ancestors).unwrap();
                 if x.starts_with(&cwd) {
                     x.strip_prefix(&cwd)
                         .map(|i| i.to_string_lossy().into_owned())
@@ -252,7 +251,6 @@ fn prepare_input_paths(inputs: Vec<&str>) -> Result<Vec<(String, String)>> {
         .zip(inputs)
         .map(|(r, i)| (i.to_owned(), r))
         .collect::<Vec<_>>();
-    // dbg!(&all_inputs);
     Ok(all_inputs)
 }
 
@@ -448,7 +446,6 @@ fn print_outputs(
             let output_path =
                 translate_to_output_path(render_options, &PathBuf::from(&module.filename))?
                     .with_extension("svg");
-            // dbg!(&output_path);
             let mut output_file = Box::new(File::create(&output_path).context(format!(
                 "Failed to open output file {}",
                 &output_path.display()
@@ -469,20 +466,24 @@ fn print_outputs(
             arch_output.push(architecture_filename);
 
             let output_path = translate_to_output_path(render_options, &arch_output)?;
-            // dbg!(&output_path);
             let mut output_file = File::create(&output_path).context(format!(
                 "Failed to open output file {}",
                 &output_path.display()
             ))?;
             let deps = crate::gsn::calculate_module_dependencies(&nodes);
-            render::render_architecture(&mut output_file, modules, deps, render_options)?;
+            render::render_architecture(
+                &mut output_file,
+                modules,
+                deps,
+                render_options,
+                output_path.to_str().unwrap(),
+            )?;
         }
         if let Some(complete_filename) = &render_options.complete_filename {
             let mut comp_output = PathBuf::from(&common_ancestors);
             comp_output.push(complete_filename);
 
             let output_path = translate_to_output_path(render_options, &comp_output)?;
-            // dbg!(&output_path);
             let mut output_file = File::create(&output_path).context(format!(
                 "Failed to open output file {}",
                 output_path.display()
@@ -495,7 +496,6 @@ fn print_outputs(
         evidence_output.push(evidences_filename);
 
         let output_path = translate_to_output_path(render_options, &evidence_output)?;
-        // dbg!(&output_path);
         let mut output_file = File::create(&output_path).context(format!(
             "Failed to open output file {}",
             output_path.display()
@@ -514,8 +514,6 @@ fn translate_to_output_path(
     input_filename: &PathBuf,
 ) -> Result<PathBuf> {
     let mut output_path = std::path::PathBuf::from(&render_options.output_directory);
-    // dbg!(&output_path);
-    // dbg!(&input_filename);
     output_path.push(input_filename);
     if let Some(dir) = output_path.parent() {
         if !dir.exists() {

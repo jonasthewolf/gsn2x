@@ -12,12 +12,13 @@ A clear and concise description of what the bug is.
 
 **To Reproduce**
 This is a minimal YAML that reproduces the example:
-```
+
+```yaml
 G1:
   text: buggy
 ```
 
-You can anonymize your argumentation using, e.g. https://mikefarah.gitbook.io/yq/
+You can sanitize your files from your intellectual property using, e.g. https://mikefarah.gitbook.io/yq/
 
 ```
  yq "(.[] | select(. | has(\"text\"))) .text |=sub(\"[a-zA-Z0-9]\",\"x\")"  inputfile.yaml | yq "... comments=\"\"" > outputfile.yaml
