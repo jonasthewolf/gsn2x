@@ -262,6 +262,7 @@ fn get_relative_module_url(target: &str, source: &str) -> Result<String> {
     };
     diff_comps.set_extension("svg");
     prefix.push_str(&diff_comps.to_string_lossy());
+    dbg!(&prefix);
     Ok(prefix)
 }
 
@@ -273,6 +274,7 @@ pub fn render_architecture(
     modules: &HashMap<String, Module>,
     dependencies: BTreeMap<String, BTreeMap<String, EdgeType>>,
     render_options: &RenderOptions,
+    output_path: &str,
 ) -> Result<()> {
     let mut dg = crate::dirgraphsvg::DirGraph::default();
     let svg_nodes: BTreeMap<String, Node> = modules
@@ -289,7 +291,7 @@ pub fn render_architecture(
                         .and_then(|m| m.brief.to_owned())
                         .unwrap_or_else(|| "".to_owned())
                         .as_str(),
-                    get_relative_module_url(&module.filename, &module.filename).ok(),
+                    get_relative_module_url(&module.filename, output_path).ok(),
                     vec![],
                 ),
             )
