@@ -25,7 +25,7 @@ You can create an SVG like this:
 
     gsn2x <yourgsnfile.yaml> 
 
-The output is an argument view in SVG format and automatically written to `<yourgsnfile.svg>`. If more than one input file is provided, they are treated as [modules](#modular-extension).
+The output is an argument view in SVG format and automatically written to `<yourgsnfile.svg>`. If more than one input file is provided, they are treated as modules.
 
 ## Documentation
 
