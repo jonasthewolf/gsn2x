@@ -84,7 +84,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="basic_usage.html"><strong aria-hidden="true">1.</strong> Basic Usage</a></li><li class="chapter-item expanded "><a href="yaml_syntax.html"><strong aria-hidden="true">2.</strong> Syntax</a></li><li class="chapter-item expanded "><a href="checks.html"><strong aria-hidden="true">3.</strong> Checks</a></li><li class="chapter-item expanded "><a href="advanced_usecases.html"><strong aria-hidden="true">4.</strong> Advanced Use-cases</a></li><li class="chapter-item expanded "><a href="modular_extension.html"><strong aria-hidden="true">5.</strong> Modular Extension</a></li><li class="chapter-item expanded "><a href="interfacing.html"><strong aria-hidden="true">6.</strong> Interfacing</a></li><li class="chapter-item expanded "><a href="standard_support.html"><strong aria-hidden="true">7.</strong> Standard Support</a></li><li class="chapter-item expanded "><a href="design_goals.html"><strong aria-hidden="true">8.</strong> Design Goals</a></li><li class="chapter-item expanded "><a href="history.html"><strong aria-hidden="true">9.</strong> History</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="basic_usage.html"><strong aria-hidden="true">1.</strong> Basic Usage</a></li><li class="chapter-item expanded "><a href="yaml_syntax.html"><strong aria-hidden="true">2.</strong> Syntax</a></li><li class="chapter-item expanded "><a href="checks.html"><strong aria-hidden="true">3.</strong> Checks</a></li><li class="chapter-item expanded "><a href="advanced_usecases.html"><strong aria-hidden="true">4.</strong> Advanced Use-cases</a></li><li class="chapter-item expanded "><a href="modular_extension.html"><strong aria-hidden="true">5.</strong> Modular Extension</a></li><li class="chapter-item expanded "><div><strong aria-hidden="true">6.</strong> Interfacing</div></li><li class="chapter-item expanded "><a href="standard_support.html"><strong aria-hidden="true">7.</strong> Standard Support</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="design_goals.html"><strong aria-hidden="true">8.</strong> Design Goals</a></li><li class="chapter-item expanded "><a href="history.html"><strong aria-hidden="true">9.</strong> History</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -148,24 +148,63 @@
                         <h1 id="basic-usage"><a class="header" href="#basic-usage">Basic usage</a></h1>
 <p>This little program renders <a href="https://scsc.uk/gsn">Goal Structuring Notation</a> in a YAML format to a scalable vector graphics (SVG) image.</p>
 <p><img src="examples/example.gsn.svg" alt="example" /></p>
-<p>Feel free to use it and please let me know. Same applies if you have feature requests, bug reports or contributions.</p>
 <h2 id="usage"><a class="header" href="#usage">Usage</a></h2>
 <p>You can create an SVG like this:</p>
 <pre><code>gsn2x &lt;yourgsnfile.yaml&gt; 
 </code></pre>
 <p>The output is an argument view in SVG format and automatically written to <code>&lt;yourgsnfile.svg&gt;</code>. If more than one input file is provided, they are treated as <a href="basic_usage.html#modular-extension">modules</a>.</p>
+<h2 id="options"><a class="header" href="#options">Options</a></h2>
+<pre><code>Usage: gsn2x [OPTIONS] &lt;INPUT&gt;...
+
+Arguments:
+  &lt;INPUT&gt;...  Sets the input file(s) to use.
+
+Options:
+  -h, --help     Print help
+  -V, --version  Print version
+
+CHECKS:
+  -c, --check                      Only check the input file(s), but do not output graphs.
+  -x, --exclude &lt;EXCLUDED_MODULE&gt;  Exclude this module from reference checks.
+
+OUTPUT:
+  -N, --no-arg                         Do not output of argument view for provided input files.
+  -f, --full &lt;COMPLETE_VIEW&gt;           Output the complete view to &lt;COMPLETE_VIEW&gt;. [default: complete.svg]
+  -F, --no-full                        Do not output the complete view.
+  -a, --arch &lt;ARCHITECTURE_VIEW&gt;       Output the architecture view to &lt;ARCHITECTURE_VIEW&gt;. [default: architecture.svg]
+  -A, --no-arch                        Do not output the architecture view.
+  -e, --evidences &lt;EVIDENCES&gt;          Output list of all evidences to &lt;EVIDENCES&gt;. [default: evidences.md]
+  -E, --no-evidences                   Do not output list of all evidences.
+  -o, --output-dir &lt;OUTPUT_DIRECTORY&gt;  [default: .]
+
+OUTPUT MODIFICATION:
+  -l, --layer &lt;LAYERS&gt;            Output additional layer. Can be used multiple times.
+  -s, --stylesheet &lt;STYLESHEETS&gt;  Links a stylesheet in SVG output. Can be used multiple times.
+  -t, --embed-css                 Embed stylehseets instead of linking them.
+  -G, --no-legend                 Do not output a legend based on module information.
+  -g, --full-legend               Output a legend based on all module information.
+</code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="syntax-in-yaml"><a class="header" href="#syntax-in-yaml">Syntax in YAML</a></h1>
+<h2 id="elements"><a class="header" href="#elements">Elements</a></h2>
 <p>The following Goal Structuring Notation (GSN) core elements are supported:</p>
-<ul>
-<li>Goal (G), </li>
-<li>Assumption (A), </li>
-<li>Justification (J), </li>
-<li>Solution (Sn),</li>
-<li>Context (C), and</li>
-<li>Strategy (S)</li>
-</ul>
-<p>Every element is defined by a prefix (as shown in the list above) and a number.
-Actually, the number can be an arbitrary identifier then.</p>
+<div class="table-wrapper"><table><thead><tr><th>Element Type</th><th>Prefix</th></tr></thead><tbody>
+<tr><td>Goal</td><td>G</td></tr>
+<tr><td>Assumption</td><td>A</td></tr>
+<tr><td>Justification</td><td>J</td></tr>
+<tr><td>Solution</td><td>Sn</td></tr>
+<tr><td>Context</td><td>C</td></tr>
+<tr><td>Strategy</td><td>S</td></tr>
+</tbody></table>
+</div>
+<p>Every element is defined by a prefix (as shown in the table above) and an arbitrary identifier then.</p>
+<h3 id="examples"><a class="header" href="#examples">Examples</a></h3>
+<pre><code class="language-yaml">G1:
+
+G-TopLevelGoal:
+
+C_A_certain_context:
+</code></pre>
+<h2 id="attributes"><a class="header" href="#attributes">Attributes</a></h2>
 <p>The only mandatory attribute is <code>text</code> that is the textual contents of the element.</p>
 <p>An optional <code>supportedBy</code> gives a list of the supporting arguments. Thus, Goal, Strategy and Solution can be listed here.</p>
 <p>An optional <code>inContextOf</code> links Justifications, Contexts or Assumptions. </p>
@@ -173,7 +212,7 @@ Actually, the number can be an arbitrary identifier then.</p>
 This should support finding information more easily.</p>
 <p>Goals and Strategies can be undeveloped i.e., without supporting Goals, Strategies or Solutions.
 These elements should marked with <code>undeveloped: true</code>, otherwise validation will emit warnings.</p>
-<h2 id="example"><a class="header" href="#example">Example</a></h2>
+<h3 id="example"><a class="header" href="#example">Example</a></h3>
 <pre><code class="language-yaml">G1:
   text: This is a Goal
   supportedBy: [S1]
@@ -186,9 +225,18 @@ C1:
   text: This is a Context
 </code></pre>
 <p>Please see <a href="examples/example.gsn.yaml">examples/example.gsn.yaml</a> for an example of the used syntax.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="checks"><a class="header" href="#checks">Checks</a></h1>
+<h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
+<div class="table-wrapper"><table><thead><tr><th>Attribute</th><th>Optional</th></tr></thead><tbody>
+<tr><td>text</td><td>no</td></tr>
+<tr><td>supportedBy</td><td>yes</td></tr>
+<tr><td>inContextOf</td><td>yes</td></tr>
+<tr><td>url</td><td>yes</td></tr>
+<tr><td>undeveloped</td><td>yes</td></tr>
+</tbody></table>
+</div><div style="break-before: page; page-break-before: always;"></div><h1 id="checks"><a class="header" href="#checks">Checks</a></h1>
 <h2 id="validation-checks"><a class="header" href="#validation-checks">Validation checks</a></h2>
 <p>The tool automatically performs the following validation checks on the input YAML.</p>
+<p>Validations can be performed on individual input files.</p>
 <div class="table-wrapper"><table><thead><tr><th>ID</th><th>Meaning</th></tr></thead><tbody>
 <tr><td>V01</td><td>All IDs must start with a known prefix i.e., there are only known element types.</td></tr>
 <tr><td>V02</td><td>All Goals and Strategies must be either marked with <code>undeveloped: true</code> or have supporting Goals, Strategies or Solutions.</td></tr>
@@ -198,7 +246,9 @@ C1:
 <tr><td>V06</td><td>All referenced elements in <code>supportedBy</code> and <code>inContextOf</code> must not refer to the element itself.</td></tr>
 <tr><td>V07</td><td>All elements listed as extending other elements must be known elements of the current module and semantically sensible (see V04).</td></tr>
 </tbody></table>
-</div><div class="table-wrapper"><table><thead><tr><th>ID</th><th>Meaning</th></tr></thead><tbody>
+</div>
+<p>The following checks apply to the complete set of input files.</p>
+<div class="table-wrapper"><table><thead><tr><th>ID</th><th>Meaning</th></tr></thead><tbody>
 <tr><td>C01</td><td>There should be only one but must be at least one top-level element (G,S,C,J,A,Sn) unreferenced.</td></tr>
 <tr><td>C02</td><td>The top-level element must be a Goal. A top-level element is an element that is not referenced by any other element.</td></tr>
 <tr><td>C03</td><td>All referenced elements in <code>supportedBy</code> and <code>inContextOf</code> must exist.</td></tr>
@@ -211,12 +261,14 @@ C1:
 <tr><td>C10</td><td>All extended elements must exist in the named module and must be undeveloped.</td></tr>
 </tbody></table>
 </div>
-<p>The checks (Cxx) always apply to the complete set of input files.</p>
 <p>Uniqueness of keys (i.e. element IDs) is automatically enforced by the YAML format.</p>
-<p>Error messages and warnings are printed to stderr.</p>
 <p>If called with option <code>-c</code> or <code>--check</code> the input file is only checked for validity, but the resulting graph is not written.
 The checks for references (Cxx) can be skipped for individual files by using the <code>-x</code> option.</p>
-<p>TODO Format of errors</p>
+<h2 id="format-of-messages"><a class="header" href="#format-of-messages">Format of messages</a></h2>
+<p>Error messages and warnings are printed to stderr.</p>
+<p>The following format is used:</p>
+<pre><code>(Warning|Error): \((?&lt;module&gt;.+)\) \((?&lt;num&gt;[CV][0-9][0-9])\): (?&lt;msg&gt;.+) 
+</code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="advanced-use-cases"><a class="header" href="#advanced-use-cases">Advanced use-cases</a></h1>
 <h2 id="additional-layers"><a class="header" href="#additional-layers">Additional layers</a></h2>
 <p>Additional attributes of an element are ignored by default.
@@ -282,9 +334,12 @@ If the architecture view should not be output, use the <code>-A</code> option.</
 but showing all modules within the same diagram. The modules are &quot;unrolled&quot;. </p>
 <!-- Modules can be masked i.e., unrolling is prevented, 
 by additionally adding those modules with the `-m` option. -->
+<p><img src="examples/modular/complete.svg" alt="example complete" /></p>
 <p>See <a href="examples/modular/complete.svg">example</a> here.</p>
 <h2 id="architecture-view"><a class="header" href="#architecture-view">Architecture view</a></h2>
-<p>The architecture view only shows the selected modules and their dependencies.</p>
+<p>The architecture view only shows the selected modules and their dependencies.
+THe architecture view is navigable to the module argument view.</p>
+<p><img src="examples/modular/architecture.svg" alt="example architecture" /></p>
 <p>See <a href="examples/modular/architecture.svg">example</a> here.</p>
 <h2 id="example-3"><a class="header" href="#example-3">Example:</a></h2>
 <pre><code>gsn2x -f full.svg -a arch.svg main.yml sub1.yml sub3.yml
@@ -335,9 +390,6 @@ module:
 <p>The module information is printed as part of a legend for the argument view.</p>
 <p>You can use the <code>-G</code> option to suppress the legend completely, 
 or the <code>-g</code> option to limit it to <code>name</code>, <code>brief</code> and the time and date of generation of the SVG.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="interfacing"><a class="header" href="#interfacing">Interfacing</a></h1>
-<h2 id="checking-evidences"><a class="header" href="#checking-evidences">Checking evidences</a></h2>
-<h2 id="mdg-xml"><a class="header" href="#mdg-xml">MDG XML</a></h2>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="standard-support"><a class="header" href="#standard-support">Standard support</a></h1>
 <p>This tool is based on the <a href="https://scsc.uk/r141C:1">Goal Structuring Notation Community Standard Version 3</a>.</p>
 <p>This table shows the support of <code>gsn2x</code> for the different parts of the standard.</p>

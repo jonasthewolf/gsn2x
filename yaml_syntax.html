@@ -83,7 +83,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="basic_usage.html"><strong aria-hidden="true">1.</strong> Basic Usage</a></li><li class="chapter-item expanded "><a href="yaml_syntax.html" class="active"><strong aria-hidden="true">2.</strong> Syntax</a></li><li class="chapter-item expanded "><a href="checks.html"><strong aria-hidden="true">3.</strong> Checks</a></li><li class="chapter-item expanded "><a href="advanced_usecases.html"><strong aria-hidden="true">4.</strong> Advanced Use-cases</a></li><li class="chapter-item expanded "><a href="modular_extension.html"><strong aria-hidden="true">5.</strong> Modular Extension</a></li><li class="chapter-item expanded "><a href="interfacing.html"><strong aria-hidden="true">6.</strong> Interfacing</a></li><li class="chapter-item expanded "><a href="standard_support.html"><strong aria-hidden="true">7.</strong> Standard Support</a></li><li class="chapter-item expanded "><a href="design_goals.html"><strong aria-hidden="true">8.</strong> Design Goals</a></li><li class="chapter-item expanded "><a href="history.html"><strong aria-hidden="true">9.</strong> History</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="basic_usage.html"><strong aria-hidden="true">1.</strong> Basic Usage</a></li><li class="chapter-item expanded "><a href="yaml_syntax.html" class="active"><strong aria-hidden="true">2.</strong> Syntax</a></li><li class="chapter-item expanded "><a href="checks.html"><strong aria-hidden="true">3.</strong> Checks</a></li><li class="chapter-item expanded "><a href="advanced_usecases.html"><strong aria-hidden="true">4.</strong> Advanced Use-cases</a></li><li class="chapter-item expanded "><a href="modular_extension.html"><strong aria-hidden="true">5.</strong> Modular Extension</a></li><li class="chapter-item expanded "><div><strong aria-hidden="true">6.</strong> Interfacing</div></li><li class="chapter-item expanded "><a href="standard_support.html"><strong aria-hidden="true">7.</strong> Standard Support</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="design_goals.html"><strong aria-hidden="true">8.</strong> Design Goals</a></li><li class="chapter-item expanded "><a href="history.html"><strong aria-hidden="true">9.</strong> History</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -145,17 +145,26 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="syntax-in-yaml"><a class="header" href="#syntax-in-yaml">Syntax in YAML</a></h1>
+<h2 id="elements"><a class="header" href="#elements">Elements</a></h2>
 <p>The following Goal Structuring Notation (GSN) core elements are supported:</p>
-<ul>
-<li>Goal (G), </li>
-<li>Assumption (A), </li>
-<li>Justification (J), </li>
-<li>Solution (Sn),</li>
-<li>Context (C), and</li>
-<li>Strategy (S)</li>
-</ul>
-<p>Every element is defined by a prefix (as shown in the list above) and a number.
-Actually, the number can be an arbitrary identifier then.</p>
+<div class="table-wrapper"><table><thead><tr><th>Element Type</th><th>Prefix</th></tr></thead><tbody>
+<tr><td>Goal</td><td>G</td></tr>
+<tr><td>Assumption</td><td>A</td></tr>
+<tr><td>Justification</td><td>J</td></tr>
+<tr><td>Solution</td><td>Sn</td></tr>
+<tr><td>Context</td><td>C</td></tr>
+<tr><td>Strategy</td><td>S</td></tr>
+</tbody></table>
+</div>
+<p>Every element is defined by a prefix (as shown in the table above) and an arbitrary identifier then.</p>
+<h3 id="examples"><a class="header" href="#examples">Examples</a></h3>
+<pre><code class="language-yaml">G1:
+
+G-TopLevelGoal:
+
+C_A_certain_context:
+</code></pre>
+<h2 id="attributes"><a class="header" href="#attributes">Attributes</a></h2>
 <p>The only mandatory attribute is <code>text</code> that is the textual contents of the element.</p>
 <p>An optional <code>supportedBy</code> gives a list of the supporting arguments. Thus, Goal, Strategy and Solution can be listed here.</p>
 <p>An optional <code>inContextOf</code> links Justifications, Contexts or Assumptions. </p>
@@ -163,7 +172,7 @@ Actually, the number can be an arbitrary identifier then.</p>
 This should support finding information more easily.</p>
 <p>Goals and Strategies can be undeveloped i.e., without supporting Goals, Strategies or Solutions.
 These elements should marked with <code>undeveloped: true</code>, otherwise validation will emit warnings.</p>
-<h2 id="example"><a class="header" href="#example">Example</a></h2>
+<h3 id="example"><a class="header" href="#example">Example</a></h3>
 <pre><code class="language-yaml">G1:
   text: This is a Goal
   supportedBy: [S1]
@@ -176,7 +185,15 @@ C1:
   text: This is a Context
 </code></pre>
 <p>Please see <a href="examples/example.gsn.yaml">examples/example.gsn.yaml</a> for an example of the used syntax.</p>
-
+<h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
+<div class="table-wrapper"><table><thead><tr><th>Attribute</th><th>Optional</th></tr></thead><tbody>
+<tr><td>text</td><td>no</td></tr>
+<tr><td>supportedBy</td><td>yes</td></tr>
+<tr><td>inContextOf</td><td>yes</td></tr>
+<tr><td>url</td><td>yes</td></tr>
+<tr><td>undeveloped</td><td>yes</td></tr>
+</tbody></table>
+</div>
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">

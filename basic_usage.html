@@ -83,7 +83,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="basic_usage.html" class="active"><strong aria-hidden="true">1.</strong> Basic Usage</a></li><li class="chapter-item expanded "><a href="yaml_syntax.html"><strong aria-hidden="true">2.</strong> Syntax</a></li><li class="chapter-item expanded "><a href="checks.html"><strong aria-hidden="true">3.</strong> Checks</a></li><li class="chapter-item expanded "><a href="advanced_usecases.html"><strong aria-hidden="true">4.</strong> Advanced Use-cases</a></li><li class="chapter-item expanded "><a href="modular_extension.html"><strong aria-hidden="true">5.</strong> Modular Extension</a></li><li class="chapter-item expanded "><a href="interfacing.html"><strong aria-hidden="true">6.</strong> Interfacing</a></li><li class="chapter-item expanded "><a href="standard_support.html"><strong aria-hidden="true">7.</strong> Standard Support</a></li><li class="chapter-item expanded "><a href="design_goals.html"><strong aria-hidden="true">8.</strong> Design Goals</a></li><li class="chapter-item expanded "><a href="history.html"><strong aria-hidden="true">9.</strong> History</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="basic_usage.html" class="active"><strong aria-hidden="true">1.</strong> Basic Usage</a></li><li class="chapter-item expanded "><a href="yaml_syntax.html"><strong aria-hidden="true">2.</strong> Syntax</a></li><li class="chapter-item expanded "><a href="checks.html"><strong aria-hidden="true">3.</strong> Checks</a></li><li class="chapter-item expanded "><a href="advanced_usecases.html"><strong aria-hidden="true">4.</strong> Advanced Use-cases</a></li><li class="chapter-item expanded "><a href="modular_extension.html"><strong aria-hidden="true">5.</strong> Modular Extension</a></li><li class="chapter-item expanded "><div><strong aria-hidden="true">6.</strong> Interfacing</div></li><li class="chapter-item expanded "><a href="standard_support.html"><strong aria-hidden="true">7.</strong> Standard Support</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="design_goals.html"><strong aria-hidden="true">8.</strong> Design Goals</a></li><li class="chapter-item expanded "><a href="history.html"><strong aria-hidden="true">9.</strong> History</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -147,12 +147,42 @@
                         <h1 id="basic-usage"><a class="header" href="#basic-usage">Basic usage</a></h1>
 <p>This little program renders <a href="https://scsc.uk/gsn">Goal Structuring Notation</a> in a YAML format to a scalable vector graphics (SVG) image.</p>
 <p><img src="examples/example.gsn.svg" alt="example" /></p>
-<p>Feel free to use it and please let me know. Same applies if you have feature requests, bug reports or contributions.</p>
 <h2 id="usage"><a class="header" href="#usage">Usage</a></h2>
 <p>You can create an SVG like this:</p>
 <pre><code>gsn2x &lt;yourgsnfile.yaml&gt; 
 </code></pre>
 <p>The output is an argument view in SVG format and automatically written to <code>&lt;yourgsnfile.svg&gt;</code>. If more than one input file is provided, they are treated as <a href="#modular-extension">modules</a>.</p>
+<h2 id="options"><a class="header" href="#options">Options</a></h2>
+<pre><code>Usage: gsn2x [OPTIONS] &lt;INPUT&gt;...
+
+Arguments:
+  &lt;INPUT&gt;...  Sets the input file(s) to use.
+
+Options:
+  -h, --help     Print help
+  -V, --version  Print version
+
+CHECKS:
+  -c, --check                      Only check the input file(s), but do not output graphs.
+  -x, --exclude &lt;EXCLUDED_MODULE&gt;  Exclude this module from reference checks.
+
+OUTPUT:
+  -N, --no-arg                         Do not output of argument view for provided input files.
+  -f, --full &lt;COMPLETE_VIEW&gt;           Output the complete view to &lt;COMPLETE_VIEW&gt;. [default: complete.svg]
+  -F, --no-full                        Do not output the complete view.
+  -a, --arch &lt;ARCHITECTURE_VIEW&gt;       Output the architecture view to &lt;ARCHITECTURE_VIEW&gt;. [default: architecture.svg]
+  -A, --no-arch                        Do not output the architecture view.
+  -e, --evidences &lt;EVIDENCES&gt;          Output list of all evidences to &lt;EVIDENCES&gt;. [default: evidences.md]
+  -E, --no-evidences                   Do not output list of all evidences.
+  -o, --output-dir &lt;OUTPUT_DIRECTORY&gt;  [default: .]
+
+OUTPUT MODIFICATION:
+  -l, --layer &lt;LAYERS&gt;            Output additional layer. Can be used multiple times.
+  -s, --stylesheet &lt;STYLESHEETS&gt;  Links a stylesheet in SVG output. Can be used multiple times.
+  -t, --embed-css                 Embed stylehseets instead of linking them.
+  -G, --no-legend                 Do not output a legend based on module information.
+  -g, --full-legend               Output a legend based on all module information.
+</code></pre>
 
                     </main>
 

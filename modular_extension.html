@@ -83,7 +83,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="basic_usage.html"><strong aria-hidden="true">1.</strong> Basic Usage</a></li><li class="chapter-item expanded "><a href="yaml_syntax.html"><strong aria-hidden="true">2.</strong> Syntax</a></li><li class="chapter-item expanded "><a href="checks.html"><strong aria-hidden="true">3.</strong> Checks</a></li><li class="chapter-item expanded "><a href="advanced_usecases.html"><strong aria-hidden="true">4.</strong> Advanced Use-cases</a></li><li class="chapter-item expanded "><a href="modular_extension.html" class="active"><strong aria-hidden="true">5.</strong> Modular Extension</a></li><li class="chapter-item expanded "><a href="interfacing.html"><strong aria-hidden="true">6.</strong> Interfacing</a></li><li class="chapter-item expanded "><a href="standard_support.html"><strong aria-hidden="true">7.</strong> Standard Support</a></li><li class="chapter-item expanded "><a href="design_goals.html"><strong aria-hidden="true">8.</strong> Design Goals</a></li><li class="chapter-item expanded "><a href="history.html"><strong aria-hidden="true">9.</strong> History</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="basic_usage.html"><strong aria-hidden="true">1.</strong> Basic Usage</a></li><li class="chapter-item expanded "><a href="yaml_syntax.html"><strong aria-hidden="true">2.</strong> Syntax</a></li><li class="chapter-item expanded "><a href="checks.html"><strong aria-hidden="true">3.</strong> Checks</a></li><li class="chapter-item expanded "><a href="advanced_usecases.html"><strong aria-hidden="true">4.</strong> Advanced Use-cases</a></li><li class="chapter-item expanded "><a href="modular_extension.html" class="active"><strong aria-hidden="true">5.</strong> Modular Extension</a></li><li class="chapter-item expanded "><div><strong aria-hidden="true">6.</strong> Interfacing</div></li><li class="chapter-item expanded "><a href="standard_support.html"><strong aria-hidden="true">7.</strong> Standard Support</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="design_goals.html"><strong aria-hidden="true">8.</strong> Design Goals</a></li><li class="chapter-item expanded "><a href="history.html"><strong aria-hidden="true">9.</strong> History</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -166,9 +166,12 @@ If the architecture view should not be output, use the <code>-A</code> option.</
 but showing all modules within the same diagram. The modules are &quot;unrolled&quot;. </p>
 <!-- Modules can be masked i.e., unrolling is prevented, 
 by additionally adding those modules with the `-m` option. -->
+<p><img src="examples/modular/complete.svg" alt="example complete" /></p>
 <p>See <a href="examples/modular/complete.svg">example</a> here.</p>
 <h2 id="architecture-view"><a class="header" href="#architecture-view">Architecture view</a></h2>
-<p>The architecture view only shows the selected modules and their dependencies.</p>
+<p>The architecture view only shows the selected modules and their dependencies.
+THe architecture view is navigable to the module argument view.</p>
+<p><img src="examples/modular/architecture.svg" alt="example architecture" /></p>
 <p>See <a href="examples/modular/architecture.svg">example</a> here.</p>
 <h2 id="example"><a class="header" href="#example">Example:</a></h2>
 <pre><code>gsn2x -f full.svg -a arch.svg main.yml sub1.yml sub3.yml
@@ -228,7 +231,7 @@ or the <code>-g</code> option to limit it to <code>name</code>, <code>brief</cod
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
-                            <a rel="next" href="interfacing.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next" href="standard_support.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
 
@@ -242,7 +245,7 @@ or the <code>-g</code> option to limit it to <code>name</code>, <code>brief</cod
                         <i class="fa fa-angle-left"></i>
                     </a>
 
-                    <a rel="next" href="interfacing.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next" href="standard_support.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>

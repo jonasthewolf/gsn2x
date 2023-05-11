@@ -83,7 +83,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="basic_usage.html"><strong aria-hidden="true">1.</strong> Basic Usage</a></li><li class="chapter-item expanded "><a href="yaml_syntax.html"><strong aria-hidden="true">2.</strong> Syntax</a></li><li class="chapter-item expanded "><a href="checks.html" class="active"><strong aria-hidden="true">3.</strong> Checks</a></li><li class="chapter-item expanded "><a href="advanced_usecases.html"><strong aria-hidden="true">4.</strong> Advanced Use-cases</a></li><li class="chapter-item expanded "><a href="modular_extension.html"><strong aria-hidden="true">5.</strong> Modular Extension</a></li><li class="chapter-item expanded "><a href="interfacing.html"><strong aria-hidden="true">6.</strong> Interfacing</a></li><li class="chapter-item expanded "><a href="standard_support.html"><strong aria-hidden="true">7.</strong> Standard Support</a></li><li class="chapter-item expanded "><a href="design_goals.html"><strong aria-hidden="true">8.</strong> Design Goals</a></li><li class="chapter-item expanded "><a href="history.html"><strong aria-hidden="true">9.</strong> History</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="basic_usage.html"><strong aria-hidden="true">1.</strong> Basic Usage</a></li><li class="chapter-item expanded "><a href="yaml_syntax.html"><strong aria-hidden="true">2.</strong> Syntax</a></li><li class="chapter-item expanded "><a href="checks.html" class="active"><strong aria-hidden="true">3.</strong> Checks</a></li><li class="chapter-item expanded "><a href="advanced_usecases.html"><strong aria-hidden="true">4.</strong> Advanced Use-cases</a></li><li class="chapter-item expanded "><a href="modular_extension.html"><strong aria-hidden="true">5.</strong> Modular Extension</a></li><li class="chapter-item expanded "><div><strong aria-hidden="true">6.</strong> Interfacing</div></li><li class="chapter-item expanded "><a href="standard_support.html"><strong aria-hidden="true">7.</strong> Standard Support</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="design_goals.html"><strong aria-hidden="true">8.</strong> Design Goals</a></li><li class="chapter-item expanded "><a href="history.html"><strong aria-hidden="true">9.</strong> History</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -147,6 +147,7 @@
                         <h1 id="checks"><a class="header" href="#checks">Checks</a></h1>
 <h2 id="validation-checks"><a class="header" href="#validation-checks">Validation checks</a></h2>
 <p>The tool automatically performs the following validation checks on the input YAML.</p>
+<p>Validations can be performed on individual input files.</p>
 <div class="table-wrapper"><table><thead><tr><th>ID</th><th>Meaning</th></tr></thead><tbody>
 <tr><td>V01</td><td>All IDs must start with a known prefix i.e., there are only known element types.</td></tr>
 <tr><td>V02</td><td>All Goals and Strategies must be either marked with <code>undeveloped: true</code> or have supporting Goals, Strategies or Solutions.</td></tr>
@@ -156,7 +157,9 @@
 <tr><td>V06</td><td>All referenced elements in <code>supportedBy</code> and <code>inContextOf</code> must not refer to the element itself.</td></tr>
 <tr><td>V07</td><td>All elements listed as extending other elements must be known elements of the current module and semantically sensible (see V04).</td></tr>
 </tbody></table>
-</div><div class="table-wrapper"><table><thead><tr><th>ID</th><th>Meaning</th></tr></thead><tbody>
+</div>
+<p>The following checks apply to the complete set of input files.</p>
+<div class="table-wrapper"><table><thead><tr><th>ID</th><th>Meaning</th></tr></thead><tbody>
 <tr><td>C01</td><td>There should be only one but must be at least one top-level element (G,S,C,J,A,Sn) unreferenced.</td></tr>
 <tr><td>C02</td><td>The top-level element must be a Goal. A top-level element is an element that is not referenced by any other element.</td></tr>
 <tr><td>C03</td><td>All referenced elements in <code>supportedBy</code> and <code>inContextOf</code> must exist.</td></tr>
@@ -169,12 +172,14 @@
 <tr><td>C10</td><td>All extended elements must exist in the named module and must be undeveloped.</td></tr>
 </tbody></table>
 </div>
-<p>The checks (Cxx) always apply to the complete set of input files.</p>
 <p>Uniqueness of keys (i.e. element IDs) is automatically enforced by the YAML format.</p>
-<p>Error messages and warnings are printed to stderr.</p>
 <p>If called with option <code>-c</code> or <code>--check</code> the input file is only checked for validity, but the resulting graph is not written.
 The checks for references (Cxx) can be skipped for individual files by using the <code>-x</code> option.</p>
-<p>TODO Format of errors</p>
+<h2 id="format-of-messages"><a class="header" href="#format-of-messages">Format of messages</a></h2>
+<p>Error messages and warnings are printed to stderr.</p>
+<p>The following format is used:</p>
+<pre><code>(Warning|Error): \((?&lt;module&gt;.+)\) \((?&lt;num&gt;[CV][0-9][0-9])\): (?&lt;msg&gt;.+) 
+</code></pre>
 
                     </main>
 
