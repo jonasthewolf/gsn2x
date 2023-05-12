@@ -1,13 +1,13 @@
 use crate::dirgraphsvg::edges::EdgeType;
 use crate::dirgraphsvg::{escape_node_id, escape_text, nodes::Node};
+use crate::find_common_ancestors_in_paths;
 use crate::gsn::{get_levels, GsnNode, Module};
-use anyhow::{anyhow, Result};
+use anyhow::Result;
 use chrono::Utc;
 use clap::ArgMatches;
 
 use std::collections::{BTreeMap, HashMap};
 use std::io::Write;
-use std::path::{Component, PathBuf};
 
 #[derive(Default, Eq, PartialEq)]
 pub enum RenderLegend {
@@ -245,24 +245,17 @@ pub fn away_svg_from_gsn_node(
 ///
 fn get_relative_module_url(target: &str, source: &str) -> Result<String> {
     let source_canon = std::path::PathBuf::from(&source).canonicalize()?;
-    let source_canon = source_canon
-        .parent()
-        .ok_or_else(|| anyhow!("No parent for {}", source))?;
     let target_canon = std::path::PathBuf::from(&target).canonicalize()?;
-    let source_comps: Vec<Component> = source_canon.components().collect();
-    let mut source_comps_iter = source_comps.iter();
-    let target_comps = target_canon.components();
-    let mut diff_comps: PathBuf = target_comps
-        .skip_while(|t| source_comps_iter.next().map(|x| x == t).unwrap_or(false))
-        .collect();
-    let mut prefix = match source_comps_iter.count() {
+    let common = find_common_ancestors_in_paths(&[source, target])?;
+    let source_canon_stripped = source_canon.strip_prefix(&common)?.to_path_buf();
+    let mut target_canon_stripped = target_canon.strip_prefix(&common)?.to_path_buf();
+    let mut prefix = match dbg!(source_canon_stripped.parent().unwrap().components().count()) {
         x if x == 0 => "./".to_owned(),
-        x if x > 0 => "../".repeat(x + 1),
+        x if x > 0 => "../".repeat(x),
         _ => unreachable!(),
     };
-    diff_comps.set_extension("svg");
-    prefix.push_str(&diff_comps.to_string_lossy());
-    dbg!(&prefix);
+    target_canon_stripped.set_extension("svg");
+    prefix.push_str(&target_canon_stripped.to_string_lossy());
     Ok(prefix)
 }
 
