@@ -280,8 +280,9 @@ pub fn render_architecture(
                     k,
                     module
                         .meta
+                        .brief
                         .as_ref()
-                        .and_then(|m| m.brief.to_owned())
+                        .map(|m| m.to_owned())
                         .unwrap_or_else(|| "".to_owned())
                         .as_str(),
                     get_relative_module_url(&module.filename, output_path).ok(),
@@ -448,7 +449,7 @@ pub fn render_argument(
     // Add meta information if requested
     if render_options.legend != RenderLegend::No {
         let mut meta_info = vec![format!("Generated on: {}", Utc::now())];
-        if let Some(Some(meta)) = &modules.get(module_name).map(|x| &x.meta) {
+        if let Some(meta) = &modules.get(module_name).map(|x| &x.meta) {
             meta_info.insert(0, format!("Module: {}", meta.name));
             if let Some(brief) = &meta.brief {
                 meta_info.insert(1, brief.to_owned());
