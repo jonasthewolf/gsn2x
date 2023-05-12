@@ -262,7 +262,6 @@ fn get_relative_module_url(target: &str, source: &str) -> Result<String> {
     };
     diff_comps.set_extension("svg");
     prefix.push_str(&diff_comps.to_string_lossy());
-    dbg!(&prefix);
     Ok(prefix)
 }
 
