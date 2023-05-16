@@ -1,9 +1,5 @@
-use anyhow::{Error, Result};
-use font_kit::{
-    family_name::FamilyName,
-    properties::{Properties, Stretch, Style, Weight},
-    source::SystemSource,
-};
+use anyhow::{anyhow, Error, Result};
+use font_loader::system_fonts;
 use glyph_brush_layout::{
     ab_glyph::{FontVec, PxScale},
     FontId, GlyphPositioner, Layout, SectionGeometry, SectionText,
@@ -39,18 +35,16 @@ pub fn get_default_font(bold: bool, italic: bool) -> Result<FontVec> {
 }
 
 pub fn get_font(font_name: &str, bold: bool, italic: bool) -> Result<FontVec> {
-    let mut props = Properties::new();
-    props = *props.stretch(Stretch::NORMAL);
+    let mut props = system_fonts::FontPropertyBuilder::new();
+    props = props.family(font_name);
     if bold {
-        props = *props.weight(Weight::BOLD);
+        props = props.bold();
     }
     if italic {
-        props = *props.style(Style::Italic);
+        props = props.italic();
     }
-    let f = SystemSource::new()
-        .select_best_match(&[FamilyName::Title(font_name.to_owned())], &props)?
-        .load()?;
-    let fd = f.copy_font_data().unwrap();
+    let prop = props.build();
+    let (fd, _) = system_fonts::get(&prop).ok_or_else(|| { anyhow!("Font {font_name} is not found.") } )?;
     FontVec::try_from_vec(fd.to_vec()).map_err(Error::from)
 }
 
