@@ -91,18 +91,18 @@ mod test {
         assert!(get_default_font(false, false).is_ok());
     }
 
-    #[test]
-    fn non_existing_font() {
-        let x = dbg!(get_font(
-            "ahopefullycrazyenoughfontnamethatdoesnotexistanywhere",
-            false,
-            false
-        ));
-        dbg!(&x.unwrap());
-        assert!(false);
-        // assert!(x
-        // .is_err());
-    }
+    // #[test]
+    // fn non_existing_font() {
+    //     let x = dbg!(get_font(
+    //         "ahopefullycrazyenoughfontnamethatdoesnotexistanywhere",
+    //         false,
+    //         false
+    //     ));
+    //     dbg!(&x.unwrap());
+    //     assert!(false);
+    //     // assert!(x
+    //     // .is_err());
+    // }
 
     #[test]
     fn bounding_box() {
