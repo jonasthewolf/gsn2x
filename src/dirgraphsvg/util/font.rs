@@ -44,7 +44,8 @@ pub fn get_font(font_name: &str, bold: bool, italic: bool) -> Result<FontVec> {
         props = props.italic();
     }
     let prop = props.build();
-    let (fd, _) = system_fonts::get(&prop).ok_or_else(|| { anyhow!("Font {font_name} is not found.") } )?;
+    let (fd, _) =
+        system_fonts::get(&prop).ok_or_else(|| anyhow!("Font {font_name} is not found."))?;
     FontVec::try_from_vec(fd.to_vec()).map_err(Error::from)
 }
 
@@ -92,11 +93,11 @@ mod test {
 
     #[test]
     fn non_existing_font() {
-        assert!(get_font(
+        assert!(dbg!(get_font(
             "ahopefullycrazyenoughfontnamethatdoesnotexistanywhere",
             false,
             false
-        )
+        ))
         .is_err());
     }
 
