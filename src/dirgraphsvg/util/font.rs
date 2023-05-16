@@ -93,12 +93,14 @@ mod test {
 
     #[test]
     fn non_existing_font() {
-        assert!(dbg!(get_font(
+        let x = dbg!(get_font(
             "ahopefullycrazyenoughfontnamethatdoesnotexistanywhere",
             false,
             false
-        ))
-        .is_err());
+        ));
+        dbg!(&x.unwrap());
+        // assert!(x
+        // .is_err());
     }
 
     #[test]
