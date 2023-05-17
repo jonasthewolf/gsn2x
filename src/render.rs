@@ -249,7 +249,7 @@ fn get_relative_module_url(target: &str, source: &str) -> Result<String> {
     let common = find_common_ancestors_in_paths(&[source, target])?;
     let source_canon_stripped = source_canon.strip_prefix(&common)?.to_path_buf();
     let mut target_canon_stripped = target_canon.strip_prefix(&common)?.to_path_buf();
-    let mut prefix = match dbg!(source_canon_stripped.parent().unwrap().components().count()) {
+    let mut prefix = match source_canon_stripped.parent().unwrap().components().count() {
         x if x == 0 => "./".to_owned(),
         x if x > 0 => "../".repeat(x),
         _ => unreachable!(),
