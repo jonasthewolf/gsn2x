@@ -2,7 +2,7 @@
 
 # Modular extension
 
-gsn2x partially supports the Modular Extension of the GSN standard (see [Standard support](#standard-support)).
+gsn2x partially supports the Modular Extension of the GSN standard (see [Standard support](./standard_support.md)).
 Module Interfaces (Section 1:4.6) and Inter-Module Contracts (Section 1:4.7) are not supported.
 
 Each module is a separate file. The name of the module is the file name (incl. the path provided to the gsn2x command line).
@@ -16,8 +16,8 @@ The argument view of individual modules will show "away" elements if elements fr
 Note: There is no "away strategy" in the standard.
 
 In addition to the default argument view for each module, there are two output files generated (if more than one input file is provided):
-1) Complete View (default to: complete.svg)
-2) Architecture View (default to: architecture.svg)
+1) Complete View (default to: `complete.svg`)
+2) Architecture View (default to: `architecture.svg`)
 
 If the argument view should not be updated, use the `-N` option.
 If the complete view should not be output, use the `-F` option.
