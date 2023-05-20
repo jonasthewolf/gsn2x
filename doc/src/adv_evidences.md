@@ -1,0 +1,18 @@
+
+
+
+# List of evidences
+
+An additional file that lists all the evidences in the input file is output by default in `evidences.md`.
+
+See [examples/evidences.md](examples/evidences.md) for an example.
+
+The format can be used in Markdown and reStructuredText files.
+
+If the list of evidences should not be output, use the `-E` option.
+
+
+## Markdown from `examples/evidences.md`
+
+{{#include examples/evidences.md}}
+

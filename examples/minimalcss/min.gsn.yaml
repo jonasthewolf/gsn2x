@@ -1,0 +1,5 @@
+
+G1:
+  text: This is a Goal
+  classes: [additionalclass1, additionalclass2]
+  undeveloped: true
