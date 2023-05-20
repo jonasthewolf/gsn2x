@@ -5,9 +5,30 @@ The path is not interpreted by gsn2x and, thus, is relative to the SVG if relati
 
 Every element will also be addressable by `id`. The `id` is the same as the YAML id.
 
-Elements are assigned `gsnelem` class, edges are assigned `gsnedge` class. 
+This table shows the CSS classes assigned to a certain element:
 
-The complete diagram is assigned `gsndiagram` class.
+| Class               | Assigned to                                | SVG Element  |
+|---------------------|--------------------------------------------|--------------|
+| gsndiagram          | The complete diagram                       | svg          |
+| gsnelem             | All elements                               | g            |
+| gsngoal             | Goal                                       | g            |
+| gsn_undeveloped     | Undeveloped                                | g            |
+| gsnsltn             | Solution                                   | g            |
+| gsnawaysltn         | Away Solution                              | g            |
+| gsnstgy             | Strategy                                   | g            |
+| gsnasmp             | Assumption                                 | g            | 
+| gsnawayasmp         | Away Assumption                            | g            |
+| gsnjust             | Justification                              | g            |
+| gsnawayjust         | Away Justification                         | g            |
+| gsnctxt             | Context                                    | g            |
+| gsnawayctxt         | Away Context                               | g            |
+| gsnmodule           | Module                                     | g            |
+| gsn_module_`module` | Module name                                | g            |
+| gsnedge             | All edges                                  | path         |
+| gsnlay_`<layer>`    | Layer `<layer>`                            | path         |
+| gsninctxt           | In Context Of                              | path         |
+| gsnspby             | Supported By                               | path         | 
+| gsncomposite        | Composite (In Context Of AND Supported By) | path         |
 
 You can assign additional classes by adding the `classes:` attribute. It must be a list of classes you want to assign. 
 Additional layers will be added as CSS classes, too. A `layer1` will e.g. be added as `gsnlay_layer1`.
