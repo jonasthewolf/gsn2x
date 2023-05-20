@@ -16,3 +16,6 @@ cargo run -- -N -E -A -G examples/modular/main.gsn.yaml examples/modular/sub1.gs
 
 # multi context
 cargo run -- -A -E -F -G tests/multi_context.gsn.yaml
+
+# minimal css example
+cargo run -- -G -t -s examples/minimalcss/min.css examples/minimalcss/min.gsn.yaml

@@ -375,6 +375,10 @@ impl Node {
         url: Option<String>,
         classes: Vec<String>,
     ) -> Self {
+        let mut classes = classes;
+        if undeveloped {
+            classes.push("gsn_undeveloped".to_owned());
+        }
         let mut n = Node::new(identifier, text, url, classes, "gsngoal");
         if undeveloped {
             n.node_type = NodeType::Box(BoxType::Undeveloped(0));

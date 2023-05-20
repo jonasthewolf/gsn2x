@@ -787,7 +787,8 @@ impl<'a> DirGraph<'a> {
             .document
             .add(composite_arrow)
             .add(supportedby_arrow)
-            .add(incontext_arrow);
+            .add(incontext_arrow)
+            .set("classes", "gsndiagram");
         self
     }
 

@@ -7,6 +7,9 @@
 ---
 
 - [Advanced Use-cases](./advanced_usecases.md)
+    - [Layers](./adv_layers.md)
+    - [Stylesheets](./adv_stylesheets.md)
+    - [Evidences](./adv_evidences.md)
 - [Modular Extension](./modular_extension.md)
 - [Interfacing]()
 

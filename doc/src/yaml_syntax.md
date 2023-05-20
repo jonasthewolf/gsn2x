@@ -67,4 +67,6 @@ Please see [examples/example.gsn.yaml](examples/example.gsn.yaml) for an example
 | inContextOf    |    yes   | 
 | url            |    yes   |   
 | undeveloped    |    yes   |
+| classes[^note] |    yes   |
 
+[^note]: See [Stylesheets](./adv_stylesheets.md).
