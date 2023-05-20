@@ -10,14 +10,14 @@ repository = "https://github.com/jonasthewolf/gsn2x"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-anyhow = "1.0"
+anyhow = "1.0" # Only std feature
 chrono = { version = "0.4", default-features = false, features = ["clock"]}
-clap = { version = "4.2", features = ["cargo"] }
-serde = { version = "1.0", features = ["derive"] }
-serde_yaml = "0.9"
-svg = "0.13"
-font-loader = { version = "0.11" }
-glyph_brush_layout = "0.2"
+clap = { version = "4.2", default-features = false, features = ["std", "cargo"] }
+serde = { version = "1.0", default-features = false, features = ["derive"] }
+serde_yaml = "0.9" # No features
+svg = "0.13" # No features
+font-loader = "0.11" # No features
+glyph_brush_layout = "0.2" # No featues
 
 [dev-dependencies]
 assert_cmd = "2.0"

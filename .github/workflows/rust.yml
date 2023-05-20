@@ -107,7 +107,7 @@ jobs:
 
     steps:
     - name: Download artifacts
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v3
       with:
         name: gsn2x
     - name: Deploy pre-release to github.com
@@ -133,7 +133,7 @@ jobs:
       id: get_version
       run: echo "name=VERSION::${GITHUB_REF/refs\/tags\//}" > $GITHUB_OUTPUT
     - name: Download artifacts
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v3
       with:
         name: gsn2x
     - name: Deploy release to github.com
