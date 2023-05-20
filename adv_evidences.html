@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>History - gsn2x User Manual</title>
+        <title>Evidences - gsn2x User Manual</title>
 
 
         <!-- Custom HTML head -->
@@ -83,7 +83,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="basic_usage.html"><strong aria-hidden="true">1.</strong> Basic Usage</a></li><li class="chapter-item expanded "><a href="yaml_syntax.html"><strong aria-hidden="true">2.</strong> Syntax</a></li><li class="chapter-item expanded "><a href="checks.html"><strong aria-hidden="true">3.</strong> Checks</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="advanced_usecases.html"><strong aria-hidden="true">4.</strong> Advanced Use-cases</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="adv_layers.html"><strong aria-hidden="true">4.1.</strong> Layers</a></li><li class="chapter-item expanded "><a href="adv_stylesheets.html"><strong aria-hidden="true">4.2.</strong> Stylesheets</a></li><li class="chapter-item expanded "><a href="adv_evidences.html"><strong aria-hidden="true">4.3.</strong> Evidences</a></li></ol></li><li class="chapter-item expanded "><a href="modular_extension.html"><strong aria-hidden="true">5.</strong> Modular Extension</a></li><li class="chapter-item expanded "><div><strong aria-hidden="true">6.</strong> Interfacing</div></li><li class="spacer"></li><li class="chapter-item expanded "><a href="standard_support.html"><strong aria-hidden="true">7.</strong> Standard Support</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="design_goals.html"><strong aria-hidden="true">8.</strong> Design Goals</a></li><li class="chapter-item expanded "><a href="history.html" class="active"><strong aria-hidden="true">9.</strong> History</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="basic_usage.html"><strong aria-hidden="true">1.</strong> Basic Usage</a></li><li class="chapter-item expanded "><a href="yaml_syntax.html"><strong aria-hidden="true">2.</strong> Syntax</a></li><li class="chapter-item expanded "><a href="checks.html"><strong aria-hidden="true">3.</strong> Checks</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="advanced_usecases.html"><strong aria-hidden="true">4.</strong> Advanced Use-cases</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="adv_layers.html"><strong aria-hidden="true">4.1.</strong> Layers</a></li><li class="chapter-item expanded "><a href="adv_stylesheets.html"><strong aria-hidden="true">4.2.</strong> Stylesheets</a></li><li class="chapter-item expanded "><a href="adv_evidences.html" class="active"><strong aria-hidden="true">4.3.</strong> Evidences</a></li></ol></li><li class="chapter-item expanded "><a href="modular_extension.html"><strong aria-hidden="true">5.</strong> Modular Extension</a></li><li class="chapter-item expanded "><div><strong aria-hidden="true">6.</strong> Interfacing</div></li><li class="spacer"></li><li class="chapter-item expanded "><a href="standard_support.html"><strong aria-hidden="true">7.</strong> Standard Support</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="design_goals.html"><strong aria-hidden="true">8.</strong> Design Goals</a></li><li class="chapter-item expanded "><a href="history.html"><strong aria-hidden="true">9.</strong> History</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -144,38 +144,48 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="history"><a class="header" href="#history">History</a></h1>
-<p>I also noticed that (also for myself) it is good to note down some history of the project:</p>
-<ul>
+                        <h1 id="list-of-evidences"><a class="header" href="#list-of-evidences">List of evidences</a></h1>
+<p>An additional file that lists all the evidences in the input file is output by default in <code>evidences.md</code>.</p>
+<p>See <a href="examples/evidences.html">examples/evidences.md</a> for an example.</p>
+<p>The format can be used in Markdown and reStructuredText files.</p>
+<p>If the list of evidences should not be output, use the <code>-E</code> option.</p>
+<h2 id="markdown-from-examplesevidencesmd"><a class="header" href="#markdown-from-examplesevidencesmd">Markdown from <code>examples/evidences.md</code></a></h2>
+<p>List of Evidences</p>
+<ol>
 <li>
-<p>It all started out in 2017 with the need for graphically representing some argumentation at work.
-I wrote a tiny Python script that used a jinja template to transform the YAML syntax
-into something Graphviz could understand.</p>
-<p>From there Graphviz could generate different output formats. That's where the <code>x</code> in <code>gsn2x</code> is from.</p>
+<p>Sn1: Solution 1</p>
+<p>examples_example_gsn_yaml</p>
+<p>https://github.com/jonasthewolf/gsn2x</p>
 </li>
 <li>
-<p>It got obvious that some validation, especially on the uniqueness and reference resolution is needed
-to handle larger argumentation.</p>
-<p>I did not want to write those validations in Python, but in my favorite programming language Rust.
-I released the first Rust version in July 2021.</p>
+<p>Sn2: Solution 2</p>
+<p>examples_example_gsn_yaml</p>
 </li>
 <li>
-<p>I desperately tried adding the modular extension by convincing Graphviz to draw what I want, but I failed.
-I finally made decided to no longer output DOT, but directly generate SVGs from the program.
-This required writing a specialized version for rendering the tree on my own which ended up in version 2 
-finally released in April 2022.</p>
+<p>Sn3: Solution 3</p>
+<p>examples_example_gsn_yaml</p>
 </li>
-</ul>
-<p>Any feedback, especially the use-case in your company is very much appreciated.</p>
+<li>
+<p>Sn4: Solution 4</p>
+<p>examples_example_gsn_yaml</p>
+</li>
+<li>
+<p>Sn5: Solution 5</p>
+<p>examples_example_gsn_yaml</p>
+</li>
+</ol>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="design_goals.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="adv_stylesheets.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
+                            <a rel="next" href="modular_extension.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
 
                         <div style="clear: both"></div>
                     </nav>
@@ -183,10 +193,13 @@ finally released in April 2022.</p>
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="design_goals.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="adv_stylesheets.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
 
+                    <a rel="next" href="modular_extension.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
             </nav>
 
         </div>

@@ -84,7 +84,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="basic_usage.html"><strong aria-hidden="true">1.</strong> Basic Usage</a></li><li class="chapter-item expanded "><a href="yaml_syntax.html"><strong aria-hidden="true">2.</strong> Syntax</a></li><li class="chapter-item expanded "><a href="checks.html"><strong aria-hidden="true">3.</strong> Checks</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="advanced_usecases.html"><strong aria-hidden="true">4.</strong> Advanced Use-cases</a></li><li class="chapter-item expanded "><a href="modular_extension.html"><strong aria-hidden="true">5.</strong> Modular Extension</a></li><li class="chapter-item expanded "><div><strong aria-hidden="true">6.</strong> Interfacing</div></li><li class="spacer"></li><li class="chapter-item expanded "><a href="standard_support.html"><strong aria-hidden="true">7.</strong> Standard Support</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="design_goals.html"><strong aria-hidden="true">8.</strong> Design Goals</a></li><li class="chapter-item expanded "><a href="history.html"><strong aria-hidden="true">9.</strong> History</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="basic_usage.html"><strong aria-hidden="true">1.</strong> Basic Usage</a></li><li class="chapter-item expanded "><a href="yaml_syntax.html"><strong aria-hidden="true">2.</strong> Syntax</a></li><li class="chapter-item expanded "><a href="checks.html"><strong aria-hidden="true">3.</strong> Checks</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="advanced_usecases.html"><strong aria-hidden="true">4.</strong> Advanced Use-cases</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="adv_layers.html"><strong aria-hidden="true">4.1.</strong> Layers</a></li><li class="chapter-item expanded "><a href="adv_stylesheets.html"><strong aria-hidden="true">4.2.</strong> Stylesheets</a></li><li class="chapter-item expanded "><a href="adv_evidences.html"><strong aria-hidden="true">4.3.</strong> Evidences</a></li></ol></li><li class="chapter-item expanded "><a href="modular_extension.html"><strong aria-hidden="true">5.</strong> Modular Extension</a></li><li class="chapter-item expanded "><div><strong aria-hidden="true">6.</strong> Interfacing</div></li><li class="spacer"></li><li class="chapter-item expanded "><a href="standard_support.html"><strong aria-hidden="true">7.</strong> Standard Support</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="design_goals.html"><strong aria-hidden="true">8.</strong> Design Goals</a></li><li class="chapter-item expanded "><a href="history.html"><strong aria-hidden="true">9.</strong> History</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -232,8 +232,13 @@ C1:
 <tr><td>inContextOf</td><td>yes</td></tr>
 <tr><td>url</td><td>yes</td></tr>
 <tr><td>undeveloped</td><td>yes</td></tr>
+<tr><td>classes<sup class="footnote-reference"><a href="#note">1</a></sup></td><td>yes</td></tr>
 </tbody></table>
-</div><div style="break-before: page; page-break-before: always;"></div><h1 id="checks"><a class="header" href="#checks">Checks</a></h1>
+</div>
+<div class="footnote-definition" id="note"><sup class="footnote-definition-label">1</sup>
+<p>See <a href="./adv_stylesheets.html">Stylesheets</a>.</p>
+</div>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="checks"><a class="header" href="#checks">Checks</a></h1>
 <h2 id="validation-checks"><a class="header" href="#validation-checks">Validation checks</a></h2>
 <p>The tool automatically performs the following validation checks on the input YAML.</p>
 <p>Validations can be performed on individual input files.</p>
@@ -269,12 +274,17 @@ The checks for references (Cxx) can be skipped for individual files by using the
 <p>The following format is used:</p>
 <pre><code>(Warning|Error): \((?&lt;module&gt;.+)\) \((?&lt;num&gt;[CV][0-9][0-9])\): (?&lt;msg&gt;.+) 
 </code></pre>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="advanced-use-cases"><a class="header" href="#advanced-use-cases">Advanced use-cases</a></h1>
-<h2 id="additional-layers"><a class="header" href="#additional-layers">Additional layers</a></h2>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="advance-use-cases"><a class="header" href="#advance-use-cases">Advance Use-cases</a></h1>
+<ul>
+<li><a href="./adv_layers.html">Layers</a></li>
+<li><a href="./adv_stylesheets.html">Stylesheets</a></li>
+<li><a href="./adv_evidences.html">Evidences</a></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="additional-layers"><a class="header" href="#additional-layers">Additional layers</a></h1>
 <p>Additional attributes of an element are ignored by default.
 With the command line option <code>-l</code> or <code>--layers</code> you can enable the output of those additional attributes.
 By using this feature different views on the GSN can be generated.</p>
-<h3 id="example-1"><a class="header" href="#example-1">Example</a></h3>
+<h2 id="example-1"><a class="header" href="#example-1">Example</a></h2>
 <pre><code class="language-yaml">G1:
   text: This is a Goal
   supportedBy: [S1]
@@ -293,7 +303,7 @@ C1:
 Of course, using <code>text</code>, <code>inContextOf</code>, <code>supportedBy</code>, <code>url</code>, <code>undeveloped</code>, <code>level</code> or <code>classes</code> are not sensible parameters to pass for the <code>-l</code> option. </p>
 <p>Please note that using <code>module</code> and passing it as a layer option will also not work. </p>
 <p>It is intentional that information is only added for a view, but not hidden to ensure consistency of the GSN in all variants.</p>
-<h2 id="stylesheets-for-svg-rendering"><a class="header" href="#stylesheets-for-svg-rendering">Stylesheets for SVG rendering</a></h2>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="stylesheets-for-svg-rendering"><a class="header" href="#stylesheets-for-svg-rendering">Stylesheets for SVG rendering</a></h1>
 <p>You can provide (multiple) custom CSS stylesheets for SVG via the <code>-s</code> or <code>--stylesheet</code> options. 
 The path is not interpreted by gsn2x and, thus, is relative to the SVG if relative.</p>
 <p>Every element will also be addressable by <code>id</code>. The <code>id</code> is the same as the YAML id.</p>
@@ -302,16 +312,52 @@ The path is not interpreted by gsn2x and, thus, is relative to the SVG if relati
 <p>You can assign additional classes by adding the <code>classes:</code> attribute. It must be a list of classes you want to assign. 
 Additional layers will be added as CSS classes, too. A <code>layer1</code> will e.g. be added as <code>gsnlay_layer1</code>.</p>
 <p>When using <code>-t</code> or <code>--embed-css</code> instead of <code>-s</code> the CSS stylesheets will be embedded in the SVG. The path is interpreted as relative to the current working directory then.</p>
-<h3 id="example-2"><a class="header" href="#example-2">Example</a></h3>
-<pre><code class="language-yaml">G1:
+<p>For more information on how to use CSS with SVGs, see <a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/SVG_and_CSS">here</a>.</p>
+<h2 id="example-2"><a class="header" href="#example-2">Example</a></h2>
+<p>The GSN YAML: </p>
+<pre><code class="language-yaml">
+G1:
   text: This is a Goal
   classes: [additionalclass1, additionalclass2]
+  undeveloped: true
 </code></pre>
-<h2 id="list-of-evidences"><a class="header" href="#list-of-evidences">List of evidences</a></h2>
+<p>The corresponding CSS:</p>
+<pre><code class="language-css">
+.additionalclass1 path { fill: red; }
+.additionalclass1 text { fill: white; }
+</code></pre>
+<p>The result looks like this:</p>
+<p><img src="examples/minimalcss/min.gsn.svg" alt="Styled Example" /></p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="list-of-evidences"><a class="header" href="#list-of-evidences">List of evidences</a></h1>
 <p>An additional file that lists all the evidences in the input file is output by default in <code>evidences.md</code>.</p>
 <p>See <a href="examples/evidences.html">examples/evidences.md</a> for an example.</p>
 <p>The format can be used in Markdown and reStructuredText files.</p>
 <p>If the list of evidences should not be output, use the <code>-E</code> option.</p>
+<h2 id="markdown-from-examplesevidencesmd"><a class="header" href="#markdown-from-examplesevidencesmd">Markdown from <code>examples/evidences.md</code></a></h2>
+<p>List of Evidences</p>
+<ol>
+<li>
+<p>Sn1: Solution 1</p>
+<p>examples_example_gsn_yaml</p>
+<p>https://github.com/jonasthewolf/gsn2x</p>
+</li>
+<li>
+<p>Sn2: Solution 2</p>
+<p>examples_example_gsn_yaml</p>
+</li>
+<li>
+<p>Sn3: Solution 3</p>
+<p>examples_example_gsn_yaml</p>
+</li>
+<li>
+<p>Sn4: Solution 4</p>
+<p>examples_example_gsn_yaml</p>
+</li>
+<li>
+<p>Sn5: Solution 5</p>
+<p>examples_example_gsn_yaml</p>
+</li>
+</ol>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="modular-extension"><a class="header" href="#modular-extension">Modular extension</a></h1>
 <p>gsn2x partially supports the Modular Extension of the GSN standard (see <a href="./standard_support.html">Standard support</a>).
 Module Interfaces (Section 1:4.6) and Inter-Module Contracts (Section 1:4.7) are not supported.</p>

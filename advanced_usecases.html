@@ -83,7 +83,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="basic_usage.html"><strong aria-hidden="true">1.</strong> Basic Usage</a></li><li class="chapter-item expanded "><a href="yaml_syntax.html"><strong aria-hidden="true">2.</strong> Syntax</a></li><li class="chapter-item expanded "><a href="checks.html"><strong aria-hidden="true">3.</strong> Checks</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="advanced_usecases.html" class="active"><strong aria-hidden="true">4.</strong> Advanced Use-cases</a></li><li class="chapter-item expanded "><a href="modular_extension.html"><strong aria-hidden="true">5.</strong> Modular Extension</a></li><li class="chapter-item expanded "><div><strong aria-hidden="true">6.</strong> Interfacing</div></li><li class="spacer"></li><li class="chapter-item expanded "><a href="standard_support.html"><strong aria-hidden="true">7.</strong> Standard Support</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="design_goals.html"><strong aria-hidden="true">8.</strong> Design Goals</a></li><li class="chapter-item expanded "><a href="history.html"><strong aria-hidden="true">9.</strong> History</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="basic_usage.html"><strong aria-hidden="true">1.</strong> Basic Usage</a></li><li class="chapter-item expanded "><a href="yaml_syntax.html"><strong aria-hidden="true">2.</strong> Syntax</a></li><li class="chapter-item expanded "><a href="checks.html"><strong aria-hidden="true">3.</strong> Checks</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="advanced_usecases.html" class="active"><strong aria-hidden="true">4.</strong> Advanced Use-cases</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="adv_layers.html"><strong aria-hidden="true">4.1.</strong> Layers</a></li><li class="chapter-item expanded "><a href="adv_stylesheets.html"><strong aria-hidden="true">4.2.</strong> Stylesheets</a></li><li class="chapter-item expanded "><a href="adv_evidences.html"><strong aria-hidden="true">4.3.</strong> Evidences</a></li></ol></li><li class="chapter-item expanded "><a href="modular_extension.html"><strong aria-hidden="true">5.</strong> Modular Extension</a></li><li class="chapter-item expanded "><div><strong aria-hidden="true">6.</strong> Interfacing</div></li><li class="spacer"></li><li class="chapter-item expanded "><a href="standard_support.html"><strong aria-hidden="true">7.</strong> Standard Support</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="design_goals.html"><strong aria-hidden="true">8.</strong> Design Goals</a></li><li class="chapter-item expanded "><a href="history.html"><strong aria-hidden="true">9.</strong> History</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -144,49 +144,12 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="advanced-use-cases"><a class="header" href="#advanced-use-cases">Advanced use-cases</a></h1>
-<h2 id="additional-layers"><a class="header" href="#additional-layers">Additional layers</a></h2>
-<p>Additional attributes of an element are ignored by default.
-With the command line option <code>-l</code> or <code>--layers</code> you can enable the output of those additional attributes.
-By using this feature different views on the GSN can be generated.</p>
-<h3 id="example"><a class="header" href="#example">Example</a></h3>
-<pre><code class="language-yaml">G1:
-  text: This is a Goal
-  supportedBy: [S1]
-  inContextOf: [C1]
-  layer1: This is additional information for G1.
-
-S1:
-  text: This is a Strategy
-  layer1: This is additional information for S1.
-
-C1: 
-  text: This is a Context
-  layer1: This is additional information for C1.
-</code></pre>
-<p>In this example, a call to <code>gsn2x -l layer1</code> will show the additional information to each element prefixed with <em><code>LAYER1: </code></em>.
-Of course, using <code>text</code>, <code>inContextOf</code>, <code>supportedBy</code>, <code>url</code>, <code>undeveloped</code>, <code>level</code> or <code>classes</code> are not sensible parameters to pass for the <code>-l</code> option. </p>
-<p>Please note that using <code>module</code> and passing it as a layer option will also not work. </p>
-<p>It is intentional that information is only added for a view, but not hidden to ensure consistency of the GSN in all variants.</p>
-<h2 id="stylesheets-for-svg-rendering"><a class="header" href="#stylesheets-for-svg-rendering">Stylesheets for SVG rendering</a></h2>
-<p>You can provide (multiple) custom CSS stylesheets for SVG via the <code>-s</code> or <code>--stylesheet</code> options. 
-The path is not interpreted by gsn2x and, thus, is relative to the SVG if relative.</p>
-<p>Every element will also be addressable by <code>id</code>. The <code>id</code> is the same as the YAML id.</p>
-<p>Elements are assigned <code>gsnelem</code> class, edges are assigned <code>gsnedge</code> class. </p>
-<p>The complete diagram is assigned <code>gsndiagram</code> class.</p>
-<p>You can assign additional classes by adding the <code>classes:</code> attribute. It must be a list of classes you want to assign. 
-Additional layers will be added as CSS classes, too. A <code>layer1</code> will e.g. be added as <code>gsnlay_layer1</code>.</p>
-<p>When using <code>-t</code> or <code>--embed-css</code> instead of <code>-s</code> the CSS stylesheets will be embedded in the SVG. The path is interpreted as relative to the current working directory then.</p>
-<h3 id="example-1"><a class="header" href="#example-1">Example</a></h3>
-<pre><code class="language-yaml">G1:
-  text: This is a Goal
-  classes: [additionalclass1, additionalclass2]
-</code></pre>
-<h2 id="list-of-evidences"><a class="header" href="#list-of-evidences">List of evidences</a></h2>
-<p>An additional file that lists all the evidences in the input file is output by default in <code>evidences.md</code>.</p>
-<p>See <a href="examples/evidences.html">examples/evidences.md</a> for an example.</p>
-<p>The format can be used in Markdown and reStructuredText files.</p>
-<p>If the list of evidences should not be output, use the <code>-E</code> option.</p>
+                        <h1 id="advance-use-cases"><a class="header" href="#advance-use-cases">Advance Use-cases</a></h1>
+<ul>
+<li><a href="./adv_layers.html">Layers</a></li>
+<li><a href="./adv_stylesheets.html">Stylesheets</a></li>
+<li><a href="./adv_evidences.html">Evidences</a></li>
+</ul>
 
                     </main>
 
@@ -196,7 +159,7 @@ Additional layers will be added as CSS classes, too. A <code>layer1</code> will 
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
-                            <a rel="next" href="modular_extension.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next" href="adv_layers.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
 
@@ -210,7 +173,7 @@ Additional layers will be added as CSS classes, too. A <code>layer1</code> will 
                         <i class="fa fa-angle-left"></i>
                     </a>
 
-                    <a rel="next" href="modular_extension.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next" href="adv_layers.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>
