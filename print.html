@@ -307,8 +307,30 @@ Of course, using <code>text</code>, <code>inContextOf</code>, <code>supportedBy<
 <p>You can provide (multiple) custom CSS stylesheets for SVG via the <code>-s</code> or <code>--stylesheet</code> options. 
 The path is not interpreted by gsn2x and, thus, is relative to the SVG if relative.</p>
 <p>Every element will also be addressable by <code>id</code>. The <code>id</code> is the same as the YAML id.</p>
-<p>Elements are assigned <code>gsnelem</code> class, edges are assigned <code>gsnedge</code> class. </p>
-<p>The complete diagram is assigned <code>gsndiagram</code> class.</p>
+<p>This table shows the CSS classes assigned to a certain element:</p>
+<div class="table-wrapper"><table><thead><tr><th>Class</th><th>Assigned to</th><th>SVG Element</th></tr></thead><tbody>
+<tr><td>gsndiagram</td><td>The complete diagram</td><td>svg</td></tr>
+<tr><td>gsnelem</td><td>All elements</td><td>g</td></tr>
+<tr><td>gsngoal</td><td>Goal</td><td>g</td></tr>
+<tr><td>gsn_undeveloped</td><td>Undeveloped</td><td>g</td></tr>
+<tr><td>gsnsltn</td><td>Solution</td><td>g</td></tr>
+<tr><td>gsnawaysltn</td><td>Away Solution</td><td>g</td></tr>
+<tr><td>gsnstgy</td><td>Strategy</td><td>g</td></tr>
+<tr><td>gsnasmp</td><td>Assumption</td><td>g</td></tr>
+<tr><td>gsnawayasmp</td><td>Away Assumption</td><td>g</td></tr>
+<tr><td>gsnjust</td><td>Justification</td><td>g</td></tr>
+<tr><td>gsnawayjust</td><td>Away Justification</td><td>g</td></tr>
+<tr><td>gsnctxt</td><td>Context</td><td>g</td></tr>
+<tr><td>gsnawayctxt</td><td>Away Context</td><td>g</td></tr>
+<tr><td>gsnmodule</td><td>Module</td><td>g</td></tr>
+<tr><td>gsn_module_<code>module</code></td><td>Module name</td><td>g</td></tr>
+<tr><td>gsnedge</td><td>All edges</td><td>path</td></tr>
+<tr><td>gsnlay_<code>&lt;layer&gt;</code></td><td>Layer <code>&lt;layer&gt;</code></td><td>path</td></tr>
+<tr><td>gsninctxt</td><td>In Context Of</td><td>path</td></tr>
+<tr><td>gsnspby</td><td>Supported By</td><td>path</td></tr>
+<tr><td>gsncomposite</td><td>Composite (In Context Of AND Supported By)</td><td>path</td></tr>
+</tbody></table>
+</div>
 <p>You can assign additional classes by adding the <code>classes:</code> attribute. It must be a list of classes you want to assign. 
 Additional layers will be added as CSS classes, too. A <code>layer1</code> will e.g. be added as <code>gsnlay_layer1</code>.</p>
 <p>When using <code>-t</code> or <code>--embed-css</code> instead of <code>-s</code> the CSS stylesheets will be embedded in the SVG. The path is interpreted as relative to the current working directory then.</p>

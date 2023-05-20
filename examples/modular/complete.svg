@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg viewBox="0 0 724 447" xmlns="http://www.w3.org/2000/svg">
+<svg classes="gsndiagram" viewBox="0 0 724 447" xmlns="http://www.w3.org/2000/svg">
 <symbol id="module_icon">
 <rect fill="lightgrey" height="5" stroke="black" stroke-width="1" width="10" x="0" y="0"/>
 <rect fill="lightgrey" height="10" stroke="black" stroke-width="1" width="20" x="0" y="5"/>
@@ -93,7 +93,7 @@ Some Context
 J
 </text>
 </g>
-<g class="gsn_module_Main" id="node_G2">
+<g class="gsn_module_Main gsn_undeveloped" id="node_G2">
 <title>
 G2
 </title>
