@@ -84,7 +84,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="basic_usage.html"><strong aria-hidden="true">1.</strong> Basic Usage</a></li><li class="chapter-item expanded "><a href="yaml_syntax.html"><strong aria-hidden="true">2.</strong> Syntax</a></li><li class="chapter-item expanded "><a href="checks.html"><strong aria-hidden="true">3.</strong> Checks</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="advanced_usecases.html"><strong aria-hidden="true">4.</strong> Advanced Use-cases</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="adv_layers.html"><strong aria-hidden="true">4.1.</strong> Layers</a></li><li class="chapter-item expanded "><a href="adv_stylesheets.html"><strong aria-hidden="true">4.2.</strong> Stylesheets</a></li><li class="chapter-item expanded "><a href="adv_evidences.html"><strong aria-hidden="true">4.3.</strong> Evidences</a></li></ol></li><li class="chapter-item expanded "><a href="modular_extension.html"><strong aria-hidden="true">5.</strong> Modular Extension</a></li><li class="chapter-item expanded "><div><strong aria-hidden="true">6.</strong> Interfacing</div></li><li class="spacer"></li><li class="chapter-item expanded "><a href="standard_support.html"><strong aria-hidden="true">7.</strong> Standard Support</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="design_goals.html"><strong aria-hidden="true">8.</strong> Design Goals</a></li><li class="chapter-item expanded "><a href="history.html"><strong aria-hidden="true">9.</strong> History</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="basic_usage.html"><strong aria-hidden="true">1.</strong> Basic Usage</a></li><li class="chapter-item expanded "><a href="yaml_syntax.html"><strong aria-hidden="true">2.</strong> Syntax</a></li><li class="chapter-item expanded "><a href="checks.html"><strong aria-hidden="true">3.</strong> Checks</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="advanced_usecases.html"><strong aria-hidden="true">4.</strong> Advanced Use-cases</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="adv_layout.html"><strong aria-hidden="true">4.1.</strong> Layout</a></li><li class="chapter-item expanded "><a href="adv_layers.html"><strong aria-hidden="true">4.2.</strong> Layers</a></li><li class="chapter-item expanded "><a href="adv_stylesheets.html"><strong aria-hidden="true">4.3.</strong> Stylesheets</a></li><li class="chapter-item expanded "><a href="adv_evidences.html"><strong aria-hidden="true">4.4.</strong> Evidences</a></li></ol></li><li class="chapter-item expanded "><a href="modular_extension.html"><strong aria-hidden="true">5.</strong> Modular Extension</a></li><li class="chapter-item expanded "><div><strong aria-hidden="true">6.</strong> Interfacing</div></li><li class="spacer"></li><li class="chapter-item expanded "><a href="standard_support.html"><strong aria-hidden="true">7.</strong> Standard Support</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="design_goals.html"><strong aria-hidden="true">8.</strong> Design Goals</a></li><li class="chapter-item expanded "><a href="history.html"><strong aria-hidden="true">9.</strong> History</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -230,13 +230,20 @@ C1:
 <tr><td>text</td><td>no</td></tr>
 <tr><td>supportedBy</td><td>yes</td></tr>
 <tr><td>inContextOf</td><td>yes</td></tr>
+<tr><td>undeveloped<sup class="footnote-reference"><a href="#nu">1</a></sup></td><td>yes</td></tr>
 <tr><td>url</td><td>yes</td></tr>
-<tr><td>undeveloped</td><td>yes</td></tr>
-<tr><td>classes<sup class="footnote-reference"><a href="#note">1</a></sup></td><td>yes</td></tr>
+<tr><td>classes<sup class="footnote-reference"><a href="#nc">2</a></sup></td><td>yes</td></tr>
+<tr><td>level<sup class="footnote-reference"><a href="#nl">3</a></sup></td><td>yes</td></tr>
 </tbody></table>
 </div>
-<div class="footnote-definition" id="note"><sup class="footnote-definition-label">1</sup>
+<div class="footnote-definition" id="nu"><sup class="footnote-definition-label">1</sup>
+<p>Mutually exclusive to <code>supportedBy</code>.</p>
+</div>
+<div class="footnote-definition" id="nc"><sup class="footnote-definition-label">2</sup>
 <p>See <a href="./adv_stylesheets.html">Stylesheets</a>.</p>
+</div>
+<div class="footnote-definition" id="nl"><sup class="footnote-definition-label">3</sup>
+<p>See <a href="./adv_layout.html">Layout</a>.</p>
 </div>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="checks"><a class="header" href="#checks">Checks</a></h1>
 <h2 id="validation-checks"><a class="header" href="#validation-checks">Validation checks</a></h2>
@@ -280,6 +287,21 @@ The checks for references (Cxx) can be skipped for individual files by using the
 <li><a href="./adv_stylesheets.html">Stylesheets</a></li>
 <li><a href="./adv_evidences.html">Evidences</a></li>
 </ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="more-influence-on-the-layout-of-elements"><a class="header" href="#more-influence-on-the-layout-of-elements">More influence on the layout of elements</a></h1>
+<h2 id="vertical-placement"><a class="header" href="#vertical-placement">Vertical placement</a></h2>
+<p>To influence the rendered image, you can add an identifier to a GSN element with the <code>level</code> attribute. 
+All elements with the same identifier for <code>level</code> will now show up on the same vertical level. </p>
+<p>This is especially useful, if e.g., two goals or strategies are on the same logical level, 
+but have a different &quot;depth&quot; in the argumentation (i.e. a different number of goals or strategies in their path to the root goal).</p>
+<p>See the <a href="examples/example.gsn.yaml">example</a> for usage. The strategies S1 and S2 are on the same level.</p>
+<p>It is recommended to use <code>level</code> only for goals, since related contexts, 
+justifications and assumptions are automatically put on the same level.</p>
+<h2 id="horizontal-placement"><a class="header" href="#horizontal-placement">Horizontal placement</a></h2>
+<p>The order of the GSN elements on the same horizontal rank can be influenced by their ID.
+The elements are sorted lexicographically. Thus, a goal <code>G1</code> if placed on the same vertical level is placed before <code>G2</code>, 
+if they have the same depth of their supporting arguments.</p>
+<p>There can be situations (e.g. a n:m relation between goals and solutions) that lead to weird looking graphs.
+You may even encounter the following message <code>Rendering a diagram took too many iterations. See README.md for hints how to solve this situation.</code>. In such cases, please file an issue on GitHub, so I can see how the algorithm can be improved.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="additional-layers"><a class="header" href="#additional-layers">Additional layers</a></h1>
 <p>Additional attributes of an element are ignored by default.
 With the command line option <code>-l</code> or <code>--layers</code> you can enable the output of those additional attributes.
@@ -488,7 +510,7 @@ Moreover, it can be parsed by other programs easily, too.</p>
 <p>Standard conformance</p>
 <p>I would like the program output to be very close to the GSN standard.</p>
 <p>I don't want to redefine the semantics or add additional ones. 
-The standard was created that as many people as possible have some common grounds.
+The standard was created so that as many people as possible have some common grounds.
 If I added new fancy stuff, everyone might have a different interpretation of that again.</p>
 </li>
 <li>
@@ -496,6 +518,7 @@ If I added new fancy stuff, everyone might have a different interpretation of th
 <p>Since I understand that this tool might be used in some corporate environment where usage of 
 free and open-source software might be limited, I try to keep the dependencies of this program 
 as few as possible.</p>
+<p>I used a very relaxed license and try to take care that it is compatible with those of the dependencies.</p>
 </li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="history"><a class="header" href="#history">History</a></h1>

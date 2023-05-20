@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Modular Extension - gsn2x User Manual</title>
+        <title>Layout - gsn2x User Manual</title>
 
 
         <!-- Custom HTML head -->
@@ -83,7 +83,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="basic_usage.html"><strong aria-hidden="true">1.</strong> Basic Usage</a></li><li class="chapter-item expanded "><a href="yaml_syntax.html"><strong aria-hidden="true">2.</strong> Syntax</a></li><li class="chapter-item expanded "><a href="checks.html"><strong aria-hidden="true">3.</strong> Checks</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="advanced_usecases.html"><strong aria-hidden="true">4.</strong> Advanced Use-cases</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="adv_layout.html"><strong aria-hidden="true">4.1.</strong> Layout</a></li><li class="chapter-item expanded "><a href="adv_layers.html"><strong aria-hidden="true">4.2.</strong> Layers</a></li><li class="chapter-item expanded "><a href="adv_stylesheets.html"><strong aria-hidden="true">4.3.</strong> Stylesheets</a></li><li class="chapter-item expanded "><a href="adv_evidences.html"><strong aria-hidden="true">4.4.</strong> Evidences</a></li></ol></li><li class="chapter-item expanded "><a href="modular_extension.html" class="active"><strong aria-hidden="true">5.</strong> Modular Extension</a></li><li class="chapter-item expanded "><div><strong aria-hidden="true">6.</strong> Interfacing</div></li><li class="spacer"></li><li class="chapter-item expanded "><a href="standard_support.html"><strong aria-hidden="true">7.</strong> Standard Support</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="design_goals.html"><strong aria-hidden="true">8.</strong> Design Goals</a></li><li class="chapter-item expanded "><a href="history.html"><strong aria-hidden="true">9.</strong> History</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="basic_usage.html"><strong aria-hidden="true">1.</strong> Basic Usage</a></li><li class="chapter-item expanded "><a href="yaml_syntax.html"><strong aria-hidden="true">2.</strong> Syntax</a></li><li class="chapter-item expanded "><a href="checks.html"><strong aria-hidden="true">3.</strong> Checks</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="advanced_usecases.html"><strong aria-hidden="true">4.</strong> Advanced Use-cases</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="adv_layout.html" class="active"><strong aria-hidden="true">4.1.</strong> Layout</a></li><li class="chapter-item expanded "><a href="adv_layers.html"><strong aria-hidden="true">4.2.</strong> Layers</a></li><li class="chapter-item expanded "><a href="adv_stylesheets.html"><strong aria-hidden="true">4.3.</strong> Stylesheets</a></li><li class="chapter-item expanded "><a href="adv_evidences.html"><strong aria-hidden="true">4.4.</strong> Evidences</a></li></ol></li><li class="chapter-item expanded "><a href="modular_extension.html"><strong aria-hidden="true">5.</strong> Modular Extension</a></li><li class="chapter-item expanded "><div><strong aria-hidden="true">6.</strong> Interfacing</div></li><li class="spacer"></li><li class="chapter-item expanded "><a href="standard_support.html"><strong aria-hidden="true">7.</strong> Standard Support</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="design_goals.html"><strong aria-hidden="true">8.</strong> Design Goals</a></li><li class="chapter-item expanded "><a href="history.html"><strong aria-hidden="true">9.</strong> History</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -144,94 +144,31 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="modular-extension"><a class="header" href="#modular-extension">Modular extension</a></h1>
-<p>gsn2x partially supports the Modular Extension of the GSN standard (see <a href="./standard_support.html">Standard support</a>).
-Module Interfaces (Section 1:4.6) and Inter-Module Contracts (Section 1:4.7) are not supported.</p>
-<p>Each module is a separate file. The name of the module is the file name (incl. the path provided to the gsn2x command line).</p>
-<p>If modules are used, all related module files must be provided to the command line of gsn2x.
-Element IDs must be unique across all modules. Checks will by default be performed across all modules.
-Check messages for individual modules can be omitted using the <code>-x</code> option.</p>
-<p>The argument view of individual modules will show &quot;away&quot; elements if elements from other modules are referenced.</p>
-<p>Note: There is no &quot;away strategy&quot; in the standard.</p>
-<p>In addition to the default argument view for each module, there are two output files generated (if more than one input file is provided):</p>
-<ol>
-<li>Complete View (default to: <code>complete.svg</code>)</li>
-<li>Architecture View (default to: <code>architecture.svg</code>)</li>
-</ol>
-<p>If the argument view should not be updated, use the <code>-N</code> option.
-If the complete view should not be output, use the <code>-F</code> option.
-If the architecture view should not be output, use the <code>-A</code> option.</p>
-<h2 id="complete-view"><a class="header" href="#complete-view">Complete view</a></h2>
-<p>The complete view is a similar to an argument view for a single module, 
-but showing all modules within the same diagram. The modules are &quot;unrolled&quot;. </p>
-<!-- Modules can be masked i.e., unrolling is prevented, 
-by additionally adding those modules with the `-m` option. -->
-<p><img src="examples/modular/complete.svg" alt="example complete" /></p>
-<p>See <a href="examples/modular/complete.svg">example</a> here.</p>
-<h2 id="architecture-view"><a class="header" href="#architecture-view">Architecture view</a></h2>
-<p>The architecture view only shows the selected modules and their dependencies.
-THe architecture view is navigable to the module argument view.</p>
-<p><img src="examples/modular/architecture.svg" alt="example architecture" /></p>
-<p>See <a href="examples/modular/architecture.svg">example</a> here.</p>
-<h2 id="example"><a class="header" href="#example">Example:</a></h2>
-<pre><code>gsn2x -f full.svg -a arch.svg main.yml sub1.yml sub3.yml
-</code></pre>
-<p>This will generate the argument view for each module, the complete view (<code>-f full.svg</code>) of all modules and the architecture view (<code>-a arch.svg</code>). <!-- In the complete view, the elements of the `sub1` module will be represented by a module. --></p>
-<h2 id="developing-undeveloped-elements-from-other-modules"><a class="header" href="#developing-undeveloped-elements-from-other-modules">Developing undeveloped elements from other modules</a></h2>
-<p>In a customer supplier relationship it may be helpful to develop otherwise undeveloped elements from other modules.
-This allows creating distributed assurance cases.</p>
-<p>Example for a module with undeveloped elements:</p>
-<pre><code class="language-yaml">module:
-  name: template 
-  brief: Template for an assurance case
-
-G1:
-  text: A claim somebody else should support
-  undeveloped: true
-</code></pre>
-<p>Example for developing those elements in another module:</p>
-<pre><code class="language-yaml">module:
-  name: instance
-  brief: Extending instance
-  extends: 
-    - module: template
-      develops:
-        G1: [G2]
-
-G2:
-  text: This is the argument provided by somebody else.
-  supportedBy: [Sn1]
-
-Sn1:
-  text: A solution
-</code></pre>
-<h1 id="optional-module-information"><a class="header" href="#optional-module-information">Optional module information</a></h1>
-<p>It is possible to add additional <code>module</code> information in the source YAML.
-This allows describing the module`s name and an optional brief description.
-Even arbitrary information can be added. </p>
-<p><code>name</code> and <code>brief</code> are mandatory if a <code>module</code> is added.</p>
-<pre><code class="language-yaml">
-module: 
-   name: MainModule
-   brief: This is a short description of the module
-   additionalInformation: 
-    v1: Changed line 2
-    v2: Added line 4
-
-</code></pre>
-<p>The module information is printed as part of a legend for the argument view.</p>
-<p>You can use the <code>-G</code> option to suppress the legend completely, 
-or the <code>-g</code> option to limit it to <code>name</code>, <code>brief</code> and the time and date of generation of the SVG.</p>
+                        <h1 id="more-influence-on-the-layout-of-elements"><a class="header" href="#more-influence-on-the-layout-of-elements">More influence on the layout of elements</a></h1>
+<h2 id="vertical-placement"><a class="header" href="#vertical-placement">Vertical placement</a></h2>
+<p>To influence the rendered image, you can add an identifier to a GSN element with the <code>level</code> attribute. 
+All elements with the same identifier for <code>level</code> will now show up on the same vertical level. </p>
+<p>This is especially useful, if e.g., two goals or strategies are on the same logical level, 
+but have a different &quot;depth&quot; in the argumentation (i.e. a different number of goals or strategies in their path to the root goal).</p>
+<p>See the <a href="examples/example.gsn.yaml">example</a> for usage. The strategies S1 and S2 are on the same level.</p>
+<p>It is recommended to use <code>level</code> only for goals, since related contexts, 
+justifications and assumptions are automatically put on the same level.</p>
+<h2 id="horizontal-placement"><a class="header" href="#horizontal-placement">Horizontal placement</a></h2>
+<p>The order of the GSN elements on the same horizontal rank can be influenced by their ID.
+The elements are sorted lexicographically. Thus, a goal <code>G1</code> if placed on the same vertical level is placed before <code>G2</code>, 
+if they have the same depth of their supporting arguments.</p>
+<p>There can be situations (e.g. a n:m relation between goals and solutions) that lead to weird looking graphs.
+You may even encounter the following message <code>Rendering a diagram took too many iterations. See README.md for hints how to solve this situation.</code>. In such cases, please file an issue on GitHub, so I can see how the algorithm can be improved.</p>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="adv_evidences.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="advanced_usecases.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
-                            <a rel="next" href="standard_support.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next" href="adv_layers.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
 
@@ -241,11 +178,11 @@ or the <code>-g</code> option to limit it to <code>name</code>, <code>brief</cod
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="adv_evidences.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="advanced_usecases.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
 
-                    <a rel="next" href="standard_support.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next" href="adv_layers.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>
