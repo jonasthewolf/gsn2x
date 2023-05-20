@@ -60,13 +60,18 @@ Please see [examples/example.gsn.yaml](examples/example.gsn.yaml) for an example
 ## Summary
 
 
-| Attribute      | Optional |
-|----------------|----------|
-| text           |    no    | 
-| supportedBy    |    yes   |
-| inContextOf    |    yes   | 
-| url            |    yes   |   
-| undeveloped    |    yes   |
-| classes[^note] |    yes   |
+| Attribute        | Optional |
+|------------------|----------|
+| text             |    no    | 
+| supportedBy      |    yes   |
+| inContextOf      |    yes   | 
+| undeveloped[^nu] |    yes   |
+| url              |    yes   |   
+| classes[^nc]     |    yes   |
+| level[^nl]       |    yes   |
 
-[^note]: See [Stylesheets](./adv_stylesheets.md).
+[^nu]: Mutually exclusive to `supportedBy`.
+
+[^nc]: See [Stylesheets](./adv_stylesheets.md).
+
+[^nl]: See [Layout](./adv_layout.md).

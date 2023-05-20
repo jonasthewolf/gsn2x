@@ -7,6 +7,7 @@
 ---
 
 - [Advanced Use-cases](./advanced_usecases.md)
+    - [Layout](./adv_layout.md)
     - [Layers](./adv_layers.md)
     - [Stylesheets](./adv_stylesheets.md)
     - [Evidences](./adv_evidences.md)
@@ -16,7 +17,7 @@
 ---
 
 - [Standard Support](./standard_support.md)
-- [Troubleshooting]() 
+- [Troubleshooting]()
 
 ---
 
