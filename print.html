@@ -282,7 +282,9 @@ The checks for references (Cxx) can be skipped for individual files by using the
 <pre><code>(Warning|Error): \((?&lt;module&gt;.+)\) \((?&lt;num&gt;[CV][0-9][0-9])\): (?&lt;msg&gt;.+) 
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="advance-use-cases"><a class="header" href="#advance-use-cases">Advance Use-cases</a></h1>
+<p>There are a few extra, advanced use-cases:</p>
 <ul>
+<li><a href="./adv_layout.html">Layout</a></li>
 <li><a href="./adv_layers.html">Layers</a></li>
 <li><a href="./adv_stylesheets.html">Stylesheets</a></li>
 <li><a href="./adv_evidences.html">Evidences</a></li>
@@ -367,8 +369,8 @@ G1:
 </code></pre>
 <p>The corresponding CSS:</p>
 <pre><code class="language-css">
-.additionalclass1 path { fill: red; }
-.additionalclass1 text { fill: white; }
+.additionalclass1 * { fill: red; }
+.additionalclass1 text,a { fill: white; }
 </code></pre>
 <p>The result looks like this:</p>
 <p><img src="examples/minimalcss/min.gsn.svg" alt="Styled Example" /></p>
