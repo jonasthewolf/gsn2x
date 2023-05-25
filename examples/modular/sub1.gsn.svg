@@ -18,7 +18,7 @@
 <style>
 @import ("modular.css")
 </style>
-<g class="gsn_module_Main" id="node_G1">
+<g class="gsnelem gsnawaygoal gsn_module_Main" id="node_G1">
 <title>
 G1
 </title>
@@ -37,7 +37,7 @@ Main
 </a>
 <use href="#module_icon" x="27" y="79"/>
 </g>
-<g class="gsn_module_Sub1" id="node_A1">
+<g class="gsnelem gsnasmp gsn_module_Sub1" id="node_A1">
 <title>
 A1
 </title>
@@ -53,7 +53,7 @@ A
 </text>
 </g>
 <a href="./main.gsn.svg#node_S1">
-<g class="gsn_module_Main" id="node_S1"/>
+<g class="gsnelem gsnstgy gsn_module_Main" id="node_S1"/>
 <title>
 S1
 </title>
@@ -65,7 +65,7 @@ S1
 Divide and Conquer
 </text>
 </a>
-<g class="gsn_module_Sub3" id="node_C2">
+<g class="gsnelem gsnawayctxt gsn_module_Sub3" id="node_C2">
 <title>
 C2
 </title>
@@ -84,7 +84,7 @@ Sub3
 </a>
 <use href="#module_icon" x="27" y="221"/>
 </g>
-<g class="gsn_module_Sub1" id="node_G3">
+<g class="gsnelem gsngoal gsn_module_Sub1" id="node_G3">
 <title>
 G3
 </title>
@@ -96,7 +96,7 @@ G3
 Conquer the submodules
 </text>
 </g>
-<g class="gsn_module_Main" id="node_J1">
+<g class="gsnelem gsnawayjust gsn_module_Main" id="node_J1">
 <title>
 J1
 </title>
@@ -121,7 +121,7 @@ Main
 J
 </text>
 </g>
-<g class="gsn_module_Sub3" id="node_Sn1">
+<g class="gsnelem gsnawaysltn gsn_module_Sub3" id="node_Sn1">
 <title>
 Sn1
 </title>

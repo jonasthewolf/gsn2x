@@ -214,7 +214,7 @@ impl Node {
             identifier: identifier.to_owned(),
             text: text.to_owned(),
             url,
-            classes,
+            classes: new_classes,
             node_type: NodeType::Box(BoxType::Context),
         }
     }
