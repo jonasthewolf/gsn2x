@@ -1,11 +1,14 @@
 [package]
 name = "gsn2x"
 description = "Tool to create a graphical representation from a Goal Structuring Notation in YAML format."
+keywords = ["gsn", "yaml", "svg", "assurancecases"]
+categories = ["visualization", "rendering::data-formats"]
 authors = ["Jonas Wolf <jonas.wolf@jonaswolf.org>"]
 version = "2.7.4"
 edition = "2021"
 license = "CC-BY-4.0"
 repository = "https://github.com/jonasthewolf/gsn2x"
+documentation = "https://jonasthewolf.github.io/gsn2x"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
