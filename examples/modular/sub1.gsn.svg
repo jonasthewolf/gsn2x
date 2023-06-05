@@ -41,7 +41,7 @@ Main
 <title>
 A1
 </title>
-<ellipse class="border" cx="189" cy="60" fill="none" rx="45" ry="37" stroke="black" stroke-width="1"/>
+<path class="border" d="M144,60 a45,37,0,1,0,90,0 a45,37,0,1,0,-90,0 z" fill="none" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="167" y="51">
 A1
 </text>

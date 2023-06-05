@@ -17,7 +17,7 @@
 </marker>
 <style type="text/css">
 <![CDATA[
-.additionalclass1 * { fill: red; }
+.additionalclass1 path { fill: red; }
 .additionalclass1 text,a { fill: white; }
 ]]>
 </style>
