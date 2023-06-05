@@ -82,7 +82,7 @@ impl EllipticalType {
                 0,               // x-axis-rotation
                 1,               // large-arc-flag
                 0,               // sweep-flag
-                - node.width,
+                -node.width,
                 0,
             ))
             .close();
