@@ -71,7 +71,7 @@ Context 1
 <title>
 J1
 </title>
-<ellipse class="border" cx="224" cy="238" fill="none" rx="71" ry="37" stroke="black" stroke-width="1"/>
+<path class="border" d="M153,238 a71,37,0,1,0,142,0 a71,37,0,1,0,-142,0 z" fill="none" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="184" y="229">
 J1
 </text>
@@ -98,7 +98,7 @@ Strategy 1
 <title>
 A1
 </title>
-<ellipse class="border" cx="568" cy="238" fill="none" rx="59" ry="37" stroke="black" stroke-width="1"/>
+<path class="border" d="M509,238 a59,37,0,1,0,118,0 a59,37,0,1,0,-118,0 z" fill="none" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="536" y="229">
 A1
 </text>
@@ -126,7 +126,7 @@ Strategy 2
 <title>
 Sn1
 </title>
-<ellipse class="border" cx="1021" cy="238" fill="none" rx="46" ry="46" stroke="black" stroke-width="1"/>
+<path class="border" d="M975,238 a46,46,0,1,0,92,0 a46,46,0,1,0,-92,0 z" fill="none" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="993" y="229">
 Sn1
 </text>
@@ -138,7 +138,7 @@ Solution 1
 <title>
 A2
 </title>
-<ellipse class="border" cx="88" cy="361" fill="none" rx="68" ry="37" stroke="black" stroke-width="1"/>
+<path class="border" d="M20,361 a68,37,0,1,0,136,0 a68,37,0,1,0,-136,0 z" fill="none" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="50" y="352">
 A2
 </text>
@@ -204,7 +204,7 @@ Goal 4
 <title>
 J2
 </title>
-<ellipse class="border" cx="863" cy="361" fill="none" rx="71" ry="37" stroke="black" stroke-width="1"/>
+<path class="border" d="M792,361 a71,37,0,1,0,142,0 a71,37,0,1,0,-142,0 z" fill="none" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="823" y="352">
 J2
 </text>
@@ -232,7 +232,7 @@ Undeveloped Goal
 <title>
 Sn4
 </title>
-<ellipse class="border" cx="248" cy="484" fill="none" rx="46" ry="46" stroke="black" stroke-width="1"/>
+<path class="border" d="M202,484 a46,46,0,1,0,92,0 a46,46,0,1,0,-92,0 z" fill="none" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="220" y="475">
 Sn4
 </text>
@@ -244,7 +244,7 @@ Solution 4
 <title>
 Sn3
 </title>
-<ellipse class="border" cx="402" cy="484" fill="none" rx="46" ry="46" stroke="black" stroke-width="1"/>
+<path class="border" d="M356,484 a46,46,0,1,0,92,0 a46,46,0,1,0,-92,0 z" fill="none" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="374" y="475">
 Sn3
 </text>
@@ -256,7 +256,7 @@ Solution 3
 <title>
 Sn5
 </title>
-<ellipse class="border" cx="556" cy="484" fill="none" rx="46" ry="46" stroke="black" stroke-width="1"/>
+<path class="border" d="M510,484 a46,46,0,1,0,92,0 a46,46,0,1,0,-92,0 z" fill="none" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="528" y="475">
 Sn5
 </text>
@@ -268,7 +268,7 @@ Solution 5
 <title>
 Sn2
 </title>
-<ellipse class="border" cx="700" cy="484" fill="none" rx="46" ry="46" stroke="black" stroke-width="1"/>
+<path class="border" d="M654,484 a46,46,0,1,0,92,0 a46,46,0,1,0,-92,0 z" fill="none" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="672" y="475">
 Sn2
 </text>

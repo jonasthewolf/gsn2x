@@ -67,7 +67,7 @@ Context 3
 <title>
 A2
 </title>
-<ellipse class="border" cx="116" cy="231" fill="none" rx="96" ry="37" stroke="black" stroke-width="1"/>
+<path class="border" d="M20,231 a96,37,0,1,0,192,0 a96,37,0,1,0,-192,0 z" fill="none" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="58" y="222">
 A2
 </text>
@@ -94,7 +94,7 @@ Yet another goal with context
 <title>
 J2
 </title>
-<ellipse class="border" cx="579" cy="231" fill="none" rx="97" ry="37" stroke="black" stroke-width="1"/>
+<path class="border" d="M482,231 a97,37,0,1,0,194,0 a97,37,0,1,0,-194,0 z" fill="none" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="520" y="222">
 J2
 </text>
@@ -109,7 +109,7 @@ J
 <title>
 J1
 </title>
-<ellipse class="border" cx="785" cy="231" fill="none" rx="69" ry="37" stroke="black" stroke-width="1"/>
+<path class="border" d="M716,231 a69,37,0,1,0,138,0 a69,37,0,1,0,-138,0 z" fill="none" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="746" y="222">
 J1
 </text>
@@ -137,7 +137,7 @@ Another goal with contexts
 <title>
 A1
 </title>
-<ellipse class="border" cx="1179" cy="231" fill="none" rx="73" ry="37" stroke="black" stroke-width="1"/>
+<path class="border" d="M1106,231 a73,37,0,1,0,146,0 a73,37,0,1,0,-146,0 z" fill="none" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="1137" y="222">
 A1
 </text>
@@ -164,7 +164,7 @@ Simple goal
 <title>
 Sn1
 </title>
-<ellipse class="border" cx="72" cy="440" fill="none" rx="46" ry="46" stroke="black" stroke-width="1"/>
+<path class="border" d="M26,440 a46,46,0,1,0,92,0 a46,46,0,1,0,-92,0 z" fill="none" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="45" y="431">
 Sn1
 </text>

@@ -1,4 +1,4 @@
-use svg::node::element::{Element, Ellipse, Title};
+use svg::node::element::{path::Data, Element, Path, Title};
 
 use crate::dirgraphsvg::{
     nodes::{add_text, OFFSET_IDENTIFIER},
@@ -65,14 +65,33 @@ impl EllipticalType {
     pub(super) fn render(&self, node: &Node, font: &FontInfo, mut context: Element) -> Element {
         let title = Title::new().add(svg::node::Text::new(&node.identifier));
 
-        let border = Ellipse::new()
+        let data = Data::new()
+            .move_to((node.x - node.width / 2, node.y))
+            .elliptical_arc_by((
+                node.width / 2,  // rx
+                node.height / 2, // ry
+                0,               // x-axis-rotation
+                1,               // large-arc-flag
+                0,               // sweep-flag
+                node.width,
+                0,
+            ))
+            .elliptical_arc_by((
+                node.width / 2,  // rx
+                node.height / 2, // ry
+                0,               // x-axis-rotation
+                1,               // large-arc-flag
+                0,               // sweep-flag
+                -node.width,
+                0,
+            ))
+            .close();
+
+        let border = Path::new()
             .set("fill", "none")
             .set("stroke", "black")
             .set("stroke-width", 1u32)
-            .set("cx", node.x)
-            .set("cy", node.y)
-            .set("rx", node.width / 2)
-            .set("ry", node.height / 2)
+            .set("d", data)
             .set("class", "border");
 
         use svg::Node;
