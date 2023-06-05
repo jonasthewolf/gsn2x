@@ -53,7 +53,7 @@ Context 2
 <title>
 Sn1
 </title>
-<ellipse class="border" cx="100" cy="186" fill="none" rx="46" ry="46" stroke="black" stroke-width="1"/>
+<path class="border" d="M54,186 a46,46,0,1,0,92,0 a46,46,0,1,0,-92,0 z" fill="none" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="72" y="177">
 Sn1
 </text>
