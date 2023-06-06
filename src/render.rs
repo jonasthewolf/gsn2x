@@ -486,7 +486,7 @@ pub(crate) fn render_evidences(
         .iter()
         .filter(|(id, _)| id.starts_with("Sn"))
         .collect();
-    solutions.sort_by_key(|(k,_)| *k);
+    solutions.sort_by_key(|(k, _)| *k);
     if solutions.is_empty() {
         writeln!(output, "No evidences found.")?;
     }
