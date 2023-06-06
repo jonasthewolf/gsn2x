@@ -8,9 +8,11 @@ assignees: jonasthewolf
 ---
 
 **Describe the bug**
-A clear and concise description of what the bug is.
+
+A clear and concise description of what the bug is, i.e. the actual behavior.
 
 **To Reproduce**
+
 This is a minimal YAML that reproduces the example:
 
 ```yaml
@@ -25,15 +27,20 @@ You can sanitize your files from your intellectual property using, e.g. https://
 ```
 
 **Expected behavior**
+
 A clear and concise description of what you expected to happen.
 
 **Screenshots**
+
 If applicable, add screenshots to help explain your problem.
 
 **Desktop (please complete the following information):**
+
  - OS: [e.g. macOS, Windows, Linux]
- - Version [e.g. 11]
- - Browser [e.g. chrome, safari] that is used for viewing the SVG
+ - OS Version: [e.g. 11]
+ - SVG Viewer: [e.g. browser Chrome, Safari that is used for viewing the SVG]
+ - gsn2x Version: [use `gsn2x --version`]
 
 **Additional context**
+
 Add any other context about the problem here.
