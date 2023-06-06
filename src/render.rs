@@ -482,10 +482,11 @@ pub(crate) fn render_evidences(
     writeln!(output, "List of Evidences")?;
     writeln!(output)?;
 
-    let solutions: Vec<(&String, &GsnNode)> = nodes
+    let mut solutions: Vec<(&String, &GsnNode)> = nodes
         .iter()
         .filter(|(id, _)| id.starts_with("Sn"))
         .collect();
+    solutions.sort_by_key(|(k, _)| *k);
     if solutions.is_empty() {
         writeln!(output, "No evidences found.")?;
     }

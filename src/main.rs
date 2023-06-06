@@ -204,7 +204,11 @@ fn main() -> Result<()> {
     let mut modules: HashMap<String, Module> = HashMap::new();
 
     // Read input
-    let common_ancestors = find_common_ancestors_in_paths(&inputs)?;
+    let mut common_ancestors = find_common_ancestors_in_paths(&inputs)?;
+    let cwd = PathBuf::from(".").canonicalize()?;
+    if common_ancestors.starts_with(&cwd) {
+        common_ancestors = common_ancestors.strip_prefix(cwd)?.to_path_buf();
+    }
     let all_inputs = prepare_input_paths(inputs)?;
     read_inputs(&all_inputs, &mut nodes, &mut modules, &mut diags)?;
 
