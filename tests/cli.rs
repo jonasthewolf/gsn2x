@@ -322,19 +322,13 @@ mod integrations {
         let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
         let temp = assert_fs::TempDir::new()?;
         temp.copy_from(".", &["examples/modular/*.yaml"])?;
-        let input_file1 = temp.child("examples/modular/main.gsn.yaml");
-        let input_file2 = temp.child("examples/modular/sub1.gsn.yaml");
-        let input_file3 = temp.child("examples/modular/sub3.gsn.yaml");
         let output_file = temp.child("examples/modular/architecture.svg");
-        cmd.arg(input_file1.as_os_str())
-            .arg(input_file2.as_os_str())
-            .arg(input_file3.as_os_str())
-            .arg("-N")
+        cmd.arg("examples/modular/main.gsn.yaml")
+            .arg("examples/modular/sub1.gsn.yaml")
+            .arg("examples/modular/sub3.gsn.yaml")
             .arg("-E")
             .arg("-F")
             .arg("-G")
-            .arg("-o")
-            .arg(".")
             .current_dir(&temp);
         cmd.assert().success();
         assert!(are_struct_similar_svgs(

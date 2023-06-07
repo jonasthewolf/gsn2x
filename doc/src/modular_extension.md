@@ -19,6 +19,10 @@ In addition to the default argument view for each module, there are two output f
 1) Complete View (default to: `complete.svg`)
 2) Architecture View (default to: `architecture.svg`)
 
+You can only change the file names of these additional views. 
+They are put in the directory that all input files have in common.
+The `-o` option can be used for these views, too.
+
 If the argument view should not be updated, use the `-N` option.
 If the complete view should not be output, use the `-F` option.
 If the architecture view should not be output, use the `-A` option.
@@ -38,6 +42,8 @@ See [example](examples/modular/complete.svg) here.
 
 The architecture view only shows the selected modules and their dependencies.
 THe architecture view is navigable to the module argument view.
+
+The architecture view only contains the links to the individual module files, if they actually exist when generating the architecture view.
 
 ![example architecture](examples/modular/architecture.svg)
 

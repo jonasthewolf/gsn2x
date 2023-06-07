@@ -11,6 +11,9 @@ The format can be used in Markdown and reStructuredText files.
 
 If the list of evidences should not be output, use the `-E` option.
 
+You can use the `-e` option to rename the standard `evidences.md` to another file name, but not subdirectory.
+The `-o` option also applies to the evidences file.
+
 
 ## Markdown from `examples/evidences.md`
 

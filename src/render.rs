@@ -289,15 +289,12 @@ pub fn render_architecture(
                     {
                         let target_svg =
                             PathBuf::from(&module.relative_module_path).with_extension("svg");
-                        dbg!(&target_svg);
                         let target_path = translate_to_output_path(output_path, &target_svg);
-                        dbg!(&target_path);
-                        dbg!(output_path);
-                        dbg!(get_relative_path(
+                        get_relative_path(
                             &target_path.unwrap(), // TODO remove unwraps
                             architecture_path,
                             None, // is already made "svg" above
-                        ))
+                        )
                         .ok()
                     },
                     vec![],
