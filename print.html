@@ -379,6 +379,8 @@ G1:
 <p>See <a href="examples/evidences.html">examples/evidences.md</a> for an example.</p>
 <p>The format can be used in Markdown and reStructuredText files.</p>
 <p>If the list of evidences should not be output, use the <code>-E</code> option.</p>
+<p>You can use the <code>-e</code> option to rename the standard <code>evidences.md</code> to another file name, but not subdirectory.
+The <code>-o</code> option also applies to the evidences file.</p>
 <h2 id="markdown-from-examplesevidencesmd"><a class="header" href="#markdown-from-examplesevidencesmd">Markdown from <code>examples/evidences.md</code></a></h2>
 <p>List of Evidences</p>
 <ol>
@@ -418,6 +420,9 @@ Check messages for individual modules can be omitted using the <code>-x</code> o
 <li>Complete View (default to: <code>complete.svg</code>)</li>
 <li>Architecture View (default to: <code>architecture.svg</code>)</li>
 </ol>
+<p>You can only change the file names of these additional views. 
+They are put in the directory that all input files have in common.
+The <code>-o</code> option can be used for these views, too.</p>
 <p>If the argument view should not be updated, use the <code>-N</code> option.
 If the complete view should not be output, use the <code>-F</code> option.
 If the architecture view should not be output, use the <code>-A</code> option.</p>
@@ -431,6 +436,7 @@ by additionally adding those modules with the `-m` option. -->
 <h2 id="architecture-view"><a class="header" href="#architecture-view">Architecture view</a></h2>
 <p>The architecture view only shows the selected modules and their dependencies.
 THe architecture view is navigable to the module argument view.</p>
+<p>The architecture view only contains the links to the individual module files, if they actually exist when generating the architecture view.</p>
 <p><img src="examples/modular/architecture.svg" alt="example architecture" /></p>
 <p>See <a href="examples/modular/architecture.svg">example</a> here.</p>
 <h2 id="example-3"><a class="header" href="#example-3">Example:</a></h2>
