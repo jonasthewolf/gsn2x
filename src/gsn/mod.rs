@@ -68,7 +68,7 @@ pub enum GsnDocumentNode {
 
 #[derive(Default)]
 pub struct Module {
-    pub filename: String,
+    pub relative_module_path: String,
     pub meta: ModuleInformation,
 }
 

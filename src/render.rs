@@ -1,6 +1,6 @@
 use crate::dirgraphsvg::edges::EdgeType;
 use crate::dirgraphsvg::{escape_node_id, escape_text, nodes::Node};
-use crate::find_common_ancestors_in_paths;
+use crate::file_utils::{get_relative_path, translate_to_output_path};
 use crate::gsn::{get_levels, GsnNode, Module};
 use anyhow::Result;
 use chrono::Utc;
@@ -8,6 +8,7 @@ use clap::ArgMatches;
 
 use std::collections::{BTreeMap, HashMap};
 use std::io::Write;
+use std::path::PathBuf;
 
 #[derive(Default, Eq, PartialEq)]
 pub enum RenderLegend {
@@ -57,15 +58,29 @@ impl From<&ArgMatches> for RenderOptions {
             embed_stylesheets: matches.get_flag("EMBED_CSS"),
             architecture_filename: match matches.get_flag("NO_ARCHITECTURE_VIEW") {
                 true => None,
-                false => matches.get_one::<String>("ARCHITECTURE_VIEW").cloned(),
+                false => matches
+                    .get_one::<String>("ARCHITECTURE_VIEW")
+                    .and_then(|f| {
+                        PathBuf::from(f)
+                            .file_name()
+                            .and_then(|f| f.to_str().map(|f| f.to_owned()))
+                    }),
             },
             evidences_filename: match matches.get_flag("NO_EVIDENCES") {
                 true => None,
-                false => matches.get_one::<String>("EVIDENCES").cloned(),
+                false => matches.get_one::<String>("EVIDENCES").and_then(|f| {
+                    PathBuf::from(f)
+                        .file_name()
+                        .and_then(|f| f.to_str().map(|f| f.to_owned()))
+                }),
             },
             complete_filename: match matches.get_flag("NO_COMPLETE_VIEW") {
                 true => None,
-                false => matches.get_one::<String>("COMPLETE_VIEW").cloned(),
+                false => matches.get_one::<String>("COMPLETE_VIEW").and_then(|f| {
+                    PathBuf::from(f)
+                        .file_name()
+                        .and_then(|f| f.to_str().map(|f| f.to_owned()))
+                }),
             },
             output_directory: matches
                 .get_one::<String>("OUTPUT_DIRECTORY")
@@ -180,7 +195,11 @@ pub fn away_svg_from_gsn_node(
 ) -> Result<Node> {
     let classes = node_classes_from_node(gsn_node);
 
-    let mut module_url = get_relative_module_url(&module.filename, &source_module.filename)?;
+    let mut module_url = get_relative_path(
+        &PathBuf::from(&module.relative_module_path),
+        &PathBuf::from(&source_module.relative_module_path),
+        Some("svg"),
+    )?;
     module_url.push('#');
     module_url.push_str(&escape_node_id(id));
 
@@ -243,30 +262,12 @@ pub fn away_svg_from_gsn_node(
 ///
 ///
 ///
-fn get_relative_module_url(target: &str, source: &str) -> Result<String> {
-    let source_canon = std::path::PathBuf::from(&source).canonicalize()?;
-    let target_canon = std::path::PathBuf::from(&target).canonicalize()?;
-    let common = find_common_ancestors_in_paths(&[source, target])?;
-    let source_canon_stripped = source_canon.strip_prefix(&common)?.to_path_buf();
-    let mut target_canon_stripped = target_canon.strip_prefix(&common)?.to_path_buf();
-    let mut prefix = match source_canon_stripped.parent().unwrap().components().count() {
-        x if x == 0 => "./".to_owned(),
-        x if x > 0 => "../".repeat(x),
-        _ => unreachable!(),
-    };
-    target_canon_stripped.set_extension("svg");
-    prefix.push_str(&target_canon_stripped.to_string_lossy());
-    Ok(prefix)
-}
-
-///
-///
-///
 pub fn render_architecture(
     output: &mut impl Write,
     modules: &HashMap<String, Module>,
     dependencies: BTreeMap<String, BTreeMap<String, EdgeType>>,
     render_options: &RenderOptions,
+    architecture_path: &PathBuf,
     output_path: &str,
 ) -> Result<()> {
     let mut dg = crate::dirgraphsvg::DirGraph::default();
@@ -285,7 +286,20 @@ pub fn render_architecture(
                         .map(|m| m.to_owned())
                         .unwrap_or_else(|| "".to_owned())
                         .as_str(),
-                    get_relative_module_url(&module.filename, output_path).ok(),
+                    {
+                        let target_svg =
+                            PathBuf::from(&module.relative_module_path).with_extension("svg");
+                        dbg!(&target_svg);
+                        let target_path = translate_to_output_path(output_path, &target_svg);
+                        dbg!(&target_path);
+                        dbg!(output_path);
+                        dbg!(get_relative_path(
+                            &target_path.unwrap(), // TODO remove unwraps
+                            architecture_path,
+                            None, // is already made "svg" above
+                        ))
+                        .ok()
+                    },
                     vec![],
                 ),
             )

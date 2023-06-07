@@ -82,7 +82,7 @@ mod integrations {
 
     #[test]
     fn file_does_not_exist() -> Result<()> {
-        let mut cmd = Command::cargo_bin("gsn2x")?;
+        let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
         cmd.arg("test/file/does/not/exist");
         cmd.assert()
             .failure()
@@ -100,7 +100,7 @@ mod integrations {
         input: &str,
         expected_output: &str,
     ) -> Result<()> {
-        let mut cmd = Command::cargo_bin("gsn2x")?;
+        let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
         let temp = assert_fs::TempDir::new()?;
 
         // Copy input into subdirectory and name output file
@@ -126,11 +126,11 @@ mod integrations {
 
     #[test]
     fn legend_is_different() -> Result<()> {
-        const SUB_DIR: &'static str = "examples";
-        const INPUT_YAML: &'static str = "example.gsn.yaml";
-        const OUTPUT_SVG: &'static str = "example.gsn.svg";
+        const SUB_DIR: &str = "examples";
+        const INPUT_YAML: &str = "example.gsn.yaml";
+        const OUTPUT_SVG: &str = "example.gsn.svg";
 
-        let mut cmd = Command::cargo_bin("gsn2x")?;
+        let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
         let temp = assert_fs::TempDir::new()?;
 
         temp.copy_from(SUB_DIR, &[INPUT_YAML])?;
@@ -154,24 +154,24 @@ mod integrations {
 
     #[test]
     fn argument_view() -> Result<()> {
-        const SUB_DIR: &'static str = "examples";
-        const INPUT_YAML: &'static str = "example.gsn.yaml";
-        const OUTPUT_SVG: &'static str = "example.gsn.svg";
+        const SUB_DIR: &str = "examples";
+        const INPUT_YAML: &str = "example.gsn.yaml";
+        const OUTPUT_SVG: &str = "example.gsn.svg";
         check_if_outputs_are_similar(SUB_DIR, INPUT_YAML, OUTPUT_SVG)
     }
 
     #[test]
     fn multi_contexts() -> Result<()> {
-        const SUB_DIR: &'static str = "tests";
-        const INPUT_YAML: &'static str = "multi_context.gsn.yaml";
-        const OUTPUT_SVG: &'static str = "multi_context.gsn.svg";
+        const SUB_DIR: &str = "tests";
+        const INPUT_YAML: &str = "multi_context.gsn.yaml";
+        const OUTPUT_SVG: &str = "multi_context.gsn.svg";
 
         check_if_outputs_are_similar(SUB_DIR, INPUT_YAML, OUTPUT_SVG)
     }
 
     #[test]
     fn validate_multiple_only() -> Result<()> {
-        let mut cmd = Command::cargo_bin("gsn2x")?;
+        let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
         cmd.arg("-c")
             .arg("examples/modular/main.gsn.yaml")
             .arg("examples/modular/sub1.gsn.yaml")
@@ -185,7 +185,7 @@ mod integrations {
 
     #[test]
     fn validate_multiple_only_error() -> Result<()> {
-        let mut cmd = Command::cargo_bin("gsn2x")?;
+        let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
         cmd.arg("-c")
             .arg("examples/modular/main.gsn.yaml")
             .arg("examples/modular/sub2.gsn.yaml");
@@ -197,7 +197,7 @@ mod integrations {
 
     #[test]
     fn validate_multiple_only_error_exclude() -> Result<()> {
-        let mut cmd = Command::cargo_bin("gsn2x")?;
+        let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
         cmd.arg("-c")
             .arg("examples/modular/main.gsn.yaml")
             .arg("examples/modular/sub2.gsn.yaml")
@@ -211,7 +211,7 @@ mod integrations {
 
     #[test]
     fn validate_template_instance() -> Result<()> {
-        let mut cmd = Command::cargo_bin("gsn2x")?;
+        let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
         cmd.arg("-c")
             .arg("examples/template/template.gsn.yaml")
             .arg("examples/template/instance.gsn.yaml");
@@ -221,7 +221,7 @@ mod integrations {
 
     #[test]
     fn validate_template_invalid_instance1() -> Result<()> {
-        let mut cmd = Command::cargo_bin("gsn2x")?;
+        let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
         cmd.arg("-c")
             .arg("examples/template/template.gsn.yaml")
             .arg("tests/inval1_instance.gsn.yaml");
@@ -233,7 +233,7 @@ mod integrations {
 
     #[test]
     fn validate_template_invalid_instance2() -> Result<()> {
-        let mut cmd = Command::cargo_bin("gsn2x")?;
+        let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
         cmd.arg("-c")
             .arg("examples/template/template.gsn.yaml")
             .arg("tests/inval2_instance.gsn.yaml");
@@ -245,7 +245,7 @@ mod integrations {
 
     #[test]
     fn validate_template_invalid_instance3() -> Result<()> {
-        let mut cmd = Command::cargo_bin("gsn2x")?;
+        let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
         cmd.arg("-c")
             .arg("examples/template/template.gsn.yaml")
             .arg("tests/inval3_instance.gsn.yaml");
@@ -257,7 +257,7 @@ mod integrations {
 
     #[test]
     fn validate_template_invalid_instance4() -> Result<()> {
-        let mut cmd = Command::cargo_bin("gsn2x")?;
+        let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
         cmd.arg("-c")
             .arg("examples/template/template.gsn.yaml")
             .arg("tests/inval4_instance.gsn.yaml");
@@ -269,58 +269,63 @@ mod integrations {
 
     #[test]
     fn no_evidences() -> Result<()> {
-        let mut cmd = Command::cargo_bin("gsn2x")?;
-        let evidence_file = assert_fs::NamedTempFile::new("evidences.md")?;
+        let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
+        let temp = assert_fs::TempDir::new()?;
+        temp.copy_from("tests", &["no_evidences.gsn.test.*"])?;
         cmd.arg("-N")
             .arg("-e")
-            .arg(evidence_file.path())
-            .arg("tests/no_evidences.gsn.test.yaml");
+            .arg("my_evidences.md")
+            .arg("no_evidences.gsn.test.yaml")
+            .current_dir(&temp);
         cmd.assert()
             .success()
             .stdout(predicate::str::is_empty())
             .stderr(predicate::str::is_empty());
         assert!(compare_lines_with_replace(
-            evidence_file.as_os_str(),
-            std::path::Path::new("tests/no_evidences.gsn.test.md").as_os_str(),
+            temp.child("my_evidences.md").as_os_str(),
+            temp.child("no_evidences.gsn.test.md").as_os_str(),
             None
         )?);
-        evidence_file.close()?;
+        temp.close()?;
         Ok(())
     }
 
     #[test]
     fn some_evidences() -> Result<()> {
-        let mut cmd = Command::cargo_bin("gsn2x")?;
-        let evidence_file = assert_fs::NamedTempFile::new("evidences.md")?;
+        let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
+        let temp = assert_fs::TempDir::new()?;
+        temp.copy_from("tests", &["example.gsn.test.md"])?;
+        temp.copy_from(".", &["examples/example.gsn.yaml"])?;
+
         cmd.arg("-e")
-            .arg(evidence_file.path())
+            .arg("my_evidences.md")
             .arg("examples/example.gsn.yaml")
             .arg("-l")
             .arg("layer1")
-            .arg("-N");
+            .arg("-N")
+            .current_dir(&temp);
         cmd.assert()
             .success()
             .stdout(predicate::str::is_empty())
             .stderr(predicate::str::is_empty());
         assert!(compare_lines_with_replace(
-            evidence_file.as_os_str(),
-            std::path::Path::new("tests/example.gsn.test.md").as_os_str(),
+            temp.child("my_evidences.md").as_os_str(),
+            temp.child("example.gsn.test.md").as_os_str(),
             None
         )?);
-        evidence_file.close()?;
+        temp.close()?;
         Ok(())
     }
 
     #[test]
     fn arch_view() -> Result<()> {
-        // FIXME test operates in wrong working directory. True for others!
-        let mut cmd = Command::cargo_bin("gsn2x")?;
+        let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
         let temp = assert_fs::TempDir::new()?;
-        temp.copy_from("examples/modular", &["*.yaml"])?;
-        let input_file1 = temp.child("main.gsn.yaml");
-        let input_file2 = temp.child("sub1.gsn.yaml");
-        let input_file3 = temp.child("sub3.gsn.yaml");
-        let output_file = temp.child("architecture.svg");
+        temp.copy_from(".", &["examples/modular/*.yaml"])?;
+        let input_file1 = temp.child("examples/modular/main.gsn.yaml");
+        let input_file2 = temp.child("examples/modular/sub1.gsn.yaml");
+        let input_file3 = temp.child("examples/modular/sub3.gsn.yaml");
+        let output_file = temp.child("examples/modular/architecture.svg");
         cmd.arg(input_file1.as_os_str())
             .arg(input_file2.as_os_str())
             .arg(input_file3.as_os_str())
@@ -329,7 +334,8 @@ mod integrations {
             .arg("-F")
             .arg("-G")
             .arg("-o")
-            .arg(".");
+            .arg(".")
+            .current_dir(&temp);
         cmd.assert().success();
         assert!(are_struct_similar_svgs(
             std::path::Path::new("examples/modular/architecture.svg").as_os_str(),
@@ -341,7 +347,7 @@ mod integrations {
 
     #[test]
     fn multiple_view() -> Result<()> {
-        let mut cmd = Command::cargo_bin("gsn2x")?;
+        let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
         let temp = assert_fs::TempDir::new()?;
         temp.copy_from("examples/modular", &["*.yaml"])?;
         let input_file1 = temp.child("main.gsn.yaml");
@@ -378,7 +384,7 @@ mod integrations {
 
     #[test]
     fn complete_view() -> Result<()> {
-        let mut cmd = Command::cargo_bin("gsn2x")?;
+        let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
         let temp = assert_fs::TempDir::new()?;
         temp.copy_from("examples/modular", &["*.yaml"])?;
         let input_file1 = temp.child("main.gsn.yaml");
@@ -403,7 +409,7 @@ mod integrations {
 
     #[test]
     fn empty_input() -> Result<()> {
-        let mut cmd = Command::cargo_bin("gsn2x")?;
+        let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
         cmd.arg("tests/empty.yaml");
         cmd.assert()
             .failure()
@@ -413,7 +419,7 @@ mod integrations {
 
     #[test]
     fn invalid_input1() -> Result<()> {
-        let mut cmd = Command::cargo_bin("gsn2x")?;
+        let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
         cmd.arg("tests/invalid1.yaml");
         cmd.assert().failure().stderr(predicate::str::contains(
             "Error: Failed to parse YAML from file",
@@ -423,7 +429,7 @@ mod integrations {
 
     #[test]
     fn invalid_input2() -> Result<()> {
-        let mut cmd = Command::cargo_bin("gsn2x")?;
+        let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
         cmd.arg("tests/invalid2.yaml");
         cmd.assert().failure().stderr(predicate::str::contains(
             "Error: Failed to parse YAML from file",

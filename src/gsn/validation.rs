@@ -250,7 +250,7 @@ mod test {
             &mut d,
             "",
             &Module {
-                filename: "".to_owned(),
+                relative_module_path: "".to_owned(),
                 meta: ModuleInformation::default(),
             },
             &nodes,
@@ -553,7 +553,7 @@ mod test {
             &mut d,
             "mod",
             &Module {
-                filename: "mod".to_owned(),
+                relative_module_path: "mod".to_owned(),
                 meta: ModuleInformation {
                     name: "mod".to_owned(),
                     brief: Some("brief".to_owned()),
@@ -587,7 +587,7 @@ mod test {
             &mut d,
             "",
             &Module {
-                filename: "".to_owned(),
+                relative_module_path: "".to_owned(),
                 meta: ModuleInformation {
                     name: "mod".to_owned(),
                     brief: Some("brief".to_owned()),
