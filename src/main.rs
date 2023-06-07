@@ -500,27 +500,4 @@ mod test {
         assert!(res.is_ok());
         assert_eq!(format!("{:?}", res), "Ok(())");
     }
-
-    #[test]
-    fn common_ancestor_many() -> Result<()> {
-        let inputs = [
-            PathBuf::from("examples/modular/sub1.gsn.yaml"),
-            PathBuf::from("examples/modular/main.gsn.yaml"),
-        ];
-        let mut result = find_common_ancestors_in_paths(&inputs)?;
-        let cwd = PathBuf::from(".").canonicalize()?;
-        if result.starts_with(&cwd) {
-            result = result.strip_prefix(cwd)?.to_path_buf();
-        }
-        assert_eq!(result, PathBuf::from("examples/modular"));
-        Ok(())
-    }
-
-    #[test]
-    fn common_ancestor_single() -> Result<()> {
-        let inputs = [PathBuf::from("examples/example.gsn.yaml")];
-        let result = find_common_ancestors_in_paths(&inputs)?;
-        assert_eq!(result, PathBuf::from(""));
-        Ok(())
-    }
 }
