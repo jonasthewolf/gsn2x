@@ -344,12 +344,14 @@ mod integrations {
         let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
         let temp = assert_fs::TempDir::new()?;
         temp.copy_from("examples/modular", &["*.yaml"])?;
+        // Use absolute paths here.
         let input_file1 = temp.child("main.gsn.yaml");
         let input_file2 = temp.child("sub1.gsn.yaml");
         let input_file3 = temp.child("sub3.gsn.yaml");
         let output_file1 = temp.child("main.gsn.svg");
         let output_file2 = temp.child("sub1.gsn.svg");
         let output_file3 = temp.child("sub3.gsn.svg");
+        dbg!(std::env::current_dir().unwrap());
         cmd.arg(input_file1.as_os_str())
             .arg(input_file2.as_os_str())
             .arg(input_file3.as_os_str())

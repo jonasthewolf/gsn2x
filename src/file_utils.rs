@@ -11,7 +11,7 @@ use std::{fs::create_dir_all, path::PathBuf};
 /// This allows using the 2. prefixed with the output directory to make out-of-tree builds.
 ///
 pub fn prepare_input_paths(inputs: Vec<&str>) -> Result<Vec<(String, String)>> {
-    let cwd = PathBuf::from(".").canonicalize()?;
+    let cwd = std::env::current_dir()?.canonicalize()?;
     let relative_inputs = inputs
         .iter()
         .map(|&i| {
@@ -149,7 +149,7 @@ mod test {
             PathBuf::from("examples/modular/main.gsn.yaml"),
         ];
         let mut result = find_common_ancestors_in_paths(&inputs)?;
-        let cwd = PathBuf::from(".").canonicalize()?;
+        let cwd = std::env::current_dir()?.canonicalize()?;
         if result.starts_with(&cwd) {
             result = result.strip_prefix(cwd)?.to_path_buf();
         }

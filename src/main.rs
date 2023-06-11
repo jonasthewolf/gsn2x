@@ -209,7 +209,7 @@ fn main() -> Result<()> {
     let mut common_ancestors = find_common_ancestors_in_paths(
         &inputs.iter().map(PathBuf::from).collect::<Vec<PathBuf>>(),
     )?;
-    let cwd = PathBuf::from(".").canonicalize()?;
+    let cwd = std::env::current_dir()?.canonicalize()?;
     if common_ancestors.starts_with(&cwd) {
         common_ancestors = common_ancestors.strip_prefix(cwd)?.to_path_buf();
     }
@@ -457,10 +457,8 @@ fn output_messages(diags: &Diagnostics) -> Result<()> {
 
 #[cfg(test)]
 mod test {
-    use std::path::PathBuf;
 
-    use crate::{diagnostics::Diagnostics, find_common_ancestors_in_paths};
-    use anyhow::Result;
+    use crate::diagnostics::Diagnostics;
 
     #[test]
     fn check_output_messages_errors() {
