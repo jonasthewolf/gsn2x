@@ -53,8 +53,8 @@ pub fn get_relative_path(
     let target_canon = &target.canonicalize()?;
     let common = find_common_ancestors_in_paths(&[source.to_owned(), target.to_owned()])?;
     dbg!(&common);
-    let source_canon_stripped = source_canon.strip_prefix(&common)?.to_path_buf();
-    let mut target_canon_stripped = target_canon.strip_prefix(&common)?.to_path_buf();
+    let source_canon_stripped = source_canon.strip_prefix(&common).context("56")?.to_path_buf();
+    let mut target_canon_stripped = target_canon.strip_prefix(&common).context("57")?.to_path_buf();
     let mut prefix = match source_canon_stripped
         .parent()
         .map(|p| p.components().count())
