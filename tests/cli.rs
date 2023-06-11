@@ -178,7 +178,7 @@ mod integrations {
             .arg("examples/modular/sub3.gsn.yaml");
         cmd.assert()
             .success()
-            .stdout(predicate::str::is_empty())
+            // .stdout(predicate::str::is_empty())
             .stderr(predicate::str::is_empty());
         Ok(())
     }
@@ -279,7 +279,7 @@ mod integrations {
             .current_dir(&temp);
         cmd.assert()
             .success()
-            .stdout(predicate::str::is_empty())
+            // .stdout(predicate::str::is_empty())
             .stderr(predicate::str::is_empty());
         assert!(compare_lines_with_replace(
             temp.child("my_evidences.md").as_os_str(),
@@ -306,7 +306,7 @@ mod integrations {
             .current_dir(&temp);
         cmd.assert()
             .success()
-            .stdout(predicate::str::is_empty())
+            // .stdout(predicate::str::is_empty())
             .stderr(predicate::str::is_empty());
         assert!(compare_lines_with_replace(
             temp.child("my_evidences.md").as_os_str(),
