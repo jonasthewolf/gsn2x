@@ -52,9 +52,9 @@ pub fn get_relative_path(
     let source_canon = &source.canonicalize()?;
     let target_canon = &target.canonicalize()?;
     let common = find_common_ancestors_in_paths(&[source.to_owned(), target.to_owned()])?;
-    dbg!(&source);
-    dbg!(&target);
-    dbg!(&common);
+    dbg!(&source.display());
+    dbg!(&target.display());
+    dbg!(&common.display());
     let source_canon_stripped = source_canon.strip_prefix(&common).context("56")?.to_path_buf();
     let mut target_canon_stripped = target_canon.strip_prefix(&common).context("57")?.to_path_buf();
     let mut prefix = match source_canon_stripped
@@ -78,7 +78,6 @@ pub fn get_relative_path(
 /// The output is an absolute path containing all common ancestors.
 ///
 pub fn find_common_ancestors_in_paths(inputs: &[PathBuf]) -> Result<PathBuf> {
-    dbg!(&inputs);
     let input_paths = inputs
         .iter()
         .map(|i| {
@@ -119,7 +118,7 @@ pub fn find_common_ancestors_in_paths(inputs: &[PathBuf]) -> Result<PathBuf> {
             }
         }
     }
-    dbg!(&result);
+    dbg!(&result.display());
     Ok(result)
 }
 
