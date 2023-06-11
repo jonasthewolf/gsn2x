@@ -76,6 +76,7 @@ pub fn get_relative_path(
 /// The output is an absolute path containing all common ancestors.
 ///
 pub fn find_common_ancestors_in_paths(inputs: &[PathBuf]) -> Result<PathBuf> {
+    dbg!(&inputs);
     let input_paths = inputs
         .iter()
         .map(|i| {
