@@ -52,6 +52,7 @@ pub fn get_relative_path(
     let source_canon = &source.canonicalize()?;
     let target_canon = &target.canonicalize()?;
     let common = find_common_ancestors_in_paths(&[source.to_owned(), target.to_owned()])?;
+    dbg!(&common);
     let source_canon_stripped = source_canon.strip_prefix(&common)?.to_path_buf();
     let mut target_canon_stripped = target_canon.strip_prefix(&common)?.to_path_buf();
     let mut prefix = match source_canon_stripped
@@ -89,6 +90,7 @@ pub fn find_common_ancestors_in_paths(inputs: &[PathBuf]) -> Result<PathBuf> {
         .collect::<Vec<_>>();
 
     let mut result = PathBuf::new();
+    dbg!(&components);
 
     if let Some(min_components) = components.iter().map(|c| c.len()).min() {
         for component in 1..min_components {
@@ -114,6 +116,7 @@ pub fn find_common_ancestors_in_paths(inputs: &[PathBuf]) -> Result<PathBuf> {
             }
         }
     }
+    dbg!(&result);
     Ok(result)
 }
 

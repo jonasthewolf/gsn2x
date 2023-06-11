@@ -351,6 +351,7 @@ mod integrations {
         let output_file1 = temp.child("main.gsn.svg");
         let output_file2 = temp.child("sub1.gsn.svg");
         let output_file3 = temp.child("sub3.gsn.svg");
+        // TODO Remove again
         dbg!(std::env::current_dir().unwrap());
         cmd.arg(input_file1.as_os_str())
             .arg(input_file2.as_os_str())
