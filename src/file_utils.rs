@@ -53,14 +53,8 @@ pub fn get_relative_path(
     let source_canon = &PathBuf::from(source).canonicalize()?;
     let target_canon = &PathBuf::from(target).canonicalize()?;
     let common = find_common_ancestors_in_paths(&[source, target])?;
-    let source_canon_stripped = source_canon
-        .strip_prefix(&common)
-        .context("56")?
-        .to_path_buf();
-    let mut target_canon_stripped = target_canon
-        .strip_prefix(&common)
-        .context("57")?
-        .to_path_buf();
+    let source_canon_stripped = source_canon.strip_prefix(&common)?.to_path_buf();
+    let mut target_canon_stripped = target_canon.strip_prefix(&common)?.to_path_buf();
     let mut prefix = match source_canon_stripped
         .parent()
         .map(|p| p.components().count())
@@ -179,18 +173,22 @@ pub fn translate_to_output_path(
     input_filename: &str,
     common_ancestors: Option<&str>,
 ) -> Result<String> {
-    let mut output_path = std::path::PathBuf::from(&output_path);
-    if let Some(common_ancestors) = common_ancestors {
-        output_path.push(common_ancestors);
-    }
-    output_path.push(input_filename);
-    if let Some(dir) = output_path.parent() {
-        if !dir.exists() {
-            create_dir_all(dir)
-                .with_context(|| format!("Trying to create directory {}", dir.to_string_lossy()))?;
+    if PathBuf::from(input_filename).is_absolute() {
+        Ok(input_filename.to_owned())
+    } else {
+        let mut output_path = std::path::PathBuf::from(&output_path);
+        if let Some(common_ancestors) = common_ancestors {
+            output_path.push(common_ancestors);
         }
+        output_path.push(input_filename);
+        if let Some(dir) = output_path.parent() {
+            if !dir.exists() {
+                create_dir_all(dir)
+                    .with_context(|| format!("Trying to create directory {}", dir.to_string_lossy()))?;
+            }
+        }
+        Ok(output_path.to_string_lossy().into_owned())
     }
-    Ok(output_path.to_string_lossy().into_owned())
 }
 
 #[cfg(test)]
