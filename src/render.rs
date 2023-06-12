@@ -1,6 +1,6 @@
 use crate::dirgraphsvg::edges::EdgeType;
 use crate::dirgraphsvg::{escape_node_id, escape_text, nodes::Node};
-use crate::file_utils::{get_relative_path, translate_to_output_path};
+use crate::file_utils::{get_filename, get_relative_path, set_extension, translate_to_output_path};
 use crate::gsn::{get_levels, GsnNode, Module};
 use anyhow::Result;
 use chrono::Utc;
@@ -8,7 +8,6 @@ use clap::ArgMatches;
 
 use std::collections::{BTreeMap, HashMap};
 use std::io::Write;
-use std::path::PathBuf;
 
 #[derive(Default, Eq, PartialEq)]
 pub enum RenderLegend {
@@ -60,27 +59,23 @@ impl From<&ArgMatches> for RenderOptions {
                 true => None,
                 false => matches
                     .get_one::<String>("ARCHITECTURE_VIEW")
-                    .and_then(|f| {
-                        PathBuf::from(f)
-                            .file_name()
-                            .and_then(|f| f.to_str().map(|f| f.to_owned()))
-                    }),
+                    .and_then(|p| get_filename(p))
+                    .map(|f| f.to_owned()),
             },
+
             evidences_filename: match matches.get_flag("NO_EVIDENCES") {
                 true => None,
-                false => matches.get_one::<String>("EVIDENCES").and_then(|f| {
-                    PathBuf::from(f)
-                        .file_name()
-                        .and_then(|f| f.to_str().map(|f| f.to_owned()))
-                }),
+                false => matches
+                    .get_one::<String>("EVIDENCES")
+                    .and_then(|p| get_filename(p))
+                    .map(|f| f.to_owned()),
             },
             complete_filename: match matches.get_flag("NO_COMPLETE_VIEW") {
                 true => None,
-                false => matches.get_one::<String>("COMPLETE_VIEW").and_then(|f| {
-                    PathBuf::from(f)
-                        .file_name()
-                        .and_then(|f| f.to_str().map(|f| f.to_owned()))
-                }),
+                false => matches
+                    .get_one::<String>("COMPLETE_VIEW")
+                    .and_then(|p| get_filename(p))
+                    .map(|f| f.to_owned()),
             },
             output_directory: matches
                 .get_one::<String>("OUTPUT_DIRECTORY")
@@ -194,10 +189,9 @@ pub fn away_svg_from_gsn_node(
     layers: &[String],
 ) -> Result<Node> {
     let classes = node_classes_from_node(gsn_node);
-
     let mut module_url = get_relative_path(
-        &PathBuf::from(&module.relative_module_path),
-        &PathBuf::from(&source_module.relative_module_path),
+        &module.relative_module_path,
+        &source_module.relative_module_path,
         Some("svg"),
     )?;
     module_url.push('#');
@@ -267,7 +261,7 @@ pub fn render_architecture(
     modules: &HashMap<String, Module>,
     dependencies: BTreeMap<String, BTreeMap<String, EdgeType>>,
     render_options: &RenderOptions,
-    architecture_path: &PathBuf,
+    architecture_path: &str,
     output_path: &str,
 ) -> Result<()> {
     let mut dg = crate::dirgraphsvg::DirGraph::default();
@@ -287,9 +281,8 @@ pub fn render_architecture(
                         .unwrap_or_else(|| "".to_owned())
                         .as_str(),
                     {
-                        let target_svg =
-                            PathBuf::from(&module.relative_module_path).with_extension("svg");
-                        let target_path = translate_to_output_path(output_path, &target_svg);
+                        let target_svg = set_extension(&module.relative_module_path, "svg");
+                        let target_path = translate_to_output_path(output_path, &target_svg, None);
                         get_relative_path(
                             &target_path.unwrap(), // TODO remove unwraps
                             architecture_path,

@@ -1,11 +1,13 @@
 use anyhow::{anyhow, Context, Result};
 use clap::{Arg, ArgAction};
-use file_utils::{find_common_ancestors_in_paths, prepare_input_paths, translate_to_output_path};
+use file_utils::{
+    find_common_ancestors_in_paths, prepare_input_paths, set_extension, strip_prefix,
+    translate_to_output_path,
+};
 use render::RenderOptions;
 use std::collections::{BTreeMap, HashMap};
 use std::fs::File;
 use std::io::BufReader;
-use std::path::PathBuf;
 
 mod diagnostics;
 mod dirgraphsvg;
@@ -206,13 +208,12 @@ fn main() -> Result<()> {
     let mut modules: HashMap<String, Module> = HashMap::new();
 
     // Read input
-    let mut common_ancestors = find_common_ancestors_in_paths(
-        &inputs.iter().map(PathBuf::from).collect::<Vec<PathBuf>>(),
-    )?;
-    let cwd = std::env::current_dir()?.canonicalize()?;
-    if common_ancestors.starts_with(&cwd) {
-        common_ancestors = common_ancestors.strip_prefix(cwd)?.to_path_buf();
-    }
+    let mut common_ancestors = find_common_ancestors_in_paths(&inputs)?;
+    let cwd = std::env::current_dir()?
+        .canonicalize()?
+        .to_string_lossy()
+        .into_owned();
+    common_ancestors = strip_prefix(&common_ancestors, &cwd);
     let all_inputs = prepare_input_paths(inputs)?;
     read_inputs(&all_inputs, &mut nodes, &mut modules, &mut diags)?;
 
@@ -363,20 +364,19 @@ fn print_outputs(
     nodes: BTreeMap<String, GsnNode>,
     modules: &HashMap<String, Module>,
     render_options: &RenderOptions,
-    common_ancestors: PathBuf,
+    common_ancestors: String,
 ) -> Result<()> {
     let output_path = &render_options.output_directory;
     if !render_options.skip_argument {
         for (module_name, module) in modules {
-            let output_path = translate_to_output_path(
-                output_path,
-                &PathBuf::from(&module.relative_module_path),
-            )?
-            .with_extension("svg");
-            let mut output_file = Box::new(File::create(&output_path).context(format!(
-                "Failed to open output file {}",
-                &output_path.display()
-            ))?) as Box<dyn std::io::Write>;
+            let output_path = set_extension(
+                &translate_to_output_path(output_path, &module.relative_module_path, None)?,
+                "svg",
+            );
+            let mut output_file = Box::new(
+                File::create(&output_path)
+                    .context(format!("Failed to open output file {output_path}"))?,
+            ) as Box<dyn std::io::Write>;
 
             render::render_argument(
                 &mut output_file,
@@ -389,14 +389,13 @@ fn print_outputs(
     }
     if modules.len() > 1 {
         if let Some(architecture_filename) = &render_options.architecture_filename {
-            let mut arch_output = PathBuf::from(&common_ancestors);
-            arch_output.push(architecture_filename);
-
-            let arch_output_path = translate_to_output_path(output_path, &arch_output)?;
-            let mut output_file = File::create(&arch_output_path).context(format!(
-                "Failed to open output file {}",
-                &arch_output_path.display()
-            ))?;
+            let arch_output_path = translate_to_output_path(
+                output_path,
+                architecture_filename,
+                Some(&common_ancestors),
+            )?;
+            let mut output_file = File::create(&arch_output_path)
+                .context(format!("Failed to open output file {arch_output_path}"))?;
             let deps = crate::gsn::calculate_module_dependencies(&nodes);
             render::render_architecture(
                 &mut output_file,
@@ -408,26 +407,18 @@ fn print_outputs(
             )?;
         }
         if let Some(complete_filename) = &render_options.complete_filename {
-            let mut comp_output = PathBuf::from(&common_ancestors);
-            comp_output.push(complete_filename);
-
-            let output_path = translate_to_output_path(output_path, &comp_output)?;
-            let mut output_file = File::create(&output_path).context(format!(
-                "Failed to open output file {}",
-                output_path.display()
-            ))?;
+            let output_path =
+                translate_to_output_path(output_path, complete_filename, Some(&common_ancestors))?;
+            let mut output_file = File::create(&output_path)
+                .context(format!("Failed to open output file {output_path}"))?;
             render::render_complete(&mut output_file, &nodes, render_options)?;
         }
     }
     if let Some(evidences_filename) = &render_options.evidences_filename {
-        let mut evidence_output = PathBuf::from(&common_ancestors);
-        evidence_output.push(evidences_filename);
-
-        let output_path = translate_to_output_path(output_path, &evidence_output)?;
-        let mut output_file = File::create(&output_path).context(format!(
-            "Failed to open output file {}",
-            output_path.display()
-        ))?;
+        let output_path =
+            translate_to_output_path(output_path, evidences_filename, Some(&common_ancestors))?;
+        let mut output_file = File::create(&output_path)
+            .context(format!("Failed to open output file {output_path}"))?;
         render::render_evidences(&mut output_file, &nodes, render_options)?;
     }
     Ok(())

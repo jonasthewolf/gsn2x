@@ -11,7 +11,10 @@ use std::{fs::create_dir_all, path::PathBuf};
 /// This allows using the 2. prefixed with the output directory to make out-of-tree builds.
 ///
 pub fn prepare_input_paths(inputs: Vec<&str>) -> Result<Vec<(String, String)>> {
-    let cwd = std::env::current_dir()?.canonicalize()?;
+    let cwd = std::env::current_dir()?
+        .canonicalize()?
+        .to_string_lossy()
+        .into_owned();
     let relative_inputs = inputs
         .iter()
         .map(|&i| {
@@ -19,11 +22,9 @@ pub fn prepare_input_paths(inputs: Vec<&str>) -> Result<Vec<(String, String)>> {
             if x.is_relative() {
                 Ok(i.to_owned())
             } else {
-                let x = x.canonicalize().unwrap();
+                let x = x.canonicalize()?.to_string_lossy().into_owned();
                 if x.starts_with(&cwd) {
-                    x.strip_prefix(&cwd)
-                        .map(|i| i.to_string_lossy().into_owned())
-                        .map_err(Error::from)
+                    Ok(strip_prefix(&x, &cwd))
                 } else {
                     get_relative_path(&x, &cwd, None)
                 }
@@ -40,23 +41,29 @@ pub fn prepare_input_paths(inputs: Vec<&str>) -> Result<Vec<(String, String)>> {
 
 ///
 /// Get a relative path from `source` to `target`.
-/// Optionally, change extension of `target` to `target_extension`.
+/// Optionally, change extension of `target` to `target_extension` after existence has been checked.
 /// It does not matter if `source` or `target` are relative or absolute.
 /// However, they must both exist.
 ///
 pub fn get_relative_path(
-    target: &PathBuf,
-    source: &PathBuf,
+    target: &str,
+    source: &str,
     target_extension: Option<&str>,
 ) -> Result<String> {
-    let source_canon = &source.canonicalize()?;
-    let target_canon = &target.canonicalize()?;
-    let common = find_common_ancestors_in_paths(&[source.to_owned(), target.to_owned()])?;
-    dbg!(&source.display());
-    dbg!(&target.display());
-    dbg!(&common.display());
-    let source_canon_stripped = source_canon.strip_prefix(&common).context("56")?.to_path_buf();
-    let mut target_canon_stripped = target_canon.strip_prefix(&common).context("57")?.to_path_buf();
+    let source_canon = &PathBuf::from(source).canonicalize()?;
+    let target_canon = &PathBuf::from(target).canonicalize()?;
+    let common = find_common_ancestors_in_paths(&[source, target])?;
+    dbg!(&source);
+    dbg!(&target);
+    dbg!(&common);
+    let source_canon_stripped = source_canon
+        .strip_prefix(&common)
+        .context("56")?
+        .to_path_buf();
+    let mut target_canon_stripped = target_canon
+        .strip_prefix(&common)
+        .context("57")?
+        .to_path_buf();
     let mut prefix = match source_canon_stripped
         .parent()
         .map(|p| p.components().count())
@@ -70,20 +77,47 @@ pub fn get_relative_path(
         target_canon_stripped.set_extension(ext);
     }
     prefix.push_str(&target_canon_stripped.to_string_lossy());
+    dbg!(&prefix);
     Ok(prefix)
+}
+
+///
+/// Get the filename part from `path`.
+///
+///
+pub fn get_filename(path: &str) -> Option<&str> {
+    match dbg!(path.rsplit(['/', '\\']).next()) {
+        None => None,
+        Some(x) if x == ".." || x == "." => None,
+        Some(x) if x.is_empty() => None,
+        Some(x) => Some(x),
+    }
+}
+
+///
+/// Set extension `ext` for file in `path`.
+/// If no extension in `path` is found, new `ext` is added.
+///
+pub fn set_extension(path: &str, ext: &str) -> String {
+    let split: Vec<_> = path.rsplitn(2, '.').collect();
+    match split.len() {
+        0 => unreachable!(),
+        1..=2 => format!("{}.{}", split.last().unwrap(), ext),
+        _ => unreachable!(), // because of rsplitn(2)
+    }
 }
 
 ///
 /// Find common ancestors in all paths in `inputs`.
 /// The output is an absolute path containing all common ancestors.
 ///
-pub fn find_common_ancestors_in_paths(inputs: &[PathBuf]) -> Result<PathBuf> {
+pub fn find_common_ancestors_in_paths(inputs: &[&str]) -> Result<String> {
     let input_paths = inputs
         .iter()
         .map(|i| {
             PathBuf::from(i)
                 .canonicalize()
-                .with_context(|| format!("Failed to open file {}", i.display()))
+                .with_context(|| format!("Failed to open file {}", i))
         })
         .collect::<Result<Vec<_>, _>>()?;
     let components = input_paths
@@ -119,17 +153,42 @@ pub fn find_common_ancestors_in_paths(inputs: &[PathBuf]) -> Result<PathBuf> {
         }
     }
     dbg!(&result.display());
-    Ok(result)
+    Ok(result.to_string_lossy().into_owned())
+}
+
+///
+/// Strip `prefix` from `path`
+/// If prefix is not part of `path`, `path` is returned.
+///
+pub fn strip_prefix(path: &str, prefix: &str) -> String {
+    let path_buf = PathBuf::from(path);
+    if path_buf.starts_with(prefix) {
+        path_buf
+            .strip_prefix(prefix)
+            .unwrap()
+            .to_string_lossy()
+            .into_owned()
+    } else {
+        path.to_owned()
+    }
 }
 
 ///
 /// Prefix `input_filename` with `output_path`.
 ///
 /// `input_filename` is a relative path or only a filename.
+/// If `common_ancestors` are provided, they are added between `output_path` and `input_filename`.
+/// If directories up to the final path do not exist, they are created.
 ///
-///
-pub fn translate_to_output_path(output_path: &str, input_filename: &PathBuf) -> Result<PathBuf> {
+pub fn translate_to_output_path(
+    output_path: &str,
+    input_filename: &str,
+    common_ancestors: Option<&str>,
+) -> Result<String> {
     let mut output_path = std::path::PathBuf::from(&output_path);
+    if let Some(common_ancestors) = common_ancestors {
+        output_path.push(common_ancestors);
+    }
     output_path.push(input_filename);
     if let Some(dir) = output_path.parent() {
         if !dir.exists() {
@@ -137,36 +196,56 @@ pub fn translate_to_output_path(output_path: &str, input_filename: &PathBuf) -> 
                 .with_context(|| format!("Trying to create directory {}", dir.to_string_lossy()))?;
         }
     }
-    Ok(output_path)
+    Ok(output_path.to_string_lossy().into_owned())
 }
 
 #[cfg(test)]
 mod test {
     use anyhow::Result;
-    use std::path::PathBuf;
 
-    use crate::file_utils::find_common_ancestors_in_paths;
+    use super::*;
 
     #[test]
     fn common_ancestor_many() -> Result<()> {
         let inputs = [
-            PathBuf::from("examples/modular/sub1.gsn.yaml"),
-            PathBuf::from("examples/modular/main.gsn.yaml"),
+            "examples/modular/sub1.gsn.yaml",
+            "examples/modular/main.gsn.yaml",
         ];
         let mut result = find_common_ancestors_in_paths(&inputs)?;
-        let cwd = std::env::current_dir()?.canonicalize()?;
-        if result.starts_with(&cwd) {
-            result = result.strip_prefix(cwd)?.to_path_buf();
-        }
-        assert_eq!(result, PathBuf::from("examples/modular"));
+        let cwd = std::env::current_dir()?
+            .canonicalize()?
+            .to_string_lossy()
+            .into_owned();
+        result = strip_prefix(&result, &cwd);
+        assert_eq!(result, "examples/modular");
         Ok(())
     }
 
     #[test]
     fn common_ancestor_single() -> Result<()> {
-        let inputs = [PathBuf::from("examples/example.gsn.yaml")];
+        let inputs = ["examples/example.gsn.yaml"];
         let result = find_common_ancestors_in_paths(&inputs)?;
-        assert_eq!(result, PathBuf::from(""));
+        assert_eq!(result, "");
         Ok(())
+    }
+
+    #[test]
+    fn filename() {
+        assert_eq!(get_filename("C:\\Temp/test.txt"), Some("test.txt"));
+        assert_eq!(get_filename("/var/tmp"), Some("tmp"));
+        assert_eq!(get_filename(""), None);
+        assert_eq!(get_filename("./"), None);
+        assert_eq!(get_filename("./a.svg"), Some("a.svg"));
+        assert_eq!(get_filename("./../b.svg"), Some("b.svg"));
+        assert_eq!(get_filename("./.."), None);
+    }
+
+    #[test]
+    fn extension() {
+        assert_eq!(set_extension("path", "ext"), "path.ext".to_owned());
+        assert_eq!(set_extension("/var/log/some_text.txt", "svg"), "/var/log/some_text.svg".to_owned());
+        assert_eq!(set_extension("examples/example.gsn.yaml", "svg"), "examples/example.gsn.svg".to_owned());
+        assert_eq!(set_extension("", "test"), ".test".to_owned());
+
     }
 }
