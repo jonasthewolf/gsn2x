@@ -53,9 +53,6 @@ pub fn get_relative_path(
     let source_canon = &PathBuf::from(source).canonicalize()?;
     let target_canon = &PathBuf::from(target).canonicalize()?;
     let common = find_common_ancestors_in_paths(&[source, target])?;
-    dbg!(&source);
-    dbg!(&target);
-    dbg!(&common);
     let source_canon_stripped = source_canon
         .strip_prefix(&common)
         .context("56")?
@@ -77,7 +74,6 @@ pub fn get_relative_path(
         target_canon_stripped.set_extension(ext);
     }
     prefix.push_str(&target_canon_stripped.to_string_lossy());
-    dbg!(&prefix);
     Ok(prefix)
 }
 
@@ -86,7 +82,7 @@ pub fn get_relative_path(
 ///
 ///
 pub fn get_filename(path: &str) -> Option<&str> {
-    match dbg!(path.rsplit(['/', '\\']).next()) {
+    match path.rsplit(['/', '\\']).next() {
         None => None,
         Some(x) if x == ".." || x == "." => None,
         Some(x) if x.is_empty() => None,
@@ -126,7 +122,6 @@ pub fn find_common_ancestors_in_paths(inputs: &[&str]) -> Result<String> {
         .collect::<Vec<_>>();
 
     let mut result = PathBuf::new();
-    dbg!(&components);
 
     if let Some(min_components) = components.iter().map(|c| c.len()).min() {
         for component in 1..min_components {
@@ -152,7 +147,6 @@ pub fn find_common_ancestors_in_paths(inputs: &[&str]) -> Result<String> {
             }
         }
     }
-    dbg!(&result.display());
     Ok(result.to_string_lossy().into_owned())
 }
 
@@ -217,7 +211,7 @@ mod test {
             .to_string_lossy()
             .into_owned();
         result = strip_prefix(&result, &cwd);
-        assert_eq!(result, "examples/modular");
+        assert_eq!(result.replace('\\', "/"), "examples/modular");
         Ok(())
     }
 
@@ -243,9 +237,14 @@ mod test {
     #[test]
     fn extension() {
         assert_eq!(set_extension("path", "ext"), "path.ext".to_owned());
-        assert_eq!(set_extension("/var/log/some_text.txt", "svg"), "/var/log/some_text.svg".to_owned());
-        assert_eq!(set_extension("examples/example.gsn.yaml", "svg"), "examples/example.gsn.svg".to_owned());
+        assert_eq!(
+            set_extension("/var/log/some_text.txt", "svg"),
+            "/var/log/some_text.svg".to_owned()
+        );
+        assert_eq!(
+            set_extension("examples/example.gsn.yaml", "svg"),
+            "examples/example.gsn.svg".to_owned()
+        );
         assert_eq!(set_extension("", "test"), ".test".to_owned());
-
     }
 }

@@ -176,9 +176,10 @@ mod integrations {
             .arg("examples/modular/main.gsn.yaml")
             .arg("examples/modular/sub1.gsn.yaml")
             .arg("examples/modular/sub3.gsn.yaml");
-        cmd.assert().success();
-        // .stdout(predicate::str::is_empty())
-        // .stderr(predicate::str::is_empty());
+        cmd.assert()
+            .success()
+            .stdout(predicate::str::is_empty())
+            .stderr(predicate::str::is_empty());
         Ok(())
     }
 
@@ -276,9 +277,10 @@ mod integrations {
             .arg("my_evidences.md")
             .arg("no_evidences.gsn.test.yaml")
             .current_dir(&temp);
-        cmd.assert().success();
-        // .stdout(predicate::str::is_empty())
-        // .stderr(predicate::str::is_empty());
+        cmd.assert()
+            .success()
+            .stdout(predicate::str::is_empty())
+            .stderr(predicate::str::is_empty());
         assert!(compare_lines_with_replace(
             temp.child("my_evidences.md").as_os_str(),
             temp.child("no_evidences.gsn.test.md").as_os_str(),
@@ -302,9 +304,10 @@ mod integrations {
             .arg("layer1")
             .arg("-N")
             .current_dir(&temp);
-        cmd.assert().success();
-        // .stdout(predicate::str::is_empty())
-        // .stderr(predicate::str::is_empty());
+        cmd.assert()
+            .success()
+            .stdout(predicate::str::is_empty())
+            .stderr(predicate::str::is_empty());
         assert!(compare_lines_with_replace(
             temp.child("my_evidences.md").as_os_str(),
             temp.child("example.gsn.test.md").as_os_str(),
@@ -348,8 +351,6 @@ mod integrations {
         let output_file1 = temp.child("main.gsn.svg");
         let output_file2 = temp.child("sub1.gsn.svg");
         let output_file3 = temp.child("sub3.gsn.svg");
-        // TODO Remove again
-        dbg!(std::env::current_dir().unwrap());
         cmd.arg(input_file1.as_os_str())
             .arg(input_file2.as_os_str())
             .arg(input_file3.as_os_str())
@@ -405,8 +406,9 @@ mod integrations {
     fn empty_input() -> Result<()> {
         let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
         cmd.arg("tests/empty.yaml");
-        cmd.assert().failure();
-        // .stderr(predicate::str::contains("Error: No input elements found"));
+        cmd.assert()
+            .failure()
+            .stderr(predicate::str::contains("Error: No input elements found"));
         Ok(())
     }
 
