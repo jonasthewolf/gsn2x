@@ -1,7 +1,7 @@
 # Stylesheets for SVG rendering
 
 You can provide (multiple) custom CSS stylesheets for SVG via the `-s` or `--stylesheet` options. 
-The path is not interpreted by gsn2x and, thus, is relative to the SVG if relative.
+The path may be relative to the current working directory, absolute, or an URL (e.g. starting with http or https).
 
 Every element will also be addressable by `id`. The `id` is the same as the YAML id.
 
