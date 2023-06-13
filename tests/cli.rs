@@ -134,13 +134,12 @@ mod integrations {
         let temp = assert_fs::TempDir::new()?;
 
         temp.copy_from(SUB_DIR, &[INPUT_YAML])?;
-        let input_file = temp.child(INPUT_YAML);
         let output_file = temp.child(OUTPUT_SVG);
         let output_file1 = temp.child("out1.svg");
         let output_file2 = temp.child("out2.svg");
         // Run program twice with full legend
         cmd.current_dir(&temp);
-        cmd.arg(input_file.as_os_str());
+        cmd.arg(INPUT_YAML);
         cmd.assert().success();
         std::fs::rename(&output_file, &output_file1)?;
         cmd.assert().success();
