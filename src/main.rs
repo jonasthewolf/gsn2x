@@ -1,13 +1,14 @@
 use anyhow::{anyhow, Context, Result};
 use clap::{Arg, ArgAction};
+use file_utils::{prepare_and_check_input_paths, set_extension, translate_to_output_path};
 use render::RenderOptions;
 use std::collections::{BTreeMap, HashMap};
-use std::fs::{create_dir_all, File};
+use std::fs::File;
 use std::io::BufReader;
-use std::path::{PathBuf, StripPrefixError};
 
 mod diagnostics;
 mod dirgraphsvg;
+mod file_utils;
 mod gsn;
 mod render;
 mod yaml_fix;
@@ -26,7 +27,7 @@ fn main() -> Result<()> {
     let app = clap::command!()
         .arg(
             Arg::new("INPUT")
-                .help("Sets the input file(s) to use.")
+                .help("Sets the input file(s) to use. Only relative paths are accepted.")
                 .action(ArgAction::Append)
                 .required(true),
         )
@@ -56,7 +57,7 @@ fn main() -> Result<()> {
         )
         .arg(
             Arg::new("COMPLETE_VIEW")
-                .help("Output the complete view to <COMPLETE_VIEW>.")
+                .help("Output the complete view to file with name <COMPLETE_VIEW>.")
                 .short('f')
                 .long("full")
                 .action(ArgAction::Set)
@@ -75,7 +76,7 @@ fn main() -> Result<()> {
         )
         .arg(
             Arg::new("ARCHITECTURE_VIEW")
-                .help("Output the architecture view to <ARCHITECTURE_VIEW>.")
+                .help("Output the architecture view to file with name <ARCHITECTURE_VIEW>.")
                 .short('a')
                 .long("arch")
                 .action(ArgAction::Set)
@@ -94,7 +95,7 @@ fn main() -> Result<()> {
         )
         .arg(
             Arg::new("EVIDENCES")
-                .help("Output list of all evidences to <EVIDENCES>.")
+                .help("Output list of all evidences to file with name <EVIDENCES>.")
                 .short('e')
                 .long("evidences")
                 .action(ArgAction::Set)
@@ -113,7 +114,7 @@ fn main() -> Result<()> {
         )
         .arg(
             Arg::new("OUTPUT_DIRECTORY")
-                .help("")
+                .help("Emit all output files to directory <OUTPUT_DIRECTORY>.")
                 .short('o')
                 .long("output-dir")
                 .action(ArgAction::Set)
@@ -178,11 +179,11 @@ fn main() -> Result<()> {
                 .help_heading("OUTPUT MODIFICATION"),
         );
     let matches = app.get_matches();
-    let inputs: Vec<&str> = matches
+    let mut inputs: Vec<String> = matches
         .get_many::<String>("INPUT")
         .into_iter()
         .flatten()
-        .map(AsRef::as_ref)
+        .cloned()
         .collect();
     let layers = matches
         .get_many::<String>("LAYERS")
@@ -204,13 +205,8 @@ fn main() -> Result<()> {
     let mut modules: HashMap<String, Module> = HashMap::new();
 
     // Read input
-    let mut common_ancestors = find_common_ancestors_in_paths(&inputs)?;
-    let cwd = PathBuf::from(".").canonicalize()?;
-    if common_ancestors.starts_with(&cwd) {
-        common_ancestors = common_ancestors.strip_prefix(cwd)?.to_path_buf();
-    }
-    let all_inputs = prepare_input_paths(inputs)?;
-    read_inputs(&all_inputs, &mut nodes, &mut modules, &mut diags)?;
+    let common_ancestors = prepare_and_check_input_paths(&mut inputs)?;
+    read_inputs(&inputs, &mut nodes, &mut modules, &mut diags)?;
 
     // Validate
     validate_and_check(&mut nodes, &modules, &mut diags, &excluded_modules, &layers);
@@ -225,97 +221,16 @@ fn main() -> Result<()> {
 }
 
 ///
-///
-/// The output is a list of tuples.
-/// 1. element of tuple: the filename as provided on the command line
-/// 2. element of tuple: the part that all input files have in common as relative paths
-/// This allows using the 2. prefixed with the output directory to make out-of-tree builds.
-///
-fn prepare_input_paths(inputs: Vec<&str>) -> Result<Vec<(String, String)>> {
-    let cwd = PathBuf::from(".").canonicalize()?;
-    let relative_inputs = inputs
-        .iter()
-        .map(|&i| {
-            let x = PathBuf::from(i);
-            if x.is_relative() {
-                Ok(i.to_owned())
-            } else {
-                let x = x.canonicalize().unwrap();
-                if x.starts_with(&cwd) {
-                    x.strip_prefix(&cwd)
-                        .map(|i| i.to_string_lossy().into_owned())
-                } else {
-                    Ok(x.to_string_lossy().into_owned())
-                }
-            }
-        })
-        .collect::<Result<Vec<String>, StripPrefixError>>()?;
-    let all_inputs = relative_inputs
-        .into_iter()
-        .zip(inputs)
-        .map(|(r, i)| (i.to_owned(), r))
-        .collect::<Vec<_>>();
-    Ok(all_inputs)
-}
-
-///
-///
-///
-///
-fn find_common_ancestors_in_paths(inputs: &[&str]) -> Result<PathBuf> {
-    let input_paths = inputs
-        .iter()
-        .map(|i| {
-            PathBuf::from(i)
-                .canonicalize()
-                .with_context(|| format!("Failed to open file {i}"))
-        })
-        .collect::<Result<Vec<_>, _>>()?;
-    let components = input_paths
-        .iter()
-        .map(|p| p.components().collect::<Vec<_>>())
-        .collect::<Vec<_>>();
-
-    let mut result = PathBuf::new();
-
-    if let Some(min_components) = components.iter().map(|c| c.len()).min() {
-        for component in 1..min_components {
-            if components
-                .iter()
-                .skip(1)
-                .scan(components[0][component], |orig, x| {
-                    if x[component] == *orig {
-                        Some(1)
-                    } else {
-                        None
-                    }
-                })
-                .count()
-                > 0
-            {
-                if component == 1 {
-                    result.push(components[0][0]);
-                }
-                result.push(components[0][component]);
-            } else {
-                break;
-            }
-        }
-    }
-    Ok(result)
-}
-
-///
 /// Read inputs
 ///
 ///
 fn read_inputs(
-    inputs: &[(String, String)],
+    inputs: &[String],
     nodes: &mut BTreeMap<String, GsnNode>,
     modules: &mut HashMap<String, Module>,
     diags: &mut Diagnostics,
 ) -> Result<()> {
-    for (input, relative_input) in inputs {
+    for input in inputs {
         let reader =
             BufReader::new(File::open(input).context(format!("Failed to open file {input}"))?);
 
@@ -337,7 +252,7 @@ fn read_inputs(
         let meta: ModuleInformation = match n.remove_entry(MODULE_INFORMATION_NODE) {
             Some((_, GsnDocumentNode::ModuleInformation(x))) => x,
             _ => {
-                let module_name = escape_text(relative_input);
+                let module_name = escape_text(input);
                 ModuleInformation {
                     name: module_name.to_owned(),
                     brief: None,
@@ -351,7 +266,7 @@ fn read_inputs(
 
         if let std::collections::hash_map::Entry::Vacant(e) = modules.entry(module.to_owned()) {
             e.insert(Module {
-                filename: relative_input.to_owned().to_owned(),
+                relative_module_path: input.to_owned().to_owned(),
                 meta,
             });
         } else {
@@ -361,7 +276,7 @@ fn read_inputs(
                     "C06: Module name {} in {} was already present in {}.",
                     module,
                     input,
-                    modules.get(&module).unwrap().filename // unwrap is ok, otherwise Entry would not have been Vacant
+                    modules.get(&module).unwrap().relative_module_path // unwrap is ok, otherwise Entry would not have been Vacant
                 ),
             );
         }
@@ -440,17 +355,19 @@ fn print_outputs(
     nodes: BTreeMap<String, GsnNode>,
     modules: &HashMap<String, Module>,
     render_options: &RenderOptions,
-    common_ancestors: PathBuf,
+    common_ancestors: String,
 ) -> Result<()> {
+    let output_path = &render_options.output_directory;
     if !render_options.skip_argument {
         for (module_name, module) in modules {
-            let output_path =
-                translate_to_output_path(render_options, &PathBuf::from(&module.filename))?
-                    .with_extension("svg");
-            let mut output_file = Box::new(File::create(&output_path).context(format!(
-                "Failed to open output file {}",
-                &output_path.display()
-            ))?) as Box<dyn std::io::Write>;
+            let output_path = set_extension(
+                &translate_to_output_path(output_path, &module.relative_module_path, None)?,
+                "svg",
+            );
+            let mut output_file = Box::new(
+                File::create(&output_path)
+                    .context(format!("Failed to open output file {output_path}"))?,
+            ) as Box<dyn std::io::Write>;
 
             render::render_argument(
                 &mut output_file,
@@ -463,66 +380,39 @@ fn print_outputs(
     }
     if modules.len() > 1 {
         if let Some(architecture_filename) = &render_options.architecture_filename {
-            let mut arch_output = PathBuf::from(&common_ancestors);
-            arch_output.push(architecture_filename);
-
-            let output_path = translate_to_output_path(render_options, &arch_output)?;
-            let mut output_file = File::create(&output_path).context(format!(
-                "Failed to open output file {}",
-                &output_path.display()
-            ))?;
+            let arch_output_path = translate_to_output_path(
+                output_path,
+                architecture_filename,
+                Some(&common_ancestors),
+            )?;
+            let mut output_file = File::create(&arch_output_path)
+                .context(format!("Failed to open output file {arch_output_path}"))?;
             let deps = crate::gsn::calculate_module_dependencies(&nodes);
             render::render_architecture(
                 &mut output_file,
                 modules,
                 deps,
                 render_options,
-                output_path.to_str().unwrap(),
+                &arch_output_path,
+                output_path,
             )?;
         }
         if let Some(complete_filename) = &render_options.complete_filename {
-            let mut comp_output = PathBuf::from(&common_ancestors);
-            comp_output.push(complete_filename);
-
-            let output_path = translate_to_output_path(render_options, &comp_output)?;
-            let mut output_file = File::create(&output_path).context(format!(
-                "Failed to open output file {}",
-                output_path.display()
-            ))?;
+            let output_path =
+                translate_to_output_path(output_path, complete_filename, Some(&common_ancestors))?;
+            let mut output_file = File::create(&output_path)
+                .context(format!("Failed to open output file {output_path}"))?;
             render::render_complete(&mut output_file, &nodes, render_options)?;
         }
     }
     if let Some(evidences_filename) = &render_options.evidences_filename {
-        let mut evidence_output = PathBuf::from(&common_ancestors);
-        evidence_output.push(evidences_filename);
-
-        let output_path = translate_to_output_path(render_options, &evidence_output)?;
-        let mut output_file = File::create(&output_path).context(format!(
-            "Failed to open output file {}",
-            output_path.display()
-        ))?;
+        let output_path =
+            translate_to_output_path(output_path, evidences_filename, Some(&common_ancestors))?;
+        let mut output_file = File::create(&output_path)
+            .context(format!("Failed to open output file {output_path}"))?;
         render::render_evidences(&mut output_file, &nodes, render_options)?;
     }
     Ok(())
-}
-
-///
-/// input_filename may also contain a relative path.
-///
-///
-fn translate_to_output_path(
-    render_options: &RenderOptions,
-    input_filename: &PathBuf,
-) -> Result<PathBuf> {
-    let mut output_path = std::path::PathBuf::from(&render_options.output_directory);
-    output_path.push(input_filename);
-    if let Some(dir) = output_path.parent() {
-        if !dir.exists() {
-            create_dir_all(dir)
-                .with_context(|| format!("Trying to create directory {}", dir.to_string_lossy()))?;
-        }
-    }
-    Ok(output_path)
 }
 
 ///
@@ -549,10 +439,8 @@ fn output_messages(diags: &Diagnostics) -> Result<()> {
 
 #[cfg(test)]
 mod test {
-    use std::path::PathBuf;
 
-    use crate::{diagnostics::Diagnostics, find_common_ancestors_in_paths};
-    use anyhow::Result;
+    use crate::diagnostics::Diagnostics;
 
     #[test]
     fn check_output_messages_errors() {
@@ -591,28 +479,5 @@ mod test {
         let res = crate::output_messages(&d);
         assert!(res.is_ok());
         assert_eq!(format!("{:?}", res), "Ok(())");
-    }
-
-    #[test]
-    fn common_ancestor_many() -> Result<()> {
-        let inputs = [
-            "examples/modular/sub1.gsn.yaml",
-            "examples/modular/main.gsn.yaml",
-        ];
-        let mut result = find_common_ancestors_in_paths(&inputs)?;
-        let cwd = PathBuf::from(".").canonicalize()?;
-        if result.starts_with(&cwd) {
-            result = result.strip_prefix(cwd)?.to_path_buf();
-        }
-        assert_eq!(result, PathBuf::from("examples/modular"));
-        Ok(())
-    }
-
-    #[test]
-    fn common_ancestor_single() -> Result<()> {
-        let inputs = ["examples/example.gsn.yaml"];
-        let result = find_common_ancestors_in_paths(&inputs)?;
-        assert_eq!(result, PathBuf::from(""));
-        Ok(())
     }
 }

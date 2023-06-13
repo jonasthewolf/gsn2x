@@ -18,9 +18,9 @@ The output is an argument view in SVG format and automatically written to `<your
 ## Options
 
     Usage: gsn2x [OPTIONS] <INPUT>...
-
+    
     Arguments:
-      <INPUT>...  Sets the input file(s) to use.
+      <INPUT>...  Sets the input file(s) to use. Only relative paths are accepted.
     
     Options:
       -h, --help     Print help
@@ -32,13 +32,13 @@ The output is an argument view in SVG format and automatically written to `<your
     
     OUTPUT:
       -N, --no-arg                         Do not output of argument view for provided input files.
-      -f, --full <COMPLETE_VIEW>           Output the complete view to <COMPLETE_VIEW>. [default: complete.svg]
+      -f, --full <COMPLETE_VIEW>           Output the complete view to file with name <COMPLETE_VIEW>. [default: complete.svg]
       -F, --no-full                        Do not output the complete view.
-      -a, --arch <ARCHITECTURE_VIEW>       Output the architecture view to <ARCHITECTURE_VIEW>. [default: architecture.svg]
+      -a, --arch <ARCHITECTURE_VIEW>       Output the architecture view to file with name <ARCHITECTURE_VIEW>. [default:     architecture.svg]
       -A, --no-arch                        Do not output the architecture view.
-      -e, --evidences <EVIDENCES>          Output list of all evidences to <EVIDENCES>. [default: evidences.md]
+      -e, --evidences <EVIDENCES>          Output list of all evidences to file with name <EVIDENCES>. [default: evidences.md]
       -E, --no-evidences                   Do not output list of all evidences.
-      -o, --output-dir <OUTPUT_DIRECTORY>  [default: .]
+      -o, --output-dir <OUTPUT_DIRECTORY>  Emit all output files to directory <OUTPUT_DIRECTORY>. [default: .]
     
     OUTPUT MODIFICATION:
       -l, --layer <LAYERS>            Output additional layer. Can be used multiple times.
@@ -46,4 +46,4 @@ The output is an argument view in SVG format and automatically written to `<your
       -t, --embed-css                 Embed stylehseets instead of linking them.
       -G, --no-legend                 Do not output a legend based on module information.
       -g, --full-legend               Output a legend based on all module information.
-
+    
