@@ -1,7 +1,9 @@
 # Stylesheets for SVG rendering
 
 You can provide (multiple) custom CSS stylesheets for SVG via the `-s` or `--stylesheet` options. 
+
 The path may be relative to the current working directory, absolute, or an URL (e.g. starting with http or https).
+If a relative path is used, it will be translated to an absolute path, since the CSS stylesheet is not copied into the output path. Thus, if you have a complex folder structure, it is encouraged to either use a central CSS stylesheet that is provided via, e.g., `http`, or embed the stylesheets into the generated SVGs using the `-t` option.
 
 Every element will also be addressable by `id`. The `id` is the same as the YAML id.
 

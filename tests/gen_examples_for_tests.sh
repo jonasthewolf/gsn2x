@@ -9,7 +9,7 @@ cargo run -- examples/example.gsn.yaml -G
 cargo run -- -N -E -F -G examples/modular/main.gsn.yaml examples/modular/sub1.gsn.yaml examples/modular/sub3.gsn.yaml
 
 # multiple_view
-cargo run -- -A -E -F -G -s modular.css examples/modular/main.gsn.yaml examples/modular/sub1.gsn.yaml examples/modular/sub3.gsn.yaml
+cargo run -- -A -E -F -G -s https://github.com/jonasthewolf/gsn2x/blob/3439402d093ba54af4771b295e78f2488bd1b978/examples/modular/modular.css examples/modular/main.gsn.yaml examples/modular/sub1.gsn.yaml examples/modular/sub3.gsn.yaml
 
 # complete_view
 cargo run -- -N -E -A -G examples/modular/main.gsn.yaml examples/modular/sub1.gsn.yaml examples/modular/sub3.gsn.yaml

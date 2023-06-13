@@ -16,7 +16,7 @@
 <polyline fill="none" points="0 0, 10 4.5, 0 9, 0 0" stroke="black" stroke-width="1"/>
 </marker>
 <style>
-@import "modular.css"
+@import url(https://github.com/jonasthewolf/gsn2x/blob/3439402d093ba54af4771b295e78f2488bd1b978/examples/modular/modular.css)
 </style>
 <g class="gsnelem gsnawaygoal gsn_module_Main" id="node_G1">
 <title>

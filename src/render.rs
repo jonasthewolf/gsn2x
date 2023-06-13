@@ -2,12 +2,13 @@ use crate::dirgraphsvg::edges::EdgeType;
 use crate::dirgraphsvg::{escape_node_id, escape_text, nodes::Node};
 use crate::file_utils::{get_filename, get_relative_path, set_extension, translate_to_output_path};
 use crate::gsn::{get_levels, GsnNode, Module};
-use anyhow::Result;
+use anyhow::{Context, Result};
 use chrono::Utc;
 use clap::ArgMatches;
 
 use std::collections::{BTreeMap, HashMap};
 use std::io::Write;
+use std::path::PathBuf;
 
 #[derive(Default, Eq, PartialEq)]
 pub enum RenderLegend {
@@ -45,16 +46,45 @@ impl From<&ArgMatches> for RenderOptions {
             .cloned()
             .collect::<Vec<_>>();
 
+        let embed_stylesheets = matches.get_flag("EMBED_CSS");
+
+        let stylesheets = matches
+            .get_many::<String>("STYLESHEETS")
+            .into_iter()
+            .flatten()
+            .map(|css| {
+                // If stylesheets are not embedded transform their path.
+                if embed_stylesheets {
+                    css.to_owned()
+                } else {
+                    let path_css = PathBuf::from(css);
+                    if css.starts_with("http://")
+                        || css.starts_with("https://")
+                        || css.starts_with("file://")
+                    {
+                        format!("url({css})")
+                    } else if path_css.is_relative() {
+                        let path = path_css
+                            .canonicalize()
+                            .with_context(|| {
+                                format!("Stylesheet {} is not found.", path_css.display())
+                            })
+                            .unwrap()
+                            .to_string_lossy()
+                            .into_owned();
+                        format!("\"{path}\"")
+                    } else {
+                        format!("\"{css}\"")
+                    }
+                }
+            })
+            .collect::<Vec<_>>();
+
         RenderOptions {
-            stylesheets: matches
-                .get_many::<String>("STYLESHEETS")
-                .into_iter()
-                .flatten()
-                .cloned()
-                .collect::<Vec<_>>(),
+            stylesheets,
             layers,
             legend,
-            embed_stylesheets: matches.get_flag("EMBED_CSS"),
+            embed_stylesheets,
             architecture_filename: match matches.get_flag("NO_ARCHITECTURE_VIEW") {
                 true => None,
                 false => matches
