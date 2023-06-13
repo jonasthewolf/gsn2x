@@ -1,42 +1,27 @@
-use anyhow::{Context, Error, Result};
+use anyhow::{anyhow, Context, Result};
 use std::{fs::create_dir_all, path::PathBuf};
 
 ///
+/// Check that all inputs are relative path names.
+/// Replace backslashes with slashes.
+/// Find common ancestors.
 ///
-/// Find relative path names for input files (if they are e.g. given )
 ///
-/// The output is a list of tuples.
-/// 1. element of tuple: the filename as provided on the command line
-/// 2. element of tuple: the part that all input files have in common as relative paths
-/// This allows using the 2. prefixed with the output directory to make out-of-tree builds.
-///
-pub fn prepare_input_paths(inputs: Vec<&str>) -> Result<Vec<(String, String)>> {
-    let cwd = std::env::current_dir()?
-        .canonicalize()?
-        .to_string_lossy()
-        .into_owned();
-    let relative_inputs = inputs
-        .iter()
-        .map(|&i| {
-            let x = PathBuf::from(i);
-            if x.is_relative() {
-                Ok(i.to_owned())
-            } else {
-                let x = x.canonicalize()?.to_string_lossy().into_owned();
-                if x.starts_with(&cwd) {
-                    Ok(strip_prefix(&x, &cwd))
-                } else {
-                    get_relative_path(&x, &cwd, None)
-                }
-            }
-        })
-        .collect::<Result<Vec<String>, Error>>()?;
-    let all_inputs = relative_inputs
-        .into_iter()
-        .zip(inputs)
-        .map(|(r, i)| (i.to_owned(), r))
-        .collect::<Vec<_>>();
-    Ok(all_inputs)
+pub fn prepare_and_check_input_paths(inputs: &mut [String]) -> Result<String> {
+    if inputs.iter().all(|i| PathBuf::from(i).is_relative()) {
+        // Replace backslash with slash
+        inputs.iter_mut().for_each(|i| {
+            *i = i.replace('\\', "/");
+        });
+        let common_ancestors = find_common_ancestors_in_paths(inputs)?;
+        let cwd = std::env::current_dir()?.canonicalize()?;
+        let result = strip_prefix(&common_ancestors, &cwd)
+            .to_string_lossy()
+            .into_owned();
+        Ok(result)
+    } else {
+        Err(anyhow!("All input paths must be relative."))
+    }
 }
 
 ///
@@ -52,7 +37,7 @@ pub fn get_relative_path(
 ) -> Result<String> {
     let source_canon = &PathBuf::from(source).canonicalize()?;
     let target_canon = &PathBuf::from(target).canonicalize()?;
-    let common = find_common_ancestors_in_paths(&[source, target])?;
+    let common = find_common_ancestors_in_paths(&[source.to_owned(), target.to_owned()])?;
     let source_canon_stripped = source_canon.strip_prefix(&common)?.to_path_buf();
     let mut target_canon_stripped = target_canon.strip_prefix(&common)?.to_path_buf();
     let mut prefix = match source_canon_stripped
@@ -101,7 +86,7 @@ pub fn set_extension(path: &str, ext: &str) -> String {
 /// Find common ancestors in all paths in `inputs`.
 /// The output is an absolute path containing all common ancestors.
 ///
-pub fn find_common_ancestors_in_paths(inputs: &[&str]) -> Result<String> {
+fn find_common_ancestors_in_paths(inputs: &[String]) -> Result<PathBuf> {
     let input_paths = inputs
         .iter()
         .map(|i| {
@@ -141,21 +126,16 @@ pub fn find_common_ancestors_in_paths(inputs: &[&str]) -> Result<String> {
             }
         }
     }
-    Ok(result.to_string_lossy().into_owned())
+    Ok(result)
 }
 
 ///
 /// Strip `prefix` from `path`
 /// If prefix is not part of `path`, `path` is returned.
 ///
-pub fn strip_prefix(path: &str, prefix: &str) -> String {
-    let path_buf = PathBuf::from(path);
-    if path_buf.starts_with(prefix) {
-        path_buf
-            .strip_prefix(prefix)
-            .unwrap()
-            .to_string_lossy()
-            .into_owned()
+pub fn strip_prefix(path: &PathBuf, prefix: &PathBuf) -> PathBuf {
+    if path.starts_with(prefix) {
+        path.strip_prefix(prefix).unwrap().to_owned()
     } else {
         path.to_owned()
     }
@@ -183,8 +163,9 @@ pub fn translate_to_output_path(
         output_path.push(input_filename);
         if let Some(dir) = output_path.parent() {
             if !dir.exists() {
-                create_dir_all(dir)
-                    .with_context(|| format!("Trying to create directory {}", dir.to_string_lossy()))?;
+                create_dir_all(dir).with_context(|| {
+                    format!("Trying to create directory {}", dir.to_string_lossy())
+                })?;
             }
         }
         Ok(output_path.to_string_lossy().into_owned())
@@ -200,24 +181,21 @@ mod test {
     #[test]
     fn common_ancestor_many() -> Result<()> {
         let inputs = [
-            "examples/modular/sub1.gsn.yaml",
-            "examples/modular/main.gsn.yaml",
+            "examples/modular/sub1.gsn.yaml".to_owned(),
+            "examples/modular/main.gsn.yaml".to_owned(),
         ];
         let mut result = find_common_ancestors_in_paths(&inputs)?;
-        let cwd = std::env::current_dir()?
-            .canonicalize()?
-            .to_string_lossy()
-            .into_owned();
+        let cwd = std::env::current_dir()?.canonicalize()?;
         result = strip_prefix(&result, &cwd);
-        assert_eq!(result.replace('\\', "/"), "examples/modular");
+        assert_eq!(result, PathBuf::from("examples/modular"));
         Ok(())
     }
 
     #[test]
     fn common_ancestor_single() -> Result<()> {
-        let inputs = ["examples/example.gsn.yaml"];
+        let inputs = ["examples/example.gsn.yaml".to_owned()];
         let result = find_common_ancestors_in_paths(&inputs)?;
-        assert_eq!(result, "");
+        assert_eq!(result, PathBuf::from(""));
         Ok(())
     }
 

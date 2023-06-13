@@ -1,9 +1,6 @@
 use anyhow::{anyhow, Context, Result};
 use clap::{Arg, ArgAction};
-use file_utils::{
-    find_common_ancestors_in_paths, prepare_input_paths, set_extension, strip_prefix,
-    translate_to_output_path,
-};
+use file_utils::{prepare_and_check_input_paths, set_extension, translate_to_output_path};
 use render::RenderOptions;
 use std::collections::{BTreeMap, HashMap};
 use std::fs::File;
@@ -182,11 +179,11 @@ fn main() -> Result<()> {
                 .help_heading("OUTPUT MODIFICATION"),
         );
     let matches = app.get_matches();
-    let inputs: Vec<&str> = matches
+    let mut inputs: Vec<String> = matches
         .get_many::<String>("INPUT")
         .into_iter()
         .flatten()
-        .map(AsRef::as_ref)
+        .cloned()
         .collect();
     let layers = matches
         .get_many::<String>("LAYERS")
@@ -208,14 +205,8 @@ fn main() -> Result<()> {
     let mut modules: HashMap<String, Module> = HashMap::new();
 
     // Read input
-    let mut common_ancestors = find_common_ancestors_in_paths(&inputs)?;
-    let cwd = std::env::current_dir()?
-        .canonicalize()?
-        .to_string_lossy()
-        .into_owned();
-    common_ancestors = strip_prefix(&common_ancestors, &cwd);
-    let all_inputs = prepare_input_paths(inputs)?;
-    read_inputs(&all_inputs, &mut nodes, &mut modules, &mut diags)?;
+    let common_ancestors = prepare_and_check_input_paths(&mut inputs)?;
+    read_inputs(&inputs, &mut nodes, &mut modules, &mut diags)?;
 
     // Validate
     validate_and_check(&mut nodes, &modules, &mut diags, &excluded_modules, &layers);
@@ -234,12 +225,12 @@ fn main() -> Result<()> {
 ///
 ///
 fn read_inputs(
-    inputs: &[(String, String)],
+    inputs: &[String],
     nodes: &mut BTreeMap<String, GsnNode>,
     modules: &mut HashMap<String, Module>,
     diags: &mut Diagnostics,
 ) -> Result<()> {
-    for (input, relative_input) in inputs {
+    for input in inputs {
         let reader =
             BufReader::new(File::open(input).context(format!("Failed to open file {input}"))?);
 
@@ -261,7 +252,7 @@ fn read_inputs(
         let meta: ModuleInformation = match n.remove_entry(MODULE_INFORMATION_NODE) {
             Some((_, GsnDocumentNode::ModuleInformation(x))) => x,
             _ => {
-                let module_name = escape_text(relative_input);
+                let module_name = escape_text(input);
                 ModuleInformation {
                     name: module_name.to_owned(),
                     brief: None,
@@ -275,7 +266,7 @@ fn read_inputs(
 
         if let std::collections::hash_map::Entry::Vacant(e) = modules.entry(module.to_owned()) {
             e.insert(Module {
-                relative_module_path: relative_input.to_owned().to_owned(),
+                relative_module_path: input.to_owned().to_owned(),
                 meta,
             });
         } else {

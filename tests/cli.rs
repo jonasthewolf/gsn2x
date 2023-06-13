@@ -318,6 +318,22 @@ mod integrations {
     }
 
     #[test]
+    fn absolute_input() -> Result<()> {
+        let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
+        let temp = assert_fs::TempDir::new()?;
+        let input_file = temp.child("main.gsn.yaml");
+        cmd.arg(input_file.as_os_str())
+            .arg("-E")
+            .arg("-F")
+            .arg("-G")
+            .current_dir(&temp);
+        cmd.assert().failure().stderr(predicate::str::contains(
+            "Error: All input paths must be relative.",
+        ));
+        Ok(())
+    }
+
+    #[test]
     fn arch_view() -> Result<()> {
         let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
         let temp = assert_fs::TempDir::new()?;
@@ -343,23 +359,20 @@ mod integrations {
     fn multiple_view() -> Result<()> {
         let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
         let temp = assert_fs::TempDir::new()?;
-        temp.copy_from("examples/modular", &["*.yaml"])?;
-        // Use absolute paths here.
-        let input_file1 = temp.child("main.gsn.yaml");
-        let input_file2 = temp.child("sub1.gsn.yaml");
-        let input_file3 = temp.child("sub3.gsn.yaml");
-        let output_file1 = temp.child("main.gsn.svg");
-        let output_file2 = temp.child("sub1.gsn.svg");
-        let output_file3 = temp.child("sub3.gsn.svg");
-        cmd.arg(input_file1.as_os_str())
-            .arg(input_file2.as_os_str())
-            .arg(input_file3.as_os_str())
+        temp.copy_from(".", &["examples/modular/*.yaml"])?;
+        let output_file1 = temp.child("examples/modular/main.gsn.svg");
+        let output_file2 = temp.child("examples/modular/sub1.gsn.svg");
+        let output_file3 = temp.child("examples/modular/sub3.gsn.svg");
+        cmd.arg("examples/modular/main.gsn.yaml")
+            .arg("examples/modular/sub1.gsn.yaml")
+            .arg("examples/modular/sub3.gsn.yaml")
             .arg("-A")
             .arg("-E")
             .arg("-F")
             .arg("-G")
             .arg("-s")
-            .arg("modular.css");
+            .arg("modular.css")
+            .current_dir(&temp);
         cmd.assert().success();
         assert!(are_struct_similar_svgs(
             std::path::Path::new("examples/modular/main.gsn.svg").as_os_str(),
@@ -381,18 +394,16 @@ mod integrations {
     fn complete_view() -> Result<()> {
         let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
         let temp = assert_fs::TempDir::new()?;
-        temp.copy_from("examples/modular", &["*.yaml"])?;
-        let input_file1 = temp.child("main.gsn.yaml");
-        let input_file2 = temp.child("sub1.gsn.yaml");
-        let input_file3 = temp.child("sub3.gsn.yaml");
-        let output_file = temp.child("complete.svg");
-        cmd.arg(input_file1.as_os_str())
-            .arg(input_file2.as_os_str())
-            .arg(input_file3.as_os_str())
+        temp.copy_from(".", &["examples/modular/*.yaml"])?;
+        let output_file = temp.child("examples/modular/complete.svg");
+        cmd.arg("examples/modular/main.gsn.yaml")
+            .arg("examples/modular/sub1.gsn.yaml")
+            .arg("examples/modular/sub3.gsn.yaml")
             .arg("-N")
             .arg("-E")
             .arg("-A")
-            .arg("-G");
+            .arg("-G")
+            .current_dir(&temp);
         cmd.assert().success();
         assert!(are_struct_similar_svgs(
             std::path::Path::new("examples/modular/complete.svg").as_os_str(),
