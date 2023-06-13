@@ -370,7 +370,7 @@ mod integrations {
             .arg("-F")
             .arg("-G")
             .arg("-s")
-            .arg("modular.css")
+            .arg("https://github.com/jonasthewolf/gsn2x/blob/3439402d093ba54af4771b295e78f2488bd1b978/examples/modular/modular.css")
             .current_dir(&temp);
         cmd.assert().success();
         assert!(are_struct_similar_svgs(
