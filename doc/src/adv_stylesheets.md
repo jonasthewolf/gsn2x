@@ -55,5 +55,17 @@ The result looks like this:
 
 ![Styled Example](examples/minimalcss/min.gsn.svg)
 
+# Highlighting nodes when navigating
+
+The CSS `:target` pseudo class can be used to highlight the node you clicked on in the previous image.
+
+An example could look like this:
+
+```css
+g:target path {
+    fill: lightsteelblue;
+}
+```
+
 
 
