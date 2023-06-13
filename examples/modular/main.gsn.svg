@@ -16,7 +16,7 @@
 <polyline fill="none" points="0 0, 10 4.5, 0 9, 0 0" stroke="black" stroke-width="1"/>
 </marker>
 <style>
-@import ("modular.css")
+@import "modular.css"
 </style>
 <g class="gsnelem gsngoal gsn_module_Main" id="node_G1">
 <title>

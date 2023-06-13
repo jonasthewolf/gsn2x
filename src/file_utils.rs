@@ -61,11 +61,11 @@ pub fn get_relative_path(
 ///
 ///
 pub fn get_filename(path: &str) -> Option<&str> {
-    match path.rsplit(['/', '\\']).next() {
-        None => unreachable!(),
-        Some(x) if x == ".." || x == "." => None,
-        Some(x) if x.is_empty() => None,
-        Some(x) => Some(x),
+    let filename = path.rsplit(['/', '\\']).next().unwrap();
+    if filename.is_empty() || filename == ".." || filename == "." {
+        None
+    } else {
+        Some(filename)
     }
 }
 
@@ -199,6 +199,7 @@ mod test {
         assert_eq!(get_filename("./a.svg"), Some("a.svg"));
         assert_eq!(get_filename("./../b.svg"), Some("b.svg"));
         assert_eq!(get_filename("./.."), None);
+        assert_eq!(get_filename("a.b"), Some("a.b"));
     }
 
     #[test]
