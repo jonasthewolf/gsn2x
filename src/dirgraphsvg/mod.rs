@@ -812,7 +812,7 @@ impl<'a> DirGraph<'a> {
                 let style = Style::new(
                     self.css_stylesheets
                         .iter()
-                        .map(|x| format!("@import (\"{x}\")"))
+                        .map(|x| format!("@import \"{x}\""))
                         .collect::<Vec<_>>()
                         .join("\n"),
                 );
