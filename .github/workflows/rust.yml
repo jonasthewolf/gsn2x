@@ -75,7 +75,7 @@ jobs:
       id: tag_data
     - name: Patch version for pre-release
       id: githash
-      if: github.event_name != 'pull_request'
+      if: ${{ !startsWith(github.ref, 'refs/tags/') }}
       run: |
         echo "GSN2X_VERSION=${GITHUB_SHA::6}" >> $GITHUB_OUTPUT
     - name: Test
