@@ -157,7 +157,7 @@
 <pre><code>Usage: gsn2x [OPTIONS] &lt;INPUT&gt;...
 
 Arguments:
-  &lt;INPUT&gt;...  Sets the input file(s) to use.
+  &lt;INPUT&gt;...  Sets the input file(s) to use. Only relative paths are accepted.
 
 Options:
   -h, --help     Print help
@@ -169,13 +169,13 @@ CHECKS:
 
 OUTPUT:
   -N, --no-arg                         Do not output of argument view for provided input files.
-  -f, --full &lt;COMPLETE_VIEW&gt;           Output the complete view to &lt;COMPLETE_VIEW&gt;. [default: complete.svg]
+  -f, --full &lt;COMPLETE_VIEW&gt;           Output the complete view to file with name &lt;COMPLETE_VIEW&gt;. [default: complete.svg]
   -F, --no-full                        Do not output the complete view.
-  -a, --arch &lt;ARCHITECTURE_VIEW&gt;       Output the architecture view to &lt;ARCHITECTURE_VIEW&gt;. [default: architecture.svg]
+  -a, --arch &lt;ARCHITECTURE_VIEW&gt;       Output the architecture view to file with name &lt;ARCHITECTURE_VIEW&gt;. [default:     architecture.svg]
   -A, --no-arch                        Do not output the architecture view.
-  -e, --evidences &lt;EVIDENCES&gt;          Output list of all evidences to &lt;EVIDENCES&gt;. [default: evidences.md]
+  -e, --evidences &lt;EVIDENCES&gt;          Output list of all evidences to file with name &lt;EVIDENCES&gt;. [default: evidences.md]
   -E, --no-evidences                   Do not output list of all evidences.
-  -o, --output-dir &lt;OUTPUT_DIRECTORY&gt;  [default: .]
+  -o, --output-dir &lt;OUTPUT_DIRECTORY&gt;  Emit all output files to directory &lt;OUTPUT_DIRECTORY&gt;. [default: .]
 
 OUTPUT MODIFICATION:
   -l, --layer &lt;LAYERS&gt;            Output additional layer. Can be used multiple times.
