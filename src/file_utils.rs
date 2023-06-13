@@ -62,7 +62,7 @@ pub fn get_relative_path(
 ///
 pub fn get_filename(path: &str) -> Option<&str> {
     match path.rsplit(['/', '\\']).next() {
-        None => None,
+        None => unreachable!(),
         Some(x) if x == ".." || x == "." => None,
         Some(x) if x.is_empty() => None,
         Some(x) => Some(x),
@@ -71,15 +71,11 @@ pub fn get_filename(path: &str) -> Option<&str> {
 
 ///
 /// Set extension `ext` for file in `path`.
-/// If no extension in `path` is found, new `ext` is added.
+/// If no extension in `path` is found, `ext` is added.
 ///
 pub fn set_extension(path: &str, ext: &str) -> String {
     let split: Vec<_> = path.rsplitn(2, '.').collect();
-    match split.len() {
-        0 => unreachable!(),
-        1..=2 => format!("{}.{}", split.last().unwrap(), ext),
-        _ => unreachable!(), // because of rsplitn(2)
-    }
+    format!("{}.{}", split.last().unwrap(), ext) // unwrap ok, since there is always a last()
 }
 
 ///
@@ -153,23 +149,18 @@ pub fn translate_to_output_path(
     input_filename: &str,
     common_ancestors: Option<&str>,
 ) -> Result<String> {
-    if PathBuf::from(input_filename).is_absolute() {
-        Ok(input_filename.to_owned())
-    } else {
-        let mut output_path = std::path::PathBuf::from(&output_path);
-        if let Some(common_ancestors) = common_ancestors {
-            output_path.push(common_ancestors);
-        }
-        output_path.push(input_filename);
-        if let Some(dir) = output_path.parent() {
-            if !dir.exists() {
-                create_dir_all(dir).with_context(|| {
-                    format!("Trying to create directory {}", dir.to_string_lossy())
-                })?;
-            }
-        }
-        Ok(output_path.to_string_lossy().into_owned())
+    let mut output_path = std::path::PathBuf::from(&output_path);
+    if let Some(common_ancestors) = common_ancestors {
+        output_path.push(common_ancestors);
     }
+    output_path.push(input_filename);
+    if let Some(dir) = output_path.parent() {
+        if !dir.exists() {
+            create_dir_all(dir)
+                .with_context(|| format!("Trying to create directory {}", dir.to_string_lossy()))?;
+        }
+    }
+    Ok(output_path.to_string_lossy().into_owned())
 }
 
 #[cfg(test)]
