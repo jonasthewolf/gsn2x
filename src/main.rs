@@ -27,7 +27,7 @@ fn main() -> Result<()> {
     let app = clap::command!()
         .arg(
             Arg::new("INPUT")
-                .help("Sets the input file(s) to use.")
+                .help("Sets the input file(s) to use. Only relative paths are accepted.")
                 .action(ArgAction::Append)
                 .required(true),
         )
