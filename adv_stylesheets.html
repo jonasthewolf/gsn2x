@@ -145,8 +145,9 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="stylesheets-for-svg-rendering"><a class="header" href="#stylesheets-for-svg-rendering">Stylesheets for SVG rendering</a></h1>
-<p>You can provide (multiple) custom CSS stylesheets for SVG via the <code>-s</code> or <code>--stylesheet</code> options. 
-The path may be relative to the current working directory, absolute, or an URL (e.g. starting with http or https).</p>
+<p>You can provide (multiple) custom CSS stylesheets for SVG via the <code>-s</code> or <code>--stylesheet</code> options. </p>
+<p>The path may be relative to the current working directory, absolute, or an URL (e.g. starting with http or https).
+If a relative path is used, it will be translated to an absolute path, since the CSS stylesheet is not copied into the output path. Thus, if you have a complex folder structure, it is encouraged to either use a central CSS stylesheet that is provided via, e.g., <code>http</code>, or embed the stylesheets into the generated SVGs using the <code>-t</code> option.</p>
 <p>Every element will also be addressable by <code>id</code>. The <code>id</code> is the same as the YAML id.</p>
 <p>This table shows the CSS classes assigned to a certain element:</p>
 <div class="table-wrapper"><table><thead><tr><th>Class</th><th>Assigned to</th><th>SVG Element</th></tr></thead><tbody>
@@ -191,6 +192,13 @@ G1:
 </code></pre>
 <p>The result looks like this:</p>
 <p><img src="examples/minimalcss/min.gsn.svg" alt="Styled Example" /></p>
+<h1 id="highlighting-nodes-when-navigating"><a class="header" href="#highlighting-nodes-when-navigating">Highlighting nodes when navigating</a></h1>
+<p>The CSS <code>:target</code> pseudo class can be used to highlight the node you clicked on in the previous image.</p>
+<p>An example could look like this:</p>
+<pre><code class="language-css">g:target path {
+    fill: lightsteelblue;
+}
+</code></pre>
 
                     </main>
 
