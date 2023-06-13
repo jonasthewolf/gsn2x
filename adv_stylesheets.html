@@ -146,7 +146,7 @@
                     <main>
                         <h1 id="stylesheets-for-svg-rendering"><a class="header" href="#stylesheets-for-svg-rendering">Stylesheets for SVG rendering</a></h1>
 <p>You can provide (multiple) custom CSS stylesheets for SVG via the <code>-s</code> or <code>--stylesheet</code> options. 
-The path is not interpreted by gsn2x and, thus, is relative to the SVG if relative.</p>
+The path may be relative to the current working directory, absolute, or an URL (e.g. starting with http or https).</p>
 <p>Every element will also be addressable by <code>id</code>. The <code>id</code> is the same as the YAML id.</p>
 <p>This table shows the CSS classes assigned to a certain element:</p>
 <div class="table-wrapper"><table><thead><tr><th>Class</th><th>Assigned to</th><th>SVG Element</th></tr></thead><tbody>
