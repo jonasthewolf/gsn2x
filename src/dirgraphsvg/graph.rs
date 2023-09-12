@@ -268,7 +268,7 @@ impl<'a> NodeInfoMap<'a> {
     ///
     ///
     fn unvisited_nodes(&mut self) {
-        self.0.iter_mut().for_each(|(_, mut ni)| {
+        self.0.iter_mut().for_each(|(_, ni)| {
             ni.visited = false;
         });
     }

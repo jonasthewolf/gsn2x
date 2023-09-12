@@ -327,7 +327,7 @@ pub fn render_architecture(
         .collect();
     let mut edges: BTreeMap<String, Vec<(String, EdgeType)>> = dependencies
         .into_iter()
-        .map(|(k, v)| (k, Vec::from_iter(v.into_iter())))
+        .map(|(k, v)| (k, Vec::from_iter(v)))
         .collect();
 
     dg = dg
