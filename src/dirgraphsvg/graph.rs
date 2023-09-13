@@ -532,6 +532,16 @@ fn add_in_context_nodes(
                                         i += 1;
                                     }
                                     true
+                                } else if edges
+                                    .values()
+                                    .flatten()
+                                    .filter(|(tn, et)| {
+                                        tn == x && *et == EdgeType::OneWay(SingleEdge::InContextOf)
+                                    })
+                                    .count()
+                                    > 1
+                                {
+                                    false
                                 } else {
                                     i % 2 == 0
                                 }
