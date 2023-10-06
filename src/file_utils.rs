@@ -45,7 +45,7 @@ pub fn get_relative_path(
         .map(|p| p.components().count())
         .unwrap_or(0)
     {
-        x if x == 0 => "./".to_owned(),
+        0 => "./".to_owned(),
         x if x > 0 => "../".repeat(x),
         _ => unreachable!(),
     };

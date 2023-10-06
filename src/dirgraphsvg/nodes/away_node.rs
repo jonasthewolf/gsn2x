@@ -1,4 +1,4 @@
-use svg::node::element::{path::Data, Element, Link, Path, Rectangle, Text, Title, Use};
+use svg::node::element::{path::Data, Anchor, Element, Path, Rectangle, Text, Title, Use};
 
 use crate::dirgraphsvg::{
     nodes::{add_text, OFFSET_IDENTIFIER},
@@ -219,7 +219,7 @@ impl AwayType {
 
         // Module text and links
         if let Some(module_url) = &self.module_url {
-            let mut module_link = Link::new();
+            let mut module_link = Anchor::new();
             module_link = module_link
                 .set("href", escape_url(module_url.as_str()))
                 .add(module_box)

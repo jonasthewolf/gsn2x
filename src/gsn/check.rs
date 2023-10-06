@@ -42,7 +42,7 @@ fn check_root_nodes(
                 ),
             );
         }
-        x if x == 1 => {
+        1 => {
             let rootn = root_nodes.get(0).unwrap(); // unwrap is ok, since we just checked that there is an element in Vec
             if !rootn.starts_with('G') {
                 diag.add_error(

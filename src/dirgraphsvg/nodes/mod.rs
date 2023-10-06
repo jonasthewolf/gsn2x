@@ -1,4 +1,4 @@
-use svg::node::element::{Element, Group, Link};
+use svg::node::element::{Anchor, Element, Group};
 
 use crate::dirgraphsvg::{util::point2d::Point2D, FontInfo};
 
@@ -470,7 +470,7 @@ pub(crate) fn setup_basics(id: &str, classes: &[String], url: &Option<String>) -
     let mut g = Group::new().set("id", escape_node_id(id));
     g = g.set("class", classes.join(" "));
     if let Some(url) = &url {
-        let link = Link::new();
+        let link = Anchor::new();
         link.set("href", escape_url(url.as_str())).add(g).into()
     } else {
         g.into()
