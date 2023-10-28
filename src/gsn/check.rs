@@ -534,10 +534,13 @@ mod test {
     fn wrong_root() {
         let mut d = Diagnostics::default();
         let mut nodes = BTreeMap::<String, GsnNode>::new();
-        nodes.insert("Sn1".to_owned(), GsnNode {
-            node_type: Some(GsnNodeType::Solution),
-            ..Default::default()
-        });
+        nodes.insert(
+            "Sn1".to_owned(),
+            GsnNode {
+                node_type: Some(GsnNodeType::Solution),
+                ..Default::default()
+            },
+        );
         check_nodes(&mut d, &nodes, &[]);
         assert_eq!(d.messages.len(), 1);
         assert_eq!(d.messages[0].module, None);

@@ -75,7 +75,6 @@ impl GsnNode {
             get_node_type_from_text(id)
         }
     }
-
 }
 
 fn get_node_type_from_text(text: &str) -> Option<GsnNodeType> {

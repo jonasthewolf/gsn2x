@@ -68,22 +68,46 @@ fn validate_id(diag: &mut Diagnostics, module: &str, id: &str, node: &GsnNode) {
 /// - Check supported_by references for well-formedness
 /// - Check if undeveloped is correctly set
 ///
-fn validate_references(diag: &mut Diagnostics, module: &str, nodes: &BTreeMap<String, GsnNode>, id: &str, node: &GsnNode) {
+fn validate_references(
+    diag: &mut Diagnostics,
+    module: &str,
+    nodes: &BTreeMap<String, GsnNode>,
+    id: &str,
+    node: &GsnNode,
+) {
     if let Some(in_context_refs) = node.in_context_of.as_ref() {
         let mut valid_ref_types = vec![];
         // Only goals and strategies can have contexts, assumptions and justifications
         if node.node_type == Some(GsnNodeType::Strategy)
             || node.node_type == Some(GsnNodeType::Goal)
         {
-            valid_ref_types.append(&mut vec![GsnNodeType::Justification, GsnNodeType::Assumption, GsnNodeType::Context]);
+            valid_ref_types.append(&mut vec![
+                GsnNodeType::Justification,
+                GsnNodeType::Assumption,
+                GsnNodeType::Context,
+            ]);
         }
-        validate_reference(diag, module, nodes, id, in_context_refs, "context", &valid_ref_types);
+        validate_reference(
+            diag,
+            module,
+            nodes,
+            id,
+            in_context_refs,
+            "context",
+            &valid_ref_types,
+        );
     }
     if let Some(supported_by_refs) = node.supported_by.as_ref() {
         let mut valid_ref_types = vec![];
         // Only goals and strategies can have other goals, strategies and solutions
-        if node.node_type == Some(GsnNodeType::Solution) || node.node_type == Some(GsnNodeType::Goal) {
-            valid_ref_types.append(&mut vec![GsnNodeType::Goal, GsnNodeType::Solution, GsnNodeType::Strategy]);
+        if node.node_type == Some(GsnNodeType::Strategy)
+            || node.node_type == Some(GsnNodeType::Goal)
+        {
+            valid_ref_types.append(&mut vec![
+                GsnNodeType::Goal,
+                GsnNodeType::Solution,
+                GsnNodeType::Strategy,
+            ]);
         }
         validate_reference(
             diag,
@@ -122,7 +146,7 @@ fn validate_reference(
     node: &str,
     refs: &[String],
     diag_str: &str,
-    valid_ref_types: &[GsnNodeType],
+    valid_ref_types: &Vec<GsnNodeType>,
 ) {
     // HashSet ok, since order is never important.
     let mut set = HashSet::with_capacity(refs.len());
@@ -139,11 +163,17 @@ fn validate_reference(
                 format!("V05: Element {node} has duplicate entry {n} in {diag_str}."),
             );
         }
-        if !valid_ref_types.iter().any(|r| nodes.get(n).unwrap().node_type == Some(*r)) {
-            diag.add_error(
-                Some(module),
-                format!("V04: Element {node} has invalid type of reference {n} in {diag_str}."),
-            );
+        if let Some(ref_node) = nodes.get(n) {
+            if let Some(ref_node_type) = ref_node.node_type {
+                if !valid_ref_types.iter().any(|&r| ref_node_type == r) {
+                    diag.add_error(
+                        Some(module),
+                        format!(
+                            "V04: Element {node} has invalid type of reference {n} in {diag_str}."
+                        ),
+                    );
+                }
+            }
         }
     }
 }
@@ -385,14 +415,20 @@ mod test {
                 ..Default::default()
             },
         );
-        nodes.insert("Sn1".to_owned(), GsnNode {
-            node_type: Some(GsnNodeType::Solution),
-            ..Default::default()
-        });
-        nodes.insert("C1".to_owned(), GsnNode{
-            node_type: Some(GsnNodeType::Context),
-            ..Default::default()
-        });
+        nodes.insert(
+            "Sn1".to_owned(),
+            GsnNode {
+                node_type: Some(GsnNodeType::Solution),
+                ..Default::default()
+            },
+        );
+        nodes.insert(
+            "C1".to_owned(),
+            GsnNode {
+                node_type: Some(GsnNodeType::Context),
+                ..Default::default()
+            },
+        );
         validate_module(&mut d, "", &Module::default(), &mut nodes);
         assert_eq!(d.messages.len(), 1);
         assert_eq!(d.messages[0].module, Some("".to_owned()));
@@ -466,10 +502,13 @@ mod test {
                 ..Default::default()
             },
         );
-        nodes.insert("Sn1".to_owned(), GsnNode {
-            node_type: Some(GsnNodeType::Solution),
-            ..Default::default()
-        });
+        nodes.insert(
+            "Sn1".to_owned(),
+            GsnNode {
+                node_type: Some(GsnNodeType::Solution),
+                ..Default::default()
+            },
+        );
         validate_module(&mut d, "", &Module::default(), &mut nodes);
         assert_eq!(d.messages.len(), 3);
         assert_eq!(d.messages[0].module, Some("".to_owned()));
@@ -506,18 +545,27 @@ mod test {
                 ..Default::default()
             },
         );
-        nodes.insert("C1".to_owned(), GsnNode {
-            node_type: Some(GsnNodeType::Context),
-            ..Default::default()
-        });
-        nodes.insert("J1".to_owned(), GsnNode {
-            node_type: Some(GsnNodeType::Justification),
-            ..Default::default()
-        });
-        nodes.insert("A1".to_owned(), GsnNode {
-            node_type: Some(GsnNodeType::Assumption),
-            ..Default::default()
-        });
+        nodes.insert(
+            "C1".to_owned(),
+            GsnNode {
+                node_type: Some(GsnNodeType::Context),
+                ..Default::default()
+            },
+        );
+        nodes.insert(
+            "J1".to_owned(),
+            GsnNode {
+                node_type: Some(GsnNodeType::Justification),
+                ..Default::default()
+            },
+        );
+        nodes.insert(
+            "A1".to_owned(),
+            GsnNode {
+                node_type: Some(GsnNodeType::Assumption),
+                ..Default::default()
+            },
+        );
         validate_module(&mut d, "", &Module::default(), &mut nodes);
         assert_eq!(d.messages.len(), 3);
         assert_eq!(d.messages[0].module, Some("".to_owned()));
@@ -546,10 +594,13 @@ mod test {
     fn undeveloped_goal() {
         let mut d = Diagnostics::default();
         let mut nodes = BTreeMap::<String, GsnNode>::new();
-        nodes.insert("G1".to_owned(), GsnNode {
-            node_type: Some(GsnNodeType::Goal),
-            ..Default::default()
-        });
+        nodes.insert(
+            "G1".to_owned(),
+            GsnNode {
+                node_type: Some(GsnNodeType::Goal),
+                ..Default::default()
+            },
+        );
         nodes.insert(
             "G2".to_owned(),
             GsnNode {
@@ -574,10 +625,13 @@ mod test {
     fn undeveloped_strategy() {
         let mut d = Diagnostics::default();
         let mut nodes = BTreeMap::<String, GsnNode>::new();
-        nodes.insert("S1".to_owned(), GsnNode {
-            node_type: Some(GsnNodeType::Strategy),
-            ..Default::default()
-        });
+        nodes.insert(
+            "S1".to_owned(),
+            GsnNode {
+                node_type: Some(GsnNodeType::Strategy),
+                ..Default::default()
+            },
+        );
         nodes.insert(
             "S2".to_owned(),
             GsnNode {
@@ -611,10 +665,13 @@ mod test {
                 ..Default::default()
             },
         );
-        nodes.insert("Sn2".to_owned(), GsnNode {
-            node_type: Some(GsnNodeType::Solution),
-            ..Default::default()
-        });
+        nodes.insert(
+            "Sn2".to_owned(),
+            GsnNode {
+                node_type: Some(GsnNodeType::Solution),
+                ..Default::default()
+            },
+        );
         validate_module(&mut d, "", &Module::default(), &mut nodes);
         assert_eq!(d.messages.len(), 1);
         assert_eq!(d.messages[0].module, Some("".to_owned()));
