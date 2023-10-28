@@ -261,6 +261,7 @@ C1:
 <tr><td>url</td><td>yes</td></tr>
 <tr><td>classes<sup class="footnote-reference"><a href="#nc">2</a></sup></td><td>yes</td></tr>
 <tr><td>level<sup class="footnote-reference"><a href="#nl">3</a></sup></td><td>yes</td></tr>
+<tr><td>nodeType<sup class="footnote-reference"><a href="#nt">4</a></sup></td><td>yes</td></tr>
 </tbody></table>
 </div>
 <div class="footnote-definition" id="nu"><sup class="footnote-definition-label">1</sup>
@@ -271,6 +272,10 @@ C1:
 </div>
 <div class="footnote-definition" id="nl"><sup class="footnote-definition-label">3</sup>
 <p>See <a href="./adv_layout.html">Layout</a>.</p>
+</div>
+<div class="footnote-definition" id="nt"><sup class="footnote-definition-label">4</sup>
+<p>When providing a <code>nodeType</code> you do not need to follow the standard prefix scheme above.
+Just give <code>Goal</code>, <code>Assumption</code>, <code>Justification</code>, <code>Solution</code>, <code>Context</code> and <code>Strategy</code> to give the type of the element.</p>
 </div>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="checks"><a class="header" href="#checks">Checks</a></h1>
 <h2 id="validation-checks"><a class="header" href="#validation-checks">Validation checks</a></h2>
@@ -564,6 +569,12 @@ free and open-source software might be limited, I try to keep the dependencies o
 as few as possible.</p>
 <p>I used a very relaxed license and try to take care that it is compatible with those of the dependencies.</p>
 </li>
+<li>
+<p>Full control by the user how the diagram is layed out</p>
+<p>Creating an optimal rendering for all different use-cases is incredibly difficult.
+I failed in creating an algorithm that would allow for that. 
+When trying I recognized that it is anyhow preferable to give the user full control over how the diagram should look like.</p>
+</li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="history"><a class="header" href="#history">History</a></h1>
 <p>I also noticed that (also for myself) it is good to note down some history of the project:</p>
@@ -585,6 +596,11 @@ I released the first Rust version in July 2021.</p>
 I finally made decided to no longer output DOT, but directly generate SVGs from the program.
 This required writing a specialized version for rendering the tree on my own which ended up in version 2 
 finally released in April 2022.</p>
+</li>
+<li>
+<p>I tried hard improving the layout algorithm over time but I failed to come up with a satisfying solution.
+Moreover, I recognized that it is anyway preferable if the user is in full control of the layout of the diagram.
+Thus, I decided to redesign the layout algorithm and create version 3.</p>
 </li>
 </ul>
 <p>Any feedback, especially the use-case in your company is very much appreciated.</p>
