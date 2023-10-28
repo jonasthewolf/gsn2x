@@ -69,9 +69,13 @@ Please see [examples/example.gsn.yaml](examples/example.gsn.yaml) for an example
 | url              |    yes   |   
 | classes[^nc]     |    yes   |
 | level[^nl]       |    yes   |
+| nodeType[^nt]    |    yes   |
 
 [^nu]: Mutually exclusive to `supportedBy`.
 
 [^nc]: See [Stylesheets](./adv_stylesheets.md).
 
 [^nl]: See [Layout](./adv_layout.md).
+
+[^nt]: When providing a `nodeType` you do not need to follow the standard prefix scheme above.
+       Just give `Goal`, `Assumption`, `Justification`, `Solution`, `Context` and `Strategy` to give the type of the element.
