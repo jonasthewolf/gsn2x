@@ -1,8 +1,8 @@
-[![License: CC BY 4.0](https://img.shields.io/github/license/jonasthewolf/gsn2x)](https://creativecommons.org/licenses/by/4.0/)
-[![CI](https://img.shields.io/github/actions/workflow/status/jonasthewolf/gsn2x/rust.yml?branch=main&label=CI)](https://github.com/jonasthewolf/gsn2x/actions/workflows/rust.yml)
+[![License: MIT](https://img.shields.io/github/license/jonasthewolf/gsn2x)](https://opensource.org/licenses/MIT)
+[![tests](https://img.shields.io/github/actions/workflow/status/jonasthewolf/gsn2x/rust.yml?branch=main&label=tests)](https://github.com/jonasthewolf/gsn2x/actions/workflows/rust.yml)
 [![codecov](https://img.shields.io/codecov/c/github/jonasthewolf/gsn2x/main?token=YQKUQQOYS3)](https://codecov.io/gh/jonasthewolf/gsn2x)
-![LoC](https://img.shields.io/tokei/lines/github/jonasthewolf/gsn2x)
-[![Downloads](https://img.shields.io/github/downloads/jonasthewolf/gsn2x/total)](https://github.com/jonasthewolf/gsn2x/releases)
+![size](https://img.shields.io/tokei/lines/github/jonasthewolf/gsn2x)
+[![downloads](https://img.shields.io/github/languages/code-size/jonasthewolf/gsn2x)](https://github.com/jonasthewolf/gsn2x/releases)
 
 # gsn2x
 
