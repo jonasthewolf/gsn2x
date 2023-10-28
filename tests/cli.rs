@@ -57,7 +57,7 @@ mod integrations {
         // Order is important.
         let replaces = vec![
             (
-                Regex::new(r#" gsn_module_\w+"#).unwrap(),
+                Regex::new(r" gsn_module_\w+").unwrap(),
                 " gsn_module_replaced",
             ),
             (
@@ -69,7 +69,7 @@ mod integrations {
                 Regex::new(r#" font-family="([0-9A-Za-z-_]|\\.|\\u[0-9a-fA-F]{1,4})+""#).unwrap(),
                 " font-family=\"\"",
             ),
-            (Regex::new(r#"(-?\d+,-?\d+[, ]?)+"#).unwrap(), ""),
+            (Regex::new(r"(-?\d+,-?\d+[, ]?)+").unwrap(), ""),
             (
                 Regex::new(r#"d="((?P<cmd>[A-Za-z]+)(:?-?\d+(:?,-?\d+)?)? ?(?P<cmd2>z?))+""#)
                     .unwrap(),
