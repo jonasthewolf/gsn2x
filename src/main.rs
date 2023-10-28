@@ -290,6 +290,7 @@ fn read_inputs(
                         GsnDocumentNode::GsnNode(mut x) => {
                             // Remember module for node
                             x.module = module.to_owned();
+                            x.fix_node_type(&k);
                             e.insert(x);
                         }
                         _ => unreachable!(), // There can be only one MetaNode

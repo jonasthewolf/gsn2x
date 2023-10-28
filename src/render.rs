@@ -1,7 +1,7 @@
 use crate::dirgraphsvg::edges::EdgeType;
 use crate::dirgraphsvg::{escape_node_id, escape_text, nodes::Node};
 use crate::file_utils::{get_filename, get_relative_path, set_extension, translate_to_output_path};
-use crate::gsn::{get_levels, GsnNode, Module};
+use crate::gsn::{get_levels, GsnNode, GsnNodeType, Module};
 use anyhow::{Context, Result};
 use chrono::Utc;
 use clap::ArgMatches;
@@ -126,34 +126,32 @@ pub fn svg_from_gsn_node(id: &str, gsn_node: &GsnNode, layers: &[String]) -> Nod
     // Add layer to node output
     let node_text = node_text_from_node_and_layers(gsn_node, layers);
     // Create node
-    match id {
-        id if id.starts_with('G') => Node::new_goal(
+    match gsn_node.node_type.unwrap() {
+        // unwrap ok, since checked during validation
+        GsnNodeType::Goal => Node::new_goal(
             id,
             &node_text,
             gsn_node.undeveloped.unwrap_or(false),
             gsn_node.url.to_owned(),
             classes,
         ),
-        id if id.starts_with("Sn") => {
+        GsnNodeType::Solution => {
             Node::new_solution(id, &node_text, gsn_node.url.to_owned(), classes)
         }
-        id if id.starts_with('S') => Node::new_strategy(
+        GsnNodeType::Strategy => Node::new_strategy(
             id,
             &node_text,
             gsn_node.undeveloped.unwrap_or(false),
             gsn_node.url.to_owned(),
             classes,
         ),
-        id if id.starts_with('C') => {
-            Node::new_context(id, &node_text, gsn_node.url.to_owned(), classes)
-        }
-        id if id.starts_with('A') => {
+        GsnNodeType::Context => Node::new_context(id, &node_text, gsn_node.url.to_owned(), classes),
+        GsnNodeType::Assumption => {
             Node::new_assumption(id, &node_text, gsn_node.url.to_owned(), classes)
         }
-        id if id.starts_with('J') => {
+        GsnNodeType::Justification => {
             Node::new_justification(id, &node_text, gsn_node.url.to_owned(), classes)
         }
-        _ => unreachable!(),
     }
 }
 
@@ -231,8 +229,9 @@ pub fn away_svg_from_gsn_node(
     let node_text = node_text_from_node_and_layers(gsn_node, layers);
 
     // Create node
-    Ok(match id {
-        id if id.starts_with('G') => Node::new_away_goal(
+    Ok(match gsn_node.node_type.unwrap() {
+        // unwrap ok, since checked during validation
+        GsnNodeType::Goal => Node::new_away_goal(
             id,
             &node_text,
             &gsn_node.module,
@@ -240,7 +239,7 @@ pub fn away_svg_from_gsn_node(
             gsn_node.url.to_owned(),
             classes,
         ),
-        id if id.starts_with("Sn") => Node::new_away_solution(
+        GsnNodeType::Solution => Node::new_away_solution(
             id,
             &node_text,
             &gsn_node.module,
@@ -248,14 +247,14 @@ pub fn away_svg_from_gsn_node(
             gsn_node.url.to_owned(),
             classes,
         ),
-        id if id.starts_with('S') => Node::new_strategy(
+        GsnNodeType::Strategy => Node::new_strategy(
             id,
             &node_text,
             gsn_node.undeveloped.unwrap_or(false),
             Some(module_url), // Use module_url if Strategy is not defined in current module.
             classes,
         ),
-        id if id.starts_with('C') => Node::new_away_context(
+        GsnNodeType::Context => Node::new_away_context(
             id,
             &node_text,
             &gsn_node.module,
@@ -263,7 +262,7 @@ pub fn away_svg_from_gsn_node(
             gsn_node.url.to_owned(),
             classes,
         ),
-        id if id.starts_with('A') => Node::new_away_assumption(
+        GsnNodeType::Assumption => Node::new_away_assumption(
             id,
             &node_text,
             &gsn_node.module,
@@ -271,7 +270,7 @@ pub fn away_svg_from_gsn_node(
             gsn_node.url.to_owned(),
             classes,
         ),
-        id if id.starts_with('J') => Node::new_away_justification(
+        GsnNodeType::Justification => Node::new_away_justification(
             id,
             &node_text,
             &gsn_node.module,
@@ -279,7 +278,6 @@ pub fn away_svg_from_gsn_node(
             gsn_node.url.to_owned(),
             classes,
         ),
-        _ => unreachable!(), // Prefixes are checked during validation.
     })
 }
 
@@ -518,7 +516,7 @@ pub(crate) fn render_evidences(
 
     let mut solutions: Vec<(&String, &GsnNode)> = nodes
         .iter()
-        .filter(|(id, _)| id.starts_with("Sn"))
+        .filter(|(_, node)| node.node_type == Some(GsnNodeType::Solution))
         .collect();
     solutions.sort_by_key(|(k, _)| *k);
     if solutions.is_empty() {
@@ -566,7 +564,6 @@ pub(crate) fn render_evidences(
 
 #[cfg(test)]
 mod test {
-    use std::collections::BTreeMap;
 
     use crate::gsn::GsnNode;
 
@@ -575,17 +572,7 @@ mod test {
     #[test]
     #[should_panic]
     fn cover_unreachable() {
-        let gsn_node = GsnNode {
-            text: "".to_owned(),
-            in_context_of: None,
-            supported_by: None,
-            undeveloped: None,
-            classes: None,
-            url: None,
-            level: None,
-            additional: BTreeMap::new(),
-            module: "".to_owned(),
-        };
+        let gsn_node = GsnNode::default();
         svg_from_gsn_node("X2", &gsn_node, &[]);
     }
 }

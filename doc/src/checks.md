@@ -9,13 +9,14 @@ Validations can be performed on individual input files.
 
 | ID  | Meaning                                                                                      |
 |-----|----------------------------------------------------------------------------------------------|
-| V01 | All IDs must start with a known prefix i.e., there are only known element types.             |
+| V01 | All IDs must either start with a known prefix or a `node_type` must explicitly set.          |
 | V02 | All Goals and Strategies must be either marked with `undeveloped: true` or have supporting Goals, Strategies or Solutions. |
 | V03 | Goals and Strategies marked as undeveloped, must have no supporting arguments.               |
 | V04 | All elements listed under `supportedBy` and `inContextOf` must be known elements types and semantically sensible (e.g. a Justification cannot be listed under `supportedBy`). |
 | V05 | All referenced elements in `supportedBy` and `inContextOf` must be unique i.e., no duplicates in the list.  |
 | V06 | All referenced elements in `supportedBy` and `inContextOf` must not refer to the element itself.            |
 | V07 | All elements listed as extending other elements must be known elements of the current module and semantically sensible (see V04). |
+| V08 | The IDs start contradicts the type of the element set with `node_type`. |
 
 The following checks apply to the complete set of input files.
 

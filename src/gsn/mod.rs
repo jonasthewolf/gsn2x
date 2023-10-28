@@ -3,10 +3,29 @@ use crate::{
     dirgraphsvg::edges::{EdgeType, SingleEdge},
 };
 use serde::Deserialize;
-use std::collections::{BTreeMap, BTreeSet, HashMap};
+use std::{
+    collections::{BTreeMap, BTreeSet, HashMap},
+    fmt::Display,
+};
 
 pub mod check;
 pub mod validation;
+
+#[derive(Clone, Copy, Debug, Deserialize, PartialEq, Eq)]
+pub enum GsnNodeType {
+    Goal,
+    Strategy,
+    Solution,
+    Justification,
+    Context,
+    Assumption,
+}
+
+impl Display for GsnNodeType {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_fmt(format_args!("{:?}", self))
+    }
+}
 
 ///
 /// The main struct of this program
@@ -26,6 +45,7 @@ pub struct GsnNode {
     pub(crate) additional: BTreeMap<String, String>,
     #[serde(skip_deserializing)]
     pub(crate) module: String,
+    pub(crate) node_type: Option<GsnNodeType>,
 }
 
 impl GsnNode {
@@ -46,6 +66,28 @@ impl GsnNode {
             edges.append(&mut es);
         }
         edges
+    }
+
+    pub fn fix_node_type(&mut self, id: &str) {
+        self.node_type = if let Some(node_type) = self.node_type {
+            Some(node_type)
+        } else {
+            get_node_type_from_text(id)
+        }
+    }
+
+}
+
+fn get_node_type_from_text(text: &str) -> Option<GsnNodeType> {
+    // Order is important due to Sn and S
+    match text {
+        id if id.starts_with('G') => Some(GsnNodeType::Goal),
+        id if id.starts_with("Sn") => Some(GsnNodeType::Solution),
+        id if id.starts_with('S') => Some(GsnNodeType::Strategy),
+        id if id.starts_with('C') => Some(GsnNodeType::Context),
+        id if id.starts_with('A') => Some(GsnNodeType::Assumption),
+        id if id.starts_with('J') => Some(GsnNodeType::Justification),
+        _ => None,
     }
 }
 

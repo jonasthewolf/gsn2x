@@ -1,4 +1,4 @@
-use super::GsnNode;
+use super::{GsnNode, GsnNodeType};
 use crate::diagnostics::Diagnostics;
 use std::collections::{BTreeMap, BTreeSet};
 
@@ -44,7 +44,7 @@ fn check_root_nodes(
         }
         1 => {
             let rootn = root_nodes.get(0).unwrap(); // unwrap is ok, since we just checked that there is an element in Vec
-            if !rootn.starts_with('G') {
+            if nodes.get(rootn).unwrap().node_type != Some(GsnNodeType::Goal) {
                 diag.add_error(
                     None,
                     format!("C02: The root element should be a goal, but {rootn} was found."),
@@ -140,7 +140,7 @@ fn check_cycles(diag: &mut Diagnostics, nodes: &BTreeMap<String, GsnNode>) {
             .supported_by
             .iter()
             .flatten()
-            .filter(|x| !x.starts_with("Sn"))
+            .filter(|&x| nodes.get(x).unwrap().node_type != Some(GsnNodeType::Solution))
             .count()
             > 0
         {
@@ -161,7 +161,7 @@ fn check_cycles(diag: &mut Diagnostics, nodes: &BTreeMap<String, GsnNode>) {
         for child_node in nodes.get(&p_id).unwrap().supported_by.iter().flatten() {
             // Remember the solutions for reachability analysis.
             visited.insert(child_node.to_owned());
-            if !child_node.starts_with("Sn") {
+            if nodes.get(child_node).unwrap().node_type != Some(GsnNodeType::Solution) {
                 if ancestors.contains(child_node) {
                     diag.add_error(
                         None,
@@ -271,6 +271,7 @@ mod test {
             GsnNode {
                 in_context_of: Some(vec!["C1".to_owned()]),
                 undeveloped: Some(true),
+                node_type: Some(GsnNodeType::Goal),
                 ..Default::default()
             },
         );
@@ -294,6 +295,7 @@ mod test {
             "G1".to_owned(),
             GsnNode {
                 supported_by: Some(vec!["G2".to_owned()]),
+                node_type: Some(GsnNodeType::Goal),
                 ..Default::default()
             },
         );
@@ -415,6 +417,7 @@ mod test {
             "G1".to_owned(),
             GsnNode {
                 supported_by: Some(vec!["S1".to_owned()]),
+                node_type: Some(GsnNodeType::Goal),
                 ..Default::default()
             },
         );
@@ -422,6 +425,7 @@ mod test {
             "S1".to_owned(),
             GsnNode {
                 supported_by: Some(vec!["G2".to_owned(), "G3".to_owned()]),
+                node_type: Some(GsnNodeType::Strategy),
                 ..Default::default()
             },
         );
@@ -429,6 +433,7 @@ mod test {
             "G2".to_owned(),
             GsnNode {
                 undeveloped: Some(true),
+                node_type: Some(GsnNodeType::Goal),
                 ..Default::default()
             },
         );
@@ -436,6 +441,7 @@ mod test {
             "G3".to_owned(),
             GsnNode {
                 supported_by: Some(vec!["G2".to_owned()]),
+                node_type: Some(GsnNodeType::Goal),
                 ..Default::default()
             },
         );
@@ -453,6 +459,7 @@ mod test {
             "G1".to_owned(),
             GsnNode {
                 supported_by: Some(vec!["S1".to_owned()]),
+                node_type: Some(GsnNodeType::Goal),
                 ..Default::default()
             },
         );
@@ -460,6 +467,7 @@ mod test {
             "S1".to_owned(),
             GsnNode {
                 supported_by: Some(vec!["G2".to_owned()]),
+                node_type: Some(GsnNodeType::Strategy),
                 ..Default::default()
             },
         );
@@ -467,12 +475,14 @@ mod test {
             "G2".to_owned(),
             GsnNode {
                 supported_by: Some(vec!["G1".to_owned()]),
+                node_type: Some(GsnNodeType::Goal),
                 ..Default::default()
             },
         );
         nodes.insert(
             "Sn1".to_owned(),
             GsnNode {
+                node_type: Some(GsnNodeType::Solution),
                 ..Default::default()
             },
         );
@@ -481,6 +491,7 @@ mod test {
             GsnNode {
                 supported_by: Some(vec!["Sn1".to_owned(), "G4".to_owned()]),
                 in_context_of: Some(vec!["A1".to_owned()]),
+                node_type: Some(GsnNodeType::Goal),
                 ..Default::default()
             },
         );
@@ -489,18 +500,21 @@ mod test {
             GsnNode {
                 undeveloped: Some(true),
                 in_context_of: Some(vec!["J1".to_owned()]),
+                node_type: Some(GsnNodeType::Goal),
                 ..Default::default()
             },
         );
         nodes.insert(
             "A1".to_owned(),
             GsnNode {
+                node_type: Some(GsnNodeType::Assumption),
                 ..Default::default()
             },
         );
         nodes.insert(
             "J1".to_owned(),
             GsnNode {
+                node_type: Some(GsnNodeType::Justification),
                 ..Default::default()
             },
         );
@@ -520,7 +534,10 @@ mod test {
     fn wrong_root() {
         let mut d = Diagnostics::default();
         let mut nodes = BTreeMap::<String, GsnNode>::new();
-        nodes.insert("Sn1".to_owned(), GsnNode::default());
+        nodes.insert("Sn1".to_owned(), GsnNode {
+            node_type: Some(GsnNodeType::Solution),
+            ..Default::default()
+        });
         check_nodes(&mut d, &nodes, &[]);
         assert_eq!(d.messages.len(), 1);
         assert_eq!(d.messages[0].module, None);
@@ -638,6 +655,7 @@ mod test {
             GsnNode {
                 undeveloped: Some(true),
                 level: Some("test".to_owned()),
+                node_type: Some(GsnNodeType::Goal),
                 ..Default::default()
             },
         );
