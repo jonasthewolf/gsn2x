@@ -32,7 +32,7 @@ jobs:
       uses: actions-rs/clippy-check@v1
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
-        args: --all-features --all
+        args: --all-features --all --all-targets
     - name: Cargo deny
       uses: EmbarkStudios/cargo-deny-action@v1
   
