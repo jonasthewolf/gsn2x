@@ -2,13 +2,12 @@ use crate::dirgraphsvg::edges::EdgeType;
 use crate::dirgraphsvg::{escape_node_id, escape_text, nodes::Node};
 use crate::file_utils::{get_filename, get_relative_path, set_extension, translate_to_output_path};
 use crate::gsn::{get_levels, GsnNode, GsnNodeType, Module};
-use anyhow::{Context, Result};
+use anyhow::Result;
 use chrono::Utc;
 use clap::ArgMatches;
 
 use std::collections::{BTreeMap, HashMap};
 use std::io::Write;
-use std::path::PathBuf;
 
 #[derive(Default, Eq, PartialEq)]
 pub enum RenderLegend {
@@ -26,12 +25,17 @@ pub struct RenderOptions {
     pub architecture_filename: Option<String>,
     pub evidences_filename: Option<String>,
     pub complete_filename: Option<String>,
-    pub output_directory: String,
+    pub output_directory: Option<String>,
     pub skip_argument: bool,
 }
 
-impl From<&ArgMatches> for RenderOptions {
-    fn from(matches: &ArgMatches) -> Self {
+impl RenderOptions {
+    pub fn new(
+        matches: &ArgMatches,
+        stylesheets: Vec<String>,
+        embed_stylesheets: bool,
+        output_directory: Option<&String>,
+    ) -> Self {
         let legend = if matches.get_flag("NO_LEGEND") {
             RenderLegend::No
         } else if matches.get_flag("FULL_LEGEND") {
@@ -44,40 +48,6 @@ impl From<&ArgMatches> for RenderOptions {
             .into_iter()
             .flatten()
             .cloned()
-            .collect::<Vec<_>>();
-
-        let embed_stylesheets = matches.get_flag("EMBED_CSS");
-
-        let stylesheets = matches
-            .get_many::<String>("STYLESHEETS")
-            .into_iter()
-            .flatten()
-            .map(|css| {
-                // If stylesheets are not embedded transform their path.
-                if embed_stylesheets {
-                    css.to_owned()
-                } else {
-                    let path_css = PathBuf::from(css);
-                    if css.starts_with("http://")
-                        || css.starts_with("https://")
-                        || css.starts_with("file://")
-                    {
-                        format!("url({css})")
-                    } else if path_css.is_relative() {
-                        let path = path_css
-                            .canonicalize()
-                            .with_context(|| {
-                                format!("Stylesheet {} is not found.", path_css.display())
-                            })
-                            .unwrap()
-                            .to_string_lossy()
-                            .into_owned();
-                        format!("\"{path}\"")
-                    } else {
-                        format!("\"{css}\"")
-                    }
-                }
-            })
             .collect::<Vec<_>>();
 
         RenderOptions {
@@ -107,10 +77,7 @@ impl From<&ArgMatches> for RenderOptions {
                     .and_then(|p| get_filename(p))
                     .map(|f| f.to_owned()),
             },
-            output_directory: matches
-                .get_one::<String>("OUTPUT_DIRECTORY")
-                .unwrap()
-                .to_owned(), // Default value is used.
+            output_directory: output_directory.cloned(),
             skip_argument: matches.get_flag("NO_ARGUMENT_VIEW"),
         }
     }

@@ -5,6 +5,7 @@ use render::RenderOptions;
 use std::collections::{BTreeMap, HashMap};
 use std::fs::File;
 use std::io::BufReader;
+use std::path::PathBuf;
 
 mod diagnostics;
 mod dirgraphsvg;
@@ -118,7 +119,6 @@ fn main() -> Result<()> {
                 .short('o')
                 .long("output-dir")
                 .action(ArgAction::Set)
-                .default_value(".")
                 .conflicts_with("CHECKONLY")
                 .help_heading("OUTPUT"),
         )
@@ -212,7 +212,18 @@ fn main() -> Result<()> {
     validate_and_check(&mut nodes, &modules, &mut diags, &excluded_modules, &layers);
 
     if diags.errors == 0 && !matches.get_flag("CHECKONLY") {
-        let render_options = RenderOptions::from(&matches);
+        let embed_stylesheets = matches.get_flag("EMBED_CSS");
+        let output_directory = matches.get_one::<String>("OUTPUT_DIRECTORY");
+        let mut stylesheets = matches
+            .get_many::<String>("STYLESHEETS")
+            .into_iter()
+            .flatten()
+            .map(|css| css.to_owned())
+            .collect::<Vec<_>>();
+        // Copy stylesheets if necessary and prepare paths
+        copy_and_prepare_stylesheets(&mut stylesheets, embed_stylesheets, &output_directory)?;
+        let render_options =
+            RenderOptions::new(&matches, stylesheets, embed_stylesheets, output_directory);
         // Output views
         print_outputs(nodes, &modules, &render_options, common_ancestors)?;
     }
@@ -358,11 +369,14 @@ fn print_outputs(
     render_options: &RenderOptions,
     common_ancestors: String,
 ) -> Result<()> {
-    let output_path = &render_options.output_directory;
+    let output_path = render_options
+        .output_directory
+        .to_owned()
+        .unwrap_or(".".to_owned());
     if !render_options.skip_argument {
         for (module_name, module) in modules {
             let output_path = set_extension(
-                &translate_to_output_path(output_path, &module.relative_module_path, None)?,
+                &translate_to_output_path(&output_path, &module.relative_module_path, None)?,
                 "svg",
             );
             let mut output_file = Box::new(
@@ -382,7 +396,7 @@ fn print_outputs(
     if modules.len() > 1 {
         if let Some(architecture_filename) = &render_options.architecture_filename {
             let arch_output_path = translate_to_output_path(
-                output_path,
+                &output_path,
                 architecture_filename,
                 Some(&common_ancestors),
             )?;
@@ -395,12 +409,12 @@ fn print_outputs(
                 deps,
                 render_options,
                 &arch_output_path,
-                output_path,
+                &output_path,
             )?;
         }
         if let Some(complete_filename) = &render_options.complete_filename {
             let output_path =
-                translate_to_output_path(output_path, complete_filename, Some(&common_ancestors))?;
+                translate_to_output_path(&output_path, complete_filename, Some(&common_ancestors))?;
             let mut output_file = File::create(&output_path)
                 .context(format!("Failed to open output file {output_path}"))?;
             render::render_complete(&mut output_file, &nodes, render_options)?;
@@ -408,7 +422,7 @@ fn print_outputs(
     }
     if let Some(evidences_filename) = &render_options.evidences_filename {
         let output_path =
-            translate_to_output_path(output_path, evidences_filename, Some(&common_ancestors))?;
+            translate_to_output_path(&output_path, evidences_filename, Some(&common_ancestors))?;
         let mut output_file = File::create(&output_path)
             .context(format!("Failed to open output file {output_path}"))?;
         render::render_evidences(&mut output_file, &nodes, render_options)?;
@@ -436,6 +450,51 @@ fn output_messages(diags: &Diagnostics) -> Result<()> {
             diags.warnings
         ))
     }
+}
+
+///
+///
+///
+///
+pub(crate) fn copy_and_prepare_stylesheets(
+    stylesheets: &mut [String],
+    embed_stylesheets: bool,
+    output_directory: &Option<&String>,
+) -> Result<()> {
+    for stylesheet in stylesheets {
+        let new_name = if stylesheet.starts_with("http://")
+            || stylesheet.starts_with("https://")
+            || stylesheet.starts_with("file://")
+        {
+            // Stylesheets provided as a URL, are neither copied nor embedded
+            format!("url({stylesheet})")
+        } else if embed_stylesheets {
+            // No need to transform path when embedding stylesheets
+            stylesheet.to_owned()
+        } else if let Some(output_directory) = output_directory {
+            // Copy stylesheet to output path
+            let css_path = PathBuf::from(&stylesheet);
+            let mut out_path = PathBuf::from(output_directory);
+            std::fs::create_dir_all(&out_path)?;
+            out_path.push(css_path.file_name().ok_or(anyhow!(
+                "Could not identify stylesheet filename in {}",
+                stylesheet
+            ))?);
+            std::fs::copy(&css_path, &out_path).with_context(|| {
+                format!(
+                    "Could not copy stylesheet from {} to {}",
+                    css_path.display(),
+                    &out_path.display()
+                )
+            })?;
+            out_path.to_string_lossy().to_string().to_owned()
+        } else {
+            stylesheet.to_owned()
+        };
+        *stylesheet = new_name.to_owned();
+    }
+
+    Ok(())
 }
 
 #[cfg(test)]
