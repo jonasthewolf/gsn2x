@@ -157,7 +157,7 @@ pub fn translate_to_output_path(
     if let Some(dir) = output_path.parent() {
         if !dir.exists() {
             create_dir_all(dir)
-                .with_context(|| format!("Trying to create directory {}", dir.to_string_lossy()))?;
+                .with_context(|| format!("Trying to create directory {}", dir.display()))?;
         }
     }
     Ok(output_path.to_string_lossy().into_owned())
