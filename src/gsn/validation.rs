@@ -164,15 +164,14 @@ fn validate_reference(
             );
         }
         if let Some(ref_node) = nodes.get(n) {
-            if let Some(ref_node_type) = ref_node.node_type {
-                if !valid_ref_types.iter().any(|&r| ref_node_type == r) {
-                    diag.add_error(
-                        Some(module),
-                        format!(
-                            "V04: Element {node} has invalid type of reference {n} in {diag_str}."
-                        ),
-                    );
-                }
+            if !valid_ref_types
+                .iter()
+                .any(|&r| ref_node.node_type.unwrap() == r)
+            {
+                diag.add_error(
+                    Some(module),
+                    format!("V04: Element {node} has invalid type of reference {n} in {diag_str}."),
+                );
             }
         }
     }
@@ -248,6 +247,17 @@ mod test {
             "V01: Element X1 is of unknown type. Please see README for supported types"
         );
         assert_eq!(d.errors, 1);
+        assert_eq!(d.warnings, 0);
+    }
+
+    #[test]
+    fn unknown_id_no_type() {
+        // validate_id is not supposed to detect that situation
+        let mut d = Diagnostics::default();
+        let node = GsnNode::default();
+        validate_id(&mut d, "", "X1", &node);
+        assert_eq!(d.messages.len(), 0);
+        assert_eq!(d.errors, 0);
         assert_eq!(d.warnings, 0);
     }
 
