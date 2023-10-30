@@ -189,7 +189,7 @@ impl<'a> NodeInfoMap<'a> {
                 }
             }
         }
-        self.unvisited_nodes();
+        self.unvisit_nodes();
     }
 
     ///
@@ -267,7 +267,7 @@ impl<'a> NodeInfoMap<'a> {
     ///
     ///
     ///
-    fn unvisited_nodes(&mut self) {
+    fn unvisit_nodes(&mut self) {
         self.0.iter_mut().for_each(|(_, ni)| {
             ni.visited = false;
         });
@@ -303,7 +303,7 @@ impl<'a> NodeInfoMap<'a> {
                 }
             }
         }
-        self.unvisited_nodes();
+        self.unvisit_nodes();
         changed
     }
 
@@ -342,7 +342,7 @@ impl<'a> NodeInfoMap<'a> {
                 }
             }
         }
-        self.unvisited_nodes();
+        self.unvisit_nodes();
         ranks
     }
 }
