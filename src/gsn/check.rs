@@ -234,6 +234,8 @@ pub fn check_layers(diag: &mut Diagnostics, nodes: &BTreeMap<String, GsnNode>, l
         "url",
         "level",
         "undeveloped",
+        "nodeType",
+        "horizontalIndex",
     ];
     for l in layers {
         if reserved_words.contains(l) {
