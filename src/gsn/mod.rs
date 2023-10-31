@@ -361,6 +361,13 @@ mod test {
         assert!(res.is_err());
         let res: Result<HorizontalIndex,_> = serde_yaml::from_str("");
         assert!(res.is_err());
+        // 2**32 + 1
+        let res: Result<HorizontalIndex,_> = serde_yaml::from_str("4294967297");
+        assert!(res.is_err());
+        let res: Result<HorizontalIndex,_> = serde_yaml::from_str("+4294967297");
+        assert!(res.is_err());
+        let res: Result<HorizontalIndex,_> = serde_yaml::from_str("-4294967297");
+        assert!(res.is_err());
         let res: Result<HorizontalIndex,_> = serde_yaml::from_str("-x");
         assert!(res.is_err());
         let res: Result<HorizontalIndex,_> = serde_yaml::from_str("bslkdf");
