@@ -292,6 +292,39 @@ mod test {
     }
 
     #[test]
+    fn solution_with_supported() {
+        let mut d = Diagnostics::default();
+
+        let mut nodes = BTreeMap::<String, GsnNode>::new();
+        nodes.insert(
+            "Sn1".to_owned(),
+            GsnNode {
+                supported_by: Some(vec!["G2".to_owned()]),
+                node_type: Some(GsnNodeType::Solution),
+                ..Default::default()
+            },
+        );
+        nodes.insert(
+            "G2".to_owned(),
+            GsnNode {
+                node_type: Some(GsnNodeType::Goal),
+                undeveloped: Some(true),
+                ..Default::default()
+            },
+        );
+        validate_module(&mut d, "", &Module::default(), &nodes);
+        assert_eq!(d.messages.len(), 1);
+        assert_eq!(d.messages[0].module, Some("".to_owned()));
+        assert_eq!(d.messages[0].diag_type, DiagType::Error);
+        assert_eq!(
+            d.messages[0].msg,
+            "V04: Element Sn1 has invalid type of reference G2 in supported by element."
+        );
+        assert_eq!(d.errors, 1);
+        assert_eq!(d.warnings, 0);
+    }
+
+    #[test]
     fn self_ref_context() {
         let mut d = Diagnostics::default();
         let mut nodes = BTreeMap::<String, GsnNode>::new();
