@@ -1,5 +1,7 @@
 use std::ops::BitOr;
 
+use crate::gsn::GsnEdgeType;
+
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum SingleEdge {
     InContextOf,
@@ -36,6 +38,15 @@ pub enum EdgeType {
     OneWay(SingleEdge),
     TwoWay((SingleEdge, SingleEdge)),
     // Invisible,
+}
+
+impl From<&GsnEdgeType> for EdgeType {
+    fn from(value: &GsnEdgeType) -> Self {
+        match value {
+            GsnEdgeType::SupportedBy => Self::OneWay(SingleEdge::SupportedBy),
+            GsnEdgeType::InContextOf => Self::OneWay(SingleEdge::InContextOf),
+        }
+    }
 }
 
 #[cfg(test)]

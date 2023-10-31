@@ -1,6 +1,9 @@
-use super::{GsnNode, GsnNodeType};
-use crate::diagnostics::Diagnostics;
-use std::collections::{BTreeMap, BTreeSet};
+use super::{GsnEdgeType, GsnNode, GsnNodeType};
+use crate::{
+    diagnostics::Diagnostics,
+    dirgraph::{DirectedGraph, DirectedGraphEdgeType, DirectedGraphNodeType},
+};
+use std::collections::BTreeMap;
 
 ///
 /// Entry function to all checks.
@@ -15,7 +18,13 @@ pub fn check_nodes(
     check_root_nodes(diag, nodes)
         .map(|_| {
             check_levels(diag, nodes);
-            check_cycles(diag, nodes);
+            let edges: BTreeMap<String, Vec<(String, GsnEdgeType)>> = nodes
+                .iter()
+                .map(|(id, node)| (id.to_owned(), node.get_edges()))
+                .collect();
+            let graph = DirectedGraph::new(&nodes, &edges, &BTreeMap::new());
+            check_cycles(diag, &graph);
+            check_unreachable(diag, &graph);
         })
         .unwrap_or(());
 }
@@ -109,94 +118,61 @@ fn check_node_references(
     }
 }
 
+impl<'a> DirectedGraphNodeType<'a> for GsnNode {
+    fn is_final_node(&'a self) -> bool {
+        self.node_type == Some(GsnNodeType::Solution)
+    }
+}
+
+impl<'a> DirectedGraphEdgeType<'a> for GsnEdgeType {
+    fn is_primary_child_edge(&'a self) -> bool {
+        match self {
+            GsnEdgeType::SupportedBy => true,
+            GsnEdgeType::InContextOf => false,
+        }
+    }
+
+    fn is_secondary_child_edge(&'a self) -> bool {
+        match self {
+            GsnEdgeType::SupportedBy => false,
+            GsnEdgeType::InContextOf => true,
+        }
+    }
+}
+
 ///
 /// Check for cycles in `supported by` references
 /// It also detects if there is a cycle in an independent graph.
 ///
 ///
-fn check_cycles(diag: &mut Diagnostics, nodes: &BTreeMap<String, GsnNode>) {
-    let mut visited: BTreeSet<String> = BTreeSet::new();
-    let root_nodes = super::get_root_nodes(nodes);
-    let cloned_root_nodes = root_nodes.to_vec();
-    let mut stack = Vec::new();
-    let mut ancestors = Vec::new();
+fn check_cycles(diag: &mut Diagnostics, graph: &DirectedGraph<GsnNode, GsnEdgeType>) {
+    let cycle = graph.get_first_cycle();
+    if let Some((found, ring)) = cycle {
+        diag.add_error(
+            None,
+            format!(
+                "C04: Cycle detected at element {}. Cycle is {}.",
+                found,
+                &ring.join(" -> "),
+            ),
+        );
+    }
+}
 
-    for root in &root_nodes {
-        visited.insert(root.to_owned());
-        stack.push((root.to_owned(), 0));
-    }
-    let mut depth = 0;
-    while let Some((p_id, rdepth)) = stack.pop() {
-        // Jump back to current ancestor
-        if rdepth < depth {
-            // It is not sufficient to pop here, since one could skip levels when cleaning up.
-            ancestors.resize(rdepth, "".to_owned());
-            depth = rdepth;
-        }
-        // Increase depth if current node has children that are not Solutions
-        if nodes
-            .get(&p_id)
-            .unwrap() // unwrap is ok, since all references have been checked already
-            .supported_by
-            .iter()
-            .flatten()
-            .filter(|&x| nodes.get(x).unwrap().node_type != Some(GsnNodeType::Solution))
-            .count()
-            > 0
-        {
-            depth += 1;
-            ancestors.push(p_id.to_owned());
-        }
-        // Remember the incontext elements for the reachability analysis below.
-        nodes
-            .get(&p_id)
-            .unwrap()
-            .in_context_of
-            .iter()
-            .flatten()
-            .for_each(|x| {
-                visited.insert(x.to_owned());
-            });
-        // unwrap is ok, since all references have been checked already
-        for child_node in nodes.get(&p_id).unwrap().supported_by.iter().flatten() {
-            // Remember the solutions for reachability analysis.
-            visited.insert(child_node.to_owned());
-            if nodes.get(child_node).unwrap().node_type != Some(GsnNodeType::Solution) {
-                if ancestors.contains(child_node) {
-                    diag.add_error(
-                        None,
-                        format!(
-                            "C04: Cycle detected at element {}. Cycle is {} -> {} -> {}.",
-                            &p_id,
-                            child_node,
-                            &ancestors
-                                .rsplit(|x| x == child_node)
-                                .next()
-                                .unwrap() // unwrap is ok, since it is checked above that `ancestors` contains `child_node`
-                                .join(" -> "),
-                            child_node
-                        ),
-                    );
-                    break;
-                }
-                stack.push((child_node.to_owned(), depth));
-            }
-        }
-    }
-    let node_keys = BTreeSet::from_iter(nodes.keys().cloned());
-    let unvisited: BTreeSet<&String> = node_keys.difference(&visited).collect();
+///
+///
+///
+fn check_unreachable(diag: &mut Diagnostics, graph: &DirectedGraph<GsnNode, GsnEdgeType>) {
+    let unvisited = graph.get_unreachable_nodes();
+    let root_nodes = graph.get_root_nodes();
 
     if !unvisited.is_empty() {
         diag.add_error(
             None,
             format!(
                 "C08: The following element(s) are not reachable from the root element(s) ({}): {}",
-                cloned_root_nodes.join(", "),
-                Vec::from_iter(unvisited)
-                    .into_iter()
-                    .cloned()
-                    .collect::<Vec<String>>()
-                    .join(", ")
+                root_nodes.join(", "),
+                unvisited.join(", ")
             ),
         );
     }
@@ -362,7 +338,12 @@ mod test {
                 ..Default::default()
             },
         );
-        check_cycles(&mut d, &nodes);
+        let edges: BTreeMap<String, Vec<(String, GsnEdgeType)>> = nodes
+            .iter()
+            .map(|(id, node)| (id.to_owned(), node.get_edges()))
+            .collect();
+        let graph = DirectedGraph::new(&nodes, &edges, &BTreeMap::new());
+        check_cycles(&mut d, &graph);
         assert_eq!(d.messages.len(), 1);
         assert_eq!(d.messages[0].module, None);
         assert_eq!(d.messages[0].diag_type, DiagType::Error);

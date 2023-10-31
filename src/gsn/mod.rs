@@ -99,20 +99,26 @@ pub struct GsnNode {
     pub(crate) horizontal_index: Option<HorizontalIndex>,
 }
 
+#[derive(Clone, Copy)]
+pub enum GsnEdgeType {
+    SupportedBy,
+    InContextOf,
+}
+
 impl GsnNode {
-    pub fn get_edges(&self) -> Vec<(String, EdgeType)> {
+    pub fn get_edges(&self) -> Vec<(String, GsnEdgeType)> {
         let mut edges = Vec::new();
         if let Some(c_nodes) = &self.in_context_of {
-            let mut es: Vec<(String, EdgeType)> = c_nodes
+            let mut es: Vec<(String, GsnEdgeType)> = c_nodes
                 .iter()
-                .map(|target| (target.to_owned(), EdgeType::OneWay(SingleEdge::InContextOf)))
+                .map(|target| (target.to_owned(), GsnEdgeType::InContextOf))
                 .collect();
             edges.append(&mut es);
         }
         if let Some(s_nodes) = &self.supported_by {
-            let mut es: Vec<(String, EdgeType)> = s_nodes
+            let mut es: Vec<(String, GsnEdgeType)> = s_nodes
                 .iter()
-                .map(|target| (target.to_owned(), EdgeType::OneWay(SingleEdge::SupportedBy)))
+                .map(|target| (target.to_owned(), GsnEdgeType::SupportedBy))
                 .collect();
             edges.append(&mut es);
         }
@@ -352,6 +358,8 @@ mod test {
         assert_eq!(res, HorizontalIndex::Relative(-3));
         let res: HorizontalIndex = serde_yaml::from_str("0")?;
         assert_eq!(res, HorizontalIndex::Absolute(0));
+        let res: HorizontalIndex = serde_yaml::from_str("7")?;
+        assert_eq!(res, HorizontalIndex::Absolute(7));
         Ok(())
     }
 

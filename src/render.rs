@@ -331,7 +331,15 @@ pub fn render_complete(
         .iter()
         // .filter(|(_, node)| !masked_modules.contains(&&node.module))
         // TODO continue masking here
-        .map(|(id, node)| (id.to_owned(), node.get_edges()))
+        .map(|(id, node)| {
+            (
+                id.to_owned(),
+                node.get_edges()
+                    .iter()
+                    .map(|(s, t)| (s.to_owned(), EdgeType::from(t)))
+                    .collect(),
+            )
+        })
         .collect();
     let svg_nodes: BTreeMap<String, Node> = nodes
         .iter()
@@ -345,7 +353,7 @@ pub fn render_complete(
     dg = dg
         .add_nodes(svg_nodes)
         .add_edges(&mut edges)
-        .add_levels(&get_levels(nodes))
+        .add_forced_levels(&get_levels(nodes))
         .embed_stylesheets(render_options.embed_stylesheets)
         .add_css_stylesheets(
             &mut render_options
@@ -419,6 +427,7 @@ pub fn render_argument(
                             // unwrap is ok, since all references are checked at the beginning
                             && nodes.get(target).unwrap().module != module_name)
                     })
+                    .map(|(s, t)| (s.to_owned(), EdgeType::from(&t)))
                     .collect::<Vec<(String, EdgeType)>>(),
             )
         })
@@ -435,7 +444,7 @@ pub fn render_argument(
     dg = dg
         .add_nodes(svg_nodes)
         .add_edges(&mut edges)
-        .add_levels(&get_levels(nodes))
+        .add_forced_levels(&get_levels(nodes))
         .embed_stylesheets(render_options.embed_stylesheets)
         .add_css_stylesheets(
             &mut render_options

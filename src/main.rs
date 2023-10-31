@@ -8,6 +8,7 @@ use std::io::BufReader;
 use std::path::PathBuf;
 
 mod diagnostics;
+mod dirgraph;
 mod dirgraphsvg;
 mod file_utils;
 mod gsn;
