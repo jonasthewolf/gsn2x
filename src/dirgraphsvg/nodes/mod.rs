@@ -1,6 +1,9 @@
 use svg::node::element::{Anchor, Element, Group};
 
-use crate::dirgraphsvg::{util::point2d::Point2D, FontInfo};
+use crate::{
+    dirgraphsvg::{util::point2d::Point2D, FontInfo},
+    gsn::HorizontalIndex,
+};
 
 use self::{
     away_node::{AwayNodeType, AwayType},
@@ -37,6 +40,7 @@ pub struct Node {
     text: String,
     url: Option<String>,
     classes: Vec<String>,
+    horizontal_index: Option<HorizontalIndex>,
     node_type: NodeType,
 }
 
@@ -201,6 +205,7 @@ impl Node {
         text: &str,
         url: Option<String>,
         classes: Vec<String>,
+        horizontal_index: Option<HorizontalIndex>,
         add_class: &str,
     ) -> Self {
         let mut new_classes: Vec<String> = vec!["gsnelem".to_owned(), add_class.to_owned()];
@@ -215,6 +220,7 @@ impl Node {
             text: text.to_owned(),
             url,
             classes: new_classes,
+            horizontal_index,
             node_type: NodeType::Box(BoxType::Context),
         }
     }
@@ -224,10 +230,11 @@ impl Node {
     pub fn new_assumption(
         identifier: &str,
         text: &str,
+        horizontal_index: Option<HorizontalIndex>,
         url: Option<String>,
         classes: Vec<String>,
     ) -> Self {
-        let mut n = Node::new(identifier, text, url, classes, "gsnasmp");
+        let mut n = Node::new(identifier, text, url, classes, horizontal_index, "gsnasmp");
         n.node_type = NodeType::Ellipsis(EllipticalType {
             admonition: Some("A".to_owned()),
             circle: false,
@@ -246,10 +253,18 @@ impl Node {
         text: &str,
         module: &str,
         module_url: Option<String>,
+        horizontal_index: Option<HorizontalIndex>,
         url: Option<String>,
         classes: Vec<String>,
     ) -> Self {
-        let mut n = Node::new(identifier, text, url, classes, "gsnawayasmp");
+        let mut n = Node::new(
+            identifier,
+            text,
+            url,
+            classes,
+            horizontal_index,
+            "gsnawayasmp",
+        );
         n.node_type = NodeType::Away(AwayType {
             module: module.to_owned(),
             module_url,
@@ -266,10 +281,11 @@ impl Node {
     pub fn new_justification(
         identifier: &str,
         text: &str,
+        horizontal_index: Option<HorizontalIndex>,
         url: Option<String>,
         classes: Vec<String>,
     ) -> Self {
-        let mut n = Node::new(identifier, text, url, classes, "gsnjust");
+        let mut n = Node::new(identifier, text, url, classes, horizontal_index, "gsnjust");
         n.node_type = NodeType::Ellipsis(EllipticalType {
             admonition: Some("J".to_owned()),
             circle: false,
@@ -289,10 +305,18 @@ impl Node {
         text: &str,
         module: &str,
         module_url: Option<String>,
+        horizontal_index: Option<HorizontalIndex>,
         url: Option<String>,
         classes: Vec<String>,
     ) -> Self {
-        let mut n = Node::new(identifier, text, url, classes, "gsnawayjust");
+        let mut n = Node::new(
+            identifier,
+            text,
+            url,
+            classes,
+            horizontal_index,
+            "gsnawayjust",
+        );
         n.node_type = NodeType::Away(AwayType {
             module: module.to_owned(),
             module_url,
@@ -309,10 +333,11 @@ impl Node {
     pub fn new_solution(
         identifier: &str,
         text: &str,
+        horizontal_index: Option<HorizontalIndex>,
         url: Option<String>,
         classes: Vec<String>,
     ) -> Self {
-        let mut n = Node::new(identifier, text, url, classes, "gsnsltn");
+        let mut n = Node::new(identifier, text, url, classes, horizontal_index, "gsnsltn");
         n.node_type = NodeType::Ellipsis(EllipticalType {
             admonition: None,
             circle: true,
@@ -331,10 +356,18 @@ impl Node {
         text: &str,
         module: &str,
         module_url: Option<String>,
+        horizontal_index: Option<HorizontalIndex>,
         url: Option<String>,
         classes: Vec<String>,
     ) -> Self {
-        let mut n = Node::new(identifier, text, url, classes, "gsnawaysltn");
+        let mut n = Node::new(
+            identifier,
+            text,
+            url,
+            classes,
+            horizontal_index,
+            "gsnawaysltn",
+        );
         n.node_type = NodeType::Away(AwayType {
             module: module.to_owned(),
             module_url,
@@ -352,10 +385,11 @@ impl Node {
         identifier: &str,
         text: &str,
         undeveloped: bool,
+        horizontal_index: Option<HorizontalIndex>,
         url: Option<String>,
         classes: Vec<String>,
     ) -> Self {
-        let mut n = Node::new(identifier, text, url, classes, "gsnstgy");
+        let mut n = Node::new(identifier, text, url, classes, horizontal_index, "gsnstgy");
         if undeveloped {
             n.node_type = NodeType::Box(BoxType::Undeveloped(15));
         } else {
@@ -372,6 +406,7 @@ impl Node {
         identifier: &str,
         text: &str,
         undeveloped: bool,
+        horizontal_index: Option<HorizontalIndex>,
         url: Option<String>,
         classes: Vec<String>,
     ) -> Self {
@@ -379,7 +414,7 @@ impl Node {
         if undeveloped {
             classes.push("gsn_undeveloped".to_owned());
         }
-        let mut n = Node::new(identifier, text, url, classes, "gsngoal");
+        let mut n = Node::new(identifier, text, url, classes, horizontal_index, "gsngoal");
         if undeveloped {
             n.node_type = NodeType::Box(BoxType::Undeveloped(0));
         } else {
@@ -397,10 +432,18 @@ impl Node {
         text: &str,
         module: &str,
         module_url: Option<String>,
+        horizontal_index: Option<HorizontalIndex>,
         url: Option<String>,
         classes: Vec<String>,
     ) -> Self {
-        let mut n = Node::new(identifier, text, url, classes, "gsnawaygoal");
+        let mut n = Node::new(
+            identifier,
+            text,
+            url,
+            classes,
+            horizontal_index,
+            "gsnawaygoal",
+        );
         n.node_type = NodeType::Away(AwayType {
             module: module.to_owned(),
             module_url,
@@ -417,10 +460,11 @@ impl Node {
     pub fn new_context(
         identifier: &str,
         text: &str,
+        horizontal_index: Option<HorizontalIndex>,
         url: Option<String>,
         classes: Vec<String>,
     ) -> Self {
-        Node::new(identifier, text, url, classes, "gsnctxt")
+        Node::new(identifier, text, url, classes, horizontal_index, "gsnctxt")
     }
 
     ///
@@ -432,10 +476,18 @@ impl Node {
         text: &str,
         module: &str,
         module_url: Option<String>,
+        horizontal_index: Option<HorizontalIndex>,
         url: Option<String>,
         classes: Vec<String>,
     ) -> Self {
-        let mut n = Node::new(identifier, text, url, classes, "gsnawayctxt");
+        let mut n = Node::new(
+            identifier,
+            text,
+            url,
+            classes,
+            horizontal_index,
+            "gsnawayctxt",
+        );
         n.node_type = NodeType::Away(AwayType {
             module: module.to_owned(),
             module_url,
@@ -452,10 +504,18 @@ impl Node {
     pub fn new_module(
         identifier: &str,
         text: &str,
+        horizontal_index: Option<HorizontalIndex>,
         url: Option<String>,
         classes: Vec<String>,
     ) -> Self {
-        let mut n = Node::new(identifier, text, url, classes, "gsnmodule");
+        let mut n = Node::new(
+            identifier,
+            text,
+            url,
+            classes,
+            horizontal_index,
+            "gsnmodule",
+        );
         n.node_type = NodeType::Box(BoxType::Module);
         n
     }

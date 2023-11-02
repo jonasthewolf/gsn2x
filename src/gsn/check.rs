@@ -22,7 +22,8 @@ pub fn check_nodes(
                 .iter()
                 .map(|(id, node)| (id.to_owned(), node.get_edges()))
                 .collect();
-            let graph = DirectedGraph::new(&nodes, &edges, &BTreeMap::new());
+            let forced_levels = BTreeMap::new();
+            let graph = DirectedGraph::new(&nodes, &edges, &forced_levels);
             check_cycles(diag, &graph);
             check_unreachable(diag, &graph);
         })
@@ -342,7 +343,8 @@ mod test {
             .iter()
             .map(|(id, node)| (id.to_owned(), node.get_edges()))
             .collect();
-        let graph = DirectedGraph::new(&nodes, &edges, &BTreeMap::new());
+        let forced_levels = BTreeMap::new();
+        let graph = DirectedGraph::new(&nodes, &edges, &forced_levels);
         check_cycles(&mut d, &graph);
         assert_eq!(d.messages.len(), 1);
         assert_eq!(d.messages[0].module, None);

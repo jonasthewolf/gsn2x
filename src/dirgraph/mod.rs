@@ -16,6 +16,8 @@ where
 {
     nodes: &'a BTreeMap<String, NodeType>,
     edges: &'a BTreeMap<String, Vec<(String, EdgeType)>>,
+    // Map of node to forced rank
+    forced_levels: BTreeMap<&'a str, usize>,
     root_nodes: Vec<&'a str>,
     parent_edges: BTreeMap<&'a str, Vec<(&'a str, EdgeType)>>,
 }
@@ -34,17 +36,19 @@ where
     pub fn new(
         nodes: &'a BTreeMap<String, NodeType>,
         edges: &'a BTreeMap<String, Vec<(String, EdgeType)>>,
-        forced_levels: &BTreeMap<&'a str, Vec<&'a str>>,
+        forced_levels: &BTreeMap<&str, Vec<&'a str>>,
     ) -> Self {
         // Initialize node_info map
         let mut node_info = DirectedGraph {
             nodes,
             edges,
+            forced_levels: BTreeMap::new(),
             root_nodes: vec![],
             parent_edges: BTreeMap::new(),
         };
         node_info.calculate_parent_edge_map();
         node_info.find_root_nodes();
+        node_info.calculate_forced_levels(forced_levels);
 
         // TODO REIMPLEMENT
         // loop {
@@ -97,12 +101,29 @@ where
     }
 
     ///
+    /// FIXME: What if we have (a, b) and (b, c) and a and c are on different levels.
+    ///
+    ///
+    fn calculate_forced_levels(&mut self, forced_levels: &BTreeMap<&str, Vec<&'a str>>) {
+        for (_, ref nodes) in forced_levels {
+            if let Some(max_depth) = nodes.iter().map(|&n| self.get_distance(n)).max() {
+                nodes.iter().for_each(|n| {
+                    self.forced_levels.insert(n.to_owned(), max_depth);
+                });
+            }
+        }
+    }
+
+    ///
     ///
     ///
     pub fn get_root_nodes(&'a self) -> Vec<&'a str> {
         self.root_nodes.to_vec()
     }
 
+    ///
+    ///
+    ///
     pub fn get_parent_edges(&'a self) -> BTreeMap<&'a str, Vec<(&'a str, EdgeType)>> {
         self.parent_edges.to_owned()
     }
@@ -249,66 +270,6 @@ where
 
     ///
     ///
-    ///
-    ///
-    ///
-    ///
-    // fn constrain_by_forced_levels(
-    //     &mut self,
-    //     nodes: &BTreeMap<String, Node>,
-    //     edges: &BTreeMap<String, Vec<(String, EdgeType)>>,
-    //     forced_levels: &BTreeMap<&'a str, Vec<&'a str>>,
-    // ) {
-    // for forced_nodes in forced_levels.values() {
-    //     if forced_nodes.iter().all(|&n| self.0.contains_key(n)) {
-    //         if let Some(max_depth) = forced_nodes.iter().filter_map(|&n| self.get_rank(n)).max()
-    //         {
-    //             for &node in forced_nodes {
-    //                 let diff_rank = self.get_rank(node).unwrap().abs_diff(max_depth);
-    //                 if diff_rank > 0 {
-    //                     self.set_rank(node, max_depth);
-    //                     let mut stack = vec![node];
-    //                     self.visit_node(node);
-    //                     while let Some(parent_id) = stack.pop() {
-    //                         let mut current_node = parent_id;
-    //                         while let Some(child_node) =
-    //                             find_next_child_node(nodes, edges, &self.0, current_node, true)
-    //                         {
-    //                             stack.push(current_node);
-    //                             self.visit_node(child_node);
-    //                             let current_rank =
-    //                                 self.get_rank(child_node).unwrap() + diff_rank;
-    //                             self.set_rank(child_node, current_rank);
-    //                             current_node = child_node;
-    //                         }
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //     }
-    // }
-    // self.unvisit_nodes();
-    // }
-
-    ///
-    ///
-    /// Returns true if rank has changed
-    ///
-    fn set_rank(&mut self, current_node: &str, current_rank: usize) -> bool {
-        let mut changed = false;
-        // self.0.entry(current_node.to_owned()).and_modify(|v| {
-        //     if v.rank == Some(current_rank) {
-        //         changed = false;
-        //     } else {
-        //         v.rank = Some(current_rank);
-        //         changed = true;
-        //     }
-        // });
-        changed
-    }
-
-    ///
-    ///
     /// Returns true if any rank has changed.
     ///
     // fn find_ranks(
@@ -344,18 +305,65 @@ where
     ///
     ///
     ///
+    /// vertical, horizontal, cell
     ///
-    ///
-    pub(super) fn rank_nodes(
-        &mut self,
-        forced_levels: &BTreeMap<&'a str, Vec<&'a str>>,
-        cycles_allowed: bool,
-    ) -> BTreeMap<usize, BTreeMap<usize, Vec<&'a str>>> {
-        // let mut ranks = self.int_rank_nodes(cycles_allowed);
+    pub(super) fn rank_nodes(&'a mut self, cycles_allowed: bool) -> Vec<Vec<Vec<&str>>> {
+        let mut ranks = Vec::new();
+        let mut vertical_index = 0;
 
-        // add_in_context_nodes(self.edges, &mut ranks);
-        // ranks
-        BTreeMap::new()
+        let mut next_rank_nodes = self.root_nodes.to_vec();
+
+        loop {
+            // FIXME root nodes that have forced levels
+            next_rank_nodes = self
+                .get_nodes_for_next_rank(&next_rank_nodes)
+                .iter()
+                .filter(|&n| {
+                    if let Some(&forced_level) = self.forced_levels.get(n) {
+                        forced_level > vertical_index
+                    } else {
+                        true
+                    }
+                })
+                .map(|&n| n)
+                .collect();
+            if next_rank_nodes.is_empty() {
+                break;
+            } else {
+                ranks.push(next_rank_nodes.iter().map(|&n| vec![n]).collect());
+                vertical_index += 1;
+            }
+        }
+        ranks
+    }
+
+    ///
+    ///
+    ///
+    ///
+    fn get_nodes_for_next_rank(&self, current_rank_nodes: &[&str]) -> Vec<&str> {
+        current_rank_nodes
+            .iter()
+            .map(|&n| self.get_real_children(n))
+            .flatten()
+            .collect()
+    }
+
+    ///
+    /// Get distance of `node` from any root_nodes
+    ///
+    ///
+    fn get_distance(&self, node: &str) -> usize {
+        let mut cur_rank = self.root_nodes.to_vec();
+        let mut distance = 0;
+        loop {
+            if cur_rank.contains(&node) {
+                break;
+            }
+            cur_rank = self.get_nodes_for_next_rank(&cur_rank);
+            distance += 1;
+        }
+        distance
     }
 
     // fn int_rank_nodes(

@@ -99,26 +99,46 @@ pub fn svg_from_gsn_node(id: &str, gsn_node: &GsnNode, layers: &[String]) -> Nod
             id,
             &node_text,
             gsn_node.undeveloped.unwrap_or(false),
+            gsn_node.horizontal_index,
             gsn_node.url.to_owned(),
             classes,
         ),
-        GsnNodeType::Solution => {
-            Node::new_solution(id, &node_text, gsn_node.url.to_owned(), classes)
-        }
+        GsnNodeType::Solution => Node::new_solution(
+            id,
+            &node_text,
+            gsn_node.horizontal_index,
+            gsn_node.url.to_owned(),
+            classes,
+        ),
         GsnNodeType::Strategy => Node::new_strategy(
             id,
             &node_text,
             gsn_node.undeveloped.unwrap_or(false),
+            gsn_node.horizontal_index,
             gsn_node.url.to_owned(),
             classes,
         ),
-        GsnNodeType::Context => Node::new_context(id, &node_text, gsn_node.url.to_owned(), classes),
-        GsnNodeType::Assumption => {
-            Node::new_assumption(id, &node_text, gsn_node.url.to_owned(), classes)
-        }
-        GsnNodeType::Justification => {
-            Node::new_justification(id, &node_text, gsn_node.url.to_owned(), classes)
-        }
+        GsnNodeType::Context => Node::new_context(
+            id,
+            &node_text,
+            gsn_node.horizontal_index,
+            gsn_node.url.to_owned(),
+            classes,
+        ),
+        GsnNodeType::Assumption => Node::new_assumption(
+            id,
+            &node_text,
+            gsn_node.horizontal_index,
+            gsn_node.url.to_owned(),
+            classes,
+        ),
+        GsnNodeType::Justification => Node::new_justification(
+            id,
+            &node_text,
+            gsn_node.horizontal_index,
+            gsn_node.url.to_owned(),
+            classes,
+        ),
     }
 }
 
@@ -203,6 +223,7 @@ pub fn away_svg_from_gsn_node(
             &node_text,
             &gsn_node.module,
             Some(module_url),
+            gsn_node.horizontal_index,
             gsn_node.url.to_owned(),
             classes,
         ),
@@ -211,6 +232,7 @@ pub fn away_svg_from_gsn_node(
             &node_text,
             &gsn_node.module,
             Some(module_url),
+            gsn_node.horizontal_index,
             gsn_node.url.to_owned(),
             classes,
         ),
@@ -218,6 +240,7 @@ pub fn away_svg_from_gsn_node(
             id,
             &node_text,
             gsn_node.undeveloped.unwrap_or(false),
+            gsn_node.horizontal_index,
             Some(module_url), // Use module_url if Strategy is not defined in current module.
             classes,
         ),
@@ -226,6 +249,7 @@ pub fn away_svg_from_gsn_node(
             &node_text,
             &gsn_node.module,
             Some(module_url),
+            gsn_node.horizontal_index,
             gsn_node.url.to_owned(),
             classes,
         ),
@@ -234,6 +258,7 @@ pub fn away_svg_from_gsn_node(
             &node_text,
             &gsn_node.module,
             Some(module_url),
+            gsn_node.horizontal_index,
             gsn_node.url.to_owned(),
             classes,
         ),
@@ -242,6 +267,7 @@ pub fn away_svg_from_gsn_node(
             &node_text,
             &gsn_node.module,
             Some(module_url),
+            gsn_node.horizontal_index,
             gsn_node.url.to_owned(),
             classes,
         ),
@@ -275,6 +301,7 @@ pub fn render_architecture(
                         .map(|m| m.to_owned())
                         .unwrap_or_else(|| "".to_owned())
                         .as_str(),
+                    None, // FIXME: That might be a big problem; maybe add horizontal index to meta information of modules
                     {
                         let target_svg = set_extension(&module.relative_module_path, "svg");
                         let target_path = translate_to_output_path(output_path, &target_svg, None);
@@ -316,6 +343,9 @@ pub fn render_architecture(
 /// Render all nodes in one diagram
 ///
 /// TODO mask modules MASK_MODULE
+///
+/// FIXME: Problem horizontal index only applies to argument view
+///        potential solution: puzzle individual argument views together...
 ///
 pub fn render_complete(
     output: &mut impl Write,

@@ -27,7 +27,7 @@ impl Display for GsnNodeType {
     }
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub enum HorizontalIndex {
     Relative(i32),
     Absolute(u32),

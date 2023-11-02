@@ -111,7 +111,7 @@ impl<'a> DirGraph<'a> {
 
         // Rank nodes
         let mut graph = DirectedGraph::new(&self.nodes, &self.edges, &self.forced_levels);
-        let ranks = graph.rank_nodes(&self.forced_levels, cycles_allowed);
+        let ranks = graph.rank_nodes(cycles_allowed);
 
         // Layout graph
         // let (width, height) = layout_nodes(
@@ -145,7 +145,7 @@ mod test {
     #[test]
     fn test_render_legend() {
         let mut d = DirGraph::default();
-        let b1 = Node::new_away_goal("id", "text", "module", None, None, vec![]);
+        let b1 = Node::new_away_goal("id", "text", "module", None, None, None, vec![]);
         let mut nodes = BTreeMap::new();
         nodes.insert("G1".to_owned(), b1);
         d = d.add_nodes(nodes);
