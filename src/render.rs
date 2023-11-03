@@ -1,7 +1,7 @@
 use crate::dirgraphsvg::edges::EdgeType;
 use crate::dirgraphsvg::{escape_node_id, escape_text, nodes::Node};
 use crate::file_utils::{get_filename, get_relative_path, set_extension, translate_to_output_path};
-use crate::gsn::{get_levels, GsnNode, GsnNodeType, Module};
+use crate::gsn::{GsnNode, GsnNodeType, Module};
 use anyhow::Result;
 use chrono::Utc;
 use clap::ArgMatches;
@@ -100,6 +100,7 @@ pub fn svg_from_gsn_node(id: &str, gsn_node: &GsnNode, layers: &[String]) -> Nod
             &node_text,
             gsn_node.undeveloped.unwrap_or(false),
             gsn_node.horizontal_index,
+            gsn_node.rank_increment,
             gsn_node.url.to_owned(),
             classes,
         ),
@@ -107,6 +108,7 @@ pub fn svg_from_gsn_node(id: &str, gsn_node: &GsnNode, layers: &[String]) -> Nod
             id,
             &node_text,
             gsn_node.horizontal_index,
+            gsn_node.rank_increment,
             gsn_node.url.to_owned(),
             classes,
         ),
@@ -115,6 +117,7 @@ pub fn svg_from_gsn_node(id: &str, gsn_node: &GsnNode, layers: &[String]) -> Nod
             &node_text,
             gsn_node.undeveloped.unwrap_or(false),
             gsn_node.horizontal_index,
+            gsn_node.rank_increment,
             gsn_node.url.to_owned(),
             classes,
         ),
@@ -122,6 +125,7 @@ pub fn svg_from_gsn_node(id: &str, gsn_node: &GsnNode, layers: &[String]) -> Nod
             id,
             &node_text,
             gsn_node.horizontal_index,
+            gsn_node.rank_increment,
             gsn_node.url.to_owned(),
             classes,
         ),
@@ -129,6 +133,7 @@ pub fn svg_from_gsn_node(id: &str, gsn_node: &GsnNode, layers: &[String]) -> Nod
             id,
             &node_text,
             gsn_node.horizontal_index,
+            gsn_node.rank_increment,
             gsn_node.url.to_owned(),
             classes,
         ),
@@ -136,6 +141,7 @@ pub fn svg_from_gsn_node(id: &str, gsn_node: &GsnNode, layers: &[String]) -> Nod
             id,
             &node_text,
             gsn_node.horizontal_index,
+            gsn_node.rank_increment,
             gsn_node.url.to_owned(),
             classes,
         ),
@@ -224,6 +230,7 @@ pub fn away_svg_from_gsn_node(
             &gsn_node.module,
             Some(module_url),
             gsn_node.horizontal_index,
+            gsn_node.rank_increment,
             gsn_node.url.to_owned(),
             classes,
         ),
@@ -233,6 +240,7 @@ pub fn away_svg_from_gsn_node(
             &gsn_node.module,
             Some(module_url),
             gsn_node.horizontal_index,
+            gsn_node.rank_increment,
             gsn_node.url.to_owned(),
             classes,
         ),
@@ -241,6 +249,7 @@ pub fn away_svg_from_gsn_node(
             &node_text,
             gsn_node.undeveloped.unwrap_or(false),
             gsn_node.horizontal_index,
+            gsn_node.rank_increment,
             Some(module_url), // Use module_url if Strategy is not defined in current module.
             classes,
         ),
@@ -250,6 +259,7 @@ pub fn away_svg_from_gsn_node(
             &gsn_node.module,
             Some(module_url),
             gsn_node.horizontal_index,
+            gsn_node.rank_increment,
             gsn_node.url.to_owned(),
             classes,
         ),
@@ -259,6 +269,7 @@ pub fn away_svg_from_gsn_node(
             &gsn_node.module,
             Some(module_url),
             gsn_node.horizontal_index,
+            gsn_node.rank_increment,
             gsn_node.url.to_owned(),
             classes,
         ),
@@ -268,6 +279,7 @@ pub fn away_svg_from_gsn_node(
             &gsn_node.module,
             Some(module_url),
             gsn_node.horizontal_index,
+            gsn_node.rank_increment,
             gsn_node.url.to_owned(),
             classes,
         ),
@@ -302,6 +314,7 @@ pub fn render_architecture(
                         .unwrap_or_else(|| "".to_owned())
                         .as_str(),
                     None, // FIXME: That might be a big problem; maybe add horizontal index to meta information of modules
+                    None,
                     {
                         let target_svg = set_extension(&module.relative_module_path, "svg");
                         let target_path = translate_to_output_path(output_path, &target_svg, None);
@@ -383,7 +396,6 @@ pub fn render_complete(
     dg = dg
         .add_nodes(svg_nodes)
         .add_edges(&mut edges)
-        .add_forced_levels(&get_levels(nodes))
         .embed_stylesheets(render_options.embed_stylesheets)
         .add_css_stylesheets(
             &mut render_options
@@ -474,7 +486,6 @@ pub fn render_argument(
     dg = dg
         .add_nodes(svg_nodes)
         .add_edges(&mut edges)
-        .add_forced_levels(&get_levels(nodes))
         .embed_stylesheets(render_options.embed_stylesheets)
         .add_css_stylesheets(
             &mut render_options

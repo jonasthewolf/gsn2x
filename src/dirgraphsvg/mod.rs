@@ -1,9 +1,10 @@
 pub mod edges;
-// mod layout;
+mod layout;
 pub mod nodes;
-// mod render;
+mod render;
 mod util;
 
+use serde_yaml::with;
 use std::collections::BTreeMap;
 pub use util::{escape_node_id, escape_text};
 
@@ -13,32 +14,57 @@ use nodes::{Node, Port};
 use crate::dirgraph::DirectedGraph;
 use crate::dirgraph::DirectedGraphEdgeType;
 use crate::dirgraph::DirectedGraphNodeType;
+use crate::dirgraphsvg::layout::layout_nodes;
+use crate::dirgraphsvg::render::render_graph;
+// use crate::dirgraphsvg::layout::layout_nodes;
+use crate::gsn::HorizontalIndex;
 
 use self::edges::SingleEdge;
+use self::layout::Margin;
 use self::util::font::FontInfo;
 
 impl<'a> DirectedGraphNodeType<'a> for Node {
     fn is_final_node(&'a self) -> bool {
         false
     }
+
+    fn get_forced_level(&'a self) -> Option<usize> {
+        self.rank_increment
+    }
+
+    fn get_horizontal_index(&'a self, current_index: usize) -> Option<usize> {
+        match self.horizontal_index {
+            Some(HorizontalIndex::Absolute(x)) => x.try_into().ok(),
+            Some(HorizontalIndex::Relative(x)) => (x + current_index as i32).try_into().ok(),
+            None => None,
+        }
+    }
+
+    fn get_mut(&'a mut self) -> &'a mut Self {
+        self
+    }
 }
 
 impl<'a> DirectedGraphEdgeType<'a> for EdgeType {
     fn is_primary_child_edge(&'a self) -> bool {
-        match self {
-            &EdgeType::OneWay(x) if x == SingleEdge::SupportedBy => todo!(),
-            EdgeType::TwoWay(_) => todo!(),
-            _ => todo!(),
-        }
+        !self.is_secondary_child_edge()
     }
 
     fn is_secondary_child_edge(&'a self) -> bool {
-        todo!()
+        match *self {
+            EdgeType::OneWay(SingleEdge::InContextOf) => true,
+            EdgeType::TwoWay((s, t))
+                if s == SingleEdge::InContextOf || t == SingleEdge::InContextOf =>
+            {
+                true
+            }
+            _ => false,
+        }
     }
 }
 
 pub struct DirGraph<'a> {
-    // margin: Margin,
+    margin: Margin,
     nodes: BTreeMap<String, Node>,
     edges: BTreeMap<String, Vec<(String, EdgeType)>>,
     forced_levels: BTreeMap<&'a str, Vec<&'a str>>,
@@ -54,7 +80,7 @@ impl<'a> Default for DirGraph<'a> {
             // TODO Where now?
             // width: 210,
             // height: 297,
-            // margin: Margin::default(),
+            margin: Margin::default(),
             font: FontInfo::default(),
             css_stylesheets: Vec::new(),
             embed_stylesheets: false,
@@ -110,29 +136,27 @@ impl<'a> DirGraph<'a> {
             .for_each(|n| n.calculate_optimal_size(&self.font));
 
         // Rank nodes
-        let mut graph = DirectedGraph::new(&self.nodes, &self.edges, &self.forced_levels);
-        let ranks = graph.rank_nodes(cycles_allowed);
-
+        let graph = DirectedGraph::new(&self.nodes, &self.edges);
+        let ranks = &graph.rank_nodes();
+        // dbg!(ranks);
+        dbg!(&graph);
         // Layout graph
-        // let (width, height) = layout_nodes(
-        //     &mut self.nodes,
-        //     self.edges,
-        //     &ranks,
-        //     graph.get_parent_edges(),
-        // );
+        let (width, height) = layout_nodes(&mut self.nodes, &graph, &ranks, &self.margin, &graph.get_parent_edges());
 
+        let width = 500;
+        let height = 500;
         // // Render to SVG
-        // let document = render_graph(
-        //     self.nodes,
-        //     self.edges,
-        //     ranks,
-        //     width,
-        //     height,
-        //     &self.font,
-        //     self.margin,
-        // );
-        // output.write_all("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n".as_bytes())?;
-        // svg::write(output, &document)?;
+        let document = render_graph(
+            &self.nodes,
+            &self.edges,
+            ranks,
+            width,
+            height,
+            &self.font,
+            self.margin,
+        );
+        output.write_all("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n".as_bytes())?;
+        svg::write(output, &document)?;
 
         Ok(())
     }
@@ -145,7 +169,7 @@ mod test {
     #[test]
     fn test_render_legend() {
         let mut d = DirGraph::default();
-        let b1 = Node::new_away_goal("id", "text", "module", None, None, None, vec![]);
+        let b1 = Node::new_away_goal("id", "text", "module", None, None, None, None, vec![]);
         let mut nodes = BTreeMap::new();
         nodes.insert("G1".to_owned(), b1);
         d = d.add_nodes(nodes);

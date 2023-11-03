@@ -6,11 +6,11 @@ use svg::{
     Document,
 };
 
-use crate::dirgraphsvg::nodes::add_text;
+use crate::{dirgraph::DirectedGraph, dirgraphsvg::nodes::add_text};
 
 use super::{
     edges::{EdgeType, SingleEdge},
-    layout::{Margin, NodePlace},
+    layout::Margin,
     nodes::{Node, Port},
     util::font::FontInfo,
 };
@@ -23,9 +23,9 @@ const MARKER_HEIGHT: u32 = 10;
 ///
 ///
 pub(super) fn render_graph(
-    nodes: BTreeMap<String, Node>,
-    edges: BTreeMap<String, Vec<(String, EdgeType)>>,
-    ranks: BTreeMap<usize, BTreeMap<usize, Vec<&str>>>,
+    nodes: &BTreeMap<String, Node>,
+    edges: &BTreeMap<String, Vec<(String, EdgeType)>>,
+    ranks: &Vec<Vec<Vec<&str>>>,
     width: i32,
     height: i32,
     font_info: &FontInfo,
@@ -33,12 +33,12 @@ pub(super) fn render_graph(
 ) -> Document {
     let mut document = Document::new();
     // Draw nodes
-    render_nodes(&mut document, &nodes, &ranks, font_info, &margin);
+    document = render_nodes(document, &nodes, &edges, &ranks, font_info, &margin);
 
     // Draw edges
-    render_edges(&mut document, &nodes, &edges, &margin);
+    document = render_edges(document, &nodes, &edges, &margin);
     // Order is important here. render_legend may modify self.width and self.height
-    render_legend(&mut document);
+    // render_legend(&mut document);
     document = document.set("viewBox", (0u32, 0u32, width, height));
     document
 }
@@ -50,11 +50,11 @@ pub(super) fn render_graph(
 ///
 ///
 fn render_edges(
-    document: &mut Document,
+    mut document: Document,
     nodes: &BTreeMap<String, Node>,
     edges: &BTreeMap<String, Vec<(String, EdgeType)>>,
     margin: &Margin,
-) {
+) -> Document {
     for (source, targets) in edges {
         for (target, edge_type) in targets {
             let s = nodes.get(source).unwrap();
@@ -160,9 +160,10 @@ fn render_edges(
                 e = e.set("marker-start", arrow_id);
             }
             e = e.set("class", classes);
-            *document = document.add(e);
+            document = document.add(e);
         }
     }
+    document
 }
 
 ///
@@ -170,35 +171,37 @@ fn render_edges(
 ///
 ///
 fn render_nodes(
-    document: &mut Document,
+    mut document: Document,
     nodes: &BTreeMap<String, Node>,
-    ranks: &BTreeMap<usize, BTreeMap<usize, Vec<&str>>>,
+    edges: &BTreeMap<String, Vec<(String, EdgeType)>>,
+    ranks: &Vec<Vec<Vec<&str>>>,
     font_info: &FontInfo,
     margin: &Margin,
-) {
+) -> Document {
     // Draw the nodes
-    for rank in ranks.values() {
-        for np in rank.values() {
+    for rank in ranks {
+        for np in rank {
             for &id in np {
-                let n = nodes.get_mut(id).unwrap();
-                *document = document.add(n.render(font_info));
+                let n = nodes.get(id).unwrap();
+                document = document.add(n.render(font_info));
             }
         }
     }
+    document
     // Calculate size of document
-    let width = ranks
-        .values()
-        .map(|rank| {
-            let n = NodePlace::from(rank.values().last().unwrap());
-            n.get_x(&nodes) + n.get_max_width(&nodes)
-        })
-        .max()
-        .unwrap_or(0);
-    let height = ranks
-        .values()
-        .map(|rank| margin.top + self.get_max_height(rank) + margin.bottom)
-        .sum();
-    (width, height)
+    // let width = ranks
+    //     .iter()
+    //     .map(|rank| {
+    //         let n = nodes.get(rank.iter().last().unwrap().first().unwrap().to_owned()).unwrap();
+    //         n.get_x(&nodes) + n.get_max_width(&nodes)
+    //     })
+    //     .max()
+    //     .unwrap_or(0);
+    // let height = ranks
+    //     .iter()
+    //     .map(|rank| margin.top + self.get_max_height(rank) + margin.bottom)
+    //     .sum();
+    // (width, height)
 }
 
 ///
@@ -206,7 +209,7 @@ fn render_nodes(
 ///
 ///
 ///
-fn setup_basics(document: &mut Document) {
+fn setup_basics(mut document: Document) -> Document {
     let supportedby_polyline = Polyline::new()
         .set("points", "0 0, 10 4.5, 0 9")
         .set("fill", "black");
@@ -279,20 +282,25 @@ fn setup_basics(document: &mut Document) {
         .set("stroke-width", 1u32)
         .set("fill", "lightgrey");
     let module_image = Symbol::new().set("id", "module_icon").add(mi_r1).add(mi_r2);
-    *document = document.add(module_image);
+    document = document.add(module_image);
 
-    *document = document
+    document = document
         .add(composite_arrow)
         .add(supportedby_arrow)
         .add(incontext_arrow)
         .set("classes", "gsndiagram");
+    document
 }
 
 ///
 ///
 ///
 ///
-fn setup_stylesheets(document: &mut Document, css_stylesheets: &[&str], embed_stylesheets: bool) {
+fn setup_stylesheets(
+    mut document: Document,
+    css_stylesheets: &[&str],
+    embed_stylesheets: bool,
+) -> Document {
     if !css_stylesheets.is_empty() {
         if embed_stylesheets {
             for css in css_stylesheets {
@@ -300,7 +308,7 @@ fn setup_stylesheets(document: &mut Document, css_stylesheets: &[&str], embed_st
                     .context(format!("Failed to open CSS file {css} for embedding"))
                     .unwrap();
                 let style = Style::new(format!("<![CDATA[{css_str}]]>")).set("type", "text/css");
-                *document = document.add(style);
+                document = document.add(style);
             }
         } else {
             // Only link them
@@ -311,49 +319,50 @@ fn setup_stylesheets(document: &mut Document, css_stylesheets: &[&str], embed_st
                     .collect::<Vec<_>>()
                     .join("\n"),
             );
-            *document = document.add(style);
+            document = document.add(style);
         }
     }
+    document
 }
 
-///
-///
-///
-///
-fn render_legend(document: &mut Document, meta_information: Option<Vec<String>>) {
-    if let Some(meta) = meta_information {
-        let mut g = setup_basics(
-            &mut document,
-            "gsn_module",
-            &["gsnmodule".to_owned()],
-            &None,
-        );
-        let title = Title::new().add(svg::node::Text::new("Module Information"));
-        use svg::Node;
-        g.append(title);
+// ///
+// ///
+// ///
+// ///
+// fn render_legend(document: &mut Document, meta_information: Option<Vec<String>>) {
+//     if let Some(meta) = meta_information {
+//         let mut g = setup_basics(
+//             &mut document,
+//             "gsn_module",
+//             &["gsnmodule".to_owned()],
+//             &None,
+//         );
+//         let title = Title::new().add(svg::node::Text::new("Module Information"));
+//         use svg::Node;
+//         g.append(title);
 
-        let mut text_height = 0;
-        let mut text_width = 0;
-        let mut lines = Vec::new();
-        for t in meta {
-            let (width, height) =
-                crate::dirgraphsvg::util::font::text_bounding_box(&self.font, t, false);
-            lines.push((width, height));
-            text_height += height;
-            text_width = std::cmp::max(text_width, width);
-        }
+//         let mut text_height = 0;
+//         let mut text_width = 0;
+//         let mut lines = Vec::new();
+//         for t in meta {
+//             let (width, height) =
+//                 crate::dirgraphsvg::util::font::text_bounding_box(&self.font, t, false);
+//             lines.push((width, height));
+//             text_height += height;
+//             text_width = std::cmp::max(text_width, width);
+//         }
 
-        if self.width < text_width + 20i32 {
-            self.width = text_width + 40i32;
-        }
-        self.height += text_height + 40i32;
-        let x = self.width - text_width - 20;
-        let y_base = self.height - text_height - 20;
-        let mut y_running = 0;
-        for (text, (_, h)) in meta.iter().zip(lines) {
-            y_running += h;
-            g = add_text(g, text, x, y_base + y_running, &self.font, false);
-        }
-        *document = document.add(g);
-    }
-}
+//         if self.width < text_width + 20i32 {
+//             self.width = text_width + 40i32;
+//         }
+//         self.height += text_height + 40i32;
+//         let x = self.width - text_width - 20;
+//         let y_base = self.height - text_height - 20;
+//         let mut y_running = 0;
+//         for (text, (_, h)) in meta.iter().zip(lines) {
+//             y_running += h;
+//             g = add_text(g, text, x, y_base + y_running, &self.font, false);
+//         }
+//         *document = document.add(g);
+//     }
+// }

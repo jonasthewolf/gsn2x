@@ -1,4 +1,4 @@
-use super::{GsnEdgeType, GsnNode, GsnNodeType};
+use super::{GsnEdgeType, GsnNode, GsnNodeType, HorizontalIndex};
 use crate::{
     diagnostics::Diagnostics,
     dirgraph::{DirectedGraph, DirectedGraphEdgeType, DirectedGraphNodeType},
@@ -22,8 +22,7 @@ pub fn check_nodes(
                 .iter()
                 .map(|(id, node)| (id.to_owned(), node.get_edges()))
                 .collect();
-            let forced_levels = BTreeMap::new();
-            let graph = DirectedGraph::new(&nodes, &edges, &forced_levels);
+            let graph = DirectedGraph::new(nodes, &edges);
             check_cycles(diag, &graph);
             check_unreachable(diag, &graph);
         })
@@ -123,6 +122,22 @@ impl<'a> DirectedGraphNodeType<'a> for GsnNode {
     fn is_final_node(&'a self) -> bool {
         self.node_type == Some(GsnNodeType::Solution)
     }
+
+    fn get_forced_level(&'a self) -> Option<usize> {
+        self.rank_increment
+    }
+
+    fn get_horizontal_index(&'a self, current_index: usize) -> Option<usize> {
+        match self.horizontal_index {
+            Some(HorizontalIndex::Absolute(idx)) => idx.try_into().ok(),
+            Some(HorizontalIndex::Relative(idx)) => (current_index as i32 + idx).try_into().ok(),
+            None => None,
+        }
+    }
+
+    fn get_mut(&'a mut self) -> &'a mut Self {
+        self
+    }
 }
 
 impl<'a> DirectedGraphEdgeType<'a> for GsnEdgeType {
@@ -182,19 +197,19 @@ fn check_unreachable(diag: &mut Diagnostics, graph: &DirectedGraph<GsnNode, GsnE
 ///
 /// Check if level statement is used more than once.
 ///
-///
+/// TODO Check is not relevant anymore. Also remove from documentation.
 ///
 fn check_levels(diag: &mut Diagnostics, nodes: &BTreeMap<String, GsnNode>) {
-    let mut levels = BTreeMap::<&str, usize>::new();
-    for node in nodes.values() {
-        if let Some(l) = &node.level {
-            *levels.entry(l.trim()).or_insert(0) += 1;
-        }
-    }
-    levels
-        .iter()
-        .filter(|(_, &count)| count == 1)
-        .for_each(|(l, _)| diag.add_warning(None, format!("C05: Level {l} is only used once.")));
+    // let mut levels = BTreeMap::<&str, usize>::new();
+    // for node in nodes.values() {
+    //     if let Some(l) = &node.level {
+    //         *levels.entry(l.trim()).or_insert(0) += 1;
+    //     }
+    // }
+    // levels
+    //     .iter()
+    //     .filter(|(_, &count)| count == 1)
+    //     .for_each(|(l, _)| diag.add_warning(None, format!("C05: Level {l} is only used once.")));
 }
 
 ///
@@ -343,8 +358,7 @@ mod test {
             .iter()
             .map(|(id, node)| (id.to_owned(), node.get_edges()))
             .collect();
-        let forced_levels = BTreeMap::new();
-        let graph = DirectedGraph::new(&nodes, &edges, &forced_levels);
+        let graph = DirectedGraph::new(&nodes, &edges);
         check_cycles(&mut d, &graph);
         assert_eq!(d.messages.len(), 1);
         assert_eq!(d.messages[0].module, None);
@@ -634,27 +648,27 @@ mod test {
         assert_eq!(d.warnings, 1);
     }
 
-    #[test]
-    fn level_only_once() {
-        let mut d = Diagnostics::default();
-        let mut nodes = BTreeMap::<String, GsnNode>::new();
-        nodes.insert(
-            "G1".to_owned(),
-            GsnNode {
-                undeveloped: Some(true),
-                level: Some("test".to_owned()),
-                node_type: Some(GsnNodeType::Goal),
-                ..Default::default()
-            },
-        );
-        check_nodes(&mut d, &nodes, &[]);
-        assert_eq!(d.messages.len(), 1);
-        assert_eq!(d.messages[0].module, None);
-        assert_eq!(d.messages[0].diag_type, DiagType::Warning);
-        assert_eq!(d.messages[0].msg, "C05: Level test is only used once.");
-        assert_eq!(d.errors, 0);
-        assert_eq!(d.warnings, 1);
-    }
+    // #[test]
+    // fn level_only_once() {
+    //     let mut d = Diagnostics::default();
+    //     let mut nodes = BTreeMap::<String, GsnNode>::new();
+    //     nodes.insert(
+    //         "G1".to_owned(),
+    //         GsnNode {
+    //             undeveloped: Some(true),
+    //             level: Some("test".to_owned()),
+    //             node_type: Some(GsnNodeType::Goal),
+    //             ..Default::default()
+    //         },
+    //     );
+    //     check_nodes(&mut d, &nodes, &[]);
+    //     assert_eq!(d.messages.len(), 1);
+    //     assert_eq!(d.messages[0].module, None);
+    //     assert_eq!(d.messages[0].diag_type, DiagType::Warning);
+    //     assert_eq!(d.messages[0].msg, "C05: Level test is only used once.");
+    //     assert_eq!(d.errors, 0);
+    //     assert_eq!(d.warnings, 1);
+    // }
 
     #[test]
     fn empty_document() {

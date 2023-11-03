@@ -52,18 +52,16 @@ impl<'de> Deserialize<'de> for HorizontalIndex {
             where
                 E: serde::de::Error,
             {
-                if let Ok(index) = i32::from_str_radix(v, 10) {
-                    if v.starts_with(&['+', '-']) {
+                if let Ok(index) = v.parse::<i32>() {
+                    if v.starts_with(['+', '-']) {
                         Ok(HorizontalIndex::Relative(index))
+                    } else if let Ok(abs_index) = u32::try_from(index) {
+                        Ok(HorizontalIndex::Absolute(abs_index))
                     } else {
-                        if let Ok(abs_index) = u32::try_from(index) {
-                            Ok(HorizontalIndex::Absolute(abs_index))
-                        } else {
-                            Err(serde::de::Error::invalid_type(
-                                serde::de::Unexpected::Str(v),
-                                &self,
-                            ))
-                        }
+                        Err(serde::de::Error::invalid_type(
+                            serde::de::Unexpected::Str(v),
+                            &self,
+                        ))
                     }
                 } else {
                     Err(serde::de::Error::invalid_type(
@@ -90,16 +88,16 @@ pub struct GsnNode {
     pub(crate) undeveloped: Option<bool>,
     pub(crate) classes: Option<Vec<String>>,
     pub(crate) url: Option<String>,
-    pub(crate) level: Option<String>,
+    pub(crate) rank_increment: Option<usize>,
+    pub(crate) horizontal_index: Option<HorizontalIndex>,
     #[serde(flatten)]
     pub(crate) additional: BTreeMap<String, String>,
     #[serde(skip_deserializing)]
     pub(crate) module: String,
     pub(crate) node_type: Option<GsnNodeType>,
-    pub(crate) horizontal_index: Option<HorizontalIndex>,
 }
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Debug)]
 pub enum GsnEdgeType {
     SupportedBy,
     InContextOf,
@@ -246,19 +244,6 @@ fn get_root_nodes(nodes: &BTreeMap<String, GsnNode>) -> Vec<String> {
 }
 
 ///
-/// Gathers all different 'level' attributes from all nodes.
-///
-pub fn get_levels(nodes: &BTreeMap<String, GsnNode>) -> BTreeMap<&str, Vec<&str>> {
-    let mut levels = BTreeMap::<&str, Vec<&str>>::new();
-    for (id, node) in nodes.iter() {
-        if let Some(l) = &node.level {
-            levels.entry(l.trim()).or_default().push(id);
-        }
-    }
-    levels
-}
-
-///
 /// Calculate module dependencies
 /// Check if a dependency in one direction is already known, then only modify the existing one.
 ///
@@ -381,36 +366,5 @@ mod test {
         let res: Result<HorizontalIndex, _> = serde_yaml::from_str("bslkdf");
         assert!(res.is_err());
         Ok(())
-    }
-
-    #[test]
-    fn no_level_exists() {
-        let mut nodes = BTreeMap::<String, GsnNode>::new();
-        nodes.insert("Sn1".to_owned(), Default::default());
-        let output = get_levels(&nodes);
-        assert!(output.is_empty());
-    }
-
-    #[test]
-    fn two_levels_exist() {
-        let mut nodes = BTreeMap::<String, GsnNode>::new();
-        nodes.insert(
-            "Sn1".to_owned(),
-            GsnNode {
-                level: Some("x1".to_owned()),
-                ..Default::default()
-            },
-        );
-        nodes.insert(
-            "G1".to_owned(),
-            GsnNode {
-                level: Some("x2".to_owned()),
-                ..Default::default()
-            },
-        );
-        let output = get_levels(&nodes);
-        assert_eq!(output.len(), 2);
-        assert!(output.contains_key(&"x1"));
-        assert!(output.contains_key(&"x2"));
     }
 }

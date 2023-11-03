@@ -40,7 +40,9 @@ pub struct Node {
     text: String,
     url: Option<String>,
     classes: Vec<String>,
-    horizontal_index: Option<HorizontalIndex>,
+    // FIXME pub(super)
+    pub(super) rank_increment: Option<usize>,
+    pub(super) horizontal_index: Option<HorizontalIndex>,
     node_type: NodeType,
 }
 
@@ -190,7 +192,7 @@ impl Node {
         }
     }
 
-    pub fn render(&mut self, font: &FontInfo) -> Element {
+    pub fn render(&self, font: &FontInfo) -> Element {
         let mut context = setup_basics(&self.identifier, &self.classes, &self.url);
         context = match &self.node_type {
             NodeType::Box(x) => x.render(self, font, context),
@@ -206,6 +208,7 @@ impl Node {
         url: Option<String>,
         classes: Vec<String>,
         horizontal_index: Option<HorizontalIndex>,
+        rank_increment: Option<usize>,
         add_class: &str,
     ) -> Self {
         let mut new_classes: Vec<String> = vec!["gsnelem".to_owned(), add_class.to_owned()];
@@ -221,6 +224,7 @@ impl Node {
             url,
             classes: new_classes,
             horizontal_index,
+            rank_increment,
             node_type: NodeType::Box(BoxType::Context),
         }
     }
@@ -231,10 +235,19 @@ impl Node {
         identifier: &str,
         text: &str,
         horizontal_index: Option<HorizontalIndex>,
+        rank_increment: Option<usize>,
         url: Option<String>,
         classes: Vec<String>,
     ) -> Self {
-        let mut n = Node::new(identifier, text, url, classes, horizontal_index, "gsnasmp");
+        let mut n = Node::new(
+            identifier,
+            text,
+            url,
+            classes,
+            horizontal_index,
+            rank_increment,
+            "gsnasmp",
+        );
         n.node_type = NodeType::Ellipsis(EllipticalType {
             admonition: Some("A".to_owned()),
             circle: false,
@@ -254,6 +267,7 @@ impl Node {
         module: &str,
         module_url: Option<String>,
         horizontal_index: Option<HorizontalIndex>,
+        rank_increment: Option<usize>,
         url: Option<String>,
         classes: Vec<String>,
     ) -> Self {
@@ -263,6 +277,7 @@ impl Node {
             url,
             classes,
             horizontal_index,
+            rank_increment,
             "gsnawayasmp",
         );
         n.node_type = NodeType::Away(AwayType {
@@ -282,10 +297,19 @@ impl Node {
         identifier: &str,
         text: &str,
         horizontal_index: Option<HorizontalIndex>,
+        rank_increment: Option<usize>,
         url: Option<String>,
         classes: Vec<String>,
     ) -> Self {
-        let mut n = Node::new(identifier, text, url, classes, horizontal_index, "gsnjust");
+        let mut n = Node::new(
+            identifier,
+            text,
+            url,
+            classes,
+            horizontal_index,
+            rank_increment,
+            "gsnjust",
+        );
         n.node_type = NodeType::Ellipsis(EllipticalType {
             admonition: Some("J".to_owned()),
             circle: false,
@@ -306,6 +330,7 @@ impl Node {
         module: &str,
         module_url: Option<String>,
         horizontal_index: Option<HorizontalIndex>,
+        rank_increment: Option<usize>,
         url: Option<String>,
         classes: Vec<String>,
     ) -> Self {
@@ -315,6 +340,7 @@ impl Node {
             url,
             classes,
             horizontal_index,
+            rank_increment,
             "gsnawayjust",
         );
         n.node_type = NodeType::Away(AwayType {
@@ -334,10 +360,19 @@ impl Node {
         identifier: &str,
         text: &str,
         horizontal_index: Option<HorizontalIndex>,
+        rank_increment: Option<usize>,
         url: Option<String>,
         classes: Vec<String>,
     ) -> Self {
-        let mut n = Node::new(identifier, text, url, classes, horizontal_index, "gsnsltn");
+        let mut n = Node::new(
+            identifier,
+            text,
+            url,
+            classes,
+            horizontal_index,
+            rank_increment,
+            "gsnsltn",
+        );
         n.node_type = NodeType::Ellipsis(EllipticalType {
             admonition: None,
             circle: true,
@@ -357,6 +392,7 @@ impl Node {
         module: &str,
         module_url: Option<String>,
         horizontal_index: Option<HorizontalIndex>,
+        rank_increment: Option<usize>,
         url: Option<String>,
         classes: Vec<String>,
     ) -> Self {
@@ -366,6 +402,7 @@ impl Node {
             url,
             classes,
             horizontal_index,
+            rank_increment,
             "gsnawaysltn",
         );
         n.node_type = NodeType::Away(AwayType {
@@ -386,10 +423,19 @@ impl Node {
         text: &str,
         undeveloped: bool,
         horizontal_index: Option<HorizontalIndex>,
+        rank_increment: Option<usize>,
         url: Option<String>,
         classes: Vec<String>,
     ) -> Self {
-        let mut n = Node::new(identifier, text, url, classes, horizontal_index, "gsnstgy");
+        let mut n = Node::new(
+            identifier,
+            text,
+            url,
+            classes,
+            horizontal_index,
+            rank_increment,
+            "gsnstgy",
+        );
         if undeveloped {
             n.node_type = NodeType::Box(BoxType::Undeveloped(15));
         } else {
@@ -407,6 +453,7 @@ impl Node {
         text: &str,
         undeveloped: bool,
         horizontal_index: Option<HorizontalIndex>,
+        rank_increment: Option<usize>,
         url: Option<String>,
         classes: Vec<String>,
     ) -> Self {
@@ -414,7 +461,15 @@ impl Node {
         if undeveloped {
             classes.push("gsn_undeveloped".to_owned());
         }
-        let mut n = Node::new(identifier, text, url, classes, horizontal_index, "gsngoal");
+        let mut n = Node::new(
+            identifier,
+            text,
+            url,
+            classes,
+            horizontal_index,
+            rank_increment,
+            "gsngoal",
+        );
         if undeveloped {
             n.node_type = NodeType::Box(BoxType::Undeveloped(0));
         } else {
@@ -433,6 +488,7 @@ impl Node {
         module: &str,
         module_url: Option<String>,
         horizontal_index: Option<HorizontalIndex>,
+        rank_increment: Option<usize>,
         url: Option<String>,
         classes: Vec<String>,
     ) -> Self {
@@ -442,6 +498,7 @@ impl Node {
             url,
             classes,
             horizontal_index,
+            rank_increment,
             "gsnawaygoal",
         );
         n.node_type = NodeType::Away(AwayType {
@@ -461,10 +518,19 @@ impl Node {
         identifier: &str,
         text: &str,
         horizontal_index: Option<HorizontalIndex>,
+        rank_increment: Option<usize>,
         url: Option<String>,
         classes: Vec<String>,
     ) -> Self {
-        Node::new(identifier, text, url, classes, horizontal_index, "gsnctxt")
+        Node::new(
+            identifier,
+            text,
+            url,
+            classes,
+            horizontal_index,
+            rank_increment,
+            "gsnctxt",
+        )
     }
 
     ///
@@ -477,6 +543,7 @@ impl Node {
         module: &str,
         module_url: Option<String>,
         horizontal_index: Option<HorizontalIndex>,
+        rank_increment: Option<usize>,
         url: Option<String>,
         classes: Vec<String>,
     ) -> Self {
@@ -486,6 +553,7 @@ impl Node {
             url,
             classes,
             horizontal_index,
+            rank_increment,
             "gsnawayctxt",
         );
         n.node_type = NodeType::Away(AwayType {
@@ -505,6 +573,7 @@ impl Node {
         identifier: &str,
         text: &str,
         horizontal_index: Option<HorizontalIndex>,
+        rank_increment: Option<usize>,
         url: Option<String>,
         classes: Vec<String>,
     ) -> Self {
@@ -514,6 +583,7 @@ impl Node {
             url,
             classes,
             horizontal_index,
+            rank_increment,
             "gsnmodule",
         );
         n.node_type = NodeType::Box(BoxType::Module);
