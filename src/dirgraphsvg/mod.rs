@@ -26,33 +26,29 @@ use self::layout::Margin;
 use self::util::font::FontInfo;
 
 impl<'a> DirectedGraphNodeType<'a> for RefCell<Node> {
-    fn is_final_node(&'a self) -> bool {
+    fn is_final_node(&self) -> bool {
         false
     }
 
-    fn get_forced_level(&'a self) -> Option<usize> {
+    fn get_forced_level(&self) -> Option<usize> {
         self.borrow().rank_increment
     }
 
-    fn get_horizontal_index(&'a self, current_index: usize) -> Option<usize> {
+    fn get_horizontal_index(&self, current_index: usize) -> Option<usize> {
         match self.borrow().horizontal_index {
             Some(HorizontalIndex::Absolute(x)) => x.try_into().ok(),
             Some(HorizontalIndex::Relative(x)) => (x + current_index as i32).try_into().ok(),
             None => None,
         }
     }
-
-    fn get_mut(&'a mut self) -> &'a mut Self {
-        self
-    }
 }
 
 impl<'a> DirectedGraphEdgeType<'a> for EdgeType {
-    fn is_primary_child_edge(&'a self) -> bool {
+    fn is_primary_child_edge(&self) -> bool {
         !self.is_secondary_child_edge()
     }
 
-    fn is_secondary_child_edge(&'a self) -> bool {
+    fn is_secondary_child_edge(&self) -> bool {
         match *self {
             EdgeType::OneWay(SingleEdge::InContextOf) => true,
             EdgeType::TwoWay((s, t))
@@ -115,13 +111,6 @@ impl<'a> DirGraph<'a> {
         self
     }
 
-    pub fn add_forced_levels(mut self, levels: &BTreeMap<&'a str, Vec<&'a str>>) -> Self {
-        for (level, nodes) in levels {
-            self.forced_levels.insert(level, nodes.to_vec());
-        }
-        self
-    }
-
     pub fn add_meta_information(mut self, meta: &mut Vec<String>) -> Self {
         self.meta_information.get_or_insert(Vec::new()).append(meta);
         self
@@ -148,7 +137,7 @@ impl<'a> DirGraph<'a> {
         // dbg!(ranks);
         dbg!(&graph);
         // Layout graph
-        let (width, height) = layout_nodes(&graph, &ranks, &self.margin, &graph.get_parent_edges());
+        let (width, height) = layout_nodes(&graph, ranks, &self.margin, &graph.get_parent_edges());
 
         // // Render to SVG
         let document = render_graph(&graph, ranks, width, height, &self.font, self.margin);

@@ -1,19 +1,17 @@
 use std::cmp::min;
-use std::collections::btree_map::Entry;
 use std::collections::{BTreeMap, BTreeSet};
 use std::fmt::Debug;
 
 pub trait DirectedGraphNodeType<'a> {
     // FIXME: is that really needed?
-    fn is_final_node(&'a self) -> bool;
-    fn get_forced_level(&'a self) -> Option<usize>;
-    fn get_horizontal_index(&'a self, current_index: usize) -> Option<usize>;
-    fn get_mut(&'a mut self) -> &'a mut Self;
+    fn is_final_node(&self) -> bool;
+    fn get_forced_level(&self) -> Option<usize>;
+    fn get_horizontal_index(&self, current_index: usize) -> Option<usize>;
 }
 
 pub trait DirectedGraphEdgeType<'a> {
-    fn is_primary_child_edge(&'a self) -> bool;
-    fn is_secondary_child_edge(&'a self) -> bool;
+    fn is_primary_child_edge(&self) -> bool;
+    fn is_secondary_child_edge(&self) -> bool;
 }
 
 ///
@@ -74,17 +72,28 @@ where
         }
     }
 
+    ///
+    /// Get a map of all inverse edges, i.e. children to their parents.
+    ///
+    ///
     pub fn get_parent_edges(&'a self) -> BTreeMap<&'a str, Vec<(&'a str, EdgeType)>> {
         self.parent_edges.to_owned()
     }
 
+    ///
+    /// Get the nodes of the graph.
+    ///
     pub fn get_nodes(&'a self) -> &'a BTreeMap<String, NodeType> {
         self.nodes
     }
 
+    ///
+    /// Get the edges of the graph.
+    ///
     pub fn get_edges(&'a self) -> &'a BTreeMap<String, Vec<(String, EdgeType)>> {
         self.edges
     }
+
     ///
     /// Identify the nodes with no incoming edges.
     /// They are called root nodes.
@@ -266,62 +275,63 @@ where
         let mut ranks = Vec::new();
         let mut visited = Vec::new();
 
-        let mut incremented_ranks = BTreeMap::new(); // = self.get_forced_levels();
+        let mut carried_nodes;
+        let mut forced_levels = self.get_forced_levels();
 
         let mut current_rank_nodes = self.root_nodes.to_vec();
 
         loop {
+            // For each rank
             let mut next_rank_nodes: Vec<&str> = Vec::new();
+
+            // Postpone ranking of forced nodes
+            (current_rank_nodes, carried_nodes) =
+                current_rank_nodes
+                    .into_iter()
+                    .partition(|n| match forced_levels.get_mut(n) {
+                        Some(0) => true,
+                        Some(forced_level) if *forced_level > 0 => {
+                            // Reduce forced level
+                            *forced_level -= 1;
+                            false
+                        }
+                        Some(_) => unreachable!(),
+                        None => true,
+                    });
+            // Visit current nodes
+            current_rank_nodes.iter().for_each(|n| visited.push(*n));
+            // Sort nodes lexicographically
+            current_rank_nodes.sort();
+            // Apply horizontal index movement
+            for idx in 0..current_rank_nodes.len() {
+                if let Some(new_idx) = self
+                    .nodes
+                    .get(current_rank_nodes.get(idx).unwrap().to_owned())
+                    .unwrap()
+                    .get_horizontal_index(idx)
+                {
+                    // FIXME Some checks are missing
+                    let child = current_rank_nodes.remove(idx);
+                    current_rank_nodes.insert(new_idx, child);
+                }
+            }
+
             for parent_node in current_rank_nodes.iter() {
                 // Get children of current parent
-                let mut children = self.get_next_rank_children_of_parent(
-                    parent_node,
-                    &visited,
-                    &mut incremented_ranks,
-                );
-                // Sort children lexicographically
-                children.sort();
-                // Apply horizontal index movement
-                for idx in 0..children.len() {
-                    if let Some(new_idx) = self
-                        .nodes
-                        .get(children.get(idx).unwrap().to_owned())
-                        .unwrap()
-                        .get_horizontal_index(idx)
-                    {
-                        // FIXME Some checks are missing
-                        let child = children.remove(idx);
-                        children.insert(new_idx, child);
-                    }
-                }
-                // Mark all children as visited
-                visited.append(&mut children.to_vec());
+                let (mut children, mut child_carried_nodes) =
+                    self.get_next_rank_children_of_parent(parent_node, &visited);
                 // Append all children to next rank
                 next_rank_nodes.append(&mut children);
+                carried_nodes.append(&mut child_carried_nodes);
             }
-            // Add nodes that are pushed down with forced levels
-            let mut remove_carry = Vec::new();
-            for (carry_node, forced_level) in incremented_ranks.iter_mut() {
-                if forced_level > &mut 0 {
-                    *forced_level -= 1;
-                } else {
-                    visited.push(carry_node);
-                    remove_carry.push(carry_node.to_owned());
-                    current_rank_nodes.push(carry_node);
-                }
-            }
-            remove_carry.iter().for_each(|&r| {
-                incremented_ranks.remove(r);
-            });
 
             if current_rank_nodes.is_empty() {
                 break;
             } else {
-                // TODO insert incontext nodes
-
                 let current_rank = self.add_same_rank_nodes(current_rank_nodes);
                 ranks.push(current_rank);
                 current_rank_nodes = next_rank_nodes;
+                current_rank_nodes.append(&mut carried_nodes);
             }
         }
         ranks
@@ -333,10 +343,8 @@ where
     ///
     ///
     fn add_same_rank_nodes<'b>(&'b self, current_rank_nodes: Vec<&'b str>) -> Vec<Vec<&str>> {
-        // dbg!(&current_rank_nodes);
         let mut current_rank: Vec<Vec<&str>> =
             current_rank_nodes.iter().map(|&n| vec![n]).collect();
-        // dbg!(&current_rank);
         // Add inContext nodes
         for index in 0..current_rank_nodes.len() {
             let same_rank_parent = current_rank_nodes.get(index).unwrap().to_owned();
@@ -349,9 +357,6 @@ where
                 .iter()
                 .position(|x| x.contains(&same_rank_parent))
                 .unwrap();
-            // dbg!(parent_index);
-            // dbg!(&left);
-            // dbg!(&right);
             if !left.is_empty() {
                 current_rank.insert(parent_index, left.iter().map(|(_, x)| *x).collect());
                 parent_index += 1;
@@ -363,21 +368,18 @@ where
                 );
             }
         }
-        // dbg!(&current_rank);
         current_rank
     }
 
     ///
-    /// Get next rank children of `parent_node`` that are not `visited` yet
-    /// and that have an `incremented_rank` of 0.
-    ///
+    /// Get next rank children of `parent_node`` that are not `visited` yet.
+    /// (Children scheduled for ranking, Children that are not yet ready)
     ///
     fn get_next_rank_children_of_parent(
         &self,
         parent_node: &str,
         visited: &[&str],
-        incremented_ranks: &mut BTreeMap<&'a str, usize>,
-    ) -> Vec<&str> {
+    ) -> (Vec<&str>, Vec<&str>) {
         self.edges
             .get(parent_node)
             .iter()
@@ -391,37 +393,32 @@ where
                 }
             })
             .filter(|n| !visited.contains(n)) // Remove already visited nodes again
-            .filter(|&n| {
-                // See if we need to postpone ranking of forced nodes
-                if let Some(forced_level) = self.nodes.get(n).unwrap().get_forced_level() {
-                    if let Entry::Vacant(e) = incremented_ranks.entry(n) {
-                        e.insert(forced_level + 1);
-                    }
-                    if let Some(current_forced_level) = incremented_ranks.get(n) {
-                        *current_forced_level == 0
-                    } else {
-                        true
-                    }
-                } else {
-                    true
-                }
+            .partition(|n| {
+                // Remove nodes that have not all parents visited yet
+                self
+                    .parent_edges
+                    .get(n)
+                    .unwrap()
+                    .iter()
+                    .filter(|(_, et)| et.is_primary_child_edge())
+                    .all(|(p, _)| visited.contains(p))
+
+            })
+    }
+
+    ///
+    /// Collect a map of node IDs and their forced vertical rank increment.
+    /// A node is not added if no forced level is set.
+    ///
+    fn get_forced_levels(&self) -> BTreeMap<&str, usize> {
+        self.nodes
+            .iter()
+            .filter_map(|(id, n)| {
+                n.get_forced_level()
+                    .map(|forced_level| (id.as_str(), forced_level))
             })
             .collect()
     }
-
-    // ///
-    // /// Collect a map of node IDs and their forced vertical rank increment.
-    // /// A node is not added if no forced level is set.
-    // ///
-    // fn get_forced_levels(&self) -> BTreeMap<&str, usize> {
-    //     dbg!(self
-    //         .nodes
-    //         .iter()
-    //         .filter_map(|(id, n)| n
-    //             .get_forced_level()
-    //             .map(|forced_level| (id.as_str(), forced_level)))
-    //         .collect())
-    // }
 }
 
 ///

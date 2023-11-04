@@ -79,7 +79,6 @@ impl Cell for Vec<&str> {
 //     }
 // }
 
-
 ///
 /// Iteratively move nodes horizontally until no movement detected
 ///  
@@ -103,14 +102,14 @@ pub(super) fn layout_nodes(
         let mut y = margin.top;
         for v_rank in ranks.iter() {
             let mut x = margin.left;
-            let dy_max = get_max_height(nodes, &margin, &v_rank);
+            let dy_max = get_max_height(nodes, margin, v_rank);
             y += dy_max / 2;
             for np in v_rank.iter() {
                 let w = np.get_max_width(nodes);
                 let old_x = np.get_x(nodes);
                 x = std::cmp::max(x + w / 2, old_x);
                 if !first_run {
-                    if let Some(new_x) = has_node_to_be_moved(nodes, edges, graph, np, &edge_map) {
+                    if let Some(new_x) = has_node_to_be_moved(nodes, edges, graph, np, edge_map) {
                         if new_x > x {
                             x = std::cmp::max(x, new_x);
                             // eprintln!("Changed {:?} {} {} {}", &np, x, old_x, new_x);
@@ -118,9 +117,9 @@ pub(super) fn layout_nodes(
                         }
                     }
                 }
-                dbg!(x, y);
+                // dbg!(x, y);
                 // nodes.get_mut("G1").unwrap().set_position(&Point2D { x, y });
-                np.set_position(&nodes, &margin, Point2D { x, y });
+                np.set_position(nodes, margin, Point2D { x, y });
                 x += w / 2 + margin.left + margin.right;
             }
             y += margin.bottom + dy_max / 2 + margin.top;
@@ -133,19 +132,23 @@ pub(super) fn layout_nodes(
             eprintln!("Rendering a diagram took too many iterations ({limiter}). See README.md for hints how to solve this situation.");
         }
     }
-    calculate_size_of_document(&nodes, ranks, margin)
+    calculate_size_of_document(nodes, ranks, margin)
 }
 
 ///
 ///  Calculate size of document
-/// 
-/// 
-fn calculate_size_of_document(nodes: &BTreeMap<String, RefCell<Node>>, ranks: &Vec<Vec<Vec<&str>>>, margin: &Margin) -> (i32, i32) {
+///
+///
+fn calculate_size_of_document(
+    nodes: &BTreeMap<String, RefCell<Node>>,
+    ranks: &[Vec<Vec<&str>>],
+    margin: &Margin,
+) -> (i32, i32) {
     let width = ranks
         .iter()
         .map(|rank| {
             let n = rank.last().unwrap();
-            n.get_x(&nodes) + n.get_max_width(&nodes)
+            n.get_x(nodes) + n.get_max_width(nodes)
         })
         .max()
         .unwrap_or(0);
@@ -163,7 +166,7 @@ fn calculate_size_of_document(nodes: &BTreeMap<String, RefCell<Node>>, ranks: &V
 fn get_max_height(
     nodes: &BTreeMap<String, RefCell<Node>>,
     margin: &Margin,
-    rank: &Vec<Vec<&str>>,
+    rank: &[Vec<&str>],
 ) -> i32 {
     rank.iter()
         .map(|id| {
@@ -176,7 +179,7 @@ fn get_max_height(
         .unwrap()
 }
 
-fn get_center(nodes: &BTreeMap<String, RefCell<Node>>, set: &Vec<&str>) -> i32 {
+fn get_center(nodes: &BTreeMap<String, RefCell<Node>>, set: &[&str]) -> i32 {
     let x_values: Vec<_> = set
         .iter()
         .map(|&node| nodes.get(node).unwrap().borrow().get_position().x)
@@ -197,15 +200,14 @@ fn has_node_to_be_moved(
     nodes: &BTreeMap<String, RefCell<Node>>,
     edges: &BTreeMap<String, Vec<(String, EdgeType)>>,
     graph: &DirectedGraph<'_, RefCell<Node>, EdgeType>,
-    np: &Vec<&str>,
+    cell: &[&str],
     edge_map: &BTreeMap<&str, Vec<(&str, EdgeType)>>,
 ) -> Option<i32> {
-    let children: Vec<_> = np
+    let children: Vec<_> = cell
         .iter()
-        .map(|n| graph.get_real_children(n))
-        .flatten()
+        .flat_map(|n| graph.get_real_children(n))
         .collect();
-    let parents: Vec<_> = np
+    let parents: Vec<_> = cell
         .iter()
         .filter_map(|n| edge_map.get(n))
         .flatten()

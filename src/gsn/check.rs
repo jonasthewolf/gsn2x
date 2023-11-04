@@ -119,36 +119,32 @@ fn check_node_references(
 }
 
 impl<'a> DirectedGraphNodeType<'a> for GsnNode {
-    fn is_final_node(&'a self) -> bool {
+    fn is_final_node(&self) -> bool {
         self.node_type == Some(GsnNodeType::Solution)
     }
 
-    fn get_forced_level(&'a self) -> Option<usize> {
+    fn get_forced_level(&self) -> Option<usize> {
         self.rank_increment
     }
 
-    fn get_horizontal_index(&'a self, current_index: usize) -> Option<usize> {
+    fn get_horizontal_index(&self, current_index: usize) -> Option<usize> {
         match self.horizontal_index {
             Some(HorizontalIndex::Absolute(idx)) => idx.try_into().ok(),
             Some(HorizontalIndex::Relative(idx)) => (current_index as i32 + idx).try_into().ok(),
             None => None,
         }
     }
-
-    fn get_mut(&'a mut self) -> &'a mut Self {
-        self
-    }
 }
 
 impl<'a> DirectedGraphEdgeType<'a> for GsnEdgeType {
-    fn is_primary_child_edge(&'a self) -> bool {
+    fn is_primary_child_edge(&self) -> bool {
         match self {
             GsnEdgeType::SupportedBy => true,
             GsnEdgeType::InContextOf => false,
         }
     }
 
-    fn is_secondary_child_edge(&'a self) -> bool {
+    fn is_secondary_child_edge(&self) -> bool {
         match self {
             GsnEdgeType::SupportedBy => false,
             GsnEdgeType::InContextOf => true,

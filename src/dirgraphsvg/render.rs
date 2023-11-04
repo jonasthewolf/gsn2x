@@ -34,10 +34,10 @@ pub(super) fn render_graph(
     let nodes = graph.get_nodes();
     let edges = graph.get_edges();
     // Draw nodes
-    document = render_nodes(document, &nodes, &edges, &ranks, font_info, &margin);
+    document = render_nodes(document, nodes, edges, ranks, font_info, &margin);
 
     // Draw edges
-    document = render_edges(document, &nodes, &edges, &margin);
+    document = render_edges(document, nodes, edges, &margin);
     // Order is important here. render_legend may modify self.width and self.height
     // render_legend(&mut document);
     document = document.set("viewBox", (0u32, 0u32, width, height));
