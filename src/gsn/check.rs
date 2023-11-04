@@ -17,7 +17,6 @@ pub fn check_nodes(
     check_node_references(diag, nodes, excluded_modules);
     check_root_nodes(diag, nodes)
         .map(|_| {
-            check_levels(diag, nodes);
             let edges: BTreeMap<String, Vec<(String, GsnEdgeType)>> = nodes
                 .iter()
                 .map(|(id, node)| (id.to_owned(), node.get_edges()))
@@ -190,23 +189,6 @@ fn check_unreachable(diag: &mut Diagnostics, graph: &DirectedGraph<GsnNode, GsnE
     }
 }
 
-///
-/// Check if level statement is used more than once.
-///
-/// TODO Check is not relevant anymore. Also remove from documentation.
-///
-fn check_levels(diag: &mut Diagnostics, nodes: &BTreeMap<String, GsnNode>) {
-    // let mut levels = BTreeMap::<&str, usize>::new();
-    // for node in nodes.values() {
-    //     if let Some(l) = &node.level {
-    //         *levels.entry(l.trim()).or_insert(0) += 1;
-    //     }
-    // }
-    // levels
-    //     .iter()
-    //     .filter(|(_, &count)| count == 1)
-    //     .for_each(|(l, _)| diag.add_warning(None, format!("C05: Level {l} is only used once.")));
-}
 
 ///
 /// Checks if the layers handed in via command line parameters
