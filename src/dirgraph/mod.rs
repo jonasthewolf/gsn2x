@@ -395,14 +395,12 @@ where
             .filter(|n| !visited.contains(n)) // Remove already visited nodes again
             .partition(|n| {
                 // Remove nodes that have not all parents visited yet
-                self
-                    .parent_edges
+                self.parent_edges
                     .get(n)
                     .unwrap()
                     .iter()
                     .filter(|(_, et)| et.is_primary_child_edge())
                     .all(|(p, _)| visited.contains(p))
-
             })
     }
 
