@@ -5,6 +5,8 @@ mod render;
 mod util;
 
 use serde_yaml::with;
+use std::cell::RefCell;
+use std::cell::RefMut;
 use std::collections::BTreeMap;
 pub use util::{escape_node_id, escape_text};
 
@@ -23,17 +25,17 @@ use self::edges::SingleEdge;
 use self::layout::Margin;
 use self::util::font::FontInfo;
 
-impl<'a> DirectedGraphNodeType<'a> for Node {
+impl<'a> DirectedGraphNodeType<'a> for RefCell<Node> {
     fn is_final_node(&'a self) -> bool {
         false
     }
 
     fn get_forced_level(&'a self) -> Option<usize> {
-        self.rank_increment
+        self.borrow().rank_increment
     }
 
     fn get_horizontal_index(&'a self, current_index: usize) -> Option<usize> {
-        match self.horizontal_index {
+        match self.borrow().horizontal_index {
             Some(HorizontalIndex::Absolute(x)) => x.try_into().ok(),
             Some(HorizontalIndex::Relative(x)) => (x + current_index as i32).try_into().ok(),
             None => None,
@@ -135,26 +137,21 @@ impl<'a> DirGraph<'a> {
             .values_mut()
             .for_each(|n| n.calculate_optimal_size(&self.font));
 
+        let nodes: BTreeMap<String, RefCell<Node>> = self
+            .nodes
+            .into_iter()
+            .map(|(a, b)| (a, RefCell::new(b)))
+            .collect();
         // Rank nodes
-        let graph = DirectedGraph::new(&self.nodes, &self.edges);
+        let graph = DirectedGraph::new(&nodes, &self.edges);
         let ranks = &graph.rank_nodes();
         // dbg!(ranks);
         dbg!(&graph);
         // Layout graph
-        let (width, height) = layout_nodes(&mut self.nodes, &graph, &ranks, &self.margin, &graph.get_parent_edges());
+        let (width, height) = layout_nodes(&graph, &ranks, &self.margin, &graph.get_parent_edges());
 
-        let width = 500;
-        let height = 500;
         // // Render to SVG
-        let document = render_graph(
-            &self.nodes,
-            &self.edges,
-            ranks,
-            width,
-            height,
-            &self.font,
-            self.margin,
-        );
+        let document = render_graph(&graph, ranks, width, height, &self.font, self.margin);
         output.write_all("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n".as_bytes())?;
         svg::write(output, &document)?;
 

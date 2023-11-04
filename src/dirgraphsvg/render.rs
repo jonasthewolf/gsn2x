@@ -1,4 +1,4 @@
-use std::collections::BTreeMap;
+use std::{cell::RefCell, collections::BTreeMap};
 
 use anyhow::Context;
 use svg::{
@@ -9,7 +9,7 @@ use svg::{
 use crate::{dirgraph::DirectedGraph, dirgraphsvg::nodes::add_text};
 
 use super::{
-    edges::{EdgeType, SingleEdge},
+    edges::{self, EdgeType, SingleEdge},
     layout::Margin,
     nodes::{Node, Port},
     util::font::FontInfo,
@@ -23,8 +23,7 @@ const MARKER_HEIGHT: u32 = 10;
 ///
 ///
 pub(super) fn render_graph(
-    nodes: &BTreeMap<String, Node>,
-    edges: &BTreeMap<String, Vec<(String, EdgeType)>>,
+    graph: &DirectedGraph<'_, RefCell<Node>, EdgeType>,
     ranks: &Vec<Vec<Vec<&str>>>,
     width: i32,
     height: i32,
@@ -32,6 +31,8 @@ pub(super) fn render_graph(
     margin: Margin,
 ) -> Document {
     let mut document = Document::new();
+    let nodes = graph.get_nodes();
+    let edges = graph.get_edges();
     // Draw nodes
     document = render_nodes(document, &nodes, &edges, &ranks, font_info, &margin);
 
@@ -51,14 +52,14 @@ pub(super) fn render_graph(
 ///
 fn render_edges(
     mut document: Document,
-    nodes: &BTreeMap<String, Node>,
+    nodes: &BTreeMap<String, RefCell<Node>>,
     edges: &BTreeMap<String, Vec<(String, EdgeType)>>,
     margin: &Margin,
 ) -> Document {
     for (source, targets) in edges {
         for (target, edge_type) in targets {
-            let s = nodes.get(source).unwrap();
-            let t = nodes.get(target).unwrap();
+            let s = nodes.get(source).unwrap().borrow();
+            let t = nodes.get(target).unwrap().borrow();
             let (marker_start_height, marker_end_height, support_distance) = match edge_type {
                 // EdgeType::Invisible => (0i32, 0i32, 3i32 * MARKER_HEIGHT as i32),
                 EdgeType::OneWay(_) => (0i32, MARKER_HEIGHT as i32, 3i32 * MARKER_HEIGHT as i32),
@@ -172,7 +173,7 @@ fn render_edges(
 ///
 fn render_nodes(
     mut document: Document,
-    nodes: &BTreeMap<String, Node>,
+    nodes: &BTreeMap<String, RefCell<Node>>,
     edges: &BTreeMap<String, Vec<(String, EdgeType)>>,
     ranks: &Vec<Vec<Vec<&str>>>,
     font_info: &FontInfo,
@@ -183,7 +184,7 @@ fn render_nodes(
         for np in rank {
             for &id in np {
                 let n = nodes.get(id).unwrap();
-                document = document.add(n.render(font_info));
+                document = document.add(n.borrow().render(font_info));
             }
         }
     }

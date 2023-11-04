@@ -1,7 +1,7 @@
-use std::{collections::BTreeMap, f32::consts::E};
+use std::cell::RefCell;
+use std::collections::BTreeMap;
 
-use crate::{dirgraph::DirectedGraph, gsn::ExtendsModule};
-use crate::dirgraph::DirectedGraphNodeType;
+use crate::dirgraph::DirectedGraph;
 
 use super::{
     edges::EdgeType,
@@ -28,35 +28,35 @@ impl Default for Margin {
 }
 
 trait Cell {
-    fn get_max_width(&self, nodes: &BTreeMap<String, Node>) -> i32;
-    fn get_x(&self, nodes: &BTreeMap<String, Node>) -> i32;
-    fn set_position(&self, nodes: &mut BTreeMap<String, Node>, margin: &Margin, pos: Point2D);
+    fn get_max_width(&self, nodes: &BTreeMap<String, RefCell<Node>>) -> i32;
+    fn get_x(&self, nodes: &BTreeMap<String, RefCell<Node>>) -> i32;
+    fn set_position(&self, nodes: &BTreeMap<String, RefCell<Node>>, margin: &Margin, pos: Point2D);
 }
 
 impl Cell for Vec<&str> {
-    fn get_max_width(&self, nodes: &BTreeMap<String, Node>) -> i32 {
+    fn get_max_width(&self, nodes: &BTreeMap<String, RefCell<Node>>) -> i32 {
         self.iter()
-            .map(|&n| nodes.get(n).unwrap().get_width())
+            .map(|&n| nodes.get(n).unwrap().borrow().get_width())
             .max()
             .unwrap()
     }
 
-    fn get_x(&self, nodes: &BTreeMap<String, Node>) -> i32 {
+    fn get_x(&self, nodes: &BTreeMap<String, RefCell<Node>>) -> i32 {
         let n = nodes.get(self.first().unwrap().to_owned()).unwrap();
-        n.get_position().x
+        n.borrow().get_position().x
     }
 
-    fn set_position(&self, nodes: &mut BTreeMap<String, Node>, margin: &Margin, pos: Point2D) {
+    fn set_position(&self, nodes: &BTreeMap<String, RefCell<Node>>, margin: &Margin, pos: Point2D) {
         let max_h = self
             .iter()
-            .map(|&id| nodes.get(id).unwrap().get_height())
+            .map(|&id| nodes.get(id).unwrap().borrow().get_height())
             .sum::<i32>()
             + (margin.top + margin.bottom) * (self.len() - 1) as i32;
         let mut y_n = pos.y - max_h / 2;
         for &id in self {
-            let n = nodes.get_mut(id).unwrap();
-            let h = n.get_height();
-            n.set_position(&Point2D {
+            let n = nodes.get(id).unwrap();
+            let h = n.borrow().get_height();
+            n.borrow_mut().set_position(&Point2D {
                 x: pos.x,
                 y: y_n + h / 2,
             });
@@ -64,51 +64,6 @@ impl Cell for Vec<&str> {
         }
     }
 }
-
-// impl NodePlace {
-//     ///
-//     /// Get (maximum) width of NodePlace
-//     ///
-//     /// Panics if a node in NodePlace does not exist or if NodePlace with multiple nodes is empty.
-//     ///
-//     ///
-//     pub(crate) fn get_max_width(&self, nodes: &BTreeMap<String, Node>) -> i32 {
-//         self.0
-//             .iter()
-//             .map(|n| nodes.get(n).unwrap().get_width())
-//             .max()
-//             .unwrap()
-//     }
-
-//     ///
-//     /// Position point to the center of the node
-//     ///
-//     ///
-//     pub(crate) fn set_position(
-//         &self,
-//         nodes: &mut BTreeMap<String, Node>,
-//         margin: &Margin,
-//         pos: Point2D,
-//     ) {
-//         // Unwraps are ok, since NodePlace are only created from existing nodes
-
-//         let max_h = self
-//             .0
-//             .iter()
-//             .map(|id| nodes.get(id).unwrap().get_height())
-//             .sum::<i32>()
-//             + (margin.top + margin.bottom) * (self.0.len() - 1) as i32;
-//         let mut y_n = pos.y - max_h / 2;
-//         for id in self.0 {
-//             let n = nodes.get_mut(&id).unwrap();
-//             let h = n.get_height();
-//             n.set_position(&Point2D {
-//                 x: pos.x,
-//                 y: y_n + h / 2,
-//             });
-//             y_n += h + margin.top + margin.bottom;
-//         }
-//     }
 
 //     ///
 //     /// Get x value of NodePlace
@@ -124,19 +79,13 @@ impl Cell for Vec<&str> {
 //     }
 // }
 
-pub(super) struct NodeLayout {
-    margin: Margin,
-    font: FontInfo,
-}
 
-impl NodeLayout {}
 ///
 /// Iteratively move nodes horizontally until no movement detected
 ///  
 ///
 pub(super) fn layout_nodes(
-    nodes: &mut BTreeMap<String, Node>,
-    graph: &DirectedGraph<'_, Node, EdgeType>,
+    graph: &DirectedGraph<'_, RefCell<Node>, EdgeType>,
     ranks: &Vec<Vec<Vec<&str>>>,
     margin: &Margin,
     parent_edges: &BTreeMap<&str, Vec<(&str, EdgeType)>>,
@@ -144,9 +93,11 @@ pub(super) fn layout_nodes(
     // Generate edge map from children to parents
     let edge_map = parent_edges;
     let mut first_run = true;
+    let nodes = graph.get_nodes();
     let edges = graph.get_edges();
     // This number should be safe that it yields a final, good looking image
-    let limit = nodes.len() * nodes.len() * 2;
+    // let limit = nodes.len() * nodes.len() * 2;
+    let limit = 5;
     for limiter in 1..=limit {
         let mut changed = false;
         let mut y = margin.top;
@@ -155,8 +106,8 @@ pub(super) fn layout_nodes(
             let dy_max = get_max_height(nodes, &margin, &v_rank);
             y += dy_max / 2;
             for np in v_rank.iter() {
-                let w = np.get_max_width(&nodes);
-                let old_x = np.get_x(&nodes);
+                let w = np.get_max_width(nodes);
+                let old_x = np.get_x(nodes);
                 x = std::cmp::max(x + w / 2, old_x);
                 if !first_run {
                     if let Some(new_x) = has_node_to_be_moved(nodes, edges, graph, np, &edge_map) {
@@ -168,9 +119,8 @@ pub(super) fn layout_nodes(
                     }
                 }
                 dbg!(x, y);
-                nodes.get_mut("G1").unwrap().get_mut().set_position(&Point2D { x, y });
                 // nodes.get_mut("G1").unwrap().set_position(&Point2D { x, y });
-                // np.set_position(&mut nodes, &margin, Point2D { x, y });
+                np.set_position(&nodes, &margin, Point2D { x, y });
                 x += w / 2 + margin.left + margin.right;
             }
             y += margin.bottom + dy_max / 2 + margin.top;
@@ -183,18 +133,42 @@ pub(super) fn layout_nodes(
             eprintln!("Rendering a diagram took too many iterations ({limiter}). See README.md for hints how to solve this situation.");
         }
     }
-    (0, 0)
+    calculate_size_of_document(&nodes, ranks, margin)
+}
+
+///
+///  Calculate size of document
+/// 
+/// 
+fn calculate_size_of_document(nodes: &BTreeMap<String, RefCell<Node>>, ranks: &Vec<Vec<Vec<&str>>>, margin: &Margin) -> (i32, i32) {
+    let width = ranks
+        .iter()
+        .map(|rank| {
+            let n = rank.last().unwrap();
+            n.get_x(&nodes) + n.get_max_width(&nodes)
+        })
+        .max()
+        .unwrap_or(0);
+    let height = ranks
+        .iter()
+        .map(|rank| margin.top + get_max_height(nodes, margin, rank) + margin.bottom)
+        .sum();
+    (width, height)
 }
 
 ///
 /// Get the maximum height of a rank
 ///
 ///
-fn get_max_height(nodes: &BTreeMap<String, Node>, margin: &Margin, rank: &Vec<Vec<&str>>) -> i32 {
+fn get_max_height(
+    nodes: &BTreeMap<String, RefCell<Node>>,
+    margin: &Margin,
+    rank: &Vec<Vec<&str>>,
+) -> i32 {
     rank.iter()
         .map(|id| {
             id.iter()
-                .map(|&x| nodes.get(x).unwrap().get_height())
+                .map(|&x| nodes.get(x).unwrap().borrow().get_height())
                 .sum::<i32>()
                 + (margin.top + margin.bottom) * (id.len() - 1) as i32
         })
@@ -202,10 +176,10 @@ fn get_max_height(nodes: &BTreeMap<String, Node>, margin: &Margin, rank: &Vec<Ve
         .unwrap()
 }
 
-fn get_center(nodes: &BTreeMap<String, Node>, set: &Vec<&str>) -> i32 {
+fn get_center(nodes: &BTreeMap<String, RefCell<Node>>, set: &Vec<&str>) -> i32 {
     let x_values: Vec<_> = set
         .iter()
-        .map(|&node| nodes.get(node).unwrap().get_position().x)
+        .map(|&node| nodes.get(node).unwrap().borrow().get_position().x)
         .collect();
     let max = x_values.iter().max().unwrap();
     let min = x_values.iter().min().unwrap();
@@ -220,9 +194,9 @@ fn get_center(nodes: &BTreeMap<String, Node>, set: &Vec<&str>) -> i32 {
 /// Then check if it should be moved, since it is in a child role.
 ///
 fn has_node_to_be_moved(
-    nodes: &BTreeMap<String, Node>,
+    nodes: &BTreeMap<String, RefCell<Node>>,
     edges: &BTreeMap<String, Vec<(String, EdgeType)>>,
-    graph: &DirectedGraph<'_, Node, EdgeType>,
+    graph: &DirectedGraph<'_, RefCell<Node>, EdgeType>,
     np: &Vec<&str>,
     edge_map: &BTreeMap<&str, Vec<(&str, EdgeType)>>,
 ) -> Option<i32> {
