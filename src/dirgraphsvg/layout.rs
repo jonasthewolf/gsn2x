@@ -190,12 +190,10 @@ fn get_center(nodes: &BTreeMap<String, RefCell<Node>>, set: &[&str]) -> i32 {
 }
 
 ///
-/// Must node be moved to create a better looking diagram?
-///
-/// Check if it should be moved, since it is an inContext node.
-/// Then check if it should be moved, since it is in a parent role.
-/// Then check if it should be moved, since it is in a child role.
-///
+/// 
+/// 
+/// 
+/// 
 fn has_node_to_be_moved(
     nodes: &BTreeMap<String, RefCell<Node>>,
     edges: &BTreeMap<String, Vec<(String, EdgeType)>>,
@@ -210,7 +208,7 @@ fn has_node_to_be_moved(
     let parents: Vec<_> = cell
         .iter()
         .filter_map(|n| edge_map.get(n))
-        .flatten()
+        .flatten() // TODO Filter edge type?
         .map(|(p, _)| *p)
         .collect();
     if !children.is_empty() {
