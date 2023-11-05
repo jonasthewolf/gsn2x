@@ -336,8 +336,6 @@ pub fn render_architecture(
         .collect();
 
     dg = dg
-        .add_nodes(svg_nodes)
-        .add_edges(&mut edges)
         .embed_stylesheets(render_options.embed_stylesheets)
         .add_css_stylesheets(
             &mut render_options
@@ -347,7 +345,7 @@ pub fn render_architecture(
                 .collect(),
         );
 
-    dg.write(output, true)?;
+    dg.write(svg_nodes, edges, output, true)?;
 
     Ok(())
 }
@@ -394,8 +392,6 @@ pub fn render_complete(
         })
         .collect();
     dg = dg
-        .add_nodes(svg_nodes)
-        .add_edges(&mut edges)
         .embed_stylesheets(render_options.embed_stylesheets)
         .add_css_stylesheets(
             &mut render_options
@@ -405,7 +401,7 @@ pub fn render_complete(
                 .collect(),
         );
 
-    dg.write(output, false)?;
+    dg.write(svg_nodes, edges, output, false)?;
 
     Ok(())
 }
@@ -484,8 +480,6 @@ pub fn render_argument(
     });
 
     dg = dg
-        .add_nodes(svg_nodes)
-        .add_edges(&mut edges)
         .embed_stylesheets(render_options.embed_stylesheets)
         .add_css_stylesheets(
             &mut render_options
@@ -511,7 +505,7 @@ pub fn render_argument(
         dg = dg.add_meta_information(&mut meta_info);
     }
 
-    dg.write(output, false)?;
+    dg.write(svg_nodes, edges, output, false)?;
 
     Ok(())
 }

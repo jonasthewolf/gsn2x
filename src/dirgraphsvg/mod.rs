@@ -4,9 +4,7 @@ pub mod nodes;
 mod render;
 mod util;
 
-use serde_yaml::with;
 use std::cell::RefCell;
-use std::cell::RefMut;
 use std::collections::BTreeMap;
 pub use util::{escape_node_id, escape_text};
 
@@ -18,7 +16,6 @@ use crate::dirgraph::DirectedGraphEdgeType;
 use crate::dirgraph::DirectedGraphNodeType;
 use crate::dirgraphsvg::layout::layout_nodes;
 use crate::dirgraphsvg::render::render_graph;
-// use crate::dirgraphsvg::layout::layout_nodes;
 use crate::gsn::HorizontalIndex;
 
 use self::edges::SingleEdge;
@@ -36,7 +33,10 @@ impl<'a> DirectedGraphNodeType<'a> for RefCell<Node> {
 
     fn get_horizontal_index(&self, current_index: usize) -> Option<usize> {
         match self.borrow().horizontal_index {
-            Some(HorizontalIndex::Absolute(x)) => x.try_into().ok(),
+            Some(HorizontalIndex::Absolute(x)) => match x {
+                crate::gsn::AbsoluteIndex::Number(num) => num.try_into().ok(),
+                crate::gsn::AbsoluteIndex::Last => Some(usize::MAX),
+            },
             Some(HorizontalIndex::Relative(x)) => (x + current_index as i32).try_into().ok(),
             None => None,
         }
@@ -61,33 +61,13 @@ impl<'a> DirectedGraphEdgeType<'a> for EdgeType {
     }
 }
 
+#[derive(Default)]
 pub struct DirGraph<'a> {
     margin: Margin,
-    nodes: BTreeMap<String, Node>,
-    edges: BTreeMap<String, Vec<(String, EdgeType)>>,
-    forced_levels: BTreeMap<&'a str, Vec<&'a str>>,
     font: FontInfo,
     css_stylesheets: Vec<&'a str>,
     embed_stylesheets: bool,
     meta_information: Option<Vec<String>>,
-}
-
-impl<'a> Default for DirGraph<'a> {
-    fn default() -> Self {
-        Self {
-            // TODO Where now?
-            // width: 210,
-            // height: 297,
-            margin: Margin::default(),
-            font: FontInfo::default(),
-            css_stylesheets: Vec::new(),
-            embed_stylesheets: false,
-            forced_levels: BTreeMap::new(),
-            nodes: BTreeMap::new(),
-            edges: BTreeMap::new(),
-            meta_information: None,
-        }
-    }
 }
 
 impl<'a> DirGraph<'a> {
@@ -101,16 +81,6 @@ impl<'a> DirGraph<'a> {
         self
     }
 
-    pub fn add_nodes(mut self, mut nodes: BTreeMap<String, Node>) -> Self {
-        self.nodes.append(&mut nodes);
-        self
-    }
-
-    pub fn add_edges(mut self, edges: &mut BTreeMap<String, Vec<(String, EdgeType)>>) -> Self {
-        self.edges.append(edges);
-        self
-    }
-
     pub fn add_meta_information(mut self, meta: &mut Vec<String>) -> Self {
         self.meta_information.get_or_insert(Vec::new()).append(meta);
         self
@@ -118,29 +88,28 @@ impl<'a> DirGraph<'a> {
 
     pub fn write(
         mut self,
+        mut nodes: BTreeMap<String, Node>,
+        edges: BTreeMap<String, Vec<(String, EdgeType)>>,
         mut output: impl std::io::Write,
         cycles_allowed: bool,
     ) -> Result<(), std::io::Error> {
         // Calculate node sizes
-        self.nodes
+        nodes
             .values_mut()
             .for_each(|n| n.calculate_optimal_size(&self.font));
 
-        let nodes: BTreeMap<String, RefCell<Node>> = self
-            .nodes
+        let nodes: BTreeMap<String, RefCell<Node>> = nodes
             .into_iter()
             .map(|(a, b)| (a, RefCell::new(b)))
             .collect();
         // Rank nodes
-        let graph = DirectedGraph::new(&nodes, &self.edges);
+        let graph = DirectedGraph::new(&nodes, &edges);
         let ranks = &graph.rank_nodes();
-        // dbg!(ranks);
         dbg!(&graph);
         // Layout graph
-        let (width, height) = layout_nodes(&graph, ranks, &self.margin, &graph.get_parent_edges());
-
-        // // Render to SVG
-        let document = render_graph(&graph, ranks, width, height, &self.font, self.margin);
+        let (width, height) = layout_nodes(&graph, ranks, &self.margin);
+        // Render to SVG
+        let document = render_graph(&self, &graph, ranks, width, height);
         output.write_all("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n".as_bytes())?;
         svg::write(output, &document)?;
 
@@ -158,10 +127,10 @@ mod test {
         let b1 = Node::new_away_goal("id", "text", "module", None, None, None, None, vec![]);
         let mut nodes = BTreeMap::new();
         nodes.insert("G1".to_owned(), b1);
-        d = d.add_nodes(nodes);
         d = d.add_meta_information(&mut vec!["A1".to_owned(), "B2".to_owned()]);
         let mut string_buffer = Vec::new();
-        d.write(&mut string_buffer, false).unwrap();
+        d.write(nodes, BTreeMap::new(), &mut string_buffer, false)
+            .unwrap();
         println!("{}", std::str::from_utf8(string_buffer.as_slice()).unwrap());
     }
 }

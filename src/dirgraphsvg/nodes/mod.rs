@@ -193,7 +193,7 @@ impl Node {
     }
 
     pub fn render(&self, font: &FontInfo) -> Element {
-        let mut context = setup_basics(&self.identifier, &self.classes, &self.url);
+        let mut context = create_group(&self.identifier, &self.classes, &self.url);
         context = match &self.node_type {
             NodeType::Box(x) => x.render(self, font, context),
             NodeType::Ellipsis(x) => x.render(self, font, context),
@@ -596,7 +596,7 @@ impl Node {
 ///
 ///
 ///
-pub(crate) fn setup_basics(id: &str, classes: &[String], url: &Option<String>) -> Element {
+pub(crate) fn create_group(id: &str, classes: &[String], url: &Option<String>) -> Element {
     let mut g = Group::new().set("id", escape_node_id(id));
     g = g.set("class", classes.join(" "));
     if let Some(url) = &url {
@@ -640,7 +640,7 @@ mod test {
 
     #[test]
     fn test_setup_basics() {
-        let b = setup_basics("my_id", &[], &None);
+        let b = create_group("my_id", &[], &None);
         assert_eq!(
             b.get_attributes()["id"].to_string(),
             "node_my_id".to_owned()

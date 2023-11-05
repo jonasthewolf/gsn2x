@@ -1,8 +1,11 @@
 use crate::{
     diagnostics::Diagnostics,
+    dirgraph::{DirectedGraphEdgeType, DirectedGraphNodeType},
     dirgraphsvg::edges::{EdgeType, SingleEdge},
 };
+use anyhow::{anyhow, Error};
 use serde::Deserialize;
+use serde_yaml::Value;
 use std::{
     collections::{BTreeMap, BTreeSet, HashMap},
     fmt::Display,
@@ -38,7 +41,32 @@ pub enum GsnEdgeType {
 #[serde(rename_all = "camelCase")]
 pub enum HorizontalIndex {
     Relative(i32),
-    Absolute(u32),
+    Absolute(AbsoluteIndex),
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Deserialize)]
+#[serde(untagged, rename_all = "camelCase", try_from = "Value")]
+pub enum AbsoluteIndex {
+    Number(u32),
+    Last,
+}
+
+impl TryFrom<Value> for AbsoluteIndex {
+    type Error = Error;
+
+    fn try_from(value: Value) -> Result<Self, Self::Error> {
+        let int_val = value.as_u64();
+        match int_val {
+            Some(x) => Ok(AbsoluteIndex::Number(x.try_into().unwrap())),
+            None => {
+                if value == "last" {
+                    Ok(AbsoluteIndex::Last)
+                } else {
+                    Err(anyhow!("Either provide positive integer or \"last\""))
+                }
+            }
+        }
+    }
 }
 
 ///
@@ -88,6 +116,50 @@ impl GsnNode {
             Some(node_type)
         } else {
             get_node_type_from_text(id)
+        }
+    }
+}
+
+///
+///
+///
+///
+impl<'a> DirectedGraphNodeType<'a> for GsnNode {
+    fn is_final_node(&self) -> bool {
+        self.node_type == Some(GsnNodeType::Solution) || self.undeveloped == Some(true)
+    }
+
+    fn get_forced_level(&self) -> Option<usize> {
+        self.rank_increment
+    }
+
+    fn get_horizontal_index(&self, current_index: usize) -> Option<usize> {
+        match self.horizontal_index {
+            Some(HorizontalIndex::Absolute(idx)) => match idx {
+                AbsoluteIndex::Number(num) => num.try_into().ok(),
+                AbsoluteIndex::Last => Some(usize::MAX),
+            },
+            Some(HorizontalIndex::Relative(idx)) => (current_index as i32 + idx).try_into().ok(),
+            None => None,
+        }
+    }
+}
+
+///
+///
+///
+impl<'a> DirectedGraphEdgeType<'a> for GsnEdgeType {
+    fn is_primary_child_edge(&self) -> bool {
+        match self {
+            GsnEdgeType::SupportedBy => true,
+            GsnEdgeType::InContextOf => false,
+        }
+    }
+
+    fn is_secondary_child_edge(&self) -> bool {
+        match self {
+            GsnEdgeType::SupportedBy => false,
+            GsnEdgeType::InContextOf => true,
         }
     }
 }
@@ -305,10 +377,14 @@ mod test {
         assert_eq!(res, HorizontalIndex::Relative(5));
         let res: HorizontalIndex = serde_yaml::from_str("!relative -3")?;
         assert_eq!(res, HorizontalIndex::Relative(-3));
+        let res: HorizontalIndex = serde_yaml::from_str("!relative 0")?;
+        assert_eq!(res, HorizontalIndex::Relative(0));
         let res: HorizontalIndex = serde_yaml::from_str("!absolute 0")?;
-        assert_eq!(res, HorizontalIndex::Absolute(0));
+        assert_eq!(res, HorizontalIndex::Absolute(AbsoluteIndex::Number(0)));
         let res: HorizontalIndex = serde_yaml::from_str("!absolute 7")?;
-        assert_eq!(res, HorizontalIndex::Absolute(7));
+        assert_eq!(res, HorizontalIndex::Absolute(AbsoluteIndex::Number(7)));
+        let res: HorizontalIndex = serde_yaml::from_str("!absolute last")?;
+        assert_eq!(res, HorizontalIndex::Absolute(AbsoluteIndex::Last));
         Ok(())
     }
 
@@ -328,6 +404,12 @@ mod test {
         let res: Result<HorizontalIndex, _> = serde_yaml::from_str("-x");
         assert!(res.is_err());
         let res: Result<HorizontalIndex, _> = serde_yaml::from_str("bslkdf");
+        assert!(res.is_err());
+        let res: Result<HorizontalIndex, _> = serde_yaml::from_str("!absolute null");
+        assert!(res.is_err());
+        let res: Result<HorizontalIndex, _> = serde_yaml::from_str("!absolute");
+        assert!(res.is_err());
+        let res: Result<HorizontalIndex, _> = serde_yaml::from_str("null");
         assert!(res.is_err());
         Ok(())
     }

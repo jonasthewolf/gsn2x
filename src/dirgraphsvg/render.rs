@@ -6,13 +6,15 @@ use svg::{
     Document,
 };
 
-use crate::{dirgraph::DirectedGraph, dirgraphsvg::nodes::add_text};
+use crate::{
+    dirgraph::DirectedGraph,
+    dirgraphsvg::nodes::{add_text, create_group},
+};
 
 use super::{
-    edges::{self, EdgeType, SingleEdge},
-    layout::Margin,
+    edges::{EdgeType, SingleEdge},
     nodes::{Node, Port},
-    util::font::FontInfo,
+    DirGraph,
 };
 
 const MARKER_HEIGHT: u32 = 10;
@@ -23,23 +25,29 @@ const MARKER_HEIGHT: u32 = 10;
 ///
 ///
 pub(super) fn render_graph(
+    render_graph: &DirGraph,
     graph: &DirectedGraph<'_, RefCell<Node>, EdgeType>,
     ranks: &Vec<Vec<Vec<&str>>>,
     width: i32,
     height: i32,
-    font_info: &FontInfo,
-    margin: Margin,
 ) -> Document {
+    let mut width = width;
+    let mut height = height;
     let mut document = Document::new();
     let nodes = graph.get_nodes();
     let edges = graph.get_edges();
+    document = setup_basics(document);
+    document = setup_stylesheets(
+        document,
+        &render_graph.css_stylesheets,
+        render_graph.embed_stylesheets,
+    );
     // Draw nodes
-    document = render_nodes(document, nodes, edges, ranks, font_info, &margin);
-
+    document = render_nodes(document, render_graph, nodes, ranks);
     // Draw edges
-    document = render_edges(document, nodes, edges, &margin);
+    document = render_edges(document, render_graph, nodes, edges);
     // Order is important here. render_legend may modify self.width and self.height
-    // render_legend(&mut document);
+    document = render_legend(document, render_graph, &mut width, &mut height);
     document = document.set("viewBox", (0u32, 0u32, width, height));
     document
 }
@@ -52,9 +60,9 @@ pub(super) fn render_graph(
 ///
 fn render_edges(
     mut document: Document,
+    render_graph: &DirGraph,
     nodes: &BTreeMap<String, RefCell<Node>>,
     edges: &BTreeMap<String, Vec<(String, EdgeType)>>,
-    margin: &Margin,
 ) -> Document {
     for (source, targets) in edges {
         for (target, edge_type) in targets {
@@ -83,7 +91,9 @@ fn render_edges(
                         t.get_coordinates(&Port::North)
                             .move_relative(0, -support_distance),
                     )
-                } else if s_pos.y - s.get_height() / 2 - margin.top > t_pos.y + t.get_height() / 2 {
+                } else if s_pos.y - s.get_height() / 2 - render_graph.margin.top
+                    > t_pos.y + t.get_height() / 2
+                {
                     (
                         s.get_coordinates(&Port::North)
                             .move_relative(0, -marker_start_height),
@@ -173,18 +183,16 @@ fn render_edges(
 ///
 fn render_nodes(
     mut document: Document,
+    render_graph: &DirGraph,
     nodes: &BTreeMap<String, RefCell<Node>>,
-    edges: &BTreeMap<String, Vec<(String, EdgeType)>>,
     ranks: &Vec<Vec<Vec<&str>>>,
-    font_info: &FontInfo,
-    margin: &Margin,
 ) -> Document {
     // Draw the nodes
     for rank in ranks {
         for np in rank {
             for &id in np {
                 let n = nodes.get(id).unwrap();
-                document = document.add(n.borrow().render(font_info));
+                document = document.add(n.borrow().render(&render_graph.font));
             }
         }
     }
@@ -326,44 +334,45 @@ fn setup_stylesheets(
     document
 }
 
-// ///
-// ///
-// ///
-// ///
-// fn render_legend(document: &mut Document, meta_information: Option<Vec<String>>) {
-//     if let Some(meta) = meta_information {
-//         let mut g = setup_basics(
-//             &mut document,
-//             "gsn_module",
-//             &["gsnmodule".to_owned()],
-//             &None,
-//         );
-//         let title = Title::new().add(svg::node::Text::new("Module Information"));
-//         use svg::Node;
-//         g.append(title);
+///
+///
+///
+///
+fn render_legend(
+    mut document: Document,
+    render_graph: &DirGraph,
+    width: &mut i32,
+    height: &mut i32,
+) -> Document {
+    if let Some(meta) = &render_graph.meta_information {
+        let mut g = create_group("gsn_module", &["gsnmodule".to_owned()], &None);
+        let title = Title::new().add(svg::node::Text::new("Module Information"));
+        use svg::Node;
+        g.append(title);
 
-//         let mut text_height = 0;
-//         let mut text_width = 0;
-//         let mut lines = Vec::new();
-//         for t in meta {
-//             let (width, height) =
-//                 crate::dirgraphsvg::util::font::text_bounding_box(&self.font, t, false);
-//             lines.push((width, height));
-//             text_height += height;
-//             text_width = std::cmp::max(text_width, width);
-//         }
+        let mut text_height = 0;
+        let mut text_width = 0;
+        let mut lines = Vec::new();
+        for t in meta {
+            let (width, height) =
+                crate::dirgraphsvg::util::font::text_bounding_box(&render_graph.font, &t, false);
+            lines.push((width, height));
+            text_height += height;
+            text_width = std::cmp::max(text_width, width);
+        }
 
-//         if self.width < text_width + 20i32 {
-//             self.width = text_width + 40i32;
-//         }
-//         self.height += text_height + 40i32;
-//         let x = self.width - text_width - 20;
-//         let y_base = self.height - text_height - 20;
-//         let mut y_running = 0;
-//         for (text, (_, h)) in meta.iter().zip(lines) {
-//             y_running += h;
-//             g = add_text(g, text, x, y_base + y_running, &self.font, false);
-//         }
-//         *document = document.add(g);
-//     }
-// }
+        if *width < text_width + 20i32 {
+            *width = text_width + 40i32;
+        }
+        *height += text_height + 40i32;
+        let x = *width - text_width - 20;
+        let y_base = *height - text_height - 20;
+        let mut y_running = 0;
+        for (text, (_, h)) in meta.iter().zip(lines) {
+            y_running += h;
+            g = add_text(g, text, x, y_base + y_running, &render_graph.font, false);
+        }
+        document = document.add(g);
+    }
+    document
+}

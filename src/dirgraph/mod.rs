@@ -1,5 +1,5 @@
 use std::cmp::min;
-use std::collections::{BTreeMap, BTreeSet};
+use std::collections::{BTreeMap, BTreeSet, HashSet};
 use std::fmt::Debug;
 
 pub trait DirectedGraphNodeType<'a> {
@@ -266,6 +266,44 @@ where
     }
 
     ///
+    /// Get parents of `node´ that are typically placed on the *next* rank.
+    ///
+    ///
+    pub fn get_real_parents(&self, node: &str) -> Vec<&str> {
+        self.parent_edges
+            .get(node)
+            .iter()
+            .flat_map(|&x| x)
+            .filter_map(|(target, edge_type)| {
+                if edge_type.is_primary_child_edge() {
+                    Some(*target)
+                } else {
+                    None
+                }
+            })
+            .collect()
+    }
+
+    ///
+    /// Get parents of `node´ that are typically placed on the *same* rank.
+    ///
+    ///
+    pub fn get_same_ranks_parents(&self, node: &str) -> Vec<&str> {
+        self.parent_edges
+            .get(node)
+            .iter()
+            .flat_map(|&x| x)
+            .filter_map(|(target, edge_type)| {
+                if edge_type.is_secondary_child_edge() {
+                    Some(*target)
+                } else {
+                    None
+                }
+            })
+            .collect()
+    }
+
+    ///
     /// Rank all nodes
     ///
     /// The return value are the IDs of the ranked nodes in
@@ -273,7 +311,7 @@ where
     ///
     pub fn rank_nodes(&self) -> Vec<Vec<Vec<&str>>> {
         let mut ranks = Vec::new();
-        let mut visited = Vec::new();
+        let mut visited = HashSet::new();
 
         let mut carried_nodes;
         let mut forced_levels = self.get_forced_levels();
@@ -283,7 +321,6 @@ where
         loop {
             // For each rank
             let mut next_rank_nodes: Vec<&str> = Vec::new();
-
             // Postpone ranking of forced nodes
             (current_rank_nodes, carried_nodes) =
                 current_rank_nodes
@@ -299,25 +336,14 @@ where
                         None => true,
                     });
             // Visit current nodes
-            current_rank_nodes.iter().for_each(|n| visited.push(*n));
+            current_rank_nodes.iter().for_each(|n| {
+                visited.insert(*n);
+            });
             // Sort nodes lexicographically
             current_rank_nodes.sort();
             // Apply horizontal index movement
-            for idx in 0..current_rank_nodes.len() {
-                if let Some(mut new_idx) = self
-                    .nodes
-                    .get(current_rank_nodes.get(idx).unwrap().to_owned())
-                    .unwrap()
-                    .get_horizontal_index(idx)
-                {
-                    // FIXME Some checks are missing
-                    let child = current_rank_nodes.remove(idx);
-                    new_idx = std::cmp::min(current_rank_nodes.len(), new_idx);
-                    dbg!(new_idx);
-                    current_rank_nodes.insert(new_idx, child);
-                }
-            }
-
+            self.reorder_horizontally(&mut current_rank_nodes);
+            // Find children for next rank
             for parent_node in current_rank_nodes.iter() {
                 // Get children of current parent
                 let (mut children, mut child_carried_nodes) =
@@ -332,11 +358,53 @@ where
             } else {
                 let current_rank = self.add_same_rank_nodes(current_rank_nodes);
                 ranks.push(current_rank);
-                current_rank_nodes = next_rank_nodes;
+                current_rank_nodes = next_rank_nodes
+                    .into_iter()
+                    .collect::<BTreeSet<_>>()
+                    .into_iter()
+                    .collect::<Vec<_>>();
                 current_rank_nodes.append(&mut carried_nodes);
             }
         }
         ranks
+    }
+
+    ///
+    ///
+    ///
+    ///
+    fn reorder_horizontally(&self, current_rank_nodes: &mut Vec<&str>) {
+        let current_rank_nodes_len = current_rank_nodes.len();
+        let reordered_nodes = current_rank_nodes
+            .iter()
+            .enumerate()
+            .filter_map(|(idx, node)| {
+                self.nodes
+                    .get(*node)
+                    .unwrap()
+                    .get_horizontal_index(idx)
+                    .map(|_| *node)
+            })
+            .collect::<Vec<_>>();
+        let mut reordered_nodes_iter = reordered_nodes.iter();
+        while let Some(next_reorder) = reordered_nodes_iter.next() {
+            let cur_pos = current_rank_nodes
+                .iter()
+                .position(|n| n == next_reorder)
+                .unwrap();
+            let new_pos = self
+                .nodes
+                .get(*next_reorder)
+                .unwrap()
+                .get_horizontal_index(cur_pos)
+                .unwrap();
+            let tmp = current_rank_nodes.remove(cur_pos);
+            if new_pos > current_rank_nodes_len {
+                current_rank_nodes.push(tmp);
+            } else {
+                current_rank_nodes.insert(new_pos, tmp);
+            }
+        }
     }
 
     ///
@@ -354,7 +422,7 @@ where
                 .get_same_rank_children(same_rank_parent)
                 .into_iter()
                 .enumerate()
-                .partition(|(idx, _)| idx % 2 == 0);
+                .partition(|(idx, _)| idx % 2 != 0);
             let mut parent_index = current_rank
                 .iter()
                 .position(|x| x.contains(&same_rank_parent))
@@ -380,7 +448,7 @@ where
     fn get_next_rank_children_of_parent(
         &self,
         parent_node: &str,
-        visited: &[&str],
+        visited: &HashSet<&str>,
     ) -> (Vec<&str>, Vec<&str>) {
         self.edges
             .get(parent_node)
