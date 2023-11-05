@@ -17,7 +17,7 @@ mod yaml_fix;
 
 use diagnostics::Diagnostics;
 use dirgraphsvg::escape_text;
-use gsn::{GsnDocumentNode, GsnNode, Module, ModuleInformation};
+use gsn::{GsnDocument, GsnNode, Module, ModuleInformation};
 
 const MODULE_INFORMATION_NODE: &str = "module";
 
@@ -246,8 +246,8 @@ fn read_inputs(
         let reader =
             BufReader::new(File::open(input).context(format!("Failed to open file {input}"))?);
 
-        let mut n: BTreeMap<String, GsnDocumentNode> = serde_yaml::from_reader(reader)
-            .map(|n: yaml_fix::YamlFixMap<String, GsnDocumentNode>| n.into_inner())
+        let mut n: BTreeMap<String, GsnDocument> = serde_yaml::from_reader(reader)
+            .map(|n: yaml_fix::YamlFixMap<String, GsnDocument>| n.into_inner())
             .map_err(|e| {
                 anyhow!(format!(
                     "No valid GSN element can be found starting from line {}.\n\
@@ -262,7 +262,7 @@ fn read_inputs(
             })
             .context(format!("Failed to parse YAML from file {input}"))?;
         let meta: ModuleInformation = match n.remove_entry(MODULE_INFORMATION_NODE) {
-            Some((_, GsnDocumentNode::ModuleInformation(x))) => x,
+            Some((_, GsnDocument::ModuleInformation(x))) => x,
             _ => {
                 let module_name = escape_text(input);
                 ModuleInformation {
@@ -299,7 +299,7 @@ fn read_inputs(
             if let Some((k, v)) = n.remove_entry(&node_name) {
                 if let std::collections::btree_map::Entry::Vacant(e) = nodes.entry(k.to_owned()) {
                     match v {
-                        GsnDocumentNode::GsnNode(mut x) => {
+                        GsnDocument::GsnNode(mut x) => {
                             // Remember module for node
                             x.module = module.to_owned();
                             x.fix_node_type(&k);

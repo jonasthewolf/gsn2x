@@ -190,10 +190,10 @@ fn get_center(nodes: &BTreeMap<String, RefCell<Node>>, set: &[&str]) -> i32 {
 }
 
 ///
-/// 
-/// 
-/// 
-/// 
+///
+///
+///
+///
 fn has_node_to_be_moved(
     nodes: &BTreeMap<String, RefCell<Node>>,
     edges: &BTreeMap<String, Vec<(String, EdgeType)>>,

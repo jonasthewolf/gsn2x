@@ -2,7 +2,7 @@ use crate::{
     diagnostics::Diagnostics,
     dirgraphsvg::edges::{EdgeType, SingleEdge},
 };
-use serde::{de::Visitor, Deserialize};
+use serde::Deserialize;
 use std::{
     collections::{BTreeMap, BTreeSet, HashMap},
     fmt::Display,
@@ -12,6 +12,7 @@ pub mod check;
 pub mod validation;
 
 #[derive(Clone, Copy, Debug, Deserialize, PartialEq, Eq)]
+#[serde(untagged)]
 pub enum GsnNodeType {
     Goal,
     Strategy,
@@ -27,52 +28,17 @@ impl Display for GsnNodeType {
     }
 }
 
-#[derive(Clone, Copy, Debug, PartialEq)]
+#[derive(Clone, Copy, Debug)]
+pub enum GsnEdgeType {
+    SupportedBy,
+    InContextOf,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub enum HorizontalIndex {
     Relative(i32),
     Absolute(u32),
-}
-
-impl<'de> Deserialize<'de> for HorizontalIndex {
-    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        struct MyVisitor;
-        impl<'de> Visitor<'de> for MyVisitor {
-            type Value = HorizontalIndex;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
-                formatter.write_str(
-                    "an integer (if provided with sign it is interpreted as relative index)",
-                )
-            }
-
-            fn visit_str<E>(self, v: &str) -> Result<Self::Value, E>
-            where
-                E: serde::de::Error,
-            {
-                if let Ok(index) = v.parse::<i32>() {
-                    if v.starts_with(['+', '-']) {
-                        Ok(HorizontalIndex::Relative(index))
-                    } else if let Ok(abs_index) = u32::try_from(index) {
-                        Ok(HorizontalIndex::Absolute(abs_index))
-                    } else {
-                        Err(serde::de::Error::invalid_type(
-                            serde::de::Unexpected::Str(v),
-                            &self,
-                        ))
-                    }
-                } else {
-                    Err(serde::de::Error::invalid_type(
-                        serde::de::Unexpected::Str(v),
-                        &self,
-                    ))
-                }
-            }
-        }
-        deserializer.deserialize_str(MyVisitor)
-    }
 }
 
 ///
@@ -90,17 +56,11 @@ pub struct GsnNode {
     pub(crate) url: Option<String>,
     pub(crate) rank_increment: Option<usize>,
     pub(crate) horizontal_index: Option<HorizontalIndex>,
+    pub(crate) node_type: Option<GsnNodeType>,
     #[serde(flatten)]
     pub(crate) additional: BTreeMap<String, String>,
     #[serde(skip_deserializing)]
     pub(crate) module: String,
-    pub(crate) node_type: Option<GsnNodeType>,
-}
-
-#[derive(Clone, Copy, Debug)]
-pub enum GsnEdgeType {
-    SupportedBy,
-    InContextOf,
 }
 
 impl GsnNode {
@@ -132,6 +92,10 @@ impl GsnNode {
     }
 }
 
+///
+///
+///
+///
 fn get_node_type_from_text(text: &str) -> Option<GsnNodeType> {
     // Order is important due to Sn and S
     match text {
@@ -157,7 +121,7 @@ pub struct ModuleInformation {
 
 #[derive(Debug, Deserialize)]
 #[serde(untagged)]
-pub enum GsnDocumentNode {
+pub enum GsnDocument {
     GsnNode(GsnNode),
     ModuleInformation(ModuleInformation),
 }
@@ -334,22 +298,22 @@ fn add_dependencies(
 #[cfg(test)]
 mod test {
     use super::*;
-    use anyhow::Result;
+    use anyhow::{anyhow, Result};
     #[test]
-    fn derser_hor_index() -> Result<()> {
-        let res: HorizontalIndex = serde_yaml::from_str("+5")?;
+    fn serde_hor_index() -> Result<()> {
+        let res: HorizontalIndex = serde_yaml::from_str("!relative 5")?;
         assert_eq!(res, HorizontalIndex::Relative(5));
-        let res: HorizontalIndex = serde_yaml::from_str("-3")?;
+        let res: HorizontalIndex = serde_yaml::from_str("!relative -3")?;
         assert_eq!(res, HorizontalIndex::Relative(-3));
-        let res: HorizontalIndex = serde_yaml::from_str("0")?;
+        let res: HorizontalIndex = serde_yaml::from_str("!absolute 0")?;
         assert_eq!(res, HorizontalIndex::Absolute(0));
-        let res: HorizontalIndex = serde_yaml::from_str("7")?;
+        let res: HorizontalIndex = serde_yaml::from_str("!absolute 7")?;
         assert_eq!(res, HorizontalIndex::Absolute(7));
         Ok(())
     }
 
     #[test]
-    fn derser_hor_invalid_index() -> Result<()> {
+    fn serde_hor_invalid_index() -> Result<()> {
         let res: Result<HorizontalIndex, _> = serde_yaml::from_str("+asdf");
         assert!(res.is_err());
         let res: Result<HorizontalIndex, _> = serde_yaml::from_str("");
@@ -366,5 +330,22 @@ mod test {
         let res: Result<HorizontalIndex, _> = serde_yaml::from_str("bslkdf");
         assert!(res.is_err());
         Ok(())
+    }
+
+    #[test]
+    fn serde_back() -> Result<()> {
+        let goal = r#"
+text: test
+undeveloped: true
+horizontalIndex:
+  relative: -23
+"#;
+        let res: GsnDocument = serde_yaml::from_str(goal)?;
+        if let GsnDocument::GsnNode(node) = res {
+            assert_eq!(node.horizontal_index, Some(HorizontalIndex::Relative(-23)));
+            Ok(())
+        } else {
+            Err(anyhow!("no GsnNode deserialized"))
+        }
     }
 }

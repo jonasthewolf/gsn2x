@@ -304,7 +304,7 @@ where
             current_rank_nodes.sort();
             // Apply horizontal index movement
             for idx in 0..current_rank_nodes.len() {
-                if let Some(new_idx) = self
+                if let Some(mut new_idx) = self
                     .nodes
                     .get(current_rank_nodes.get(idx).unwrap().to_owned())
                     .unwrap()
@@ -312,6 +312,8 @@ where
                 {
                     // FIXME Some checks are missing
                     let child = current_rank_nodes.remove(idx);
+                    new_idx = std::cmp::min(current_rank_nodes.len(), new_idx);
+                    dbg!(new_idx);
                     current_rank_nodes.insert(new_idx, child);
                 }
             }

@@ -189,7 +189,6 @@ fn check_unreachable(diag: &mut Diagnostics, graph: &DirectedGraph<GsnNode, GsnE
     }
 }
 
-
 ///
 /// Checks if the layers handed in via command line parameters
 /// are actually used at at least one node.
@@ -205,6 +204,7 @@ pub fn check_layers(diag: &mut Diagnostics, nodes: &BTreeMap<String, GsnNode>, l
         "level",
         "undeveloped",
         "nodeType",
+        "rankIncrement",
         "horizontalIndex",
     ];
     for l in layers {
