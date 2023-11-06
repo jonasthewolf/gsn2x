@@ -220,8 +220,7 @@ impl AwayType {
 
         // Module text and links
         if let Some(module_url) = &self.module_url {
-            let mut module_link = Anchor::new();
-            module_link = module_link
+            let module_link = Anchor::new()
                 .set("href", escape_url(module_url.as_str()))
                 .add(module_box)
                 .add(module_text);

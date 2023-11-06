@@ -225,7 +225,7 @@ fn render_legend(
     height: &mut i32,
 ) -> Document {
     if let Some(meta) = &render_graph.meta_information {
-        let mut g = create_group("gsn_module", &["gsnmodule".to_owned()], &None);
+        let (outer, mut g) = create_group("gsn_module", &["gsnmodule".to_owned()], &None);
         let title = Title::new().add(svg::node::Text::new("Module Information"));
         use svg::Node;
         g.append(title);
@@ -252,7 +252,7 @@ fn render_legend(
             y_running += h;
             g = add_text(g, text, x, y_base + y_running, &render_graph.font, false);
         }
-        document = document.add(g);
+        document = document.add(outer);
     }
     document
 }
@@ -381,16 +381,25 @@ fn setup_stylesheets(
 ///
 ///
 ///
+/// (outer, inner) element
 ///
-///
-pub(crate) fn create_group(id: &str, classes: &[String], url: &Option<String>) -> Element {
+pub(crate) fn create_group(
+    id: &str,
+    classes: &[String],
+    url: &Option<String>,
+) -> (Element, Element) {
     let mut g = Group::new().set("id", escape_node_id(id));
     g = g.set("class", classes.join(" "));
     if let Some(url) = &url {
         let link = Anchor::new();
-        link.set("href", escape_url(url.as_str())).add(g).into()
+        (
+            link.set("href", escape_url(url.as_str()))
+                .add(g.clone())
+                .into(),
+            g.into(),
+        )
     } else {
-        g.into()
+        (g.clone().into(), g.into())
     }
 }
 

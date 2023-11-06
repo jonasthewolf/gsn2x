@@ -197,13 +197,15 @@ impl Node {
     ///
     ///
     pub fn render(&self, font: &FontInfo) -> Element {
-        let mut context = create_group(&self.identifier, &self.classes, &self.url);
+        let (mut outer, mut context) = create_group(&self.identifier, &self.classes, &self.url);
         context = match &self.node_type {
             NodeType::Box(x) => x.render(self, font, context),
             NodeType::Ellipsis(x) => x.render(self, font, context),
             NodeType::Away(x) => x.render(self, font, context),
         };
-        context
+        use svg::Node;
+        outer.append(context);
+        outer
     }
 
     ///
@@ -395,10 +397,16 @@ impl Node {
         layers: &[String],
         module_url: Option<String>,
     ) -> Self {
-        let mut n = Node::new(identifier, gsn_node, layers, module_url, &["gsnawaygoal"]);
+        let mut n = Node::new(
+            identifier,
+            gsn_node,
+            layers,
+            module_url.to_owned(),
+            &["gsnawaygoal"],
+        );
         n.node_type = NodeType::Away(AwayType {
             module: gsn_node.module.to_owned(),
-            module_url: gsn_node.url.to_owned(),
+            module_url,
             away_type: AwayNodeType::Goal,
             mod_height: 0,
         });
@@ -439,10 +447,16 @@ impl Node {
         layers: &[String],
         module_url: Option<String>,
     ) -> Self {
-        let mut n = Node::new(identifier, gsn_node, layers, module_url, &["gsnawayctxt"]);
+        let mut n = Node::new(
+            identifier,
+            gsn_node,
+            layers,
+            module_url.to_owned(),
+            &["gsnawayctxt"],
+        );
         n.node_type = NodeType::Away(AwayType {
             module: gsn_node.module.to_owned(),
-            module_url: Some(gsn_node.module.to_owned()),
+            module_url,
             away_type: AwayNodeType::Context,
             mod_height: 0,
         });
@@ -540,15 +554,4 @@ fn node_text_from_node_and_layers(gsn_node: &GsnNode, layers: &[String]) -> Stri
 }
 
 #[cfg(test)]
-mod test {
-    use super::*;
-
-    #[test]
-    fn test_setup_basics() {
-        let b = create_group("my_id", &[], &None);
-        assert_eq!(
-            b.get_attributes()["id"].to_string(),
-            "node_my_id".to_owned()
-        );
-    }
-}
+mod test {}

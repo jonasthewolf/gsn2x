@@ -17,6 +17,7 @@
 </marker>
 <a href="./main.gsn.svg">
 <g class="gsn_module_ gsnelem gsnmodule" id="node_Main"/>
+<g class="gsn_module_ gsnelem gsnmodule" id="node_Main">
 <title>
 Main
 </title>
@@ -24,9 +25,11 @@ Main
 <text font-family="Arial" font-size="12" font-weight="bold" x="27" y="49">
 Main
 </text>
+</g>
 </a>
 <a href="./sub1.gsn.svg">
 <g class="gsn_module_ gsnelem gsnmodule" id="node_Sub1"/>
+<g class="gsn_module_ gsnelem gsnmodule" id="node_Sub1">
 <title>
 Sub1
 </title>
@@ -34,6 +37,7 @@ Sub1
 <text font-family="Arial" font-size="12" font-weight="bold" x="171" y="49">
 Sub1
 </text>
+</g>
 </a>
 <path class="gsnedge gsninctxt" d="M134,47 C124,47,134,47,154,47" fill="none" marker-end="url(#composite_arrow)" marker-start="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsncomposite" d="M164,47 C164,47,82,0,62,0" fill="none" marker-end="url(#composite_arrow)" stroke="black" stroke-width="1"/>

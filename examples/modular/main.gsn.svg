@@ -19,6 +19,7 @@
 @import url(https://github.com/jonasthewolf/gsn2x/blob/3439402d093ba54af4771b295e78f2488bd1b978/examples/modular/modular.css)
 </style>
 <g class="gsn_module_Main gsnelem gsngoal" id="node_G1">
+<g class="gsn_module_Main gsnelem gsngoal" id="node_G1">
 <title>
 G1
 </title>
@@ -30,8 +31,10 @@ G1
 Main Goal
 </text>
 </g>
+</g>
 <a href="./sub1.gsn.svg#node_A1">
 <g class="gsn_module_Sub1 gsnelem gsnawayasmp" id="node_A1"/>
+<g class="gsn_module_Sub1 gsnelem gsnawayasmp" id="node_A1">
 <title>
 A1
 </title>
@@ -52,7 +55,9 @@ Sub1
 <text font-family="Arial" font-size="12" font-weight="bold" x="1051" y="20">
 A
 </text>
+</g>
 </a>
+<g class="gsn_module_Main gsnelem gsnstgy" id="node_S1">
 <g class="gsn_module_Main gsnelem gsnstgy" id="node_S1">
 <title>
 S1
@@ -65,6 +70,8 @@ S1
 Divide and Conquer
 </text>
 </g>
+</g>
+<g class="gsn_module_Main gsnelem gsngoal gsn_undeveloped" id="node_G2">
 <g class="gsn_module_Main gsnelem gsngoal gsn_undeveloped" id="node_G2">
 <title>
 G2
@@ -78,6 +85,8 @@ Divide
 </text>
 <path d="M1152,314 l5,5 l-5,5 l-5,-5 z" fill="none" stroke="black" stroke-width="1"/>
 </g>
+</g>
+<g class="gsn_module_Main gsnelem gsnjust" id="node_J1">
 <g class="gsn_module_Main gsnelem gsnjust" id="node_J1">
 <title>
 J1
@@ -93,6 +102,8 @@ Some Context
 J
 </text>
 </g>
+</g>
+<g class="gsn_module_Main gsnelem gsnjust" id="node_J1">
 <g class="gsn_module_Main gsnelem gsnjust" id="node_J1">
 <title>
 J1
@@ -107,9 +118,11 @@ Some Context
 <text font-family="Arial" font-size="12" font-weight="bold" x="1567" y="320">
 J
 </text>
+</g>
 </g>
 <a href="./sub1.gsn.svg#node_G3">
 <g class="gsn_module_Sub1 gsnelem gsnawaygoal" id="node_G3"/>
+<g class="gsn_module_Sub1 gsnelem gsnawaygoal" id="node_G3">
 <title>
 G3
 </title>
@@ -120,11 +133,14 @@ G3
 <text font-family="Arial" font-size="12" x="1619" y="284">
 Conquer the submodules
 </text>
+<a href="./sub1.gsn.svg#node_G3">
 <rect fill="none" height="28" stroke="black" stroke-width="1" width="161" x="1612" y="300"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="1646" y="321">
 Sub1
 </text>
+</a>
 <use href="#module_icon" x="1619" y="307"/>
+</g>
 </a>
 <path class="gsnedge gsninctxt" d="M934,71 C934,71,944,71,964,71" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsninspby" d="M882,94 C882,124,1152,132,1152,152" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>

@@ -20,6 +20,7 @@
 </style>
 <a href="./sub1.gsn.svg#node_G3">
 <g class="gsn_module_Sub1 gsnelem gsnawaygoal" id="node_G3"/>
+<g class="gsn_module_Sub1 gsnelem gsnawaygoal" id="node_G3">
 <title>
 G3
 </title>
@@ -30,12 +31,16 @@ G3
 <text font-family="Arial" font-size="12" x="27" y="56">
 Conquer the submodules
 </text>
+<a href="./sub1.gsn.svg#node_G3">
 <rect fill="none" height="28" stroke="black" stroke-width="1" width="161" x="20" y="72"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="54" y="93">
 Sub1
 </text>
-<use href="#module_icon" x="27" y="79"/>
 </a>
+<use href="#module_icon" x="27" y="79"/>
+</g>
+</a>
+<g class="gsn_module_Sub3 gsnelem gsnctxt" id="node_C2">
 <g class="gsn_module_Sub3 gsnelem gsnctxt" id="node_C2">
 <title>
 C2
@@ -48,6 +53,8 @@ C2
 Context 2
 </text>
 </g>
+</g>
+<g class="gsn_module_Sub3 gsnelem gsnsltn" id="node_Sn1">
 <g class="gsn_module_Sub3 gsnelem gsnsltn" id="node_Sn1">
 <title>
 Sn1
@@ -59,6 +66,7 @@ Sn1
 <text font-family="Arial" font-size="12" x="72" y="194">
 Solution 1
 </text>
+</g>
 </g>
 <path class="gsnedge gsninctxt" d="M180,60 C180,60,190,60,210,60" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsninspby" d="M100,100 C100,130,100,110,100,130" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
