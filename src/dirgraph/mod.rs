@@ -421,7 +421,13 @@ where
                 .get_same_rank_children(same_rank_parent)
                 .into_iter()
                 .enumerate()
-                .partition(|(idx, _)| idx % 2 != 0);
+                .partition(|(idx, same_rank_child)| {
+                    // If a parent is already in the rank, put the same_rank_child to the left
+                    self.get_same_ranks_parents(&same_rank_child)
+                        .iter()
+                        .any(|p| current_rank_nodes[0..index].contains(p))
+                        || idx % 2 != 0
+                });
             let mut parent_index = current_rank
                 .iter()
                 .position(|x| x.contains(&same_rank_parent))
