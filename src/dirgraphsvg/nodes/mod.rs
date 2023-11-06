@@ -197,14 +197,14 @@ impl Node {
     ///
     ///
     pub fn render(&self, font: &FontInfo) -> Element {
-        let (mut outer, mut context) = create_group(&self.identifier, &self.classes, &self.url);
-        context = match &self.node_type {
-            NodeType::Box(x) => x.render(self, font, context),
-            NodeType::Ellipsis(x) => x.render(self, font, context),
-            NodeType::Away(x) => x.render(self, font, context),
+        let (mut outer, mut inner) = create_group(&self.identifier, &self.classes, &self.url);
+        inner = match &self.node_type {
+            NodeType::Box(x) => x.render(self, font, inner),
+            NodeType::Ellipsis(x) => x.render(self, font, inner),
+            NodeType::Away(x) => x.render(self, font, inner),
         };
         use svg::Node;
-        outer.append(context);
+        outer.append(inner);
         outer
     }
 

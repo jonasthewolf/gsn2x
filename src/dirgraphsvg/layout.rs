@@ -1,5 +1,5 @@
-use std::cell::RefCell;
 use std::collections::BTreeMap;
+use std::{cell::RefCell, collections::BTreeSet};
 
 use crate::dirgraph::DirectedGraph;
 
@@ -93,6 +93,7 @@ pub(super) fn layout_nodes(
     for limiter in 1..=limit {
         let mut changed = false;
         let mut y = margin.top;
+        let mut cells_with_centered_parents = BTreeSet::new();
         for v_rank in ranks.iter() {
             let mut x = margin.left;
             let dy_max = get_max_height(nodes, margin, v_rank);
@@ -102,7 +103,8 @@ pub(super) fn layout_nodes(
                 let old_x = cell.get_x(nodes);
                 x = std::cmp::max(x + w / 2, old_x);
                 if !first_run {
-                    if let Some(new_x) = has_node_to_be_moved(graph, cell, margin) {
+                    if let Some(new_x) = has_node_to_be_moved(graph, cell, margin, &mut cells_with_centered_parents)
+                    {
                         if new_x > x {
                             x = std::cmp::max(x, new_x);
                             // eprintln!("Changed {:?} {} {} {}", &np, x, old_x, new_x);
@@ -179,8 +181,8 @@ fn get_center(nodes: &BTreeMap<String, RefCell<Node>>, set: &[&str]) -> i32 {
         .iter()
         .map(|&node| nodes.get(node).unwrap().borrow().get_position().x)
         .collect();
-    let max = x_values.iter().max().unwrap();
-    let min = x_values.iter().min().unwrap();
+    let max = x_values.iter().max().unwrap_or(&0);
+    let min = x_values.iter().min().unwrap_or(&0);
     (max + min) / 2
 }
 
@@ -188,10 +190,11 @@ fn get_center(nodes: &BTreeMap<String, RefCell<Node>>, set: &[&str]) -> i32 {
 ///
 ///
 ///
-fn has_node_to_be_moved(
-    graph: &DirectedGraph<'_, RefCell<Node>, EdgeType>,
+fn has_node_to_be_moved<'b>(
+    graph: &'b DirectedGraph<'b, RefCell<Node>, EdgeType>,
     cell: &Vec<&str>,
     margin: &Margin,
+    moved_nodes: &mut BTreeSet<&'b str>,
 ) -> Option<i32> {
     let children: Vec<_> = cell
         .iter()
@@ -207,21 +210,24 @@ fn has_node_to_be_moved(
         .collect();
     // If node has children, center over them
     if !children.is_empty() {
-        // let cell_x = cell.get_x(&graph.get_nodes());
-        // Don't move if all children are more left
-        // if children.iter().map(|n| graph.get_nodes().get(*n).unwrap().borrow().get_position().x).all(|p| p >= cell_x) {
         // Center only over the children that have no other parents
         let center_children = children
             .into_iter()
             .filter(|&c| graph.get_real_parents(c).len() == 1)
             .collect::<Vec<_>>();
+        if center_children.len() > 1 {
+            center_children.iter().for_each(|c| {
+                moved_nodes.insert(c);
+            });
+        }
         Some(get_center(graph.get_nodes(), &center_children))
-        // } else {
-        //     None
-        // }
     } else if !parents.is_empty() {
-        // else center under its parents
-        Some(get_center(graph.get_nodes(), &parents))
+        // else center under parents if the parent has centered above the current cell and other nodes
+        if cell.iter().any(|c| moved_nodes.contains(c)) {
+            None
+        } else {
+            Some(get_center(graph.get_nodes(), &parents))
+        }
     } else if same_rank_parents.len() == 1 {
         // Move same rank child closer to parent
         Some(move_closer(
