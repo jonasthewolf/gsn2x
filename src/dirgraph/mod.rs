@@ -386,15 +386,14 @@ where
                     .map(|_| *node)
             })
             .collect::<Vec<_>>();
-        let mut reordered_nodes_iter = reordered_nodes.iter();
-        while let Some(next_reorder) = reordered_nodes_iter.next() {
+        for next_reorder in reordered_nodes {
             let cur_pos = current_rank_nodes
                 .iter()
-                .position(|n| n == next_reorder)
+                .position(|n| *n == next_reorder)
                 .unwrap();
             let new_pos = self
                 .nodes
-                .get(*next_reorder)
+                .get(next_reorder)
                 .unwrap()
                 .get_horizontal_index(cur_pos)
                 .unwrap();
