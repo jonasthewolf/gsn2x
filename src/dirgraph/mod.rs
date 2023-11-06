@@ -356,7 +356,7 @@ where
             if current_rank_nodes.is_empty() {
                 break;
             } else {
-                let current_rank = self.add_same_rank_nodes(current_rank_nodes);
+                let current_rank = self.add_same_rank_nodes(current_rank_nodes, &mut visited);
                 ranks.push(current_rank);
                 current_rank_nodes = next_rank_nodes
                     .into_iter()
@@ -411,7 +411,7 @@ where
     ///
     /// TODO allow reordering of same rank nodes
     ///
-    fn add_same_rank_nodes<'b>(&'b self, current_rank_nodes: Vec<&'b str>) -> Vec<Vec<&str>> {
+    fn add_same_rank_nodes<'b>(&'b self, current_rank_nodes: Vec<&'b str>, visited: &mut HashSet<&'b str>) -> Vec<Vec<&str>> {
         let mut current_rank: Vec<Vec<&str>> =
             current_rank_nodes.iter().map(|&n| vec![n]).collect();
         // Add inContext nodes
@@ -420,6 +420,7 @@ where
             let (left, right): (Vec<_>, Vec<_>) = self
                 .get_same_rank_children(same_rank_parent)
                 .into_iter()
+                .filter(|n| !visited.contains(n))
                 .enumerate()
                 .partition(|(idx, same_rank_child)| {
                     // If a parent is already in the rank, put the same_rank_child to the left
@@ -433,13 +434,17 @@ where
                 .position(|x| x.contains(&same_rank_parent))
                 .unwrap();
             if !left.is_empty() {
-                current_rank.insert(parent_index, left.iter().map(|(_, x)| *x).collect());
+                let left_vec = left.iter().map(|(_, x)| *x).collect::<Vec<_>>();
+                left_vec.iter().for_each(|n| { visited.insert(n); });
+                current_rank.insert(parent_index, left_vec);
                 parent_index += 1;
             }
             if !right.is_empty() {
+                let right_vec = right.iter().map(|(_, x)| *x).collect::<Vec<_>>();
+                right_vec.iter().for_each(|n| { visited.insert(n); });
                 current_rank.insert(
                     min(parent_index + 1, current_rank.len()),
-                    right.iter().map(|(_, x)| *x).collect(),
+                    right_vec,
                 );
             }
         }
