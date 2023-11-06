@@ -76,9 +76,9 @@ where
     /// Get a map of all inverse edges, i.e. children to their parents.
     ///
     ///
-    pub fn get_parent_edges(&'a self) -> BTreeMap<&'a str, Vec<(&'a str, EdgeType)>> {
-        self.parent_edges.to_owned()
-    }
+    // pub fn get_parent_edges(&'a self) -> BTreeMap<&'a str, Vec<(&'a str, EdgeType)>> {
+    //     self.parent_edges.to_owned()
+    // }
 
     ///
     /// Get the nodes of the graph.
@@ -409,7 +409,7 @@ where
     ///
     ///
     ///
-    ///
+    /// TODO allow reordering of same rank nodes
     ///
     fn add_same_rank_nodes<'b>(&'b self, current_rank_nodes: Vec<&'b str>) -> Vec<Vec<&str>> {
         let mut current_rank: Vec<Vec<&str>> =
@@ -423,7 +423,7 @@ where
                 .enumerate()
                 .partition(|(idx, same_rank_child)| {
                     // If a parent is already in the rank, put the same_rank_child to the left
-                    self.get_same_ranks_parents(&same_rank_child)
+                    self.get_same_ranks_parents(same_rank_child)
                         .iter()
                         .any(|p| current_rank_nodes[0..index].contains(p))
                         || idx % 2 != 0

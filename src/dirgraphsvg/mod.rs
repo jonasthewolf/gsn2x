@@ -87,11 +87,11 @@ impl<'a> DirGraph<'a> {
     }
 
     pub fn write(
-        mut self,
+        self,
         mut nodes: BTreeMap<String, Node>,
         edges: BTreeMap<String, Vec<(String, EdgeType)>>,
         mut output: impl std::io::Write,
-        cycles_allowed: bool,
+        _cycles_allowed: bool,
     ) -> Result<(), std::io::Error> {
         // Calculate node sizes
         nodes
@@ -119,12 +119,18 @@ impl<'a> DirGraph<'a> {
 
 #[cfg(test)]
 mod test {
+    use crate::gsn::GsnNode;
+
     use super::*;
 
     #[test]
     fn test_render_legend() {
         let mut d = DirGraph::default();
-        let b1 = Node::new_away_goal("id", "text", "module", None, None, None, None, vec![]);
+        let n = GsnNode {
+            text: "Test".to_owned(),
+            ..Default::default()
+        };
+        let b1 = Node::new_goal("id", &n, &[]);
         let mut nodes = BTreeMap::new();
         nodes.insert("G1".to_owned(), b1);
         d = d.add_meta_information(&mut vec!["A1".to_owned(), "B2".to_owned()]);

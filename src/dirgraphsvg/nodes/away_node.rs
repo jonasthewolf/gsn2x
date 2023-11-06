@@ -1,7 +1,8 @@
 use svg::node::element::{path::Data, Anchor, Element, Path, Rectangle, Text, Title, Use};
 
 use crate::dirgraphsvg::{
-    nodes::{add_text, OFFSET_IDENTIFIER},
+    nodes::OFFSET_IDENTIFIER,
+    render::add_text,
     util::escape_url,
     util::font::{text_bounding_box, FontInfo},
 };

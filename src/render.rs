@@ -1,5 +1,5 @@
 use crate::dirgraphsvg::edges::EdgeType;
-use crate::dirgraphsvg::{escape_node_id, escape_text, nodes::Node};
+use crate::dirgraphsvg::{escape_node_id, nodes::Node};
 use crate::file_utils::{get_filename, get_relative_path, set_extension, translate_to_output_path};
 use crate::gsn::{GsnNode, GsnNodeType, Module};
 use anyhow::Result;
@@ -88,113 +88,17 @@ impl RenderOptions {
 ///
 ///
 ///
-pub fn svg_from_gsn_node(id: &str, gsn_node: &GsnNode, layers: &[String]) -> Node {
-    let classes = node_classes_from_node(gsn_node);
-    // Add layer to node output
-    let node_text = node_text_from_node_and_layers(gsn_node, layers);
+pub fn svg_from_gsn_node(identifier: &str, gsn_node: &GsnNode, layers: &[String]) -> Node {
     // Create node
     match gsn_node.node_type.unwrap() {
         // unwrap ok, since checked during validation
-        GsnNodeType::Goal => Node::new_goal(
-            id,
-            &node_text,
-            gsn_node.undeveloped.unwrap_or(false),
-            gsn_node.horizontal_index,
-            gsn_node.rank_increment,
-            gsn_node.url.to_owned(),
-            classes,
-        ),
-        GsnNodeType::Solution => Node::new_solution(
-            id,
-            &node_text,
-            gsn_node.horizontal_index,
-            gsn_node.rank_increment,
-            gsn_node.url.to_owned(),
-            classes,
-        ),
-        GsnNodeType::Strategy => Node::new_strategy(
-            id,
-            &node_text,
-            gsn_node.undeveloped.unwrap_or(false),
-            gsn_node.horizontal_index,
-            gsn_node.rank_increment,
-            gsn_node.url.to_owned(),
-            classes,
-        ),
-        GsnNodeType::Context => Node::new_context(
-            id,
-            &node_text,
-            gsn_node.horizontal_index,
-            gsn_node.rank_increment,
-            gsn_node.url.to_owned(),
-            classes,
-        ),
-        GsnNodeType::Assumption => Node::new_assumption(
-            id,
-            &node_text,
-            gsn_node.horizontal_index,
-            gsn_node.rank_increment,
-            gsn_node.url.to_owned(),
-            classes,
-        ),
-        GsnNodeType::Justification => Node::new_justification(
-            id,
-            &node_text,
-            gsn_node.horizontal_index,
-            gsn_node.rank_increment,
-            gsn_node.url.to_owned(),
-            classes,
-        ),
+        GsnNodeType::Goal => Node::new_goal(identifier, gsn_node, layers),
+        GsnNodeType::Solution => Node::new_solution(identifier, gsn_node, layers),
+        GsnNodeType::Strategy => Node::new_strategy(identifier, gsn_node, layers),
+        GsnNodeType::Context => Node::new_context(identifier, gsn_node, layers),
+        GsnNodeType::Assumption => Node::new_assumption(identifier, gsn_node, layers),
+        GsnNodeType::Justification => Node::new_justification(identifier, gsn_node, layers),
     }
-}
-
-///
-/// Create SVG node text from GsnNode and layer information
-///
-///
-fn node_text_from_node_and_layers(gsn_node: &GsnNode, layers: &[String]) -> String {
-    let mut node_text = gsn_node.text.to_owned();
-    let mut additional_text = vec![];
-    for layer in layers {
-        if let Some(layer_text) = gsn_node.additional.get(layer) {
-            additional_text.push(format!(
-                "\n{}: {}",
-                layer.to_ascii_uppercase(),
-                layer_text.replace('\n', " ")
-            ));
-        }
-    }
-    if !additional_text.is_empty() {
-        node_text.push_str("\n\n");
-        node_text.push_str(&additional_text.join("\n"));
-    }
-    node_text
-}
-
-///
-///
-///
-fn node_classes_from_node(gsn_node: &GsnNode) -> Vec<String> {
-    let layer_classes: Option<Vec<String>> = gsn_node
-        .additional
-        .keys()
-        .map(|k| {
-            let mut t = escape_text(&k.to_ascii_lowercase());
-            t.insert_str(0, "gsn_");
-            Some(t.to_owned())
-        })
-        .collect();
-    let mut mod_class = gsn_node.module.to_owned();
-    mod_class.insert_str(0, "gsn_module_");
-    let classes = gsn_node
-        .classes
-        .iter()
-        .chain(layer_classes.iter())
-        .flatten()
-        .chain(&[mod_class])
-        .cloned()
-        .collect();
-    classes
 }
 
 ///
@@ -203,86 +107,37 @@ fn node_classes_from_node(gsn_node: &GsnNode) -> Vec<String> {
 ///
 ///
 pub fn away_svg_from_gsn_node(
-    id: &str,
+    identifier: &str,
     gsn_node: &GsnNode,
     module: &Module,
     source_module: &Module,
     layers: &[String],
 ) -> Result<Node> {
-    let classes = node_classes_from_node(gsn_node);
     let mut module_url = get_relative_path(
         &module.relative_module_path,
         &source_module.relative_module_path,
         Some("svg"),
     )?;
     module_url.push('#');
-    module_url.push_str(&escape_node_id(id));
-
-    // Add layer to node output
-    let node_text = node_text_from_node_and_layers(gsn_node, layers);
+    module_url.push_str(&escape_node_id(identifier));
 
     // Create node
     Ok(match gsn_node.node_type.unwrap() {
         // unwrap ok, since checked during validation
-        GsnNodeType::Goal => Node::new_away_goal(
-            id,
-            &node_text,
-            &gsn_node.module,
-            Some(module_url),
-            gsn_node.horizontal_index,
-            gsn_node.rank_increment,
-            gsn_node.url.to_owned(),
-            classes,
-        ),
-        GsnNodeType::Solution => Node::new_away_solution(
-            id,
-            &node_text,
-            &gsn_node.module,
-            Some(module_url),
-            gsn_node.horizontal_index,
-            gsn_node.rank_increment,
-            gsn_node.url.to_owned(),
-            classes,
-        ),
-        GsnNodeType::Strategy => Node::new_strategy(
-            id,
-            &node_text,
-            gsn_node.undeveloped.unwrap_or(false),
-            gsn_node.horizontal_index,
-            gsn_node.rank_increment,
-            Some(module_url), // Use module_url if Strategy is not defined in current module.
-            classes,
-        ),
-        GsnNodeType::Context => Node::new_away_context(
-            id,
-            &node_text,
-            &gsn_node.module,
-            Some(module_url),
-            gsn_node.horizontal_index,
-            gsn_node.rank_increment,
-            gsn_node.url.to_owned(),
-            classes,
-        ),
-        GsnNodeType::Assumption => Node::new_away_assumption(
-            id,
-            &node_text,
-            &gsn_node.module,
-            Some(module_url),
-            gsn_node.horizontal_index,
-            gsn_node.rank_increment,
-            gsn_node.url.to_owned(),
-            classes,
-        ),
-        GsnNodeType::Justification => Node::new_away_justification(
-            id,
-            &node_text,
-            &gsn_node.module,
-            Some(module_url),
-            gsn_node.horizontal_index,
-            gsn_node.rank_increment,
-            gsn_node.url.to_owned(),
-            classes,
-        ),
+        GsnNodeType::Goal => Node::new_away_goal(identifier, gsn_node, layers, Some(module_url)),
+        GsnNodeType::Solution => {
+            Node::new_away_solution(identifier, gsn_node, layers, Some(module_url))
+        }
+        GsnNodeType::Strategy => Node::new_strategy(identifier, gsn_node, layers),
+        GsnNodeType::Context => {
+            Node::new_away_context(identifier, gsn_node, layers, Some(module_url))
+        }
+        GsnNodeType::Assumption => {
+            Node::new_away_assumption(identifier, gsn_node, layers, Some(module_url))
+        }
+        GsnNodeType::Justification => {
+            Node::new_away_justification(identifier, gsn_node, layers, Some(module_url))
+        }
     })
 }
 
@@ -302,35 +157,32 @@ pub fn render_architecture(
         .iter()
         .filter(|(k, _)| dependencies.contains_key(k.to_owned()))
         .map(|(k, module)| {
+            let module_node = GsnNode {
+                text: module
+                    .meta
+                    .brief
+                    .as_ref()
+                    .map(|m| m.to_owned())
+                    .unwrap_or_else(|| "".to_owned()),
+                ..Default::default()
+            };
+
             (
                 k.to_owned(),
-                Node::new_module(
-                    k,
-                    module
-                        .meta
-                        .brief
-                        .as_ref()
-                        .map(|m| m.to_owned())
-                        .unwrap_or_else(|| "".to_owned())
-                        .as_str(),
-                    None, // FIXME: That might be a big problem; maybe add horizontal index to meta information of modules
-                    None,
-                    {
-                        let target_svg = set_extension(&module.relative_module_path, "svg");
-                        let target_path = translate_to_output_path(output_path, &target_svg, None);
-                        get_relative_path(
-                            &target_path.unwrap(), // TODO remove unwraps
-                            architecture_path,
-                            None, // is already made "svg" above
-                        )
-                        .ok()
-                    },
-                    vec![],
-                ),
+                Node::new_module(k, &module_node, &[], {
+                    let target_svg = set_extension(&module.relative_module_path, "svg");
+                    let target_path = translate_to_output_path(output_path, &target_svg, None);
+                    get_relative_path(
+                        &target_path.unwrap(), // TODO remove unwraps
+                        architecture_path,
+                        None, // is already made "svg" above
+                    )
+                    .ok()
+                }),
             )
         })
         .collect();
-    let mut edges: BTreeMap<String, Vec<(String, EdgeType)>> = dependencies
+    let edges: BTreeMap<String, Vec<(String, EdgeType)>> = dependencies
         .into_iter()
         .map(|(k, v)| (k, Vec::from_iter(v)))
         .collect();
@@ -368,7 +220,7 @@ pub fn render_complete(
     //     .map(|x| x.map(|y| y.to_owned()).collect::<Vec<String>>());
     // let masked_modules = masked_modules_opt.iter().flatten().collect::<Vec<_>>();
     let mut dg = crate::dirgraphsvg::DirGraph::default();
-    let mut edges: BTreeMap<String, Vec<(String, EdgeType)>> = nodes
+    let edges: BTreeMap<String, Vec<(String, EdgeType)>> = nodes
         .iter()
         // .filter(|(_, node)| !masked_modules.contains(&&node.module))
         // TODO continue masking here
@@ -453,7 +305,7 @@ pub fn render_argument(
             .collect::<Result<BTreeMap<_, _>>>()?,
     );
 
-    let mut edges: BTreeMap<String, Vec<(String, EdgeType)>> = nodes
+    let edges: BTreeMap<String, Vec<(String, EdgeType)>> = nodes
         .iter()
         .map(|(id, node)| {
             (

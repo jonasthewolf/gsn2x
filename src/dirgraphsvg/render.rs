@@ -2,18 +2,19 @@ use std::{cell::RefCell, collections::BTreeMap};
 
 use anyhow::Context;
 use svg::{
-    node::element::{path::Data, Marker, Path, Polyline, Rectangle, Style, Symbol, Title},
+    node::element::{
+        path::Data, Anchor, Element, Group, Marker, Path, Polyline, Rectangle, Style, Symbol, Title,
+    },
     Document,
 };
 
-use crate::{
-    dirgraph::DirectedGraph,
-    dirgraphsvg::nodes::{add_text, create_group},
-};
+use crate::dirgraph::DirectedGraph;
 
 use super::{
     edges::{EdgeType, SingleEdge},
+    escape_node_id,
     nodes::{Node, Port},
+    util::{escape_url, font::FontInfo},
     DirGraph,
 };
 
@@ -217,6 +218,49 @@ fn render_nodes(
 ///
 ///
 ///
+fn render_legend(
+    mut document: Document,
+    render_graph: &DirGraph,
+    width: &mut i32,
+    height: &mut i32,
+) -> Document {
+    if let Some(meta) = &render_graph.meta_information {
+        let mut g = create_group("gsn_module", &["gsnmodule".to_owned()], &None);
+        let title = Title::new().add(svg::node::Text::new("Module Information"));
+        use svg::Node;
+        g.append(title);
+
+        let mut text_height = 0;
+        let mut text_width = 0;
+        let mut lines = Vec::new();
+        for t in meta {
+            let (width, height) =
+                crate::dirgraphsvg::util::font::text_bounding_box(&render_graph.font, t, false);
+            lines.push((width, height));
+            text_height += height;
+            text_width = std::cmp::max(text_width, width);
+        }
+
+        if *width < text_width + 20i32 {
+            *width = text_width + 40i32;
+        }
+        *height += text_height + 40i32;
+        let x = *width - text_width - 20;
+        let y_base = *height - text_height - 20;
+        let mut y_running = 0;
+        for (text, (_, h)) in meta.iter().zip(lines) {
+            y_running += h;
+            g = add_text(g, text, x, y_base + y_running, &render_graph.font, false);
+        }
+        document = document.add(g);
+    }
+    document
+}
+
+///
+///
+///
+///
 ///
 fn setup_basics(mut document: Document) -> Document {
     let supportedby_polyline = Polyline::new()
@@ -338,41 +382,41 @@ fn setup_stylesheets(
 ///
 ///
 ///
-fn render_legend(
-    mut document: Document,
-    render_graph: &DirGraph,
-    width: &mut i32,
-    height: &mut i32,
-) -> Document {
-    if let Some(meta) = &render_graph.meta_information {
-        let mut g = create_group("gsn_module", &["gsnmodule".to_owned()], &None);
-        let title = Title::new().add(svg::node::Text::new("Module Information"));
-        use svg::Node;
-        g.append(title);
-
-        let mut text_height = 0;
-        let mut text_width = 0;
-        let mut lines = Vec::new();
-        for t in meta {
-            let (width, height) =
-                crate::dirgraphsvg::util::font::text_bounding_box(&render_graph.font, &t, false);
-            lines.push((width, height));
-            text_height += height;
-            text_width = std::cmp::max(text_width, width);
-        }
-
-        if *width < text_width + 20i32 {
-            *width = text_width + 40i32;
-        }
-        *height += text_height + 40i32;
-        let x = *width - text_width - 20;
-        let y_base = *height - text_height - 20;
-        let mut y_running = 0;
-        for (text, (_, h)) in meta.iter().zip(lines) {
-            y_running += h;
-            g = add_text(g, text, x, y_base + y_running, &render_graph.font, false);
-        }
-        document = document.add(g);
+///
+pub(crate) fn create_group(id: &str, classes: &[String], url: &Option<String>) -> Element {
+    let mut g = Group::new().set("id", escape_node_id(id));
+    g = g.set("class", classes.join(" "));
+    if let Some(url) = &url {
+        let link = Anchor::new();
+        link.set("href", escape_url(url.as_str())).add(g).into()
+    } else {
+        g.into()
     }
-    document
+}
+
+///
+///
+///
+///
+pub(crate) fn add_text(
+    mut context: Element,
+    text: &str,
+    x: i32,
+    y: i32,
+    font: &FontInfo,
+    bold: bool,
+) -> Element {
+    use svg::node::element::Text;
+    let mut text = Text::new()
+        .set("x", x)
+        .set("y", y)
+        .set("font-size", font.size)
+        .set("font-family", font.name.as_str())
+        .add(svg::node::Text::new(text));
+    if bold {
+        text = text.set("font-weight", "bold");
+    }
+    use svg::Node;
+    context.append(text);
+    context
 }

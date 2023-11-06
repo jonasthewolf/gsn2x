@@ -81,7 +81,7 @@ impl Cell for Vec<&str> {
 ///
 pub(super) fn layout_nodes(
     graph: &DirectedGraph<'_, RefCell<Node>, EdgeType>,
-    ranks: &Vec<Vec<Vec<&str>>>,
+    ranks: &[Vec<Vec<&str>>],
     margin: &Margin,
 ) -> (i32, i32) {
     let mut first_run = true;
@@ -207,12 +207,18 @@ fn has_node_to_be_moved(
         .collect();
     // If node has children, center over them
     if !children.is_empty() {
+        // let cell_x = cell.get_x(&graph.get_nodes());
+        // Don't move if all children are more left
+        // if children.iter().map(|n| graph.get_nodes().get(*n).unwrap().borrow().get_position().x).all(|p| p >= cell_x) {
         // Center only over the children that have no other parents
         let center_children = children
             .into_iter()
             .filter(|&c| graph.get_real_parents(c).len() == 1)
             .collect::<Vec<_>>();
         Some(get_center(graph.get_nodes(), &center_children))
+        // } else {
+        //     None
+        // }
     } else if !parents.is_empty() {
         // else center under its parents
         Some(get_center(graph.get_nodes(), &parents))
@@ -221,7 +227,7 @@ fn has_node_to_be_moved(
         Some(move_closer(
             graph.get_nodes(),
             cell,
-            same_rank_parents.get(0).unwrap(),
+            same_rank_parents.first().unwrap(),
             margin,
         ))
     } else {

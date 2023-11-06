@@ -1,8 +1,8 @@
-use svg::node::element::{Anchor, Element, Group};
+use svg::node::element::Element;
 
 use crate::{
     dirgraphsvg::{util::point2d::Point2D, FontInfo},
-    gsn::HorizontalIndex,
+    gsn::{GsnNode, HorizontalIndex},
 };
 
 use self::{
@@ -11,7 +11,7 @@ use self::{
     elliptical_node::EllipticalType,
 };
 
-use super::util::{escape_node_id, escape_url, font::text_bounding_box};
+use super::{escape_text, render::create_group, util::font::text_bounding_box};
 
 mod away_node;
 mod box_node;
@@ -192,6 +192,10 @@ impl Node {
         }
     }
 
+    ///
+    ///
+    ///
+    ///
     pub fn render(&self, font: &FontInfo) -> Element {
         let mut context = create_group(&self.identifier, &self.classes, &self.url);
         context = match &self.node_type {
@@ -202,17 +206,27 @@ impl Node {
         context
     }
 
+    ///
+    ///
+    ///
     fn new(
         identifier: &str,
-        text: &str,
-        url: Option<String>,
-        classes: Vec<String>,
-        horizontal_index: Option<HorizontalIndex>,
-        rank_increment: Option<usize>,
-        add_class: &str,
+        gsn_node: &GsnNode,
+        layers: &[String],
+        module_url: Option<String>,
+        add_classes: &[&str],
     ) -> Self {
-        let mut new_classes: Vec<String> = vec!["gsnelem".to_owned(), add_class.to_owned()];
-        new_classes.append(&mut classes.to_vec());
+        // Add layer to node output
+        let node_text = node_text_from_node_and_layers(gsn_node, layers);
+        // Setup CSS classes
+        let mut classes = node_classes_from_node(gsn_node);
+        classes.push("gsnelem".to_owned());
+        classes.append(
+            &mut add_classes
+                .iter()
+                .map(|&c| c.to_owned())
+                .collect::<Vec<String>>(),
+        );
 
         Node {
             x: 0,
@@ -220,33 +234,25 @@ impl Node {
             width: 0,
             height: 0,
             identifier: identifier.to_owned(),
-            text: text.to_owned(),
-            url,
-            classes: new_classes,
-            horizontal_index,
-            rank_increment,
+            text: node_text.to_owned(),
+            url: module_url,
+            classes,
+            horizontal_index: gsn_node.horizontal_index,
+            rank_increment: gsn_node.rank_increment,
             node_type: NodeType::Box(BoxType::Context),
         }
     }
 
     ///
     ///
-    pub fn new_assumption(
-        identifier: &str,
-        text: &str,
-        horizontal_index: Option<HorizontalIndex>,
-        rank_increment: Option<usize>,
-        url: Option<String>,
-        classes: Vec<String>,
-    ) -> Self {
+    ///
+    pub fn new_assumption(identifier: &str, gsn_node: &GsnNode, layers: &[String]) -> Self {
         let mut n = Node::new(
             identifier,
-            text,
-            url,
-            classes,
-            horizontal_index,
-            rank_increment,
-            "gsnasmp",
+            gsn_node,
+            layers,
+            gsn_node.url.to_owned(),
+            &["gsnasmp"],
         );
         n.node_type = NodeType::Ellipsis(EllipticalType {
             admonition: Some("A".to_owned()),
@@ -260,55 +266,26 @@ impl Node {
     ///
     ///
     ///
-    ///
-    pub fn new_away_assumption(
-        identifier: &str,
-        text: &str,
-        module: &str,
-        module_url: Option<String>,
-        horizontal_index: Option<HorizontalIndex>,
-        rank_increment: Option<usize>,
-        url: Option<String>,
-        classes: Vec<String>,
-    ) -> Self {
-        let mut n = Node::new(
+    pub fn new_context(identifier: &str, gsn_node: &GsnNode, layers: &[String]) -> Self {
+        Node::new(
             identifier,
-            text,
-            url,
-            classes,
-            horizontal_index,
-            rank_increment,
-            "gsnawayasmp",
-        );
-        n.node_type = NodeType::Away(AwayType {
-            module: module.to_owned(),
-            module_url,
-            away_type: AwayNodeType::Assumption,
-            mod_height: 0,
-        });
-        n
+            gsn_node,
+            layers,
+            gsn_node.url.to_owned(),
+            &["gsnctxt"],
+        )
     }
 
     ///
     ///
     ///
-    ///
-    pub fn new_justification(
-        identifier: &str,
-        text: &str,
-        horizontal_index: Option<HorizontalIndex>,
-        rank_increment: Option<usize>,
-        url: Option<String>,
-        classes: Vec<String>,
-    ) -> Self {
+    pub fn new_justification(identifier: &str, gsn_node: &GsnNode, layers: &[String]) -> Self {
         let mut n = Node::new(
             identifier,
-            text,
-            url,
-            classes,
-            horizontal_index,
-            rank_increment,
-            "gsnjust",
+            gsn_node,
+            layers,
+            gsn_node.url.to_owned(),
+            &["gsnjust"],
         );
         n.node_type = NodeType::Ellipsis(EllipticalType {
             admonition: Some("J".to_owned()),
@@ -322,56 +299,13 @@ impl Node {
     ///
     ///
     ///
-    ///
-    ///
-    pub fn new_away_justification(
-        identifier: &str,
-        text: &str,
-        module: &str,
-        module_url: Option<String>,
-        horizontal_index: Option<HorizontalIndex>,
-        rank_increment: Option<usize>,
-        url: Option<String>,
-        classes: Vec<String>,
-    ) -> Self {
+    pub fn new_solution(identifier: &str, gsn_node: &GsnNode, layers: &[String]) -> Self {
         let mut n = Node::new(
             identifier,
-            text,
-            url,
-            classes,
-            horizontal_index,
-            rank_increment,
-            "gsnawayjust",
-        );
-        n.node_type = NodeType::Away(AwayType {
-            module: module.to_owned(),
-            module_url,
-            away_type: AwayNodeType::Justification,
-            mod_height: 0,
-        });
-        n
-    }
-
-    ///
-    ///
-    ///
-    ///
-    pub fn new_solution(
-        identifier: &str,
-        text: &str,
-        horizontal_index: Option<HorizontalIndex>,
-        rank_increment: Option<usize>,
-        url: Option<String>,
-        classes: Vec<String>,
-    ) -> Self {
-        let mut n = Node::new(
-            identifier,
-            text,
-            url,
-            classes,
-            horizontal_index,
-            rank_increment,
-            "gsnsltn",
+            gsn_node,
+            layers,
+            gsn_node.url.to_owned(),
+            &["gsnsltn"],
         );
         n.node_type = NodeType::Ellipsis(EllipticalType {
             admonition: None,
@@ -386,57 +320,15 @@ impl Node {
     ///
     ///
     ///
-    pub fn new_away_solution(
-        identifier: &str,
-        text: &str,
-        module: &str,
-        module_url: Option<String>,
-        horizontal_index: Option<HorizontalIndex>,
-        rank_increment: Option<usize>,
-        url: Option<String>,
-        classes: Vec<String>,
-    ) -> Self {
+    pub fn new_strategy(identifier: &str, gsn_node: &GsnNode, layers: &[String]) -> Self {
         let mut n = Node::new(
             identifier,
-            text,
-            url,
-            classes,
-            horizontal_index,
-            rank_increment,
-            "gsnawaysltn",
+            gsn_node,
+            layers,
+            gsn_node.url.to_owned(),
+            &["gsnstgy"],
         );
-        n.node_type = NodeType::Away(AwayType {
-            module: module.to_owned(),
-            module_url,
-            away_type: AwayNodeType::Solution,
-            mod_height: 0,
-        });
-        n
-    }
-
-    ///
-    ///
-    ///
-    ///
-    pub fn new_strategy(
-        identifier: &str,
-        text: &str,
-        undeveloped: bool,
-        horizontal_index: Option<HorizontalIndex>,
-        rank_increment: Option<usize>,
-        url: Option<String>,
-        classes: Vec<String>,
-    ) -> Self {
-        let mut n = Node::new(
-            identifier,
-            text,
-            url,
-            classes,
-            horizontal_index,
-            rank_increment,
-            "gsnstgy",
-        );
-        if undeveloped {
+        if gsn_node.undeveloped.unwrap_or(false) {
             n.node_type = NodeType::Box(BoxType::Undeveloped(15));
         } else {
             n.node_type = NodeType::Box(BoxType::Normal(15));
@@ -448,27 +340,18 @@ impl Node {
     ///
     ///
     ///
-    pub fn new_goal(
-        identifier: &str,
-        text: &str,
-        undeveloped: bool,
-        horizontal_index: Option<HorizontalIndex>,
-        rank_increment: Option<usize>,
-        url: Option<String>,
-        classes: Vec<String>,
-    ) -> Self {
-        let mut classes = classes;
+    pub fn new_goal(identifier: &str, gsn_node: &GsnNode, layers: &[String]) -> Self {
+        let undeveloped = gsn_node.undeveloped.unwrap_or(false);
+        let mut classes = vec!["gsngoal"];
         if undeveloped {
-            classes.push("gsn_undeveloped".to_owned());
+            classes.push("gsn_undeveloped");
         }
         let mut n = Node::new(
             identifier,
-            text,
-            url,
-            classes,
-            horizontal_index,
-            rank_increment,
-            "gsngoal",
+            gsn_node,
+            layers,
+            gsn_node.url.to_owned(),
+            &classes,
         );
         if undeveloped {
             n.node_type = NodeType::Box(BoxType::Undeveloped(0));
@@ -481,29 +364,41 @@ impl Node {
     ///
     ///
     ///
-    ///
-    pub fn new_away_goal(
+    pub fn new_away_assumption(
         identifier: &str,
-        text: &str,
-        module: &str,
+        gsn_node: &GsnNode,
+        layers: &[String],
         module_url: Option<String>,
-        horizontal_index: Option<HorizontalIndex>,
-        rank_increment: Option<usize>,
-        url: Option<String>,
-        classes: Vec<String>,
     ) -> Self {
         let mut n = Node::new(
             identifier,
-            text,
-            url,
-            classes,
-            horizontal_index,
-            rank_increment,
-            "gsnawaygoal",
+            gsn_node,
+            layers,
+            module_url.to_owned(),
+            &["gsnawayasmp"],
         );
         n.node_type = NodeType::Away(AwayType {
-            module: module.to_owned(),
+            module: gsn_node.module.to_owned(),
             module_url,
+            away_type: AwayNodeType::Assumption,
+            mod_height: 0,
+        });
+        n
+    }
+
+    ///
+    ///
+    ///
+    pub fn new_away_goal(
+        identifier: &str,
+        gsn_node: &GsnNode,
+        layers: &[String],
+        module_url: Option<String>,
+    ) -> Self {
+        let mut n = Node::new(identifier, gsn_node, layers, module_url, &["gsnawaygoal"]);
+        n.node_type = NodeType::Away(AwayType {
+            module: gsn_node.module.to_owned(),
+            module_url: gsn_node.url.to_owned(),
             away_type: AwayNodeType::Goal,
             mod_height: 0,
         });
@@ -513,53 +408,67 @@ impl Node {
     ///
     ///
     ///
-    ///
-    pub fn new_context(
+    pub fn new_away_justification(
         identifier: &str,
-        text: &str,
-        horizontal_index: Option<HorizontalIndex>,
-        rank_increment: Option<usize>,
-        url: Option<String>,
-        classes: Vec<String>,
+        gsn_node: &GsnNode,
+        layers: &[String],
+        module_url: Option<String>,
     ) -> Self {
-        Node::new(
+        let mut n = Node::new(
             identifier,
-            text,
-            url,
-            classes,
-            horizontal_index,
-            rank_increment,
-            "gsnctxt",
-        )
+            gsn_node,
+            layers,
+            module_url.to_owned(),
+            &["gsnawayjust"],
+        );
+        n.node_type = NodeType::Away(AwayType {
+            module: gsn_node.module.to_owned(),
+            module_url,
+            away_type: AwayNodeType::Justification,
+            mod_height: 0,
+        });
+        n
     }
 
     ///
     ///
     ///
-    ///
     pub fn new_away_context(
         identifier: &str,
-        text: &str,
-        module: &str,
+        gsn_node: &GsnNode,
+        layers: &[String],
         module_url: Option<String>,
-        horizontal_index: Option<HorizontalIndex>,
-        rank_increment: Option<usize>,
-        url: Option<String>,
-        classes: Vec<String>,
+    ) -> Self {
+        let mut n = Node::new(identifier, gsn_node, layers, module_url, &["gsnawayctxt"]);
+        n.node_type = NodeType::Away(AwayType {
+            module: gsn_node.module.to_owned(),
+            module_url: Some(gsn_node.module.to_owned()),
+            away_type: AwayNodeType::Context,
+            mod_height: 0,
+        });
+        n
+    }
+
+    ///
+    ///
+    ///
+    pub fn new_away_solution(
+        identifier: &str,
+        gsn_node: &GsnNode,
+        layers: &[String],
+        module_url: Option<String>,
     ) -> Self {
         let mut n = Node::new(
             identifier,
-            text,
-            url,
-            classes,
-            horizontal_index,
-            rank_increment,
-            "gsnawayctxt",
+            gsn_node,
+            layers,
+            module_url.to_owned(),
+            &["gsnawaysltn"],
         );
         n.node_type = NodeType::Away(AwayType {
-            module: module.to_owned(),
+            module: gsn_node.module.to_owned(),
             module_url,
-            away_type: AwayNodeType::Context,
+            away_type: AwayNodeType::Solution,
             mod_height: 0,
         });
         n
@@ -571,21 +480,11 @@ impl Node {
     ///
     pub fn new_module(
         identifier: &str,
-        text: &str,
-        horizontal_index: Option<HorizontalIndex>,
-        rank_increment: Option<usize>,
-        url: Option<String>,
-        classes: Vec<String>,
+        gsn_node: &GsnNode,
+        layers: &[String],
+        module_url: Option<String>,
     ) -> Self {
-        let mut n = Node::new(
-            identifier,
-            text,
-            url,
-            classes,
-            horizontal_index,
-            rank_increment,
-            "gsnmodule",
-        );
+        let mut n = Node::new(identifier, gsn_node, layers, module_url, &["gsnmodule"]);
         n.node_type = NodeType::Box(BoxType::Module);
         n
     }
@@ -594,44 +493,50 @@ impl Node {
 ///
 ///
 ///
-///
-///
-pub(crate) fn create_group(id: &str, classes: &[String], url: &Option<String>) -> Element {
-    let mut g = Group::new().set("id", escape_node_id(id));
-    g = g.set("class", classes.join(" "));
-    if let Some(url) = &url {
-        let link = Anchor::new();
-        link.set("href", escape_url(url.as_str())).add(g).into()
-    } else {
-        g.into()
-    }
+fn node_classes_from_node(gsn_node: &GsnNode) -> Vec<String> {
+    let layer_classes: Option<Vec<String>> = gsn_node
+        .additional
+        .keys()
+        .map(|k| {
+            let mut t = escape_text(&k.to_ascii_lowercase());
+            t.insert_str(0, "gsn_");
+            Some(t.to_owned())
+        })
+        .collect();
+    let mut mod_class = gsn_node.module.to_owned();
+    mod_class.insert_str(0, "gsn_module_");
+    let classes = gsn_node
+        .classes
+        .iter()
+        .chain(layer_classes.iter())
+        .flatten()
+        .chain(&[mod_class])
+        .cloned()
+        .collect();
+    classes
 }
 
 ///
+/// Create SVG node text from GsnNode and layer information
 ///
 ///
-///
-pub(crate) fn add_text(
-    mut context: Element,
-    text: &str,
-    x: i32,
-    y: i32,
-    font: &FontInfo,
-    bold: bool,
-) -> Element {
-    use svg::node::element::Text;
-    let mut text = Text::new()
-        .set("x", x)
-        .set("y", y)
-        .set("font-size", font.size)
-        .set("font-family", font.name.as_str())
-        .add(svg::node::Text::new(text));
-    if bold {
-        text = text.set("font-weight", "bold");
+fn node_text_from_node_and_layers(gsn_node: &GsnNode, layers: &[String]) -> String {
+    let mut node_text = gsn_node.text.to_owned();
+    let mut additional_text = vec![];
+    for layer in layers {
+        if let Some(layer_text) = gsn_node.additional.get(layer) {
+            additional_text.push(format!(
+                "\n{}: {}",
+                layer.to_ascii_uppercase(),
+                layer_text.replace('\n', " ")
+            ));
+        }
     }
-    use svg::Node;
-    context.append(text);
-    context
+    if !additional_text.is_empty() {
+        node_text.push_str("\n\n");
+        node_text.push_str(&additional_text.join("\n"));
+    }
+    node_text
 }
 
 #[cfg(test)]
