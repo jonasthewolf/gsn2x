@@ -22,6 +22,7 @@
 ]]>
 </style>
 <g class="additionalclass1 additionalclass2 gsn_module_examples_minimalcss_min_gsn_yaml gsnelem gsngoal gsn_undeveloped" id="node_G1">
+<g class="additionalclass1 additionalclass2 gsn_module_examples_minimalcss_min_gsn_yaml gsnelem gsngoal gsn_undeveloped" id="node_G1">
 <title>
 G1
 </title>
@@ -33,5 +34,6 @@ G1
 This is a Goal
 </text>
 <path d="M72,72 l5,5 l-5,5 l-5,-5 z" fill="none" stroke="black" stroke-width="1"/>
+</g>
 </g>
 </svg>
