@@ -16,7 +16,7 @@
 <polyline fill="none" points="0 0, 10 4.5, 0 9, 0 0" stroke="black" stroke-width="1"/>
 </marker>
 <a href="./main.gsn.svg">
-<g class="gsnelem gsnmodule" id="node_Main"/>
+<g class="gsn_module_ gsnelem gsnmodule" id="node_Main"/>
 <title>
 Main
 </title>
@@ -26,7 +26,7 @@ Main
 </text>
 </a>
 <a href="./sub1.gsn.svg">
-<g class="gsnelem gsnmodule" id="node_Sub1"/>
+<g class="gsn_module_ gsnelem gsnmodule" id="node_Sub1"/>
 <title>
 Sub1
 </title>
