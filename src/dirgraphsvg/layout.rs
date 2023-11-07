@@ -30,6 +30,9 @@ trait Cell {
 }
 
 impl Cell for Vec<&str> {
+    ///
+    ///
+    ///
     fn get_max_width(&self, nodes: &BTreeMap<String, RefCell<Node>>) -> i32 {
         self.iter()
             .map(|&n| nodes.get(n).unwrap().borrow().get_width())
@@ -37,11 +40,17 @@ impl Cell for Vec<&str> {
             .unwrap()
     }
 
+    ///
+    ///
+    ///
     fn get_x(&self, nodes: &BTreeMap<String, RefCell<Node>>) -> i32 {
         let n = nodes.get(self.first().unwrap().to_owned()).unwrap();
         n.borrow().get_position().x
     }
 
+    ///
+    ///
+    ///
     fn set_position(&self, nodes: &BTreeMap<String, RefCell<Node>>, margin: &Margin, pos: Point2D) {
         let max_h = self
             .iter()
@@ -60,20 +69,6 @@ impl Cell for Vec<&str> {
         }
     }
 }
-
-//     ///
-//     /// Get x value of NodePlace
-//     ///
-//     /// MultipleNodes have the same x, thus, just the value of the first node is used.
-//     /// MultipleNodes are never empty.
-//     ///
-//     ///
-//     pub(crate) fn get_x(&self, nodes: &BTreeMap<String, Node>) -> i32 {
-//         // Unwraps are ok, since NodePlace are only created from existing nodes
-//         let n = nodes.get(self.0.first().unwrap()).unwrap();
-//         n.get_position().x
-//     }
-// }
 
 ///
 /// Iteratively move nodes horizontally until no movement detected
@@ -176,7 +171,6 @@ fn get_max_height(
 ///
 ///
 ///
-///
 fn get_center(nodes: &BTreeMap<String, RefCell<Node>>, set: &[&str]) -> i32 {
     let x_values: Vec<_> = set
         .iter()
@@ -187,7 +181,6 @@ fn get_center(nodes: &BTreeMap<String, RefCell<Node>>, set: &[&str]) -> i32 {
     (max + min) / 2
 }
 
-///
 ///
 ///
 ///
@@ -244,7 +237,6 @@ fn has_node_to_be_moved<'b>(
     }
 }
 
-///
 ///
 ///
 ///
