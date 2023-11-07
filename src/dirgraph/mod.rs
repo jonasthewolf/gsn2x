@@ -1,5 +1,5 @@
 use std::cmp::min;
-use std::collections::{BTreeMap, BTreeSet, HashSet};
+use std::collections::{BTreeMap, BTreeSet};
 use std::fmt::Debug;
 
 pub trait DirectedGraphNodeType<'a> {
@@ -177,47 +177,41 @@ where
 
     ///
     /// Get a list of unreachable nodes in the graph.
-    /// TODO can be simplified
     ///
     pub fn get_unreachable_nodes(&'a self) -> Vec<&'a str> {
-        let mut visited: BTreeSet<&str> = BTreeSet::new();
-        let mut stack = Vec::new();
-        let mut ancestors = Vec::new();
+        let mut ranks = Vec::new();
+        // Using BTreeSet here to ensure that reporting is always in the same order.
+        let mut visited = BTreeSet::new();
 
-        for &root in &self.root_nodes {
-            visited.insert(root);
-            stack.push((root, 0));
-        }
-        let mut depth = 0;
-        while let Some((p_id, rdepth)) = stack.pop() {
-            // Jump back to current ancestor
-            if rdepth < depth {
-                // It is not sufficient to pop here, since one could skip levels when cleaning up.
-                ancestors.resize(rdepth, "");
-                depth = rdepth;
-            }
-            // Increase depth if current node has children that are not Solutions
-            if self
-                .get_real_children(p_id)
-                .iter()
-                .filter(|&&x| !self.nodes.get(x).unwrap().is_final_node())
-                .count()
-                > 0
-            {
-                depth += 1;
-                ancestors.push(p_id);
-            }
-            // Remember the incontext elements for the reachability analysis below.
-            self.get_same_rank_children(p_id).iter().for_each(|x| {
-                visited.insert(x);
+        let mut current_rank_nodes = self.root_nodes.to_vec();
+
+        loop {
+            // For each rank
+            let mut next_rank_nodes: Vec<&str> = Vec::new();
+            // Visit current nodes
+            current_rank_nodes.iter().for_each(|n| {
+                visited.insert(*n);
             });
-            // unwrap is ok, since all references have been checked already
-            for &child_node in self.get_real_children(p_id).iter() {
-                // Remember the solutions for reachability analysis.
-                visited.insert(child_node);
-                if !self.nodes.get(child_node).unwrap().is_final_node() {
-                    stack.push((&child_node, depth));
-                }
+            // Find children for next rank
+            for parent_node in current_rank_nodes.iter() {
+                // Get children of current parent
+                let (mut children, mut child_carried_nodes) =
+                    self.get_next_rank_children_of_parent(parent_node, &visited);
+                // Append all children to next rank
+                next_rank_nodes.append(&mut children);
+                next_rank_nodes.append(&mut child_carried_nodes);
+            }
+
+            if current_rank_nodes.is_empty() {
+                break;
+            } else {
+                let current_rank = self.add_same_rank_nodes(current_rank_nodes, &mut visited);
+                ranks.push(current_rank);
+                current_rank_nodes = next_rank_nodes
+                    .into_iter()
+                    .collect::<BTreeSet<_>>()
+                    .into_iter()
+                    .collect::<Vec<_>>();
             }
         }
 
@@ -311,7 +305,7 @@ where
     ///
     pub fn rank_nodes(&self) -> Vec<Vec<Vec<&str>>> {
         let mut ranks = Vec::new();
-        let mut visited = HashSet::new();
+        let mut visited = BTreeSet::new();
 
         let mut carried_nodes;
         let mut forced_levels = self.get_forced_levels();
@@ -415,7 +409,7 @@ where
     fn add_same_rank_nodes<'b>(
         &'b self,
         current_rank_nodes: Vec<&'b str>,
-        visited: &mut HashSet<&'b str>,
+        visited: &mut BTreeSet<&'b str>,
     ) -> Vec<Vec<&str>> {
         let mut current_rank: Vec<Vec<&str>> =
             current_rank_nodes.iter().map(|&n| vec![n]).collect();
@@ -464,7 +458,7 @@ where
     fn get_next_rank_children_of_parent(
         &self,
         parent_node: &str,
-        visited: &HashSet<&str>,
+        visited: &BTreeSet<&str>,
     ) -> (Vec<&str>, Vec<&str>) {
         self.edges
             .get(parent_node)

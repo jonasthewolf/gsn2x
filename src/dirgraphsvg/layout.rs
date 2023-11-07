@@ -1,5 +1,5 @@
-use std::collections::BTreeMap;
-use std::{cell::RefCell, collections::BTreeSet};
+use std::cell::RefCell;
+use std::collections::{BTreeMap, HashSet};
 
 use crate::dirgraph::DirectedGraph;
 
@@ -88,12 +88,12 @@ pub(super) fn layout_nodes(
     let nodes = graph.get_nodes();
     // This number should be safe that it yields a final, good looking image
     // let limit = nodes.len() * nodes.len() * 2;
-    // TODO Restore old limit
+    // TODO Restore old limit; or even better, detect if at least one node in the first column was not moved.
     let limit = 5;
     for limiter in 1..=limit {
         let mut changed = false;
         let mut y = margin.top;
-        let mut cells_with_centered_parents = BTreeSet::new();
+        let mut cells_with_centered_parents = HashSet::new();
         for v_rank in ranks.iter() {
             let mut x = margin.left;
             let dy_max = get_max_height(nodes, margin, v_rank);
@@ -103,7 +103,8 @@ pub(super) fn layout_nodes(
                 let old_x = cell.get_x(nodes);
                 x = std::cmp::max(x + w / 2, old_x);
                 if !first_run {
-                    if let Some(new_x) = has_node_to_be_moved(graph, cell, margin, &mut cells_with_centered_parents)
+                    if let Some(new_x) =
+                        has_node_to_be_moved(graph, cell, margin, &mut cells_with_centered_parents)
                     {
                         if new_x > x {
                             x = std::cmp::max(x, new_x);
@@ -194,7 +195,7 @@ fn has_node_to_be_moved<'b>(
     graph: &'b DirectedGraph<'b, RefCell<Node>, EdgeType>,
     cell: &Vec<&str>,
     margin: &Margin,
-    moved_nodes: &mut BTreeSet<&'b str>,
+    moved_nodes: &mut HashSet<&'b str>,
 ) -> Option<i32> {
     let children: Vec<_> = cell
         .iter()
@@ -215,6 +216,8 @@ fn has_node_to_be_moved<'b>(
             .into_iter()
             .filter(|&c| graph.get_real_parents(c).len() == 1)
             .collect::<Vec<_>>();
+        // If node centered over multiple children, remember them.
+        // We don't move them later.
         if center_children.len() > 1 {
             center_children.iter().for_each(|c| {
                 moved_nodes.insert(c);

@@ -45,19 +45,19 @@ impl<'a> DirectedGraphNodeType<'a> for RefCell<Node> {
 
 impl<'a> DirectedGraphEdgeType<'a> for EdgeType {
     fn is_primary_child_edge(&self) -> bool {
-        !self.is_secondary_child_edge()
+        matches!(
+            *self,
+            EdgeType::OneWay(SingleEdge::SupportedBy)
+                | EdgeType::OneWay(SingleEdge::Composite)
+                | EdgeType::TwoWay((SingleEdge::SupportedBy, _))
+                | EdgeType::TwoWay((_, SingleEdge::SupportedBy))
+                | EdgeType::TwoWay((SingleEdge::Composite, _))
+                | EdgeType::TwoWay((_, SingleEdge::Composite))
+        )
     }
 
     fn is_secondary_child_edge(&self) -> bool {
-        match *self {
-            EdgeType::OneWay(SingleEdge::InContextOf) => true,
-            EdgeType::TwoWay((s, t))
-                if s == SingleEdge::InContextOf || t == SingleEdge::InContextOf =>
-            {
-                true
-            }
-            _ => false,
-        }
+        matches!(*self, EdgeType::OneWay(SingleEdge::InContextOf))
     }
 }
 
@@ -105,7 +105,7 @@ impl<'a> DirGraph<'a> {
         // Rank nodes
         let graph = DirectedGraph::new(&nodes, &edges);
         let ranks = &graph.rank_nodes();
-        dbg!(&graph);
+        // dbg!(&graph);
         // Layout graph
         let (width, height) = layout_nodes(&graph, ranks, &self.margin);
         // Render to SVG
