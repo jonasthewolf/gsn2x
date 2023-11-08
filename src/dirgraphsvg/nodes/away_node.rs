@@ -1,4 +1,4 @@
-use svg::node::element::{path::Data, Anchor, Element, Path, Rectangle, Title, Use};
+use svg::node::element::{path::Data, Anchor, Element, Path, Title, Use};
 
 use crate::dirgraphsvg::{
     nodes::OFFSET_IDENTIFIER,
@@ -174,7 +174,7 @@ impl AwayType {
         };
 
         let upper_line = Path::new()
-            .set("fill", "none")
+            .set("fill", "transparent")
             .set("stroke", "black")
             .set("stroke-width", 1u32)
             .set("d", data)
@@ -194,17 +194,22 @@ impl AwayType {
         }
 
         // It is a box to be able to add a link to it
-        let module_box = Rectangle::new()
-            .set("x", node.x - node.width / 2)
-            .set(
-                "y",
+        let module_box_data = Data::new()
+            .move_to((
+                node.x - node.width / 2,
                 node.y + node.height / 2 - (2 * PADDING_VERTICAL + self.mod_height),
-            )
-            .set("width", node.width)
-            .set("height", 2 * PADDING_VERTICAL + self.mod_height)
-            .set("fill", "none")
+            ))
+            .horizontal_line_by(node.width)
+            .vertical_line_by(2 * PADDING_VERTICAL + self.mod_height)
+            .horizontal_line_by(-node.width)
+            .close();
+
+        let module_box = Path::new()
+            .set("fill", "transparent")
             .set("stroke", "black")
-            .set("stroke-width", 1u32);
+            .set("stroke-width", 1u32)
+            .set("d", module_box_data)
+            .set("class", "border");
 
         // Module text and links
         let module_text = create_text(

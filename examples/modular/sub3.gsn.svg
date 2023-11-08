@@ -23,7 +23,7 @@
 <title>
 G3
 </title>
-<path class="border" d="M20,72 V20 H180 V72" fill="none" stroke="black" stroke-width="1"/>
+<path class="border" d="M20,72 V20 H180 V72" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="27" y="39">
 G3
 </text>
@@ -31,7 +31,7 @@ G3
 Conquer the submodules
 </text>
 <a href="./sub1.gsn.svg#node_G3">
-<rect fill="none" height="28" stroke="black" stroke-width="1" width="161" x="20" y="72"/>
+<path class="border" d="M20,72 h161 v28 h-161 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="54" y="93">
 Sub1
 </text>

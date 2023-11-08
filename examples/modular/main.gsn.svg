@@ -35,7 +35,7 @@ Main Goal
 <title>
 A1
 </title>
-<path class="border" d="M342,94 V41 A42,21,0,0,1,426,41 V94" fill="none" stroke="black" stroke-width="1"/>
+<path class="border" d="M342,94 V41 A42,21,0,0,1,426,41 V94" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="349" y="60">
 A1
 </text>
@@ -43,7 +43,7 @@ A1
 TestABC
 </text>
 <a href="./sub1.gsn.svg#node_A1">
-<rect fill="none" height="28" stroke="black" stroke-width="1" width="84" x="342" y="94"/>
+<path class="border" d="M342,94 h84 v28 h-84 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="376" y="115">
 Sub1
 </text>
@@ -99,7 +99,7 @@ J
 <title>
 G3
 </title>
-<path class="border" d="M348,300 V248 H508 V300" fill="none" stroke="black" stroke-width="1"/>
+<path class="border" d="M348,300 V248 H508 V300" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="355" y="267">
 G3
 </text>
@@ -107,7 +107,7 @@ G3
 Conquer the submodules
 </text>
 <a href="./sub1.gsn.svg#node_G3">
-<rect fill="none" height="28" stroke="black" stroke-width="1" width="161" x="348" y="300"/>
+<path class="border" d="M348,300 h161 v28 h-161 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="382" y="321">
 Sub1
 </text>
