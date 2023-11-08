@@ -564,4 +564,25 @@ fn node_text_from_node_and_layers(gsn_node: &GsnNode, layers: &[String]) -> Stri
 }
 
 #[cfg(test)]
-mod test {}
+mod test {
+    use std::collections::BTreeMap;
+
+    use crate::gsn::GsnNode;
+
+    use super::node_text_from_node_and_layers;
+
+
+
+    #[test]
+    fn node_text_layers() {
+        let n1 = GsnNode {
+            text: "test text".to_owned(),
+            undeveloped: Some(true),
+            node_type: Some(crate::gsn::GsnNodeType::Goal),
+            additional: BTreeMap::from([("layer1".to_owned(),"text for layer1".to_owned())]),
+            ..Default::default()
+        };
+        let res = node_text_from_node_and_layers(&n1, &["layer1".to_owned()]);
+        assert_eq!(res, "test text\n\n\nLAYER1: text for layer1");
+    }
+}
