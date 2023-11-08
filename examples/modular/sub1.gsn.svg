@@ -35,7 +35,7 @@ Divide and Conquer
 <title>
 G1
 </title>
-<path class="border" d="M331,72 V20 H415 V72" fill="none" stroke="black" stroke-width="1"/>
+<path class="border" d="M331,72 V20 H415 V72" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="338" y="39">
 G1
 </text>
@@ -43,7 +43,7 @@ G1
 Main Goal
 </text>
 <a href="./main.gsn.svg#node_G1">
-<rect fill="none" height="28" stroke="black" stroke-width="1" width="84" x="331" y="72"/>
+<path class="border" d="M331,72 h84 v28 h-84 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="365" y="93">
 Main
 </text>
@@ -71,7 +71,7 @@ A
 <title>
 C2
 </title>
-<path class="border" d="M20,214 V162 C20,158,24,154,28,154 h68 C100,154,104,158,104,162 V214" fill="none" stroke="black" stroke-width="1"/>
+<path class="border" d="M20,214 V162 C20,158,24,154,28,154 h68 C100,154,104,158,104,162 V214" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="27" y="181">
 C2
 </text>
@@ -79,7 +79,7 @@ C2
 Context 2
 </text>
 <a href="./sub3.gsn.svg#node_C2">
-<rect fill="none" height="28" stroke="black" stroke-width="1" width="84" x="20" y="214"/>
+<path class="border" d="M20,214 h84 v28 h-84 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="54" y="235">
 Sub3
 </text>
@@ -104,7 +104,7 @@ Conquer the submodules
 <title>
 J1
 </title>
-<path class="border" d="M344,228 V161 A42,21,0,0,1,428,161 V228" fill="none" stroke="black" stroke-width="1"/>
+<path class="border" d="M344,228 V161 A42,21,0,0,1,428,161 V228" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="351" y="180">
 J1
 </text>
@@ -115,7 +115,7 @@ Some
 Context
 </text>
 <a href="./main.gsn.svg#node_J1">
-<rect fill="none" height="28" stroke="black" stroke-width="1" width="84" x="344" y="228"/>
+<path class="border" d="M344,228 h84 v28 h-84 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="378" y="249">
 Main
 </text>
@@ -131,7 +131,7 @@ J
 <title>
 Sn1
 </title>
-<path class="border" d="M182,390 V338 A42,42,0,0,1,266,338 V390" fill="none" stroke="black" stroke-width="1"/>
+<path class="border" d="M182,390 V338 A42,42,0,0,1,266,338 V390" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="189" y="357">
 Sn1
 </text>
@@ -139,7 +139,7 @@ Sn1
 Solution 1
 </text>
 <a href="./sub3.gsn.svg#node_Sn1">
-<rect fill="none" height="28" stroke="black" stroke-width="1" width="84" x="182" y="390"/>
+<path class="border" d="M182,390 h84 v28 h-84 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="216" y="411">
 Sub3
 </text>
