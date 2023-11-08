@@ -1,13 +1,13 @@
-use svg::node::element::{path::Data, Anchor, Element, Path, Rectangle, Text, Title, Use};
+use svg::node::element::{path::Data, Anchor, Element, Path, Rectangle, Title, Use};
 
 use crate::dirgraphsvg::{
     nodes::OFFSET_IDENTIFIER,
-    render::add_text,
+    render::create_text,
     util::escape_url,
     util::font::{text_bounding_box, FontInfo},
 };
 
-use super::{Node, SizeContext, PADDING_HORIZONTAL, PADDING_VERTICAL};
+use super::{SizeContext, SvgNode, PADDING_HORIZONTAL, PADDING_VERTICAL};
 
 const MODULE_IMAGE: i32 = 20;
 
@@ -118,7 +118,7 @@ impl AwayType {
     ///
     ///
     ///
-    pub(super) fn render(&self, node: &Node, font: &FontInfo, mut context: Element) -> Element {
+    pub(super) fn render(&self, node: &SvgNode, font: &FontInfo, context: &mut Element) {
         let title = Title::new().add(svg::node::Text::new(&node.identifier));
 
         use svg::Node;
@@ -184,13 +184,13 @@ impl AwayType {
         let x = node.x - node.width / 2 + PADDING_HORIZONTAL;
         let mut y = y_id + font.size as i32;
         // Identifier
-        context = add_text(context, &node.identifier, x, y, font, true);
+        context.append(create_text(&node.identifier, x, y, font, true));
         y += OFFSET_IDENTIFIER;
 
         // Text
         for text in node.text.lines() {
             y += font.size as i32;
-            context = add_text(context, text, x, y, font, false);
+            context.append(create_text(text, x, y, font, false));
         }
 
         // It is a box to be able to add a link to it
@@ -206,28 +206,24 @@ impl AwayType {
             .set("stroke", "black")
             .set("stroke-width", 1u32);
 
-        // TODO rework add_text to support this use-case
-        let module_text = Text::new()
-            .set(
-                "x",
-                node.x - node.width / 2 + PADDING_HORIZONTAL + MODULE_IMAGE + PADDING_HORIZONTAL,
-            )
-            .set("y", node.y + node.height / 2 - PADDING_VERTICAL)
-            .set("font-weight", "bold")
-            .set("font-size", font.size)
-            .set("font-family", font.name.as_str())
-            .add(svg::node::Text::new(&self.module));
-
         // Module text and links
+        let module_text = create_text(
+            &self.module,
+            node.x - node.width / 2 + PADDING_HORIZONTAL + MODULE_IMAGE + PADDING_HORIZONTAL,
+            node.y + node.height / 2 - PADDING_VERTICAL,
+            font,
+            true,
+        );
+
         if let Some(module_url) = &self.module_url {
-            let module_link = Anchor::new()
+            let mut module_link = Anchor::new()
                 .set("href", escape_url(module_url.as_str()))
-                .add(module_box)
-                .add(module_text);
+                .add(module_box);
+            module_link.append(module_text);
             context.append(module_link);
         } else {
-            context.append(module_box);
             context.append(module_text);
+            context.append(module_box);
         }
         // Module icon
         context.append(
@@ -247,16 +243,13 @@ impl AwayType {
             _ => None,
         };
         if let Some(adm) = admonition {
-            context = add_text(
-                context,
+            context.append(create_text(
                 adm,
                 node.x + node.width / 2 - PADDING_HORIZONTAL,
                 node.y - node.height / 2,
                 font,
                 true,
-            );
+            ));
         }
-
-        context
     }
 }

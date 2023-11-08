@@ -9,7 +9,7 @@ use std::collections::BTreeMap;
 pub use util::{escape_node_id, escape_text};
 
 use edges::EdgeType;
-use nodes::{Node, Port};
+use nodes::{Port, SvgNode};
 
 use crate::dirgraph::DirectedGraph;
 use crate::dirgraph::DirectedGraphEdgeType;
@@ -22,7 +22,7 @@ use self::edges::SingleEdge;
 use self::layout::Margin;
 use self::util::font::FontInfo;
 
-impl<'a> DirectedGraphNodeType<'a> for RefCell<Node> {
+impl<'a> DirectedGraphNodeType<'a> for RefCell<SvgNode> {
     fn is_final_node(&self) -> bool {
         false
     }
@@ -88,7 +88,7 @@ impl<'a> DirGraph<'a> {
 
     pub fn write(
         self,
-        mut nodes: BTreeMap<String, Node>,
+        mut nodes: BTreeMap<String, SvgNode>,
         edges: BTreeMap<String, Vec<(String, EdgeType)>>,
         mut output: impl std::io::Write,
         _cycles_allowed: bool,
@@ -98,7 +98,7 @@ impl<'a> DirGraph<'a> {
             .values_mut()
             .for_each(|n| n.calculate_optimal_size(&self.font));
 
-        let nodes: BTreeMap<String, RefCell<Node>> = nodes
+        let nodes: BTreeMap<String, RefCell<SvgNode>> = nodes
             .into_iter()
             .map(|(a, b)| (a, RefCell::new(b)))
             .collect();
@@ -130,7 +130,7 @@ mod test {
             text: "Test".to_owned(),
             ..Default::default()
         };
-        let b1 = Node::new_goal("id", &n, &[]);
+        let b1 = SvgNode::new_goal("id", &n, &[]);
         let mut nodes = BTreeMap::new();
         nodes.insert("G1".to_owned(), b1);
         d = d.add_meta_information(&mut vec!["A1".to_owned(), "B2".to_owned()]);

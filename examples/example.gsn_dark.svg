@@ -20,7 +20,6 @@
 svg { filter: invert(100%); }]]>
 </style>
 <g class="gsn_module_examples_example_gsn_yaml gsnelem gsngoal" id="node_G1">
-<g class="gsn_module_examples_example_gsn_yaml gsnelem gsngoal" id="node_G1">
 <title>
 G1
 </title>
@@ -32,8 +31,6 @@ G1
 Goal 1
 </text>
 </g>
-</g>
-<g class="gsn_module_examples_example_gsn_yaml gsnelem gsngoal" id="node_G2">
 <g class="gsn_module_examples_example_gsn_yaml gsnelem gsngoal" id="node_G2">
 <title>
 G2
@@ -46,8 +43,6 @@ G2
 Goal 2
 </text>
 </g>
-</g>
-<g class="gsn_module_examples_example_gsn_yaml gsnelem gsngoal" id="node_G3">
 <g class="gsn_module_examples_example_gsn_yaml gsnelem gsngoal" id="node_G3">
 <title>
 G3
@@ -60,8 +55,6 @@ G3
 Goal 3
 </text>
 </g>
-</g>
-<g class="gsn_module_examples_example_gsn_yaml gsnelem gsnctxt" id="node_C1">
 <g class="gsn_module_examples_example_gsn_yaml gsnelem gsnctxt" id="node_C1">
 <title>
 C1
@@ -74,8 +67,6 @@ C1
 Context 1
 </text>
 </g>
-</g>
-<g class="gsn_module_examples_example_gsn_yaml gsnelem gsnjust" id="node_J1">
 <g class="gsn_module_examples_example_gsn_yaml gsnelem gsnjust" id="node_J1">
 <title>
 J1
@@ -91,8 +82,6 @@ Justification 1
 J
 </text>
 </g>
-</g>
-<g class="gsn_module_examples_example_gsn_yaml gsnelem gsnstgy" id="node_S1">
 <g class="gsn_module_examples_example_gsn_yaml gsnelem gsnstgy" id="node_S1">
 <title>
 S1
@@ -105,8 +94,6 @@ S1
 Strategy 1
 </text>
 </g>
-</g>
-<g class="gsn_module_examples_example_gsn_yaml gsnelem gsnasmp" id="node_A1">
 <g class="gsn_module_examples_example_gsn_yaml gsnelem gsnasmp" id="node_A1">
 <title>
 A1
@@ -122,8 +109,6 @@ Argument 1
 A
 </text>
 </g>
-</g>
-<g class="gsn_module_examples_example_gsn_yaml gsnelem gsnstgy" id="node_S2">
 <g class="gsn_module_examples_example_gsn_yaml gsnelem gsnstgy" id="node_S2">
 <title>
 S2
@@ -136,9 +121,7 @@ S2
 Strategy 2
 </text>
 </g>
-</g>
 <a href="https://github.com/jonasthewolf/gsn2x">
-<g class="gsn_module_examples_example_gsn_yaml gsnelem gsnsltn" id="node_Sn1"/>
 <g class="gsn_module_examples_example_gsn_yaml gsnelem gsnsltn" id="node_Sn1">
 <title>
 Sn1
@@ -152,7 +135,6 @@ Solution 1
 </text>
 </g>
 </a>
-<g class="mycssclass anotherclass gsn_module_examples_example_gsn_yaml gsnelem gsnasmp" id="node_A2">
 <g class="mycssclass anotherclass gsn_module_examples_example_gsn_yaml gsnelem gsnasmp" id="node_A2">
 <title>
 A2
@@ -168,8 +150,6 @@ Assumption 2
 A
 </text>
 </g>
-</g>
-<g class="gsn_module_examples_example_gsn_yaml gsnelem gsngoal" id="node_G5">
 <g class="gsn_module_examples_example_gsn_yaml gsnelem gsngoal" id="node_G5">
 <title>
 G5
@@ -182,8 +162,6 @@ G5
 Goal 5
 </text>
 </g>
-</g>
-<g class="gsn_module_examples_example_gsn_yaml gsnelem gsnctxt" id="node_C2">
 <g class="gsn_module_examples_example_gsn_yaml gsnelem gsnctxt" id="node_C2">
 <title>
 C2
@@ -199,8 +177,6 @@ Context 2
 Multiline
 </text>
 </g>
-</g>
-<g class="gsn_module_examples_example_gsn_yaml gsnelem gsngoal" id="node_G6">
 <g class="gsn_module_examples_example_gsn_yaml gsnelem gsngoal" id="node_G6">
 <title>
 G6
@@ -213,8 +189,6 @@ G6
 Goal 6
 </text>
 </g>
-</g>
-<g class="gsn_module_examples_example_gsn_yaml gsnelem gsngoal" id="node_G4">
 <g class="gsn_module_examples_example_gsn_yaml gsnelem gsngoal" id="node_G4">
 <title>
 G4
@@ -227,8 +201,6 @@ G4
 Goal 4
 </text>
 </g>
-</g>
-<g class="gsn_module_examples_example_gsn_yaml gsnelem gsnjust" id="node_J2">
 <g class="gsn_module_examples_example_gsn_yaml gsnelem gsnjust" id="node_J2">
 <title>
 J2
@@ -244,8 +216,6 @@ Justification 2
 J
 </text>
 </g>
-</g>
-<g class="gsn_module_examples_example_gsn_yaml gsnelem gsngoal gsn_undeveloped" id="node_G7">
 <g class="gsn_module_examples_example_gsn_yaml gsnelem gsngoal gsn_undeveloped" id="node_G7">
 <title>
 G7
@@ -259,8 +229,6 @@ Undeveloped Goal
 </text>
 <path d="M1036,387 l5,5 l-5,5 l-5,-5 z" fill="none" stroke="black" stroke-width="1"/>
 </g>
-</g>
-<g class="gsn_module_examples_example_gsn_yaml gsnelem gsnsltn" id="node_Sn4">
 <g class="gsn_module_examples_example_gsn_yaml gsnelem gsnsltn" id="node_Sn4">
 <title>
 Sn4
@@ -273,8 +241,6 @@ Sn4
 Solution 4
 </text>
 </g>
-</g>
-<g class="gsn_layer2 gsn_module_examples_example_gsn_yaml gsnelem gsnsltn" id="node_Sn3">
 <g class="gsn_layer2 gsn_module_examples_example_gsn_yaml gsnelem gsnsltn" id="node_Sn3">
 <title>
 Sn3
@@ -287,8 +253,6 @@ Sn3
 Solution 3
 </text>
 </g>
-</g>
-<g class="gsn_module_examples_example_gsn_yaml gsnelem gsnsltn" id="node_Sn5">
 <g class="gsn_module_examples_example_gsn_yaml gsnelem gsnsltn" id="node_Sn5">
 <title>
 Sn5
@@ -301,8 +265,6 @@ Sn5
 Solution 5
 </text>
 </g>
-</g>
-<g class="gsn_layer1 gsn_layer2 gsn_module_examples_example_gsn_yaml gsnelem gsnsltn" id="node_Sn2">
 <g class="gsn_layer1 gsn_layer2 gsn_module_examples_example_gsn_yaml gsnelem gsnsltn" id="node_Sn2">
 <title>
 Sn2
@@ -314,7 +276,6 @@ Sn2
 <text font-family="Arial" font-size="12" x="672" y="492">
 Solution 2
 </text>
-</g>
 </g>
 <path class="gsnedge gsninspby" d="M711,66 C711,96,402,76,402,96" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsninspby" d="M711,66 C711,96,1021,76,1021,96" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>

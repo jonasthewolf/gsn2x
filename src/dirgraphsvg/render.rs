@@ -3,9 +3,9 @@ use std::{cell::RefCell, collections::BTreeMap};
 use anyhow::Context;
 use svg::{
     node::element::{
-        path::Data, Anchor, Element, Group, Marker, Path, Polyline, Rectangle, Style, Symbol, Title,
+        path::Data, Group, Marker, Path, Polyline, Rectangle, Style, Symbol, Text, Title,
     },
-    Document,
+    Document, Node,
 };
 
 use crate::dirgraph::DirectedGraph;
@@ -13,8 +13,8 @@ use crate::dirgraph::DirectedGraph;
 use super::{
     edges::{EdgeType, SingleEdge},
     escape_node_id,
-    nodes::{Node, Port},
-    util::{escape_url, font::FontInfo},
+    nodes::{Port, SvgNode},
+    util::font::FontInfo,
     DirGraph,
 };
 
@@ -27,7 +27,7 @@ const MARKER_HEIGHT: u32 = 10;
 ///
 pub(super) fn render_graph(
     render_graph: &DirGraph,
-    graph: &DirectedGraph<'_, RefCell<Node>, EdgeType>,
+    graph: &DirectedGraph<'_, RefCell<SvgNode>, EdgeType>,
     ranks: &Vec<Vec<Vec<&str>>>,
     width: i32,
     height: i32,
@@ -44,11 +44,11 @@ pub(super) fn render_graph(
         render_graph.embed_stylesheets,
     );
     // Draw nodes
-    document = render_nodes(document, render_graph, nodes, ranks);
+    render_nodes(&mut document, render_graph, nodes, ranks);
     // Draw edges
-    document = render_edges(document, render_graph, nodes, edges);
+    render_edges(&mut document, render_graph, nodes, edges);
     // Order is important here. render_legend may modify self.width and self.height
-    document = render_legend(document, render_graph, &mut width, &mut height);
+    render_legend(&mut document, render_graph, &mut width, &mut height);
     document = document.set("viewBox", (0u32, 0u32, width, height));
     document
 }
@@ -60,11 +60,11 @@ pub(super) fn render_graph(
 ///
 ///
 fn render_edges(
-    mut document: Document,
+    document: &mut Document,
     render_graph: &DirGraph,
-    nodes: &BTreeMap<String, RefCell<Node>>,
+    nodes: &BTreeMap<String, RefCell<SvgNode>>,
     edges: &BTreeMap<String, Vec<(String, EdgeType)>>,
-) -> Document {
+) {
     for (source, targets) in edges {
         for (target, edge_type) in targets {
             let s = nodes.get(source).unwrap().borrow();
@@ -172,10 +172,9 @@ fn render_edges(
                 e = e.set("marker-start", arrow_id);
             }
             e = e.set("class", classes);
-            document = document.add(e);
+            document.append(e);
         }
     }
-    document
 }
 
 ///
@@ -183,21 +182,20 @@ fn render_edges(
 ///
 ///
 fn render_nodes(
-    mut document: Document,
+    document: &mut Document,
     render_graph: &DirGraph,
-    nodes: &BTreeMap<String, RefCell<Node>>,
+    nodes: &BTreeMap<String, RefCell<SvgNode>>,
     ranks: &Vec<Vec<Vec<&str>>>,
-) -> Document {
+) {
     // Draw the nodes
     for rank in ranks {
         for np in rank {
             for &id in np {
                 let n = nodes.get(id).unwrap();
-                document = document.add(n.borrow().render(&render_graph.font));
+                n.borrow().render(&render_graph.font, document);
             }
         }
     }
-    document
     // Calculate size of document
     // let width = ranks
     //     .iter()
@@ -219,15 +217,14 @@ fn render_nodes(
 ///
 ///
 fn render_legend(
-    mut document: Document,
+    document: &mut Document,
     render_graph: &DirGraph,
     width: &mut i32,
     height: &mut i32,
-) -> Document {
+) {
     if let Some(meta) = &render_graph.meta_information {
-        let (outer, mut g) = create_group("gsn_module", &["gsnmodule".to_owned()], &None);
+        let mut g = create_group("gsn_module", &["gsnmodule".to_owned()]);
         let title = Title::new().add(svg::node::Text::new("Module Information"));
-        use svg::Node;
         g.append(title);
 
         let mut text_height = 0;
@@ -250,11 +247,16 @@ fn render_legend(
         let mut y_running = 0;
         for (text, (_, h)) in meta.iter().zip(lines) {
             y_running += h;
-            g = add_text(g, text, x, y_base + y_running, &render_graph.font, false);
+            g.append(create_text(
+                text,
+                x,
+                y_base + y_running,
+                &render_graph.font,
+                false,
+            ));
         }
-        document = document.add(outer);
+        document.append(g);
     }
-    document
 }
 
 ///
@@ -335,7 +337,7 @@ fn setup_basics(mut document: Document) -> Document {
         .set("stroke-width", 1u32)
         .set("fill", "lightgrey");
     let module_image = Symbol::new().set("id", "module_icon").add(mi_r1).add(mi_r2);
-    document = document.add(module_image);
+    document.append(module_image);
 
     document = document
         .add(composite_arrow)
@@ -381,41 +383,17 @@ fn setup_stylesheets(
 ///
 ///
 ///
-/// (outer, inner) element
-///
-pub(crate) fn create_group(
-    id: &str,
-    classes: &[String],
-    url: &Option<String>,
-) -> (Element, Element) {
-    let mut g = Group::new().set("id", escape_node_id(id));
-    g = g.set("class", classes.join(" "));
-    if let Some(url) = &url {
-        let link = Anchor::new();
-        (
-            link.set("href", escape_url(url.as_str()))
-                .add(g.clone())
-                .into(),
-            g.into(),
-        )
-    } else {
-        (g.clone().into(), g.into())
-    }
+pub(crate) fn create_group(id: &str, classes: &[String]) -> Group {
+    Group::new()
+        .set("id", escape_node_id(id))
+        .set("class", classes.join(" "))
 }
 
 ///
 ///
 ///
 ///
-pub(crate) fn add_text(
-    mut context: Element,
-    text: &str,
-    x: i32,
-    y: i32,
-    font: &FontInfo,
-    bold: bool,
-) -> Element {
-    use svg::node::element::Text;
+pub(crate) fn create_text(text: &str, x: i32, y: i32, font: &FontInfo, bold: bool) -> Text {
     let mut text = Text::new()
         .set("x", x)
         .set("y", y)
@@ -425,7 +403,5 @@ pub(crate) fn add_text(
     if bold {
         text = text.set("font-weight", "bold");
     }
-    use svg::Node;
-    context.append(text);
-    context
+    text
 }

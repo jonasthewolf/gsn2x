@@ -1,4 +1,7 @@
-use svg::node::element::Element;
+use svg::{
+    node::element::{Anchor, Element},
+    Node,
+};
 
 use crate::{
     dirgraphsvg::{util::point2d::Point2D, FontInfo},
@@ -11,7 +14,11 @@ use self::{
     elliptical_node::EllipticalType,
 };
 
-use super::{escape_text, render::create_group, util::font::text_bounding_box};
+use super::{
+    escape_text,
+    render::create_group,
+    util::{escape_url, font::text_bounding_box},
+};
 
 mod away_node;
 mod box_node;
@@ -31,7 +38,7 @@ enum NodeType {
     Away(AwayType),
 }
 
-pub struct Node {
+pub struct SvgNode {
     x: i32,
     y: i32,
     width: i32,
@@ -59,7 +66,7 @@ const PADDING_HORIZONTAL: i32 = 7;
 const OFFSET_IDENTIFIER: i32 = 5;
 const MODULE_TAB_HEIGHT: i32 = 10;
 
-impl Node {
+impl SvgNode {
     pub fn get_width(&self) -> i32 {
         self.width
     }
@@ -196,16 +203,19 @@ impl Node {
     ///
     ///
     ///
-    pub fn render(&self, font: &FontInfo) -> Element {
-        let (mut outer, mut inner) = create_group(&self.identifier, &self.classes, &self.url);
-        inner = match &self.node_type {
-            NodeType::Box(x) => x.render(self, font, inner),
-            NodeType::Ellipsis(x) => x.render(self, font, inner),
-            NodeType::Away(x) => x.render(self, font, inner),
+    pub fn render(&self, font: &FontInfo, document: &mut Element) {
+        let mut g = create_group(&self.identifier, &self.classes);
+        match &self.node_type {
+            NodeType::Box(x) => x.render(self, font, &mut g),
+            NodeType::Ellipsis(x) => x.render(self, font, &mut g),
+            NodeType::Away(x) => x.render(self, font, &mut g),
         };
-        use svg::Node;
-        outer.append(inner);
-        outer
+        if let Some(url) = &self.url {
+            let link = Anchor::new().set("href", escape_url(url.as_str())).add(g);
+            document.append(link);
+        } else {
+            document.append(g);
+        }
     }
 
     ///
@@ -230,7 +240,7 @@ impl Node {
                 .collect::<Vec<String>>(),
         );
 
-        Node {
+        SvgNode {
             x: 0,
             y: 0,
             width: 0,
@@ -249,7 +259,7 @@ impl Node {
     ///
     ///
     pub fn new_assumption(identifier: &str, gsn_node: &GsnNode, layers: &[String]) -> Self {
-        let mut n = Node::new(
+        let mut n = SvgNode::new(
             identifier,
             gsn_node,
             layers,
@@ -269,7 +279,7 @@ impl Node {
     ///
     ///
     pub fn new_context(identifier: &str, gsn_node: &GsnNode, layers: &[String]) -> Self {
-        Node::new(
+        SvgNode::new(
             identifier,
             gsn_node,
             layers,
@@ -282,7 +292,7 @@ impl Node {
     ///
     ///
     pub fn new_justification(identifier: &str, gsn_node: &GsnNode, layers: &[String]) -> Self {
-        let mut n = Node::new(
+        let mut n = SvgNode::new(
             identifier,
             gsn_node,
             layers,
@@ -302,7 +312,7 @@ impl Node {
     ///
     ///
     pub fn new_solution(identifier: &str, gsn_node: &GsnNode, layers: &[String]) -> Self {
-        let mut n = Node::new(
+        let mut n = SvgNode::new(
             identifier,
             gsn_node,
             layers,
@@ -323,7 +333,7 @@ impl Node {
     ///
     ///
     pub fn new_strategy(identifier: &str, gsn_node: &GsnNode, layers: &[String]) -> Self {
-        let mut n = Node::new(
+        let mut n = SvgNode::new(
             identifier,
             gsn_node,
             layers,
@@ -348,7 +358,7 @@ impl Node {
         if undeveloped {
             classes.push("gsn_undeveloped");
         }
-        let mut n = Node::new(
+        let mut n = SvgNode::new(
             identifier,
             gsn_node,
             layers,
@@ -372,7 +382,7 @@ impl Node {
         layers: &[String],
         module_url: Option<String>,
     ) -> Self {
-        let mut n = Node::new(
+        let mut n = SvgNode::new(
             identifier,
             gsn_node,
             layers,
@@ -397,7 +407,7 @@ impl Node {
         layers: &[String],
         module_url: Option<String>,
     ) -> Self {
-        let mut n = Node::new(
+        let mut n = SvgNode::new(
             identifier,
             gsn_node,
             layers,
@@ -422,7 +432,7 @@ impl Node {
         layers: &[String],
         module_url: Option<String>,
     ) -> Self {
-        let mut n = Node::new(
+        let mut n = SvgNode::new(
             identifier,
             gsn_node,
             layers,
@@ -447,7 +457,7 @@ impl Node {
         layers: &[String],
         module_url: Option<String>,
     ) -> Self {
-        let mut n = Node::new(
+        let mut n = SvgNode::new(
             identifier,
             gsn_node,
             layers,
@@ -472,7 +482,7 @@ impl Node {
         layers: &[String],
         module_url: Option<String>,
     ) -> Self {
-        let mut n = Node::new(
+        let mut n = SvgNode::new(
             identifier,
             gsn_node,
             layers,
@@ -498,7 +508,7 @@ impl Node {
         layers: &[String],
         module_url: Option<String>,
     ) -> Self {
-        let mut n = Node::new(identifier, gsn_node, layers, module_url, &["gsnmodule"]);
+        let mut n = SvgNode::new(identifier, gsn_node, layers, module_url, &["gsnmodule"]);
         n.node_type = NodeType::Box(BoxType::Module);
         n
     }

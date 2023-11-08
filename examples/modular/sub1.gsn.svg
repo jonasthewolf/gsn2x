@@ -19,7 +19,6 @@
 @import url(https://github.com/jonasthewolf/gsn2x/blob/3439402d093ba54af4771b295e78f2488bd1b978/examples/modular/modular.css)
 </style>
 <g class="gsn_module_Main gsnelem gsnstgy" id="node_S1">
-<g class="gsn_module_Main gsnelem gsnstgy" id="node_S1">
 <title>
 S1
 </title>
@@ -31,9 +30,7 @@ S1
 Divide and Conquer
 </text>
 </g>
-</g>
 <a href="./main.gsn.svg#node_G1">
-<g class="gsn_module_Main gsnelem gsnawaygoal" id="node_G1"/>
 <g class="gsn_module_Main gsnelem gsnawaygoal" id="node_G1">
 <title>
 G1
@@ -55,7 +52,6 @@ Main
 </g>
 </a>
 <g class="gsn_module_Sub1 gsnelem gsnasmp" id="node_A1">
-<g class="gsn_module_Sub1 gsnelem gsnasmp" id="node_A1">
 <title>
 A1
 </title>
@@ -70,9 +66,7 @@ TestABC
 A
 </text>
 </g>
-</g>
 <a href="./sub3.gsn.svg#node_C2">
-<g class="gsn_module_Sub3 gsnelem gsnawayctxt" id="node_C2"/>
 <g class="gsn_module_Sub3 gsnelem gsnawayctxt" id="node_C2">
 <title>
 C2
@@ -94,7 +88,6 @@ Sub3
 </g>
 </a>
 <g class="gsn_module_Sub1 gsnelem gsngoal" id="node_G3">
-<g class="gsn_module_Sub1 gsnelem gsngoal" id="node_G3">
 <title>
 G3
 </title>
@@ -106,9 +99,7 @@ G3
 Conquer the submodules
 </text>
 </g>
-</g>
 <a href="./main.gsn.svg#node_J1">
-<g class="gsn_module_Main gsnelem gsnawayjust" id="node_J1"/>
 <g class="gsn_module_Main gsnelem gsnawayjust" id="node_J1">
 <title>
 J1
@@ -136,7 +127,6 @@ J
 </g>
 </a>
 <a href="./sub3.gsn.svg#node_Sn1">
-<g class="gsn_module_Sub3 gsnelem gsnawaysltn" id="node_Sn1"/>
 <g class="gsn_module_Sub3 gsnelem gsnawaysltn" id="node_Sn1">
 <title>
 Sn1

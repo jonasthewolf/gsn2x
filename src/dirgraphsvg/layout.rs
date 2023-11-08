@@ -3,7 +3,7 @@ use std::collections::{BTreeMap, HashSet};
 
 use crate::dirgraph::DirectedGraph;
 
-use super::{edges::EdgeType, nodes::Node, util::point2d::Point2D};
+use super::{edges::EdgeType, nodes::SvgNode, util::point2d::Point2D};
 
 pub struct Margin {
     pub top: i32,
@@ -24,16 +24,21 @@ impl Default for Margin {
 }
 
 trait Cell {
-    fn get_max_width(&self, nodes: &BTreeMap<String, RefCell<Node>>) -> i32;
-    fn get_x(&self, nodes: &BTreeMap<String, RefCell<Node>>) -> i32;
-    fn set_position(&self, nodes: &BTreeMap<String, RefCell<Node>>, margin: &Margin, pos: Point2D);
+    fn get_max_width(&self, nodes: &BTreeMap<String, RefCell<SvgNode>>) -> i32;
+    fn get_x(&self, nodes: &BTreeMap<String, RefCell<SvgNode>>) -> i32;
+    fn set_position(
+        &self,
+        nodes: &BTreeMap<String, RefCell<SvgNode>>,
+        margin: &Margin,
+        pos: Point2D,
+    );
 }
 
 impl Cell for Vec<&str> {
     ///
     ///
     ///
-    fn get_max_width(&self, nodes: &BTreeMap<String, RefCell<Node>>) -> i32 {
+    fn get_max_width(&self, nodes: &BTreeMap<String, RefCell<SvgNode>>) -> i32 {
         self.iter()
             .map(|&n| nodes.get(n).unwrap().borrow().get_width())
             .max()
@@ -43,7 +48,7 @@ impl Cell for Vec<&str> {
     ///
     ///
     ///
-    fn get_x(&self, nodes: &BTreeMap<String, RefCell<Node>>) -> i32 {
+    fn get_x(&self, nodes: &BTreeMap<String, RefCell<SvgNode>>) -> i32 {
         let n = nodes.get(self.first().unwrap().to_owned()).unwrap();
         n.borrow().get_position().x
     }
@@ -51,7 +56,12 @@ impl Cell for Vec<&str> {
     ///
     ///
     ///
-    fn set_position(&self, nodes: &BTreeMap<String, RefCell<Node>>, margin: &Margin, pos: Point2D) {
+    fn set_position(
+        &self,
+        nodes: &BTreeMap<String, RefCell<SvgNode>>,
+        margin: &Margin,
+        pos: Point2D,
+    ) {
         let max_h = self
             .iter()
             .map(|&id| nodes.get(id).unwrap().borrow().get_height())
@@ -75,7 +85,7 @@ impl Cell for Vec<&str> {
 ///  
 ///
 pub(super) fn layout_nodes(
-    graph: &DirectedGraph<'_, RefCell<Node>, EdgeType>,
+    graph: &DirectedGraph<'_, RefCell<SvgNode>, EdgeType>,
     ranks: &[Vec<Vec<&str>>],
     margin: &Margin,
 ) -> (i32, i32) {
@@ -129,7 +139,7 @@ pub(super) fn layout_nodes(
 ///
 ///
 fn calculate_size_of_document(
-    nodes: &BTreeMap<String, RefCell<Node>>,
+    nodes: &BTreeMap<String, RefCell<SvgNode>>,
     ranks: &[Vec<Vec<&str>>],
     margin: &Margin,
 ) -> (i32, i32) {
@@ -153,7 +163,7 @@ fn calculate_size_of_document(
 ///
 ///
 fn get_max_height(
-    nodes: &BTreeMap<String, RefCell<Node>>,
+    nodes: &BTreeMap<String, RefCell<SvgNode>>,
     margin: &Margin,
     rank: &[Vec<&str>],
 ) -> i32 {
@@ -171,7 +181,7 @@ fn get_max_height(
 ///
 ///
 ///
-fn get_center(nodes: &BTreeMap<String, RefCell<Node>>, set: &[&str]) -> i32 {
+fn get_center(nodes: &BTreeMap<String, RefCell<SvgNode>>, set: &[&str]) -> i32 {
     let x_values: Vec<_> = set
         .iter()
         .map(|&node| nodes.get(node).unwrap().borrow().get_position().x)
@@ -185,7 +195,7 @@ fn get_center(nodes: &BTreeMap<String, RefCell<Node>>, set: &[&str]) -> i32 {
 ///
 ///
 fn has_node_to_be_moved<'b>(
-    graph: &'b DirectedGraph<'b, RefCell<Node>, EdgeType>,
+    graph: &'b DirectedGraph<'b, RefCell<SvgNode>, EdgeType>,
     cell: &Vec<&str>,
     margin: &Margin,
     moved_nodes: &mut HashSet<&'b str>,
@@ -241,7 +251,7 @@ fn has_node_to_be_moved<'b>(
 ///
 ///
 fn move_closer(
-    nodes: &BTreeMap<String, RefCell<Node>>,
+    nodes: &BTreeMap<String, RefCell<SvgNode>>,
     cell: &Vec<&str>,
     parent: &str,
     margin: &Margin,

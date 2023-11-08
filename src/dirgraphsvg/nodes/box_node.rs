@@ -1,8 +1,8 @@
 use svg::node::element::{path::Data, Element, Path, Title};
 
-use crate::dirgraphsvg::{nodes::OFFSET_IDENTIFIER, render::add_text, util::font::FontInfo};
+use crate::dirgraphsvg::{nodes::OFFSET_IDENTIFIER, render::create_text, util::font::FontInfo};
 
-use super::{Node, SizeContext, PADDING_HORIZONTAL, PADDING_VERTICAL};
+use super::{SizeContext, SvgNode, PADDING_HORIZONTAL, PADDING_VERTICAL};
 
 const MODULE_TAB_HEIGHT: i32 = 10;
 const UNDEVELOPED_DIAMOND: i32 = 5;
@@ -59,7 +59,7 @@ impl BoxType {
     ///
     ///
     ///
-    pub(super) fn render(&self, node: &Node, font: &FontInfo, mut context: Element) -> Element {
+    pub(super) fn render(&self, node: &SvgNode, font: &FontInfo, context: &mut Element) {
         let title = Title::new().add(svg::node::Text::new(&node.identifier));
         use svg::Node;
         context.append(title);
@@ -131,12 +131,12 @@ impl BoxType {
             y += MODULE_TAB_HEIGHT;
         }
         y += font.size as i32;
-        context = add_text(context, &node.identifier, x, y, font, true);
+        context.append(create_text(&node.identifier, x, y, font, true));
         y += OFFSET_IDENTIFIER;
 
         for text in node.text.lines() {
             y += font.size as i32;
-            context = add_text(context, text, x, y, font, false);
+            context.append(create_text(text, x, y, font, false));
         }
 
         if let BoxType::Undeveloped(_) = self {
@@ -153,6 +153,5 @@ impl BoxType {
                 .set("d", data);
             context.append(undeveloped_diamond);
         }
-        context
     }
 }

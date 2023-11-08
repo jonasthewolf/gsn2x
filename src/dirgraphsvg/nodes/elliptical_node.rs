@@ -1,8 +1,8 @@
 use svg::node::element::{path::Data, Element, Path, Title};
 
-use crate::dirgraphsvg::{nodes::OFFSET_IDENTIFIER, render::add_text, util::font::FontInfo};
+use crate::dirgraphsvg::{nodes::OFFSET_IDENTIFIER, render::create_text, util::font::FontInfo};
 
-use super::{Node, SizeContext, PADDING_HORIZONTAL};
+use super::{SizeContext, SvgNode, PADDING_HORIZONTAL};
 
 pub(crate) struct EllipticalType {
     pub(super) admonition: Option<String>,
@@ -59,7 +59,7 @@ impl EllipticalType {
     ///
     ///
     ///
-    pub(super) fn render(&self, node: &Node, font: &FontInfo, mut context: Element) -> Element {
+    pub(super) fn render(&self, node: &SvgNode, font: &FontInfo, context: &mut Element) {
         let title = Title::new().add(svg::node::Text::new(&node.identifier));
 
         let data = Data::new()
@@ -97,25 +97,22 @@ impl EllipticalType {
 
         let x = node.x - self.text_width / 2;
         let mut y = node.y - self.text_height / 2 + PADDING_HORIZONTAL;
-        context = add_text(context, &node.identifier, x, y, font, true);
+        context.append(create_text(&node.identifier, x, y, font, true));
 
         y += OFFSET_IDENTIFIER;
         for text in node.text.lines() {
             y += font.size as i32;
-            context = add_text(context, text, x, y, font, false);
+            context.append(create_text(text, x, y, font, false));
         }
 
         if let Some(adm) = &self.admonition {
-            context = add_text(
-                context,
+            context.append(create_text(
                 adm,
                 node.x + node.width / 2 - 5,
                 node.y + node.height / 2 - 5,
                 font,
                 true,
-            );
+            ));
         }
-
-        context
     }
 }

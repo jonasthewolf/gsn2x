@@ -1,5 +1,5 @@
 use crate::dirgraphsvg::edges::EdgeType;
-use crate::dirgraphsvg::{escape_node_id, nodes::Node};
+use crate::dirgraphsvg::{escape_node_id, nodes::SvgNode};
 use crate::file_utils::{get_filename, get_relative_path, set_extension, translate_to_output_path};
 use crate::gsn::{GsnNode, GsnNodeType, Module};
 use anyhow::Result;
@@ -88,16 +88,16 @@ impl RenderOptions {
 ///
 ///
 ///
-pub fn svg_from_gsn_node(identifier: &str, gsn_node: &GsnNode, layers: &[String]) -> Node {
+pub fn svg_from_gsn_node(identifier: &str, gsn_node: &GsnNode, layers: &[String]) -> SvgNode {
     // Create node
     match gsn_node.node_type.unwrap() {
         // unwrap ok, since checked during validation
-        GsnNodeType::Goal => Node::new_goal(identifier, gsn_node, layers),
-        GsnNodeType::Solution => Node::new_solution(identifier, gsn_node, layers),
-        GsnNodeType::Strategy => Node::new_strategy(identifier, gsn_node, layers),
-        GsnNodeType::Context => Node::new_context(identifier, gsn_node, layers),
-        GsnNodeType::Assumption => Node::new_assumption(identifier, gsn_node, layers),
-        GsnNodeType::Justification => Node::new_justification(identifier, gsn_node, layers),
+        GsnNodeType::Goal => SvgNode::new_goal(identifier, gsn_node, layers),
+        GsnNodeType::Solution => SvgNode::new_solution(identifier, gsn_node, layers),
+        GsnNodeType::Strategy => SvgNode::new_strategy(identifier, gsn_node, layers),
+        GsnNodeType::Context => SvgNode::new_context(identifier, gsn_node, layers),
+        GsnNodeType::Assumption => SvgNode::new_assumption(identifier, gsn_node, layers),
+        GsnNodeType::Justification => SvgNode::new_justification(identifier, gsn_node, layers),
     }
 }
 
@@ -112,7 +112,7 @@ pub fn away_svg_from_gsn_node(
     module: &Module,
     source_module: &Module,
     layers: &[String],
-) -> Result<Node> {
+) -> Result<SvgNode> {
     let mut module_url = get_relative_path(
         &module.relative_module_path,
         &source_module.relative_module_path,
@@ -124,19 +124,19 @@ pub fn away_svg_from_gsn_node(
     // Create node
     Ok(match gsn_node.node_type.unwrap() {
         // unwrap ok, since checked during validation
-        GsnNodeType::Goal => Node::new_away_goal(identifier, gsn_node, layers, Some(module_url)),
+        GsnNodeType::Goal => SvgNode::new_away_goal(identifier, gsn_node, layers, Some(module_url)),
         GsnNodeType::Solution => {
-            Node::new_away_solution(identifier, gsn_node, layers, Some(module_url))
+            SvgNode::new_away_solution(identifier, gsn_node, layers, Some(module_url))
         }
-        GsnNodeType::Strategy => Node::new_strategy(identifier, gsn_node, layers),
+        GsnNodeType::Strategy => SvgNode::new_strategy(identifier, gsn_node, layers),
         GsnNodeType::Context => {
-            Node::new_away_context(identifier, gsn_node, layers, Some(module_url))
+            SvgNode::new_away_context(identifier, gsn_node, layers, Some(module_url))
         }
         GsnNodeType::Assumption => {
-            Node::new_away_assumption(identifier, gsn_node, layers, Some(module_url))
+            SvgNode::new_away_assumption(identifier, gsn_node, layers, Some(module_url))
         }
         GsnNodeType::Justification => {
-            Node::new_away_justification(identifier, gsn_node, layers, Some(module_url))
+            SvgNode::new_away_justification(identifier, gsn_node, layers, Some(module_url))
         }
     })
 }
@@ -153,7 +153,7 @@ pub fn render_architecture(
     output_path: &str,
 ) -> Result<()> {
     let mut dg = crate::dirgraphsvg::DirGraph::default();
-    let svg_nodes: BTreeMap<String, Node> = modules
+    let svg_nodes: BTreeMap<String, SvgNode> = modules
         .iter()
         .filter(|(k, _)| dependencies.contains_key(k.to_owned()))
         .map(|(k, module)| {
@@ -169,7 +169,7 @@ pub fn render_architecture(
 
             (
                 k.to_owned(),
-                Node::new_module(k, &module_node, &[], {
+                SvgNode::new_module(k, &module_node, &[], {
                     let target_svg = set_extension(&module.relative_module_path, "svg");
                     let target_path = translate_to_output_path(output_path, &target_svg, None);
                     get_relative_path(
@@ -234,7 +234,7 @@ pub fn render_complete(
             )
         })
         .collect();
-    let svg_nodes: BTreeMap<String, Node> = nodes
+    let svg_nodes: BTreeMap<String, SvgNode> = nodes
         .iter()
         .map(|(id, node)| {
             (
@@ -274,7 +274,7 @@ pub fn render_argument(
     render_options: &RenderOptions,
 ) -> Result<()> {
     let mut dg = crate::dirgraphsvg::DirGraph::default();
-    let mut svg_nodes: BTreeMap<String, Node> = nodes
+    let mut svg_nodes: BTreeMap<String, SvgNode> = nodes
         .iter()
         .filter(|(_, node)| node.module == module_name)
         .map(|(id, node)| {

@@ -19,7 +19,6 @@
 @import url(https://github.com/jonasthewolf/gsn2x/blob/3439402d093ba54af4771b295e78f2488bd1b978/examples/modular/modular.css)
 </style>
 <g class="gsn_module_Main gsnelem gsngoal" id="node_G1">
-<g class="gsn_module_Main gsnelem gsngoal" id="node_G1">
 <title>
 G1
 </title>
@@ -31,9 +30,7 @@ G1
 Main Goal
 </text>
 </g>
-</g>
 <a href="./sub1.gsn.svg#node_A1">
-<g class="gsn_module_Sub1 gsnelem gsnawayasmp" id="node_A1"/>
 <g class="gsn_module_Sub1 gsnelem gsnawayasmp" id="node_A1">
 <title>
 A1
@@ -58,7 +55,6 @@ A
 </g>
 </a>
 <g class="gsn_module_Main gsnelem gsnstgy" id="node_S1">
-<g class="gsn_module_Main gsnelem gsnstgy" id="node_S1">
 <title>
 S1
 </title>
@@ -70,8 +66,6 @@ S1
 Divide and Conquer
 </text>
 </g>
-</g>
-<g class="gsn_module_Main gsnelem gsngoal gsn_undeveloped" id="node_G2">
 <g class="gsn_module_Main gsnelem gsngoal gsn_undeveloped" id="node_G2">
 <title>
 G2
@@ -85,8 +79,6 @@ Divide
 </text>
 <path d="M72,314 l5,5 l-5,5 l-5,-5 z" fill="none" stroke="black" stroke-width="1"/>
 </g>
-</g>
-<g class="gsn_module_Main gsnelem gsnjust" id="node_J1">
 <g class="gsn_module_Main gsnelem gsnjust" id="node_J1">
 <title>
 J1
@@ -102,9 +94,7 @@ Some Context
 J
 </text>
 </g>
-</g>
 <a href="./sub1.gsn.svg#node_G3">
-<g class="gsn_module_Sub1 gsnelem gsnawaygoal" id="node_G3"/>
 <g class="gsn_module_Sub1 gsnelem gsnawaygoal" id="node_G3">
 <title>
 G3
