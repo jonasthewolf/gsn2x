@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg classes="gsndiagram" viewBox="0 0 320 94" xmlns="http://www.w3.org/2000/svg">
+<svg classes="gsndiagram" viewBox="0 0 176 282" xmlns="http://www.w3.org/2000/svg">
 <symbol id="module_icon">
 <rect fill="lightgrey" height="5" stroke="black" stroke-width="1" width="10" x="0" y="0"/>
 <rect fill="lightgrey" height="10" stroke="black" stroke-width="1" width="20" x="0" y="5"/>
@@ -16,7 +16,6 @@
 <polyline fill="none" points="0 0, 10 4.5, 0 9, 0 0" stroke="black" stroke-width="1"/>
 </marker>
 <a href="./main.gsn.svg">
-<g class="gsn_module_ gsnelem gsnmodule" id="node_Main"/>
 <g class="gsn_module_ gsnelem gsnmodule" id="node_Main">
 <title>
 Main
@@ -28,17 +27,27 @@ Main
 </g>
 </a>
 <a href="./sub1.gsn.svg">
-<g class="gsn_module_ gsnelem gsnmodule" id="node_Sub1"/>
 <g class="gsn_module_ gsnelem gsnmodule" id="node_Sub1">
 <title>
 Sub1
 </title>
-<path class="border" d="M164,20 h30 v10 L268,30 L268,74 L164,74 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="171" y="49">
+<path class="border" d="M20,114 h30 v10 L124,124 L124,168 L20,168 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="27" y="143">
 Sub1
 </text>
 </g>
 </a>
-<path class="gsnedge gsninctxt" d="M134,47 C124,47,134,47,154,47" fill="none" marker-end="url(#composite_arrow)" marker-start="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsncomposite" d="M164,47 C164,47,82,0,62,0" fill="none" marker-end="url(#composite_arrow)" stroke="black" stroke-width="1"/>
+<a href="./sub3.gsn.svg">
+<g class="gsn_module_ gsnelem gsnmodule" id="node_Sub3">
+<title>
+Sub3
+</title>
+<path class="border" d="M20,208 h30 v10 L124,218 L124,262 L20,262 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="27" y="237">
+Sub3
+</text>
+</g>
+</a>
+<path class="gsnedge gsninctxt" d="M72,84 C72,104,72,94,72,114" fill="none" marker-end="url(#composite_arrow)" marker-start="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsncomposite" d="M72,168 C72,198,72,188,72,208" fill="none" marker-end="url(#composite_arrow)" stroke="black" stroke-width="1"/>
 </svg>

@@ -16,7 +16,6 @@
 <polyline fill="none" points="0 0, 10 4.5, 0 9, 0 0" stroke="black" stroke-width="1"/>
 </marker>
 <g class="gsn_module_Main gsnelem gsngoal" id="node_G1">
-<g class="gsn_module_Main gsnelem gsngoal" id="node_G1">
 <title>
 G1
 </title>
@@ -28,8 +27,6 @@ G1
 Main Goal
 </text>
 </g>
-</g>
-<g class="gsn_module_Sub1 gsnelem gsnasmp" id="node_A1">
 <g class="gsn_module_Sub1 gsnelem gsnasmp" id="node_A1">
 <title>
 A1
@@ -45,8 +42,6 @@ TestABC
 A
 </text>
 </g>
-</g>
-<g class="gsn_module_Main gsnelem gsnstgy" id="node_S1">
 <g class="gsn_module_Main gsnelem gsnstgy" id="node_S1">
 <title>
 S1
@@ -59,8 +54,6 @@ S1
 Divide and Conquer
 </text>
 </g>
-</g>
-<g class="gsn_module_Main gsnelem gsngoal gsn_undeveloped" id="node_G2">
 <g class="gsn_module_Main gsnelem gsngoal gsn_undeveloped" id="node_G2">
 <title>
 G2
@@ -74,8 +67,6 @@ Divide
 </text>
 <path d="M72,283 l5,5 l-5,5 l-5,-5 z" fill="none" stroke="black" stroke-width="1"/>
 </g>
-</g>
-<g class="gsn_module_Main gsnelem gsnjust" id="node_J1">
 <g class="gsn_module_Main gsnelem gsnjust" id="node_J1">
 <title>
 J1
@@ -91,8 +82,6 @@ Some Context
 J
 </text>
 </g>
-</g>
-<g class="gsn_module_Sub1 gsnelem gsngoal" id="node_G3">
 <g class="gsn_module_Sub1 gsnelem gsngoal" id="node_G3">
 <title>
 G3
@@ -105,8 +94,6 @@ G3
 Conquer the submodules
 </text>
 </g>
-</g>
-<g class="gsn_module_Sub3 gsnelem gsnctxt" id="node_C2">
 <g class="gsn_module_Sub3 gsnelem gsnctxt" id="node_C2">
 <title>
 C2
@@ -119,8 +106,6 @@ C2
 Context 2
 </text>
 </g>
-</g>
-<g class="gsn_module_Sub3 gsnelem gsnsltn" id="node_Sn1">
 <g class="gsn_module_Sub3 gsnelem gsnsltn" id="node_Sn1">
 <title>
 Sn1
@@ -132,7 +117,6 @@ Sn1
 <text font-family="Arial" font-size="12" x="400" y="388">
 Solution 1
 </text>
-</g>
 </g>
 <path class="gsnedge gsninctxt" d="M302,57 C302,57,312,57,332,57" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsninspby" d="M250,80 C250,110,250,104,250,124" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
