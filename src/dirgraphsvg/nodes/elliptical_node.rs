@@ -45,11 +45,11 @@ impl EllipticalType {
             (
                 std::cmp::max(
                     min_width,
-                    PADDING_HORIZONTAL * 4 + ((size_context.text_width as f32 * 1.414) as i32),
+                    PADDING_HORIZONTAL * 3 + ((size_context.text_width as f32 * 1.4) as i32),
                 ),
                 std::cmp::max(
                     min_height,
-                    PADDING_HORIZONTAL * 4 + ((size_context.text_height as f32 * 1.414) as i32),
+                    PADDING_HORIZONTAL * 3 + ((size_context.text_height as f32 * 1.4) as i32),
                 ),
             )
         }

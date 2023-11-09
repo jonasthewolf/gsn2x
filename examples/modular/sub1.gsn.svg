@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg classes="gsndiagram" viewBox="0 0 590 440" xmlns="http://www.w3.org/2000/svg">
+<svg classes="gsndiagram" viewBox="0 0 578 440" xmlns="http://www.w3.org/2000/svg">
 <symbol id="module_icon">
 <rect fill="lightgrey" height="5" stroke="black" stroke-width="1" width="10" x="0" y="0"/>
 <rect fill="lightgrey" height="10" stroke="black" stroke-width="1" width="20" x="0" y="5"/>
@@ -55,14 +55,14 @@ Main
 <title>
 A1
 </title>
-<path class="border" d="M455,60 a45,37,0,1,0,90,0 a45,37,0,1,0,-90,0 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="478" y="51">
+<path class="border" d="M455,60 a41,33,0,1,0,82,0 a41,33,0,1,0,-82,0 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="474" y="51">
 A1
 </text>
-<text font-family="Arial" font-size="12" x="478" y="68">
+<text font-family="Arial" font-size="12" x="474" y="68">
 TestABC
 </text>
-<text font-family="Arial" font-size="12" font-weight="bold" x="540" y="92">
+<text font-family="Arial" font-size="12" font-weight="bold" x="532" y="88">
 A
 </text>
 </g>
