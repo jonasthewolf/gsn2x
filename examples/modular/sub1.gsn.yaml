@@ -10,4 +10,5 @@ G3:
 
 A1: 
    text: TestABC
-   
+   horizontalIndex:
+      absolute: 0

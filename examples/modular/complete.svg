@@ -15,6 +15,21 @@
 <marker id="incontextof_arrow" markerHeight="9" markerUnits="userSpaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
 <polyline fill="none" points="0 0, 10 4.5, 0 9, 0 0" stroke="black" stroke-width="1"/>
 </marker>
+<g class="gsn_module_Sub1 gsnelem gsnasmp" id="node_A1">
+<title>
+A1
+</title>
+<path class="border" d="M72,53 a41,33,0,1,0,82,0 a41,33,0,1,0,-82,0 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="91" y="44">
+A1
+</text>
+<text font-family="Arial" font-size="12" x="91" y="61">
+TestABC
+</text>
+<text font-family="Arial" font-size="12" font-weight="bold" x="149" y="81">
+A
+</text>
+</g>
 <g class="gsn_module_Main gsnelem gsngoal" id="node_G1">
 <title>
 G1
@@ -25,21 +40,6 @@ G1
 </text>
 <text font-family="Arial" font-size="12" x="201" y="66">
 Main Goal
-</text>
-</g>
-<g class="gsn_module_Sub1 gsnelem gsnasmp" id="node_A1">
-<title>
-A1
-</title>
-<path class="border" d="M338,53 a41,33,0,1,0,82,0 a41,33,0,1,0,-82,0 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="357" y="44">
-A1
-</text>
-<text font-family="Arial" font-size="12" x="357" y="61">
-TestABC
-</text>
-<text font-family="Arial" font-size="12" font-weight="bold" x="415" y="81">
-A
 </text>
 </g>
 <g class="gsn_module_Main gsnelem gsnstgy" id="node_S1">
@@ -118,7 +118,7 @@ Sn1
 Solution 1
 </text>
 </g>
-<path class="gsnedge gsninctxt" d="M298,53 C298,53,308,53,328,53" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M194,53 C194,53,184,53,164,53" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsninspby" d="M246,76 C246,106,246,96,246,116" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsninctxt" d="M124,245 C124,245,134,245,154,245" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsninctxt" d="M340,245 C340,245,330,245,310,245" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>

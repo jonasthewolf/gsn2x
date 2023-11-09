@@ -83,14 +83,14 @@ where
     ///
     /// Get the nodes of the graph.
     ///
-    pub fn get_nodes(&'a self) -> &'a BTreeMap<String, NodeType> {
+    pub fn get_nodes(&self) -> &'a BTreeMap<String, NodeType> {
         self.nodes
     }
 
     ///
     /// Get the edges of the graph.
     ///
-    pub fn get_edges(&'a self) -> &'a BTreeMap<String, Vec<(String, EdgeType)>> {
+    pub fn get_edges(&self) -> &'a BTreeMap<String, Vec<(String, EdgeType)>> {
         self.edges
     }
 
@@ -422,6 +422,12 @@ where
                 .filter(|n| !visited.contains(n))
                 .enumerate()
                 .partition(|(idx, same_rank_child)| {
+                    let i = self
+                        .get_nodes()
+                        .get(same_rank_child.to_owned())
+                        .unwrap()
+                        .get_horizontal_index(*idx);
+                    matches!(i, Some(0) | Some(2)) ||
                     // If a parent is already in the rank, put the same_rank_child to the left
                     self.get_same_ranks_parents(same_rank_child)
                         .iter()

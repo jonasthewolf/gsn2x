@@ -18,6 +18,30 @@
 <style>
 @import url(https://github.com/jonasthewolf/gsn2x/blob/3439402d093ba54af4771b295e78f2488bd1b978/examples/modular/modular.css)
 </style>
+<a href="./sub1.gsn.svg#node_A1">
+<g class="gsn_module_Sub1 gsnelem gsnawayasmp" id="node_A1">
+<title>
+A1
+</title>
+<path class="border" d="M70,94 V41 A42,21,0,0,1,154,41 V94" fill="transparent" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="77" y="60">
+A1
+</text>
+<text font-family="Arial" font-size="12" x="77" y="77">
+TestABC
+</text>
+<a href="./sub1.gsn.svg#node_A1">
+<path class="border" d="M70,94 h84 v28 h-84 z" fill="transparent" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="104" y="115">
+Sub1
+</text>
+</a>
+<use href="#module_icon" x="77" y="101"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="147" y="20">
+A
+</text>
+</g>
+</a>
 <g class="gsn_module_Main gsnelem gsngoal" id="node_G1">
 <title>
 G1
@@ -30,30 +54,6 @@ G1
 Main Goal
 </text>
 </g>
-<a href="./sub1.gsn.svg#node_A1">
-<g class="gsn_module_Sub1 gsnelem gsnawayasmp" id="node_A1">
-<title>
-A1
-</title>
-<path class="border" d="M338,94 V41 A42,21,0,0,1,422,41 V94" fill="transparent" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="345" y="60">
-A1
-</text>
-<text font-family="Arial" font-size="12" x="345" y="77">
-TestABC
-</text>
-<a href="./sub1.gsn.svg#node_A1">
-<path class="border" d="M338,94 h84 v28 h-84 z" fill="transparent" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="372" y="115">
-Sub1
-</text>
-</a>
-<use href="#module_icon" x="345" y="101"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="415" y="20">
-A
-</text>
-</g>
-</a>
 <g class="gsn_module_Main gsnelem gsnstgy" id="node_S1">
 <title>
 S1
@@ -115,7 +115,7 @@ Sub1
 <use href="#module_icon" x="347" y="307"/>
 </g>
 </a>
-<path class="gsnedge gsninctxt" d="M298,71 C298,71,308,71,328,71" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M194,71 C194,71,184,71,164,71" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsninspby" d="M246,94 C246,124,246,132,246,152" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsninctxt" d="M124,288 C124,288,134,288,154,288" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsninctxt" d="M340,288 C340,288,330,288,310,288" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
