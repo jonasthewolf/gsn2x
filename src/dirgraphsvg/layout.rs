@@ -91,12 +91,15 @@ pub(super) fn layout_nodes(
 ) -> (i32, i32) {
     let mut first_run = true;
     let nodes = graph.get_nodes();
-    loop {
+    // This number should be safe that it yields a final, good looking image
+    // let limit = nodes.len() * nodes.len() * 2;
+    // TODO Restore old limit; or even better, detect if at least one node in the first column was not moved.
+    let limit = 5;
+    for limiter in 1..=limit {
         let mut changed = false;
         let mut y = margin.top;
         let mut cells_with_centered_parents = HashSet::new();
-        let mut min_x = [0].repeat(ranks.len());
-        for (v_index, v_rank) in ranks.iter().enumerate() {
+        for v_rank in ranks.iter() {
             let mut x = margin.left;
             let dy_max = get_max_height(nodes, margin, v_rank);
             y += dy_max / 2;
@@ -104,9 +107,7 @@ pub(super) fn layout_nodes(
                 let w = cell.get_max_width(nodes);
                 let old_x = cell.get_x(nodes);
                 x = std::cmp::max(x + w / 2, old_x);
-                if first_run {
-                    min_x[v_index] = std::cmp::min(x, min_x[v_index]);
-                } else {
+                if !first_run {
                     if let Some(new_x) =
                         has_node_to_be_moved(graph, cell, margin, &mut cells_with_centered_parents)
                     {
@@ -126,13 +127,8 @@ pub(super) fn layout_nodes(
             break;
         }
         first_run = false;
-        if changed
-            && min_x
-                .iter()
-                .enumerate()
-                .all(|(v_ind, init_x)| &ranks[v_ind][0].get_x(nodes) > init_x)
-        {
-            eprintln!("Rendering seems to end up in infinite loop. See documentation for hints how to solve this situation.");
+        if changed && limiter == limit {
+            eprintln!("Rendering a diagram took too many iterations ({limiter}). See README.md for hints how to solve this situation.");
         }
     }
     calculate_size_of_document(nodes, ranks, margin)
