@@ -8,17 +8,17 @@ pub trait DirectedGraphNodeType<'a> {
 
     ///
     /// Get the forced vertical rank increment, if any.
-    /// 
+    ///
     /// Returns `None` if there is no forced index.
-    /// 
+    ///
     fn get_forced_level(&self) -> Option<usize>;
 
     ///
     /// Get the forced horizontal index, if any.
     /// `current_index` gives in the current index of the node.
-    /// 
+    ///
     /// Returns `None` if there is no forced index.
-    /// 
+    ///
     fn get_horizontal_index(&self, current_index: usize) -> Option<usize>;
 }
 
@@ -439,15 +439,16 @@ where
                         .get_nodes()
                         .get(same_rank_child.to_owned())
                         .unwrap()
-                        .get_horizontal_index(*idx) {
-                            0 == forced_index
-                        } else {
-                            // If a parent is already in the rank, put the same_rank_child to the left
-                            self.get_same_ranks_parents(same_rank_child)
-                                .iter()
-                                .any(|p| current_rank_nodes[0..index].contains(p))
-                                || idx % 2 != 0
-                        }
+                        .get_horizontal_index(*idx)
+                    {
+                        0 == forced_index
+                    } else {
+                        // If a parent is already in the rank, put the same_rank_child to the left
+                        self.get_same_ranks_parents(same_rank_child)
+                            .iter()
+                            .any(|p| current_rank_nodes[0..index].contains(p))
+                            || idx % 2 != 0
+                    }
                 });
             let mut parent_index = current_rank
                 .iter()
