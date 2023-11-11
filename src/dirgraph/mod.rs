@@ -396,9 +396,8 @@ where
     }
 
     ///
+    /// Add same rank nodes
     ///
-    ///
-    /// TODO allow reordering of same rank nodes
     ///
     fn add_same_rank_nodes<'b>(
         &'b self,
