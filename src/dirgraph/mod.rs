@@ -3,9 +3,6 @@ use std::collections::{BTreeMap, BTreeSet};
 use std::fmt::Debug;
 
 pub trait DirectedGraphNodeType<'a> {
-    // FIXME: is that really needed?
-    fn is_final_node(&self) -> bool;
-
     ///
     /// Get the forced vertical rank increment, if any.
     ///
@@ -86,14 +83,6 @@ where
     }
 
     ///
-    /// Get a map of all inverse edges, i.e. children to their parents.
-    ///
-    ///
-    // pub fn get_parent_edges(&'a self) -> BTreeMap<&'a str, Vec<(&'a str, EdgeType)>> {
-    //     self.parent_edges.to_owned()
-    // }
-
-    ///
     /// Get the nodes of the graph.
     ///
     pub fn get_nodes(&self) -> &'a BTreeMap<String, NodeType> {
@@ -141,37 +130,30 @@ where
     ///
     /// Get the first cycle in the graph.
     /// If no cycle is found None is returned.
-    /// TODO Can be simplified. Depth is not important.
     ///
     pub fn get_first_cycle(&'a self) -> Option<(&'a str, Vec<&'a str>)> {
-        let mut stack = Vec::new();
+        let mut stack = self.root_nodes.iter().map(|&n| (n, 0)).collect::<Vec<_>>();
         let mut ancestors = Vec::new();
-
-        for &root in &self.root_nodes {
-            stack.push((root, 0));
-        }
         let mut depth = 0;
         while let Some((p_id, rdepth)) = stack.pop() {
             // Jump back to current ancestor
             if rdepth < depth {
-                // It is not sufficient to pop here, since one could skip levels when cleaning up.
-                ancestors.resize(rdepth, "");
+                ancestors.truncate(rdepth);
                 depth = rdepth;
             }
-            // Increase depth if current node has children that are not Solutions
+            // Remember the current node if it has no other real children
             if self
                 .get_real_children(p_id)
                 .iter()
-                .filter(|&&x| !self.nodes.get(x).unwrap().is_final_node())
+                .filter(|&&x| !self.get_real_children(x).is_empty())
                 .count()
                 > 0
             {
                 depth += 1;
                 ancestors.push(p_id);
             }
-            // unwrap is ok, since all references have been checked already
             for &child_node in self.get_real_children(p_id).iter() {
-                if !self.nodes.get(child_node).unwrap().is_final_node() {
+                if !self.get_real_children(child_node).is_empty() {
                     if ancestors.contains(&child_node) {
                         let mut reported_ancestors = Vec::from(
                             ancestors.rsplit(|&x| x == child_node).next().unwrap(), // unwrap is ok, since it is checked above that `ancestors` contains `child_node`
@@ -230,7 +212,6 @@ where
 
         let node_keys: BTreeSet<&str> = BTreeSet::from_iter(self.nodes.keys().map(|k| k.as_str()));
         let unvisited: BTreeSet<&str> = node_keys.difference(&visited).copied().collect();
-
         unvisited.into_iter().collect()
     }
 
@@ -474,8 +455,6 @@ where
     }
 
     ///
-    /// Get next rank children of `parent_node`` that are not `visited` yet.
-    /// (Children scheduled for ranking, Children that are not yet ready)
     ///
     fn get_next_rank_children_of_parent(
         &self,
@@ -496,7 +475,6 @@ where
             })
             .filter(|n| !visited.contains(n)) // Remove already visited nodes again
             .partition(|n| {
-                // Remove nodes that have not all parents visited yet
                 self.parent_edges
                     .get(n)
                     .unwrap()
@@ -508,7 +486,6 @@ where
 
     ///
     /// Collect a map of node IDs and their forced vertical rank increment.
-    /// A node is not added if no forced level is set.
     ///
     fn get_forced_levels(&self) -> BTreeMap<&str, usize> {
         self.nodes

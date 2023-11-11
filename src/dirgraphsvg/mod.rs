@@ -23,10 +23,6 @@ use self::layout::Margin;
 use self::util::font::FontInfo;
 
 impl<'a> DirectedGraphNodeType<'a> for RefCell<SvgNode> {
-    fn is_final_node(&self) -> bool {
-        false
-    }
-
     fn get_forced_level(&self) -> Option<usize> {
         self.borrow().rank_increment
     }

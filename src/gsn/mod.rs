@@ -125,10 +125,6 @@ impl GsnNode {
 ///
 ///
 impl<'a> DirectedGraphNodeType<'a> for GsnNode {
-    fn is_final_node(&self) -> bool {
-        self.node_type == Some(GsnNodeType::Solution) || self.undeveloped == Some(true)
-    }
-
     fn get_forced_level(&self) -> Option<usize> {
         self.rank_increment
     }
