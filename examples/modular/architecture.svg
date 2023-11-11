@@ -16,7 +16,7 @@
 <polyline fill="none" points="0 0, 10 4.5, 0 9, 0 0" stroke="black" stroke-width="1"/>
 </marker>
 <a href="./main.gsn.svg">
-<g class="gsnelem gsnmodule" id="node_Main"/>
+<g class="gsn_module_ gsnelem gsnmodule" id="node_Main">
 <title>
 Main
 </title>
@@ -24,9 +24,10 @@ Main
 <text font-family="Arial" font-size="12" font-weight="bold" x="27" y="49">
 Main
 </text>
+</g>
 </a>
 <a href="./sub1.gsn.svg">
-<g class="gsnelem gsnmodule" id="node_Sub1"/>
+<g class="gsn_module_ gsnelem gsnmodule" id="node_Sub1">
 <title>
 Sub1
 </title>
@@ -34,9 +35,10 @@ Sub1
 <text font-family="Arial" font-size="12" font-weight="bold" x="27" y="143">
 Sub1
 </text>
+</g>
 </a>
 <a href="./sub3.gsn.svg">
-<g class="gsnelem gsnmodule" id="node_Sub3"/>
+<g class="gsn_module_ gsnelem gsnmodule" id="node_Sub3">
 <title>
 Sub3
 </title>
@@ -44,6 +46,7 @@ Sub3
 <text font-family="Arial" font-size="12" font-weight="bold" x="27" y="237">
 Sub3
 </text>
+</g>
 </a>
 <path class="gsnedge gsninctxt" d="M72,84 C72,104,72,94,72,114" fill="none" marker-end="url(#composite_arrow)" marker-start="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsncomposite" d="M72,168 C72,198,72,188,72,208" fill="none" marker-end="url(#composite_arrow)" stroke="black" stroke-width="1"/>

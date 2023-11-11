@@ -261,6 +261,7 @@ C1:
 <tr><td>url</td><td>yes</td></tr>
 <tr><td>classes<sup class="footnote-reference"><a href="#nc">2</a></sup></td><td>yes</td></tr>
 <tr><td>level<sup class="footnote-reference"><a href="#nl">3</a></sup></td><td>yes</td></tr>
+<tr><td>nodeType<sup class="footnote-reference"><a href="#nt">4</a></sup></td><td>yes</td></tr>
 </tbody></table>
 </div>
 <div class="footnote-definition" id="nu"><sup class="footnote-definition-label">1</sup>
@@ -272,18 +273,23 @@ C1:
 <div class="footnote-definition" id="nl"><sup class="footnote-definition-label">3</sup>
 <p>See <a href="./adv_layout.html">Layout</a>.</p>
 </div>
+<div class="footnote-definition" id="nt"><sup class="footnote-definition-label">4</sup>
+<p>When providing a <code>nodeType</code> you do not need to follow the standard prefix scheme above.
+Just give <code>Goal</code>, <code>Assumption</code>, <code>Justification</code>, <code>Solution</code>, <code>Context</code> and <code>Strategy</code> to give the type of the element.</p>
+</div>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="checks"><a class="header" href="#checks">Checks</a></h1>
 <h2 id="validation-checks"><a class="header" href="#validation-checks">Validation checks</a></h2>
 <p>The tool automatically performs the following validation checks on the input YAML.</p>
 <p>Validations can be performed on individual input files.</p>
 <div class="table-wrapper"><table><thead><tr><th>ID</th><th>Meaning</th></tr></thead><tbody>
-<tr><td>V01</td><td>All IDs must start with a known prefix i.e., there are only known element types.</td></tr>
+<tr><td>V01</td><td>All IDs must either start with a known prefix or a <code>node_type</code> must explicitly set.</td></tr>
 <tr><td>V02</td><td>All Goals and Strategies must be either marked with <code>undeveloped: true</code> or have supporting Goals, Strategies or Solutions.</td></tr>
 <tr><td>V03</td><td>Goals and Strategies marked as undeveloped, must have no supporting arguments.</td></tr>
 <tr><td>V04</td><td>All elements listed under <code>supportedBy</code> and <code>inContextOf</code> must be known elements types and semantically sensible (e.g. a Justification cannot be listed under <code>supportedBy</code>).</td></tr>
 <tr><td>V05</td><td>All referenced elements in <code>supportedBy</code> and <code>inContextOf</code> must be unique i.e., no duplicates in the list.</td></tr>
 <tr><td>V06</td><td>All referenced elements in <code>supportedBy</code> and <code>inContextOf</code> must not refer to the element itself.</td></tr>
 <tr><td>V07</td><td>All elements listed as extending other elements must be known elements of the current module and semantically sensible (see V04).</td></tr>
+<tr><td>V08</td><td> The IDs start contradicts the type of the element set with <code>node_type</code>.</td></tr>
 </tbody></table>
 </div>
 <p>The following checks apply to the complete set of input files.</p>
@@ -356,8 +362,13 @@ Of course, using <code>text</code>, <code>inContextOf</code>, <code>supportedBy<
 <p>It is intentional that information is only added for a view, but not hidden to ensure consistency of the GSN in all variants.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="stylesheets-for-svg-rendering"><a class="header" href="#stylesheets-for-svg-rendering">Stylesheets for SVG rendering</a></h1>
 <p>You can provide (multiple) custom CSS stylesheets for SVG via the <code>-s</code> or <code>--stylesheet</code> options. </p>
-<p>The path may be relative to the current working directory, absolute, or an URL (e.g. starting with http or https).
-If a relative path is used, it will be translated to an absolute path, since the CSS stylesheet is not copied into the output path. Thus, if you have a complex folder structure, it is encouraged to either use a central CSS stylesheet that is provided via, e.g., <code>http</code>, or embed the stylesheets into the generated SVGs using the <code>-t</code> option.</p>
+<p>The path may be relative to the current working directory, absolute, or an URL (i.e. starting with <code>http://</code>, <code>https://</code> or <code>file://</code>).</p>
+<p>When adding <code>-t</code> or <code>--embed-css</code> on the command line, the CSS stylesheets will be embedded in the SVG. </p>
+<p>If an output path is provided (see <a href="./basic_usage.html">Basic usage</a>), the stylesheet(s) will be copied there.
+If a relative path is used, the relative path to the current working directory is preserved. 
+If an absolute path is used, the stylesheet will be copied to the root of the output path.</p>
+<p>If a URL (see above for definition) is provided for a stylesheet, it is neither embedded nor copied to an output directory.</p>
+<h2 id="classes-and-styles"><a class="header" href="#classes-and-styles">Classes and styles</a></h2>
 <p>Every element will also be addressable by <code>id</code>. The <code>id</code> is the same as the YAML id.</p>
 <p>This table shows the CSS classes assigned to a certain element:</p>
 <div class="table-wrapper"><table><thead><tr><th>Class</th><th>Assigned to</th><th>SVG Element</th></tr></thead><tbody>
@@ -385,7 +396,6 @@ If a relative path is used, it will be translated to an absolute path, since the
 </div>
 <p>You can assign additional classes by adding the <code>classes:</code> attribute. It must be a list of classes you want to assign. 
 Additional layers will be added as CSS classes, too. A <code>layer1</code> will e.g. be added as <code>gsnlay_layer1</code>.</p>
-<p>When adding <code>-t</code> or <code>--embed-css</code> on the command line, the CSS stylesheets will be embedded in the SVG. The path is interpreted as relative to the current working directory then.</p>
 <p>For more information on how to use CSS with SVGs, see <a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/SVG_and_CSS">here</a>.</p>
 <h2 id="example-2"><a class="header" href="#example-2">Example</a></h2>
 <p>The GSN YAML: </p>
@@ -563,6 +573,12 @@ free and open-source software might be limited, I try to keep the dependencies o
 as few as possible.</p>
 <p>I used a very relaxed license and try to take care that it is compatible with those of the dependencies.</p>
 </li>
+<li>
+<p>Full control by the user how the diagram is layed out</p>
+<p>Creating an optimal rendering for all different use-cases is incredibly difficult.
+I failed in creating an algorithm that would allow for that. 
+When trying I recognized that it is anyhow preferable to give the user full control over how the diagram should look like.</p>
+</li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="history"><a class="header" href="#history">History</a></h1>
 <p>I also noticed that (also for myself) it is good to note down some history of the project:</p>
@@ -584,6 +600,12 @@ I released the first Rust version in July 2021.</p>
 I finally made decided to no longer output DOT, but directly generate SVGs from the program.
 This required writing a specialized version for rendering the tree on my own which ended up in version 2 
 finally released in April 2022.</p>
+</li>
+<li>
+<p>I tried hard improving the layout algorithm over time but I failed to come up with a satisfying solution.
+Moreover, I recognized that it is anyway preferable if the user is in full control of the layout of the diagram.
+Thus, I decided to redesign the layout algorithm and create version 3. A new major version was needed because of different user input that is required now.</p>
+<p>In addition, I changed the license from CC-BY-4.0 to MIT. MIT is shorter and more applicable to software.</p>
 </li>
 </ul>
 <p>Any feedback, especially the use-case in your company is very much appreciated.</p>
