@@ -5,7 +5,20 @@ use std::fmt::Debug;
 pub trait DirectedGraphNodeType<'a> {
     // FIXME: is that really needed?
     fn is_final_node(&self) -> bool;
+
+    ///
+    /// Get the forced vertical rank increment, if any.
+    /// 
+    /// Returns `None` if there is no forced index.
+    /// 
     fn get_forced_level(&self) -> Option<usize>;
+
+    ///
+    /// Get the forced horizontal index, if any.
+    /// `current_index` gives in the current index of the node.
+    /// 
+    /// Returns `None` if there is no forced index.
+    /// 
     fn get_horizontal_index(&self, current_index: usize) -> Option<usize>;
 }
 
@@ -422,17 +435,19 @@ where
                 .filter(|n| !visited.contains(n))
                 .enumerate()
                 .partition(|(idx, same_rank_child)| {
-                    let i = self
+                    if let Some(forced_index) = self
                         .get_nodes()
                         .get(same_rank_child.to_owned())
                         .unwrap()
-                        .get_horizontal_index(*idx);
-                    matches!(i, Some(0) | Some(2)) ||
-                    // If a parent is already in the rank, put the same_rank_child to the left
-                    self.get_same_ranks_parents(same_rank_child)
-                        .iter()
-                        .any(|p| current_rank_nodes[0..index].contains(p))
-                        || idx % 2 != 0
+                        .get_horizontal_index(*idx) {
+                            0 == forced_index
+                        } else {
+                            // If a parent is already in the rank, put the same_rank_child to the left
+                            self.get_same_ranks_parents(same_rank_child)
+                                .iter()
+                                .any(|p| current_rank_nodes[0..index].contains(p))
+                                || idx % 2 != 0
+                        }
                 });
             let mut parent_index = current_rank
                 .iter()
