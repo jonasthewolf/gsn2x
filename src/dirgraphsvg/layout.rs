@@ -92,9 +92,7 @@ pub(super) fn layout_nodes(
     let mut first_run = true;
     let nodes = graph.get_nodes();
     // This number should be safe that it yields a final, good looking image
-    // let limit = nodes.len() * nodes.len() * 2;
-    // TODO Restore old limit; or even better, detect if at least one node in the first column was not moved.
-    let limit = 5;
+    let limit = nodes.len() * nodes.len();
     for limiter in 1..=limit {
         let mut changed = false;
         let mut y = margin.top;
