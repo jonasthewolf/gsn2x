@@ -2,9 +2,9 @@ use std::cmp::min;
 use std::collections::{BTreeMap, BTreeSet};
 use std::fmt::Debug;
 
-/// 
+///
 /// Trait to be implemented for nodes of `DirectedGraph`.
-/// 
+///
 pub trait DirectedGraphNodeType<'a> {
     ///
     /// Get the forced vertical rank increment, if any.
@@ -24,25 +24,25 @@ pub trait DirectedGraphNodeType<'a> {
 
 ///
 /// Trait to be implemented for edges of `DirectedGraph`.
-/// 
+///
 pub trait DirectedGraphEdgeType<'a> {
     ///
     /// Returns true if the edge points to a primary (i.e. **next** rank) child.
     /// Otherwise false.
-    /// 
+    ///
     fn is_primary_child_edge(&self) -> bool;
-    
+
     ///
     /// Returns true if the edge points to a secondary (i.e. **same** rank) child.
     /// Otherwise false.
-    /// 
+    ///
     fn is_secondary_child_edge(&self) -> bool;
 }
 
 ///
 /// The structure to rank nodes on a graph.
-/// The graph is described by nodes and the edges between them. 
-/// Nodes and edges must be 
+/// The graph is described by nodes and the edges between them.
+/// Nodes and edges must be
 ///
 pub(super) struct DirectedGraph<'a, NodeType, EdgeType>
 where
@@ -471,7 +471,7 @@ where
     ///
     /// Get the children on the next rank of the given parent.
     /// This is used during ranking.
-    /// 
+    ///
     fn get_next_rank_children_of_parent(
         &self,
         parent_node: &str,
