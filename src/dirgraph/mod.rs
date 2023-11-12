@@ -355,12 +355,13 @@ where
                 carried_nodes.append(&mut child_carried_nodes);
             }
 
-            if current_rank_nodes.is_empty() {
+            if current_rank_nodes.is_empty() && carried_nodes.is_empty() {
                 break;
             } else {
                 let current_rank = self.add_same_rank_nodes(current_rank_nodes, &mut visited);
-                // let current_rank = current_rank_nodes.iter().map(|&n| vec![n]).collect();
-                ranks.push(current_rank);
+                if !current_rank.is_empty() {
+                    ranks.push(current_rank);
+                }
                 current_rank_nodes = next_rank_nodes
                     .into_iter()
                     .collect::<BTreeSet<_>>()
