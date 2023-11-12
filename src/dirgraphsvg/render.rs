@@ -56,9 +56,6 @@ pub(super) fn render_graph(
 ///
 /// Render the edges
 ///
-/// TODO Make edges nicer, if e.g., start marker is used. Make the first and last MARKER_HEIGHT pixels vertical.
-///
-///
 fn render_edges(
     document: &mut Document,
     render_graph: &DirGraph,
@@ -70,7 +67,6 @@ fn render_edges(
             let s = nodes.get(source).unwrap().borrow();
             let t = nodes.get(target).unwrap().borrow();
             let (marker_start_height, marker_end_height, support_distance) = match edge_type {
-                // EdgeType::Invisible => (0i32, 0i32, 3i32 * MARKER_HEIGHT as i32),
                 EdgeType::OneWay(_) => (0i32, MARKER_HEIGHT as i32, 3i32 * MARKER_HEIGHT as i32),
                 EdgeType::TwoWay(_) => (
                     MARKER_HEIGHT as i32,
@@ -137,7 +133,6 @@ fn render_edges(
                 | EdgeType::TwoWay((_, SingleEdge::SupportedBy)) => Some("url(#supportedby_arrow)"),
                 EdgeType::OneWay(SingleEdge::Composite)
                 | EdgeType::TwoWay((_, SingleEdge::Composite)) => Some("url(#composite_arrow)"),
-                // EdgeType::Invisible => None,
             };
             let arrow_start_id = match &edge_type {
                 EdgeType::TwoWay((SingleEdge::InContextOf, _)) => Some("url(#incontextof_arrow)"),
@@ -158,7 +153,7 @@ fn render_edges(
                     // Already covered by all other matches
                     //| EdgeType::TwoWay((SingleEdge::Composite, _))
                     classes.push_str(" gsncomposite")
-                } // EdgeType::Invisible => classes.push_str(" gsninvis"),
+                } 
             };
             let mut e = Path::new()
                 .set("d", data)
