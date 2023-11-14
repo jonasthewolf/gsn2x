@@ -93,7 +93,7 @@ impl<'a> DirGraph<'a> {
         nodes
             .values_mut()
             .for_each(|n| n.calculate_optimal_size(&self.font));
-
+        // Translate to RefCell to be usable by DirectedGraph
         let nodes: BTreeMap<String, RefCell<SvgNode>> = nodes
             .into_iter()
             .map(|(a, b)| (a, RefCell::new(b)))

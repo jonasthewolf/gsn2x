@@ -153,7 +153,7 @@ fn render_edges(
                     // Already covered by all other matches
                     //| EdgeType::TwoWay((SingleEdge::Composite, _))
                     classes.push_str(" gsncomposite")
-                } 
+                }
             };
             let mut e = Path::new()
                 .set("d", data)
