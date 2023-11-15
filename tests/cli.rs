@@ -341,6 +341,8 @@ mod integrations {
         cmd.arg("examples/modular/main.gsn.yaml")
             .arg("examples/modular/sub1.gsn.yaml")
             .arg("examples/modular/sub3.gsn.yaml")
+            .arg("-o")
+            .arg("examples/modular")
             .arg("-E")
             .arg("-F")
             .arg("-G")
@@ -394,7 +396,7 @@ mod integrations {
         let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
         let temp = assert_fs::TempDir::new()?;
         temp.copy_from(".", &["examples/modular/*.yaml"])?;
-        let output_file = temp.child("examples/modular/complete.svg");
+        let output_file = temp.child("complete.svg");
         cmd.arg("examples/modular/main.gsn.yaml")
             .arg("examples/modular/sub1.gsn.yaml")
             .arg("examples/modular/sub3.gsn.yaml")

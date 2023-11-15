@@ -216,7 +216,7 @@ fn main() -> Result<()> {
     let mut modules: HashMap<String, Module> = HashMap::new();
 
     // Read input
-    let common_ancestors = prepare_and_check_input_paths(&mut inputs)?;
+    prepare_and_check_input_paths(&mut inputs)?;
     read_inputs(&inputs, &mut nodes, &mut modules, &mut diags)?;
 
     // Validate
@@ -236,7 +236,7 @@ fn main() -> Result<()> {
         let render_options =
             RenderOptions::new(&matches, stylesheets, embed_stylesheets, output_directory);
         // Output views
-        print_outputs(nodes, &modules, &render_options, common_ancestors)?;
+        print_outputs(nodes, &modules, &render_options)?;
     }
     // Output diagnostic messages
     output_messages(&diags)
@@ -378,7 +378,6 @@ fn print_outputs(
     nodes: BTreeMap<String, GsnNode>,
     modules: &HashMap<String, Module>,
     render_options: &RenderOptions,
-    common_ancestors: String,
 ) -> Result<()> {
     let output_path = render_options
         .output_directory
@@ -387,7 +386,7 @@ fn print_outputs(
     if !render_options.skip_argument {
         for (module_name, module) in modules {
             let output_path = set_extension(
-                &translate_to_output_path(&output_path, &module.relative_module_path, None)?,
+                &translate_to_output_path(&output_path, &module.relative_module_path)?,
                 "svg",
             );
             let mut output_file = Box::new(
@@ -406,11 +405,7 @@ fn print_outputs(
     }
     if modules.len() > 1 {
         if let Some(architecture_filename) = &render_options.architecture_filename {
-            let arch_output_path = translate_to_output_path(
-                &output_path,
-                architecture_filename,
-                Some(&common_ancestors),
-            )?;
+            let arch_output_path = translate_to_output_path(&output_path, architecture_filename)?;
             let mut output_file = File::create(&arch_output_path)
                 .context(format!("Failed to open output file {arch_output_path}"))?;
             let deps = crate::gsn::calculate_module_dependencies(&nodes);
@@ -424,16 +419,14 @@ fn print_outputs(
             )?;
         }
         if let Some(complete_filename) = &render_options.complete_filename {
-            let output_path =
-                translate_to_output_path(&output_path, complete_filename, Some(&common_ancestors))?;
+            let output_path = translate_to_output_path(&output_path, complete_filename)?;
             let mut output_file = File::create(&output_path)
                 .context(format!("Failed to open output file {output_path}"))?;
             render::render_complete(&mut output_file, &nodes, render_options)?;
         }
     }
     if let Some(evidences_filename) = &render_options.evidences_filename {
-        let output_path =
-            translate_to_output_path(&output_path, evidences_filename, Some(&common_ancestors))?;
+        let output_path = translate_to_output_path(&output_path, evidences_filename)?;
         let mut output_file = File::create(&output_path)
             .context(format!("Failed to open output file {output_path}"))?;
         render::render_evidences(&mut output_file, &nodes, render_options)?;

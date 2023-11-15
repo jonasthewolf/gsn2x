@@ -182,28 +182,21 @@ pub fn render_architecture(
                     .unwrap_or_else(|| "".to_owned()),
                 ..Default::default()
             };
-
-            (
+            let module_url = Some({
+                let target_svg = set_extension(&module.relative_module_path, "svg");
+                let target_path = translate_to_output_path(output_path, &target_svg)?;
+                get_relative_path(
+                    &target_path,
+                    architecture_path,
+                    None, // is already made "svg" above
+                )?
+            });
+            Ok((
                 k.to_owned(),
-                SvgNode::new_module(
-                    k,
-                    &module_node,
-                    &[],
-                    {
-                        let target_svg = set_extension(&module.relative_module_path, "svg");
-                        let target_path = translate_to_output_path(output_path, &target_svg, None);
-                        get_relative_path(
-                            &target_path.unwrap(), // TODO remove unwraps
-                            architecture_path,
-                            None, // is already made "svg" above
-                        )
-                        .ok()
-                    },
-                    render_options.word_wrap,
-                ),
-            )
+                SvgNode::new_module(k, &module_node, &[], module_url, render_options.word_wrap),
+            ))
         })
-        .collect();
+        .collect::<Result<BTreeMap<String, SvgNode>>>()?;
     let edges: BTreeMap<String, Vec<(String, EdgeType)>> = dependencies
         .into_iter()
         .map(|(k, v)| (k, Vec::from_iter(v)))

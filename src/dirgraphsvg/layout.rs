@@ -7,7 +7,7 @@ use super::{edges::EdgeType, nodes::SvgNode, util::point2d::Point2D};
 
 ///
 /// Struct for margin setup
-/// 
+///
 pub struct Margin {
     pub top: i32,
     pub right: i32,
@@ -17,7 +17,7 @@ pub struct Margin {
 
 ///
 /// Default values for Margin
-/// 
+///
 impl Default for Margin {
     fn default() -> Self {
         Self {
@@ -31,21 +31,21 @@ impl Default for Margin {
 
 ///
 /// A Cell is a list of node IDs
-/// 
+///
 trait Cell {
     ///
     /// Get the maximum width of all nodes within the cell
-    /// 
+    ///
     fn get_max_width(&self, nodes: &BTreeMap<String, RefCell<SvgNode>>) -> i32;
 
     ///
     /// Get the x coordinate of the cell
-    /// 
+    ///
     fn get_x(&self, nodes: &BTreeMap<String, RefCell<SvgNode>>) -> i32;
 
     ///
     /// Set the x coordinates of all nodes in the cell
-    /// 
+    ///
     fn set_position(
         &self,
         nodes: &BTreeMap<String, RefCell<SvgNode>>,
@@ -233,7 +233,7 @@ fn has_node_to_be_moved<'b>(
         .collect();
     let my_x = cell.get_x(graph.get_nodes());
     // If node has children, center over them
-    if !children.is_empty() && !(children.len() == 1 && my_x >= children.get_x(graph.get_nodes())) {
+    if !(children.is_empty() || children.len() == 1 && my_x >= children.get_x(graph.get_nodes())) {
         // Center only over the children that have no other parents
         let center_children = children
             .into_iter()

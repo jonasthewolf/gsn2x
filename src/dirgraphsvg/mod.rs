@@ -13,31 +13,12 @@ use nodes::{Port, SvgNode};
 
 use crate::dirgraph::DirectedGraph;
 use crate::dirgraph::DirectedGraphEdgeType;
-use crate::dirgraph::DirectedGraphNodeType;
 use crate::dirgraphsvg::layout::layout_nodes;
 use crate::dirgraphsvg::render::render_graph;
-use crate::gsn::HorizontalIndex;
 
 use self::edges::SingleEdge;
 use self::layout::Margin;
 use self::util::font::FontInfo;
-
-impl<'a> DirectedGraphNodeType<'a> for RefCell<SvgNode> {
-    fn get_forced_level(&self) -> Option<usize> {
-        self.borrow().rank_increment
-    }
-
-    fn get_horizontal_index(&self, current_index: usize) -> Option<usize> {
-        match self.borrow().horizontal_index {
-            Some(HorizontalIndex::Absolute(x)) => match x {
-                crate::gsn::AbsoluteIndex::Number(num) => num.try_into().ok(),
-                crate::gsn::AbsoluteIndex::Last => Some(usize::MAX),
-            },
-            Some(HorizontalIndex::Relative(x)) => (x + current_index as i32).try_into().ok(),
-            None => None,
-        }
-    }
-}
 
 impl<'a> DirectedGraphEdgeType<'a> for EdgeType {
     fn is_primary_child_edge(&self) -> bool {
@@ -101,7 +82,6 @@ impl<'a> DirGraph<'a> {
         // Rank nodes
         let graph = DirectedGraph::new(&nodes, &edges);
         let ranks = &graph.rank_nodes();
-        // dbg!(&graph);
         // Layout graph
         let (width, height) = layout_nodes(&graph, ranks, &self.margin);
         // Render to SVG
