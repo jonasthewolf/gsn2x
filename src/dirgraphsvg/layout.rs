@@ -5,6 +5,9 @@ use crate::dirgraph::DirectedGraph;
 
 use super::{edges::EdgeType, nodes::SvgNode, util::point2d::Point2D};
 
+///
+/// Struct for margin setup
+/// 
 pub struct Margin {
     pub top: i32,
     pub right: i32,
@@ -12,6 +15,9 @@ pub struct Margin {
     pub left: i32,
 }
 
+///
+/// Default values for Margin
+/// 
 impl Default for Margin {
     fn default() -> Self {
         Self {
@@ -23,9 +29,23 @@ impl Default for Margin {
     }
 }
 
+///
+/// A Cell is a list of node IDs
+/// 
 trait Cell {
+    ///
+    /// Get the maximum width of all nodes within the cell
+    /// 
     fn get_max_width(&self, nodes: &BTreeMap<String, RefCell<SvgNode>>) -> i32;
+
+    ///
+    /// Get the x coordinate of the cell
+    /// 
     fn get_x(&self, nodes: &BTreeMap<String, RefCell<SvgNode>>) -> i32;
+
+    ///
+    /// Set the x coordinates of all nodes in the cell
+    /// 
     fn set_position(
         &self,
         nodes: &BTreeMap<String, RefCell<SvgNode>>,
@@ -178,7 +198,7 @@ fn get_max_height(
 }
 
 ///
-///
+/// Get the center of all nodes in the `set`.
 ///
 fn get_center(nodes: &BTreeMap<String, RefCell<SvgNode>>, set: &[&str]) -> i32 {
     let x_values: Vec<_> = set
@@ -191,7 +211,7 @@ fn get_center(nodes: &BTreeMap<String, RefCell<SvgNode>>, set: &[&str]) -> i32 {
 }
 
 ///
-///
+/// Decides if a node has to be moved.
 ///
 fn has_node_to_be_moved<'b>(
     graph: &'b DirectedGraph<'b, RefCell<SvgNode>, EdgeType>,
@@ -248,7 +268,8 @@ fn has_node_to_be_moved<'b>(
 }
 
 ///
-///
+/// Move "in context" nodes closer to their parents.
+/// Only nodes to the left of their parents are moved.
 ///
 fn move_closer(
     nodes: &BTreeMap<String, RefCell<SvgNode>>,
