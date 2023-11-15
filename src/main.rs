@@ -1,5 +1,5 @@
 use anyhow::{anyhow, Context, Result};
-use clap::{Arg, ArgAction};
+use clap::{value_parser, Arg, ArgAction};
 use file_utils::{prepare_and_check_input_paths, set_extension, translate_to_output_path};
 use render::RenderOptions;
 use std::collections::{BTreeMap, HashMap};
@@ -176,6 +176,16 @@ fn main() -> Result<()> {
                 .short('g')
                 .long("full-legend")
                 .action(ArgAction::SetTrue)
+                .conflicts_with("CHECKONLY")
+                .help_heading("OUTPUT MODIFICATION"),
+        )
+        .arg(
+            Arg::new("WORD_WRAP")
+                .help("Define the number of characters after which a line of text is wrapped.")
+                .short('w')
+                .long("wrap")
+                .action(ArgAction::Set)
+                .value_parser(value_parser!(u32))
                 .conflicts_with("CHECKONLY")
                 .help_heading("OUTPUT MODIFICATION"),
         );

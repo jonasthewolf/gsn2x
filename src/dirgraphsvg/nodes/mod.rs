@@ -56,7 +56,6 @@ pub struct SvgNode {
 struct SizeContext {
     width: i32,
     height: i32,
-    text: String,
     text_width: i32,
     text_height: i32,
 }
@@ -111,63 +110,37 @@ impl SvgNode {
         }
     }
 
-    pub fn calculate_optimal_size(&mut self, font: &FontInfo) {
-        let mut min_width = i32::MAX;
-        let mut min_height = i32::MAX;
-        let mut min_size = SizeContext {
-            width: 0,
-            height: 0,
-            text: "".to_owned(),
-            text_width: 0,
-            text_height: 0,
+    ///
+    ///
+    ///
+    ///
+    pub fn calculate_size(&mut self, font: &FontInfo) {
+        let (min_width, min_height) = match &self.node_type {
+            NodeType::Box(x) => x.get_minimum_size(),
+            NodeType::Ellipsis(x) => x.get_minimum_size(),
+            NodeType::Away(x) => x.get_minimum_size(),
         };
-
-        // Minimum number should be low.
-        // However, if too low, the test in CI will fail, since size for fonts on different OSes lead to different line numbers.
-        // as of 2023-05-06: 10 seems to be a good number
-        for wrap in 10..70 {
-            let size_context = self.calculate_size(font, wrap);
-            if size_context.width > size_context.height
-                || (size_context.width <= min_width && size_context.height <= min_height)
-            {
-                min_width = size_context.width;
-                min_height = size_context.height;
-                min_size = size_context;
+        let mut size_context = self.calculate_text_size(font);
+        (size_context.width, size_context.height) = match &self.node_type {
+            NodeType::Box(x) => x.calculate_size(font, min_width, min_height, &mut size_context),
+            NodeType::Ellipsis(x) => {
+                x.calculate_size(font, min_width, min_height, &mut size_context)
             }
-        }
+            NodeType::Away(x) => x.calculate_size(font, min_width, min_height, &mut size_context),
+        };
         // Set minimum size
-        self.width = min_size.width;
-        self.height = min_size.height;
-        self.text = min_size.text;
+        self.width = size_context.width;
+        self.height = size_context.height;
         match &mut self.node_type {
             NodeType::Box(_) => (),
             NodeType::Ellipsis(x) => {
-                x.text_width = min_size.text_width;
-                x.text_height = min_size.text_height;
+                x.text_width = size_context.text_width;
+                x.text_height = size_context.text_height;
             }
             NodeType::Away(x) => {
                 (_, x.mod_height) = text_bounding_box(font, &x.module, false);
             }
         }
-    }
-
-    ///
-    ///
-    ///
-    ///
-    fn calculate_size(&mut self, font: &FontInfo, char_wrap: u32) -> SizeContext {
-        let (width, height) = match &self.node_type {
-            NodeType::Box(x) => x.get_minimum_size(),
-            NodeType::Ellipsis(x) => x.get_minimum_size(),
-            NodeType::Away(x) => x.get_minimum_size(),
-        };
-        let mut size_context = self.calculate_text_size(font, char_wrap);
-        (size_context.width, size_context.height) = match &self.node_type {
-            NodeType::Box(x) => x.calculate_size(font, width, height, &mut size_context),
-            NodeType::Ellipsis(x) => x.calculate_size(font, width, height, &mut size_context),
-            NodeType::Away(x) => x.calculate_size(font, width, height, &mut size_context),
-        };
-        size_context
     }
 
     ///
@@ -177,15 +150,12 @@ impl SvgNode {
     /// Width: Max of Identifier or longest Text line
     ///
     ///
-    fn calculate_text_size(&self, font: &FontInfo, char_wrap: u32) -> SizeContext {
-        use crate::dirgraphsvg::util::wrap_words::wrap_words;
-
-        let text = wrap_words(&self.text, char_wrap, "\n");
+    fn calculate_text_size(&self, font: &FontInfo) -> SizeContext {
         // First row is identifier, thus treated differently
         let (head_width, head_height) = text_bounding_box(font, &self.identifier, true);
         let mut text_height = head_height + OFFSET_IDENTIFIER;
         let mut text_width = head_width;
-        for text_line in text.lines() {
+        for text_line in self.text.lines() {
             let (line_width, line_height) = text_bounding_box(font, text_line, false);
             text_height += line_height;
             text_width = std::cmp::max(text_width, line_width);
@@ -193,7 +163,6 @@ impl SvgNode {
         SizeContext {
             width: 0,
             height: 0,
-            text,
             text_width,
             text_height,
         }
@@ -227,9 +196,10 @@ impl SvgNode {
         layers: &[String],
         module_url: Option<String>,
         add_classes: &[&str],
+        char_wrap: Option<u32>,
     ) -> Self {
         // Add layer to node output
-        let node_text = node_text_from_node_and_layers(gsn_node, layers);
+        let node_text = node_text_from_node_and_layers(gsn_node, layers, char_wrap);
         // Setup CSS classes
         let mut classes = node_classes_from_node(gsn_node);
         classes.push("gsnelem".to_owned());
@@ -258,13 +228,19 @@ impl SvgNode {
     ///
     ///
     ///
-    pub fn new_assumption(identifier: &str, gsn_node: &GsnNode, layers: &[String]) -> Self {
+    pub fn new_assumption(
+        identifier: &str,
+        gsn_node: &GsnNode,
+        layers: &[String],
+        char_wrap: Option<u32>,
+    ) -> Self {
         let mut n = SvgNode::new(
             identifier,
             gsn_node,
             layers,
             gsn_node.url.to_owned(),
             &["gsnasmp"],
+            char_wrap,
         );
         n.node_type = NodeType::Ellipsis(EllipticalType {
             admonition: Some("A".to_owned()),
@@ -278,26 +254,38 @@ impl SvgNode {
     ///
     ///
     ///
-    pub fn new_context(identifier: &str, gsn_node: &GsnNode, layers: &[String]) -> Self {
+    pub fn new_context(
+        identifier: &str,
+        gsn_node: &GsnNode,
+        layers: &[String],
+        char_wrap: Option<u32>,
+    ) -> Self {
         SvgNode::new(
             identifier,
             gsn_node,
             layers,
             gsn_node.url.to_owned(),
             &["gsnctxt"],
+            char_wrap,
         )
     }
 
     ///
     ///
     ///
-    pub fn new_justification(identifier: &str, gsn_node: &GsnNode, layers: &[String]) -> Self {
+    pub fn new_justification(
+        identifier: &str,
+        gsn_node: &GsnNode,
+        layers: &[String],
+        char_wrap: Option<u32>,
+    ) -> Self {
         let mut n = SvgNode::new(
             identifier,
             gsn_node,
             layers,
             gsn_node.url.to_owned(),
             &["gsnjust"],
+            char_wrap,
         );
         n.node_type = NodeType::Ellipsis(EllipticalType {
             admonition: Some("J".to_owned()),
@@ -311,13 +299,19 @@ impl SvgNode {
     ///
     ///
     ///
-    pub fn new_solution(identifier: &str, gsn_node: &GsnNode, layers: &[String]) -> Self {
+    pub fn new_solution(
+        identifier: &str,
+        gsn_node: &GsnNode,
+        layers: &[String],
+        char_wrap: Option<u32>,
+    ) -> Self {
         let mut n = SvgNode::new(
             identifier,
             gsn_node,
             layers,
             gsn_node.url.to_owned(),
             &["gsnsltn"],
+            char_wrap,
         );
         n.node_type = NodeType::Ellipsis(EllipticalType {
             admonition: None,
@@ -332,13 +326,19 @@ impl SvgNode {
     ///
     ///
     ///
-    pub fn new_strategy(identifier: &str, gsn_node: &GsnNode, layers: &[String]) -> Self {
+    pub fn new_strategy(
+        identifier: &str,
+        gsn_node: &GsnNode,
+        layers: &[String],
+        char_wrap: Option<u32>,
+    ) -> Self {
         let mut n = SvgNode::new(
             identifier,
             gsn_node,
             layers,
             gsn_node.url.to_owned(),
             &["gsnstgy"],
+            char_wrap,
         );
         if gsn_node.undeveloped.unwrap_or(false) {
             n.node_type = NodeType::Box(BoxType::Undeveloped(15));
@@ -352,7 +352,12 @@ impl SvgNode {
     ///
     ///
     ///
-    pub fn new_goal(identifier: &str, gsn_node: &GsnNode, layers: &[String]) -> Self {
+    pub fn new_goal(
+        identifier: &str,
+        gsn_node: &GsnNode,
+        layers: &[String],
+        char_wrap: Option<u32>,
+    ) -> Self {
         let undeveloped = gsn_node.undeveloped.unwrap_or(false);
         let mut classes = vec!["gsngoal"];
         if undeveloped {
@@ -364,6 +369,7 @@ impl SvgNode {
             layers,
             gsn_node.url.to_owned(),
             &classes,
+            char_wrap,
         );
         if undeveloped {
             n.node_type = NodeType::Box(BoxType::Undeveloped(0));
@@ -381,6 +387,7 @@ impl SvgNode {
         gsn_node: &GsnNode,
         layers: &[String],
         module_url: Option<String>,
+        char_wrap: Option<u32>,
     ) -> Self {
         let mut n = SvgNode::new(
             identifier,
@@ -388,6 +395,7 @@ impl SvgNode {
             layers,
             module_url.to_owned(),
             &["gsnawayasmp"],
+            char_wrap,
         );
         n.node_type = NodeType::Away(AwayType {
             module: gsn_node.module.to_owned(),
@@ -406,6 +414,7 @@ impl SvgNode {
         gsn_node: &GsnNode,
         layers: &[String],
         module_url: Option<String>,
+        char_wrap: Option<u32>,
     ) -> Self {
         let mut n = SvgNode::new(
             identifier,
@@ -413,6 +422,7 @@ impl SvgNode {
             layers,
             module_url.to_owned(),
             &["gsnawaygoal"],
+            char_wrap,
         );
         n.node_type = NodeType::Away(AwayType {
             module: gsn_node.module.to_owned(),
@@ -431,6 +441,7 @@ impl SvgNode {
         gsn_node: &GsnNode,
         layers: &[String],
         module_url: Option<String>,
+        char_wrap: Option<u32>,
     ) -> Self {
         let mut n = SvgNode::new(
             identifier,
@@ -438,6 +449,7 @@ impl SvgNode {
             layers,
             module_url.to_owned(),
             &["gsnawayjust"],
+            char_wrap,
         );
         n.node_type = NodeType::Away(AwayType {
             module: gsn_node.module.to_owned(),
@@ -456,6 +468,7 @@ impl SvgNode {
         gsn_node: &GsnNode,
         layers: &[String],
         module_url: Option<String>,
+        char_wrap: Option<u32>,
     ) -> Self {
         let mut n = SvgNode::new(
             identifier,
@@ -463,6 +476,7 @@ impl SvgNode {
             layers,
             module_url.to_owned(),
             &["gsnawayctxt"],
+            char_wrap,
         );
         n.node_type = NodeType::Away(AwayType {
             module: gsn_node.module.to_owned(),
@@ -481,6 +495,7 @@ impl SvgNode {
         gsn_node: &GsnNode,
         layers: &[String],
         module_url: Option<String>,
+        char_wrap: Option<u32>,
     ) -> Self {
         let mut n = SvgNode::new(
             identifier,
@@ -488,6 +503,7 @@ impl SvgNode {
             layers,
             module_url.to_owned(),
             &["gsnawaysltn"],
+            char_wrap,
         );
         n.node_type = NodeType::Away(AwayType {
             module: gsn_node.module.to_owned(),
@@ -507,8 +523,16 @@ impl SvgNode {
         gsn_node: &GsnNode,
         layers: &[String],
         module_url: Option<String>,
+        char_wrap: Option<u32>,
     ) -> Self {
-        let mut n = SvgNode::new(identifier, gsn_node, layers, module_url, &["gsnmodule"]);
+        let mut n = SvgNode::new(
+            identifier,
+            gsn_node,
+            layers,
+            module_url,
+            &["gsnmodule"],
+            char_wrap,
+        );
         n.node_type = NodeType::Box(BoxType::Module);
         n
     }
@@ -544,8 +568,18 @@ fn node_classes_from_node(gsn_node: &GsnNode) -> Vec<String> {
 /// Create SVG node text from GsnNode and layer information
 ///
 ///
-fn node_text_from_node_and_layers(gsn_node: &GsnNode, layers: &[String]) -> String {
-    let mut node_text = gsn_node.text.to_owned();
+fn node_text_from_node_and_layers(
+    gsn_node: &GsnNode,
+    layers: &[String],
+    char_wrap: Option<u32>,
+) -> String {
+    use crate::dirgraphsvg::util::wrap_words::wrap_words;
+
+    let mut node_text = if let Some(char_wrap) = char_wrap {
+        wrap_words(&gsn_node.text, char_wrap, "\n")
+    } else {
+        gsn_node.text.to_owned()
+    };
     let mut additional_text = vec![];
     for layer in layers {
         if let Some(layer_text) = gsn_node.additional.get(layer) {
@@ -580,7 +614,7 @@ mod test {
             additional: BTreeMap::from([("layer1".to_owned(), "text for layer1".to_owned())]),
             ..Default::default()
         };
-        let res = node_text_from_node_and_layers(&n1, &["layer1".to_owned()]);
+        let res = node_text_from_node_and_layers(&n1, &["layer1".to_owned()], None);
         assert_eq!(res, "test text\n\n\nLAYER1: text for layer1");
     }
 }

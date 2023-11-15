@@ -92,7 +92,7 @@ impl<'a> DirGraph<'a> {
         // Calculate node sizes
         nodes
             .values_mut()
-            .for_each(|n| n.calculate_optimal_size(&self.font));
+            .for_each(|n| n.calculate_size(&self.font));
         // Translate to RefCell to be usable by DirectedGraph
         let nodes: BTreeMap<String, RefCell<SvgNode>> = nodes
             .into_iter()
@@ -126,7 +126,7 @@ mod test {
             text: "Test".to_owned(),
             ..Default::default()
         };
-        let b1 = SvgNode::new_goal("id", &n, &[]);
+        let b1 = SvgNode::new_goal("id", &n, &[], None);
         let mut nodes = BTreeMap::new();
         nodes.insert("G1".to_owned(), b1);
         d = d.add_meta_information(&mut vec!["A1".to_owned(), "B2".to_owned()]);

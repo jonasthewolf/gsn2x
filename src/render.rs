@@ -27,6 +27,7 @@ pub struct RenderOptions {
     pub complete_filename: Option<String>,
     pub output_directory: Option<String>,
     pub skip_argument: bool,
+    pub word_wrap: Option<u32>,
 }
 
 impl RenderOptions {
@@ -79,6 +80,7 @@ impl RenderOptions {
             },
             output_directory: output_directory.cloned(),
             skip_argument: matches.get_flag("NO_ARGUMENT_VIEW"),
+            word_wrap: matches.get_one::<u32>("WORD_WRAP").copied(),
         }
     }
 }
@@ -88,16 +90,23 @@ impl RenderOptions {
 ///
 ///
 ///
-pub fn svg_from_gsn_node(identifier: &str, gsn_node: &GsnNode, layers: &[String]) -> SvgNode {
+pub fn svg_from_gsn_node(
+    identifier: &str,
+    gsn_node: &GsnNode,
+    layers: &[String],
+    char_wrap: Option<u32>,
+) -> SvgNode {
     // Create node
     match gsn_node.node_type.unwrap() {
         // unwrap ok, since checked during validation
-        GsnNodeType::Goal => SvgNode::new_goal(identifier, gsn_node, layers),
-        GsnNodeType::Solution => SvgNode::new_solution(identifier, gsn_node, layers),
-        GsnNodeType::Strategy => SvgNode::new_strategy(identifier, gsn_node, layers),
-        GsnNodeType::Context => SvgNode::new_context(identifier, gsn_node, layers),
-        GsnNodeType::Assumption => SvgNode::new_assumption(identifier, gsn_node, layers),
-        GsnNodeType::Justification => SvgNode::new_justification(identifier, gsn_node, layers),
+        GsnNodeType::Goal => SvgNode::new_goal(identifier, gsn_node, layers, char_wrap),
+        GsnNodeType::Solution => SvgNode::new_solution(identifier, gsn_node, layers, char_wrap),
+        GsnNodeType::Strategy => SvgNode::new_strategy(identifier, gsn_node, layers, char_wrap),
+        GsnNodeType::Context => SvgNode::new_context(identifier, gsn_node, layers, char_wrap),
+        GsnNodeType::Assumption => SvgNode::new_assumption(identifier, gsn_node, layers, char_wrap),
+        GsnNodeType::Justification => {
+            SvgNode::new_justification(identifier, gsn_node, layers, char_wrap)
+        }
     }
 }
 
@@ -112,6 +121,7 @@ pub fn away_svg_from_gsn_node(
     module: &Module,
     source_module: &Module,
     layers: &[String],
+    char_wrap: Option<u32>,
 ) -> Result<SvgNode> {
     let mut module_url = get_relative_path(
         &module.relative_module_path,
@@ -124,20 +134,26 @@ pub fn away_svg_from_gsn_node(
     // Create node
     Ok(match gsn_node.node_type.unwrap() {
         // unwrap ok, since checked during validation
-        GsnNodeType::Goal => SvgNode::new_away_goal(identifier, gsn_node, layers, Some(module_url)),
-        GsnNodeType::Solution => {
-            SvgNode::new_away_solution(identifier, gsn_node, layers, Some(module_url))
+        GsnNodeType::Goal => {
+            SvgNode::new_away_goal(identifier, gsn_node, layers, Some(module_url), char_wrap)
         }
-        GsnNodeType::Strategy => SvgNode::new_strategy(identifier, gsn_node, layers),
+        GsnNodeType::Solution => {
+            SvgNode::new_away_solution(identifier, gsn_node, layers, Some(module_url), char_wrap)
+        }
+        GsnNodeType::Strategy => SvgNode::new_strategy(identifier, gsn_node, layers, char_wrap),
         GsnNodeType::Context => {
-            SvgNode::new_away_context(identifier, gsn_node, layers, Some(module_url))
+            SvgNode::new_away_context(identifier, gsn_node, layers, Some(module_url), char_wrap)
         }
         GsnNodeType::Assumption => {
-            SvgNode::new_away_assumption(identifier, gsn_node, layers, Some(module_url))
+            SvgNode::new_away_assumption(identifier, gsn_node, layers, Some(module_url), char_wrap)
         }
-        GsnNodeType::Justification => {
-            SvgNode::new_away_justification(identifier, gsn_node, layers, Some(module_url))
-        }
+        GsnNodeType::Justification => SvgNode::new_away_justification(
+            identifier,
+            gsn_node,
+            layers,
+            Some(module_url),
+            char_wrap,
+        ),
     })
 }
 
@@ -169,16 +185,22 @@ pub fn render_architecture(
 
             (
                 k.to_owned(),
-                SvgNode::new_module(k, &module_node, &[], {
-                    let target_svg = set_extension(&module.relative_module_path, "svg");
-                    let target_path = translate_to_output_path(output_path, &target_svg, None);
-                    get_relative_path(
-                        &target_path.unwrap(), // TODO remove unwraps
-                        architecture_path,
-                        None, // is already made "svg" above
-                    )
-                    .ok()
-                }),
+                SvgNode::new_module(
+                    k,
+                    &module_node,
+                    &[],
+                    {
+                        let target_svg = set_extension(&module.relative_module_path, "svg");
+                        let target_path = translate_to_output_path(output_path, &target_svg, None);
+                        get_relative_path(
+                            &target_path.unwrap(), // TODO remove unwraps
+                            architecture_path,
+                            None, // is already made "svg" above
+                        )
+                        .ok()
+                    },
+                    render_options.word_wrap,
+                ),
             )
         })
         .collect();
@@ -239,7 +261,7 @@ pub fn render_complete(
         .map(|(id, node)| {
             (
                 id.to_owned(),
-                svg_from_gsn_node(id, node, &render_options.layers),
+                svg_from_gsn_node(id, node, &render_options.layers, render_options.word_wrap),
             )
         })
         .collect();
@@ -280,7 +302,7 @@ pub fn render_argument(
         .map(|(id, node)| {
             (
                 id.to_owned(),
-                svg_from_gsn_node(id, node, &render_options.layers),
+                svg_from_gsn_node(id, node, &render_options.layers, render_options.word_wrap),
             )
         })
         .collect();
@@ -299,6 +321,7 @@ pub fn render_argument(
                         modules.get(&node.module).unwrap(),
                         modules.get(module_name).unwrap(),
                         &render_options.layers,
+                        render_options.word_wrap,
                     )?,
                 ))
             })
@@ -436,6 +459,6 @@ mod test {
     #[should_panic]
     fn cover_unreachable() {
         let gsn_node = GsnNode::default();
-        svg_from_gsn_node("X2", &gsn_node, &[]);
+        svg_from_gsn_node("X2", &gsn_node, &[], None);
     }
 }
