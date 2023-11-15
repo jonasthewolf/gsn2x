@@ -152,11 +152,11 @@ J
 <title>
 G4
 </title>
-<path class="border" d="M20,300 L124,300 L124,346 L20,346 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="27" y="319">
+<path class="border" d="M845,300 L949,300 L949,346 L845,346 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="852" y="319">
 G4
 </text>
-<text font-family="Arial" font-size="12" x="27" y="336">
+<text font-family="Arial" font-size="12" x="852" y="336">
 Simple goal
 </text>
 </g>
@@ -164,11 +164,11 @@ Simple goal
 <title>
 Sn1
 </title>
-<path class="border" d="M26,432 a46,46,0,1,0,92,0 a46,46,0,1,0,-92,0 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="45" y="423">
+<path class="border" d="M851,432 a46,46,0,1,0,92,0 a46,46,0,1,0,-92,0 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="870" y="423">
 Sn1
 </text>
-<text font-family="Arial" font-size="12" x="45" y="440">
+<text font-family="Arial" font-size="12" x="870" y="440">
 A solution
 </text>
 </g>
@@ -181,6 +181,6 @@ A solution
 <path class="gsnedge gsninctxt" d="M190,227 C190,227,180,227,160,227" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsninctxt" d="M992,227 C992,227,1002,227,1022,227" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsninctxt" d="M802,227 C802,227,792,227,772,227" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M897,250 C897,280,72,270,72,290" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M72,346 C72,376,72,356,72,376" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M897,250 C897,280,897,270,897,290" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M897,346 C897,376,897,356,897,376" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 </svg>

@@ -211,8 +211,9 @@ fn has_node_to_be_moved<'b>(
         .iter()
         .flat_map(|n| graph.get_same_ranks_parents(n))
         .collect();
+    let my_x = cell.get_x(graph.get_nodes());
     // If node has children, center over them
-    if !children.is_empty() {
+    if !children.is_empty() && !(children.len() == 1 && my_x >= children.get_x(graph.get_nodes())) {
         // Center only over the children that have no other parents
         let center_children = children
             .into_iter()
