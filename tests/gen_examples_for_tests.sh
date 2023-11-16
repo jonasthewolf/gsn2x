@@ -1,9 +1,9 @@
 #!/bin/sh
 
 # argument_view
-cargo run -- examples/example.gsn.yaml -G -s examples/example.css -t
+cargo run -- examples/example.gsn.yaml -E -G -s examples/example.css -t
 cp examples/example.gsn.svg examples/example.gsn_dark.svg
-cargo run -- examples/example.gsn.yaml -G 
+cargo run -- examples/example.gsn.yaml -E -G
 
 # arch_view
 cargo run -- -N -E -F -G -o examples/modular examples/modular/main.gsn.yaml examples/modular/sub1.gsn.yaml examples/modular/sub3.gsn.yaml
@@ -18,4 +18,4 @@ cargo run -- -N -E -A -G -o examples/modular examples/modular/main.gsn.yaml exam
 cargo run -- -A -E -F -G tests/multi_context.gsn.yaml
 
 # minimal css example
-cargo run -- -G -t -s examples/minimalcss/min.css examples/minimalcss/min.gsn.yaml
+cargo run -- -G -E -t -s examples/minimalcss/min.css examples/minimalcss/min.gsn.yaml
