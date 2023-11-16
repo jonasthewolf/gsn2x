@@ -146,7 +146,7 @@ pub(super) fn layout_nodes(
         }
         first_run = false;
         if changed && limiter == limit {
-            eprintln!("Rendering a diagram took too many iterations ({limiter}). See README.md for hints how to solve this situation.");
+            eprintln!("Rendering a diagram took too many iterations ({limiter}). See documentation (https://jonasthewolf.github.io/gsn2x/) for hints how to solve this situation.");
         }
     }
     calculate_size_of_document(nodes, ranks, margin)

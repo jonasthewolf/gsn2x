@@ -34,7 +34,7 @@ fn validate_type(diag: &mut Diagnostics, module: &str, id: &str, node: &GsnNode)
         diag.add_msg(
             DiagType::Error,
             Some(module),
-            format!("V01: Element {id} is of unknown type. Please see README for supported types"),
+            format!("V01: Element {id} is of unknown type. Please see documentation for supported types"),
         );
     }
 }
@@ -244,7 +244,7 @@ mod test {
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
         assert_eq!(
             d.messages[0].msg,
-            "V01: Element X1 is of unknown type. Please see README for supported types"
+            "V01: Element X1 is of unknown type. Please see documentation for supported types"
         );
         assert_eq!(d.errors, 1);
         assert_eq!(d.warnings, 0);

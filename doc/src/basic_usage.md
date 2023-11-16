@@ -46,5 +46,5 @@ The output is an argument view in SVG format and automatically written to `<your
       -t, --embed-css                 Embed stylehseets instead of linking them.
       -G, --no-legend                 Do not output a legend based on module information.
       -g, --full-legend               Output a legend based on all module information.
-      -w, --wrap                      Define the number of characters after which a line of text is wrapped.
+      -w, --wrap <WORD_WRAP>          Define the number of characters after which a line of text is wrapped.
     
