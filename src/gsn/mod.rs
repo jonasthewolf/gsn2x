@@ -15,7 +15,6 @@ pub mod check;
 pub mod validation;
 
 #[derive(Clone, Copy, Debug, Deserialize, PartialEq, Eq)]
-#[serde(untagged)]
 pub enum GsnNodeType {
     Goal,
     Strategy,
@@ -30,6 +29,7 @@ impl Display for GsnNodeType {
         f.write_fmt(format_args!("{:?}", self))
     }
 }
+
 
 #[derive(Clone, Copy, Debug)]
 pub enum GsnEdgeType {
@@ -92,6 +92,9 @@ pub struct GsnNode {
 }
 
 impl GsnNode {
+    ///
+    ///
+    ///
     pub fn get_edges(&self) -> Vec<(String, GsnEdgeType)> {
         let mut edges = Vec::new();
         if let Some(c_nodes) = &self.in_context_of {
@@ -111,6 +114,9 @@ impl GsnNode {
         edges
     }
 
+    ///
+    ///
+    ///
     pub fn fix_node_type(&mut self, id: &str) {
         self.node_type = if let Some(node_type) = self.node_type {
             Some(node_type)
@@ -125,10 +131,16 @@ impl GsnNode {
 ///
 ///
 impl<'a> DirectedGraphNodeType<'a> for GsnNode {
+    ///
+    ///
+    ///
     fn get_forced_level(&self) -> Option<usize> {
         self.rank_increment
     }
 
+    ///
+    ///
+    ///
     fn get_horizontal_index(&self, current_index: usize) -> Option<usize> {
         match self.horizontal_index {
             Some(HorizontalIndex::Absolute(idx)) => match idx {
@@ -145,6 +157,9 @@ impl<'a> DirectedGraphNodeType<'a> for GsnNode {
 ///
 ///
 impl<'a> DirectedGraphEdgeType<'a> for GsnEdgeType {
+    ///
+    ///
+    ///
     fn is_primary_child_edge(&self) -> bool {
         match self {
             GsnEdgeType::SupportedBy => true,
@@ -152,6 +167,9 @@ impl<'a> DirectedGraphEdgeType<'a> for GsnEdgeType {
         }
     }
 
+    ///
+    ///
+    ///
     fn is_secondary_child_edge(&self) -> bool {
         match self {
             GsnEdgeType::SupportedBy => false,
@@ -424,6 +442,29 @@ horizontalIndex:
             Ok(())
         } else {
             Err(anyhow!("no GsnNode deserialized"))
+        }
+    }
+
+    #[test]
+    fn nodetype() -> Result<()> {
+        let nt: GsnNodeType = serde_yaml::from_str("Solution")?;
+        assert_eq!(nt, GsnNodeType::Solution);
+
+        let gsn = r#"
+G1:
+  text: Goal1
+  supportedBy: [C1]
+
+C1:
+  text: Solution1
+  nodeType: Solution
+"#;
+        let res: BTreeMap<String, GsnDocument>  = serde_yaml::from_str(gsn)?;
+        if let Some(GsnDocument::GsnNode(n)) = res.get("C1") {
+            assert_eq!(n.node_type, Some(GsnNodeType::Solution));
+            Ok(())
+        } else {
+            Err(anyhow!("Serialization did not work"))
         }
     }
 }
