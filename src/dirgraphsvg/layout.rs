@@ -60,16 +60,16 @@ impl Cell for Vec<&str> {
     ///
     fn get_max_width(&self, nodes: &BTreeMap<String, RefCell<SvgNode>>) -> i32 {
         self.iter()
-            .map(|&n| nodes.get(n).unwrap().borrow().get_width())
+            .map(|&n| nodes.get(n).unwrap().borrow().get_width()) // unwrap ok, since nodes must exist.
             .max()
-            .unwrap()
+            .unwrap() // unwrap ok, since there is always at least one node.
     }
 
     ///
     ///
     ///
     fn get_x(&self, nodes: &BTreeMap<String, RefCell<SvgNode>>) -> i32 {
-        let n = nodes.get(self.first().unwrap().to_owned()).unwrap();
+        let n = nodes.get(self.first().unwrap().to_owned()).unwrap(); // unwraps ok, since nodes must exist.
         n.borrow().get_position().x
     }
 
@@ -164,7 +164,7 @@ fn calculate_size_of_document(
     let width = ranks
         .iter()
         .map(|rank| {
-            let n = rank.last().unwrap();
+            let n = rank.last().unwrap(); // unwrap ok, since there is at least one rank.
             n.get_x(nodes) + n.get_max_width(nodes)
         })
         .max()

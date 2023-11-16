@@ -128,6 +128,7 @@ where
             // No root nodes are found.
             // This can actually only happen in architecture view.
             // Take the first node and start from there.
+            // Unwrap is ok, since there is at least one node
             vec![self.nodes.iter().next().unwrap().0]
         } else {
             n_ids.iter().map(|rn| rn.as_str()).collect()
@@ -385,7 +386,7 @@ where
             .filter_map(|(idx, node)| {
                 self.nodes
                     .get(*node)
-                    .unwrap()
+                    .unwrap() // unwrap ok, since nodes exist.
                     .get_horizontal_index(idx)
                     .map(|_| *node)
             })
@@ -394,11 +395,11 @@ where
             let cur_pos = current_rank_nodes
                 .iter()
                 .position(|n| *n == next_reorder)
-                .unwrap();
+                .unwrap(); // unwrap ok, since nodes exist.
             let new_pos = self
                 .nodes
                 .get(next_reorder)
-                .unwrap()
+                .unwrap() // unwrap ok, since nodes exist.
                 .get_horizontal_index(cur_pos)
                 .unwrap();
             let tmp = current_rank_nodes.remove(cur_pos);
@@ -423,7 +424,7 @@ where
             current_rank_nodes.iter().map(|&n| vec![n]).collect();
         // Add inContext nodes
         for index in 0..current_rank_nodes.len() {
-            let same_rank_parent = current_rank_nodes.get(index).unwrap().to_owned();
+            let same_rank_parent = current_rank_nodes.get(index).unwrap().to_owned(); // unwrap ok, since nodes exist.
             let (left, right): (Vec<_>, Vec<_>) = self
                 .get_same_rank_children(same_rank_parent)
                 .into_iter()
@@ -433,7 +434,7 @@ where
                     if let Some(forced_index) = self
                         .get_nodes()
                         .get(same_rank_child.to_owned())
-                        .unwrap()
+                        .unwrap() // unwrap ok, since nodes exist.
                         .get_horizontal_index(*idx)
                     {
                         0 == forced_index
@@ -448,7 +449,7 @@ where
             let mut parent_index = current_rank
                 .iter()
                 .position(|x| x.contains(&same_rank_parent))
-                .unwrap();
+                .unwrap(); // unwrap ok, since nodes exist.
             if !left.is_empty() {
                 let left_vec = left.iter().map(|(_, x)| *x).collect::<Vec<_>>();
                 left_vec.iter().for_each(|n| {
@@ -493,7 +494,7 @@ where
             .partition(|n| {
                 self.parent_edges
                     .get(n)
-                    .unwrap()
+                    .unwrap() // unwrap ok, since nodes exist.
                     .iter()
                     .filter(|(_, et)| et.is_primary_child_edge())
                     .all(|(p, _)| visited.contains(p))
