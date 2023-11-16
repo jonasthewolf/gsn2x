@@ -3,17 +3,14 @@ pub mod point2d;
 pub mod wrap_words;
 
 ///
-///
 /// Escape string to prevent misrendering if special characters are used.
-///
 ///
 pub fn escape_text(input: &str) -> String {
     input.replace(['.', '-', ' ', '/', '\\', ':', '\'', '"', '~'], "_")
 }
 
 ///
-///
-///
+/// Create node identifiers for the rendered SVG.
 ///
 pub fn escape_node_id(id: &str) -> String {
     format!("node_{}", escape_text(id))
