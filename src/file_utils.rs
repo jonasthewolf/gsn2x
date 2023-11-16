@@ -55,15 +55,9 @@ pub fn get_relative_path(
 ///
 ///
 pub fn get_filename(path: &str) -> Option<&str> {
-    if let Some(filename) = path.rsplit(['/', '\\']).next() {
-        if filename.is_empty() || filename == ".." || filename == "." {
-            None
-        } else {
-            Some(filename)
-        }
-    } else {
-        None
-    }
+    path.rsplit(['/', '\\'])
+        .next()
+        .filter(|&filename| !(filename.is_empty() || filename == ".." || filename == "."))
 }
 
 ///
