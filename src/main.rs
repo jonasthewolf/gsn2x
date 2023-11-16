@@ -383,7 +383,7 @@ fn print_outputs(
     if !render_options.skip_argument {
         for (module_name, module) in modules {
             let output_path = set_extension(
-                &translate_to_output_path(&output_path, &module.relative_module_path)?,
+                &translate_to_output_path(output_path, &module.relative_module_path)?,
                 "svg",
             );
             let mut output_file = Box::new(
@@ -402,7 +402,7 @@ fn print_outputs(
     }
     if modules.len() > 1 {
         if let Some(architecture_filename) = &render_options.architecture_filename {
-            let arch_output_path = translate_to_output_path(&output_path, architecture_filename)?;
+            let arch_output_path = translate_to_output_path(output_path, architecture_filename)?;
             let mut output_file = File::create(&arch_output_path)
                 .context(format!("Failed to open output file {arch_output_path}"))?;
             let deps = crate::gsn::calculate_module_dependencies(&nodes);
@@ -412,18 +412,18 @@ fn print_outputs(
                 deps,
                 render_options,
                 &arch_output_path,
-                &output_path,
+                output_path,
             )?;
         }
         if let Some(complete_filename) = &render_options.complete_filename {
-            let output_path = translate_to_output_path(&output_path, complete_filename)?;
+            let output_path = translate_to_output_path(output_path, complete_filename)?;
             let mut output_file = File::create(&output_path)
                 .context(format!("Failed to open output file {output_path}"))?;
             render::render_complete(&mut output_file, &nodes, render_options)?;
         }
     }
     if let Some(evidences_filename) = &render_options.evidences_filename {
-        let output_path = translate_to_output_path(&output_path, evidences_filename)?;
+        let output_path = translate_to_output_path(output_path, evidences_filename)?;
         let mut output_file = File::create(&output_path)
             .context(format!("Failed to open output file {output_path}"))?;
         render::render_evidences(&mut output_file, &nodes, render_options)?;
