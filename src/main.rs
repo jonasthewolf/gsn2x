@@ -276,7 +276,7 @@ fn read_inputs(
             _ => {
                 let module_name = escape_text(input);
                 ModuleInformation {
-                    name: module_name.to_owned(),
+                    name: module_name,
                     brief: None,
                     extends: None,
                     additional: BTreeMap::new(),
@@ -379,10 +379,7 @@ fn print_outputs(
     modules: &HashMap<String, Module>,
     render_options: &RenderOptions,
 ) -> Result<()> {
-    let output_path = render_options
-        .output_directory
-        .to_owned()
-        .unwrap_or(".".to_owned());
+    let output_path = render_options.output_directory.to_owned().unwrap_or(".");
     if !render_options.skip_argument {
         for (module_name, module) in modules {
             let output_path = set_extension(

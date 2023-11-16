@@ -17,25 +17,25 @@ pub enum RenderLegend {
     Full,
 }
 
-pub struct RenderOptions {
+pub struct RenderOptions<'a> {
     pub stylesheets: Vec<String>,
     pub layers: Vec<String>,
     pub legend: RenderLegend,
     pub embed_stylesheets: bool,
-    pub architecture_filename: Option<String>,
-    pub evidences_filename: Option<String>,
-    pub complete_filename: Option<String>,
-    pub output_directory: Option<String>,
+    pub architecture_filename: Option<&'a str>,
+    pub evidences_filename: Option<&'a str>,
+    pub complete_filename: Option<&'a str>,
+    pub output_directory: Option<&'a str>,
     pub skip_argument: bool,
     pub word_wrap: Option<u32>,
 }
 
-impl RenderOptions {
+impl<'a> RenderOptions<'a> {
     pub fn new(
-        matches: &ArgMatches,
+        matches: &'a ArgMatches,
         stylesheets: Vec<String>,
         embed_stylesheets: bool,
-        output_directory: Option<&String>,
+        output_directory: Option<&'a String>,
     ) -> Self {
         let legend = if matches.get_flag("NO_LEGEND") {
             RenderLegend::No
@@ -60,25 +60,22 @@ impl RenderOptions {
                 true => None,
                 false => matches
                     .get_one::<String>("ARCHITECTURE_VIEW")
-                    .and_then(|p| get_filename(p))
-                    .map(|f| f.to_owned()),
+                    .and_then(|p| get_filename(p)),
             },
 
             evidences_filename: match matches.get_flag("NO_EVIDENCES") {
                 true => None,
                 false => matches
                     .get_one::<String>("EVIDENCES")
-                    .and_then(|p| get_filename(p))
-                    .map(|f| f.to_owned()),
+                    .and_then(|p| get_filename(p)),
             },
             complete_filename: match matches.get_flag("NO_COMPLETE_VIEW") {
                 true => None,
                 false => matches
                     .get_one::<String>("COMPLETE_VIEW")
-                    .and_then(|p| get_filename(p))
-                    .map(|f| f.to_owned()),
+                    .and_then(|p| get_filename(p)),
             },
-            output_directory: output_directory.cloned(),
+            output_directory: output_directory.map(|x| x.as_str()),
             skip_argument: matches.get_flag("NO_ARGUMENT_VIEW"),
             word_wrap: matches.get_one::<u32>("WORD_WRAP").copied(),
         }
