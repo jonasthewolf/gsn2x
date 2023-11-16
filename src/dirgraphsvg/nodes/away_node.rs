@@ -118,7 +118,13 @@ impl AwayType {
     ///
     ///
     ///
-    pub(super) fn render(&self, node: &SvgNode, font: &FontInfo, context: &mut Element) {
+    pub(super) fn render(
+        &self,
+        node: &SvgNode,
+        font: &FontInfo,
+        context: &mut Element,
+        border_color: &str,
+    ) {
         let title = Title::new().add(svg::node::Text::new(&node.identifier));
 
         use svg::Node;
@@ -175,7 +181,7 @@ impl AwayType {
 
         let upper_line = Path::new()
             .set("fill", "transparent")
-            .set("stroke", "black")
+            .set("stroke", border_color)
             .set("stroke-width", 1u32)
             .set("d", data)
             .set("class", "border");
@@ -188,9 +194,11 @@ impl AwayType {
         y += OFFSET_IDENTIFIER;
 
         // Text
-        for text in node.text.lines() {
-            y += font.size as i32;
-            context.append(create_text(text, x, y, font, false));
+        if !node.masked {
+            for text in node.text.lines() {
+                y += font.size as i32;
+                context.append(create_text(text, x, y, font, false));
+            }
         }
 
         // It is a box to be able to add a link to it
@@ -206,28 +214,35 @@ impl AwayType {
 
         let module_box = Path::new()
             .set("fill", "transparent")
-            .set("stroke", "black")
+            .set("stroke", border_color)
             .set("stroke-width", 1u32)
             .set("d", module_box_data)
             .set("class", "border");
 
         // Module text and links
-        let module_text = create_text(
-            &self.module,
-            node.x - node.width / 2 + PADDING_HORIZONTAL + MODULE_IMAGE + PADDING_HORIZONTAL,
-            node.y + node.height / 2 - PADDING_VERTICAL,
-            font,
-            true,
-        );
-
+        let module_text = if node.masked {
+            None
+        } else {
+            Some(create_text(
+                &self.module,
+                node.x - node.width / 2 + PADDING_HORIZONTAL + MODULE_IMAGE + PADDING_HORIZONTAL,
+                node.y + node.height / 2 - PADDING_VERTICAL,
+                font,
+                true,
+            ))
+        };
         if let Some(module_url) = &self.module_url {
             let mut module_link = Anchor::new()
                 .set("href", escape_url(module_url.as_str()))
                 .add(module_box);
-            module_link.append(module_text);
+            if let Some(module_text) = module_text {
+                module_link.append(module_text);
+            }
             context.append(module_link);
         } else {
-            context.append(module_text);
+            if let Some(module_text) = module_text {
+                context.append(module_text);
+            }
             context.append(module_box);
         }
         // Module icon

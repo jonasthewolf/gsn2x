@@ -29,8 +29,8 @@ pub fn get_relative_path(
     source: &str,
     target_extension: Option<&str>,
 ) -> Result<String> {
-    let source_canon = &PathBuf::from(source).canonicalize()?;
-    let target_canon = &PathBuf::from(target).canonicalize()?;
+    let source_canon = &PathBuf::from(source).canonicalize().with_context(|| format!("Could not find relative path between {source} and {target}, because {source} not found"))?;
+    let target_canon = &PathBuf::from(target).canonicalize().with_context(|| format!("Could not find relative path between {source} and {target}, because {target} not found"))?;
     let common = find_common_ancestors_in_paths(&[source, target])?;
     let source_canon_stripped = source_canon.strip_prefix(&common)?.to_path_buf();
     let mut target_canon_stripped = target_canon.strip_prefix(&common)?.to_path_buf();

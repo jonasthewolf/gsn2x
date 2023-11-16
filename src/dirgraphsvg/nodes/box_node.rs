@@ -59,7 +59,13 @@ impl BoxType {
     ///
     ///
     ///
-    pub(super) fn render(&self, node: &SvgNode, font: &FontInfo, context: &mut Element) {
+    pub(super) fn render(
+        &self,
+        node: &SvgNode,
+        font: &FontInfo,
+        context: &mut Element,
+        border_color: &str,
+    ) {
         let title = Title::new().add(svg::node::Text::new(&node.identifier));
         use svg::Node;
         context.append(title);
@@ -115,7 +121,7 @@ impl BoxType {
 
         let border = Path::new()
             .set("fill", "none")
-            .set("stroke", "black")
+            .set("stroke", border_color)
             .set("stroke-width", 1u32)
             .set("d", data)
             .set("class", "border");
@@ -134,9 +140,11 @@ impl BoxType {
         context.append(create_text(&node.identifier, x, y, font, true));
         y += OFFSET_IDENTIFIER;
 
-        for text in node.text.lines() {
-            y += font.size as i32;
-            context.append(create_text(text, x, y, font, false));
+        if !node.masked {
+            for text in node.text.lines() {
+                y += font.size as i32;
+                context.append(create_text(text, x, y, font, false));
+            }
         }
 
         if let BoxType::Undeveloped(_) = self {
@@ -148,7 +156,7 @@ impl BoxType {
                 .close();
             let undeveloped_diamond = Path::new()
                 .set("fill", "none")
-                .set("stroke", "black")
+                .set("stroke", border_color)
                 .set("stroke-width", 1u32)
                 .set("d", data);
             context.append(undeveloped_diamond);

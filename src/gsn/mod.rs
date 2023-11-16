@@ -30,7 +30,6 @@ impl Display for GsnNodeType {
     }
 }
 
-
 #[derive(Clone, Copy, Debug)]
 pub enum GsnEdgeType {
     SupportedBy,
@@ -459,7 +458,7 @@ C1:
   text: Solution1
   nodeType: Solution
 "#;
-        let res: BTreeMap<String, GsnDocument>  = serde_yaml::from_str(gsn)?;
+        let res: BTreeMap<String, GsnDocument> = serde_yaml::from_str(gsn)?;
         if let Some(GsnDocument::GsnNode(n)) = res.get("C1") {
             assert_eq!(n.node_type, Some(GsnNodeType::Solution));
             Ok(())

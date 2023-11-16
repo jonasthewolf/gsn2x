@@ -151,16 +151,15 @@ fn main() -> Result<()> {
                 .conflicts_with("CHECKONLY")
                 .help_heading("OUTPUT MODIFICATION"),
         )
-        // .arg(
-        //     Arg::new("MASK_MODULE")
-        //         .help("Do not unroll this module in the complete view.")
-        //         .short('m')
-        //         .long("mask")
-        //         .multiple_occurrences(true)
-        //         .takes_value(true)
-        //         .requires("COMPLETE_VIEW")
-        //         .help_heading("OUTPUT MODIFICATION"),
-        // )
+        .arg(
+            Arg::new("MASKED_MODULE")
+                .help("Do not show this module in views.")
+                .short('m')
+                .long("mask")
+                .action(ArgAction::Append)
+                .conflicts_with("CHECKONLY")
+                .help_heading("OUTPUT MODIFICATION"),
+        )
         .arg(
             Arg::new("NO_LEGEND")
                 .help("Do not output a legend based on module information.")
@@ -233,13 +232,60 @@ fn main() -> Result<()> {
             .collect::<Vec<_>>();
         // Copy stylesheets if necessary and prepare paths
         copy_and_prepare_stylesheets(&mut stylesheets, embed_stylesheets, &output_directory)?;
-        let render_options =
+        let mut render_options =
             RenderOptions::new(&matches, stylesheets, embed_stylesheets, output_directory);
+        // Add missing nodes that may not exist because references checks have been excluded
+        add_missing_nodes_and_modules(&mut nodes, &mut modules, &mut render_options);
         // Output views
         print_outputs(nodes, &modules, &render_options)?;
     }
     // Output diagnostic messages
     output_messages(&diags)
+}
+
+///
+/// Add missing nodes that were referenced, but excluded f
+///
+fn add_missing_nodes_and_modules(
+    nodes: &mut BTreeMap<String, GsnNode>,
+    modules: &mut HashMap<String, Module>,
+    render_options: &mut RenderOptions,
+) {
+    let mut add_nodes = vec![];
+    for (_, node) in nodes.iter() {
+        let ref_nodes: Vec<_> = node
+            .supported_by
+            .iter()
+            .chain(node.in_context_of.iter())
+            .flatten()
+            .collect();
+        for ref_node in ref_nodes {
+            if !nodes.contains_key(ref_node) {
+                add_nodes.push(ref_node.to_owned());
+            }
+        }
+    }
+    for node in add_nodes {
+        let mut gsn_node = GsnNode {
+            module: "Unknown".to_owned(),
+            ..Default::default()
+        };
+        gsn_node.fix_node_type(&node);
+        nodes.insert(node.to_owned(), gsn_node);
+        render_options.masked_elements.push(node);
+    }
+    modules.insert(
+        "Unknown".to_owned(),
+        Module {
+            relative_module_path: "".to_owned(),
+            meta: ModuleInformation {
+                name: "Unknown".to_owned(),
+                brief: None,
+                extends: None,
+                additional: BTreeMap::new(),
+            },
+        },
+    );
 }
 
 ///
@@ -381,7 +427,7 @@ fn print_outputs(
 ) -> Result<()> {
     let output_path = render_options.output_directory.to_owned().unwrap_or(".");
     if !render_options.skip_argument {
-        for (module_name, module) in modules {
+        for (module_name, module) in modules.iter().filter(|(m, _)| m.as_str() != "Unknown") {
             let output_path = set_extension(
                 &translate_to_output_path(output_path, &module.relative_module_path)?,
                 "svg",
@@ -400,7 +446,12 @@ fn print_outputs(
             )?;
         }
     }
-    if modules.len() > 1 {
+    if modules
+        .iter()
+        .filter(|(m, _)| m.as_str() != "Unknown")
+        .count()
+        > 1
+    {
         if let Some(architecture_filename) = &render_options.architecture_filename {
             let arch_output_path = translate_to_output_path(output_path, architecture_filename)?;
             let mut output_file = File::create(&arch_output_path)

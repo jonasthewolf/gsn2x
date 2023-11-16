@@ -48,6 +48,7 @@ pub struct SvgNode {
     height: i32,
     identifier: String,
     text: String,
+    masked: bool,
     url: Option<String>,
     classes: Vec<String>,
     rank_increment: Option<usize>,
@@ -193,10 +194,13 @@ impl SvgNode {
     ///
     pub fn render(&self, font: &FontInfo, document: &mut Element) {
         let mut g = create_group(&self.identifier, &self.classes);
+
+        let border_color = if self.masked { "lightgrey" } else { "black" };
+
         match &self.node_type {
-            NodeType::Box(x) => x.render(self, font, &mut g),
-            NodeType::Ellipsis(x) => x.render(self, font, &mut g),
-            NodeType::Away(x) => x.render(self, font, &mut g),
+            NodeType::Box(x) => x.render(self, font, &mut g, border_color),
+            NodeType::Ellipsis(x) => x.render(self, font, &mut g, border_color),
+            NodeType::Away(x) => x.render(self, font, &mut g, border_color),
         };
         if let Some(url) = &self.url {
             let link = Anchor::new().set("href", escape_url(url.as_str())).add(g);
@@ -212,6 +216,7 @@ impl SvgNode {
     fn new(
         identifier: &str,
         gsn_node: &GsnNode,
+        masked: bool,
         layers: &[String],
         module_url: Option<String>,
         add_classes: &[&str],
@@ -220,7 +225,7 @@ impl SvgNode {
         // Add layer to node output
         let node_text = node_text_from_node_and_layers(gsn_node, layers, char_wrap);
         // Setup CSS classes
-        let mut classes = node_classes_from_node(gsn_node);
+        let mut classes = node_classes_from_node(gsn_node, masked);
         classes.push("gsnelem".to_owned());
         classes.append(
             &mut add_classes
@@ -234,6 +239,7 @@ impl SvgNode {
             y: 0,
             width: 0,
             height: 0,
+            masked,
             identifier: identifier.to_owned(),
             text: node_text.to_owned(),
             url: module_url,
@@ -250,12 +256,14 @@ impl SvgNode {
     pub fn new_assumption(
         identifier: &str,
         gsn_node: &GsnNode,
+        masked: bool,
         layers: &[String],
         char_wrap: Option<u32>,
     ) -> Self {
         let mut n = SvgNode::new(
             identifier,
             gsn_node,
+            masked,
             layers,
             gsn_node.url.to_owned(),
             &["gsnasmp"],
@@ -276,12 +284,14 @@ impl SvgNode {
     pub fn new_context(
         identifier: &str,
         gsn_node: &GsnNode,
+        masked: bool,
         layers: &[String],
         char_wrap: Option<u32>,
     ) -> Self {
         SvgNode::new(
             identifier,
             gsn_node,
+            masked,
             layers,
             gsn_node.url.to_owned(),
             &["gsnctxt"],
@@ -295,12 +305,14 @@ impl SvgNode {
     pub fn new_justification(
         identifier: &str,
         gsn_node: &GsnNode,
+        masked: bool,
         layers: &[String],
         char_wrap: Option<u32>,
     ) -> Self {
         let mut n = SvgNode::new(
             identifier,
             gsn_node,
+            masked,
             layers,
             gsn_node.url.to_owned(),
             &["gsnjust"],
@@ -321,12 +333,14 @@ impl SvgNode {
     pub fn new_solution(
         identifier: &str,
         gsn_node: &GsnNode,
+        masked: bool,
         layers: &[String],
         char_wrap: Option<u32>,
     ) -> Self {
         let mut n = SvgNode::new(
             identifier,
             gsn_node,
+            masked,
             layers,
             gsn_node.url.to_owned(),
             &["gsnsltn"],
@@ -348,12 +362,14 @@ impl SvgNode {
     pub fn new_strategy(
         identifier: &str,
         gsn_node: &GsnNode,
+        masked: bool,
         layers: &[String],
         char_wrap: Option<u32>,
     ) -> Self {
         let mut n = SvgNode::new(
             identifier,
             gsn_node,
+            masked,
             layers,
             gsn_node.url.to_owned(),
             &["gsnstgy"],
@@ -374,6 +390,7 @@ impl SvgNode {
     pub fn new_goal(
         identifier: &str,
         gsn_node: &GsnNode,
+        masked: bool,
         layers: &[String],
         char_wrap: Option<u32>,
     ) -> Self {
@@ -385,6 +402,7 @@ impl SvgNode {
         let mut n = SvgNode::new(
             identifier,
             gsn_node,
+            masked,
             layers,
             gsn_node.url.to_owned(),
             &classes,
@@ -404,6 +422,7 @@ impl SvgNode {
     pub fn new_away_assumption(
         identifier: &str,
         gsn_node: &GsnNode,
+        masked: bool,
         layers: &[String],
         module_url: Option<String>,
         char_wrap: Option<u32>,
@@ -411,6 +430,7 @@ impl SvgNode {
         let mut n = SvgNode::new(
             identifier,
             gsn_node,
+            masked,
             layers,
             module_url.to_owned(),
             &["gsnawayasmp"],
@@ -431,6 +451,7 @@ impl SvgNode {
     pub fn new_away_goal(
         identifier: &str,
         gsn_node: &GsnNode,
+        masked: bool,
         layers: &[String],
         module_url: Option<String>,
         char_wrap: Option<u32>,
@@ -438,6 +459,7 @@ impl SvgNode {
         let mut n = SvgNode::new(
             identifier,
             gsn_node,
+            masked,
             layers,
             module_url.to_owned(),
             &["gsnawaygoal"],
@@ -458,6 +480,7 @@ impl SvgNode {
     pub fn new_away_justification(
         identifier: &str,
         gsn_node: &GsnNode,
+        masked: bool,
         layers: &[String],
         module_url: Option<String>,
         char_wrap: Option<u32>,
@@ -465,6 +488,7 @@ impl SvgNode {
         let mut n = SvgNode::new(
             identifier,
             gsn_node,
+            masked,
             layers,
             module_url.to_owned(),
             &["gsnawayjust"],
@@ -485,6 +509,7 @@ impl SvgNode {
     pub fn new_away_context(
         identifier: &str,
         gsn_node: &GsnNode,
+        masked: bool,
         layers: &[String],
         module_url: Option<String>,
         char_wrap: Option<u32>,
@@ -492,6 +517,7 @@ impl SvgNode {
         let mut n = SvgNode::new(
             identifier,
             gsn_node,
+            masked,
             layers,
             module_url.to_owned(),
             &["gsnawayctxt"],
@@ -512,6 +538,7 @@ impl SvgNode {
     pub fn new_away_solution(
         identifier: &str,
         gsn_node: &GsnNode,
+        masked: bool,
         layers: &[String],
         module_url: Option<String>,
         char_wrap: Option<u32>,
@@ -519,6 +546,7 @@ impl SvgNode {
         let mut n = SvgNode::new(
             identifier,
             gsn_node,
+            masked,
             layers,
             module_url.to_owned(),
             &["gsnawaysltn"],
@@ -540,6 +568,7 @@ impl SvgNode {
     pub fn new_module(
         identifier: &str,
         gsn_node: &GsnNode,
+        masked: bool,
         layers: &[String],
         module_url: Option<String>,
         char_wrap: Option<u32>,
@@ -547,6 +576,7 @@ impl SvgNode {
         let mut n = SvgNode::new(
             identifier,
             gsn_node,
+            masked,
             layers,
             module_url,
             &["gsnmodule"],
@@ -560,7 +590,7 @@ impl SvgNode {
 ///
 ///
 ///
-fn node_classes_from_node(gsn_node: &GsnNode) -> Vec<String> {
+fn node_classes_from_node(gsn_node: &GsnNode, masked: bool) -> Vec<String> {
     let layer_classes: Option<Vec<String>> = gsn_node
         .additional
         .keys()
@@ -572,12 +602,17 @@ fn node_classes_from_node(gsn_node: &GsnNode) -> Vec<String> {
         .collect();
     let mut mod_class = gsn_node.module.to_owned();
     mod_class.insert_str(0, "gsn_module_");
+    let mut masked_class = vec![];
+    if masked {
+        masked_class.push("gsn_masked".to_owned());
+    }
     let classes = gsn_node
         .classes
         .iter()
         .chain(layer_classes.iter())
         .flatten()
         .chain(&[mod_class])
+        .chain(masked_class.iter())
         .cloned()
         .collect();
     classes

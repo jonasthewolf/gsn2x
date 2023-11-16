@@ -60,9 +60,10 @@ impl Cell for Vec<&str> {
     ///
     fn get_max_width(&self, nodes: &BTreeMap<String, RefCell<SvgNode>>) -> i32 {
         self.iter()
-            .map(|&n| nodes.get(n).unwrap().borrow().get_width()) // unwrap ok, since nodes must exist.
+            .filter_map(|&n| nodes.get(n))
+            .map(|n| n.borrow().get_width())
             .max()
-            .unwrap() // unwrap ok, since there is always at least one node.
+            .unwrap_or_default()
     }
 
     ///
@@ -188,7 +189,8 @@ fn get_max_height(
     rank.iter()
         .map(|id| {
             id.iter()
-                .map(|&x| nodes.get(x).unwrap().borrow().get_height())
+                .filter_map(|&x| nodes.get(x))
+                .map(|n| n.borrow().get_height())
                 .sum::<i32>()
                 + (margin.top + margin.bottom) * (id.len() - 1) as i32
         })

@@ -386,8 +386,7 @@ where
             .filter_map(|(idx, node)| {
                 self.nodes
                     .get(*node)
-                    .unwrap() // unwrap ok, since nodes exist.
-                    .get_horizontal_index(idx)
+                    .and_then(|n| n.get_horizontal_index(idx))
                     .map(|_| *node)
             })
             .collect::<Vec<_>>();

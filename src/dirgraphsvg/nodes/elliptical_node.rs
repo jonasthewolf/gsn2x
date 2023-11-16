@@ -59,7 +59,13 @@ impl EllipticalType {
     ///
     ///
     ///
-    pub(super) fn render(&self, node: &SvgNode, font: &FontInfo, context: &mut Element) {
+    pub(super) fn render(
+        &self,
+        node: &SvgNode,
+        font: &FontInfo,
+        context: &mut Element,
+        border_color: &str,
+    ) {
         let title = Title::new().add(svg::node::Text::new(&node.identifier));
 
         let data = Data::new()
@@ -86,7 +92,7 @@ impl EllipticalType {
 
         let border = Path::new()
             .set("fill", "none")
-            .set("stroke", "black")
+            .set("stroke", border_color)
             .set("stroke-width", 1u32)
             .set("d", data)
             .set("class", "border");
@@ -99,10 +105,12 @@ impl EllipticalType {
         let mut y = node.y - self.text_height / 2 + PADDING_HORIZONTAL;
         context.append(create_text(&node.identifier, x, y, font, true));
 
-        y += OFFSET_IDENTIFIER;
-        for text in node.text.lines() {
-            y += font.size as i32;
-            context.append(create_text(text, x, y, font, false));
+        if !node.masked {
+            y += OFFSET_IDENTIFIER;
+            for text in node.text.lines() {
+                y += font.size as i32;
+                context.append(create_text(text, x, y, font, false));
+            }
         }
 
         if let Some(adm) = &self.admonition {
