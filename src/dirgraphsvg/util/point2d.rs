@@ -1,9 +1,15 @@
+///
+/// Two dimensional point representation
+///
 pub struct Point2D {
     pub x: i32,
     pub y: i32,
 }
 
 impl Point2D {
+    ///
+    /// Move the point by `x` and `y` relatively.
+    ///
     pub fn move_relative(&self, x: i32, y: i32) -> Self {
         Point2D {
             x: self.x + x,
