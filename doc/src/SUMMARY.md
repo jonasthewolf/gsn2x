@@ -23,3 +23,4 @@
 
 - [Design Goals](./design_goals.md)
 - [History](./history.md)
+- [Migration from v2.x](./migration_v2x.md)
