@@ -31,7 +31,7 @@ pub fn get_relative_path(
 ) -> Result<String> {
     let source_canon = &PathBuf::from(source).canonicalize()?;
     let target_canon = &PathBuf::from(target).canonicalize()?;
-    let common = find_common_ancestors_in_paths(&[source.to_owned(), target.to_owned()])?;
+    let common = find_common_ancestors_in_paths(&[source, target])?;
     let source_canon_stripped = source_canon.strip_prefix(&common)?.to_path_buf();
     let mut target_canon_stripped = target_canon.strip_prefix(&common)?.to_path_buf();
     let mut prefix = match source_canon_stripped
@@ -76,7 +76,7 @@ pub fn set_extension(path: &str, ext: &str) -> String {
 /// Find common ancestors in all paths in `inputs`.
 /// The output is an absolute path containing all common ancestors.
 ///
-fn find_common_ancestors_in_paths(inputs: &[String]) -> Result<PathBuf> {
+fn find_common_ancestors_in_paths(inputs: &[&str]) -> Result<PathBuf> {
     let input_paths = inputs
         .iter()
         .map(|i| {
@@ -150,7 +150,7 @@ mod test {
 
     #[test]
     fn common_ancestor_single() -> Result<()> {
-        let inputs = ["examples/example.gsn.yaml".to_owned()];
+        let inputs = ["examples/example.gsn.yaml"];
         let result = find_common_ancestors_in_paths(&inputs)?;
         assert_eq!(result, PathBuf::from(""));
         Ok(())
