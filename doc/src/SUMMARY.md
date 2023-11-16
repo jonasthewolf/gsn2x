@@ -17,7 +17,7 @@
 ---
 
 - [Standard Support](./standard_support.md)
-- [Troubleshooting]()
+- [Troubleshooting](./troubleshooting.md)
 
 ---
 

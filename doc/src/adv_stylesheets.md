@@ -64,9 +64,9 @@ The result looks like this:
 
 ![Styled Example](examples/minimalcss/min.gsn.svg)
 
-# Highlighting nodes when navigating
+# Highlighting elements when navigating
 
-The CSS `:target` pseudo class can be used to highlight the node you clicked on in the previous image.
+The CSS `:target` pseudo class can be used to highlight the element you clicked on in the previous image.
 
 An example could look like this:
 

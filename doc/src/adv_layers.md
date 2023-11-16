@@ -24,7 +24,9 @@ C1:
 ```
 
 In this example, a call to `gsn2x -l layer1` will show the additional information to each element prefixed with _`LAYER1: `_.
-Of course, using `text`, `inContextOf`, `supportedBy`, `url`, `undeveloped`, `level` or `classes` are not sensible parameters to pass for the `-l` option. 
+
+Of course, using `text`, `inContextOf`, `supportedBy`, `url`, `undeveloped`, 
+`horizontalRank`, `rankIncrement` or `classes` are not sensible parameters to pass for the `-l` option. 
 
 Please note that using `module` and passing it as a layer option will also not work. 
 

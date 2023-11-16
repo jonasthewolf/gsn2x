@@ -7,7 +7,7 @@ use glyph_brush_layout::{
 
 ///
 /// Default font family names on different operating systems
-/// 
+///
 #[cfg(any(target_os = "windows", target_os = "macos"))]
 pub static DEFAULT_FONT_FAMILY_NAME: &str = "Arial";
 #[cfg(not(any(target_os = "windows", target_os = "macos")))]
@@ -15,7 +15,7 @@ pub static DEFAULT_FONT_FAMILY_NAME: &str = "DejaVuSans";
 
 ///
 /// All we need to know about a font
-/// 
+///
 pub struct FontInfo {
     font: FontVec,
     font_bold: FontVec,
@@ -26,7 +26,7 @@ pub struct FontInfo {
 
 ///
 /// Default font with size 12
-/// 
+///
 impl Default for FontInfo {
     fn default() -> Self {
         FontInfo {
@@ -41,14 +41,14 @@ impl Default for FontInfo {
 
 ///
 /// Get the default font as a byte vector
-/// 
+///
 pub fn get_default_font(bold: bool, italic: bool) -> Result<FontVec> {
     get_font(DEFAULT_FONT_FAMILY_NAME, bold, italic)
 }
 
 ///
 /// Get a font as a byte vector
-/// 
+///
 fn get_font(font_name: &str, bold: bool, italic: bool) -> Result<FontVec> {
     let mut props = system_fonts::FontPropertyBuilder::new();
     props = props.family(font_name);
@@ -66,7 +66,7 @@ fn get_font(font_name: &str, bold: bool, italic: bool) -> Result<FontVec> {
 
 ///
 /// Get the bounding box of `text` for the font described by `font_info` and `bold`
-/// 
+///
 pub fn text_bounding_box(font_info: &FontInfo, text: &str, bold: bool) -> (i32, i32) {
     let kern = if bold {
         text.chars().count() as i32 * 4

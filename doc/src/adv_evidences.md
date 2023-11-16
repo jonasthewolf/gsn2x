@@ -1,6 +1,4 @@
 
-
-
 # List of evidences
 
 An additional file that lists all the evidences in the input file is output by default in `evidences.md`.

@@ -1,25 +1,90 @@
 
-# More influence on the layout of elements
+# Layout of elements
+
+## How does the default layout of the graph work?
+
+At first, the root elements are identified. Root elements are elements 
+that are not referenced as `supportedBy` or `inContextOf`. 
+
+Each level in the rendered graph is called rank. 
+The elements on each rank are sorted lexicographically before being placed on that rank. 
+Then, starting with the first element on the current rank, the elements of the next rank are identified.
+An element is only ranked if all elements referencing it are already placed.
+Finally, the `inContextOf` elements are placed on that rank.
 
 ## Vertical placement
 
-To influence the rendered image, you can add an identifier to a GSN element with the `level` attribute. 
-All elements with the same identifier for `level` will now show up on the same vertical level. 
+To influence the vertical placement i.e., the rank, of an element in the rendered graph, 
+you can use `rankIncrement` for a node. 
+A rank increment is a positive number to push an element this amount of ranks downwards.
+It is not possible to decrease the rank that would be assigned by the above algorithm.
 
-This is especially useful, if e.g., two goals or strategies are on the same logical level, 
+Incrementing the rank is especially useful, if e.g., two goals or strategies are on the same logical level, 
 but have a different "depth" in the argumentation (i.e. a different number of goals or strategies in their path to the root goal).
 
-See the [example](examples/example.gsn.yaml) for usage. The strategies S1 and S2 are on the same level.
-
-It is recommended to use `level` only for goals, since related contexts, 
-justifications and assumptions are automatically put on the same level.
+See the [example](examples/example.gsn.yaml) for usage. The strategy S2 has an incremented rank.
 
 ## Horizontal placement
 
-The order of the GSN elements on the same horizontal rank can be influenced by their ID.
-The elements are sorted lexicographically. Thus, a goal `G1` if placed on the same vertical level is placed before `G2`, 
-if they have the same depth of their supporting arguments.
+The order of the GSN elements on the same rank is in the first place defined by their ID.
+The elements are sorted lexicographically. Thus, a goal `G1` if placed on the same rank is placed left to `G2`.
 
-There can be situations (e.g. a n:m relation between goals and solutions) that lead to weird looking graphs.
-You may even encounter the following message `Rendering a diagram took too many iterations. See README.md for hints how to solve this situation.`. In such cases, please file an issue on GitHub, so I can see how the algorithm can be improved.
+You can use `horizontalIndex` to reorder elements after lexicographical sorting. 
+The index can be modified by giving a relative or absolute index.
 
+In the following example, G1 and G2 are placed on the same rank. 
+However, G2 is placed left of G1 because of the relative horizontal index.
+
+```yaml
+G1:
+    text: Goal 1
+    undeveloped: true
+
+G2: 
+    text: Goal 2
+    undeveloped: true
+    horizontalIndex:
+         relative: -1
+```
+
+Please see Sn2 and Sn4 in [example](examples/example.gsn.yaml) for how to use the absolute index. 
+
+Typical use-cases for defining an absolute index are putting elements at the beginning or the end within a rank.
+Please see the following example for how to use an absolute index. 
+
+```yaml
+G1:
+    text: Goal 1
+    undeveloped: true
+    horizontalIndex:
+        absolute: last
+
+G2: 
+    text: Goal 2
+    undeveloped: true
+    horizontalIndex:
+        absolute: 0
+```
+
+Please note that giving the horizontal index for G1 and G2 is redundant. 
+
+The absolute index is zero-based. You can use `last` to move elements 
+to the very right of the graph.
+
+The horizontal index can also be applied to `inContextOf` elements. 
+You would typically use an absolute index with either `0` or `last` to place them
+either left or right of the element they are referenced from.
+
+## Troubleshooting
+
+There can be situations (e.g. a n:m relation between goals and solutions) 
+that lead to weird looking graphs.
+You may even encounter the following message 
+`Rendering a diagram took too many iterations. See README.md for hints how to solve this situation.`. 
+In such cases, please use the mechanisms described above to support 
+the algorithm in ranking the elements more sensibly.
+
+If you have trouble doing so, please feel free to create an issue or 
+start a discussion on the GitHub site. 
+The issue template on GitHub shows you how to remove intellectual property
+ from the files that I would ask for then.

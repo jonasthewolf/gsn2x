@@ -155,7 +155,7 @@ fn check_unreachable(diag: &mut Diagnostics, graph: &DirectedGraph<GsnNode, GsnE
 ///
 /// Checks if the layers handed in via command line parameters
 /// are actually used at at least one node.
-/// Also checks if no reserved words are used, like 'level' or 'text'
+/// Also checks if no reserved words are used, like 'rankIncrement' or 'text'
 ///
 pub fn check_layers(diag: &mut Diagnostics, nodes: &BTreeMap<String, GsnNode>, layers: &[&str]) {
     let reserved_words = [
@@ -164,7 +164,6 @@ pub fn check_layers(diag: &mut Diagnostics, nodes: &BTreeMap<String, GsnNode>, l
         "supportedBy",
         "classes",
         "url",
-        "level",
         "undeveloped",
         "nodeType",
         "rankIncrement",
@@ -588,28 +587,6 @@ mod test {
         assert_eq!(d.errors, 1);
         assert_eq!(d.warnings, 1);
     }
-
-    // #[test]
-    // fn level_only_once() {
-    //     let mut d = Diagnostics::default();
-    //     let mut nodes = BTreeMap::<String, GsnNode>::new();
-    //     nodes.insert(
-    //         "G1".to_owned(),
-    //         GsnNode {
-    //             undeveloped: Some(true),
-    //             level: Some("test".to_owned()),
-    //             node_type: Some(GsnNodeType::Goal),
-    //             ..Default::default()
-    //         },
-    //     );
-    //     check_nodes(&mut d, &nodes, &[]);
-    //     assert_eq!(d.messages.len(), 1);
-    //     assert_eq!(d.messages[0].module, None);
-    //     assert_eq!(d.messages[0].diag_type, DiagType::Warning);
-    //     assert_eq!(d.messages[0].msg, "C05: Level test is only used once.");
-    //     assert_eq!(d.errors, 0);
-    //     assert_eq!(d.warnings, 1);
-    // }
 
     #[test]
     fn empty_document() {
