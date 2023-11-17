@@ -2,28 +2,23 @@ use std::{cell::RefCell, collections::BTreeMap};
 
 use anyhow::Context;
 use svg::{
-    node::element::{
-        path::Data, Group, Marker, Path, Polyline, Rectangle, Style, Symbol, Text, Title,
-    },
+    node::element::{Group, Marker, Polyline, Rectangle, Style, Symbol, Text, Title},
     Document, Node,
 };
 
 use crate::dirgraph::DirectedGraph;
 
 use super::{
-    edges::{EdgeType, SingleEdge},
+    edges::{render_edge, EdgeType},
     escape_node_id,
-    nodes::{Port, SvgNode},
-    util::font::FontInfo,
+    layout::{Cell, Margin},
+    nodes::SvgNode,
+    util::{font::FontInfo, point2d::Point2D},
     DirGraph,
 };
 
-const MARKER_HEIGHT: u32 = 10;
-
 ///
-///
-///
-///
+/// Render the complete graph
 ///
 pub(super) fn render_graph(
     render_graph: &DirGraph,
@@ -35,8 +30,6 @@ pub(super) fn render_graph(
     let mut width = width;
     let mut height = height;
     let mut document = Document::new();
-    let nodes = graph.get_nodes();
-    let edges = graph.get_edges();
     document = setup_basics(document);
     document = setup_stylesheets(
         document,
@@ -44,9 +37,9 @@ pub(super) fn render_graph(
         render_graph.embed_stylesheets,
     );
     // Draw nodes
-    render_nodes(&mut document, render_graph, nodes, ranks);
+    render_nodes(&mut document, graph, render_graph, ranks);
     // Draw edges
-    render_edges(&mut document, render_graph, nodes, edges);
+    render_edges(&mut document, graph, render_graph, ranks);
     // Order is important here. render_legend may modify self.width and self.height
     render_legend(&mut document, render_graph, &mut width, &mut height);
     document = document.set("viewBox", (0u32, 0u32, width, height));
@@ -58,130 +51,89 @@ pub(super) fn render_graph(
 ///
 fn render_edges(
     document: &mut Document,
+    graph: &DirectedGraph<'_, RefCell<SvgNode>, EdgeType>,
     render_graph: &DirGraph,
-    nodes: &BTreeMap<String, RefCell<SvgNode>>,
-    edges: &BTreeMap<String, Vec<(String, EdgeType)>>,
+    ranks: &[Vec<Vec<&str>>],
 ) {
+    let bounding_boxes = ranks
+        .iter()
+        .map(|rank| get_bounding_boxes_in_rank(graph.get_nodes(), rank, &render_graph.margin))
+        .collect::<Vec<_>>();
+
+    let edges = graph.get_edges();
     for (source, targets) in edges {
         for (target, edge_type) in targets {
-            let s = nodes.get(source).unwrap().borrow();
-            let t = nodes.get(target).unwrap().borrow();
-            let (marker_start_height, marker_end_height, support_distance) = match edge_type {
-                EdgeType::OneWay(_) => (0i32, MARKER_HEIGHT as i32, 3i32 * MARKER_HEIGHT as i32),
-                EdgeType::TwoWay(_) => (
-                    MARKER_HEIGHT as i32,
-                    MARKER_HEIGHT as i32,
-                    3i32 * MARKER_HEIGHT as i32,
-                ),
-            };
-            let s_pos = s.get_position();
-            let t_pos = t.get_position();
-            let (start, start_sup, end, end_sup) =
-                if s_pos.y + s.get_height() / 2 < t_pos.y - t.get_height() / 2 {
-                    (
-                        s.get_coordinates(&Port::South)
-                            .move_relative(0, marker_start_height),
-                        s.get_coordinates(&Port::South)
-                            .move_relative(0, support_distance),
-                        t.get_coordinates(&Port::North)
-                            .move_relative(0, -marker_end_height),
-                        t.get_coordinates(&Port::North)
-                            .move_relative(0, -support_distance),
-                    )
-                } else if s_pos.y - s.get_height() / 2 - render_graph.margin.top
-                    > t_pos.y + t.get_height() / 2
-                {
-                    (
-                        s.get_coordinates(&Port::North)
-                            .move_relative(0, -marker_start_height),
-                        s.get_coordinates(&Port::North)
-                            .move_relative(0, -support_distance),
-                        t.get_coordinates(&Port::South)
-                            .move_relative(0, marker_end_height),
-                        t.get_coordinates(&Port::South)
-                            .move_relative(0, support_distance),
-                    )
-                } else if s_pos.x - s.get_width() / 2 > t_pos.x + t.get_width() / 2 {
-                    (
-                        s.get_coordinates(&Port::West)
-                            .move_relative(-marker_start_height, 0),
-                        s.get_coordinates(&Port::West),
-                        t.get_coordinates(&Port::East)
-                            .move_relative(marker_end_height, 0),
-                        t.get_coordinates(&Port::East)
-                            .move_relative(support_distance, 0),
-                    )
-                } else {
-                    (
-                        s.get_coordinates(&Port::East)
-                            .move_relative(marker_start_height, 0),
-                        s.get_coordinates(&Port::East),
-                        t.get_coordinates(&Port::West)
-                            .move_relative(-marker_end_height, 0),
-                        t.get_coordinates(&Port::West)
-                            .move_relative(-support_distance, 0),
-                    )
-                };
-            let parameters = (start_sup.x, start_sup.y, end_sup.x, end_sup.y, end.x, end.y);
-            let data = Data::new()
-                .move_to((start.x, start.y))
-                .cubic_curve_to(parameters);
-            let arrow_end_id = match &edge_type {
-                EdgeType::OneWay(SingleEdge::InContextOf)
-                | EdgeType::TwoWay((_, SingleEdge::InContextOf)) => Some("url(#incontextof_arrow)"),
-                EdgeType::OneWay(SingleEdge::SupportedBy)
-                | EdgeType::TwoWay((_, SingleEdge::SupportedBy)) => Some("url(#supportedby_arrow)"),
-                EdgeType::OneWay(SingleEdge::Composite)
-                | EdgeType::TwoWay((_, SingleEdge::Composite)) => Some("url(#composite_arrow)"),
-            };
-            let arrow_start_id = match &edge_type {
-                EdgeType::TwoWay((SingleEdge::InContextOf, _)) => Some("url(#incontextof_arrow)"),
-                EdgeType::TwoWay((SingleEdge::SupportedBy, _)) => Some("url(#supportedby_arrow)"),
-                EdgeType::TwoWay((SingleEdge::Composite, _)) => Some("url(#composite_arrow)"),
-                _ => None,
-            };
-            let mut classes = "gsnedge".to_string();
-            match edge_type {
-                EdgeType::OneWay(SingleEdge::InContextOf)
-                | EdgeType::TwoWay((_, SingleEdge::InContextOf))
-                | EdgeType::TwoWay((SingleEdge::InContextOf, _)) => classes.push_str(" gsninctxt"),
-                EdgeType::OneWay(SingleEdge::SupportedBy)
-                | EdgeType::TwoWay((_, SingleEdge::SupportedBy))
-                | EdgeType::TwoWay((SingleEdge::SupportedBy, _)) => classes.push_str(" gsninspby"),
-                EdgeType::OneWay(SingleEdge::Composite)
-                | EdgeType::TwoWay((_, SingleEdge::Composite)) => {
-                    // Already covered by all other matches
-                    //| EdgeType::TwoWay((SingleEdge::Composite, _))
-                    classes.push_str(" gsncomposite")
-                }
-            };
-            let mut e = Path::new()
-                .set("d", data)
-                .set("fill", "none")
-                .set("stroke", "black")
-                .set("stroke-width", 1u32);
-            if let Some(arrow_id) = arrow_end_id {
-                e = e.set("marker-end", arrow_id);
-            }
-            if let Some(arrow_id) = arrow_start_id {
-                e = e.set("marker-start", arrow_id);
-            }
-            e = e.set("class", classes);
-            document.append(e);
+            let edge = render_edge(
+                graph,
+                ranks,
+                &bounding_boxes,
+                source,
+                target,
+                edge_type,
+                &render_graph.margin,
+            );
+            document.append(edge);
         }
     }
 }
 
+pub(crate) const TOP_LEFT_CORNER: usize = 0;
+pub(crate) const TOP_RIGHT_CORNER: usize = 1;
+pub(crate) const BOTTOM_RIGHT_CORNER: usize = 2;
+pub(crate) const BOTTOM_LEFT_CORNER: usize = 3;
+
 ///
+/// Get the full spaces for a given rank (incl. margin).
+/// A vector of the coordinates of the bounding boxes is returned.
 ///
+fn get_bounding_boxes_in_rank(
+    nodes: &BTreeMap<String, RefCell<SvgNode>>,
+    rank: &Vec<Vec<&str>>,
+    margin: &Margin,
+) -> Vec<[Point2D; 4]> {
+    let mut boxes = vec![];
+    for cell in rank {
+        let x = cell.get_x(nodes);
+        let y = cell.get_center_y(nodes);
+        let width = cell.get_max_width(nodes);
+        let height = cell.get_height(nodes, margin);
+        let corners = [
+            Point2D {
+                // Top left
+                x: x - width / 2 - margin.left,
+                y: y - height / 2 - margin.top,
+            },
+            Point2D {
+                // Top right
+                x: x + width / 2 + margin.right,
+                y: y - height / 2 - margin.top,
+            },
+            Point2D {
+                // Bottom right
+                x: x + width / 2 + margin.right,
+                y: y + height / 2 + margin.bottom,
+            },
+            Point2D {
+                // Bottom left
+                x: x - width / 2 - margin.left,
+                y: y + height / 2 + margin.bottom,
+            },
+        ];
+        boxes.push(corners);
+    }
+    boxes
+}
+
 ///
+/// Render nodes
 ///
 fn render_nodes(
     document: &mut Document,
+    graph: &DirectedGraph<'_, RefCell<SvgNode>, EdgeType>,
     render_graph: &DirGraph,
-    nodes: &BTreeMap<String, RefCell<SvgNode>>,
     ranks: &Vec<Vec<Vec<&str>>>,
 ) {
+    let nodes = graph.get_nodes();
     // Draw the nodes
     for rank in ranks {
         for np in rank {
@@ -191,25 +143,10 @@ fn render_nodes(
             }
         }
     }
-    // Calculate size of document
-    // let width = ranks
-    //     .iter()
-    //     .map(|rank| {
-    //         let n = nodes.get(rank.iter().last().unwrap().first().unwrap().to_owned()).unwrap();
-    //         n.get_x(&nodes) + n.get_max_width(&nodes)
-    //     })
-    //     .max()
-    //     .unwrap_or(0);
-    // let height = ranks
-    //     .iter()
-    //     .map(|rank| margin.top + self.get_max_height(rank) + margin.bottom)
-    //     .sum();
-    // (width, height)
 }
 
 ///
-///
-///
+/// Render the optional legend
 ///
 fn render_legend(
     document: &mut Document,
@@ -255,9 +192,7 @@ fn render_legend(
 }
 
 ///
-///
-///
-///
+/// Setup the basic ingredients of the SVG
 ///
 fn setup_basics(mut document: Document) -> Document {
     let supportedby_polyline = Polyline::new()
@@ -343,8 +278,7 @@ fn setup_basics(mut document: Document) -> Document {
 }
 
 ///
-///
-///
+/// Setup stylesheets in SVG
 ///
 fn setup_stylesheets(
     mut document: Document,
@@ -376,7 +310,7 @@ fn setup_stylesheets(
 }
 
 ///
-///
+/// Crate a SVG group
 ///
 pub(crate) fn create_group(id: &str, classes: &[String]) -> Group {
     Group::new()
@@ -385,8 +319,7 @@ pub(crate) fn create_group(id: &str, classes: &[String]) -> Group {
 }
 
 ///
-///
-///
+/// Create a SVG text element
 ///
 pub(crate) fn create_text(text: &str, x: i32, y: i32, font: &FontInfo, bold: bool) -> Text {
     let mut text = Text::new()

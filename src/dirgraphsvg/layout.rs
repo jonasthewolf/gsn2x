@@ -32,7 +32,7 @@ impl Default for Margin {
 ///
 /// A Cell is a list of node IDs
 ///
-trait Cell {
+pub(crate) trait Cell {
     ///
     /// Get the maximum width of all nodes within the cell
     ///
@@ -44,6 +44,11 @@ trait Cell {
     fn get_x(&self, nodes: &BTreeMap<String, RefCell<SvgNode>>) -> i32;
 
     ///
+    /// Get the center y coordinate of the cell
+    ///
+    fn get_center_y(&self, nodes: &BTreeMap<String, RefCell<SvgNode>>) -> i32;
+
+    ///
     /// Set the x coordinates of all nodes in the cell
     ///
     fn set_position(
@@ -52,6 +57,11 @@ trait Cell {
         margin: &Margin,
         pos: Point2D,
     );
+
+    ///
+    /// Get the height of a cell, including inner margins
+    ///
+    fn get_height(&self, nodes: &BTreeMap<String, RefCell<SvgNode>>, margin: &Margin) -> i32;
 }
 
 impl Cell for Vec<&str> {
@@ -72,6 +82,17 @@ impl Cell for Vec<&str> {
     fn get_x(&self, nodes: &BTreeMap<String, RefCell<SvgNode>>) -> i32 {
         let n = nodes.get(self.first().unwrap().to_owned()).unwrap(); // unwraps ok, since nodes must exist.
         n.borrow().get_position().x
+    }
+
+    ///
+    ///
+    ///
+    fn get_center_y(&self, nodes: &BTreeMap<String, RefCell<SvgNode>>) -> i32 {
+        (self
+            .iter()
+            .map(|&n| nodes.get(n).unwrap().borrow().get_position().y as f64)
+            .sum::<f64>()
+            / self.len() as f64) as i32
     }
 
     ///
@@ -98,6 +119,17 @@ impl Cell for Vec<&str> {
             });
             y_n += h + margin.top + margin.bottom;
         }
+    }
+
+    ///
+    ///
+    ///
+    fn get_height(&self, nodes: &BTreeMap<String, RefCell<SvgNode>>, margin: &Margin) -> i32 {
+        self.iter()
+            .filter_map(|&x| nodes.get(x))
+            .map(|n| n.borrow().get_height())
+            .sum::<i32>()
+            + (margin.top + margin.bottom) * (self.len() - 1) as i32
     }
 }
 
@@ -187,13 +219,7 @@ fn get_max_height(
     rank: &[Vec<&str>],
 ) -> i32 {
     rank.iter()
-        .map(|id| {
-            id.iter()
-                .filter_map(|&x| nodes.get(x))
-                .map(|n| n.borrow().get_height())
-                .sum::<i32>()
-                + (margin.top + margin.bottom) * (id.len() - 1) as i32
-        })
+        .map(|cell| cell.get_height(nodes, margin))
         .max()
         .unwrap()
 }

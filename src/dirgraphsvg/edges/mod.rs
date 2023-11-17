@@ -1,6 +1,19 @@
-use std::ops::BitOr;
+use std::{cell::RefCell, ops::BitOr};
 
-use crate::gsn::GsnEdgeType;
+use svg::node::element::{path::Data, Path};
+
+use crate::{
+    dirgraph::DirectedGraph,
+    dirgraphsvg::render::{BOTTOM_RIGHT_CORNER, TOP_LEFT_CORNER},
+    gsn::GsnEdgeType,
+};
+
+use super::{
+    layout::Margin,
+    nodes::{Port, SvgNode},
+    render::{BOTTOM_LEFT_CORNER, TOP_RIGHT_CORNER},
+    util::point2d::Point2D,
+};
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum SingleEdge {
@@ -47,6 +60,317 @@ impl From<&GsnEdgeType> for EdgeType {
             GsnEdgeType::InContextOf => Self::OneWay(SingleEdge::InContextOf),
         }
     }
+}
+
+///
+/// Height of the arrow
+///
+const MARKER_HEIGHT: u32 = 10;
+
+///
+/// Render a single edge
+///
+pub(super) fn render_edge(
+    graph: &DirectedGraph<'_, RefCell<SvgNode>, EdgeType>,
+    ranks: &[Vec<Vec<&str>>],
+    bounding_boxes: &[Vec<[Point2D; 4]>],
+    source: &str,
+    target: &str,
+    edge_type: &EdgeType,
+    margin: &Margin,
+) -> Path {
+    let s = graph.get_nodes().get(source).unwrap().borrow();
+    let s_rank = ranks
+        .iter()
+        .position(|x| x.iter().flatten().any(|&v| v == source))
+        .unwrap();
+    let t = graph.get_nodes().get(target).unwrap().borrow();
+    let t_rank = ranks
+        .iter()
+        .position(|x| x.iter().flatten().any(|&v| v == target))
+        .unwrap();
+    let s_pos = s.get_position();
+    let t_pos = t.get_position();
+
+    let (marker_start_height, marker_end_height, support_distance) = match edge_type {
+        EdgeType::OneWay(_) => (0i32, MARKER_HEIGHT as i32, 3i32 * MARKER_HEIGHT as i32),
+        EdgeType::TwoWay(_) => (
+            MARKER_HEIGHT as i32,
+            MARKER_HEIGHT as i32,
+            3i32 * MARKER_HEIGHT as i32,
+        ),
+    };
+
+    let (start, start_sup, end, end_sup) = get_start_and_end_points(
+        &s_pos,
+        s,
+        &t_pos,
+        t,
+        marker_start_height,
+        support_distance,
+        marker_end_height,
+        margin,
+    );
+    let mut curve_points = vec![(start, start_sup)];
+    add_supporting_points(
+        &mut curve_points,
+        bounding_boxes,
+        t_rank,
+        s_rank,
+        &s_pos,
+        &t_pos,
+        margin,
+        support_distance
+    );
+    curve_points.push((end, end_sup));
+
+    let data = create_path_data_for_points(&curve_points);
+    let arrow_end_id = match &edge_type {
+        EdgeType::OneWay(SingleEdge::InContextOf)
+        | EdgeType::TwoWay((_, SingleEdge::InContextOf)) => Some("url(#incontextof_arrow)"),
+        EdgeType::OneWay(SingleEdge::SupportedBy)
+        | EdgeType::TwoWay((_, SingleEdge::SupportedBy)) => Some("url(#supportedby_arrow)"),
+        EdgeType::OneWay(SingleEdge::Composite) | EdgeType::TwoWay((_, SingleEdge::Composite)) => {
+            Some("url(#composite_arrow)")
+        }
+    };
+    let arrow_start_id = match &edge_type {
+        EdgeType::TwoWay((SingleEdge::InContextOf, _)) => Some("url(#incontextof_arrow)"),
+        EdgeType::TwoWay((SingleEdge::SupportedBy, _)) => Some("url(#supportedby_arrow)"),
+        EdgeType::TwoWay((SingleEdge::Composite, _)) => Some("url(#composite_arrow)"),
+        _ => None,
+    };
+    let mut classes = "gsnedge".to_string();
+    match edge_type {
+        EdgeType::OneWay(SingleEdge::InContextOf)
+        | EdgeType::TwoWay((_, SingleEdge::InContextOf))
+        | EdgeType::TwoWay((SingleEdge::InContextOf, _)) => classes.push_str(" gsninctxt"),
+        EdgeType::OneWay(SingleEdge::SupportedBy)
+        | EdgeType::TwoWay((_, SingleEdge::SupportedBy))
+        | EdgeType::TwoWay((SingleEdge::SupportedBy, _)) => classes.push_str(" gsninspby"),
+        EdgeType::OneWay(SingleEdge::Composite) | EdgeType::TwoWay((_, SingleEdge::Composite)) => {
+            // Already covered by all other matches
+            //| EdgeType::TwoWay((SingleEdge::Composite, _))
+            classes.push_str(" gsncomposite")
+        }
+    };
+    let mut e = Path::new()
+        .set("d", data)
+        .set("fill", "none")
+        .set("stroke", "black")
+        .set("stroke-width", 1u32);
+    if let Some(arrow_id) = arrow_end_id {
+        e = e.set("marker-end", arrow_id);
+    }
+    if let Some(arrow_id) = arrow_start_id {
+        e = e.set("marker-start", arrow_id);
+    }
+    e = e.set("class", classes);
+    e
+}
+
+///
+///
+///
+fn create_path_data_for_points(curve_points: &Vec<(Point2D, Point2D)>) -> Data {
+    let mut data = Data::new().move_to((curve_points[0].0.x, curve_points[0].0.y));
+    for points in curve_points.windows(2) {
+        let parameters = vec![
+            points[0].1.x as f32, // start supporting point
+            points[0].1.y as f32,
+            points[1].1.x as f32, // end supporting point
+            points[1].1.y as f32,
+            points[1].0.x as f32, // end point
+            points[1].0.y as f32,
+        ];
+
+        data = data
+            .cubic_curve_to(parameters)
+    }
+    data
+}
+
+///
+///
+///
+fn add_supporting_points(
+    curve_points: &mut Vec<(Point2D, Point2D)>,
+    bounding_boxes: &[Vec<[Point2D; 4]>],
+    t_rank: usize,
+    s_rank: usize,
+    s_pos: &Point2D,
+    t_pos: &Point2D,
+    margin: &Margin,
+    support_distance: i32,
+) {
+    // If a rank is skipped, test if we hit anything.
+    // If not, everything is fine. If so, we need to add supporting points to the curve.
+    // The supporting point is closest to its predecessor point not hitting anything.
+    // Y is the median of the ranks y positions.
+    // This way we get one supporting point for each skipped rank.
+    for bboxes in bounding_boxes.iter().take(t_rank).skip(s_rank + 1) {
+        // println!("rank skip {source} {s_rank} {target} {t_rank}");
+        if bboxes
+            .iter()
+            .any(|bbox| is_line_intersecting_with_box(s_pos, t_pos, bbox))
+        {
+            let first_in_rank = first_free_center_point(bboxes.first().unwrap());
+            let last_in_rank = last_free_center_point(bboxes.last().unwrap(), margin);
+            let mut boxes = vec![first_in_rank];
+            boxes.append(&mut bboxes.iter().cloned().collect());
+            boxes.push(last_in_rank);
+            let last_point = curve_points.last().unwrap(); // unwrap ok, since start point is added before first call to this function.
+            let best_free_point = boxes
+                .windows(2)
+                .flat_map(|window| get_potential_supporting_points(window))
+                .min_by_key(|p| distance(&p, &last_point.0) + distance(&p, t_pos))
+                .unwrap();
+            let supporting_point = if curve_points.len() > 0 {Point2D {
+                x: best_free_point.x,
+                y: best_free_point.y-support_distance,
+            } } else {
+                best_free_point.clone()
+            };
+            curve_points.push((best_free_point, supporting_point));
+        }
+    }
+}
+
+///
+/// Get three points to choose from for supporting point
+/// 
+fn get_potential_supporting_points(window: &[[Point2D; 4]]) -> Vec<Point2D> {
+    let y = (window[0][TOP_RIGHT_CORNER].y
+        + window[0][BOTTOM_RIGHT_CORNER].y
+        + window[1][TOP_LEFT_CORNER].y
+        + window[1][BOTTOM_LEFT_CORNER].y)
+        / 4;
+    vec![Point2D {
+        x: window[0][TOP_RIGHT_CORNER].x,
+        y
+    },
+    Point2D {
+        x: (window[0][TOP_RIGHT_CORNER].x + window[1][TOP_LEFT_CORNER].x) / 2,
+        y
+    },Point2D {
+        x: window[1][TOP_LEFT_CORNER].x,
+        y
+    }
+    ]
+}
+
+///
+///
+///
+fn first_free_center_point(bbox: &[Point2D; 4]) -> [Point2D; 4] {
+    let p = Point2D {
+        x: 0,
+        y: (bbox[TOP_LEFT_CORNER].y + bbox[BOTTOM_LEFT_CORNER].y) / 2,
+    };
+    [p.clone(), p.clone(), p.clone(), p]
+}
+
+///
+///
+///
+fn last_free_center_point(bbox: &[Point2D; 4], margin: &Margin) -> [Point2D; 4] {
+    let p = Point2D {
+        x: bbox[TOP_RIGHT_CORNER].x + margin.right,
+        y: (bbox[TOP_RIGHT_CORNER].y + bbox[BOTTOM_RIGHT_CORNER].y) / 2,
+    };
+    [p.clone(), p.clone(), p.clone(), p]
+}
+
+///
+///
+///
+///
+fn get_start_and_end_points(
+    s_pos: &Point2D,
+    s: std::cell::Ref<'_, SvgNode>,
+    t_pos: &Point2D,
+    t: std::cell::Ref<'_, SvgNode>,
+    marker_start_height: i32,
+    support_distance: i32,
+    marker_end_height: i32,
+    margin: &Margin,
+) -> (Point2D, Point2D, Point2D, Point2D) {
+    let (start, start_sup, end, end_sup) =
+        if s_pos.y + s.get_height() / 2 < t_pos.y - t.get_height() / 2 {
+            (
+                s.get_coordinates(&Port::South)
+                    .move_relative(0, marker_start_height),
+                s.get_coordinates(&Port::South)
+                    .move_relative(0, support_distance),
+                t.get_coordinates(&Port::North)
+                    .move_relative(0, -marker_end_height),
+                t.get_coordinates(&Port::North)
+                    .move_relative(0, -support_distance),
+            )
+        } else if s_pos.y - s.get_height() / 2 - margin.top > t_pos.y + t.get_height() / 2 {
+            (
+                s.get_coordinates(&Port::North)
+                    .move_relative(0, -marker_start_height),
+                s.get_coordinates(&Port::North)
+                    .move_relative(0, -support_distance),
+                t.get_coordinates(&Port::South)
+                    .move_relative(0, marker_end_height),
+                t.get_coordinates(&Port::South)
+                    .move_relative(0, support_distance),
+            )
+        } else if s_pos.x - s.get_width() / 2 > t_pos.x + t.get_width() / 2 {
+            (
+                s.get_coordinates(&Port::West)
+                    .move_relative(-marker_start_height, 0),
+                s.get_coordinates(&Port::West)
+                    .move_relative(-support_distance, 0),
+                t.get_coordinates(&Port::East)
+                    .move_relative(marker_end_height, 0),
+                t.get_coordinates(&Port::East)
+                    .move_relative(support_distance, 0),
+            )
+        } else {
+            (
+                s.get_coordinates(&Port::East)
+                    .move_relative(marker_start_height, 0),
+                s.get_coordinates(&Port::East)
+                    .move_relative(support_distance, 0),
+                t.get_coordinates(&Port::West)
+                    .move_relative(-marker_end_height, 0),
+                t.get_coordinates(&Port::West)
+                    .move_relative(-support_distance, 0),
+            )
+        };
+    (start, start_sup, end, end_sup)
+}
+
+///
+///
+/// Algorithm from https://stackoverflow.com/a/293052/2516756
+///
+fn is_line_intersecting_with_box(start: &Point2D, end: &Point2D, bbox: &[Point2D; 4]) -> bool {
+    let line = |x: i32, y: i32| -> i32 {
+        ((end.y - start.y) as f64 * x as f64
+            + (start.x - end.x) as f64 * y as f64
+            + (end.x * start.y - start.x * end.y) as f64) as i32
+    };
+    if bbox.iter().all(|bb| line(bb.x, bb.y) < 0) || bbox.iter().all(|bb| line(bb.x, bb.y) > 0) {
+        false
+    } else {
+        !((start.x > bbox[TOP_RIGHT_CORNER].x && end.x > bbox[TOP_RIGHT_CORNER].x)
+            || (start.x < bbox[BOTTOM_LEFT_CORNER].x && end.x < bbox[BOTTOM_LEFT_CORNER].x)
+            || (start.y > bbox[TOP_RIGHT_CORNER].y && end.y > bbox[TOP_RIGHT_CORNER].y)
+            || (start.y < bbox[BOTTOM_LEFT_CORNER].y && end.y < bbox[BOTTOM_LEFT_CORNER].y))
+    }
+}
+
+///
+/// Get the distance between two points
+///
+fn distance(p1: &Point2D, p2: &Point2D) -> i32 {
+    f64::sqrt(
+        (p1.x - p2.x) as f64 * (p1.x - p2.x) as f64 + (p1.y - p2.y) as f64 * (p1.y - p2.y) as f64,
+    ) as i32
 }
 
 #[cfg(test)]
