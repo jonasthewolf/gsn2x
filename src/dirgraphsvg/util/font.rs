@@ -69,11 +69,11 @@ fn get_font(font_name: &str, bold: bool, italic: bool) -> Result<FontVec> {
 ///
 pub fn text_bounding_box(font_info: &FontInfo, text: &str, bold: bool) -> (i32, i32) {
     let kern = if bold {
-        text.chars().count() as i32 * 4
+        text.chars().count() as f64 * 4.0
     } else {
-        (text.chars().count() as f32 * 1.5) as i32
+        text.chars().count() as f64 * 1.5
     };
-    let line_gap = 5;
+    let line_gap = 5.0;
     let font_id = usize::from(bold);
     Layout::default_single_line()
         .calculate_glyphs(
@@ -92,10 +92,11 @@ pub fn text_bounding_box(font_info: &FontInfo, text: &str, bold: bool) -> (i32, 
         .last()
         .map(|g| {
             (
-                g.glyph.position.x as i32 + kern,
-                g.glyph.position.y as i32 + line_gap,
+                g.glyph.position.x as f64 + kern,
+                g.glyph.position.y as f64 + line_gap,
             )
         })
+        .map(|(x,y)| (x as i32, y as i32))
         .unwrap_or((0, 0))
 }
 
