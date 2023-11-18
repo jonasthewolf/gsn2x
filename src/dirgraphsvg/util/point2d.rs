@@ -1,5 +1,8 @@
 use core::fmt::Debug;
-use std::fmt::Display;
+use std::{
+    fmt::Display,
+    ops::{Add, AddAssign, Sub},
+};
 
 ///
 /// Two dimensional point representation
@@ -19,6 +22,35 @@ impl Debug for Point2D {
 impl Display for Point2D {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         f.write_fmt(format_args!("{},{}", self.x, self.y))
+    }
+}
+
+impl AddAssign for Point2D {
+    fn add_assign(&mut self, rhs: Self) {
+        self.x += rhs.x;
+        self.y += rhs.y;
+    }
+}
+
+impl Add<Point2D> for Point2D {
+    type Output = Point2D;
+
+    fn add(self, rhs: Point2D) -> Self::Output {
+        Point2D {
+            x: self.x + rhs.x,
+            y: self.y + rhs.y,
+        }
+    }
+}
+
+impl Sub<Point2D> for Point2D {
+    type Output = Point2D;
+
+    fn sub(self, rhs: Point2D) -> Self::Output {
+        Point2D {
+            x: self.x - rhs.x,
+            y: self.y - rhs.y,
+        }
     }
 }
 

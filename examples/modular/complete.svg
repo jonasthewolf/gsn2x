@@ -118,11 +118,11 @@ Sn1
 Solution 1
 </text>
 </g>
-<path class="gsnedge gsninctxt" d="M194,53 C194,53,184,53,164,53" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M194,53 C164,53,184,53,164,53" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsninspby" d="M246,76 C246,106,246,96,246,116" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninctxt" d="M124,245 C124,245,134,245,154,245" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninctxt" d="M340,245 C340,245,330,245,310,245" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninctxt" d="M500,245 C500,245,510,245,530,245" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M124,245 C154,245,134,245,154,245" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M340,245 C310,245,330,245,310,245" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M500,245 C530,245,510,245,530,245" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsninspby" d="M420,268 C420,298,420,288,420,308" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsninspby" d="M246,172 C246,202,72,189,72,209" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsninspby" d="M246,172 C246,202,420,192,420,212" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>

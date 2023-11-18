@@ -102,9 +102,7 @@ pub(super) fn render_edge(
     };
 
     let (start, start_sup, end, end_sup) = get_start_and_end_points(
-        &s_pos,
         s,
-        &t_pos,
         t,
         marker_start_height,
         support_distance,
@@ -119,8 +117,6 @@ pub(super) fn render_edge(
         s_rank,
         &s_pos,
         &t_pos,
-        margin,
-        support_distance
     );
     curve_points.push((end, end_sup));
 
@@ -172,20 +168,28 @@ pub(super) fn render_edge(
 ///
 ///
 ///
-fn create_path_data_for_points(curve_points: &Vec<(Point2D, Point2D)>) -> Data {
-    let mut data = Data::new().move_to((curve_points[0].0.x, curve_points[0].0.y));
-    for points in curve_points.windows(2) {
+fn create_path_data_for_points(curve_points: &[(Point2D, Point2D)]) -> Data {
+    let parameters = vec![
+        curve_points[0].1.x as f32, // start supporting point
+        curve_points[0].1.y as f32,
+        curve_points[1].1.x as f32, // end supporting point
+        curve_points[1].1.y as f32,
+        curve_points[1].0.x as f32, // end point
+        curve_points[1].0.y as f32,
+    ];
+
+    let mut data = Data::new()
+        .move_to((curve_points[0].0.x, curve_points[0].0.y))
+        .cubic_curve_to(parameters);
+    for point in curve_points.iter().skip(2).take(curve_points.len() - 1) {
         let parameters = vec![
-            points[0].1.x as f32, // start supporting point
-            points[0].1.y as f32,
-            points[1].1.x as f32, // end supporting point
-            points[1].1.y as f32,
-            points[1].0.x as f32, // end point
-            points[1].0.y as f32,
+            point.1.x as f32, // end supporting point
+            point.1.y as f32,
+            point.0.x as f32, // end point
+            point.0.y as f32,
         ];
 
-        data = data
-            .cubic_curve_to(parameters)
+        data = data.smooth_cubic_curve_to(parameters)
     }
     data
 }
@@ -200,8 +204,6 @@ fn add_supporting_points(
     s_rank: usize,
     s_pos: &Point2D,
     t_pos: &Point2D,
-    margin: &Margin,
-    support_distance: i32,
 ) {
     // If a rank is skipped, test if we hit anything.
     // If not, everything is fine. If so, we need to add supporting points to the curve.
@@ -215,22 +217,24 @@ fn add_supporting_points(
             .any(|bbox| is_line_intersecting_with_box(s_pos, t_pos, bbox))
         {
             let first_in_rank = first_free_center_point(bboxes.first().unwrap());
-            let last_in_rank = last_free_center_point(bboxes.last().unwrap(), margin);
+            let last_in_rank = last_free_center_point(bboxes.last().unwrap());
             let mut boxes = vec![first_in_rank];
-            boxes.append(&mut bboxes.iter().cloned().collect());
+            boxes.append(&mut bboxes.to_vec());
             boxes.push(last_in_rank);
             let last_point = curve_points.last().unwrap(); // unwrap ok, since start point is added before first call to this function.
             let best_free_point = boxes
                 .windows(2)
-                .flat_map(|window| get_potential_supporting_points(window))
-                .min_by_key(|p| distance(&p, &last_point.0) + distance(&p, t_pos))
+                .flat_map(get_potential_supporting_points)
+                .min_by_key(|p| distance(p, &last_point.0) + distance(p, t_pos))
                 .unwrap();
-            let supporting_point = if curve_points.len() > 0 {Point2D {
-                x: best_free_point.x,
-                y: best_free_point.y-support_distance,
-            } } else {
-                best_free_point.clone()
+            let supporting_point = if curve_points.len() % 2 == 0 {
+                dbg!(curve_points.len());
+                best_free_point + (last_point.1 - last_point.0)
+            } else {
+                dbg!(curve_points.len());
+                best_free_point - (last_point.1 - last_point.0)
             };
+            dbg!(supporting_point);
             curve_points.push((best_free_point, supporting_point));
         }
     }
@@ -238,24 +242,26 @@ fn add_supporting_points(
 
 ///
 /// Get three points to choose from for supporting point
-/// 
+///
 fn get_potential_supporting_points(window: &[[Point2D; 4]]) -> Vec<Point2D> {
     let y = (window[0][TOP_RIGHT_CORNER].y
         + window[0][BOTTOM_RIGHT_CORNER].y
         + window[1][TOP_LEFT_CORNER].y
         + window[1][BOTTOM_LEFT_CORNER].y)
         / 4;
-    vec![Point2D {
-        x: window[0][TOP_RIGHT_CORNER].x,
-        y
-    },
-    Point2D {
-        x: (window[0][TOP_RIGHT_CORNER].x + window[1][TOP_LEFT_CORNER].x) / 2,
-        y
-    },Point2D {
-        x: window[1][TOP_LEFT_CORNER].x,
-        y
-    }
+    vec![
+        Point2D {
+            x: window[0][TOP_RIGHT_CORNER].x,
+            y,
+        },
+        Point2D {
+            x: (window[0][TOP_RIGHT_CORNER].x + window[1][TOP_LEFT_CORNER].x) / 2,
+            y,
+        },
+        Point2D {
+            x: window[1][TOP_LEFT_CORNER].x,
+            y,
+        },
     ]
 }
 
@@ -267,18 +273,18 @@ fn first_free_center_point(bbox: &[Point2D; 4]) -> [Point2D; 4] {
         x: 0,
         y: (bbox[TOP_LEFT_CORNER].y + bbox[BOTTOM_LEFT_CORNER].y) / 2,
     };
-    [p.clone(), p.clone(), p.clone(), p]
+    [p, p, p, p]
 }
 
 ///
 ///
 ///
-fn last_free_center_point(bbox: &[Point2D; 4], margin: &Margin) -> [Point2D; 4] {
+fn last_free_center_point(bbox: &[Point2D; 4]) -> [Point2D; 4] {
     let p = Point2D {
-        x: bbox[TOP_RIGHT_CORNER].x + margin.right,
+        x: bbox[TOP_RIGHT_CORNER].x + 1,
         y: (bbox[TOP_RIGHT_CORNER].y + bbox[BOTTOM_RIGHT_CORNER].y) / 2,
     };
-    [p.clone(), p.clone(), p.clone(), p]
+    [p, p, p, p]
 }
 
 ///
@@ -286,15 +292,15 @@ fn last_free_center_point(bbox: &[Point2D; 4], margin: &Margin) -> [Point2D; 4] 
 ///
 ///
 fn get_start_and_end_points(
-    s_pos: &Point2D,
     s: std::cell::Ref<'_, SvgNode>,
-    t_pos: &Point2D,
     t: std::cell::Ref<'_, SvgNode>,
     marker_start_height: i32,
     support_distance: i32,
     marker_end_height: i32,
     margin: &Margin,
 ) -> (Point2D, Point2D, Point2D, Point2D) {
+    let s_pos = s.get_position();
+    let t_pos = t.get_position();
     let (start, start_sup, end, end_sup) =
         if s_pos.y + s.get_height() / 2 < t_pos.y - t.get_height() / 2 {
             (
