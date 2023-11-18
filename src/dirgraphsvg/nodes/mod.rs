@@ -94,7 +94,7 @@ impl SvgNode {
         self.height
     }
 
-    pub fn get_coordinates(&self, port: &Port) -> Point2D {
+    pub fn get_coordinates(&self, port: Port) -> Point2D {
         let mut coords = Point2D {
             x: match port {
                 Port::North => self.x,
@@ -110,7 +110,7 @@ impl SvgNode {
             },
         };
         if let NodeType::Box(BoxType::Module) = &self.node_type {
-            if port == &super::Port::North {
+            if port == super::Port::North {
                 coords.y += MODULE_TAB_HEIGHT;
             }
         }

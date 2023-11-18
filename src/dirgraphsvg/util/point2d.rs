@@ -1,7 +1,7 @@
 use core::fmt::Debug;
 use std::{
     fmt::Display,
-    ops::{Add, AddAssign, Sub},
+    ops::{Add, AddAssign, Mul, Sub},
 };
 
 ///
@@ -43,6 +43,17 @@ impl Add<Point2D> for Point2D {
     }
 }
 
+impl Add<(i32, i32)> for Point2D {
+    type Output = Point2D;
+
+    fn add(self, rhs: (i32, i32)) -> Self::Output {
+        Point2D {
+            x: self.x + rhs.0,
+            y: self.y + rhs.1,
+        }
+    }
+}
+
 impl Sub<Point2D> for Point2D {
     type Output = Point2D;
 
@@ -54,26 +65,25 @@ impl Sub<Point2D> for Point2D {
     }
 }
 
-impl Point2D {
-    ///
-    /// Move the point by `x` and `y` relatively.
-    ///
-    pub fn move_relative(&self, x: i32, y: i32) -> Self {
+impl Mul<i32> for Point2D {
+    type Output = Point2D;
+
+    fn mul(self, rhs: i32) -> Self::Output {
         Point2D {
-            x: self.x + x,
-            y: self.y + y,
+            x: self.x * rhs,
+            y: self.y * rhs,
+        }
+    }
+}
+
+impl From<(i32, i32)> for Point2D {
+    fn from(value: (i32, i32)) -> Self {
+        Point2D {
+            x: value.0,
+            y: value.1,
         }
     }
 }
 
 #[cfg(test)]
-mod test {
-    use super::*;
-
-    #[test]
-    fn move_rel() {
-        let p = Point2D { x: 0, y: 0 }.move_relative(5, 3);
-        assert_eq!(p.x, 5);
-        assert_eq!(p.y, 3);
-    }
-}
+mod test {}

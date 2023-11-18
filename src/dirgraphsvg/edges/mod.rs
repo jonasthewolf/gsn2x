@@ -225,22 +225,19 @@ fn add_supporting_points(
             boxes.append(&mut bboxes.to_vec());
             boxes.push(last_in_rank);
             let last_point = curve_points.last().unwrap(); // unwrap ok, since start point is added before first call to this function.
-            let best_free_point = boxes
+            let best_free_points = boxes
                 .windows(2)
-                .flat_map(|window| get_potential_supporting_points(window, t_pos.x))
-                .min_by_key(|p| {
+                .flat_map(|window| {
+                    get_potential_supporting_points(window, t_pos.x, t_rank > s_rank)
+                })
+                .min_by_key(|(p, _)| {
                     (distance(p, &last_point.0) as f64
                         * f64::sqrt((t_pos.x - p.x) as f64 * (t_pos.x - p.x) as f64))
                         as i32
                 })
                 .unwrap();
-            // FIXME: Required?
-            let supporting_point = if curve_points.len() % 2 == 0 {
-                best_free_point + (last_point.1 - last_point.0)
-            } else {
-                best_free_point - (last_point.1 - last_point.0)
-            };
-            curve_points.push((best_free_point, supporting_point));
+
+            curve_points.push(best_free_points);
         }
     }
     // Reverse order if t_rank < s_rank
@@ -254,31 +251,51 @@ fn add_supporting_points(
 ///
 /// Get three points to choose from for supporting point
 ///
-fn get_potential_supporting_points(window: &[[Point2D; 4]], target_x: i32) -> Vec<Point2D> {
+fn get_potential_supporting_points(
+    window: &[[Point2D; 4]],
+    target_x: i32,
+    top_down: bool,
+) -> Vec<(Point2D, Point2D)> {
     let y = (window[0][TOP_RIGHT_CORNER].y
         + window[0][BOTTOM_RIGHT_CORNER].y
         + window[1][TOP_LEFT_CORNER].y
         + window[1][BOTTOM_LEFT_CORNER].y)
         / 4;
+    let supporting_y = if top_down {
+        0.7 * (window[0][TOP_RIGHT_CORNER].y + window[1][TOP_LEFT_CORNER].y) as f64 / 2.0
+    } else {
+        1.2 * (window[0][BOTTOM_RIGHT_CORNER].y + window[1][BOTTOM_LEFT_CORNER].y) as f64 / 2.0
+    } as i32;
 
-    let mut points = vec![
-        Point2D {
-            x: window[0][TOP_RIGHT_CORNER].x,
-            y,
-        },
-        Point2D {
-            x: (window[0][TOP_RIGHT_CORNER].x + window[1][TOP_LEFT_CORNER].x) / 2,
-            y,
-        },
-    ];
+    let mut points: Vec<_> = vec![
+        (
+            (window[0][TOP_RIGHT_CORNER].x, y),
+            (window[0][TOP_RIGHT_CORNER].x, supporting_y),
+        ),
+        (
+            (
+                (window[0][TOP_RIGHT_CORNER].x + window[1][TOP_LEFT_CORNER].x) / 2,
+                y,
+            ),
+            (
+                (window[0][TOP_RIGHT_CORNER].x + window[1][TOP_LEFT_CORNER].x) / 2,
+                supporting_y,
+            ),
+        ),
+    ]
+    .into_iter()
+    .collect();
     if window[0][TOP_RIGHT_CORNER].x < target_x && window[1][TOP_LEFT_CORNER].x > target_x {
-        points.push(Point2D { x: target_x, y });
+        points.push(((target_x, y), (target_x, supporting_y)));
     }
-    points.push(Point2D {
-        x: window[1][TOP_LEFT_CORNER].x,
-        y,
-    });
+    points.push((
+        (window[1][TOP_LEFT_CORNER].x, y),
+        (window[1][TOP_LEFT_CORNER].x, supporting_y),
+    ));
     points
+        .into_iter()
+        .map(|(p1, p2)| (p1.into(), p2.into()))
+        .collect()
 }
 
 ///
@@ -319,47 +336,31 @@ fn get_start_and_end_points(
     let (start, start_sup, end, end_sup) =
         if s_pos.y + s.get_height() / 2 < t_pos.y - t.get_height() / 2 {
             (
-                s.get_coordinates(&Port::South)
-                    .move_relative(0, marker_start_height),
-                s.get_coordinates(&Port::South)
-                    .move_relative(0, support_distance),
-                t.get_coordinates(&Port::North)
-                    .move_relative(0, -marker_end_height),
-                t.get_coordinates(&Port::North)
-                    .move_relative(0, -support_distance),
+                s.get_coordinates(Port::South) + (0, marker_start_height),
+                s.get_coordinates(Port::South) + (0, support_distance),
+                t.get_coordinates(Port::North) + (0, -marker_end_height),
+                t.get_coordinates(Port::North) + (0, -support_distance),
             )
         } else if s_pos.y - s.get_height() / 2 > t_pos.y + t.get_height() / 2 {
             (
-                s.get_coordinates(&Port::North)
-                    .move_relative(0, -marker_start_height),
-                s.get_coordinates(&Port::North)
-                    .move_relative(0, -support_distance),
-                t.get_coordinates(&Port::South)
-                    .move_relative(0, marker_end_height),
-                t.get_coordinates(&Port::South)
-                    .move_relative(0, support_distance),
+                s.get_coordinates(Port::North) + (0, -marker_start_height),
+                s.get_coordinates(Port::North) + (0, -support_distance),
+                t.get_coordinates(Port::South) + (0, marker_end_height),
+                t.get_coordinates(Port::South) + (0, support_distance),
             )
         } else if s_pos.x - s.get_width() / 2 > t_pos.x + t.get_width() / 2 {
             (
-                s.get_coordinates(&Port::West)
-                    .move_relative(-marker_start_height, 0),
-                s.get_coordinates(&Port::West)
-                    .move_relative(-support_distance, 0),
-                t.get_coordinates(&Port::East)
-                    .move_relative(marker_end_height, 0),
-                t.get_coordinates(&Port::East)
-                    .move_relative(support_distance, 0),
+                s.get_coordinates(Port::West) + (-marker_start_height, 0),
+                s.get_coordinates(Port::West) + (-support_distance, 0),
+                t.get_coordinates(Port::East) + (marker_end_height, 0),
+                t.get_coordinates(Port::East) + (support_distance, 0),
             )
         } else {
             (
-                s.get_coordinates(&Port::East)
-                    .move_relative(marker_start_height, 0),
-                s.get_coordinates(&Port::East)
-                    .move_relative(support_distance, 0),
-                t.get_coordinates(&Port::West)
-                    .move_relative(-marker_end_height, 0),
-                t.get_coordinates(&Port::West)
-                    .move_relative(-support_distance, 0),
+                s.get_coordinates(Port::East) + (marker_start_height, 0),
+                s.get_coordinates(Port::East) + (support_distance, 0),
+                t.get_coordinates(Port::West) + (-marker_end_height, 0),
+                t.get_coordinates(Port::West) + (-support_distance, 0),
             )
         };
     (start, start_sup, end, end_sup)
