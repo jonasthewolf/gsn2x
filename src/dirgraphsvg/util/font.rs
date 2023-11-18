@@ -96,7 +96,7 @@ pub fn text_bounding_box(font_info: &FontInfo, text: &str, bold: bool) -> (i32, 
                 g.glyph.position.y as f64 + line_gap,
             )
         })
-        .map(|(x,y)| (x as i32, y as i32))
+        .map(|(x, y)| (x as i32, y as i32))
         .unwrap_or((0, 0))
 }
 

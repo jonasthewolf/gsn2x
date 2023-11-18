@@ -551,26 +551,27 @@ mod test {
 
     use super::DirectedGraph;
 
+    struct NT;
+    struct ET;
+    impl DirectedGraphNodeType<'_> for NT {
+        fn get_forced_level(&self) -> Option<usize> {
+            None
+        }
+        fn get_horizontal_index(&self, _current_index: usize) -> Option<usize> {
+            None
+        }
+    }
+    impl DirectedGraphEdgeType<'_> for ET {
+        fn is_primary_child_edge(&self) -> bool {
+            true
+        }
+        fn is_secondary_child_edge(&self) -> bool {
+            false
+        }
+    }
+
     #[test]
     fn debug_dirgraph() {
-        struct NT;
-        struct ET;
-        impl DirectedGraphNodeType<'_> for NT {
-            fn get_forced_level(&self) -> Option<usize> {
-                None
-            }
-            fn get_horizontal_index(&self, _current_index: usize) -> Option<usize> {
-                None
-            }
-        }
-        impl DirectedGraphEdgeType<'_> for ET {
-            fn is_primary_child_edge(&self) -> bool {
-                true
-            }
-            fn is_secondary_child_edge(&self) -> bool {
-                false
-            }
-        }
         let nodes = BTreeMap::from([("a".to_owned(), NT {}), ("b".to_owned(), NT {})]);
         let edges = BTreeMap::from([(
             "a".to_owned(),
@@ -579,6 +580,30 @@ mod test {
                 EdgeType::OneWay(edges::SingleEdge::SupportedBy),
             )],
         )]);
+        let dg = DirectedGraph::new(&nodes, &edges);
+        let dbg = format!("{:?}", dg);
+        assert_eq!(dbg, "a\nb\n");
+    }
+
+    #[test]
+    fn no_roots() {
+        let nodes = BTreeMap::from([("a".to_owned(), NT {}), ("b".to_owned(), NT {})]);
+        let edges = BTreeMap::from([
+            (
+                "a".to_owned(),
+                vec![(
+                    "b".to_owned(),
+                    EdgeType::OneWay(edges::SingleEdge::SupportedBy),
+                )],
+            ),
+            (
+                "b".to_owned(),
+                vec![(
+                    "a".to_owned(),
+                    EdgeType::OneWay(edges::SingleEdge::SupportedBy),
+                )],
+            ),
+        ]);
         let dg = DirectedGraph::new(&nodes, &edges);
         let dbg = format!("{:?}", dg);
         assert_eq!(dbg, "a\nb\n");
