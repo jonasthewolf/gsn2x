@@ -210,8 +210,11 @@ fn add_supporting_points(
     // The supporting point is closest to its predecessor point not hitting anything.
     // Y is the median of the ranks y positions.
     // This way we get one supporting point for each skipped rank.
-    for bboxes in bounding_boxes.iter().take(t_rank).skip(s_rank + 1) {
-        // println!("rank skip {source} {s_rank} {target} {t_rank}");
+    for bboxes in bounding_boxes
+        .iter()
+        .take(std::cmp::max(s_rank, t_rank))
+        .skip(std::cmp::min(s_rank, t_rank) + 1)
+    {
         if bboxes
             .iter()
             .any(|bbox| is_line_intersecting_with_box(s_pos, t_pos, bbox))
@@ -227,14 +230,12 @@ fn add_supporting_points(
                 .flat_map(get_potential_supporting_points)
                 .min_by_key(|p| distance(p, &last_point.0) + distance(p, t_pos))
                 .unwrap();
+            // FIXME: Required?
             let supporting_point = if curve_points.len() % 2 == 0 {
-                dbg!(curve_points.len());
                 best_free_point + (last_point.1 - last_point.0)
             } else {
-                dbg!(curve_points.len());
                 best_free_point - (last_point.1 - last_point.0)
             };
-            dbg!(supporting_point);
             curve_points.push((best_free_point, supporting_point));
         }
     }
