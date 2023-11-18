@@ -55,7 +55,7 @@ pub(crate) trait Cell {
         &self,
         nodes: &BTreeMap<String, RefCell<SvgNode>>,
         margin: &Margin,
-        pos: Point2D,
+        pos: Point2D<i32>,
     );
 
     ///
@@ -102,7 +102,7 @@ impl Cell for Vec<&str> {
         &self,
         nodes: &BTreeMap<String, RefCell<SvgNode>>,
         margin: &Margin,
-        pos: Point2D,
+        pos: Point2D<i32>,
     ) {
         let max_h = self
             .iter()

@@ -91,7 +91,7 @@ fn get_bounding_boxes_in_rank(
     nodes: &BTreeMap<String, RefCell<SvgNode>>,
     rank: &Vec<Vec<&str>>,
     margin: &Margin,
-) -> Vec<[Point2D; 4]> {
+) -> Vec<[Point2D<i32>; 4]> {
     let mut boxes = vec![];
     for cell in rank {
         let x = cell.get_x(nodes);

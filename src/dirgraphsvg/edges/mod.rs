@@ -72,7 +72,7 @@ const MARKER_HEIGHT: u32 = 10;
 pub(super) fn render_edge(
     graph: &DirectedGraph<'_, RefCell<SvgNode>, EdgeType>,
     ranks: &[Vec<Vec<&str>>],
-    bounding_boxes: &[Vec<[Point2D; 4]>],
+    bounding_boxes: &[Vec<[Point2D<i32>; 4]>],
     source: &str,
     target: &str,
     edge_type: &EdgeType,
@@ -167,7 +167,7 @@ pub(super) fn render_edge(
 ///
 ///
 ///
-fn create_path_data_for_points(curve_points: &[(Point2D, Point2D)]) -> Data {
+fn create_path_data_for_points(curve_points: &[(Point2D<i32>, Point2D<i32>)]) -> Data {
     let parameters = vec![
         curve_points[0].1.x as f32, // start supporting point
         curve_points[0].1.y as f32,
@@ -197,12 +197,12 @@ fn create_path_data_for_points(curve_points: &[(Point2D, Point2D)]) -> Data {
 ///
 ///
 fn add_supporting_points(
-    curve_points: &mut Vec<(Point2D, Point2D)>,
-    bounding_boxes: &[Vec<[Point2D; 4]>],
+    curve_points: &mut Vec<(Point2D<i32>, Point2D<i32>)>,
+    bounding_boxes: &[Vec<[Point2D<i32>; 4]>],
     t_rank: usize,
     s_rank: usize,
-    s_pos: &Point2D,
-    t_pos: &Point2D,
+    s_pos: &Point2D<i32>,
+    t_pos: &Point2D<i32>,
     width: i32,
 ) {
     // If a rank is skipped, test if we hit anything.
@@ -252,10 +252,10 @@ fn add_supporting_points(
 /// Get three points to choose from for supporting point
 ///
 fn get_potential_supporting_points(
-    window: &[[Point2D; 4]],
+    window: &[[Point2D<i32>; 4]],
     target_x: i32,
     top_down: bool,
-) -> Vec<(Point2D, Point2D)> {
+) -> Vec<(Point2D<i32>, Point2D<i32>)> {
     let y = (window[0][TOP_RIGHT_CORNER].y
         + window[0][BOTTOM_RIGHT_CORNER].y
         + window[1][TOP_LEFT_CORNER].y
@@ -301,7 +301,7 @@ fn get_potential_supporting_points(
 ///
 ///
 ///
-fn first_free_center_point(bbox: &[Point2D; 4]) -> [Point2D; 4] {
+fn first_free_center_point(bbox: &[Point2D<i32>; 4]) -> [Point2D<i32>; 4] {
     let p = Point2D {
         x: 0,
         y: (bbox[TOP_LEFT_CORNER].y + bbox[BOTTOM_LEFT_CORNER].y) / 2,
@@ -312,7 +312,7 @@ fn first_free_center_point(bbox: &[Point2D; 4]) -> [Point2D; 4] {
 ///
 ///
 ///
-fn last_free_center_point(bbox: &[Point2D; 4], width: i32) -> [Point2D; 4] {
+fn last_free_center_point(bbox: &[Point2D<i32>; 4], width: i32) -> [Point2D<i32>; 4] {
     let p = Point2D {
         x: width,
         y: (bbox[TOP_RIGHT_CORNER].y + bbox[BOTTOM_RIGHT_CORNER].y) / 2,
@@ -330,7 +330,7 @@ fn get_start_and_end_points(
     marker_start_height: i32,
     support_distance: i32,
     marker_end_height: i32,
-) -> (Point2D, Point2D, Point2D, Point2D) {
+) -> (Point2D<i32>, Point2D<i32>, Point2D<i32>, Point2D<i32>) {
     let s_pos = s.get_position();
     let t_pos = t.get_position();
     let (start, start_sup, end, end_sup) =
@@ -370,7 +370,11 @@ fn get_start_and_end_points(
 ///
 /// Algorithm from https://stackoverflow.com/a/293052/2516756
 ///
-fn is_line_intersecting_with_box(start: &Point2D, end: &Point2D, bbox: &[Point2D; 4]) -> bool {
+fn is_line_intersecting_with_box(
+    start: &Point2D<i32>,
+    end: &Point2D<i32>,
+    bbox: &[Point2D<i32>; 4],
+) -> bool {
     let line = |x: i32, y: i32| -> i32 {
         ((end.y - start.y) as f64 * x as f64
             + (start.x - end.x) as f64 * y as f64
@@ -389,7 +393,7 @@ fn is_line_intersecting_with_box(start: &Point2D, end: &Point2D, bbox: &[Point2D
 ///
 /// Get the distance between two points
 ///
-fn distance(p1: &Point2D, p2: &Point2D) -> i32 {
+fn distance(p1: &Point2D<i32>, p2: &Point2D<i32>) -> i32 {
     f64::sqrt(
         (p1.x - p2.x) as f64 * (p1.x - p2.x) as f64 + (p1.y - p2.y) as f64 * (p1.y - p2.y) as f64,
     ) as i32

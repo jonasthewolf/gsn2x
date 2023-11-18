@@ -94,7 +94,7 @@ impl SvgNode {
         self.height
     }
 
-    pub fn get_coordinates(&self, port: Port) -> Point2D {
+    pub fn get_coordinates(&self, port: Port) -> Point2D<i32> {
         let mut coords = Point2D {
             x: match port {
                 Port::North => self.x,
@@ -118,12 +118,12 @@ impl SvgNode {
         coords
     }
 
-    pub fn set_position(&mut self, pos: &Point2D) {
+    pub fn set_position(&mut self, pos: &Point2D<i32>) {
         self.x = pos.x;
         self.y = pos.y;
     }
 
-    pub fn get_position(&self) -> Point2D {
+    pub fn get_position(&self) -> Point2D<i32> {
         Point2D {
             x: self.x,
             y: self.y,
