@@ -9,7 +9,6 @@ use crate::{
 };
 
 use super::{
-    layout::Margin,
     nodes::{Port, SvgNode},
     render::{BOTTOM_LEFT_CORNER, TOP_RIGHT_CORNER},
     util::point2d::Point2D,
@@ -77,7 +76,7 @@ pub(super) fn render_edge(
     source: &str,
     target: &str,
     edge_type: &EdgeType,
-    margin: &Margin,
+    width: i32,
 ) -> Path {
     let s = graph.get_nodes().get(source).unwrap().borrow();
     let s_rank = ranks
@@ -107,7 +106,6 @@ pub(super) fn render_edge(
         marker_start_height,
         support_distance,
         marker_end_height,
-        margin,
     );
     let mut curve_points = vec![(start, start_sup)];
     add_supporting_points(
@@ -117,6 +115,7 @@ pub(super) fn render_edge(
         s_rank,
         &s_pos,
         &t_pos,
+        width,
     );
     curve_points.push((end, end_sup));
 
@@ -204,6 +203,7 @@ fn add_supporting_points(
     s_rank: usize,
     s_pos: &Point2D,
     t_pos: &Point2D,
+    width: i32,
 ) {
     // If a rank is skipped, test if we hit anything.
     // If not, everything is fine. If so, we need to add supporting points to the curve.
@@ -220,7 +220,7 @@ fn add_supporting_points(
             .any(|bbox| is_line_intersecting_with_box(s_pos, t_pos, bbox))
         {
             let first_in_rank = first_free_center_point(bboxes.first().unwrap());
-            let last_in_rank = last_free_center_point(bboxes.last().unwrap());
+            let last_in_rank = last_free_center_point(bboxes.last().unwrap(), width);
             let mut boxes = vec![first_in_rank];
             boxes.append(&mut bboxes.to_vec());
             boxes.push(last_in_rank);
@@ -280,9 +280,9 @@ fn first_free_center_point(bbox: &[Point2D; 4]) -> [Point2D; 4] {
 ///
 ///
 ///
-fn last_free_center_point(bbox: &[Point2D; 4]) -> [Point2D; 4] {
+fn last_free_center_point(bbox: &[Point2D; 4], width: i32) -> [Point2D; 4] {
     let p = Point2D {
-        x: bbox[TOP_RIGHT_CORNER].x + 1,
+        x: width,
         y: (bbox[TOP_RIGHT_CORNER].y + bbox[BOTTOM_RIGHT_CORNER].y) / 2,
     };
     [p, p, p, p]
@@ -290,7 +290,7 @@ fn last_free_center_point(bbox: &[Point2D; 4]) -> [Point2D; 4] {
 
 ///
 ///
-///
+/// TODO Choose port based on angle between direct connection
 ///
 fn get_start_and_end_points(
     s: std::cell::Ref<'_, SvgNode>,
@@ -298,7 +298,6 @@ fn get_start_and_end_points(
     marker_start_height: i32,
     support_distance: i32,
     marker_end_height: i32,
-    margin: &Margin,
 ) -> (Point2D, Point2D, Point2D, Point2D) {
     let s_pos = s.get_position();
     let t_pos = t.get_position();
@@ -314,7 +313,7 @@ fn get_start_and_end_points(
                 t.get_coordinates(&Port::North)
                     .move_relative(0, -support_distance),
             )
-        } else if s_pos.y - s.get_height() / 2 - margin.top > t_pos.y + t.get_height() / 2 {
+        } else if s_pos.y - s.get_height() / 2 > t_pos.y + t.get_height() / 2 {
             (
                 s.get_coordinates(&Port::North)
                     .move_relative(0, -marker_start_height),

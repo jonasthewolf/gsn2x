@@ -39,7 +39,7 @@ pub(super) fn render_graph(
     // Draw nodes
     render_nodes(&mut document, graph, render_graph, ranks);
     // Draw edges
-    render_edges(&mut document, graph, render_graph, ranks);
+    render_edges(&mut document, graph, render_graph, ranks, width);
     // Order is important here. render_legend may modify self.width and self.height
     render_legend(&mut document, render_graph, &mut width, &mut height);
     document = document.set("viewBox", (0u32, 0u32, width, height));
@@ -54,6 +54,7 @@ fn render_edges(
     graph: &DirectedGraph<'_, RefCell<SvgNode>, EdgeType>,
     render_graph: &DirGraph,
     ranks: &[Vec<Vec<&str>>],
+    width: i32,
 ) {
     let bounding_boxes = ranks
         .iter()
@@ -70,7 +71,7 @@ fn render_edges(
                 source,
                 target,
                 edge_type,
-                &render_graph.margin,
+                width,
             );
             document.append(edge);
         }
