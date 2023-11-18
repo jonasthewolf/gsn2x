@@ -227,8 +227,12 @@ fn add_supporting_points(
             let last_point = curve_points.last().unwrap(); // unwrap ok, since start point is added before first call to this function.
             let best_free_point = boxes
                 .windows(2)
-                .flat_map(get_potential_supporting_points)
-                .min_by_key(|p| distance(p, &last_point.0) + distance(p, t_pos))
+                .flat_map(|window| get_potential_supporting_points(window, t_pos.x))
+                .min_by_key(|p| {
+                    (distance(p, &last_point.0) as f64
+                        * f64::sqrt((t_pos.x - p.x) as f64 * (t_pos.x - p.x) as f64))
+                        as i32
+                })
                 .unwrap();
             // FIXME: Required?
             let supporting_point = if curve_points.len() % 2 == 0 {
@@ -244,13 +248,14 @@ fn add_supporting_points(
 ///
 /// Get three points to choose from for supporting point
 ///
-fn get_potential_supporting_points(window: &[[Point2D; 4]]) -> Vec<Point2D> {
+fn get_potential_supporting_points(window: &[[Point2D; 4]], target_x: i32) -> Vec<Point2D> {
     let y = (window[0][TOP_RIGHT_CORNER].y
         + window[0][BOTTOM_RIGHT_CORNER].y
         + window[1][TOP_LEFT_CORNER].y
         + window[1][BOTTOM_LEFT_CORNER].y)
         / 4;
-    vec![
+
+    let mut points = vec![
         Point2D {
             x: window[0][TOP_RIGHT_CORNER].x,
             y,
@@ -259,11 +264,15 @@ fn get_potential_supporting_points(window: &[[Point2D; 4]]) -> Vec<Point2D> {
             x: (window[0][TOP_RIGHT_CORNER].x + window[1][TOP_LEFT_CORNER].x) / 2,
             y,
         },
-        Point2D {
-            x: window[1][TOP_LEFT_CORNER].x,
-            y,
-        },
-    ]
+    ];
+    if window[0][TOP_RIGHT_CORNER].x < target_x && window[1][TOP_LEFT_CORNER].x > target_x {
+        points.push(Point2D { x: target_x, y });
+    }
+    points.push(Point2D {
+        x: window[1][TOP_LEFT_CORNER].x,
+        y,
+    });
+    points
 }
 
 ///
