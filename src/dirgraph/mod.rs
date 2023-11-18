@@ -329,14 +329,12 @@ where
                 current_rank_nodes
                     .into_iter()
                     .partition(|n| match forced_levels.get_mut(n) {
-                        Some(0) => true,
                         Some(forced_level) if *forced_level > 0 => {
                             // Reduce forced level
                             *forced_level -= 1;
                             false
                         }
-                        Some(_) => unreachable!(),
-                        None => true,
+                        _ => true,
                     });
             // Visit current nodes
             current_rank_nodes.iter().for_each(|n| {
@@ -543,4 +541,37 @@ where
 }
 
 #[cfg(test)]
-mod test {}
+mod test {
+    use std::collections::BTreeMap;
+
+    use crate::{dirgraph::{DirectedGraphNodeType, DirectedGraphEdgeType}, dirgraphsvg::edges::{EdgeType, self}};
+
+    use super::DirectedGraph;
+
+    #[test]
+    fn debug_dirgraph() {
+        struct NT;
+        struct ET;
+        impl DirectedGraphNodeType<'_> for NT {
+            fn get_forced_level(&self) -> Option<usize> {
+                None
+            }
+            fn get_horizontal_index(&self, _current_index: usize) -> Option<usize> {
+                None
+            }
+        }
+        impl DirectedGraphEdgeType<'_> for ET {
+            fn is_primary_child_edge(&self) -> bool {
+                true
+            }
+            fn is_secondary_child_edge(&self) -> bool {
+                false
+            }
+        }
+        let nodes = BTreeMap::from([("a".to_owned(), NT{}), ("b".to_owned(), NT{})]);
+        let edges = BTreeMap::from([("a".to_owned(), vec![("b".to_owned(),EdgeType::OneWay(edges::SingleEdge::SupportedBy) )])]);
+        let dg = DirectedGraph::new(&nodes, &edges);
+        let dbg = format!("{:?}", dg);
+        assert_eq!(dbg, "a\nb\n");
+    }
+}
