@@ -243,6 +243,12 @@ fn add_supporting_points(
             curve_points.push((best_free_point, supporting_point));
         }
     }
+    // Reverse order if t_rank < s_rank
+    if t_rank < s_rank {
+        let tmp_first = curve_points.remove(0);
+        curve_points.reverse();
+        curve_points.insert(0, tmp_first);
+    }
 }
 
 ///
