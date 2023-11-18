@@ -63,6 +63,6 @@ Sn1
 Solution 1
 </text>
 </g>
-<path class="gsnedge gsninctxt" d="M180,60 C180,60,190,60,210,60" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M180,60 C210,60,190,60,210,60" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsninspby" d="M100,100 C100,130,100,110,100,130" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 </svg>
