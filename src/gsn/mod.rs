@@ -30,7 +30,7 @@ impl Display for GsnNodeType {
     }
 }
 
-#[derive(Clone, Copy, PartialEq)]
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub enum GsnEdgeType {
     SupportedBy,
     InContextOf,
@@ -474,5 +474,11 @@ C1:
         let edge_clone = edge.clone();
         assert_eq!(edge, edge_copy);
         assert_eq!(edge, edge_clone);
+    }
+
+    #[test]
+    fn edge_type_debug() {
+        assert_eq!(format!("{:?}", GsnEdgeType::SupportedBy), "SupportedBy");
+        assert_eq!(format!("{:?}", GsnEdgeType::InContextOf), "InContextOf");
     }
 }

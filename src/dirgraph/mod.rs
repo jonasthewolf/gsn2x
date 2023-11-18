@@ -571,6 +571,13 @@ mod test {
     }
 
     #[test]
+    fn missing_edges() {
+        let et = ET {};
+        assert_eq!(et.is_primary_child_edge(), true);
+        assert_eq!(et.is_secondary_child_edge(), false);
+    }
+
+    #[test]
     fn debug_dirgraph() {
         let nodes = BTreeMap::from([("a".to_owned(), NT {}), ("b".to_owned(), NT {})]);
         let edges = BTreeMap::from([(
