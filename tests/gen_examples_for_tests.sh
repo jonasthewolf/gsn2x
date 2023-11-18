@@ -19,3 +19,12 @@ cargo run -- -A -E -F -G tests/multi_context.gsn.yaml
 
 # minimal css example
 cargo run -- -G -E -t -s examples/minimalcss/min.css examples/minimalcss/min.gsn.yaml
+
+# issue regressions
+cargo run -- -G tests/issue84_1.yaml
+cargo run -- -G tests/issue84_2.yaml
+cargo run -- -G tests/issue84_3.yaml
+cargo run -- -G tests/issue84_4.yaml
+cargo run -- -G tests/issue313.yaml
+cargo run -- -G tests/issue250.yaml
+cargo run -- -G tests/issue249.yaml

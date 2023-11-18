@@ -1,0 +1,23 @@
+G1:
+  text: G1
+  supportedBy: [G2, G3]
+
+G2:
+  text: G2
+  inContextOf: [A2]
+  undeveloped: true
+
+G3:
+  text: G3
+  inContextOf: [J2, A2]
+  supportedBy: [G4]
+
+A2:
+  text: A2
+
+J2:
+  text: J2
+
+G4:
+  text: G4
+  undeveloped: true

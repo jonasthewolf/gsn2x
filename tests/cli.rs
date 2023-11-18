@@ -443,4 +443,47 @@ mod integrations {
         ));
         Ok(())
     }
+
+    fn regression_renderings(input: &str) -> Result<()> {
+        let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
+        let temp = assert_fs::TempDir::new()?;
+        temp.copy_from(".", &[input])?;
+        let output_name = input.to_string().replace(".yaml", ".svg");
+        let output_file = temp.child(&output_name);
+        cmd.arg(input).arg("-G").current_dir(&temp);
+        cmd.assert().success();
+        assert!(are_struct_similar_svgs(
+            std::path::Path::new(&output_name).as_os_str(),
+            output_file.as_os_str(),
+        )?);
+        temp.close()?;
+        Ok(())
+    }
+
+    #[test]
+    fn issue250() -> Result<()> {
+        regression_renderings("tests/issue250.yaml")?;
+        Ok(())
+    }
+
+    #[test]
+    fn issue249() -> Result<()> {
+        regression_renderings("tests/issue249.yaml")?;
+        Ok(())
+    }
+
+    #[test]
+    fn issue313() -> Result<()> {
+        regression_renderings("tests/issue313.yaml")?;
+        Ok(())
+    }
+
+    #[test]
+    fn issue84() -> Result<()> {
+        regression_renderings("tests/issue84_1.yaml")?;
+        regression_renderings("tests/issue84_2.yaml")?;
+        regression_renderings("tests/issue84_3.yaml")?;
+        regression_renderings("tests/issue84_4.yaml")?;
+        Ok(())
+    }
 }

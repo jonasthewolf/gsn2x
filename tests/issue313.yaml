@@ -1,0 +1,57 @@
+G1:
+  text: System is acceptably safe to operate.
+  supportedBy: [G2, G3]
+  inContextOf: [C1, C2]
+G2:
+  text: All identified hazards have been eliminated or sufficiently mitigated.
+  supportedBy: [S1]
+  inContextOf: [C3, C4]
+G2.1:
+  text: Hazard H1 has been eliminated.
+  supportedBy: [Sn1]
+G2.2:
+  text: Probability of Hazard H2 occuring &lt; 1x10-6 per year.
+  supportedBy: [Sn2]
+G2.3:
+  text: Probability of Hazard H3 occuring &lt; 1x10-3 per year.
+  supportedBy: [Sn2]
+G3:
+  text: Software in the Control System has been developed to SIL appropriate to hazards involved.
+  supportedBy: [S2]
+  inContextOf: [C4, C5]
+#  inContextOf: [C5]
+G3.1:
+  text: Primary Protection System Developed to SIL 4.
+  supportedBy: [Sn3]
+G3.2:
+  text: Secondary Protection System Development to SIL2.
+  supportedBy: [Sn4]
+Sn1:
+  text: Formal Verification.
+Sn2:
+  text: Fault Tree Analysis.
+Sn3:
+  text: Process Evidence for SIL4.
+Sn4:
+  text: Process Evidence for SIL2.
+S1:
+  text: Argument over each identified hazard.
+  supportedBy: [G2.1, G2.2, G2.3]
+S2:
+  text: Argument over allocated SIL for Primary and Secondary elements.
+  supportedBy: [G3.1, G3.2]
+  inContextOf: [J1, C6]
+J1:
+  text: SIL apportionment is correct and complete.
+C1:
+  text: Operating Role and Context.
+C2:
+  text: System Definition.
+C3:
+  text: Tolerability targets (Ref Z).
+C4:
+  text: Hazards identified from FHA (Ref Y).
+C5:
+  text: SIL Guidelines and Processes.
+C6:
+  text: Identified software hazards.
