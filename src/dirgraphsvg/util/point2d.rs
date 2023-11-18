@@ -113,4 +113,40 @@ where
 }
 
 #[cfg(test)]
-mod test {}
+mod test {
+    use super::Point2D;
+
+    #[test]
+    fn clone_copy() {
+        let p = Point2D::<i32> { x: 14, y: 23 };
+        let p_copy = p;
+        let p_clone = p.clone();
+        assert_eq!(p_copy.x, p.x);
+        assert_eq!(p_copy.y, p.y);
+        assert_eq!(p_clone.x, p.x);
+        assert_eq!(p_clone.y, p.y);
+    }
+
+    #[test]
+    fn scalar() {
+        let p = Point2D::<i32> { x: 14, y: 23 };
+        let p_new = p * 2;
+        assert_eq!(p_new.x, p.x * 2);
+        assert_eq!(p_new.y, p.y * 2);
+    }
+
+    #[test]
+    fn basics() {
+        let mut p = Point2D::<i32> { x: 2, y: 3 };
+        p += p + Point2D::from((1, 1)) - (2, 2).into();
+        assert_eq!(p.x, 3);
+        assert_eq!(p.y, 5);
+    }
+
+    #[test]
+    fn debug_display() {
+        let p = Point2D::<i32> { x: 2, y: 3 };
+        assert_eq!(format!("{}", p), "2,3");
+        assert_eq!(format!("{:?}", p), "2,3");
+    }
+}
