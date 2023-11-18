@@ -49,8 +49,12 @@ C2:
   text: System Definition.
 C3:
   text: Tolerability targets (Ref Z).
+  horizontalIndex:
+    absolute: 0
 C4:
   text: Hazards identified from FHA (Ref Y).
+  horizontalIndex:
+    absolute: last
 C5:
   text: SIL Guidelines and Processes.
 C6:

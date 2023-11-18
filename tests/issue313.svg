@@ -19,11 +19,11 @@
 <title>
 C2
 </title>
-<path class="border" d="M662,20 L786,20 C796,20,796,66,786,66 L662,66 C652,66,652,20,662,20" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="669" y="39">
+<path class="border" d="M634,20 L758,20 C768,20,768,66,758,66 L634,66 C624,66,624,20,634,20" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="641" y="39">
 C2
 </text>
-<text font-family="Arial" font-size="12" x="669" y="56">
+<text font-family="Arial" font-size="12" x="641" y="56">
 System Definition.
 </text>
 </g>
@@ -31,11 +31,11 @@ System Definition.
 <title>
 G1
 </title>
-<path class="border" d="M836,20 L1080,20 L1080,66 L836,66 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="843" y="39">
+<path class="border" d="M808,20 L1052,20 L1052,66 L808,66 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="815" y="39">
 G1
 </text>
-<text font-family="Arial" font-size="12" x="843" y="56">
+<text font-family="Arial" font-size="12" x="815" y="56">
 System is acceptably safe to operate.
 </text>
 </g>
@@ -43,48 +43,48 @@ System is acceptably safe to operate.
 <title>
 C1
 </title>
-<path class="border" d="M1130,20 L1316,20 C1326,20,1326,66,1316,66 L1130,66 C1120,66,1120,20,1130,20" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="1137" y="39">
+<path class="border" d="M1102,20 L1288,20 C1298,20,1298,66,1288,66 L1102,66 C1092,66,1092,20,1102,20" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="1109" y="39">
 C1
 </text>
-<text font-family="Arial" font-size="12" x="1137" y="56">
+<text font-family="Arial" font-size="12" x="1109" y="56">
 Operating Role and Context.
-</text>
-</g>
-<g class="gsn_module_tests_issue313_yaml gsnelem gsnctxt" id="node_C4">
-<title>
-C4
-</title>
-<path class="border" d="M30,106 L268,106 C278,106,278,152,268,152 L30,152 C20,152,20,106,30,106" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="37" y="125">
-C4
-</text>
-<text font-family="Arial" font-size="12" x="37" y="142">
-Hazards identified from FHA (Ref Y).
-</text>
-</g>
-<g class="gsn_module_tests_issue313_yaml gsnelem gsngoal" id="node_G2">
-<title>
-G2
-</title>
-<path class="border" d="M318,106 L752,106 L752,152 L318,152 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="325" y="125">
-G2
-</text>
-<text font-family="Arial" font-size="12" x="325" y="142">
-All identified hazards have been eliminated or sufficiently mitigated.
 </text>
 </g>
 <g class="gsn_module_tests_issue313_yaml gsnelem gsnctxt" id="node_C3">
 <title>
 C3
 </title>
-<path class="border" d="M802,106 L982,106 C992,106,992,152,982,152 L802,152 C792,152,792,106,802,106" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="809" y="125">
+<path class="border" d="M33,106 L213,106 C223,106,223,152,213,152 L33,152 C23,152,23,106,33,106" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="40" y="125">
 C3
 </text>
-<text font-family="Arial" font-size="12" x="809" y="142">
+<text font-family="Arial" font-size="12" x="40" y="142">
 Tolerability targets (Ref Z).
+</text>
+</g>
+<g class="gsn_module_tests_issue313_yaml gsnelem gsngoal" id="node_G2">
+<title>
+G2
+</title>
+<path class="border" d="M263,106 L697,106 L697,152 L263,152 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="270" y="125">
+G2
+</text>
+<text font-family="Arial" font-size="12" x="270" y="142">
+All identified hazards have been eliminated or sufficiently mitigated.
+</text>
+</g>
+<g class="gsn_module_tests_issue313_yaml gsnelem gsnctxt" id="node_C4">
+<title>
+C4
+</title>
+<path class="border" d="M747,106 L985,106 C995,106,995,152,985,152 L747,152 C737,152,737,106,747,106" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="754" y="125">
+C4
+</text>
+<text font-family="Arial" font-size="12" x="754" y="142">
+Hazards identified from FHA (Ref Y).
 </text>
 </g>
 <g class="gsn_module_tests_issue313_yaml gsnelem gsngoal" id="node_G3">
@@ -270,17 +270,17 @@ Sn4
 Process Evidence for SIL2.
 </text>
 </g>
-<path class="gsnedge gsninctxt" d="M1080,43 C1110,43,1090,43,1110,43" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninctxt" d="M836,43 C806,43,826,43,806,43" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M958,66 C958,96,535,76,535,96" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M958,66 C958,96,1381,76,1381,96" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninctxt" d="M752,129 C782,129,762,129,782,129" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninctxt" d="M318,129 C288,129,308,129,288,129" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M535,152 C535,182,480,172,480,192" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M1052,43 C1082,43,1062,43,1082,43" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M808,43 C778,43,798,43,778,43" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M930,66 C930,96,480,76,480,96" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M930,66 C930,96,1381,76,1381,96" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M263,129 C233,129,253,129,233,129" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M697,129 C727,129,707,129,727,129" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M480,152 C480,182,480,172,480,192" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsninspby" d="M124,344 C124,374,124,377,124,397" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsninspby" d="M444,344 C444,374,640,376,640,396" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsninspby" d="M836,344 C836,374,640,376,640,396" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninctxt" d="M1092,129 C1062,129,308,129,288,129" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M1092,129 C1062,129,1025,129,1005,129" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsninctxt" d="M1670,129 C1700,129,1680,129,1700,129" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsninspby" d="M1381,152 C1381,182,1381,172,1381,192" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsninspby" d="M1203,344 C1203,374,1203,354,1203,374" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
