@@ -30,7 +30,7 @@ impl Display for GsnNodeType {
     }
 }
 
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Copy, PartialEq)]
 pub enum GsnEdgeType {
     SupportedBy,
     InContextOf,
@@ -465,5 +465,14 @@ C1:
         } else {
             Err(anyhow!("Serialization did not work"))
         }
+    }
+
+    #[test]
+    fn edge_type_copy_clone() {
+        let edge = GsnEdgeType::SupportedBy;
+        let edge_copy = edge;
+        let edge_clone = edge.clone();
+        assert_eq!(edge, edge_copy);
+        assert_eq!(edge, edge_clone);
     }
 }
