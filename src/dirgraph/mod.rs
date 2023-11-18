@@ -544,7 +544,10 @@ where
 mod test {
     use std::collections::BTreeMap;
 
-    use crate::{dirgraph::{DirectedGraphNodeType, DirectedGraphEdgeType}, dirgraphsvg::edges::{EdgeType, self}};
+    use crate::{
+        dirgraph::{DirectedGraphEdgeType, DirectedGraphNodeType},
+        dirgraphsvg::edges::{self, EdgeType},
+    };
 
     use super::DirectedGraph;
 
@@ -568,8 +571,14 @@ mod test {
                 false
             }
         }
-        let nodes = BTreeMap::from([("a".to_owned(), NT{}), ("b".to_owned(), NT{})]);
-        let edges = BTreeMap::from([("a".to_owned(), vec![("b".to_owned(),EdgeType::OneWay(edges::SingleEdge::SupportedBy) )])]);
+        let nodes = BTreeMap::from([("a".to_owned(), NT {}), ("b".to_owned(), NT {})]);
+        let edges = BTreeMap::from([(
+            "a".to_owned(),
+            vec![(
+                "b".to_owned(),
+                EdgeType::OneWay(edges::SingleEdge::SupportedBy),
+            )],
+        )]);
         let dg = DirectedGraph::new(&nodes, &edges);
         let dbg = format!("{:?}", dg);
         assert_eq!(dbg, "a\nb\n");
