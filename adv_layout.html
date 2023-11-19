@@ -88,7 +88,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="basic_usage.html"><strong aria-hidden="true">1.</strong> Basic Usage</a></li><li class="chapter-item expanded "><a href="yaml_syntax.html"><strong aria-hidden="true">2.</strong> Syntax</a></li><li class="chapter-item expanded "><a href="checks.html"><strong aria-hidden="true">3.</strong> Checks</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="advanced_usecases.html"><strong aria-hidden="true">4.</strong> Advanced Use-cases</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="adv_layout.html" class="active"><strong aria-hidden="true">4.1.</strong> Layout</a></li><li class="chapter-item expanded "><a href="adv_layers.html"><strong aria-hidden="true">4.2.</strong> Layers</a></li><li class="chapter-item expanded "><a href="adv_stylesheets.html"><strong aria-hidden="true">4.3.</strong> Stylesheets</a></li><li class="chapter-item expanded "><a href="adv_evidences.html"><strong aria-hidden="true">4.4.</strong> Evidences</a></li></ol></li><li class="chapter-item expanded "><a href="modular_extension.html"><strong aria-hidden="true">5.</strong> Modular Extension</a></li><li class="chapter-item expanded "><div><strong aria-hidden="true">6.</strong> Interfacing</div></li><li class="spacer"></li><li class="chapter-item expanded "><a href="standard_support.html"><strong aria-hidden="true">7.</strong> Standard Support</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="design_goals.html"><strong aria-hidden="true">8.</strong> Design Goals</a></li><li class="chapter-item expanded "><a href="history.html"><strong aria-hidden="true">9.</strong> History</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="basic_usage.html"><strong aria-hidden="true">1.</strong> Basic Usage</a></li><li class="chapter-item expanded "><a href="yaml_syntax.html"><strong aria-hidden="true">2.</strong> Syntax</a></li><li class="chapter-item expanded "><a href="checks.html"><strong aria-hidden="true">3.</strong> Checks</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="advanced_usecases.html"><strong aria-hidden="true">4.</strong> Advanced Use-cases</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="adv_layout.html" class="active"><strong aria-hidden="true">4.1.</strong> Layout</a></li><li class="chapter-item expanded "><a href="adv_layers.html"><strong aria-hidden="true">4.2.</strong> Layers</a></li><li class="chapter-item expanded "><a href="adv_stylesheets.html"><strong aria-hidden="true">4.3.</strong> Stylesheets</a></li><li class="chapter-item expanded "><a href="adv_evidences.html"><strong aria-hidden="true">4.4.</strong> Evidences</a></li></ol></li><li class="chapter-item expanded "><a href="modular_extension.html"><strong aria-hidden="true">5.</strong> Modular Extension</a></li><li class="chapter-item expanded "><div><strong aria-hidden="true">6.</strong> Interfacing</div></li><li class="spacer"></li><li class="chapter-item expanded "><a href="standard_support.html"><strong aria-hidden="true">7.</strong> Standard Support</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="design_goals.html"><strong aria-hidden="true">8.</strong> Design Goals</a></li><li class="chapter-item expanded "><a href="history.html"><strong aria-hidden="true">9.</strong> History</a></li><li class="chapter-item expanded "><a href="migration_v2x.html"><strong aria-hidden="true">10.</strong> Migration from v2.x</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -171,21 +171,72 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="more-influence-on-the-layout-of-elements"><a class="header" href="#more-influence-on-the-layout-of-elements">More influence on the layout of elements</a></h1>
+                        <h1 id="layout-of-elements"><a class="header" href="#layout-of-elements">Layout of elements</a></h1>
+<h2 id="how-does-the-default-layout-of-the-graph-work"><a class="header" href="#how-does-the-default-layout-of-the-graph-work">How does the default layout of the graph work?</a></h2>
+<p>At first, the root elements are identified. Root elements are elements 
+that are not referenced as <code>supportedBy</code> or <code>inContextOf</code>. </p>
+<p>Each level in the rendered graph is called rank. 
+The elements on each rank are sorted lexicographically before being placed on that rank. 
+Then, starting with the first element on the current rank, the elements of the next rank are identified.
+An element is only ranked if all elements referencing it are already placed.
+Finally, the <code>inContextOf</code> elements are placed on that rank.</p>
 <h2 id="vertical-placement"><a class="header" href="#vertical-placement">Vertical placement</a></h2>
-<p>To influence the rendered image, you can add an identifier to a GSN element with the <code>level</code> attribute. 
-All elements with the same identifier for <code>level</code> will now show up on the same vertical level. </p>
-<p>This is especially useful, if e.g., two goals or strategies are on the same logical level, 
+<p>To influence the vertical placement i.e., the rank, of an element in the rendered graph, 
+you can use <code>rankIncrement</code> for a node. 
+A rank increment is a positive number to push an element this amount of ranks downwards.
+It is not possible to decrease the rank that would be assigned by the above algorithm.</p>
+<p>Incrementing the rank is especially useful, if e.g., two goals or strategies are on the same logical level, 
 but have a different &quot;depth&quot; in the argumentation (i.e. a different number of goals or strategies in their path to the root goal).</p>
-<p>See the <a href="examples/example.gsn.yaml">example</a> for usage. The strategies S1 and S2 are on the same level.</p>
-<p>It is recommended to use <code>level</code> only for goals, since related contexts, 
-justifications and assumptions are automatically put on the same level.</p>
+<p>See the <a href="examples/example.gsn.yaml">example</a> for usage. The strategy S2 has an incremented rank.</p>
 <h2 id="horizontal-placement"><a class="header" href="#horizontal-placement">Horizontal placement</a></h2>
-<p>The order of the GSN elements on the same horizontal rank can be influenced by their ID.
-The elements are sorted lexicographically. Thus, a goal <code>G1</code> if placed on the same vertical level is placed before <code>G2</code>, 
-if they have the same depth of their supporting arguments.</p>
-<p>There can be situations (e.g. a n:m relation between goals and solutions) that lead to weird looking graphs.
-You may even encounter the following message <code>Rendering a diagram took too many iterations. See README.md for hints how to solve this situation.</code>. In such cases, please file an issue on GitHub, so I can see how the algorithm can be improved.</p>
+<p>The order of the GSN elements on the same rank is in the first place defined by their ID.
+The elements are sorted lexicographically. Thus, a goal <code>G1</code> if placed on the same rank is placed left to <code>G2</code>.</p>
+<p>You can use <code>horizontalIndex</code> to reorder elements after lexicographical sorting. 
+The index can be modified by giving a relative or absolute index.</p>
+<p>In the following example, G1 and G2 are placed on the same rank. 
+However, G2 is placed left of G1 because of the relative horizontal index.</p>
+<pre><code class="language-yaml">G1:
+    text: Goal 1
+    undeveloped: true
+
+G2: 
+    text: Goal 2
+    undeveloped: true
+    horizontalIndex:
+         relative: -1
+</code></pre>
+<p>Please see Sn2 and Sn4 in <a href="examples/example.gsn.yaml">example</a> for how to use the absolute index. </p>
+<p>Typical use-cases for defining an absolute index are putting elements at the beginning or the end within a rank.
+Please see the following example for how to use an absolute index. </p>
+<pre><code class="language-yaml">G1:
+    text: Goal 1
+    undeveloped: true
+    horizontalIndex:
+        absolute: last
+
+G2: 
+    text: Goal 2
+    undeveloped: true
+    horizontalIndex:
+        absolute: 0
+</code></pre>
+<p>Please note that giving the horizontal index for G1 and G2 is redundant. </p>
+<p>The absolute index is zero-based. You can use <code>last</code> to move elements 
+to the very right of the graph.</p>
+<p>The horizontal index can also be applied to <code>inContextOf</code> elements. 
+You would typically use an absolute index with either <code>0</code> or <code>last</code> to place them
+either left or right of the element they are referenced from.</p>
+<h2 id="troubleshooting"><a class="header" href="#troubleshooting">Troubleshooting</a></h2>
+<p>There can be situations (e.g. a n:m relation between goals and solutions) 
+that lead to weird looking graphs.
+You may even encounter the following message 
+<code>Rendering a diagram took too many iterations. See README.md for hints how to solve this situation.</code>. 
+In such cases, please use the mechanisms described above to support 
+the algorithm in ranking the elements more sensibly.</p>
+<p>If you have trouble doing so, please feel free to create an issue or 
+start a discussion on the GitHub site. 
+The issue template on GitHub shows you how to remove intellectual property
+from the files that I would ask for then.</p>
 
                     </main>
 
