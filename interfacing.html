@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Evidences - gsn2x User Manual</title>
+        <title>Interfacing - gsn2x User Manual</title>
 
 
         <!-- Custom HTML head -->
@@ -88,7 +88,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="basic_usage.html"><strong aria-hidden="true">1.</strong> Basic Usage</a></li><li class="chapter-item expanded "><a href="yaml_syntax.html"><strong aria-hidden="true">2.</strong> Syntax</a></li><li class="chapter-item expanded "><a href="checks.html"><strong aria-hidden="true">3.</strong> Checks</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="advanced_usecases.html"><strong aria-hidden="true">4.</strong> Advanced Use-cases</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="adv_layout.html"><strong aria-hidden="true">4.1.</strong> Layout</a></li><li class="chapter-item expanded "><a href="adv_layers.html"><strong aria-hidden="true">4.2.</strong> Layers</a></li><li class="chapter-item expanded "><a href="adv_stylesheets.html"><strong aria-hidden="true">4.3.</strong> Stylesheets</a></li><li class="chapter-item expanded "><a href="adv_evidences.html" class="active"><strong aria-hidden="true">4.4.</strong> Evidences</a></li></ol></li><li class="chapter-item expanded "><a href="modular_extension.html"><strong aria-hidden="true">5.</strong> Modular Extension</a></li><li class="chapter-item expanded "><a href="interfacing.html"><strong aria-hidden="true">6.</strong> Interfacing</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="standard_support.html"><strong aria-hidden="true">7.</strong> Standard Support</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="design_goals.html"><strong aria-hidden="true">8.</strong> Design Goals</a></li><li class="chapter-item expanded "><a href="history.html"><strong aria-hidden="true">9.</strong> History</a></li><li class="chapter-item expanded "><a href="migration_v2x.html"><strong aria-hidden="true">10.</strong> Migration from v2.x</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="basic_usage.html"><strong aria-hidden="true">1.</strong> Basic Usage</a></li><li class="chapter-item expanded "><a href="yaml_syntax.html"><strong aria-hidden="true">2.</strong> Syntax</a></li><li class="chapter-item expanded "><a href="checks.html"><strong aria-hidden="true">3.</strong> Checks</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="advanced_usecases.html"><strong aria-hidden="true">4.</strong> Advanced Use-cases</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="adv_layout.html"><strong aria-hidden="true">4.1.</strong> Layout</a></li><li class="chapter-item expanded "><a href="adv_layers.html"><strong aria-hidden="true">4.2.</strong> Layers</a></li><li class="chapter-item expanded "><a href="adv_stylesheets.html"><strong aria-hidden="true">4.3.</strong> Stylesheets</a></li><li class="chapter-item expanded "><a href="adv_evidences.html"><strong aria-hidden="true">4.4.</strong> Evidences</a></li></ol></li><li class="chapter-item expanded "><a href="modular_extension.html"><strong aria-hidden="true">5.</strong> Modular Extension</a></li><li class="chapter-item expanded "><a href="interfacing.html" class="active"><strong aria-hidden="true">6.</strong> Interfacing</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="standard_support.html"><strong aria-hidden="true">7.</strong> Standard Support</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="design_goals.html"><strong aria-hidden="true">8.</strong> Design Goals</a></li><li class="chapter-item expanded "><a href="history.html"><strong aria-hidden="true">9.</strong> History</a></li><li class="chapter-item expanded "><a href="migration_v2x.html"><strong aria-hidden="true">10.</strong> Migration from v2.x</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -171,48 +171,45 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="list-of-evidences"><a class="header" href="#list-of-evidences">List of evidences</a></h1>
-<p>An additional file that lists all the evidences in the input file is output by default in <code>evidences.md</code>.</p>
-<p>See <a href="examples/evidences.html">examples/evidences.md</a> for an example.</p>
-<p>The format can be used in Markdown and reStructuredText files.</p>
-<p>If the list of evidences should not be output, use the <code>-E</code> option.</p>
-<p>You can use the <code>-e</code> option to rename the standard <code>evidences.md</code> to another file name, but not subdirectory.
-The <code>-o</code> option also applies to the evidences file.</p>
-<h2 id="markdown-from-examplesevidencesmd"><a class="header" href="#markdown-from-examplesevidencesmd">Markdown from <code>examples/evidences.md</code></a></h2>
-<p>List of Evidences</p>
+                        <h1 id="interfacing"><a class="header" href="#interfacing">Interfacing</a></h1>
+<p>Here is some guidance on interfacing with external sources.</p>
+<p>I currently see two use-cases: </p>
 <ol>
 <li>
-<p>Sn1: Solution 1</p>
-<p>examples_example_gsn_yaml</p>
-<p>https://github.com/jonasthewolf/gsn2x</p>
+<p>Use-case: Check if all configuration management items of a project exist that are mandated by the argumentation (as solutions/evidences).</p>
+<p>The reference list may comprise more items that are required for argumentation, i.e. the list items must be attributed.</p>
+<p>The reference list may be distributed across multiple files.</p>
 </li>
 <li>
-<p>Sn2: Solution 2</p>
-<p>examples_example_gsn_yaml</p>
-</li>
-<li>
-<p>Sn3: Solution 3</p>
-<p>examples_example_gsn_yaml</p>
-</li>
-<li>
-<p>Sn4: Solution 4</p>
-<p>examples_example_gsn_yaml</p>
-</li>
-<li>
-<p>Sn5: Solution 5</p>
-<p>examples_example_gsn_yaml</p>
+<p>Use-case: Check if all normative/external requirements are fulfilled.</p>
+<p>The reference list is a list of all normative requirements.</p>
+<p>This use-case is actually the other way around than the first one.</p>
 </li>
 </ol>
+<p>For the example scripts below, <a href="https://github.com/mikefarah/yq"><code>yq</code></a> is required.</p>
+<h2 id="checking-evidences"><a class="header" href="#checking-evidences">Checking evidences</a></h2>
+<p>This command lists all Solutions that are in <code>example.gsn.yaml</code> but are not in <code>reference.yaml</code>:</p>
+<pre><code>yq ea '[select(file_index == 0)|.Sn*.text] - [select(file_index == 1)|.[]]' examples/example.gsn.yaml reference.yaml   
+</code></pre>
+<p><code>reference.yaml</code> could look like this:</p>
+<pre><code># Configuration Management Items
+- Solution 1
+- Solution 2
+</code></pre>
+<h2 id="checking-references"><a class="header" href="#checking-references">Checking references</a></h2>
+<p>Depending on how the external format is defined, you can swap the part before the <code>-</code>,
+with the part after.</p>
+<!-- ## MDG XML -->
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="adv_stylesheets.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="modular_extension.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
-                            <a rel="next prefetch" href="modular_extension.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="standard_support.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
 
@@ -222,11 +219,11 @@ The <code>-o</code> option also applies to the evidences file.</p>
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="adv_stylesheets.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="modular_extension.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
 
-                    <a rel="next prefetch" href="modular_extension.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="standard_support.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>
