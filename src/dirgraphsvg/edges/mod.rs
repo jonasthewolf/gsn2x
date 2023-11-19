@@ -16,7 +16,7 @@ use super::{
 
 ///
 /// The EdgeType in one direction
-/// 
+///
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum SingleEdge {
     InContextOf,
@@ -50,7 +50,7 @@ impl BitOr for SingleEdge {
 
 ///
 /// The edge type used for rendering
-/// 
+///
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum EdgeType {
     OneWay(SingleEdge),
@@ -59,7 +59,7 @@ pub enum EdgeType {
 
 ///
 /// Convert from GsnEdgeType to EdgeType
-/// 
+///
 impl From<&GsnEdgeType> for EdgeType {
     fn from(value: &GsnEdgeType) -> Self {
         match value {
