@@ -17,6 +17,7 @@ G2:
   text: Another goal with contexts
   inContextOf: [A1, J1]
   undeveloped: true
+  rankIncrement: 1
 
 A1:
   text: An assumption

@@ -1,14 +1,13 @@
 use crate::dirgraphsvg::edges::EdgeType;
-use crate::dirgraphsvg::{escape_node_id, escape_text, nodes::Node};
+use crate::dirgraphsvg::{escape_node_id, nodes::SvgNode};
 use crate::file_utils::{get_filename, get_relative_path, set_extension, translate_to_output_path};
-use crate::gsn::{get_levels, GsnNode, Module};
-use anyhow::{Context, Result};
+use crate::gsn::{GsnNode, GsnNodeType, Module};
+use anyhow::Result;
 use chrono::Utc;
 use clap::ArgMatches;
 
 use std::collections::{BTreeMap, HashMap};
 use std::io::Write;
-use std::path::PathBuf;
 
 #[derive(Default, Eq, PartialEq)]
 pub enum RenderLegend {
@@ -18,20 +17,27 @@ pub enum RenderLegend {
     Full,
 }
 
-pub struct RenderOptions {
+pub struct RenderOptions<'a> {
     pub stylesheets: Vec<String>,
+    pub masked_elements: Vec<String>,
     pub layers: Vec<String>,
     pub legend: RenderLegend,
     pub embed_stylesheets: bool,
-    pub architecture_filename: Option<String>,
-    pub evidences_filename: Option<String>,
-    pub complete_filename: Option<String>,
-    pub output_directory: String,
+    pub architecture_filename: Option<&'a str>,
+    pub evidences_filename: Option<&'a str>,
+    pub complete_filename: Option<&'a str>,
+    pub output_directory: Option<&'a str>,
     pub skip_argument: bool,
+    pub word_wrap: Option<u32>,
 }
 
-impl From<&ArgMatches> for RenderOptions {
-    fn from(matches: &ArgMatches) -> Self {
+impl<'a> RenderOptions<'a> {
+    pub fn new(
+        matches: &'a ArgMatches,
+        stylesheets: Vec<String>,
+        embed_stylesheets: bool,
+        output_directory: Option<&'a String>,
+    ) -> Self {
         let legend = if matches.get_flag("NO_LEGEND") {
             RenderLegend::No
         } else if matches.get_flag("FULL_LEGEND") {
@@ -45,43 +51,20 @@ impl From<&ArgMatches> for RenderOptions {
             .flatten()
             .cloned()
             .collect::<Vec<_>>();
-
-        let embed_stylesheets = matches.get_flag("EMBED_CSS");
-
-        let stylesheets = matches
-            .get_many::<String>("STYLESHEETS")
-            .into_iter()
-            .flatten()
-            .map(|css| {
-                // If stylesheets are not embedded transform their path.
-                if embed_stylesheets {
-                    css.to_owned()
-                } else {
-                    let path_css = PathBuf::from(css);
-                    if css.starts_with("http://")
-                        || css.starts_with("https://")
-                        || css.starts_with("file://")
-                    {
-                        format!("url({css})")
-                    } else if path_css.is_relative() {
-                        let path = path_css
-                            .canonicalize()
-                            .with_context(|| {
-                                format!("Stylesheet {} is not found.", path_css.display())
-                            })
-                            .unwrap()
-                            .to_string_lossy()
-                            .into_owned();
-                        format!("\"{path}\"")
-                    } else {
-                        format!("\"{css}\"")
-                    }
-                }
-            })
-            .collect::<Vec<_>>();
+        let masked_elements: Vec<String> = matches
+            .get_many::<String>("MASKED_MODULE")
+            .unwrap_or_default()
+            .chain(
+                matches
+                    .get_many::<String>("EXCLUDED_MODULE")
+                    .unwrap_or_default(),
+            )
+            .cloned()
+            .collect();
 
         RenderOptions {
             stylesheets,
+            masked_elements,
             layers,
             legend,
             embed_stylesheets,
@@ -89,29 +72,23 @@ impl From<&ArgMatches> for RenderOptions {
                 true => None,
                 false => matches
                     .get_one::<String>("ARCHITECTURE_VIEW")
-                    .and_then(|p| get_filename(p))
-                    .map(|f| f.to_owned()),
+                    .and_then(|p| get_filename(p)),
             },
-
             evidences_filename: match matches.get_flag("NO_EVIDENCES") {
                 true => None,
                 false => matches
                     .get_one::<String>("EVIDENCES")
-                    .and_then(|p| get_filename(p))
-                    .map(|f| f.to_owned()),
+                    .and_then(|p| get_filename(p)),
             },
             complete_filename: match matches.get_flag("NO_COMPLETE_VIEW") {
                 true => None,
                 false => matches
                     .get_one::<String>("COMPLETE_VIEW")
-                    .and_then(|p| get_filename(p))
-                    .map(|f| f.to_owned()),
+                    .and_then(|p| get_filename(p)),
             },
-            output_directory: matches
-                .get_one::<String>("OUTPUT_DIRECTORY")
-                .unwrap()
-                .to_owned(), // Default value is used.
+            output_directory: output_directory.map(|x| x.as_str()),
             skip_argument: matches.get_flag("NO_ARGUMENT_VIEW"),
+            word_wrap: matches.get_one::<u32>("WORD_WRAP").copied(),
         }
     }
 }
@@ -121,89 +98,33 @@ impl From<&ArgMatches> for RenderOptions {
 ///
 ///
 ///
-pub fn svg_from_gsn_node(id: &str, gsn_node: &GsnNode, layers: &[String]) -> Node {
-    let classes = node_classes_from_node(gsn_node);
-    // Add layer to node output
-    let node_text = node_text_from_node_and_layers(gsn_node, layers);
+pub fn svg_from_gsn_node(
+    identifier: &str,
+    gsn_node: &GsnNode,
+    masked: bool,
+    layers: &[String],
+    char_wrap: Option<u32>,
+) -> SvgNode {
     // Create node
-    match id {
-        id if id.starts_with('G') => Node::new_goal(
-            id,
-            &node_text,
-            gsn_node.undeveloped.unwrap_or(false),
-            gsn_node.url.to_owned(),
-            classes,
-        ),
-        id if id.starts_with("Sn") => {
-            Node::new_solution(id, &node_text, gsn_node.url.to_owned(), classes)
+    match gsn_node.node_type.unwrap() {
+        // unwrap ok, since checked during validation
+        GsnNodeType::Goal => SvgNode::new_goal(identifier, gsn_node, masked, layers, char_wrap),
+        GsnNodeType::Solution => {
+            SvgNode::new_solution(identifier, gsn_node, masked, layers, char_wrap)
         }
-        id if id.starts_with('S') => Node::new_strategy(
-            id,
-            &node_text,
-            gsn_node.undeveloped.unwrap_or(false),
-            gsn_node.url.to_owned(),
-            classes,
-        ),
-        id if id.starts_with('C') => {
-            Node::new_context(id, &node_text, gsn_node.url.to_owned(), classes)
+        GsnNodeType::Strategy => {
+            SvgNode::new_strategy(identifier, gsn_node, masked, layers, char_wrap)
         }
-        id if id.starts_with('A') => {
-            Node::new_assumption(id, &node_text, gsn_node.url.to_owned(), classes)
+        GsnNodeType::Context => {
+            SvgNode::new_context(identifier, gsn_node, masked, layers, char_wrap)
         }
-        id if id.starts_with('J') => {
-            Node::new_justification(id, &node_text, gsn_node.url.to_owned(), classes)
+        GsnNodeType::Assumption => {
+            SvgNode::new_assumption(identifier, gsn_node, masked, layers, char_wrap)
         }
-        _ => unreachable!(),
-    }
-}
-
-///
-/// Create SVG node text from GsnNode and layer information
-///
-///
-fn node_text_from_node_and_layers(gsn_node: &GsnNode, layers: &[String]) -> String {
-    let mut node_text = gsn_node.text.to_owned();
-    let mut additional_text = vec![];
-    for layer in layers {
-        if let Some(layer_text) = gsn_node.additional.get(layer) {
-            additional_text.push(format!(
-                "\n{}: {}",
-                layer.to_ascii_uppercase(),
-                layer_text.replace('\n', " ")
-            ));
+        GsnNodeType::Justification => {
+            SvgNode::new_justification(identifier, gsn_node, masked, layers, char_wrap)
         }
     }
-    if !additional_text.is_empty() {
-        node_text.push_str("\n\n");
-        node_text.push_str(&additional_text.join("\n"));
-    }
-    node_text
-}
-
-///
-///
-///
-fn node_classes_from_node(gsn_node: &GsnNode) -> Vec<String> {
-    let layer_classes: Option<Vec<String>> = gsn_node
-        .additional
-        .keys()
-        .map(|k| {
-            let mut t = escape_text(&k.to_ascii_lowercase());
-            t.insert_str(0, "gsn_");
-            Some(t.to_owned())
-        })
-        .collect();
-    let mut mod_class = gsn_node.module.to_owned();
-    mod_class.insert_str(0, "gsn_module_");
-    let classes = gsn_node
-        .classes
-        .iter()
-        .chain(layer_classes.iter())
-        .flatten()
-        .chain(&[mod_class])
-        .cloned()
-        .collect();
-    classes
 }
 
 ///
@@ -212,74 +133,47 @@ fn node_classes_from_node(gsn_node: &GsnNode) -> Vec<String> {
 ///
 ///
 pub fn away_svg_from_gsn_node(
-    id: &str,
+    identifier: &str,
     gsn_node: &GsnNode,
+    masked: bool,
     module: &Module,
     source_module: &Module,
     layers: &[String],
-) -> Result<Node> {
-    let classes = node_classes_from_node(gsn_node);
-    let mut module_url = get_relative_path(
-        &module.relative_module_path,
-        &source_module.relative_module_path,
-        Some("svg"),
-    )?;
-    module_url.push('#');
-    module_url.push_str(&escape_node_id(id));
-
-    // Add layer to node output
-    let node_text = node_text_from_node_and_layers(gsn_node, layers);
-
+    char_wrap: Option<u32>,
+) -> Result<SvgNode> {
+    let module_url = if masked {
+        None
+    } else {
+        let mut x = get_relative_path(
+            &module.relative_module_path,
+            &source_module.relative_module_path,
+            Some("svg"),
+        )?;
+        x.push('#');
+        x.push_str(&escape_node_id(identifier));
+        Some(x)
+    };
     // Create node
-    Ok(match id {
-        id if id.starts_with('G') => Node::new_away_goal(
-            id,
-            &node_text,
-            &gsn_node.module,
-            Some(module_url),
-            gsn_node.url.to_owned(),
-            classes,
+    Ok(match gsn_node.node_type.unwrap() {
+        // unwrap ok, since checked during validation
+        GsnNodeType::Goal => {
+            SvgNode::new_away_goal(identifier, gsn_node, masked, layers, module_url, char_wrap)
+        }
+        GsnNodeType::Solution => {
+            SvgNode::new_away_solution(identifier, gsn_node, masked, layers, module_url, char_wrap)
+        }
+        GsnNodeType::Strategy => {
+            SvgNode::new_strategy(identifier, gsn_node, masked, layers, char_wrap)
+        }
+        GsnNodeType::Context => {
+            SvgNode::new_away_context(identifier, gsn_node, masked, layers, module_url, char_wrap)
+        }
+        GsnNodeType::Assumption => SvgNode::new_away_assumption(
+            identifier, gsn_node, masked, layers, module_url, char_wrap,
         ),
-        id if id.starts_with("Sn") => Node::new_away_solution(
-            id,
-            &node_text,
-            &gsn_node.module,
-            Some(module_url),
-            gsn_node.url.to_owned(),
-            classes,
+        GsnNodeType::Justification => SvgNode::new_away_justification(
+            identifier, gsn_node, masked, layers, module_url, char_wrap,
         ),
-        id if id.starts_with('S') => Node::new_strategy(
-            id,
-            &node_text,
-            gsn_node.undeveloped.unwrap_or(false),
-            Some(module_url), // Use module_url if Strategy is not defined in current module.
-            classes,
-        ),
-        id if id.starts_with('C') => Node::new_away_context(
-            id,
-            &node_text,
-            &gsn_node.module,
-            Some(module_url),
-            gsn_node.url.to_owned(),
-            classes,
-        ),
-        id if id.starts_with('A') => Node::new_away_assumption(
-            id,
-            &node_text,
-            &gsn_node.module,
-            Some(module_url),
-            gsn_node.url.to_owned(),
-            classes,
-        ),
-        id if id.starts_with('J') => Node::new_away_justification(
-            id,
-            &node_text,
-            &gsn_node.module,
-            Some(module_url),
-            gsn_node.url.to_owned(),
-            classes,
-        ),
-        _ => unreachable!(), // Prefixes are checked during validation.
     })
 }
 
@@ -295,44 +189,47 @@ pub fn render_architecture(
     output_path: &str,
 ) -> Result<()> {
     let mut dg = crate::dirgraphsvg::DirGraph::default();
-    let svg_nodes: BTreeMap<String, Node> = modules
+    let svg_nodes: BTreeMap<String, SvgNode> = modules
         .iter()
         .filter(|(k, _)| dependencies.contains_key(k.to_owned()))
         .map(|(k, module)| {
-            (
+            let module_node = GsnNode {
+                text: module
+                    .meta
+                    .brief
+                    .as_ref()
+                    .map(|m| m.to_owned())
+                    .unwrap_or_else(|| "".to_owned()),
+                ..Default::default()
+            };
+            let module_url = Some({
+                let target_svg = set_extension(&module.relative_module_path, "svg");
+                let target_path = translate_to_output_path(output_path, &target_svg)?;
+                get_relative_path(
+                    &target_path,
+                    architecture_path,
+                    None, // is already made "svg" above
+                )?
+            });
+            Ok((
                 k.to_owned(),
-                Node::new_module(
+                SvgNode::new_module(
                     k,
-                    module
-                        .meta
-                        .brief
-                        .as_ref()
-                        .map(|m| m.to_owned())
-                        .unwrap_or_else(|| "".to_owned())
-                        .as_str(),
-                    {
-                        let target_svg = set_extension(&module.relative_module_path, "svg");
-                        let target_path = translate_to_output_path(output_path, &target_svg, None);
-                        get_relative_path(
-                            &target_path.unwrap(), // TODO remove unwraps
-                            architecture_path,
-                            None, // is already made "svg" above
-                        )
-                        .ok()
-                    },
-                    vec![],
+                    &module_node,
+                    render_options.masked_elements.contains(&module.meta.name),
+                    &[],
+                    module_url,
+                    render_options.word_wrap,
                 ),
-            )
+            ))
         })
-        .collect();
-    let mut edges: BTreeMap<String, Vec<(String, EdgeType)>> = dependencies
+        .collect::<Result<BTreeMap<String, SvgNode>>>()?;
+    let edges: BTreeMap<String, Vec<(String, EdgeType)>> = dependencies
         .into_iter()
         .map(|(k, v)| (k, Vec::from_iter(v)))
         .collect();
 
     dg = dg
-        .add_nodes(svg_nodes)
-        .add_edges(&mut edges)
         .embed_stylesheets(render_options.embed_stylesheets)
         .add_css_stylesheets(
             &mut render_options
@@ -342,7 +239,7 @@ pub fn render_architecture(
                 .collect(),
         );
 
-    dg.write(output, true)?;
+    dg.write(svg_nodes, edges, output, true)?;
 
     Ok(())
 }
@@ -351,6 +248,9 @@ pub fn render_architecture(
 /// Render all nodes in one diagram
 ///
 /// TODO mask modules MASK_MODULE
+///
+/// FIXME: Problem horizontal index only applies to argument view
+///        potential solution: puzzle individual argument views together...
 ///
 pub fn render_complete(
     output: &mut impl Write,
@@ -362,25 +262,36 @@ pub fn render_complete(
     //     .map(|x| x.map(|y| y.to_owned()).collect::<Vec<String>>());
     // let masked_modules = masked_modules_opt.iter().flatten().collect::<Vec<_>>();
     let mut dg = crate::dirgraphsvg::DirGraph::default();
-    let mut edges: BTreeMap<String, Vec<(String, EdgeType)>> = nodes
+    let edges: BTreeMap<String, Vec<(String, EdgeType)>> = nodes
         .iter()
         // .filter(|(_, node)| !masked_modules.contains(&&node.module))
         // TODO continue masking here
-        .map(|(id, node)| (id.to_owned(), node.get_edges()))
+        .map(|(id, node)| {
+            (
+                id.to_owned(),
+                node.get_edges()
+                    .iter()
+                    .map(|(s, t)| (s.to_owned(), EdgeType::from(t)))
+                    .collect(),
+            )
+        })
         .collect();
-    let svg_nodes: BTreeMap<String, Node> = nodes
+    let svg_nodes: BTreeMap<String, SvgNode> = nodes
         .iter()
         .map(|(id, node)| {
             (
                 id.to_owned(),
-                svg_from_gsn_node(id, node, &render_options.layers),
+                svg_from_gsn_node(
+                    id,
+                    node,
+                    render_options.masked_elements.contains(id),
+                    &render_options.layers,
+                    render_options.word_wrap,
+                ),
             )
         })
         .collect();
     dg = dg
-        .add_nodes(svg_nodes)
-        .add_edges(&mut edges)
-        .add_levels(&get_levels(nodes))
         .embed_stylesheets(render_options.embed_stylesheets)
         .add_css_stylesheets(
             &mut render_options
@@ -390,7 +301,7 @@ pub fn render_complete(
                 .collect(),
         );
 
-    dg.write(output, false)?;
+    dg.write(svg_nodes, edges, output, false)?;
 
     Ok(())
 }
@@ -411,13 +322,19 @@ pub fn render_argument(
     render_options: &RenderOptions,
 ) -> Result<()> {
     let mut dg = crate::dirgraphsvg::DirGraph::default();
-    let mut svg_nodes: BTreeMap<String, Node> = nodes
+    let mut svg_nodes: BTreeMap<String, SvgNode> = nodes
         .iter()
         .filter(|(_, node)| node.module == module_name)
         .map(|(id, node)| {
             (
                 id.to_owned(),
-                svg_from_gsn_node(id, node, &render_options.layers),
+                svg_from_gsn_node(
+                    id,
+                    node,
+                    render_options.masked_elements.contains(id),
+                    &render_options.layers,
+                    render_options.word_wrap,
+                ),
             )
         })
         .collect();
@@ -432,17 +349,19 @@ pub fn render_argument(
                     away_svg_from_gsn_node(
                         id,
                         node,
+                        render_options.masked_elements.contains(id),
                         // unwraps are ok, since node.module and modules are consistently created
                         modules.get(&node.module).unwrap(),
                         modules.get(module_name).unwrap(),
                         &render_options.layers,
+                        render_options.word_wrap,
                     )?,
                 ))
             })
             .collect::<Result<BTreeMap<_, _>>>()?,
     );
 
-    let mut edges: BTreeMap<String, Vec<(String, EdgeType)>> = nodes
+    let edges: BTreeMap<String, Vec<(String, EdgeType)>> = nodes
         .iter()
         .map(|(id, node)| {
             (
@@ -454,6 +373,7 @@ pub fn render_argument(
                             // unwrap is ok, since all references are checked at the beginning
                             && nodes.get(target).unwrap().module != module_name)
                     })
+                    .map(|(s, t)| (s.to_owned(), EdgeType::from(&t)))
                     .collect::<Vec<(String, EdgeType)>>(),
             )
         })
@@ -468,9 +388,6 @@ pub fn render_argument(
     });
 
     dg = dg
-        .add_nodes(svg_nodes)
-        .add_edges(&mut edges)
-        .add_levels(&get_levels(nodes))
         .embed_stylesheets(render_options.embed_stylesheets)
         .add_css_stylesheets(
             &mut render_options
@@ -496,7 +413,7 @@ pub fn render_argument(
         dg = dg.add_meta_information(&mut meta_info);
     }
 
-    dg.write(output, false)?;
+    dg.write(svg_nodes, edges, output, false)?;
 
     Ok(())
 }
@@ -518,7 +435,11 @@ pub(crate) fn render_evidences(
 
     let mut solutions: Vec<(&String, &GsnNode)> = nodes
         .iter()
-        .filter(|(id, _)| id.starts_with("Sn"))
+        .filter(|(_, node)| node.node_type == Some(GsnNodeType::Solution))
+        .filter(|(id, node)| {
+            !(render_options.masked_elements.contains(id)
+                || render_options.masked_elements.contains(&node.module))
+        })
         .collect();
     solutions.sort_by_key(|(k, _)| *k);
     if solutions.is_empty() {
@@ -566,7 +487,6 @@ pub(crate) fn render_evidences(
 
 #[cfg(test)]
 mod test {
-    use std::collections::BTreeMap;
 
     use crate::gsn::GsnNode;
 
@@ -575,17 +495,7 @@ mod test {
     #[test]
     #[should_panic]
     fn cover_unreachable() {
-        let gsn_node = GsnNode {
-            text: "".to_owned(),
-            in_context_of: None,
-            supported_by: None,
-            undeveloped: None,
-            classes: None,
-            url: None,
-            level: None,
-            additional: BTreeMap::new(),
-            module: "".to_owned(),
-        };
-        svg_from_gsn_node("X2", &gsn_node, &[]);
+        let gsn_node = GsnNode::default();
+        svg_from_gsn_node("X2", &gsn_node, false, &[], None);
     }
 }

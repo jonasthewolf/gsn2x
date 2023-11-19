@@ -1,12 +1,72 @@
 use crate::{
     diagnostics::Diagnostics,
+    dirgraph::{DirectedGraphEdgeType, DirectedGraphNodeType},
     dirgraphsvg::edges::{EdgeType, SingleEdge},
 };
+use anyhow::{anyhow, Error};
 use serde::Deserialize;
-use std::collections::{BTreeMap, BTreeSet, HashMap};
+use serde_yaml::Value;
+use std::{
+    collections::{BTreeMap, BTreeSet, HashMap},
+    fmt::Display,
+};
 
 pub mod check;
 pub mod validation;
+
+#[derive(Clone, Copy, Debug, Deserialize, PartialEq, Eq)]
+pub enum GsnNodeType {
+    Goal,
+    Strategy,
+    Solution,
+    Justification,
+    Context,
+    Assumption,
+}
+
+impl Display for GsnNodeType {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_fmt(format_args!("{:?}", self))
+    }
+}
+
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub enum GsnEdgeType {
+    SupportedBy,
+    InContextOf,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub enum HorizontalIndex {
+    Relative(i32),
+    Absolute(AbsoluteIndex),
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Deserialize)]
+#[serde(untagged, rename_all = "camelCase", try_from = "Value")]
+pub enum AbsoluteIndex {
+    Number(u32),
+    Last,
+}
+
+impl TryFrom<Value> for AbsoluteIndex {
+    type Error = Error;
+
+    fn try_from(value: Value) -> Result<Self, Self::Error> {
+        let int_val = value.as_u64();
+        match int_val {
+            Some(x) => Ok(AbsoluteIndex::Number(x.try_into().unwrap())),
+            None => {
+                if value == "last" {
+                    Ok(AbsoluteIndex::Last)
+                } else {
+                    Err(anyhow!("Either provide positive integer or \"last\""))
+                }
+            }
+        }
+    }
+}
 
 ///
 /// The main struct of this program
@@ -21,7 +81,9 @@ pub struct GsnNode {
     pub(crate) undeveloped: Option<bool>,
     pub(crate) classes: Option<Vec<String>>,
     pub(crate) url: Option<String>,
-    pub(crate) level: Option<String>,
+    pub(crate) rank_increment: Option<usize>,
+    pub(crate) horizontal_index: Option<HorizontalIndex>,
+    pub(crate) node_type: Option<GsnNodeType>,
     #[serde(flatten)]
     pub(crate) additional: BTreeMap<String, String>,
     #[serde(skip_deserializing)]
@@ -29,23 +91,106 @@ pub struct GsnNode {
 }
 
 impl GsnNode {
-    pub fn get_edges(&self) -> Vec<(String, EdgeType)> {
+    ///
+    ///
+    ///
+    pub fn get_edges(&self) -> Vec<(String, GsnEdgeType)> {
         let mut edges = Vec::new();
         if let Some(c_nodes) = &self.in_context_of {
-            let mut es: Vec<(String, EdgeType)> = c_nodes
+            let mut es: Vec<(String, GsnEdgeType)> = c_nodes
                 .iter()
-                .map(|target| (target.to_owned(), EdgeType::OneWay(SingleEdge::InContextOf)))
+                .map(|target| (target.to_owned(), GsnEdgeType::InContextOf))
                 .collect();
             edges.append(&mut es);
         }
         if let Some(s_nodes) = &self.supported_by {
-            let mut es: Vec<(String, EdgeType)> = s_nodes
+            let mut es: Vec<(String, GsnEdgeType)> = s_nodes
                 .iter()
-                .map(|target| (target.to_owned(), EdgeType::OneWay(SingleEdge::SupportedBy)))
+                .map(|target| (target.to_owned(), GsnEdgeType::SupportedBy))
                 .collect();
             edges.append(&mut es);
         }
         edges
+    }
+
+    ///
+    ///
+    ///
+    pub fn fix_node_type(&mut self, id: &str) {
+        self.node_type = if let Some(node_type) = self.node_type {
+            Some(node_type)
+        } else {
+            get_node_type_from_text(id)
+        }
+    }
+}
+
+///
+///
+///
+///
+impl<'a> DirectedGraphNodeType<'a> for GsnNode {
+    ///
+    ///
+    ///
+    fn get_forced_level(&self) -> Option<usize> {
+        self.rank_increment
+    }
+
+    ///
+    ///
+    ///
+    fn get_horizontal_index(&self, current_index: usize) -> Option<usize> {
+        match self.horizontal_index {
+            Some(HorizontalIndex::Absolute(idx)) => match idx {
+                AbsoluteIndex::Number(num) => num.try_into().ok(),
+                AbsoluteIndex::Last => Some(usize::MAX),
+            },
+            Some(HorizontalIndex::Relative(idx)) => (current_index as i32 + idx).try_into().ok(),
+            None => None,
+        }
+    }
+}
+
+///
+///
+///
+impl<'a> DirectedGraphEdgeType<'a> for GsnEdgeType {
+    ///
+    ///
+    ///
+    fn is_primary_child_edge(&self) -> bool {
+        match self {
+            GsnEdgeType::SupportedBy => true,
+            GsnEdgeType::InContextOf => false,
+        }
+    }
+
+    ///
+    ///
+    ///
+    fn is_secondary_child_edge(&self) -> bool {
+        match self {
+            GsnEdgeType::SupportedBy => false,
+            GsnEdgeType::InContextOf => true,
+        }
+    }
+}
+
+///
+///
+///
+///
+fn get_node_type_from_text(text: &str) -> Option<GsnNodeType> {
+    // Order is important due to Sn and S
+    match text {
+        id if id.starts_with('G') => Some(GsnNodeType::Goal),
+        id if id.starts_with("Sn") => Some(GsnNodeType::Solution),
+        id if id.starts_with('S') => Some(GsnNodeType::Strategy),
+        id if id.starts_with('C') => Some(GsnNodeType::Context),
+        id if id.starts_with('A') => Some(GsnNodeType::Assumption),
+        id if id.starts_with('J') => Some(GsnNodeType::Justification),
+        _ => None,
     }
 }
 
@@ -61,7 +206,7 @@ pub struct ModuleInformation {
 
 #[derive(Debug, Deserialize)]
 #[serde(untagged)]
-pub enum GsnDocumentNode {
+pub enum GsnDocument {
     GsnNode(GsnNode),
     ModuleInformation(ModuleInformation),
 }
@@ -145,19 +290,6 @@ fn get_root_nodes(nodes: &BTreeMap<String, GsnNode>) -> Vec<String> {
         }
     }
     Vec::from_iter(root_nodes)
-}
-
-///
-/// Gathers all different 'level' attributes from all nodes.
-///
-pub fn get_levels(nodes: &BTreeMap<String, GsnNode>) -> BTreeMap<&str, Vec<&str>> {
-    let mut levels = BTreeMap::<&str, Vec<&str>>::new();
-    for (id, node) in nodes.iter() {
-        if let Some(l) = &node.level {
-            levels.entry(l.trim()).or_default().push(id);
-        }
-    }
-    levels
 }
 
 ///
@@ -251,35 +383,100 @@ fn add_dependencies(
 #[cfg(test)]
 mod test {
     use super::*;
-
+    use anyhow::{anyhow, Result};
     #[test]
-    fn no_level_exists() {
-        let mut nodes = BTreeMap::<String, GsnNode>::new();
-        nodes.insert("Sn1".to_owned(), Default::default());
-        let output = get_levels(&nodes);
-        assert!(output.is_empty());
+    fn serde_hor_index() -> Result<()> {
+        let res: HorizontalIndex = serde_yaml::from_str("!relative 5")?;
+        assert_eq!(res, HorizontalIndex::Relative(5));
+        let res: HorizontalIndex = serde_yaml::from_str("!relative -3")?;
+        assert_eq!(res, HorizontalIndex::Relative(-3));
+        let res: HorizontalIndex = serde_yaml::from_str("!relative 0")?;
+        assert_eq!(res, HorizontalIndex::Relative(0));
+        let res: HorizontalIndex = serde_yaml::from_str("!absolute 0")?;
+        assert_eq!(res, HorizontalIndex::Absolute(AbsoluteIndex::Number(0)));
+        let res: HorizontalIndex = serde_yaml::from_str("!absolute 7")?;
+        assert_eq!(res, HorizontalIndex::Absolute(AbsoluteIndex::Number(7)));
+        let res: HorizontalIndex = serde_yaml::from_str("!absolute last")?;
+        assert_eq!(res, HorizontalIndex::Absolute(AbsoluteIndex::Last));
+        Ok(())
     }
 
     #[test]
-    fn two_levels_exist() {
-        let mut nodes = BTreeMap::<String, GsnNode>::new();
-        nodes.insert(
-            "Sn1".to_owned(),
-            GsnNode {
-                level: Some("x1".to_owned()),
-                ..Default::default()
-            },
-        );
-        nodes.insert(
-            "G1".to_owned(),
-            GsnNode {
-                level: Some("x2".to_owned()),
-                ..Default::default()
-            },
-        );
-        let output = get_levels(&nodes);
-        assert_eq!(output.len(), 2);
-        assert!(output.contains_key(&"x1"));
-        assert!(output.contains_key(&"x2"));
+    fn serde_hor_invalid_index() -> Result<()> {
+        let res: Result<HorizontalIndex, _> = serde_yaml::from_str("+asdf");
+        assert!(res.is_err());
+        let res: Result<HorizontalIndex, _> = serde_yaml::from_str("");
+        assert!(res.is_err());
+        // 2**32 + 1
+        let res: Result<HorizontalIndex, _> = serde_yaml::from_str("4294967297");
+        assert!(res.is_err());
+        let res: Result<HorizontalIndex, _> = serde_yaml::from_str("+4294967297");
+        assert!(res.is_err());
+        let res: Result<HorizontalIndex, _> = serde_yaml::from_str("-4294967297");
+        assert!(res.is_err());
+        let res: Result<HorizontalIndex, _> = serde_yaml::from_str("-x");
+        assert!(res.is_err());
+        let res: Result<HorizontalIndex, _> = serde_yaml::from_str("bslkdf");
+        assert!(res.is_err());
+        let res: Result<HorizontalIndex, _> = serde_yaml::from_str("!absolute null");
+        assert!(res.is_err());
+        let res: Result<HorizontalIndex, _> = serde_yaml::from_str("!absolute");
+        assert!(res.is_err());
+        let res: Result<HorizontalIndex, _> = serde_yaml::from_str("null");
+        assert!(res.is_err());
+        Ok(())
+    }
+
+    #[test]
+    fn serde_back() -> Result<()> {
+        let goal = r#"
+text: test
+undeveloped: true
+horizontalIndex:
+  relative: -23
+"#;
+        let res: GsnDocument = serde_yaml::from_str(goal)?;
+        if let GsnDocument::GsnNode(node) = res {
+            assert_eq!(node.horizontal_index, Some(HorizontalIndex::Relative(-23)));
+            Ok(())
+        } else {
+            Err(anyhow!("no GsnNode deserialized"))
+        }
+    }
+
+    #[test]
+    fn nodetype() -> Result<()> {
+        let nt: GsnNodeType = serde_yaml::from_str("Solution")?;
+        assert_eq!(nt, GsnNodeType::Solution);
+
+        let gsn = r#"
+G1:
+  text: Goal1
+  supportedBy: [C1]
+
+C1:
+  text: Solution1
+  nodeType: Solution
+"#;
+        let res: BTreeMap<String, GsnDocument> = serde_yaml::from_str(gsn)?;
+        if let Some(GsnDocument::GsnNode(n)) = res.get("C1") {
+            assert_eq!(n.node_type, Some(GsnNodeType::Solution));
+            Ok(())
+        } else {
+            Err(anyhow!("Serialization did not work"))
+        }
+    }
+
+    #[test]
+    fn edge_type_copy_clone() {
+        let edge = GsnEdgeType::SupportedBy;
+        let edge_copy = edge;
+        assert_eq!(edge, edge_copy);
+    }
+
+    #[test]
+    fn edge_type_debug() {
+        assert_eq!(format!("{:?}", GsnEdgeType::SupportedBy), "SupportedBy");
+        assert_eq!(format!("{:?}", GsnEdgeType::InContextOf), "InContextOf");
     }
 }

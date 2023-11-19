@@ -1,12 +1,14 @@
 use anyhow::{anyhow, Context, Result};
-use clap::{Arg, ArgAction};
+use clap::{value_parser, Arg, ArgAction};
 use file_utils::{prepare_and_check_input_paths, set_extension, translate_to_output_path};
 use render::RenderOptions;
 use std::collections::{BTreeMap, HashMap};
 use std::fs::File;
 use std::io::BufReader;
+use std::path::PathBuf;
 
 mod diagnostics;
+mod dirgraph;
 mod dirgraphsvg;
 mod file_utils;
 mod gsn;
@@ -15,7 +17,7 @@ mod yaml_fix;
 
 use diagnostics::Diagnostics;
 use dirgraphsvg::escape_text;
-use gsn::{GsnDocumentNode, GsnNode, Module, ModuleInformation};
+use gsn::{GsnDocument, GsnNode, Module, ModuleInformation};
 
 const MODULE_INFORMATION_NODE: &str = "module";
 
@@ -118,7 +120,6 @@ fn main() -> Result<()> {
                 .short('o')
                 .long("output-dir")
                 .action(ArgAction::Set)
-                .default_value(".")
                 .conflicts_with("CHECKONLY")
                 .help_heading("OUTPUT"),
         )
@@ -150,16 +151,15 @@ fn main() -> Result<()> {
                 .conflicts_with("CHECKONLY")
                 .help_heading("OUTPUT MODIFICATION"),
         )
-        // .arg(
-        //     Arg::new("MASK_MODULE")
-        //         .help("Do not unroll this module in the complete view.")
-        //         .short('m')
-        //         .long("mask")
-        //         .multiple_occurrences(true)
-        //         .takes_value(true)
-        //         .requires("COMPLETE_VIEW")
-        //         .help_heading("OUTPUT MODIFICATION"),
-        // )
+        .arg(
+            Arg::new("MASKED_MODULE")
+                .help("Do not show this module in views.")
+                .short('m')
+                .long("mask")
+                .action(ArgAction::Append)
+                .conflicts_with("CHECKONLY")
+                .help_heading("OUTPUT MODIFICATION"),
+        )
         .arg(
             Arg::new("NO_LEGEND")
                 .help("Do not output a legend based on module information.")
@@ -175,6 +175,16 @@ fn main() -> Result<()> {
                 .short('g')
                 .long("full-legend")
                 .action(ArgAction::SetTrue)
+                .conflicts_with("CHECKONLY")
+                .help_heading("OUTPUT MODIFICATION"),
+        )
+        .arg(
+            Arg::new("WORD_WRAP")
+                .help("Define the number of characters after which a line of text is wrapped.")
+                .short('w')
+                .long("wrap")
+                .action(ArgAction::Set)
+                .value_parser(value_parser!(u32))
                 .conflicts_with("CHECKONLY")
                 .help_heading("OUTPUT MODIFICATION"),
         );
@@ -205,19 +215,77 @@ fn main() -> Result<()> {
     let mut modules: HashMap<String, Module> = HashMap::new();
 
     // Read input
-    let common_ancestors = prepare_and_check_input_paths(&mut inputs)?;
+    prepare_and_check_input_paths(&mut inputs)?;
     read_inputs(&inputs, &mut nodes, &mut modules, &mut diags)?;
 
     // Validate
     validate_and_check(&mut nodes, &modules, &mut diags, &excluded_modules, &layers);
 
     if diags.errors == 0 && !matches.get_flag("CHECKONLY") {
-        let render_options = RenderOptions::from(&matches);
+        let embed_stylesheets = matches.get_flag("EMBED_CSS");
+        let output_directory = matches.get_one::<String>("OUTPUT_DIRECTORY");
+        let mut stylesheets = matches
+            .get_many::<String>("STYLESHEETS")
+            .into_iter()
+            .flatten()
+            .map(|css| css.to_owned())
+            .collect::<Vec<_>>();
+        // Copy stylesheets if necessary and prepare paths
+        copy_and_prepare_stylesheets(&mut stylesheets, embed_stylesheets, &output_directory)?;
+        let mut render_options =
+            RenderOptions::new(&matches, stylesheets, embed_stylesheets, output_directory);
+        // Add missing nodes that may not exist because references checks have been excluded
+        add_missing_nodes_and_modules(&mut nodes, &mut modules, &mut render_options);
         // Output views
-        print_outputs(nodes, &modules, &render_options, common_ancestors)?;
+        print_outputs(nodes, &modules, &render_options)?;
     }
     // Output diagnostic messages
     output_messages(&diags)
+}
+
+///
+/// Add missing nodes that were referenced, but excluded f
+///
+fn add_missing_nodes_and_modules(
+    nodes: &mut BTreeMap<String, GsnNode>,
+    modules: &mut HashMap<String, Module>,
+    render_options: &mut RenderOptions,
+) {
+    let mut add_nodes = vec![];
+    for (_, node) in nodes.iter() {
+        let ref_nodes: Vec<_> = node
+            .supported_by
+            .iter()
+            .chain(node.in_context_of.iter())
+            .flatten()
+            .collect();
+        for ref_node in ref_nodes {
+            if !nodes.contains_key(ref_node) {
+                add_nodes.push(ref_node.to_owned());
+            }
+        }
+    }
+    for node in add_nodes {
+        let mut gsn_node = GsnNode {
+            module: "Unknown".to_owned(),
+            ..Default::default()
+        };
+        gsn_node.fix_node_type(&node);
+        nodes.insert(node.to_owned(), gsn_node);
+        render_options.masked_elements.push(node);
+    }
+    modules.insert(
+        "Unknown".to_owned(),
+        Module {
+            relative_module_path: "".to_owned(),
+            meta: ModuleInformation {
+                name: "Unknown".to_owned(),
+                brief: None,
+                extends: None,
+                additional: BTreeMap::new(),
+            },
+        },
+    );
 }
 
 ///
@@ -234,8 +302,8 @@ fn read_inputs(
         let reader =
             BufReader::new(File::open(input).context(format!("Failed to open file {input}"))?);
 
-        let mut n: BTreeMap<String, GsnDocumentNode> = serde_yaml::from_reader(reader)
-            .map(|n: yaml_fix::YamlFixMap<String, GsnDocumentNode>| n.into_inner())
+        let mut n: BTreeMap<String, GsnDocument> = serde_yaml::from_reader(reader)
+            .map(|n: yaml_fix::YamlFixMap<String, GsnDocument>| n.into_inner())
             .map_err(|e| {
                 anyhow!(format!(
                     "No valid GSN element can be found starting from line {}.\n\
@@ -250,11 +318,11 @@ fn read_inputs(
             })
             .context(format!("Failed to parse YAML from file {input}"))?;
         let meta: ModuleInformation = match n.remove_entry(MODULE_INFORMATION_NODE) {
-            Some((_, GsnDocumentNode::ModuleInformation(x))) => x,
+            Some((_, GsnDocument::ModuleInformation(x))) => x,
             _ => {
                 let module_name = escape_text(input);
                 ModuleInformation {
-                    name: module_name.to_owned(),
+                    name: module_name,
                     brief: None,
                     extends: None,
                     additional: BTreeMap::new(),
@@ -287,9 +355,10 @@ fn read_inputs(
             if let Some((k, v)) = n.remove_entry(&node_name) {
                 if let std::collections::btree_map::Entry::Vacant(e) = nodes.entry(k.to_owned()) {
                     match v {
-                        GsnDocumentNode::GsnNode(mut x) => {
+                        GsnDocument::GsnNode(mut x) => {
                             // Remember module for node
                             x.module = module.to_owned();
+                            x.fix_node_type(&k);
                             e.insert(x);
                         }
                         _ => unreachable!(), // There can be only one MetaNode
@@ -355,13 +424,12 @@ fn print_outputs(
     nodes: BTreeMap<String, GsnNode>,
     modules: &HashMap<String, Module>,
     render_options: &RenderOptions,
-    common_ancestors: String,
 ) -> Result<()> {
-    let output_path = &render_options.output_directory;
+    let output_path = render_options.output_directory.to_owned().unwrap_or(".");
     if !render_options.skip_argument {
-        for (module_name, module) in modules {
+        for (module_name, module) in modules.iter().filter(|(m, _)| m.as_str() != "Unknown") {
             let output_path = set_extension(
-                &translate_to_output_path(output_path, &module.relative_module_path, None)?,
+                &translate_to_output_path(output_path, &module.relative_module_path)?,
                 "svg",
             );
             let mut output_file = Box::new(
@@ -378,13 +446,14 @@ fn print_outputs(
             )?;
         }
     }
-    if modules.len() > 1 {
+    if modules
+        .iter()
+        .filter(|(m, _)| m.as_str() != "Unknown")
+        .count()
+        > 1
+    {
         if let Some(architecture_filename) = &render_options.architecture_filename {
-            let arch_output_path = translate_to_output_path(
-                output_path,
-                architecture_filename,
-                Some(&common_ancestors),
-            )?;
+            let arch_output_path = translate_to_output_path(output_path, architecture_filename)?;
             let mut output_file = File::create(&arch_output_path)
                 .context(format!("Failed to open output file {arch_output_path}"))?;
             let deps = crate::gsn::calculate_module_dependencies(&nodes);
@@ -398,16 +467,14 @@ fn print_outputs(
             )?;
         }
         if let Some(complete_filename) = &render_options.complete_filename {
-            let output_path =
-                translate_to_output_path(output_path, complete_filename, Some(&common_ancestors))?;
+            let output_path = translate_to_output_path(output_path, complete_filename)?;
             let mut output_file = File::create(&output_path)
                 .context(format!("Failed to open output file {output_path}"))?;
             render::render_complete(&mut output_file, &nodes, render_options)?;
         }
     }
     if let Some(evidences_filename) = &render_options.evidences_filename {
-        let output_path =
-            translate_to_output_path(output_path, evidences_filename, Some(&common_ancestors))?;
+        let output_path = translate_to_output_path(output_path, evidences_filename)?;
         let mut output_file = File::create(&output_path)
             .context(format!("Failed to open output file {output_path}"))?;
         render::render_evidences(&mut output_file, &nodes, render_options)?;
@@ -435,6 +502,51 @@ fn output_messages(diags: &Diagnostics) -> Result<()> {
             diags.warnings
         ))
     }
+}
+
+///
+///
+///
+///
+pub(crate) fn copy_and_prepare_stylesheets(
+    stylesheets: &mut [String],
+    embed_stylesheets: bool,
+    output_directory: &Option<&String>,
+) -> Result<()> {
+    for stylesheet in stylesheets {
+        let new_name = if stylesheet.starts_with("http://")
+            || stylesheet.starts_with("https://")
+            || stylesheet.starts_with("file://")
+        {
+            // Stylesheets provided as a URL, are neither copied nor embedded
+            format!("url({stylesheet})")
+        } else if embed_stylesheets {
+            // No need to transform path when embedding stylesheets
+            stylesheet.to_owned()
+        } else if let Some(output_directory) = output_directory {
+            // Copy stylesheet to output path
+            let css_path = PathBuf::from(&stylesheet);
+            let mut out_path = PathBuf::from(output_directory);
+            std::fs::create_dir_all(&out_path)?;
+            out_path.push(css_path.file_name().ok_or(anyhow!(
+                "Could not identify stylesheet filename in {}",
+                stylesheet
+            ))?);
+            std::fs::copy(&css_path, &out_path).with_context(|| {
+                format!(
+                    "Could not copy stylesheet from {} to {}",
+                    css_path.display(),
+                    &out_path.display()
+                )
+            })?;
+            out_path.to_string_lossy().to_string().to_owned()
+        } else {
+            stylesheet.to_owned()
+        };
+        *stylesheet = new_name.to_owned();
+    }
+
+    Ok(())
 }
 
 #[cfg(test)]

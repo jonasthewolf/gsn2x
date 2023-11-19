@@ -1,6 +1,6 @@
-use super::GsnNode;
-use crate::diagnostics::Diagnostics;
-use std::collections::{BTreeMap, BTreeSet};
+use super::{GsnEdgeType, GsnNode, GsnNodeType};
+use crate::{diagnostics::Diagnostics, dirgraph::DirectedGraph};
+use std::collections::BTreeMap;
 
 ///
 /// Entry function to all checks.
@@ -14,8 +14,13 @@ pub fn check_nodes(
     check_node_references(diag, nodes, excluded_modules);
     check_root_nodes(diag, nodes)
         .map(|_| {
-            check_levels(diag, nodes);
-            check_cycles(diag, nodes);
+            let edges: BTreeMap<String, Vec<(String, GsnEdgeType)>> = nodes
+                .iter()
+                .map(|(id, node)| (id.to_owned(), node.get_edges()))
+                .collect();
+            let graph = DirectedGraph::new(nodes, &edges);
+            check_cycles(diag, &graph);
+            check_unreachable(diag, &graph);
         })
         .unwrap_or(());
 }
@@ -44,7 +49,7 @@ fn check_root_nodes(
         }
         1 => {
             let rootn = root_nodes.get(0).unwrap(); // unwrap is ok, since we just checked that there is an element in Vec
-            if !rootn.starts_with('G') {
+            if nodes.get(rootn).unwrap().node_type != Some(GsnNodeType::Goal) {
                 diag.add_error(
                     None,
                     format!("C02: The root element should be a goal, but {rootn} was found."),
@@ -114,116 +119,43 @@ fn check_node_references(
 /// It also detects if there is a cycle in an independent graph.
 ///
 ///
-fn check_cycles(diag: &mut Diagnostics, nodes: &BTreeMap<String, GsnNode>) {
-    let mut visited: BTreeSet<String> = BTreeSet::new();
-    let root_nodes = super::get_root_nodes(nodes);
-    let cloned_root_nodes = root_nodes.to_vec();
-    let mut stack = Vec::new();
-    let mut ancestors = Vec::new();
-
-    for root in &root_nodes {
-        visited.insert(root.to_owned());
-        stack.push((root.to_owned(), 0));
-    }
-    let mut depth = 0;
-    while let Some((p_id, rdepth)) = stack.pop() {
-        // Jump back to current ancestor
-        if rdepth < depth {
-            // It is not sufficient to pop here, since one could skip levels when cleaning up.
-            ancestors.resize(rdepth, "".to_owned());
-            depth = rdepth;
-        }
-        // Increase depth if current node has children that are not Solutions
-        if nodes
-            .get(&p_id)
-            .unwrap() // unwrap is ok, since all references have been checked already
-            .supported_by
-            .iter()
-            .flatten()
-            .filter(|x| !x.starts_with("Sn"))
-            .count()
-            > 0
-        {
-            depth += 1;
-            ancestors.push(p_id.to_owned());
-        }
-        // Remember the incontext elements for the reachability analysis below.
-        nodes
-            .get(&p_id)
-            .unwrap()
-            .in_context_of
-            .iter()
-            .flatten()
-            .for_each(|x| {
-                visited.insert(x.to_owned());
-            });
-        // unwrap is ok, since all references have been checked already
-        for child_node in nodes.get(&p_id).unwrap().supported_by.iter().flatten() {
-            // Remember the solutions for reachability analysis.
-            visited.insert(child_node.to_owned());
-            if !child_node.starts_with("Sn") {
-                if ancestors.contains(child_node) {
-                    diag.add_error(
-                        None,
-                        format!(
-                            "C04: Cycle detected at element {}. Cycle is {} -> {} -> {}.",
-                            &p_id,
-                            child_node,
-                            &ancestors
-                                .rsplit(|x| x == child_node)
-                                .next()
-                                .unwrap() // unwrap is ok, since it is checked above that `ancestors` contains `child_node`
-                                .join(" -> "),
-                            child_node
-                        ),
-                    );
-                    break;
-                }
-                stack.push((child_node.to_owned(), depth));
-            }
-        }
-    }
-    let node_keys = BTreeSet::from_iter(nodes.keys().cloned());
-    let unvisited: BTreeSet<&String> = node_keys.difference(&visited).collect();
-
-    if !unvisited.is_empty() {
+fn check_cycles(diag: &mut Diagnostics, graph: &DirectedGraph<GsnNode, GsnEdgeType>) {
+    let cycle = graph.get_first_cycle();
+    if let Some((found, ring)) = cycle {
         diag.add_error(
             None,
             format!(
-                "C08: The following element(s) are not reachable from the root element(s) ({}): {}",
-                cloned_root_nodes.join(", "),
-                Vec::from_iter(unvisited)
-                    .into_iter()
-                    .cloned()
-                    .collect::<Vec<String>>()
-                    .join(", ")
+                "C04: Cycle detected at element {}. Cycle is {}.",
+                found,
+                &ring.join(" -> "),
             ),
         );
     }
 }
 
 ///
-/// Check if level statement is used more than once.
 ///
 ///
-///
-fn check_levels(diag: &mut Diagnostics, nodes: &BTreeMap<String, GsnNode>) {
-    let mut levels = BTreeMap::<&str, usize>::new();
-    for node in nodes.values() {
-        if let Some(l) = &node.level {
-            *levels.entry(l.trim()).or_insert(0) += 1;
-        }
+fn check_unreachable(diag: &mut Diagnostics, graph: &DirectedGraph<GsnNode, GsnEdgeType>) {
+    let unvisited = graph.get_unreachable_nodes();
+    let root_nodes = graph.get_root_nodes();
+
+    if !unvisited.is_empty() {
+        diag.add_error(
+            None,
+            format!(
+                "C08: The following element(s) are not reachable from the root element(s) ({}): {}",
+                root_nodes.join(", "),
+                unvisited.join(", ")
+            ),
+        );
     }
-    levels
-        .iter()
-        .filter(|(_, &count)| count == 1)
-        .for_each(|(l, _)| diag.add_warning(None, format!("C05: Level {l} is only used once.")));
 }
 
 ///
 /// Checks if the layers handed in via command line parameters
 /// are actually used at at least one node.
-/// Also checks if no reserved words are used, like 'level' or 'text'
+/// Also checks if no reserved words are used, like 'rankIncrement' or 'text'
 ///
 pub fn check_layers(diag: &mut Diagnostics, nodes: &BTreeMap<String, GsnNode>, layers: &[&str]) {
     let reserved_words = [
@@ -232,8 +164,10 @@ pub fn check_layers(diag: &mut Diagnostics, nodes: &BTreeMap<String, GsnNode>, l
         "supportedBy",
         "classes",
         "url",
-        "level",
         "undeveloped",
+        "nodeType",
+        "rankIncrement",
+        "horizontalIndex",
     ];
     for l in layers {
         if reserved_words.contains(l) {
@@ -271,6 +205,7 @@ mod test {
             GsnNode {
                 in_context_of: Some(vec!["C1".to_owned()]),
                 undeveloped: Some(true),
+                node_type: Some(GsnNodeType::Goal),
                 ..Default::default()
             },
         );
@@ -294,6 +229,7 @@ mod test {
             "G1".to_owned(),
             GsnNode {
                 supported_by: Some(vec!["G2".to_owned()]),
+                node_type: Some(GsnNodeType::Goal),
                 ..Default::default()
             },
         );
@@ -358,7 +294,12 @@ mod test {
                 ..Default::default()
             },
         );
-        check_cycles(&mut d, &nodes);
+        let edges: BTreeMap<String, Vec<(String, GsnEdgeType)>> = nodes
+            .iter()
+            .map(|(id, node)| (id.to_owned(), node.get_edges()))
+            .collect();
+        let graph = DirectedGraph::new(&nodes, &edges);
+        check_cycles(&mut d, &graph);
         assert_eq!(d.messages.len(), 1);
         assert_eq!(d.messages[0].module, None);
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
@@ -415,6 +356,7 @@ mod test {
             "G1".to_owned(),
             GsnNode {
                 supported_by: Some(vec!["S1".to_owned()]),
+                node_type: Some(GsnNodeType::Goal),
                 ..Default::default()
             },
         );
@@ -422,6 +364,7 @@ mod test {
             "S1".to_owned(),
             GsnNode {
                 supported_by: Some(vec!["G2".to_owned(), "G3".to_owned()]),
+                node_type: Some(GsnNodeType::Strategy),
                 ..Default::default()
             },
         );
@@ -429,6 +372,7 @@ mod test {
             "G2".to_owned(),
             GsnNode {
                 undeveloped: Some(true),
+                node_type: Some(GsnNodeType::Goal),
                 ..Default::default()
             },
         );
@@ -436,6 +380,7 @@ mod test {
             "G3".to_owned(),
             GsnNode {
                 supported_by: Some(vec!["G2".to_owned()]),
+                node_type: Some(GsnNodeType::Goal),
                 ..Default::default()
             },
         );
@@ -453,6 +398,7 @@ mod test {
             "G1".to_owned(),
             GsnNode {
                 supported_by: Some(vec!["S1".to_owned()]),
+                node_type: Some(GsnNodeType::Goal),
                 ..Default::default()
             },
         );
@@ -460,6 +406,7 @@ mod test {
             "S1".to_owned(),
             GsnNode {
                 supported_by: Some(vec!["G2".to_owned()]),
+                node_type: Some(GsnNodeType::Strategy),
                 ..Default::default()
             },
         );
@@ -467,12 +414,14 @@ mod test {
             "G2".to_owned(),
             GsnNode {
                 supported_by: Some(vec!["G1".to_owned()]),
+                node_type: Some(GsnNodeType::Goal),
                 ..Default::default()
             },
         );
         nodes.insert(
             "Sn1".to_owned(),
             GsnNode {
+                node_type: Some(GsnNodeType::Solution),
                 ..Default::default()
             },
         );
@@ -481,6 +430,7 @@ mod test {
             GsnNode {
                 supported_by: Some(vec!["Sn1".to_owned(), "G4".to_owned()]),
                 in_context_of: Some(vec!["A1".to_owned()]),
+                node_type: Some(GsnNodeType::Goal),
                 ..Default::default()
             },
         );
@@ -489,18 +439,21 @@ mod test {
             GsnNode {
                 undeveloped: Some(true),
                 in_context_of: Some(vec!["J1".to_owned()]),
+                node_type: Some(GsnNodeType::Goal),
                 ..Default::default()
             },
         );
         nodes.insert(
             "A1".to_owned(),
             GsnNode {
+                node_type: Some(GsnNodeType::Assumption),
                 ..Default::default()
             },
         );
         nodes.insert(
             "J1".to_owned(),
             GsnNode {
+                node_type: Some(GsnNodeType::Justification),
                 ..Default::default()
             },
         );
@@ -520,7 +473,13 @@ mod test {
     fn wrong_root() {
         let mut d = Diagnostics::default();
         let mut nodes = BTreeMap::<String, GsnNode>::new();
-        nodes.insert("Sn1".to_owned(), GsnNode::default());
+        nodes.insert(
+            "Sn1".to_owned(),
+            GsnNode {
+                node_type: Some(GsnNodeType::Solution),
+                ..Default::default()
+            },
+        );
         check_nodes(&mut d, &nodes, &[]);
         assert_eq!(d.messages.len(), 1);
         assert_eq!(d.messages[0].module, None);
@@ -626,27 +585,6 @@ mod test {
             "Layer layer2 is not used in file. No additional output will be generated."
         );
         assert_eq!(d.errors, 1);
-        assert_eq!(d.warnings, 1);
-    }
-
-    #[test]
-    fn level_only_once() {
-        let mut d = Diagnostics::default();
-        let mut nodes = BTreeMap::<String, GsnNode>::new();
-        nodes.insert(
-            "G1".to_owned(),
-            GsnNode {
-                undeveloped: Some(true),
-                level: Some("test".to_owned()),
-                ..Default::default()
-            },
-        );
-        check_nodes(&mut d, &nodes, &[]);
-        assert_eq!(d.messages.len(), 1);
-        assert_eq!(d.messages[0].module, None);
-        assert_eq!(d.messages[0].diag_type, DiagType::Warning);
-        assert_eq!(d.messages[0].msg, "C05: Level test is only used once.");
-        assert_eq!(d.errors, 0);
         assert_eq!(d.warnings, 1);
     }
 
