@@ -49,7 +49,6 @@ impl BitOr for SingleEdge {
 pub enum EdgeType {
     OneWay(SingleEdge),
     TwoWay((SingleEdge, SingleEdge)),
-    // Invisible,
 }
 
 impl From<&GsnEdgeType> for EdgeType {
@@ -194,7 +193,7 @@ fn create_path_data_for_points(curve_points: &[(Point2D<i32>, Point2D<i32>)]) ->
 }
 
 ///
-///
+/// If at least a rank is skipped, add supporting points.
 ///
 fn add_supporting_points(
     curve_points: &mut Vec<(Point2D<i32>, Point2D<i32>)>,
@@ -299,7 +298,7 @@ fn get_potential_supporting_points(
 }
 
 ///
-///
+/// Add the area from 0 to the first bounding box
 ///
 fn first_free_center_point(bbox: &[Point2D<i32>; 4]) -> [Point2D<i32>; 4] {
     let p = Point2D {
@@ -310,7 +309,7 @@ fn first_free_center_point(bbox: &[Point2D<i32>; 4]) -> [Point2D<i32>; 4] {
 }
 
 ///
-///
+/// Add the area from the last bounding box to the edge of the document
 ///
 fn last_free_center_point(bbox: &[Point2D<i32>; 4], width: i32) -> [Point2D<i32>; 4] {
     let p = Point2D {
@@ -321,8 +320,7 @@ fn last_free_center_point(bbox: &[Point2D<i32>; 4], width: i32) -> [Point2D<i32>
 }
 
 ///
-///
-/// TODO Choose port based on angle between direct connection
+/// Get start and end points of the edge
 ///
 fn get_start_and_end_points(
     s: std::cell::Ref<'_, SvgNode>,
