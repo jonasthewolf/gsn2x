@@ -231,7 +231,7 @@ fn add_supporting_points(
                     get_potential_supporting_points(window, t_pos.x, t_rank > s_rank)
                 })
                 .min_by_key(|(p, _)| {
-                    (distance(p, &last_point.0) as f64
+                    (p.distance(&last_point.0) as f64
                         * f64::sqrt((t_pos.x - p.x) as f64 * (t_pos.x - p.x) as f64))
                         as i32
                 })
@@ -388,15 +388,6 @@ fn is_line_intersecting_with_box(
             || (start.y > bbox[TOP_RIGHT_CORNER].y && end.y > bbox[TOP_RIGHT_CORNER].y)
             || (start.y < bbox[BOTTOM_LEFT_CORNER].y && end.y < bbox[BOTTOM_LEFT_CORNER].y))
     }
-}
-
-///
-/// Get the distance between two points
-///
-fn distance(p1: &Point2D<i32>, p2: &Point2D<i32>) -> i32 {
-    f64::sqrt(
-        (p1.x - p2.x) as f64 * (p1.x - p2.x) as f64 + (p1.y - p2.y) as f64 * (p1.y - p2.y) as f64,
-    ) as i32
 }
 
 #[cfg(test)]

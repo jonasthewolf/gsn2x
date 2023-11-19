@@ -471,9 +471,7 @@ C1:
     fn edge_type_copy_clone() {
         let edge = GsnEdgeType::SupportedBy;
         let edge_copy = edge;
-        let edge_clone = edge.clone();
         assert_eq!(edge, edge_copy);
-        assert_eq!(edge, edge_clone);
     }
 
     #[test]

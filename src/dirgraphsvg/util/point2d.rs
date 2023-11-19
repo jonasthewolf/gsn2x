@@ -16,6 +16,18 @@ where
     pub y: T,
 }
 
+impl Point2D<i32> {
+    ///
+    /// Get the distance between two points
+    ///
+    pub fn distance(&self, p2: &Point2D<i32>) -> i32 {
+        f64::sqrt(
+            (self.x - p2.x) as f64 * (self.x - p2.x) as f64
+                + (self.y - p2.y) as f64 * (self.y - p2.y) as f64,
+        ) as i32
+    }
+}
+
 impl<T> Debug for Point2D<T>
 where
     T: Sized + Add + Mul + Debug,
@@ -100,6 +112,17 @@ where
     }
 }
 
+impl<T> Mul<Point2D<T>> for Point2D<T>
+where
+    T: Sized + Add<Output = T> + Mul<Output = T>,
+{
+    type Output = T;
+
+    fn mul(self, rhs: Point2D<T>) -> Self::Output {
+        self.x * rhs.x + self.y * rhs.y
+    }
+}
+
 impl<T> From<(T, T)> for Point2D<T>
 where
     T: Sized + Add + Mul,
@@ -120,11 +143,8 @@ mod test {
     fn clone_copy() {
         let p = Point2D::<i32> { x: 14, y: 23 };
         let p_copy = p;
-        let p_clone = p.clone();
         assert_eq!(p_copy.x, p.x);
         assert_eq!(p_copy.y, p.y);
-        assert_eq!(p_clone.x, p.x);
-        assert_eq!(p_clone.y, p.y);
     }
 
     #[test]
