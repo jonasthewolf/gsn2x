@@ -1,11 +1,8 @@
 use svg::node::element::{path::Data, Element, Path, Title};
 
-use crate::dirgraphsvg::{
-    nodes::{add_text, OFFSET_IDENTIFIER},
-    util::font::FontInfo,
-};
+use crate::dirgraphsvg::{nodes::OFFSET_IDENTIFIER, render::create_text, util::font::FontInfo};
 
-use super::{Node, SizeContext, PADDING_HORIZONTAL, PADDING_VERTICAL};
+use super::{SizeContext, SvgNode, PADDING_HORIZONTAL, PADDING_VERTICAL};
 
 const MODULE_TAB_HEIGHT: i32 = 10;
 const UNDEVELOPED_DIAMOND: i32 = 5;
@@ -62,7 +59,13 @@ impl BoxType {
     ///
     ///
     ///
-    pub(super) fn render(&self, node: &Node, font: &FontInfo, mut context: Element) -> Element {
+    pub(super) fn render(
+        &self,
+        node: &SvgNode,
+        font: &FontInfo,
+        context: &mut Element,
+        border_color: &str,
+    ) {
         let title = Title::new().add(svg::node::Text::new(&node.identifier));
         use svg::Node;
         context.append(title);
@@ -118,7 +121,7 @@ impl BoxType {
 
         let border = Path::new()
             .set("fill", "none")
-            .set("stroke", "black")
+            .set("stroke", border_color)
             .set("stroke-width", 1u32)
             .set("d", data)
             .set("class", "border");
@@ -134,12 +137,14 @@ impl BoxType {
             y += MODULE_TAB_HEIGHT;
         }
         y += font.size as i32;
-        context = add_text(context, &node.identifier, x, y, font, true);
+        context.append(create_text(&node.identifier, x, y, font, true));
         y += OFFSET_IDENTIFIER;
 
-        for text in node.text.lines() {
-            y += font.size as i32;
-            context = add_text(context, text, x, y, font, false);
+        if !node.masked {
+            for text in node.text.lines() {
+                y += font.size as i32;
+                context.append(create_text(text, x, y, font, false));
+            }
         }
 
         if let BoxType::Undeveloped(_) = self {
@@ -151,11 +156,10 @@ impl BoxType {
                 .close();
             let undeveloped_diamond = Path::new()
                 .set("fill", "none")
-                .set("stroke", "black")
+                .set("stroke", border_color)
                 .set("stroke-width", 1u32)
                 .set("d", data);
             context.append(undeveloped_diamond);
         }
-        context
     }
 }

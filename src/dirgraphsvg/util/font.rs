@@ -5,11 +5,17 @@ use glyph_brush_layout::{
     FontId, GlyphPositioner, Layout, SectionGeometry, SectionText,
 };
 
+///
+/// Default font family names on different operating systems
+///
 #[cfg(any(target_os = "windows", target_os = "macos"))]
 pub static DEFAULT_FONT_FAMILY_NAME: &str = "Arial";
 #[cfg(not(any(target_os = "windows", target_os = "macos")))]
 pub static DEFAULT_FONT_FAMILY_NAME: &str = "DejaVuSans";
 
+///
+/// All we need to know about a font
+///
 pub struct FontInfo {
     font: FontVec,
     font_bold: FontVec,
@@ -18,6 +24,9 @@ pub struct FontInfo {
     pub size: f32,
 }
 
+///
+/// Default font with size 12
+///
 impl Default for FontInfo {
     fn default() -> Self {
         FontInfo {
@@ -30,11 +39,17 @@ impl Default for FontInfo {
     }
 }
 
+///
+/// Get the default font as a byte vector
+///
 pub fn get_default_font(bold: bool, italic: bool) -> Result<FontVec> {
     get_font(DEFAULT_FONT_FAMILY_NAME, bold, italic)
 }
 
-pub fn get_font(font_name: &str, bold: bool, italic: bool) -> Result<FontVec> {
+///
+/// Get a font as a byte vector
+///
+fn get_font(font_name: &str, bold: bool, italic: bool) -> Result<FontVec> {
     let mut props = system_fonts::FontPropertyBuilder::new();
     props = props.family(font_name);
     if bold {
@@ -49,13 +64,16 @@ pub fn get_font(font_name: &str, bold: bool, italic: bool) -> Result<FontVec> {
     FontVec::try_from_vec(fd.to_vec()).map_err(Error::from)
 }
 
+///
+/// Get the bounding box of `text` for the font described by `font_info` and `bold`
+///
 pub fn text_bounding_box(font_info: &FontInfo, text: &str, bold: bool) -> (i32, i32) {
     let kern = if bold {
-        text.chars().count() as i32 * 4
+        text.chars().count() as f64 * 4.0
     } else {
-        (text.chars().count() as f32 * 1.5) as i32
+        text.chars().count() as f64 * 1.5
     };
-    let line_gap = 5;
+    let line_gap = 5.0;
     let font_id = usize::from(bold);
     Layout::default_single_line()
         .calculate_glyphs(
@@ -74,10 +92,11 @@ pub fn text_bounding_box(font_info: &FontInfo, text: &str, bold: bool) -> (i32, 
         .last()
         .map(|g| {
             (
-                g.glyph.position.x as i32 + kern,
-                g.glyph.position.y as i32 + line_gap,
+                g.glyph.position.x as f64 + kern,
+                g.glyph.position.y as f64 + line_gap,
             )
         })
+        .map(|(x, y)| (x as i32, y as i32))
         .unwrap_or((0, 0))
 }
 

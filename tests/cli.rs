@@ -57,7 +57,7 @@ mod integrations {
         // Order is important.
         let replaces = vec![
             (
-                Regex::new(r#" gsn_module_\w+"#).unwrap(),
+                Regex::new(r" gsn_module_\w+").unwrap(),
                 " gsn_module_replaced",
             ),
             (
@@ -69,7 +69,7 @@ mod integrations {
                 Regex::new(r#" font-family="([0-9A-Za-z-_]|\\.|\\u[0-9a-fA-F]{1,4})+""#).unwrap(),
                 " font-family=\"\"",
             ),
-            (Regex::new(r#"(-?\d+,-?\d+[, ]?)+"#).unwrap(), ""),
+            (Regex::new(r"(-?\d+,-?\d+[, ]?)+").unwrap(), ""),
             (
                 Regex::new(r#"d="((?P<cmd>[A-Za-z]+)(:?-?\d+(:?,-?\d+)?)? ?(?P<cmd2>z?))+""#)
                     .unwrap(),
@@ -341,6 +341,8 @@ mod integrations {
         cmd.arg("examples/modular/main.gsn.yaml")
             .arg("examples/modular/sub1.gsn.yaml")
             .arg("examples/modular/sub3.gsn.yaml")
+            .arg("-o")
+            .arg("examples/modular")
             .arg("-E")
             .arg("-F")
             .arg("-G")
@@ -394,7 +396,7 @@ mod integrations {
         let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
         let temp = assert_fs::TempDir::new()?;
         temp.copy_from(".", &["examples/modular/*.yaml"])?;
-        let output_file = temp.child("examples/modular/complete.svg");
+        let output_file = temp.child("complete.svg");
         cmd.arg("examples/modular/main.gsn.yaml")
             .arg("examples/modular/sub1.gsn.yaml")
             .arg("examples/modular/sub3.gsn.yaml")
@@ -439,6 +441,49 @@ mod integrations {
         cmd.assert().failure().stderr(predicate::str::contains(
             "Error: Failed to parse YAML from file",
         ));
+        Ok(())
+    }
+
+    fn regression_renderings(input: &str) -> Result<()> {
+        let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
+        let temp = assert_fs::TempDir::new()?;
+        temp.copy_from(".", &[input])?;
+        let output_name = input.to_string().replace(".yaml", ".svg");
+        let output_file = temp.child(&output_name);
+        cmd.arg(input).arg("-G").current_dir(&temp);
+        cmd.assert().success();
+        assert!(are_struct_similar_svgs(
+            std::path::Path::new(&output_name).as_os_str(),
+            output_file.as_os_str(),
+        )?);
+        temp.close()?;
+        Ok(())
+    }
+
+    #[test]
+    fn issue250() -> Result<()> {
+        regression_renderings("tests/issue250.yaml")?;
+        Ok(())
+    }
+
+    #[test]
+    fn issue249() -> Result<()> {
+        regression_renderings("tests/issue249.yaml")?;
+        Ok(())
+    }
+
+    #[test]
+    fn issue313() -> Result<()> {
+        regression_renderings("tests/issue313.yaml")?;
+        Ok(())
+    }
+
+    #[test]
+    fn issue84() -> Result<()> {
+        regression_renderings("tests/issue84_1.yaml")?;
+        regression_renderings("tests/issue84_2.yaml")?;
+        regression_renderings("tests/issue84_3.yaml")?;
+        regression_renderings("tests/issue84_4.yaml")?;
         Ok(())
     }
 }

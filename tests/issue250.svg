@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg classes="gsndiagram" viewBox="0 0 483 286" xmlns="http://www.w3.org/2000/svg">
+<symbol id="module_icon">
+<rect fill="lightgrey" height="5" stroke="black" stroke-width="1" width="10" x="0" y="0"/>
+<rect fill="lightgrey" height="10" stroke="black" stroke-width="1" width="20" x="0" y="5"/>
+</symbol>
+<marker id="composite_arrow" markerHeight="9" markerUnits="userSpaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
+<polyline fill="none" points="0 0, 6 4.5, 0 9" stroke="black" stroke-width="1"/>
+<polyline fill="none" points="4 0, 10 4.5, 4 9" stroke="black" stroke-width="1"/>
+<polyline fill="none" points="0 4.5, 10 4.5" stroke="black" stroke-width="1"/>
+</marker>
+<marker id="supportedby_arrow" markerHeight="9" markerUnits="userSpaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
+<polyline fill="black" points="0 0, 10 4.5, 0 9"/>
+</marker>
+<marker id="incontextof_arrow" markerHeight="9" markerUnits="userSpaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
+<polyline fill="none" points="0 0, 10 4.5, 0 9, 0 0" stroke="black" stroke-width="1"/>
+</marker>
+<g class="gsn_module_tests_issue250_yaml gsnelem gsngoal" id="node_G1">
+<title>
+G1
+</title>
+<path class="border" d="M139,20 L243,20 L243,66 L139,66 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="146" y="39">
+G1
+</text>
+<text font-family="Arial" font-size="12" x="146" y="56">
+G1
+</text>
+</g>
+<g class="gsn_module_tests_issue250_yaml gsnelem gsngoal gsn_undeveloped" id="node_G2">
+<title>
+G2
+</title>
+<path class="border" d="M20,113 L124,113 L124,165 L20,165 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="27" y="132">
+G2
+</text>
+<text font-family="Arial" font-size="12" x="27" y="149">
+G2
+</text>
+<path d="M72,165 l5,5 l-5,5 l-5,-5 z" fill="none" stroke="black" stroke-width="1"/>
+</g>
+<g class="gsn_module_tests_issue250_yaml gsnelem gsnasmp" id="node_A2">
+<title>
+A2
+</title>
+<path class="border" d="M164,139 a27,33,0,1,0,54,0 a27,33,0,1,0,-54,0 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="184" y="130">
+A2
+</text>
+<text font-family="Arial" font-size="12" x="184" y="147">
+A2
+</text>
+<text font-family="Arial" font-size="12" font-weight="bold" x="213" y="167">
+A
+</text>
+</g>
+<g class="gsn_module_tests_issue250_yaml gsnelem gsngoal" id="node_G3">
+<title>
+G3
+</title>
+<path class="border" d="M258,116 L362,116 L362,162 L258,162 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="265" y="135">
+G3
+</text>
+<text font-family="Arial" font-size="12" x="265" y="152">
+G3
+</text>
+</g>
+<g class="gsn_module_tests_issue250_yaml gsnelem gsnjust" id="node_J2">
+<title>
+J2
+</title>
+<path class="border" d="M402,139 a27,33,0,1,0,54,0 a27,33,0,1,0,-54,0 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="423" y="130">
+J2
+</text>
+<text font-family="Arial" font-size="12" x="423" y="147">
+J2
+</text>
+<text font-family="Arial" font-size="12" font-weight="bold" x="451" y="167">
+J
+</text>
+</g>
+<g class="gsn_module_tests_issue250_yaml gsnelem gsngoal gsn_undeveloped" id="node_G4">
+<title>
+G4
+</title>
+<path class="border" d="M258,212 L362,212 L362,264 L258,264 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="265" y="231">
+G4
+</text>
+<text font-family="Arial" font-size="12" x="265" y="248">
+G4
+</text>
+<path d="M310,264 l5,5 l-5,5 l-5,-5 z" fill="none" stroke="black" stroke-width="1"/>
+</g>
+<path class="gsnedge gsninspby" d="M191,66 C191,96,72,83,72,103" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M191,66 C191,96,310,86,310,106" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M124,139 C154,139,134,139,154,139" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M362,139 C392,139,372,139,392,139" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M258,139 C228,139,248,139,228,139" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M310,162 C310,192,310,182,310,202" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+</svg>

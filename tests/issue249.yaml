@@ -1,0 +1,17 @@
+G3:
+  text: Yet another goal with context
+  inContextOf: [J2, A2]
+  supportedBy: [G4]
+
+A2:
+  text: Another assumption
+
+J2:
+  text: Another justification
+
+G4:
+  text: Simple goal
+  supportedBy: [Sn1]
+
+Sn1:
+  text: A solution

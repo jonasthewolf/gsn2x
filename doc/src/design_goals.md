@@ -33,3 +33,8 @@ I noticed that it might make sense to add some information about the goals I hav
 
   I used a very relaxed license and try to take care that it is compatible with those of the dependencies.
   
+- Full control by the user how the diagram is layed out
+
+  Creating an optimal rendering for all different use-cases is incredibly difficult.
+  I failed in creating an algorithm that would allow for that. 
+  When trying I recognized that it is anyhow preferable to give the user full control over how the diagram should look like.

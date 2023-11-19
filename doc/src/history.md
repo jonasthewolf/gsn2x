@@ -20,5 +20,11 @@ I also noticed that (also for myself) it is good to note down some history of th
   This required writing a specialized version for rendering the tree on my own which ended up in version 2 
   finally released in April 2022.
 
+- I tried hard improving the layout algorithm over time but I failed to come up with a satisfying solution.
+  Moreover, I recognized that it is anyway preferable if the user is in full control of the layout of the diagram.
+  Thus, I decided to redesign the layout algorithm and create version 3. A new major version was needed because of different user input that is required now.
+
+  In addition, I changed the license from CC-BY-4.0 to MIT. MIT is shorter and more applicable to software.
+
 Any feedback, especially the use-case in your company is very much appreciated.
 

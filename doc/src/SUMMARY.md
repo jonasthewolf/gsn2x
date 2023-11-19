@@ -12,14 +12,15 @@
     - [Stylesheets](./adv_stylesheets.md)
     - [Evidences](./adv_evidences.md)
 - [Modular Extension](./modular_extension.md)
-- [Interfacing]()
+- [Interfacing](./interfacing.md)
 
 ---
 
 - [Standard Support](./standard_support.md)
-- [Troubleshooting]()
+- [Troubleshooting](./troubleshooting.md)
 
 ---
 
 - [Design Goals](./design_goals.md)
 - [History](./history.md)
+- [Migration from v2.x](./migration_v2x.md)
