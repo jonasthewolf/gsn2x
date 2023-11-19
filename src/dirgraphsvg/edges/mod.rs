@@ -14,6 +14,9 @@ use super::{
     util::point2d::Point2D,
 };
 
+///
+/// The EdgeType in one direction
+/// 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum SingleEdge {
     InContextOf,
@@ -45,12 +48,18 @@ impl BitOr for SingleEdge {
     }
 }
 
+///
+/// The edge type used for rendering
+/// 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum EdgeType {
     OneWay(SingleEdge),
     TwoWay((SingleEdge, SingleEdge)),
 }
 
+///
+/// Convert from GsnEdgeType to EdgeType
+/// 
 impl From<&GsnEdgeType> for EdgeType {
     fn from(value: &GsnEdgeType) -> Self {
         match value {
@@ -164,7 +173,7 @@ pub(super) fn render_edge(
 }
 
 ///
-///
+/// Create bezier curves based on the calculated supporting points.
 ///
 fn create_path_data_for_points(curve_points: &[(Point2D<i32>, Point2D<i32>)]) -> Data {
     let parameters = vec![
@@ -218,6 +227,9 @@ fn add_supporting_points(
             .iter()
             .any(|bbox| is_line_intersecting_with_box(s_pos, t_pos, bbox))
         {
+            // Find the empty spaces on each skipped rank.
+            // For each empty space create at least three potential points incl. supporting points.
+            // Minimize by the distance to the last point in the curve and the distance in x-direction to the target node
             let first_in_rank = first_free_center_point(bboxes.first().unwrap());
             let last_in_rank = last_free_center_point(bboxes.last().unwrap(), width);
             let mut boxes = vec![first_in_rank];
@@ -260,6 +272,7 @@ fn get_potential_supporting_points(
         + window[1][TOP_LEFT_CORNER].y
         + window[1][BOTTOM_LEFT_CORNER].y)
         / 4;
+    // Make the support point either further up or further down, depending on direction of the edge
     let supporting_y = if top_down {
         0.7 * (window[0][TOP_RIGHT_CORNER].y + window[1][TOP_LEFT_CORNER].y) as f64 / 2.0
     } else {
@@ -365,7 +378,7 @@ fn get_start_and_end_points(
 }
 
 ///
-///
+/// Check if line is hitting a box
 /// Algorithm from https://stackoverflow.com/a/293052/2516756
 ///
 fn is_line_intersecting_with_box(
