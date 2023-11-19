@@ -7,8 +7,6 @@ G3:
    inContextOf: [J1, C2]
    supportedBy: [Sn1]
 
-
 A1: 
    text: TestABC
-   horizontalIndex:
-      absolute: 0
+   

@@ -89,7 +89,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="basic_usage.html"><strong aria-hidden="true">1.</strong> Basic Usage</a></li><li class="chapter-item expanded "><a href="yaml_syntax.html"><strong aria-hidden="true">2.</strong> Syntax</a></li><li class="chapter-item expanded "><a href="checks.html"><strong aria-hidden="true">3.</strong> Checks</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="advanced_usecases.html"><strong aria-hidden="true">4.</strong> Advanced Use-cases</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="adv_layout.html"><strong aria-hidden="true">4.1.</strong> Layout</a></li><li class="chapter-item expanded "><a href="adv_layers.html"><strong aria-hidden="true">4.2.</strong> Layers</a></li><li class="chapter-item expanded "><a href="adv_stylesheets.html"><strong aria-hidden="true">4.3.</strong> Stylesheets</a></li><li class="chapter-item expanded "><a href="adv_evidences.html"><strong aria-hidden="true">4.4.</strong> Evidences</a></li></ol></li><li class="chapter-item expanded "><a href="modular_extension.html"><strong aria-hidden="true">5.</strong> Modular Extension</a></li><li class="chapter-item expanded "><div><strong aria-hidden="true">6.</strong> Interfacing</div></li><li class="spacer"></li><li class="chapter-item expanded "><a href="standard_support.html"><strong aria-hidden="true">7.</strong> Standard Support</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="design_goals.html"><strong aria-hidden="true">8.</strong> Design Goals</a></li><li class="chapter-item expanded "><a href="history.html"><strong aria-hidden="true">9.</strong> History</a></li><li class="chapter-item expanded "><a href="migration_v2x.html"><strong aria-hidden="true">10.</strong> Migration from v2.x</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="basic_usage.html"><strong aria-hidden="true">1.</strong> Basic Usage</a></li><li class="chapter-item expanded "><a href="yaml_syntax.html"><strong aria-hidden="true">2.</strong> Syntax</a></li><li class="chapter-item expanded "><a href="checks.html"><strong aria-hidden="true">3.</strong> Checks</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="advanced_usecases.html"><strong aria-hidden="true">4.</strong> Advanced Use-cases</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="adv_layout.html"><strong aria-hidden="true">4.1.</strong> Layout</a></li><li class="chapter-item expanded "><a href="adv_layers.html"><strong aria-hidden="true">4.2.</strong> Layers</a></li><li class="chapter-item expanded "><a href="adv_stylesheets.html"><strong aria-hidden="true">4.3.</strong> Stylesheets</a></li><li class="chapter-item expanded "><a href="adv_evidences.html"><strong aria-hidden="true">4.4.</strong> Evidences</a></li></ol></li><li class="chapter-item expanded "><a href="modular_extension.html"><strong aria-hidden="true">5.</strong> Modular Extension</a></li><li class="chapter-item expanded "><div><strong aria-hidden="true">6.</strong> Interfacing</div></li><li class="spacer"></li><li class="chapter-item expanded "><a href="standard_support.html"><strong aria-hidden="true">7.</strong> Standard Support</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="design_goals.html"><strong aria-hidden="true">8.</strong> Design Goals</a></li><li class="chapter-item expanded "><a href="history.html"><strong aria-hidden="true">9.</strong> History</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -210,7 +210,6 @@ OUTPUT MODIFICATION:
   -t, --embed-css                 Embed stylehseets instead of linking them.
   -G, --no-legend                 Do not output a legend based on module information.
   -g, --full-legend               Output a legend based on all module information.
-  -w, --wrap &lt;WORD_WRAP&gt;          Define the number of characters after which a line of text is wrapped.
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="syntax-in-yaml"><a class="header" href="#syntax-in-yaml">Syntax in YAML</a></h1>
 <h2 id="elements"><a class="header" href="#elements">Elements</a></h2>
@@ -261,9 +260,7 @@ C1:
 <tr><td>undeveloped<sup class="footnote-reference"><a href="#nu">1</a></sup></td><td>yes</td></tr>
 <tr><td>url</td><td>yes</td></tr>
 <tr><td>classes<sup class="footnote-reference"><a href="#nc">2</a></sup></td><td>yes</td></tr>
-<tr><td>nodeType<sup class="footnote-reference"><a href="#nt">3</a></sup></td><td>yes</td></tr>
-<tr><td>rankIncrement<sup class="footnote-reference"><a href="#nl">4</a></sup></td><td>yes</td></tr>
-<tr><td>horizontalIndex<sup class="footnote-reference"><a href="#nl">4</a></sup></td><td>yes</td></tr>
+<tr><td>level<sup class="footnote-reference"><a href="#nl">3</a></sup></td><td>yes</td></tr>
 </tbody></table>
 </div>
 <div class="footnote-definition" id="nu"><sup class="footnote-definition-label">1</sup>
@@ -272,26 +269,21 @@ C1:
 <div class="footnote-definition" id="nc"><sup class="footnote-definition-label">2</sup>
 <p>See <a href="./adv_stylesheets.html">Stylesheets</a>.</p>
 </div>
-<div class="footnote-definition" id="nl"><sup class="footnote-definition-label">4</sup>
+<div class="footnote-definition" id="nl"><sup class="footnote-definition-label">3</sup>
 <p>See <a href="./adv_layout.html">Layout</a>.</p>
-</div>
-<div class="footnote-definition" id="nt"><sup class="footnote-definition-label">3</sup>
-<p>When providing a <code>nodeType</code> you do not need to follow the standard prefix scheme above.
-Just give <code>Goal</code>, <code>Assumption</code>, <code>Justification</code>, <code>Solution</code>, <code>Context</code> and <code>Strategy</code> to give the type of the element.</p>
 </div>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="checks"><a class="header" href="#checks">Checks</a></h1>
 <h2 id="validation-checks"><a class="header" href="#validation-checks">Validation checks</a></h2>
 <p>The tool automatically performs the following validation checks on the input YAML.</p>
 <p>Validations can be performed on individual input files.</p>
 <div class="table-wrapper"><table><thead><tr><th>ID</th><th>Meaning</th></tr></thead><tbody>
-<tr><td>V01</td><td>All IDs must either start with a known prefix or a <code>node_type</code> must explicitly set.</td></tr>
+<tr><td>V01</td><td>All IDs must start with a known prefix i.e., there are only known element types.</td></tr>
 <tr><td>V02</td><td>All Goals and Strategies must be either marked with <code>undeveloped: true</code> or have supporting Goals, Strategies or Solutions.</td></tr>
 <tr><td>V03</td><td>Goals and Strategies marked as undeveloped, must have no supporting arguments.</td></tr>
 <tr><td>V04</td><td>All elements listed under <code>supportedBy</code> and <code>inContextOf</code> must be known elements types and semantically sensible (e.g. a Justification cannot be listed under <code>supportedBy</code>).</td></tr>
 <tr><td>V05</td><td>All referenced elements in <code>supportedBy</code> and <code>inContextOf</code> must be unique i.e., no duplicates in the list.</td></tr>
 <tr><td>V06</td><td>All referenced elements in <code>supportedBy</code> and <code>inContextOf</code> must not refer to the element itself.</td></tr>
 <tr><td>V07</td><td>All elements listed as extending other elements must be known elements of the current module and semantically sensible (see V04).</td></tr>
-<tr><td>V08</td><td> The IDs start contradicts the type of the element set with <code>node_type</code>.</td></tr>
 </tbody></table>
 </div>
 <p>The following checks apply to the complete set of input files.</p>
@@ -300,9 +292,10 @@ Just give <code>Goal</code>, <code>Assumption</code>, <code>Justification</code>
 <tr><td>C02</td><td>The top-level element must be a Goal. A top-level element is an element that is not referenced by any other element.</td></tr>
 <tr><td>C03</td><td>All referenced elements in <code>supportedBy</code> and <code>inContextOf</code> must exist.</td></tr>
 <tr><td>C04</td><td>There must be no circular <code>supportedBy</code> references.</td></tr>
+<tr><td>C05</td><td>There should be more than one usage of the same <code>level</code>.</td></tr>
 <tr><td>C06</td><td>All module names must be unique.</td></tr>
 <tr><td>C07</td><td>All IDs must be unique across all modules.</td></tr>
-<tr><td>C08</td><td>All elements must be reachable from the root elements. This message can e.g. happen if there are multiple independent graphs where one contains circular references only.</td></tr>
+<tr><td>C08</td><td>All elements must be reachable from the root elements.      This message can e.g. happen if there are multiple independent graphs where one contains circular references only.</td></tr>
 <tr><td>C09</td><td>All extended modules must exist.</td></tr>
 <tr><td>C10</td><td>All extended elements must exist in the named module and must be undeveloped.</td></tr>
 </tbody></table>
@@ -323,72 +316,21 @@ The checks for references (Cxx) can be skipped for individual files by using the
 <li><a href="./adv_stylesheets.html">Stylesheets</a></li>
 <li><a href="./adv_evidences.html">Evidences</a></li>
 </ul>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="layout-of-elements"><a class="header" href="#layout-of-elements">Layout of elements</a></h1>
-<h2 id="how-does-the-default-layout-of-the-graph-work"><a class="header" href="#how-does-the-default-layout-of-the-graph-work">How does the default layout of the graph work?</a></h2>
-<p>At first, the root elements are identified. Root elements are elements 
-that are not referenced as <code>supportedBy</code> or <code>inContextOf</code>. </p>
-<p>Each level in the rendered graph is called rank. 
-The elements on each rank are sorted lexicographically before being placed on that rank. 
-Then, starting with the first element on the current rank, the elements of the next rank are identified.
-An element is only ranked if all elements referencing it are already placed.
-Finally, the <code>inContextOf</code> elements are placed on that rank.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="more-influence-on-the-layout-of-elements"><a class="header" href="#more-influence-on-the-layout-of-elements">More influence on the layout of elements</a></h1>
 <h2 id="vertical-placement"><a class="header" href="#vertical-placement">Vertical placement</a></h2>
-<p>To influence the vertical placement i.e., the rank, of an element in the rendered graph, 
-you can use <code>rankIncrement</code> for a node. 
-A rank increment is a positive number to push an element this amount of ranks downwards.
-It is not possible to decrease the rank that would be assigned by the above algorithm.</p>
-<p>Incrementing the rank is especially useful, if e.g., two goals or strategies are on the same logical level, 
+<p>To influence the rendered image, you can add an identifier to a GSN element with the <code>level</code> attribute. 
+All elements with the same identifier for <code>level</code> will now show up on the same vertical level. </p>
+<p>This is especially useful, if e.g., two goals or strategies are on the same logical level, 
 but have a different &quot;depth&quot; in the argumentation (i.e. a different number of goals or strategies in their path to the root goal).</p>
-<p>See the <a href="examples/example.gsn.yaml">example</a> for usage. The strategy S2 has an incremented rank.</p>
+<p>See the <a href="examples/example.gsn.yaml">example</a> for usage. The strategies S1 and S2 are on the same level.</p>
+<p>It is recommended to use <code>level</code> only for goals, since related contexts, 
+justifications and assumptions are automatically put on the same level.</p>
 <h2 id="horizontal-placement"><a class="header" href="#horizontal-placement">Horizontal placement</a></h2>
-<p>The order of the GSN elements on the same rank is in the first place defined by their ID.
-The elements are sorted lexicographically. Thus, a goal <code>G1</code> if placed on the same rank is placed left to <code>G2</code>.</p>
-<p>You can use <code>horizontalIndex</code> to reorder elements after lexicographical sorting. 
-The index can be modified by giving a relative or absolute index.</p>
-<p>In the following example, G1 and G2 are placed on the same rank. 
-However, G2 is placed left of G1 because of the relative horizontal index.</p>
-<pre><code class="language-yaml">G1:
-    text: Goal 1
-    undeveloped: true
-
-G2: 
-    text: Goal 2
-    undeveloped: true
-    horizontalIndex:
-         relative: -1
-</code></pre>
-<p>Please see Sn2 and Sn4 in <a href="examples/example.gsn.yaml">example</a> for how to use the absolute index. </p>
-<p>Typical use-cases for defining an absolute index are putting elements at the beginning or the end within a rank.
-Please see the following example for how to use an absolute index. </p>
-<pre><code class="language-yaml">G1:
-    text: Goal 1
-    undeveloped: true
-    horizontalIndex:
-        absolute: last
-
-G2: 
-    text: Goal 2
-    undeveloped: true
-    horizontalIndex:
-        absolute: 0
-</code></pre>
-<p>Please note that giving the horizontal index for G1 and G2 is redundant. </p>
-<p>The absolute index is zero-based. You can use <code>last</code> to move elements 
-to the very right of the graph.</p>
-<p>The horizontal index can also be applied to <code>inContextOf</code> elements. 
-You would typically use an absolute index with either <code>0</code> or <code>last</code> to place them
-either left or right of the element they are referenced from.</p>
-<h2 id="troubleshooting"><a class="header" href="#troubleshooting">Troubleshooting</a></h2>
-<p>There can be situations (e.g. a n:m relation between goals and solutions) 
-that lead to weird looking graphs.
-You may even encounter the following message 
-<code>Rendering a diagram took too many iterations. See README.md for hints how to solve this situation.</code>. 
-In such cases, please use the mechanisms described above to support 
-the algorithm in ranking the elements more sensibly.</p>
-<p>If you have trouble doing so, please feel free to create an issue or 
-start a discussion on the GitHub site. 
-The issue template on GitHub shows you how to remove intellectual property
-from the files that I would ask for then.</p>
+<p>The order of the GSN elements on the same horizontal rank can be influenced by their ID.
+The elements are sorted lexicographically. Thus, a goal <code>G1</code> if placed on the same vertical level is placed before <code>G2</code>, 
+if they have the same depth of their supporting arguments.</p>
+<p>There can be situations (e.g. a n:m relation between goals and solutions) that lead to weird looking graphs.
+You may even encounter the following message <code>Rendering a diagram took too many iterations. See README.md for hints how to solve this situation.</code>. In such cases, please file an issue on GitHub, so I can see how the algorithm can be improved.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="additional-layers"><a class="header" href="#additional-layers">Additional layers</a></h1>
 <p>Additional attributes of an element are ignored by default.
 With the command line option <code>-l</code> or <code>--layers</code> you can enable the output of those additional attributes.
@@ -408,20 +350,14 @@ C1:
   text: This is a Context
   layer1: This is additional information for C1.
 </code></pre>
-<p>In this example, a call to <code>gsn2x -l layer1</code> will show the additional information to each element prefixed with <em><code>LAYER1: </code></em>.</p>
-<p>Of course, using <code>text</code>, <code>inContextOf</code>, <code>supportedBy</code>, <code>url</code>, <code>undeveloped</code>, 
-<code>horizontalRank</code>, <code>rankIncrement</code> or <code>classes</code> are not sensible parameters to pass for the <code>-l</code> option. </p>
+<p>In this example, a call to <code>gsn2x -l layer1</code> will show the additional information to each element prefixed with <em><code>LAYER1: </code></em>.
+Of course, using <code>text</code>, <code>inContextOf</code>, <code>supportedBy</code>, <code>url</code>, <code>undeveloped</code>, <code>level</code> or <code>classes</code> are not sensible parameters to pass for the <code>-l</code> option. </p>
 <p>Please note that using <code>module</code> and passing it as a layer option will also not work. </p>
 <p>It is intentional that information is only added for a view, but not hidden to ensure consistency of the GSN in all variants.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="stylesheets-for-svg-rendering"><a class="header" href="#stylesheets-for-svg-rendering">Stylesheets for SVG rendering</a></h1>
 <p>You can provide (multiple) custom CSS stylesheets for SVG via the <code>-s</code> or <code>--stylesheet</code> options. </p>
-<p>The path may be relative to the current working directory, absolute, or an URL (i.e. starting with <code>http://</code>, <code>https://</code> or <code>file://</code>).</p>
-<p>When adding <code>-t</code> or <code>--embed-css</code> on the command line, the CSS stylesheets will be embedded in the SVG. </p>
-<p>If an output path is provided (see <a href="./basic_usage.html">Basic usage</a>), the stylesheet(s) will be copied there.
-If a relative path is used, the relative path to the current working directory is preserved. 
-If an absolute path is used, the stylesheet will be copied to the root of the output path.</p>
-<p>If a URL (see above for definition) is provided for a stylesheet, it is neither embedded nor copied to an output directory.</p>
-<h2 id="classes-and-styles"><a class="header" href="#classes-and-styles">Classes and styles</a></h2>
+<p>The path may be relative to the current working directory, absolute, or an URL (e.g. starting with http or https).
+If a relative path is used, it will be translated to an absolute path, since the CSS stylesheet is not copied into the output path. Thus, if you have a complex folder structure, it is encouraged to either use a central CSS stylesheet that is provided via, e.g., <code>http</code>, or embed the stylesheets into the generated SVGs using the <code>-t</code> option.</p>
 <p>Every element will also be addressable by <code>id</code>. The <code>id</code> is the same as the YAML id.</p>
 <p>This table shows the CSS classes assigned to a certain element:</p>
 <div class="table-wrapper"><table><thead><tr><th>Class</th><th>Assigned to</th><th>SVG Element</th></tr></thead><tbody>
@@ -449,6 +385,7 @@ If an absolute path is used, the stylesheet will be copied to the root of the ou
 </div>
 <p>You can assign additional classes by adding the <code>classes:</code> attribute. It must be a list of classes you want to assign. 
 Additional layers will be added as CSS classes, too. A <code>layer1</code> will e.g. be added as <code>gsnlay_layer1</code>.</p>
+<p>When adding <code>-t</code> or <code>--embed-css</code> on the command line, the CSS stylesheets will be embedded in the SVG. The path is interpreted as relative to the current working directory then.</p>
 <p>For more information on how to use CSS with SVGs, see <a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/SVG_and_CSS">here</a>.</p>
 <h2 id="example-2"><a class="header" href="#example-2">Example</a></h2>
 <p>The GSN YAML: </p>
@@ -465,8 +402,8 @@ G1:
 </code></pre>
 <p>The result looks like this:</p>
 <p><img src="examples/minimalcss/min.gsn.svg" alt="Styled Example" /></p>
-<h1 id="highlighting-elements-when-navigating"><a class="header" href="#highlighting-elements-when-navigating">Highlighting elements when navigating</a></h1>
-<p>The CSS <code>:target</code> pseudo class can be used to highlight the element you clicked on in the previous image.</p>
+<h1 id="highlighting-nodes-when-navigating"><a class="header" href="#highlighting-nodes-when-navigating">Highlighting nodes when navigating</a></h1>
+<p>The CSS <code>:target</code> pseudo class can be used to highlight the node you clicked on in the previous image.</p>
 <p>An example could look like this:</p>
 <pre><code class="language-css">g:target path {
     fill: lightsteelblue;
@@ -626,12 +563,6 @@ free and open-source software might be limited, I try to keep the dependencies o
 as few as possible.</p>
 <p>I used a very relaxed license and try to take care that it is compatible with those of the dependencies.</p>
 </li>
-<li>
-<p>Full control by the user how the diagram is layed out</p>
-<p>Creating an optimal rendering for all different use-cases is incredibly difficult.
-I failed in creating an algorithm that would allow for that. 
-When trying I recognized that it is anyhow preferable to give the user full control over how the diagram should look like.</p>
-</li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="history"><a class="header" href="#history">History</a></h1>
 <p>I also noticed that (also for myself) it is good to note down some history of the project:</p>
@@ -654,25 +585,8 @@ I finally made decided to no longer output DOT, but directly generate SVGs from 
 This required writing a specialized version for rendering the tree on my own which ended up in version 2 
 finally released in April 2022.</p>
 </li>
-<li>
-<p>I tried hard improving the layout algorithm over time but I failed to come up with a satisfying solution.
-Moreover, I recognized that it is anyway preferable if the user is in full control of the layout of the diagram.
-Thus, I decided to redesign the layout algorithm and create version 3. A new major version was needed because of different user input that is required now.</p>
-<p>In addition, I changed the license from CC-BY-4.0 to MIT. MIT is shorter and more applicable to software.</p>
-</li>
 </ul>
 <p>Any feedback, especially the use-case in your company is very much appreciated.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="migrating-from-version-2x-to-version-3x"><a class="header" href="#migrating-from-version-2x-to-version-3x">Migrating from Version 2.x to Version 3.x</a></h1>
-<p>Version 2 of gsn2x tried to fully automate the layout of diagrams.
-Version 3 intentionally changed this approach.</p>
-<p>To get similar or even better renderings, please follow the guidelines below.</p>
-<h2 id="replace-level-with-rankincrement"><a class="header" href="#replace-level-with-rankincrement">Replace <code>level</code> with <code>rankIncrement</code></a></h2>
-<p><code>level</code> was deprecated. Instead, increment the rank of the elements that should be pushed further down.</p>
-<p>Please see <a href="./adv_layout.html">Layout</a> for more information on how to use <code>rankIncrement</code>.</p>
-<h2 id="use-strict-lexicographical-sorting-and-horizontal-reordering-to-optimize-the-graph"><a class="header" href="#use-strict-lexicographical-sorting-and-horizontal-reordering-to-optimize-the-graph">Use strict lexicographical sorting and horizontal reordering to optimize the graph</a></h2>
-<p>If you find situations that are not rendered correctly by default, 
-please check if your IDs are sensibly defined (i.e. lexicographically increasing).
-Use <code>horizontalIndex</code> as described <a href="./adv_layout.html">here</a> to fix e.g., crossing edges.</p>
 
                     </main>
 
