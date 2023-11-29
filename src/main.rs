@@ -2,7 +2,7 @@ use anyhow::{anyhow, Context, Result};
 use clap::{value_parser, Arg, ArgAction};
 use file_utils::{prepare_and_check_input_paths, set_extension, translate_to_output_path};
 use render::RenderOptions;
-use std::collections::{BTreeMap, HashMap};
+use std::collections::BTreeMap;
 use std::fs::File;
 use std::io::BufReader;
 use std::path::PathBuf;
@@ -212,7 +212,7 @@ fn main() -> Result<()> {
     let mut nodes = BTreeMap::<String, GsnNode>::new();
 
     // Module name to module mapping
-    let mut modules: HashMap<String, Module> = HashMap::new();
+    let mut modules: BTreeMap<String, Module> = BTreeMap::new();
 
     // Read input
     prepare_and_check_input_paths(&mut inputs)?;
@@ -248,7 +248,7 @@ fn main() -> Result<()> {
 ///
 fn add_missing_nodes_and_modules(
     nodes: &mut BTreeMap<String, GsnNode>,
-    modules: &mut HashMap<String, Module>,
+    modules: &mut BTreeMap<String, Module>,
     render_options: &mut RenderOptions,
 ) {
     let mut add_nodes = vec![];
@@ -295,7 +295,7 @@ fn add_missing_nodes_and_modules(
 fn read_inputs(
     inputs: &[String],
     nodes: &mut BTreeMap<String, GsnNode>,
-    modules: &mut HashMap<String, Module>,
+    modules: &mut BTreeMap<String, Module>,
     diags: &mut Diagnostics,
 ) -> Result<()> {
     for input in inputs {
@@ -332,7 +332,7 @@ fn read_inputs(
         // Add filename and module name to module list
         let module = meta.name.to_owned();
 
-        if let std::collections::hash_map::Entry::Vacant(e) = modules.entry(module.to_owned()) {
+        if let std::collections::btree_map::Entry::Vacant(e) = modules.entry(module.to_owned()) {
             e.insert(Module {
                 relative_module_path: input.to_owned().to_owned(),
                 meta,
@@ -393,7 +393,7 @@ fn read_inputs(
 ///
 fn validate_and_check(
     nodes: &mut BTreeMap<String, GsnNode>,
-    modules: &HashMap<String, Module>,
+    modules: &BTreeMap<String, Module>,
     diags: &mut Diagnostics,
     excluded_modules: &[&str],
     layers: &Vec<&str>,
@@ -422,7 +422,7 @@ fn validate_and_check(
 ///
 fn print_outputs(
     nodes: BTreeMap<String, GsnNode>,
-    modules: &HashMap<String, Module>,
+    modules: &BTreeMap<String, Module>,
     render_options: &RenderOptions,
 ) -> Result<()> {
     let output_path = render_options.output_directory.to_owned().unwrap_or(".");
@@ -437,6 +437,7 @@ fn print_outputs(
                     .context(format!("Failed to open output file {output_path}"))?,
             ) as Box<dyn std::io::Write>;
 
+            print!("Rendering \"{output_path}\": ");
             render::render_argument(
                 &mut output_file,
                 module_name,
@@ -457,6 +458,7 @@ fn print_outputs(
             let mut output_file = File::create(&arch_output_path)
                 .context(format!("Failed to open output file {arch_output_path}"))?;
             let deps = crate::gsn::calculate_module_dependencies(&nodes);
+            print!("Rendering \"{arch_output_path}\": ");
             render::render_architecture(
                 &mut output_file,
                 modules,
@@ -470,6 +472,7 @@ fn print_outputs(
             let output_path = translate_to_output_path(output_path, complete_filename)?;
             let mut output_file = File::create(&output_path)
                 .context(format!("Failed to open output file {output_path}"))?;
+            print!("Rendering \"{output_path}\": ");
             render::render_complete(&mut output_file, &nodes, render_options)?;
         }
     }
@@ -477,6 +480,7 @@ fn print_outputs(
         let output_path = translate_to_output_path(output_path, evidences_filename)?;
         let mut output_file = File::create(&output_path)
             .context(format!("Failed to open output file {output_path}"))?;
+        print!("Writing evidences \"{output_path}\": ");
         render::render_evidences(&mut output_file, &nodes, render_options)?;
     }
     Ok(())

@@ -175,11 +175,14 @@ pub(super) fn layout_nodes(
             y += margin.bottom + dy_max / 2 + margin.top;
         }
         if !(first_run || changed) {
+            if limiter <= limit {
+                println!("OK");
+            }
             break;
         }
         first_run = false;
         if changed && limiter == limit {
-            eprintln!("Rendering a diagram took too many iterations ({limiter}). See documentation (https://jonasthewolf.github.io/gsn2x/) for hints how to solve this situation.");
+            println!("Diagram took too many iterations ({limiter}). See documentation (https://jonasthewolf.github.io/gsn2x/) for hints how to solve this situation.");
         }
     }
     calculate_size_of_document(nodes, ranks, margin)
