@@ -500,6 +500,12 @@ mod integrations {
     }
 
     #[test]
+    fn issue339() -> Result<()> {
+        regression_renderings("tests/issue313.yaml")?;
+        Ok(())
+    }
+
+    #[test]
     fn issue84() -> Result<()> {
         regression_renderings("tests/issue84_1.yaml")?;
         regression_renderings("tests/issue84_2.yaml")?;
