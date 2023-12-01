@@ -1,0 +1,11 @@
+
+G1:
+  text: Goal 1
+  supportedBy: [G2, SnX1]
+
+G2:
+  text: Goal 2
+  supportedBy: [SnX1]
+
+SnX1:
+  text: Solution 1

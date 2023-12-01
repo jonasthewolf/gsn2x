@@ -7,7 +7,7 @@ use anyhow::{anyhow, Error};
 use serde::Deserialize;
 use serde_yaml::Value;
 use std::{
-    collections::{BTreeMap, BTreeSet, HashMap},
+    collections::{BTreeMap, BTreeSet},
     fmt::Display,
 };
 
@@ -230,7 +230,7 @@ pub struct ExtendsModule {
 pub fn extend_modules(
     diags: &mut Diagnostics,
     nodes: &mut BTreeMap<String, GsnNode>,
-    modules: &HashMap<String, Module>,
+    modules: &BTreeMap<String, Module>,
 ) {
     for (module_name, module_info) in modules {
         if let Some(extensions) = &module_info.meta.extends {

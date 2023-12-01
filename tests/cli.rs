@@ -278,7 +278,9 @@ mod integrations {
             .current_dir(&temp);
         cmd.assert()
             .success()
-            .stdout(predicate::str::is_empty())
+            .stdout(predicate::str::is_match(
+                "Writing evidences \"..my_evidences.md\": No evidences found.",
+            )?)
             .stderr(predicate::str::is_empty());
         assert!(compare_lines_with_replace(
             temp.child("my_evidences.md").as_os_str(),
@@ -305,7 +307,9 @@ mod integrations {
             .current_dir(&temp);
         cmd.assert()
             .success()
-            .stdout(predicate::str::is_empty())
+            .stdout(predicate::str::is_match(
+                "Writing evidences \"..my_evidences.md\": OK",
+            )?)
             .stderr(predicate::str::is_empty());
         assert!(compare_lines_with_replace(
             temp.child("my_evidences.md").as_os_str(),
@@ -347,7 +351,14 @@ mod integrations {
             .arg("-F")
             .arg("-G")
             .current_dir(&temp);
-        cmd.assert().success();
+        cmd.assert()
+            .success()
+            .stdout(predicate::str::is_match(concat!(
+                "Rendering \"examples.modular.main.gsn.svg\": OK\n",
+                "Rendering \"examples.modular.sub1.gsn.svg\": OK\n",
+                "Rendering \"examples.modular.sub3.gsn.svg\": OK\n",
+                "Rendering \"examples.modular.architecture.svg\": OK\n",
+            ))?);
         assert!(are_struct_similar_svgs(
             std::path::Path::new("examples/modular/architecture.svg").as_os_str(),
             output_file.as_os_str(),
@@ -374,7 +385,13 @@ mod integrations {
             .arg("-s")
             .arg("https://github.com/jonasthewolf/gsn2x/blob/3439402d093ba54af4771b295e78f2488bd1b978/examples/modular/modular.css")
             .current_dir(&temp);
-        cmd.assert().success();
+        cmd.assert()
+            .success()
+            .stdout(predicate::str::is_match(concat!(
+                "Rendering \"..examples.modular.main.gsn.svg\": OK\n",
+                "Rendering \"..examples.modular.sub1.gsn.svg\": OK\n",
+                "Rendering \"..examples.modular.sub3.gsn.svg\": OK\n",
+            ))?);
         assert!(are_struct_similar_svgs(
             std::path::Path::new("examples/modular/main.gsn.svg").as_os_str(),
             output_file1.as_os_str(),
@@ -405,7 +422,11 @@ mod integrations {
             .arg("-A")
             .arg("-G")
             .current_dir(&temp);
-        cmd.assert().success();
+        cmd.assert()
+            .success()
+            .stdout(predicate::str::is_match(concat!(
+                "Rendering \"..complete.svg\": OK\n",
+            ))?);
         assert!(are_struct_similar_svgs(
             std::path::Path::new("examples/modular/complete.svg").as_os_str(),
             output_file.as_os_str(),
@@ -474,6 +495,12 @@ mod integrations {
 
     #[test]
     fn issue313() -> Result<()> {
+        regression_renderings("tests/issue313.yaml")?;
+        Ok(())
+    }
+
+    #[test]
+    fn issue339() -> Result<()> {
         regression_renderings("tests/issue313.yaml")?;
         Ok(())
     }

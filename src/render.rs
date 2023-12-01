@@ -6,7 +6,7 @@ use anyhow::Result;
 use chrono::Utc;
 use clap::ArgMatches;
 
-use std::collections::{BTreeMap, HashMap};
+use std::collections::BTreeMap;
 use std::io::Write;
 
 #[derive(Default, Eq, PartialEq)]
@@ -182,7 +182,7 @@ pub fn away_svg_from_gsn_node(
 ///
 pub fn render_architecture(
     output: &mut impl Write,
-    modules: &HashMap<String, Module>,
+    modules: &BTreeMap<String, Module>,
     dependencies: BTreeMap<String, BTreeMap<String, EdgeType>>,
     render_options: &RenderOptions,
     architecture_path: &str,
@@ -317,7 +317,7 @@ pub fn render_complete(
 pub fn render_argument(
     output: &mut impl Write,
     module_name: &str,
-    modules: &HashMap<String, Module>,
+    modules: &BTreeMap<String, Module>,
     nodes: &BTreeMap<String, GsnNode>,
     render_options: &RenderOptions,
 ) -> Result<()> {
@@ -444,42 +444,45 @@ pub(crate) fn render_evidences(
     solutions.sort_by_key(|(k, _)| *k);
     if solutions.is_empty() {
         writeln!(output, "No evidences found.")?;
-    }
-    let width = (solutions.len() as f32).log10().ceil() as usize;
-    for (i, (id, node)) in solutions.into_iter().enumerate() {
-        writeln!(
-            output,
-            "{:>width$}. {}: {}",
-            i + 1,
-            id,
-            node.text
-                .replace('\n', &format!("\n{: >w$}", ' ', w = width + 4 + id.len()))
-        )?;
-        let width = width + 2;
-        writeln!(output)?;
-        writeln!(output, "{: >width$}{}", ' ', node.module)?;
-        writeln!(output)?;
-        if let Some(url) = &node.url {
-            writeln!(output, "{: >width$}{}", ' ', url)?;
-            writeln!(output)?;
-        }
-        for (layer, text) in node
-            .additional
-            .iter()
-            .filter(|(l, _)| render_options.layers.iter().any(|x| &x == l))
-        {
+        println!("No evidences found.");
+    } else {
+        let width = (solutions.len() as f32).log10().ceil() as usize;
+        for (i, (id, node)) in solutions.into_iter().enumerate() {
             writeln!(
                 output,
-                "{: >width$}{}: {}",
-                ' ',
-                layer.to_ascii_uppercase(),
-                text.replace(
-                    '\n',
-                    &format!("\n{: >w$}", ' ', w = width + 2 + layer.len())
-                )
+                "{:>width$}. {}: {}",
+                i + 1,
+                id,
+                node.text
+                    .replace('\n', &format!("\n{: >w$}", ' ', w = width + 4 + id.len()))
             )?;
+            let width = width + 2;
             writeln!(output)?;
+            writeln!(output, "{: >width$}{}", ' ', node.module)?;
+            writeln!(output)?;
+            if let Some(url) = &node.url {
+                writeln!(output, "{: >width$}{}", ' ', url)?;
+                writeln!(output)?;
+            }
+            for (layer, text) in node
+                .additional
+                .iter()
+                .filter(|(l, _)| render_options.layers.iter().any(|x| &x == l))
+            {
+                writeln!(
+                    output,
+                    "{: >width$}{}: {}",
+                    ' ',
+                    layer.to_ascii_uppercase(),
+                    text.replace(
+                        '\n',
+                        &format!("\n{: >w$}", ' ', w = width + 2 + layer.len())
+                    )
+                )?;
+                writeln!(output)?;
+            }
         }
+        println!("OK")
     }
 
     Ok(())

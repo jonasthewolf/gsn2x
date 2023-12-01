@@ -327,14 +327,21 @@ where
             // Postpone ranking of forced nodes
             (current_rank_nodes, carried_nodes) =
                 current_rank_nodes
-                    .into_iter()
-                    .partition(|n| match forced_levels.get_mut(n) {
+                    .iter()
+                    .partition(|&n| match forced_levels.get_mut(n) {
                         Some(forced_level) if *forced_level > 0 => {
                             // Reduce forced level
                             *forced_level -= 1;
                             false
                         }
-                        _ => true,
+                        // See if parents are not the same rank
+                        _ => self
+                            .parent_edges
+                            .get(n)
+                            .into_iter()
+                            .flatten()
+                            .filter(|(_, et)| et.is_primary_child_edge())
+                            .all(|(p, _)| !current_rank_nodes.contains(p)),
                     });
             // Visit current nodes
             current_rank_nodes.iter().for_each(|n| {
