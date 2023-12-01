@@ -278,9 +278,9 @@ mod integrations {
             .current_dir(&temp);
         cmd.assert()
             .success()
-            .stdout(predicate::str::contains(
-                "Writing evidences \"./my_evidences.md\": No evidences found.",
-            ))
+            .stdout(predicate::str::is_match(
+                "Writing evidences \"..my_evidences.md\": No evidences found.",
+            )?)
             .stderr(predicate::str::is_empty());
         assert!(compare_lines_with_replace(
             temp.child("my_evidences.md").as_os_str(),
@@ -307,9 +307,9 @@ mod integrations {
             .current_dir(&temp);
         cmd.assert()
             .success()
-            .stdout(predicate::str::contains(
-                "Writing evidences \"./my_evidences.md\": OK",
-            ))
+            .stdout(predicate::str::is_match(
+                "Writing evidences \"..my_evidences.md\": OK",
+            )?)
             .stderr(predicate::str::is_empty());
         assert!(compare_lines_with_replace(
             temp.child("my_evidences.md").as_os_str(),
