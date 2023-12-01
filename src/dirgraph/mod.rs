@@ -334,11 +334,12 @@ where
                             *forced_level -= 1;
                             false
                         }
+                        // See if parents are not the same rank
                         _ => self
                             .parent_edges
                             .get(n)
                             .into_iter()
-                            .flatten() 
+                            .flatten()
                             .filter(|(_, et)| et.is_primary_child_edge())
                             .all(|(p, _)| !current_rank_nodes.contains(p)),
                     });

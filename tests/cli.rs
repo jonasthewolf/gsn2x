@@ -353,12 +353,12 @@ mod integrations {
             .current_dir(&temp);
         cmd.assert()
             .success()
-            .stdout(predicate::str::contains(concat!(
-                "Rendering \"examples/modular/main.gsn.svg\": OK\n",
-                "Rendering \"examples/modular/sub1.gsn.svg\": OK\n",
-                "Rendering \"examples/modular/sub3.gsn.svg\": OK\n",
-                "Rendering \"examples/modular/architecture.svg\": OK\n",
-            )));
+            .stdout(predicate::str::is_match(concat!(
+                "Rendering \"examples.modular.main.gsn.svg\": OK\n",
+                "Rendering \"examples.modular.sub1.gsn.svg\": OK\n",
+                "Rendering \"examples.modular.sub3.gsn.svg\": OK\n",
+                "Rendering \"examples.modular.architecture.svg\": OK\n",
+            ))?);
         assert!(are_struct_similar_svgs(
             std::path::Path::new("examples/modular/architecture.svg").as_os_str(),
             output_file.as_os_str(),
@@ -387,11 +387,11 @@ mod integrations {
             .current_dir(&temp);
         cmd.assert()
             .success()
-            .stdout(predicate::str::contains(concat!(
-                "Rendering \"./examples/modular/main.gsn.svg\": OK\n",
-                "Rendering \"./examples/modular/sub1.gsn.svg\": OK\n",
-                "Rendering \"./examples/modular/sub3.gsn.svg\": OK\n",
-            )));
+            .stdout(predicate::str::is_match(concat!(
+                "Rendering \"..examples.modular.main.gsn.svg\": OK\n",
+                "Rendering \"..examples.modular.sub1.gsn.svg\": OK\n",
+                "Rendering \"..examples.modular.sub3.gsn.svg\": OK\n",
+            ))?);
         assert!(are_struct_similar_svgs(
             std::path::Path::new("examples/modular/main.gsn.svg").as_os_str(),
             output_file1.as_os_str(),
@@ -424,9 +424,9 @@ mod integrations {
             .current_dir(&temp);
         cmd.assert()
             .success()
-            .stdout(predicate::str::contains(concat!(
-                "Rendering \"./complete.svg\": OK\n",
-            )));
+            .stdout(predicate::str::is_match(concat!(
+                "Rendering \"..complete.svg\": OK\n",
+            ))?);
         assert!(are_struct_similar_svgs(
             std::path::Path::new("examples/modular/complete.svg").as_os_str(),
             output_file.as_os_str(),
