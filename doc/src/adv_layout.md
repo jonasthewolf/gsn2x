@@ -12,7 +12,27 @@ Then, starting with the first element on the current rank, the elements of the n
 An element is only ranked if all elements referencing it are already placed.
 Finally, the `inContextOf` elements are placed on that rank.
 
-## Vertical placement
+## Text layout within elements
+
+There is a default line wrap implemented. However, this might be too wide for your diagram.
+You can break lines by YAML means, e.g. following this example:
+
+```yaml
+G1:
+  text: |
+    This
+    is
+    shown
+    on
+    separate
+    lines
+```
+
+Alternatively, you can use the `-w` option and provide a global shorter number for the number of characters after which the line is wrapped. Please note that wrapping is done if a whitespace is detected after the given number of characters.
+
+## Placement of elements 
+
+### Vertical placement
 
 To influence the vertical placement i.e., the rank, of an element in the rendered graph, 
 you can use `rankIncrement` for a node. 
@@ -24,7 +44,7 @@ but have a different "depth" in the argumentation (i.e. a different number of go
 
 See the [example](examples/example.gsn.yaml) for usage. The strategy S2 has an incremented rank.
 
-## Horizontal placement
+### Horizontal placement
 
 The order of the GSN elements on the same rank is in the first place defined by their ID.
 The elements are sorted lexicographically. Thus, a goal `G1` if placed on the same rank is placed left to `G2`.
@@ -75,7 +95,7 @@ The horizontal index can also be applied to `inContextOf` elements.
 You would typically use an absolute index with either `0` or `last` to place them
 either left or right of the element they are referenced from.
 
-## Troubleshooting
+### Troubleshooting
 
 There can be situations (e.g. a n:m relation between goals and solutions) 
 that lead to weird looking graphs.
