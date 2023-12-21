@@ -182,7 +182,21 @@ The elements on each rank are sorted lexicographically before being placed on th
 Then, starting with the first element on the current rank, the elements of the next rank are identified.
 An element is only ranked if all elements referencing it are already placed.
 Finally, the <code>inContextOf</code> elements are placed on that rank.</p>
-<h2 id="vertical-placement"><a class="header" href="#vertical-placement">Vertical placement</a></h2>
+<h2 id="text-layout-within-elements"><a class="header" href="#text-layout-within-elements">Text layout within elements</a></h2>
+<p>There is a default line wrap implemented. However, this might be too wide for your diagram.
+You can break lines by YAML means, e.g. following this example:</p>
+<pre><code class="language-yaml">G1:
+  text: |
+    This
+    is
+    shown
+    on
+    separate
+    lines
+</code></pre>
+<p>Alternatively, you can use the <code>-w</code> option and provide a global shorter number for the number of characters after which the line is wrapped. Please note that wrapping is done if a whitespace is detected after the given number of characters.</p>
+<h2 id="placement-of-elements"><a class="header" href="#placement-of-elements">Placement of elements</a></h2>
+<h3 id="vertical-placement"><a class="header" href="#vertical-placement">Vertical placement</a></h3>
 <p>To influence the vertical placement i.e., the rank, of an element in the rendered graph, 
 you can use <code>rankIncrement</code> for a node. 
 A rank increment is a positive number to push an element this amount of ranks downwards.
@@ -190,7 +204,7 @@ It is not possible to decrease the rank that would be assigned by the above algo
 <p>Incrementing the rank is especially useful, if e.g., two goals or strategies are on the same logical level, 
 but have a different &quot;depth&quot; in the argumentation (i.e. a different number of goals or strategies in their path to the root goal).</p>
 <p>See the <a href="examples/example.gsn.yaml">example</a> for usage. The strategy S2 has an incremented rank.</p>
-<h2 id="horizontal-placement"><a class="header" href="#horizontal-placement">Horizontal placement</a></h2>
+<h3 id="horizontal-placement"><a class="header" href="#horizontal-placement">Horizontal placement</a></h3>
 <p>The order of the GSN elements on the same rank is in the first place defined by their ID.
 The elements are sorted lexicographically. Thus, a goal <code>G1</code> if placed on the same rank is placed left to <code>G2</code>.</p>
 <p>You can use <code>horizontalIndex</code> to reorder elements after lexicographical sorting. 
@@ -228,7 +242,7 @@ to the very right of the graph.</p>
 <p>The horizontal index can also be applied to <code>inContextOf</code> elements. 
 You would typically use an absolute index with either <code>0</code> or <code>last</code> to place them
 either left or right of the element they are referenced from.</p>
-<h2 id="troubleshooting"><a class="header" href="#troubleshooting">Troubleshooting</a></h2>
+<h3 id="troubleshooting"><a class="header" href="#troubleshooting">Troubleshooting</a></h3>
 <p>There can be situations (e.g. a n:m relation between goals and solutions) 
 that lead to weird looking graphs.
 You may even encounter the following message 
