@@ -71,7 +71,7 @@ mod test {
         d.add_error(Some("module"), "errmsg".to_owned());
         d.add_warning(None, "msg2".to_owned());
         assert_eq!(
-            format!("{}", d.messages.get(0).unwrap()),
+            format!("{}", d.messages.first().unwrap()),
             "Warning: (module) msg".to_owned()
         );
         assert_eq!(

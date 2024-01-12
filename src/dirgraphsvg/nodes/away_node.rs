@@ -196,7 +196,7 @@ impl AwayType {
         // Text
         if !node.masked {
             for text in node.text.lines() {
-                y += font.size as i32;
+                y += text_bounding_box(font, text, false).1;
                 context.append(create_text(text, x, y, font, false));
             }
         }

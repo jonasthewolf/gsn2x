@@ -48,7 +48,7 @@ fn check_root_nodes(
             );
         }
         1 => {
-            let rootn = root_nodes.get(0).unwrap(); // unwrap is ok, since we just checked that there is an element in Vec
+            let rootn = root_nodes.first().unwrap(); // unwrap is ok, since we just checked that there is an element in Vec
             if nodes.get(rootn).unwrap().node_type != Some(GsnNodeType::Goal) {
                 diag.add_error(
                     None,
