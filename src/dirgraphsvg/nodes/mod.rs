@@ -637,15 +637,14 @@ fn node_text_from_node_and_layers(
     let mut additional_text = vec![];
     for layer in layers {
         if let Some(layer_text) = gsn_node.additional.get(layer) {
-            additional_text.push(format!(
-                "\n{}: {}",
-                layer.to_ascii_uppercase(),
-                layer_text.replace('\n', " ")
-            ));
+            additional_text.push(format!("\n{}:", layer.to_ascii_uppercase()));
+            for layer_line in layer_text.split('\n') {
+                additional_text.push(layer_line.to_owned());
+            }
         }
     }
     if !additional_text.is_empty() {
-        node_text.push_str("\n\n");
+        node_text.push('\n');
         node_text.push_str(&additional_text.join("\n"));
     }
     node_text
@@ -669,6 +668,6 @@ mod test {
             ..Default::default()
         };
         let res = node_text_from_node_and_layers(&n1, &["layer1".to_owned()], None);
-        assert_eq!(res, "test text\n\n\nLAYER1: text for layer1");
+        assert_eq!(res, "test text\n\nLAYER1:\ntext for layer1");
     }
 }

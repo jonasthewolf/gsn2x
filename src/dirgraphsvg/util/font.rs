@@ -66,38 +66,43 @@ fn get_font(font_name: &str, bold: bool, italic: bool) -> Result<FontVec> {
 
 ///
 /// Get the bounding box of `text` for the font described by `font_info` and `bold`
+/// If the line is empty, font_info.size is returned as height
 ///
 pub fn text_bounding_box(font_info: &FontInfo, text: &str, bold: bool) -> (i32, i32) {
-    let kern = if bold {
-        text.chars().count() as f64 * 4.0
+    if text.chars().filter(|c| !c.is_whitespace()).count() == 0 {
+        (0, font_info.size as i32)
     } else {
-        text.chars().count() as f64 * 1.5
-    };
-    let line_gap = 5.0;
-    let font_id = usize::from(bold);
-    Layout::default_single_line()
-        .calculate_glyphs(
-            &[
-                &font_info.font,
-                &font_info.font_bold,
-                &font_info.font_italic,
-            ],
-            &SectionGeometry::default(),
-            &[SectionText {
-                text,
-                scale: PxScale::from(font_info.size),
-                font_id: FontId(font_id),
-            }],
-        )
-        .last()
-        .map(|g| {
-            (
-                g.glyph.position.x as f64 + kern,
-                g.glyph.position.y as f64 + line_gap,
+        let kern = if bold {
+            text.chars().count() as f64 * 4.0
+        } else {
+            text.chars().count() as f64 * 1.5
+        };
+        let line_gap = 5.0;
+        let font_id = usize::from(bold);
+        Layout::default_single_line()
+            .calculate_glyphs(
+                &[
+                    &font_info.font,
+                    &font_info.font_bold,
+                    &font_info.font_italic,
+                ],
+                &SectionGeometry::default(),
+                &[SectionText {
+                    text,
+                    scale: PxScale::from(font_info.size),
+                    font_id: FontId(font_id),
+                }],
             )
-        })
-        .map(|(x, y)| (x as i32, y as i32))
-        .unwrap_or((0, 0))
+            .last()
+            .map(|g| {
+                (
+                    g.glyph.position.x as f64 + kern,
+                    g.glyph.position.y as f64 + line_gap,
+                )
+            })
+            .map(|(x, y)| (x as i32, y as i32))
+            .unwrap_or((0, font_info.size as i32))
+    }
 }
 
 #[cfg(test)]
