@@ -25,7 +25,7 @@ glyph_brush_layout = "0.2" # No featues
 [dev-dependencies]
 assert_cmd = "2.0"
 assert_fs = "1.0"
-predicates = "3.0"
+predicates = "3.1"
 regex = "1.10"
 
 [profile.release]
