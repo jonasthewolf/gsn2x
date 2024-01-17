@@ -519,4 +519,10 @@ mod integrations {
         regression_renderings("tests/issue385.yaml", &["-l", "layer1", "-l", "layer2"])?;
         Ok(())
     }
+
+    #[test]
+    fn issue365() -> Result<()> {
+        regression_renderings("tests/issue365.yaml", &["-w", "35"])?;
+        Ok(())
+    }
 }
