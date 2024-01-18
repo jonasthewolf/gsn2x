@@ -73,9 +73,9 @@ pub fn text_bounding_box(font_info: &FontInfo, text: &str, bold: bool) -> (i32, 
         (0, font_info.size as i32)
     } else {
         let kern = if bold {
-            text.chars().count() as f64 * 4.0
+            text.chars().count() as f64 * 1.2
         } else {
-            text.chars().count() as f64 * 1.5
+            text.chars().count() as f64 * 1.0
         };
         let line_gap = 5.0;
         let font_id = usize::from(bold);

@@ -1,0 +1,26 @@
+G1-XxxxxxxXxxxxxXxxxxxx:
+  text: xxxxxxx xxxxxxxx xxxxx xx xx xxx
+  supportedBy: [S2-XxxxxXxxxxxxXxXxxxxxxx, S2-XxxxxXxXxxxxxxx]
+S2-XxxxxXxxxxxxXxXxxxxxxx:
+  text: xxxxx xx xxxxxxx xxxxxxxxxx xxx xxxxxx xxxxxx xx xxxxxxxx xxxx xxxxx xxxx xx xxxxxxxx xxxxx.
+  supportedBy: [G3-XxxxxXxxxxxxXxxxxxxxxXxxxxxxxXxxxxx, G3-XxxxxXxxxxxxXxxxxxXxxxxxxxXxxxxx]
+G3-XxxxxXxxxxxxXxxxxxxxxXxxxxxxxXxxxxx:
+  text: xxxxx xx xxxxxxx xxxxxxxxxx xxxxxx xx xxxxxxxx xxxx xxxxx xxxx xx xxxxxxxx xxxxx.
+  undeveloped: true
+G3-XxxxxXxxxxxxXxxxxxXxxxxxxxXxxxxx:
+  text: xxxxx xx xxxxxxx xxxxxx xxxxxx xx xxxxxxxx xxxx xxxxx xxxx xx xxxxxxxx xxxxx.
+  undeveloped: true
+S2-XxxxxXxXxxxxxxx:
+  text: xxxxx xxxxxxxxxx xxxxxx xx xxx xxxxxxxx xxxx xxxxx xxxx xx xxxxxxxx xxxxx.
+  supportedBy: [G3-XxxXxxxxxxxXxxxXxxxxxxxXxxx, G3-XxxXxxxXxxxxxxxXxxxxxxxx, G3-XxxXxxxxxXxxx]
+G3-XxxXxxxxxxxXxxxXxxxxxxxXxxx:
+  text: xxx xxxxxx xx xxxxxxxxxx xx x xxx xxxx xx xxxx xxxxxxxxx xxx xxxxxx xx xxx_xxxxxxxxxxxx.
+  supportedBy: [Sn1-XXXXxxxxxxxxxxx]
+G3-XxxXxxxXxxxxxxxXxxxxxxxx:
+  text: xxx_xxxxxxxxxxxx xx xxxxxxxxx xxx xxxxxxxxxx. xxxx xxxxxxxx xx xxxxxxx xxxxxxx xxx xxxxxxxxxxx xxxx xxx xxxxxxx xxx xxx xxxxxxxxxx xxxxxxxxxx.
+  supportedBy: [Sn1-XXXXxxxxxxxxxxx]
+G3-XxxXxxxxxXxxx:
+  text: xxxxx xxxx xx xxx xxxxxx xxx xxx xxxxxx xxxx xxx xx xxxx xx xxx xxx_xxxxxxxxxxxx xxxxx xx xxxxxxx xx xxxxxx xxxxxxxxxxxxx.
+  supportedBy: [Sn1-XXXXxxxxxxxxxxx]
+Sn1-XXXXxxxxxxxxxxx:
+  text: xxx xxxxxxxxxxxxx
