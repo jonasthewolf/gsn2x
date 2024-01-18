@@ -10,3 +10,6 @@ multilingual = false
 create-missing = false
 build-dir = "book"
 extra-watch-dirs = ["../examples"]
+
+[output.html]
+additional-css = ["../examples/example.css"]
