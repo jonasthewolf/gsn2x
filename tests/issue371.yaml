@@ -1,0 +1,23 @@
+module:
+  name: Txxx-2 Xxxx Xxxxxxxxxx
+  brief: Txxx Xxxxxxxxxx
+GXxxxxxx-XxxxXxxxxxxxxx:
+  text: Wxxxxxxxxx xx xxxxxxx xxx xxx xxxxxxxxxx xx xxxxxxxxxx xx xxx XX xxxxxxxxxxxxxx xx xxxxx.
+  supportedBy:
+  - GXxxxxxx-XxxxXxxxxxxxxx.1
+  horizontalIndex:
+    relative: +1
+GXxxxxxx-XxxxXxxxxxxxxx.1:
+  text: Txxxx xxxx xxx xxxxxxxxxx Xxxxxxx xxx xxxxxxx.
+  supportedBy:
+  - GXxxxxxx-XxxxXxxxxxxxxx.1.1
+GXxxxxxx-XxxxXxxxxxxxxx.1.1:
+  text: Cxxxxxxxxx xx xxx xxx xx xxxxxxxx xxxxx xxxx XXX 26262-8:2018 xx xxxxxxx.
+  supportedBy:
+  - SnXxxxxxx-XxxxXxxxxxxxxx.1.1
+  inContextOf:
+  - JXxxxxxx-XxxxXxxxxxxxxx.1.1
+JXxxxxxx-XxxxXxxxxxxxxx.1.1:
+  text: "Oxxxxxxxx xxxx xxx xxx xx xxxxx xxxx xxx xxxxxxxxx xxxxxx xxxxxxxxxxxxx xx xxxxxxxxxx xxxxxxxxxx xx xxxxxxxxxx xxx xxxxxxxx xxxx xxxx xxxxxxxxxxxxxx xx xxxxxxxxx \nxxxxxxxxxxxxx xxxxxxxxx xxxxxx, xx xx xxxxxxxx xxxx xxxxxx xxxx xxx xxxxxxxx xxxx xxx xxxxxxxxxxxxx xxx xxx xxxxxxxx xxxxxxxxxxxxx xxxxxxxxx xxxxxx.\n"
+SnXxxxxxx-XxxxXxxxxxxxxx.1.1:
+  text: Txxx xxxxxxxxxx xxxxxx
