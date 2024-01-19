@@ -11,14 +11,12 @@ GXxxxxxx-XXXxxxxxxxxx:
   - GXxxxxxx-XXXxxxxxxxxx-1
   - GXxxxxxx-XXXxxxxxxxxx-2
   - GXxxxxxx-XXXxxxxxxxxx-3
-  horizontalIndex:
-    absolute: 0
 GXxxxxxx-XXXxxxxxxxxx-1:
   text: Cxxxxxxxxxxxx xxxxxxxxx xxx xxxxxxx xxx xxxxxxxxxxx.
   supportedBy:
   - SnXxxxxxx-XXXxxxxxxxxx-1
   horizontalIndex:
-    absolute: last
+    relative: +2
 SnXxxxxxx-XXXxxxxxxxxx-1:
   text: Rxxxxxx xxxxxxxxx xxxxxxxxx xxx xxxx (xxx XXX xxx xxxxxxx xx xxxxxxxxxx)
 GXxxxxxx-XXXxxxxxxxxx-3:
