@@ -23,7 +23,7 @@ G1
 <text font-family="Arial" font-size="12" font-weight="bold" x="146" y="39">
 G1
 </text>
-<text font-family="Arial" font-size="12" x="146" y="56">
+<text font-family="Arial" font-size="12" x="146" y="58">
 G1
 </text>
 </g>
@@ -35,7 +35,7 @@ G2
 <text font-family="Arial" font-size="12" font-weight="bold" x="27" y="132">
 G2
 </text>
-<text font-family="Arial" font-size="12" x="27" y="149">
+<text font-family="Arial" font-size="12" x="27" y="151">
 G2
 </text>
 <path d="M72,165 l5,5 l-5,5 l-5,-5 z" fill="none" stroke="black" stroke-width="1"/>
@@ -45,10 +45,10 @@ G2
 A2
 </title>
 <path class="border" d="M164,139 a27,33,0,1,0,54,0 a27,33,0,1,0,-54,0 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="184" y="130">
+<text font-family="Arial" font-size="12" font-weight="bold" x="186" y="130">
 A2
 </text>
-<text font-family="Arial" font-size="12" x="184" y="147">
+<text font-family="Arial" font-size="12" x="186" y="149">
 A2
 </text>
 <text font-family="Arial" font-size="12" font-weight="bold" x="213" y="167">
@@ -63,7 +63,7 @@ G3
 <text font-family="Arial" font-size="12" font-weight="bold" x="265" y="135">
 G3
 </text>
-<text font-family="Arial" font-size="12" x="265" y="152">
+<text font-family="Arial" font-size="12" x="265" y="154">
 G3
 </text>
 </g>
@@ -72,10 +72,10 @@ G3
 J2
 </title>
 <path class="border" d="M402,139 a27,33,0,1,0,54,0 a27,33,0,1,0,-54,0 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="423" y="130">
+<text font-family="Arial" font-size="12" font-weight="bold" x="425" y="130">
 J2
 </text>
-<text font-family="Arial" font-size="12" x="423" y="147">
+<text font-family="Arial" font-size="12" x="425" y="149">
 J2
 </text>
 <text font-family="Arial" font-size="12" font-weight="bold" x="451" y="167">
@@ -90,7 +90,7 @@ G4
 <text font-family="Arial" font-size="12" font-weight="bold" x="265" y="231">
 G4
 </text>
-<text font-family="Arial" font-size="12" x="265" y="248">
+<text font-family="Arial" font-size="12" x="265" y="250">
 G4
 </text>
 <path d="M310,264 l5,5 l-5,5 l-5,-5 z" fill="none" stroke="black" stroke-width="1"/>

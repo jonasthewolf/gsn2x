@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg classes="gsndiagram" viewBox="0 0 266 369" xmlns="http://www.w3.org/2000/svg">
+<svg classes="gsndiagram" viewBox="0 0 260 365" xmlns="http://www.w3.org/2000/svg">
 <symbol id="module_icon">
 <rect fill="lightgrey" height="5" stroke="black" stroke-width="1" width="10" x="0" y="0"/>
 <rect fill="lightgrey" height="10" stroke="black" stroke-width="1" width="20" x="0" y="5"/>
@@ -23,7 +23,7 @@ G1
 <text font-family="Arial" font-size="12" font-weight="bold" x="27" y="39">
 G1
 </text>
-<text font-family="Arial" font-size="12" x="27" y="56">
+<text font-family="Arial" font-size="12" x="27" y="58">
 G1
 </text>
 </g>
@@ -31,8 +31,8 @@ G1
 <title>
 G2
 </title>
-<path class="border" d="M20,117 L124,117 L124,163 L20,163 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="27" y="136">
+<path class="border" d="M20,115 L124,115 L124,161 L20,161 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="27" y="134">
 G2
 </text>
 <text font-family="Arial" font-size="12" x="27" y="153">
@@ -43,11 +43,11 @@ G2
 <title>
 Sn1
 </title>
-<path class="border" d="M164,140 a34,34,0,1,0,68,0 a34,34,0,1,0,-68,0 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="186" y="131">
+<path class="border" d="M164,138 a32,32,0,1,0,64,0 a32,32,0,1,0,-64,0 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="188" y="129">
 Sn1
 </text>
-<text font-family="Arial" font-size="12" x="186" y="148">
+<text font-family="Arial" font-size="12" x="188" y="148">
 Sn1
 </text>
 </g>
@@ -55,11 +55,11 @@ Sn1
 <title>
 G3
 </title>
-<path class="border" d="M20,214 L124,214 L124,260 L20,260 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="27" y="233">
+<path class="border" d="M20,210 L124,210 L124,256 L20,256 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="27" y="229">
 G3
 </text>
-<text font-family="Arial" font-size="12" x="27" y="250">
+<text font-family="Arial" font-size="12" x="27" y="248">
 G3
 </text>
 </g>
@@ -67,17 +67,17 @@ G3
 <title>
 G4
 </title>
-<path class="border" d="M20,300 L124,300 L124,346 L20,346 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="27" y="319">
+<path class="border" d="M20,296 L124,296 L124,342 L20,342 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="27" y="315">
 G4
 </text>
-<text font-family="Arial" font-size="12" x="27" y="336">
+<text font-family="Arial" font-size="12" x="27" y="334">
 G4
 </text>
 </g>
-<path class="gsnedge gsninspby" d="M72,66 C72,96,198,76,198,96" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M72,66 C72,96,72,87,72,107" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M72,163 C72,193,72,184,72,204" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M72,260 C72,290,72,270,72,290" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M72,300 C72,270,198,310,198,237 S198,204,198,184" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M72,66 C72,96,196,76,196,96" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M72,66 C72,96,72,85,72,105" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M72,161 C72,191,72,180,72,200" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M72,256 C72,286,72,266,72,286" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M72,296 C72,266,196,305,196,233 S196,200,196,180" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 </svg>

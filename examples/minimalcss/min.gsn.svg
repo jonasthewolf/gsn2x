@@ -29,7 +29,7 @@ G1
 <text font-family="Arial" font-size="12" font-weight="bold" x="27" y="39">
 G1
 </text>
-<text font-family="Arial" font-size="12" x="27" y="56">
+<text font-family="Arial" font-size="12" x="27" y="58">
 This is a Goal
 </text>
 <path d="M72,72 l5,5 l-5,5 l-5,-5 z" fill="none" stroke="black" stroke-width="1"/>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg classes="gsndiagram" viewBox="0 0 754 326" xmlns="http://www.w3.org/2000/svg">
+<svg classes="gsndiagram" viewBox="0 0 704 320" xmlns="http://www.w3.org/2000/svg">
 <symbol id="module_icon">
 <rect fill="lightgrey" height="5" stroke="black" stroke-width="1" width="10" x="0" y="0"/>
 <rect fill="lightgrey" height="10" stroke="black" stroke-width="1" width="20" x="0" y="5"/>
@@ -19,14 +19,14 @@
 <title>
 A2
 </title>
-<path class="border" d="M20,53 a91,33,0,1,0,183,0 a91,33,0,1,0,-183,0 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="53" y="44">
+<path class="border" d="M20,53 a85,33,0,1,0,170,0 a85,33,0,1,0,-170,0 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="52" y="44">
 A2
 </text>
-<text font-family="Arial" font-size="12" x="53" y="61">
+<text font-family="Arial" font-size="12" x="52" y="63">
 Another assumption
 </text>
-<text font-family="Arial" font-size="12" font-weight="bold" x="197" y="81">
+<text font-family="Arial" font-size="12" font-weight="bold" x="185" y="81">
 A
 </text>
 </g>
@@ -34,11 +34,11 @@ A
 <title>
 G3
 </title>
-<path class="border" d="M242,30 L434,30 L434,76 L242,76 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="249" y="49">
+<path class="border" d="M230,30 L406,30 L406,76 L230,76 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="237" y="49">
 G3
 </text>
-<text font-family="Arial" font-size="12" x="249" y="66">
+<text font-family="Arial" font-size="12" x="237" y="68">
 Yet another goal with context
 </text>
 </g>
@@ -46,14 +46,14 @@ Yet another goal with context
 <title>
 J2
 </title>
-<path class="border" d="M474,53 a93,33,0,1,0,187,0 a93,33,0,1,0,-187,0 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="508" y="44">
+<path class="border" d="M446,53 a86,33,0,1,0,172,0 a86,33,0,1,0,-172,0 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="478" y="44">
 J2
 </text>
-<text font-family="Arial" font-size="12" x="508" y="61">
+<text font-family="Arial" font-size="12" x="478" y="63">
 Another justification
 </text>
-<text font-family="Arial" font-size="12" font-weight="bold" x="655" y="81">
+<text font-family="Arial" font-size="12" font-weight="bold" x="613" y="81">
 J
 </text>
 </g>
@@ -61,11 +61,11 @@ J
 <title>
 G4
 </title>
-<path class="border" d="M286,126 L390,126 L390,172 L286,172 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="293" y="145">
+<path class="border" d="M266,126 L370,126 L370,172 L266,172 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="273" y="145">
 G4
 </text>
-<text font-family="Arial" font-size="12" x="293" y="162">
+<text font-family="Arial" font-size="12" x="273" y="164">
 Simple goal
 </text>
 </g>
@@ -73,16 +73,16 @@ Simple goal
 <title>
 Sn1
 </title>
-<path class="border" d="M292,258 a46,46,0,1,0,92,0 a46,46,0,1,0,-92,0 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="311" y="249">
+<path class="border" d="M275,255 a43,43,0,1,0,86,0 a43,43,0,1,0,-86,0 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="293" y="246">
 Sn1
 </text>
-<text font-family="Arial" font-size="12" x="311" y="266">
+<text font-family="Arial" font-size="12" x="293" y="265">
 A solution
 </text>
 </g>
-<path class="gsnedge gsninctxt" d="M434,53 C464,53,444,53,464,53" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninctxt" d="M242,53 C212,53,232,53,212,53" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M338,76 C338,106,338,96,338,116" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M338,172 C338,202,338,182,338,202" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M406,53 C436,53,416,53,436,53" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M230,53 C200,53,220,53,200,53" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M318,76 C318,106,318,96,318,116" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M318,172 C318,202,318,182,318,202" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 </svg>
