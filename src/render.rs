@@ -452,7 +452,7 @@ pub(crate) fn render_evidences(
                 output,
                 "{:>width$}. {}: {}",
                 i + 1,
-                id.replace('\n', " "),
+                id,
                 node.text
                     .replace('\n', &format!("\n{: >w$}", ' ', w = width + 4 + id.len()))
             )?;
