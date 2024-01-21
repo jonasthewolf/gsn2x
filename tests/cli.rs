@@ -501,7 +501,7 @@ mod integrations {
 
     #[test]
     fn issue339() -> Result<()> {
-        regression_renderings("tests/issue313.yaml", &[])?;
+        regression_renderings("tests/issue339.yaml", &[])?;
         Ok(())
     }
 
@@ -515,8 +515,8 @@ mod integrations {
     }
 
     #[test]
-    fn issue385() -> Result<()> {
-        regression_renderings("tests/issue385.yaml", &["-l", "layer1", "-l", "layer2"])?;
+    fn issue358() -> Result<()> {
+        regression_renderings("tests/issue358.yaml", &["-l", "layer1", "-l", "layer2"])?;
         Ok(())
     }
 
@@ -529,6 +529,12 @@ mod integrations {
     #[test]
     fn issue371() -> Result<()> {
         regression_renderings("tests/issue371.yaml", &[])?;
+        Ok(())
+    }
+
+    #[test]
+    fn issue372() -> Result<()> {
+        regression_renderings("tests/issue372.yaml", &["-w", "35"])?;
         Ok(())
     }
 }

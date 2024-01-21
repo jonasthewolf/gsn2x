@@ -264,11 +264,16 @@ fn has_node_to_be_moved<'b>(
     let my_x = cell.get_x(graph.get_nodes());
     // If node has children, center over them
     if !(children.is_empty() || children.len() == 1 && my_x >= children.get_x(graph.get_nodes())) {
-        // Center only over the children that have no other parents
-        let center_children = children
-            .into_iter()
-            .filter(|&c| graph.get_real_parents(c).len() == 1)
-            .collect::<Vec<_>>();
+        let center_children = if children.len() == 1 && parents.is_empty() {
+            // If node has no parents and exactly one child, center over it
+            children
+        } else {
+            // Otherwise center only over the children that have no other parents
+            children
+                .into_iter()
+                .filter(|&c| graph.get_real_parents(c).len() == 1)
+                .collect::<Vec<_>>()
+        };
         // If node centered over multiple children, remember them.
         // We don't move them later.
         if center_children.len() > 1 {

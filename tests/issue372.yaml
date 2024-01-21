@@ -1,0 +1,38 @@
+module:
+  name: Txxx-2 Xxxxxxxxxxxxx Xxxxxxxxxx
+  brief: Txxx-2 Xxxxxxxxxxxxx Xxxxxxxxxx xx xxxxxxxxxxxxxx xxxxx
+GXxxxxxx-XxxxXxxxxxxxxx:
+  text: Wxxxxxxxxx xx xxxxxxx xxx xxx xxxxxxxxxx xx xxxxxxxxxx xx xxx XX xxxxxxxxxxxxxx xx xxxxx.
+  supportedBy:
+  - GXxxxxxx-XXXxxxxxxxxx-2
+GXxxxxxx-XXXxxxxxxxxx:
+  text: A Xxxxxxxxxxxxx Xxxxxxxxxx xx xxxxxxxxxxx xx xxxxxxxxxxxxxx xxxxx.
+  supportedBy:
+  - GXxxxxxx-XXXxxxxxxxxx-1
+  - GXxxxxxx-XXXxxxxxxxxx-2
+  - GXxxxxxx-XXXxxxxxxxxx-3
+GXxxxxxx-XXXxxxxxxxxx-1:
+  text: Cxxxxxxxxxxxx xxxxxxxxx xxx xxxxxxx xxx xxxxxxxxxxx.
+  supportedBy:
+  - SnXxxxxxx-XXXxxxxxxxxx-1
+  horizontalIndex:
+    relative: +2
+SnXxxxxxx-XXXxxxxxxxxx-1:
+  text: Rxxxxxx xxxxxxxxx xxxxxxxxx xxx xxxx (xxx XXX xxx xxxxxxx xx xxxxxxxxxx)
+GXxxxxxx-XXXxxxxxxxxx-3:
+  text: Inxxxxxxxxx Xxxxxxxx Xxxxxxxxxx Xxxxxx (XXXX) xx xxxxxxxxxxx.
+  supportedBy:
+  - SnXxxxxxx-XXXxxxxxxxxx-2.1
+SnXxxxxxx-XXXxxxxxxxxx-2.1:
+  text: TXXXX xxxxxxxxxxx
+  horizontalIndex:
+    absolute: 0
+GXxxxxxx-XXXxxxxxxxxx-2:
+  text: Cxxxxxxxxx xxxxxxxxxxx xxxxxxx xx xx xxxxx.
+  supportedBy:
+  - SnXxxxxxx-XXXxxxxxxxxx-3
+  horizontalIndex:
+    absolute: last
+SnXxxxxxx-XXXxxxxxxxxx-3:
+  text: Rxxxxxx xxxxxxxx xxxxxx.
+

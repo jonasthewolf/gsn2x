@@ -21,10 +21,15 @@ cargo run -- -A -E -F -G tests/multi_context.gsn.yaml
 cargo run -- -G -E -t -s examples/minimalcss/min.css examples/minimalcss/min.gsn.yaml
 
 # issue regressions
-cargo run -- -G tests/issue84_1.yaml
-cargo run -- -G tests/issue84_2.yaml
-cargo run -- -G tests/issue84_3.yaml
-cargo run -- -G tests/issue84_4.yaml
-cargo run -- -G tests/issue313.yaml
-cargo run -- -G tests/issue250.yaml
-cargo run -- -G tests/issue249.yaml
+cargo run -- -G -E tests/issue84_1.yaml
+cargo run -- -G -E tests/issue84_2.yaml
+cargo run -- -G -E tests/issue84_3.yaml
+cargo run -- -G -E tests/issue84_4.yaml
+cargo run -- -G -E tests/issue249.yaml
+cargo run -- -G -E tests/issue250.yaml
+cargo run -- -G -E tests/issue313.yaml
+cargo run -- -G -E tests/issue339.yaml
+cargo run -- -G -E tests/issue358.yaml -l layer1 -l layer2
+cargo run -- -G -E -w 35 tests/issue365.yaml
+cargo run -- -G -E tests/issue371.yaml
+cargo run -- -G -E -w 35 tests/issue372.yaml
