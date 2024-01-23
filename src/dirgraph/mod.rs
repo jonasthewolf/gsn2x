@@ -370,10 +370,10 @@ where
                 }
                 current_rank_nodes = next_rank_nodes
                     .into_iter()
+                    .chain(carried_nodes)
                     .collect::<BTreeSet<_>>()
                     .into_iter()
                     .collect::<Vec<_>>();
-                current_rank_nodes.append(&mut carried_nodes);
             }
         }
         ranks
