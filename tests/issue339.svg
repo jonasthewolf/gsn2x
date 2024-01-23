@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg classes="gsndiagram" viewBox="0 0 408 302" xmlns="http://www.w3.org/2000/svg">
+<svg classes="gsndiagram" viewBox="0 0 176 302" xmlns="http://www.w3.org/2000/svg">
 <symbol id="module_icon">
 <rect fill="lightgrey" height="5" stroke="black" stroke-width="1" width="10" x="0" y="0"/>
 <rect fill="lightgrey" height="10" stroke="black" stroke-width="1" width="20" x="0" y="5"/>
@@ -43,27 +43,15 @@ Goal 2
 <title>
 SnX1
 </title>
-<path class="border" d="M276,236 a44,44,0,1,0,88,0 a44,44,0,1,0,-88,0 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="295" y="227">
+<path class="border" d="M28,236 a44,44,0,1,0,88,0 a44,44,0,1,0,-88,0 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="47" y="227">
 SnX1
 </text>
-<text font-family="Arial" font-size="12" x="295" y="246">
-Solution 1
-</text>
-</g>
-<g class="gsn_module_tests_issue339_yaml gsnelem gsnsltn" id="node_SnX1">
-<title>
-SnX1
-</title>
-<path class="border" d="M276,236 a44,44,0,1,0,88,0 a44,44,0,1,0,-88,0 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="295" y="227">
-SnX1
-</text>
-<text font-family="Arial" font-size="12" x="295" y="246">
+<text font-family="Arial" font-size="12" x="47" y="246">
 Solution 1
 </text>
 </g>
 <path class="gsnedge gsninspby" d="M72,66 C72,96,72,76,72,96" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M72,66 C72,96,320,75,320,129 S320,162,320,182" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M72,152 C72,182,320,162,320,182" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M72,66 C72,96,0,75,0,129 S72,162,72,182" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M72,152 C72,182,72,162,72,182" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 </svg>
