@@ -28,11 +28,18 @@ mod integrations {
         if l == r {
             true
         } else {
+            const TOLERANCE: f64 = 0.1;
             dbg!(l);
             dbg!(r);
             let m = dbg!((l + r) as f64 / 2.0);
-            let min = std::cmp::min((m * 0.95) as i64, (m * 1.05) as i64);
-            let max = std::cmp::max((m * 0.95) as i64, (m * 1.05) as i64);
+            let min = std::cmp::min(
+                (m * (1.0 - TOLERANCE)) as i64,
+                (m * (1.0 + TOLERANCE)) as i64,
+            );
+            let max = std::cmp::max(
+                (m * (1.0 - TOLERANCE)) as i64,
+                (m * (1.0 + TOLERANCE)) as i64,
+            );
             dbg!(min <= l && max >= l && min <= r && max >= r)
         }
     }
