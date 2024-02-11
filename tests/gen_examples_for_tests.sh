@@ -33,4 +33,4 @@ cargo run -- -G -E tests/issue358.yaml -l layer1 -l layer2
 cargo run -- -G -E -w 35 tests/issue365.yaml
 cargo run -- -G -E tests/issue371.yaml
 cargo run -- -G -E -w 35 tests/issue372.yaml
-cargo run -- -G -E -A -F -w 35 tests/issue377.yaml
+cargo run -- -G -E -w 35 tests/issue377.yaml

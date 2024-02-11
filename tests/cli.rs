@@ -591,7 +591,7 @@ mod integrations {
 
     #[test]
     fn issue377() -> Result<()> {
-        regression_renderings("tests/issue377.yaml", &["-A", "-F", "-w", "35"])?;
+        regression_renderings("tests/issue377.yaml", &["-w", "35"])?;
         Ok(())
     }
 }

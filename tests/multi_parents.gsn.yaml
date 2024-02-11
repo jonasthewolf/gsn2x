@@ -1,0 +1,14 @@
+G1: 
+  text: G1
+  supportedBy: [Sn1]
+G2: 
+  text: G2
+  supportedBy: [Sn1]
+G3: 
+  text: G3
+  supportedBy: [Sn1]
+G4: 
+  text: G4
+  supportedBy: [Sn1]
+Sn1:
+  text: Sn1
