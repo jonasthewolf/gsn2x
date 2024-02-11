@@ -312,7 +312,10 @@ fn has_node_to_be_moved<'b>(
             // exactly under its parent. This might happen if e.g. there is a large in-context node at the parent.
             // Then the child is too far left and never moved.
             // We disregard the margin.left, to not create unnecessary white space at the left.
-            let min_x = if run <= 1 && parents.len() == 1 {
+            let min_x = if run <= 1
+                && parents.len() == 1
+                && graph.get_real_children(parents.first().unwrap()).len() == 1
+            {
                 let p_x = parents.get_x(&nodes);
                 if p_x <= margin.left {
                     0
