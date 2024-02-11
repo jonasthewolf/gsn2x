@@ -310,12 +310,7 @@ fn has_node_to_be_moved<'b>(
                 && parents.len() == 1
                 && graph.get_real_children(parents.first().unwrap()).len() == 1
             {
-                let p_x = parents.get_x(nodes);
-                if p_x <= margin.left {
-                    0
-                } else {
-                    p_x
-                }
+                parents.get_x(nodes)
             } else {
                 0
             };
