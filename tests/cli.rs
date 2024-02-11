@@ -31,8 +31,8 @@ mod integrations {
             dbg!(l);
             dbg!(r);
             let m = dbg!((l + r) as f64 / 2.0);
-            let min = dbg!((m * 0.9) as i64);
-            let max = dbg!((m * 1.1) as i64);
+            let min = std::cmp::min((m * 0.95) as i64, (m * 1.05) as i64);
+            let max = std::cmp::max((m * 0.95) as i64, (m * 1.05) as i64);
             dbg!(min <= l && max >= l && min <= r && max >= r)
         }
     }
@@ -93,7 +93,6 @@ mod integrations {
                     same = false;
                     break;
                 }
-
             }
         } else {
             same = false;
