@@ -1,0 +1,13 @@
+G1:
+  text: First
+  supportedBy: [Sn2]
+
+G2:
+  text: Second
+  supportedBy: [Sn1]
+
+Sn1: 
+  text: Solution to Second
+
+Sn2: 
+  text: Solution to First

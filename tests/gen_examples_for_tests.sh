@@ -34,3 +34,4 @@ cargo run -- -G -E -w 35 tests/issue365.yaml
 cargo run -- -G -E tests/issue371.yaml
 cargo run -- -G -E -w 35 tests/issue372.yaml
 cargo run -- -G -E -w 35 tests/issue377.yaml
+cargo run -- -G -E tests/multi_parents.gsn.yaml

@@ -266,36 +266,30 @@ fn has_node_to_be_moved<'b>(
         .flat_map(|n| graph.get_same_ranks_parents(n))
         .collect();
     let nodes = graph.get_nodes();
-    let my_x = cell.get_x(nodes);
+    let cell_x = cell.get_x(nodes);
     let child_len = children.len();
     // If node has children, center over them
     if child_len > 0 {
-        if child_len == 1 && my_x <= children.get_x(nodes) && parents.is_empty() {
+        if child_len == 1 && cell_x < children.get_x(nodes) && parents.is_empty() {
             // If node has no parents and exactly one child, center over it
-            let mut my_new_x = children.get_x(nodes);
+            let child_x = children.get_x(nodes);
             let all_parent_cells = children
                 .iter()
-                .filter(|c| !graph.get_real_children(c).is_empty())
                 .filter_map(|c| match graph.get_real_parents(c) {
-                    p if p.len() > 1 => Some(p.iter().map(|&p| vec![p]).collect::<Vec<_>>()),
+                    // p if p.len() > 1 => Some(p.iter().map(|&p| vec![p]).collect::<Vec<_>>()),
+                    p if p.len() > 1 => Some(p),
                     _ => None,
                 })
                 .flatten()
+                .filter(|c| graph.get_real_children(c).len() == 1)
                 .collect::<Vec<_>>();
-            let my_pos = all_parent_cells.iter().position(|p| cell == p).unwrap_or(0);
-            let half = all_parent_cells.len() / 2;
-            // let mut last_sub = 0; // FIXME more than two parents
-            for index in (my_pos..half).rev() {
-                my_new_x -= margin.left;
-                let last_sub = all_parent_cells[index].get_max_width(nodes) / 2;
-                my_new_x -= last_sub;
+            let parent_center = get_center(nodes, &all_parent_cells);
+            let move_x = std::cmp::min(child_x - parent_center + cell_x, child_x);
+            if move_x > cell_x {
+                Some(move_x)
+            } else {
+                None
             }
-            // children
-            //     .into_iter()
-            //     .filter(|&c| dbg!(graph.get_real_parents(dbg!(c)).len() > 1))
-            //     .for_each(|c| {moved_nodes.insert(c); });
-            // my_new_x -= last_sub;
-            Some(my_new_x)
         } else {
             // Only center over the children that have no other parents...
             let center_children = children

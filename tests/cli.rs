@@ -29,7 +29,7 @@ mod integrations {
             true
         } else {
             const TOLERANCE: f64 = 0.1;
-            let m = dbg!((l + r) as f64 / 2.0);
+            let m = (l + r) as f64 / 2.0;
             let min = std::cmp::min(
                 (m * (1.0 - TOLERANCE)) as i64,
                 (m * (1.0 + TOLERANCE)) as i64,
@@ -529,6 +529,12 @@ mod integrations {
             output_file.as_os_str(),
         )?);
         temp.close()?;
+        Ok(())
+    }
+
+    #[test]
+    fn multi_parents() -> Result<()> {
+        regression_renderings("tests/multi_parents.gsn.yaml", &[])?;
         Ok(())
     }
 
