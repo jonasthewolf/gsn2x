@@ -238,7 +238,7 @@ C_A_certain_context:
 <h2 id="attributes"><a class="header" href="#attributes">Attributes</a></h2>
 <p>The only mandatory attribute is <code>text</code> that is the textual contents of the element.</p>
 <p>An optional <code>supportedBy</code> gives a list of the supporting arguments. Thus, Goal, Strategy and Solution can be listed here.</p>
-<p>An optional <code>inContextOf</code> links Justifications, Contexts or Assumptions. </p>
+<p>An optional <code>inContextOf</code> links Justifications, Contexts or Assumptions.</p>
 <p>Every element may have an optional <code>url</code> attribute that creates a navigation link in the resulting SVG.
 This should support finding information more easily.</p>
 <p>Goals and Strategies can be undeveloped i.e., without supporting Goals, Strategies or Solutions.
@@ -328,10 +328,10 @@ The checks for references (Cxx) can be skipped for individual files by using the
 </ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="layout-of-elements"><a class="header" href="#layout-of-elements">Layout of elements</a></h1>
 <h2 id="how-does-the-default-layout-of-the-graph-work"><a class="header" href="#how-does-the-default-layout-of-the-graph-work">How does the default layout of the graph work?</a></h2>
-<p>At first, the root elements are identified. Root elements are elements 
-that are not referenced as <code>supportedBy</code> or <code>inContextOf</code>. </p>
-<p>Each level in the rendered graph is called rank. 
-The elements on each rank are sorted lexicographically before being placed on that rank. 
+<p>At first, the root elements are identified. Root elements are elements
+that are not referenced as <code>supportedBy</code> or <code>inContextOf</code>.</p>
+<p>Each level in the rendered graph is called rank.
+The elements on each rank are sorted lexicographically before being placed on that rank.
 Then, starting with the first element on the current rank, the elements of the next rank are identified.
 An element is only ranked if all elements referencing it are already placed.
 Finally, the <code>inContextOf</code> elements are placed on that rank.</p>
@@ -350,19 +350,19 @@ You can break lines by YAML means, e.g. following this example:</p>
 <p>Alternatively, you can use the <code>-w</code> option and provide a global shorter number for the number of characters after which the line is wrapped. Please note that wrapping is done if a whitespace is detected after the given number of characters.</p>
 <h2 id="placement-of-elements"><a class="header" href="#placement-of-elements">Placement of elements</a></h2>
 <h3 id="vertical-placement"><a class="header" href="#vertical-placement">Vertical placement</a></h3>
-<p>To influence the vertical placement i.e., the rank, of an element in the rendered graph, 
-you can use <code>rankIncrement</code> for a node. 
+<p>To influence the vertical placement i.e., the rank, of an element in the rendered graph,
+you can use <code>rankIncrement</code> for a node.
 A rank increment is a positive number to push an element this amount of ranks downwards.
 It is not possible to decrease the rank that would be assigned by the above algorithm.</p>
-<p>Incrementing the rank is especially useful, if e.g., two goals or strategies are on the same logical level, 
-but have a different &quot;depth&quot; in the argumentation (i.e. a different number of goals or strategies in their path to the root goal).</p>
+<p>Incrementing the rank is especially useful, if e.g., two goals or strategies are on the same logical level,
+but have a different "depth" in the argumentation (i.e. a different number of goals or strategies in their path to the root goal).</p>
 <p>See the <a href="examples/example.gsn.yaml">example</a> for usage. The strategy S2 has an incremented rank.</p>
 <h3 id="horizontal-placement"><a class="header" href="#horizontal-placement">Horizontal placement</a></h3>
 <p>The order of the GSN elements on the same rank is in the first place defined by their ID.
 The elements are sorted lexicographically. Thus, a goal <code>G1</code> if placed on the same rank is placed left to <code>G2</code>.</p>
-<p>You can use <code>horizontalIndex</code> to reorder elements after lexicographical sorting. 
+<p>You can use <code>horizontalIndex</code> to reorder elements after lexicographical sorting.
 The index can be modified by giving a relative or absolute index.</p>
-<p>In the following example, G1 and G2 are placed on the same rank. 
+<p>In the following example, G1 and G2 are placed on the same rank.
 However, G2 is placed left of G1 because of the relative horizontal index.</p>
 <pre><code class="language-yaml">G1:
     text: Goal 1
@@ -374,9 +374,9 @@ G2:
     horizontalIndex:
          relative: -1
 </code></pre>
-<p>Please see Sn2 and Sn4 in <a href="examples/example.gsn.yaml">example</a> for how to use the absolute index. </p>
+<p>Please see Sn2 and Sn4 in <a href="examples/example.gsn.yaml">example</a> for how to use the absolute index.</p>
 <p>Typical use-cases for defining an absolute index are putting elements at the beginning or the end within a rank.
-Please see the following example for how to use an absolute index. </p>
+Please see the following example for how to use an absolute index.</p>
 <pre><code class="language-yaml">G1:
     text: Goal 1
     undeveloped: true
@@ -389,21 +389,21 @@ G2:
     horizontalIndex:
         absolute: 0
 </code></pre>
-<p>Please note that giving the horizontal index for G1 and G2 is redundant. </p>
-<p>The absolute index is zero-based. You can use <code>last</code> to move elements 
+<p>Please note that giving the horizontal index for G1 and G2 is redundant.</p>
+<p>The absolute index is zero-based. You can use <code>last</code> to move elements
 to the very right of the graph.</p>
-<p>The horizontal index can also be applied to <code>inContextOf</code> elements. 
+<p>The horizontal index can also be applied to <code>inContextOf</code> elements.
 You would typically use an absolute index with either <code>0</code> or <code>last</code> to place them
 either left or right of the element they are referenced from.</p>
 <h3 id="troubleshooting"><a class="header" href="#troubleshooting">Troubleshooting</a></h3>
-<p>There can be situations (e.g. a n:m relation between goals and solutions) 
+<p>There can be situations (e.g. a n:m relation between goals and solutions)
 that lead to weird looking graphs.
-You may even encounter the following message 
-<code>Rendering a diagram took too many iterations. See README.md for hints how to solve this situation.</code>. 
-In such cases, please use the mechanisms described above to support 
+You may even encounter the following message
+<code>Rendering a diagram took too many iterations. See README.md for hints how to solve this situation.</code>.
+In such cases, please use the mechanisms described above to support
 the algorithm in ranking the elements more sensibly.</p>
-<p>If you have trouble doing so, please feel free to create an issue or 
-start a discussion on the GitHub site. 
+<p>If you have trouble doing so, please feel free to create an issue or
+start a discussion on the GitHub site.
 The issue template on GitHub shows you how to remove intellectual property
 from the files that I would ask for then.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="additional-layers"><a class="header" href="#additional-layers">Additional layers</a></h1>
@@ -426,16 +426,16 @@ C1:
   layer1: This is additional information for C1.
 </code></pre>
 <p>In this example, a call to <code>gsn2x -l layer1</code> will show the additional information to each element prefixed with <em><code>LAYER1: </code></em>.</p>
-<p>Of course, using <code>text</code>, <code>inContextOf</code>, <code>supportedBy</code>, <code>url</code>, <code>undeveloped</code>, 
-<code>horizontalRank</code>, <code>rankIncrement</code> or <code>classes</code> are not sensible parameters to pass for the <code>-l</code> option. </p>
-<p>Please note that using <code>module</code> and passing it as a layer option will also not work. </p>
+<p>Of course, using <code>text</code>, <code>inContextOf</code>, <code>supportedBy</code>, <code>url</code>, <code>undeveloped</code>,
+<code>horizontalRank</code>, <code>rankIncrement</code> or <code>classes</code> are not sensible parameters to pass for the <code>-l</code> option.</p>
+<p>Please note that using <code>module</code> and passing it as a layer option will also not work.</p>
 <p>It is intentional that information is only added for a view, but not hidden to ensure consistency of the GSN in all variants.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="stylesheets-for-svg-rendering"><a class="header" href="#stylesheets-for-svg-rendering">Stylesheets for SVG rendering</a></h1>
-<p>You can provide (multiple) custom CSS stylesheets for SVG via the <code>-s</code> or <code>--stylesheet</code> options. </p>
+<p>You can provide (multiple) custom CSS stylesheets for SVG via the <code>-s</code> or <code>--stylesheet</code> options.</p>
 <p>The path may be relative to the current working directory, absolute, or an URL (i.e. starting with <code>http://</code>, <code>https://</code> or <code>file://</code>).</p>
-<p>When adding <code>-t</code> or <code>--embed-css</code> on the command line, the CSS stylesheets will be embedded in the SVG. </p>
+<p>When adding <code>-t</code> or <code>--embed-css</code> on the command line, the CSS stylesheets will be embedded in the SVG.</p>
 <p>If an output path is provided (see <a href="./basic_usage.html">Basic usage</a>), the stylesheet(s) will be copied there.
-If a relative path is used, the relative path to the current working directory is preserved. 
+If a relative path is used, the relative path to the current working directory is preserved.
 If an absolute path is used, the stylesheet will be copied to the root of the output path.</p>
 <p>If a URL (see above for definition) is provided for a stylesheet, it is neither embedded nor copied to an output directory.</p>
 <h2 id="classes-and-styles"><a class="header" href="#classes-and-styles">Classes and styles</a></h2>
@@ -464,11 +464,11 @@ If an absolute path is used, the stylesheet will be copied to the root of the ou
 <tr><td>gsncomposite</td><td>Composite (In Context Of AND Supported By)</td><td>path</td></tr>
 </tbody></table>
 </div>
-<p>You can assign additional classes by adding the <code>classes:</code> attribute. It must be a list of classes you want to assign. 
+<p>You can assign additional classes by adding the <code>classes:</code> attribute. It must be a list of classes you want to assign.
 Additional layers will be added as CSS classes, too. A <code>layer1</code> will e.g. be added as <code>gsnlay_layer1</code>.</p>
 <p>For more information on how to use CSS with SVGs, see <a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/SVG_and_CSS">here</a>.</p>
 <h2 id="example-2"><a class="header" href="#example-2">Example</a></h2>
-<p>The GSN YAML: </p>
+<p>The GSN YAML:</p>
 <pre><code class="language-yaml">
 G1:
   text: This is a Goal
@@ -528,22 +528,22 @@ Module Interfaces (Section 1:4.6) and Inter-Module Contracts (Section 1:4.7) are
 <p>If modules are used, all related module files must be provided to the command line of gsn2x.
 Element IDs must be unique across all modules. Checks will by default be performed across all modules.
 Check messages for individual modules can be omitted using the <code>-x</code> option.</p>
-<p>The argument view of individual modules will show &quot;away&quot; elements if elements from other modules are referenced.</p>
-<p>Note: There is no &quot;away strategy&quot; in the standard.</p>
+<p>The argument view of individual modules will show "away" elements if elements from other modules are referenced.</p>
+<p>Note: There is no "away strategy" in the standard.</p>
 <p>In addition to the default argument view for each module, there are two output files generated (if more than one input file is provided):</p>
 <ol>
 <li>Complete View (default to: <code>complete.svg</code>)</li>
 <li>Architecture View (default to: <code>architecture.svg</code>)</li>
 </ol>
-<p>You can only change the file names of these additional views. 
+<p>You can only change the file names of these additional views.
 They are put in the directory that all input files have in common.
 The <code>-o</code> option can be used for these views, too.</p>
 <p>If the argument view should not be updated, use the <code>-N</code> option.
 If the complete view should not be output, use the <code>-F</code> option.
 If the architecture view should not be output, use the <code>-A</code> option.</p>
 <h2 id="complete-view"><a class="header" href="#complete-view">Complete view</a></h2>
-<p>The complete view is a similar to an argument view for a single module, 
-but showing all modules within the same diagram. The modules are &quot;unrolled&quot;. </p>
+<p>The complete view is a similar to an argument view for a single module,
+but showing all modules within the same diagram. The modules are "unrolled".</p>
 <!-- Modules can be masked i.e., unrolling is prevented, 
 by additionally adding those modules with the `-m` option. -->
 <p><img src="examples/modular/complete.svg" alt="example complete" /></p>
@@ -589,7 +589,7 @@ Sn1:
 <h1 id="optional-module-information"><a class="header" href="#optional-module-information">Optional module information</a></h1>
 <p>It is possible to add additional <code>module</code> information in the source YAML.
 This allows describing the module`s name and an optional brief description.
-Even arbitrary information can be added. </p>
+Even arbitrary information can be added.</p>
 <p><code>name</code> and <code>brief</code> are mandatory if a <code>module</code> is added.</p>
 <pre><code class="language-yaml">
 module: 
@@ -601,11 +601,11 @@ module:
 
 </code></pre>
 <p>The module information is printed as part of a legend for the argument view.</p>
-<p>You can use the <code>-G</code> option to suppress the legend completely, 
+<p>You can use the <code>-G</code> option to suppress the legend completely,
 or the <code>-g</code> option to limit it to <code>name</code>, <code>brief</code> and the time and date of generation of the SVG.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="interfacing"><a class="header" href="#interfacing">Interfacing</a></h1>
 <p>Here is some guidance on interfacing with external sources.</p>
-<p>I currently see two use-cases: </p>
+<p>I currently see two use-cases:</p>
 <ol>
 <li>
 <p>Use-case: Check if all configuration management items of a project exist that are mandated by the argumentation (as solutions/evidences).</p>
@@ -653,7 +653,7 @@ The input format should be diff-able to support common git workflows with pull/m
 <li>
 <p>Simplicity</p>
 <p>I would like to keep things simple. Simple for me and others.</p>
-<p>That means the input format should be simple to learn and edit manually in any editor. 
+<p>That means the input format should be simple to learn and edit manually in any editor.
 I also did not want invent a new DSL (domain-specific language) for that purpose.
 YAML (input file format) might not be the best format, but it serves as a good tradeoff for my purposes.
 Moreover, it can be parsed by other programs easily, too.</p>
@@ -661,21 +661,21 @@ Moreover, it can be parsed by other programs easily, too.</p>
 <li>
 <p>Standard conformance</p>
 <p>I would like the program output to be very close to the GSN standard.</p>
-<p>I don't want to redefine the semantics or add additional ones. 
+<p>I don't want to redefine the semantics or add additional ones.
 The standard was created so that as many people as possible have some common grounds.
 If I added new fancy stuff, everyone might have a different interpretation of that again.</p>
 </li>
 <li>
 <p>As few dependencies as possible</p>
-<p>Since I understand that this tool might be used in some corporate environment where usage of 
-free and open-source software might be limited, I try to keep the dependencies of this program 
+<p>Since I understand that this tool might be used in some corporate environment where usage of
+free and open-source software might be limited, I try to keep the dependencies of this program
 as few as possible.</p>
 <p>I used a very relaxed license and try to take care that it is compatible with those of the dependencies.</p>
 </li>
 <li>
 <p>Full control by the user how the diagram is layed out</p>
 <p>Creating an optimal rendering for all different use-cases is incredibly difficult.
-I failed in creating an algorithm that would allow for that. 
+I failed in creating an algorithm that would allow for that.
 When trying I recognized that it is anyhow preferable to give the user full control over how the diagram should look like.</p>
 </li>
 </ul>
@@ -697,7 +697,7 @@ I released the first Rust version in July 2021.</p>
 <li>
 <p>I desperately tried adding the modular extension by convincing Graphviz to draw what I want, but I failed.
 I finally made decided to no longer output DOT, but directly generate SVGs from the program.
-This required writing a specialized version for rendering the tree on my own which ended up in version 2 
+This required writing a specialized version for rendering the tree on my own which ended up in version 2
 finally released in April 2022.</p>
 </li>
 <li>
@@ -716,7 +716,7 @@ Version 3 intentionally changed this approach.</p>
 <p><code>level</code> was deprecated. Instead, increment the rank of the elements that should be pushed further down.</p>
 <p>Please see <a href="./adv_layout.html">Layout</a> for more information on how to use <code>rankIncrement</code>.</p>
 <h2 id="use-strict-lexicographical-sorting-and-horizontal-reordering-to-optimize-the-graph"><a class="header" href="#use-strict-lexicographical-sorting-and-horizontal-reordering-to-optimize-the-graph">Use strict lexicographical sorting and horizontal reordering to optimize the graph</a></h2>
-<p>If you find situations that are not rendered correctly by default, 
+<p>If you find situations that are not rendered correctly by default,
 please check if your IDs are sensibly defined (i.e. lexicographically increasing).
 Use <code>horizontalIndex</code> as described <a href="./adv_layout.html">here</a> to fix e.g., crossing edges.</p>
 

@@ -181,22 +181,22 @@ Module Interfaces (Section 1:4.6) and Inter-Module Contracts (Section 1:4.7) are
 <p>If modules are used, all related module files must be provided to the command line of gsn2x.
 Element IDs must be unique across all modules. Checks will by default be performed across all modules.
 Check messages for individual modules can be omitted using the <code>-x</code> option.</p>
-<p>The argument view of individual modules will show &quot;away&quot; elements if elements from other modules are referenced.</p>
-<p>Note: There is no &quot;away strategy&quot; in the standard.</p>
+<p>The argument view of individual modules will show "away" elements if elements from other modules are referenced.</p>
+<p>Note: There is no "away strategy" in the standard.</p>
 <p>In addition to the default argument view for each module, there are two output files generated (if more than one input file is provided):</p>
 <ol>
 <li>Complete View (default to: <code>complete.svg</code>)</li>
 <li>Architecture View (default to: <code>architecture.svg</code>)</li>
 </ol>
-<p>You can only change the file names of these additional views. 
+<p>You can only change the file names of these additional views.
 They are put in the directory that all input files have in common.
 The <code>-o</code> option can be used for these views, too.</p>
 <p>If the argument view should not be updated, use the <code>-N</code> option.
 If the complete view should not be output, use the <code>-F</code> option.
 If the architecture view should not be output, use the <code>-A</code> option.</p>
 <h2 id="complete-view"><a class="header" href="#complete-view">Complete view</a></h2>
-<p>The complete view is a similar to an argument view for a single module, 
-but showing all modules within the same diagram. The modules are &quot;unrolled&quot;. </p>
+<p>The complete view is a similar to an argument view for a single module,
+but showing all modules within the same diagram. The modules are "unrolled".</p>
 <!-- Modules can be masked i.e., unrolling is prevented, 
 by additionally adding those modules with the `-m` option. -->
 <p><img src="examples/modular/complete.svg" alt="example complete" /></p>
@@ -242,7 +242,7 @@ Sn1:
 <h1 id="optional-module-information"><a class="header" href="#optional-module-information">Optional module information</a></h1>
 <p>It is possible to add additional <code>module</code> information in the source YAML.
 This allows describing the module`s name and an optional brief description.
-Even arbitrary information can be added. </p>
+Even arbitrary information can be added.</p>
 <p><code>name</code> and <code>brief</code> are mandatory if a <code>module</code> is added.</p>
 <pre><code class="language-yaml">
 module: 
@@ -254,7 +254,7 @@ module:
 
 </code></pre>
 <p>The module information is printed as part of a legend for the argument view.</p>
-<p>You can use the <code>-G</code> option to suppress the legend completely, 
+<p>You can use the <code>-G</code> option to suppress the legend completely,
 or the <code>-g</code> option to limit it to <code>name</code>, <code>brief</code> and the time and date of generation of the SVG.</p>
 
                     </main>
