@@ -17,30 +17,25 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - uses: actions-rs/toolchain@v1
+    - uses: actions/checkout@v4
+    - uses: dtolnay/rust-toolchain@stable
       with:
         toolchain: stable
-        profile: minimal
-        override: true
         components: clippy
     - name: Rust Cache
       uses: Swatinem/rust-cache@v2
       with:
         shared-key: ci
     - name: Annotate commit with clippy warnings
-      uses: actions-rs/clippy-check@v1
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        args: --all-features --all --all-targets --tests
+      run: cargo clippy --all-features --all --all-targets --tests -Dwarnings
     - name: Cargo deny
       uses: EmbarkStudios/cargo-deny-action@v1
   
   build_docs:
       runs-on: ubuntu-latest
       steps:
-        - uses: actions/checkout@v3
-        - uses: actions-rs/toolchain@v1
+        - uses: actions/checkout@v4
+        - uses: dtolnay/rust-toolchain@stable
           with:
             toolchain: stable
         - name: Rust Cache
@@ -49,7 +44,7 @@ jobs:
             shared-key: ci
         - run: cargo install mdbook
         - run: mdbook build doc
-        - uses: JamesIves/github-pages-deploy-action@4.1.7
+        - uses: JamesIves/github-pages-deploy-action@v4
           with:
             branch: gh-pages # The branch the action should deploy to.
             folder: doc/book # The folder the action should deploy.
@@ -61,12 +56,10 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-    - uses: actions/checkout@v3
-    - uses: actions-rs/toolchain@v1
+    - uses: actions/checkout@v4
+    - uses: dtolnay/rust-toolchain@stable
       with:
         toolchain: stable
-        profile: minimal
-        override: true
     - name: Rust Cache
       uses: Swatinem/rust-cache@v2
       with:
@@ -93,7 +86,7 @@ jobs:
       run: |
         copy target/release/gsn2x.exe gsn2x-${{ runner.os }}.exe
     - name: Upload artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: gsn2x
         path: gsn2x-${{ runner.os }}*
@@ -105,7 +98,7 @@ jobs:
 
     steps:
     - name: Download artifacts
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: gsn2x
     - name: Deploy pre-release to github.com
@@ -124,14 +117,14 @@ jobs:
     if: ${{ startsWith(github.ref, 'refs/tags/') }}
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - uses: ericcornelissen/git-tag-annotation-action@v2
       id: tag_data
     - name: Get the version
       id: get_version
       run: echo "name=VERSION::${GITHUB_REF/refs\/tags\//}" > $GITHUB_OUTPUT
     - name: Download artifacts
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: gsn2x
     - name: Deploy release to github.com
@@ -149,12 +142,10 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - uses: actions/checkout@v3
-    - uses: actions-rs/toolchain@v1
+    - uses: actions/checkout@v4
+    - uses: dtolnay/rust-toolchain@stable
       with:
         toolchain: stable
-        profile: minimal
-        override: true
         components: llvm-tools-preview
     - name: Rust Cache
       uses: Swatinem/rust-cache@v2
