@@ -222,6 +222,16 @@ mod integrations {
     }
 
     #[test]
+    fn entangled() -> Result<()> {
+        const SUB_DIR: &str = "examples";
+        const INPUT_YAML: &str = "entangled.gsn.yaml";
+        const OUTPUT_SVG: &str = "entangled.gsn.svg";
+
+        check_if_outputs_are_similar(SUB_DIR, INPUT_YAML, OUTPUT_SVG)
+    }
+
+
+    #[test]
     fn validate_multiple_only() -> Result<()> {
         let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
         cmd.arg("-c")
