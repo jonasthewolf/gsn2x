@@ -88,7 +88,7 @@ jobs:
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
-        name: gsn2x
+        name: gsn2x-${{ runner.os }}
         path: gsn2x-${{ runner.os }}*
   
   pre_release:
