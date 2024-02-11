@@ -27,7 +27,7 @@ jobs:
       with:
         shared-key: ci
     - name: Annotate commit with clippy warnings
-      run: cargo clippy --all-features --all --all-targets --tests -Dwarnings
+      run: cargo clippy --all-features --all --all-targets --tests -- -Dwarnings
     - name: Cargo deny
       uses: EmbarkStudios/cargo-deny-action@v1
   
