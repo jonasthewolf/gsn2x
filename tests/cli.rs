@@ -50,9 +50,10 @@ mod integrations {
 
         let num_regex = Regex::new(r"-?\d+").unwrap(); // unwrap ok, since static regex
 
-        if dbg!(left_c.chars().filter(|&c| c == '\n').count())
-            == dbg!(right_c.chars().filter(|&c| c == '\n').count())
-        {
+        let l_line_count = left_c.chars().filter(|&c| c == '\n').count();
+        let r_line_count = right_c.chars().filter(|&c| c == '\n').count();
+        println!("Lines: {l_line_count} {r_line_count}");
+        if l_line_count == r_line_count {
             for (l, r) in left_c.lines().zip(right_c.lines()) {
                 // TODO Compare numbers in range of 5%
                 let l_r = replace_regex
@@ -69,7 +70,7 @@ mod integrations {
                         r.replace_all(&replaced, *rp).to_string()
                     });
                 let r_split = split_keep(&num_regex, &r_r);
-                dbg!(&l_split);
+                println!("Splitted Line: {:?} {:?}", l_split, r_split);
                 assert_eq!(l_split.len(), r_split.len());
 
                 for (l_m, r_m) in l_split.into_iter().zip(r_split) {
@@ -82,10 +83,7 @@ mod integrations {
                         (Err(l), Err(r)) => l == r,
                     } == false
                     {
-                        dbg!(&l);
-                        dbg!(&l_r);
-                        dbg!(&r_r);
-                        dbg!(&r);
+                        println!("Match: {} {}", &l_m, &r_m);
                         same = false;
                         break;
                     }
