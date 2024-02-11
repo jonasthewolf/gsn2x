@@ -8,6 +8,40 @@ mod integrations {
     use regex::Regex;
     use std::process::Command;
 
+    fn split_keep<'a>(regex: &Regex, input: &'a str) -> Vec<&'a str> {
+        let mut result = vec![];
+        let mut last = 0;
+        for rmatch in regex.find_iter(input) {
+            if last != rmatch.start() {
+                result.push(&input[last..rmatch.start()]);
+            }
+            result.push(rmatch.as_str());
+            last = rmatch.end();
+        }
+        if last < input.len() {
+            result.push(&input[last..]);
+        }
+        result
+    }
+
+    fn check_within_tolerance(l: i64, r: i64) -> bool {
+        if l == r {
+            true
+        } else {
+            const TOLERANCE: f64 = 0.1;
+            let m = (l + r) as f64 / 2.0;
+            let min = std::cmp::min(
+                (m * (1.0 - TOLERANCE)) as i64,
+                (m * (1.0 + TOLERANCE)) as i64,
+            );
+            let max = std::cmp::max(
+                (m * (1.0 - TOLERANCE)) as i64,
+                (m * (1.0 + TOLERANCE)) as i64,
+            );
+            min <= l && max >= l && min <= r && max >= r
+        }
+    }
+
     fn compare_lines_with_replace(
         left: &std::ffi::OsStr,
         right: &std::ffi::OsStr,
@@ -21,27 +55,46 @@ mod integrations {
             std::fs::read_to_string(right).with_context(|| format!("Filename {:?}", right))?;
         let mut same = true;
 
-        if dbg!(left_c.chars().filter(|&c| c == '\n').count())
-            == dbg!(right_c.chars().filter(|&c| c == '\n').count())
-        {
+        let num_regex = Regex::new(r"-?\d+").unwrap(); // unwrap ok, since static regex
+
+        let l_line_count = left_c.chars().filter(|&c| c == '\n').count();
+        let r_line_count = right_c.chars().filter(|&c| c == '\n').count();
+        println!("Lines: {l_line_count} {r_line_count}");
+        if l_line_count == r_line_count {
             for (l, r) in left_c.lines().zip(right_c.lines()) {
+                // TODO Compare numbers in range of 5%
                 let l_r = replace_regex
                     .iter()
                     .flatten()
                     .fold(l.to_owned(), |replaced, (r, rp)| {
                         r.replace_all(&replaced, *rp).to_string()
                     });
+                let l_split = split_keep(&num_regex, &l_r);
                 let r_r = replace_regex
                     .iter()
                     .flatten()
                     .fold(r.to_owned(), |replaced, (r, rp)| {
                         r.replace_all(&replaced, *rp).to_string()
                     });
-                if l_r != r_r {
-                    dbg!(&l);
-                    dbg!(&l_r);
-                    dbg!(&r_r);
-                    dbg!(&r);
+                let r_split = split_keep(&num_regex, &r_r);
+                if l_split.len() == r_split.len() {
+                    for (l_m, r_m) in l_split.into_iter().zip(r_split) {
+                        let l_num = l_m.parse::<i64>();
+                        let r_num = r_m.parse::<i64>();
+                        if !match (l_num, r_num) {
+                            (Ok(l), Ok(r)) => check_within_tolerance(l, r),
+                            (Ok(_), Err(_)) => false,
+                            (Err(_), Ok(_)) => false,
+                            (Err(l), Err(r)) => l == r,
+                        }
+                        {
+                            println!("Match: {} {}", &l_m, &r_m);
+                            same = false;
+                            break;
+                        }
+                    }
+                } else {
+                    println!("Splitted Line: {:?} {:?}", l_split, r_split);
                     same = false;
                     break;
                 }
@@ -60,21 +113,21 @@ mod integrations {
                 Regex::new(r" gsn_module_\w+").unwrap(),
                 " gsn_module_replaced",
             ),
-            (
-                Regex::new(r#" (?P<attr>(([rc]?(x|y))|width|height|textLength|viewbox|viewBox))="[\d\s]+""#)
-                    .unwrap(),
-                " $attr=\"\"",
-            ),
+            // (
+            //     Regex::new(r#" (?P<attr>(([rc]?(x|y))|width|height|textLength|viewbox|viewBox))="[\d\s]+""#)
+            //         .unwrap(),
+            //     " $attr=\"\"",
+            // ),
             (
                 Regex::new(r#" font-family="([0-9A-Za-z-_]|\\.|\\u[0-9a-fA-F]{1,4})+""#).unwrap(),
                 " font-family=\"\"",
             ),
-            (Regex::new(r"(-?\d+,-?\d+[, ]?)+").unwrap(), ""),
-            (
-                Regex::new(r#"d="((?P<cmd>[A-Za-z]+)(:?-?\d+(:?,-?\d+)?)? ?(?P<cmd2>z?))+""#)
-                    .unwrap(),
-                "d=\"$cmd$cmd2\"",
-            ),
+            // (Regex::new(r"(-?\d+,-?\d+[, ]?)+").unwrap(), ""),
+            // (
+            //     Regex::new(r#"d="((?P<cmd>[A-Za-z]+)(:?-?\d+(:?,-?\d+)?)? ?(?P<cmd2>z?))+""#)
+            //         .unwrap(),
+            //     "d=\"$cmd$cmd2\"",
+            // ),
         ];
 
         compare_lines_with_replace(left, right, Some(replaces))
@@ -164,6 +217,15 @@ mod integrations {
         const SUB_DIR: &str = "tests";
         const INPUT_YAML: &str = "multi_context.gsn.yaml";
         const OUTPUT_SVG: &str = "multi_context.gsn.svg";
+
+        check_if_outputs_are_similar(SUB_DIR, INPUT_YAML, OUTPUT_SVG)
+    }
+
+    #[test]
+    fn entangled() -> Result<()> {
+        const SUB_DIR: &str = "examples";
+        const INPUT_YAML: &str = "entangled.gsn.yaml";
+        const OUTPUT_SVG: &str = "entangled.gsn.svg";
 
         check_if_outputs_are_similar(SUB_DIR, INPUT_YAML, OUTPUT_SVG)
     }
@@ -422,11 +484,9 @@ mod integrations {
             .arg("-A")
             .arg("-G")
             .current_dir(&temp);
-        cmd.assert()
-            .success()
-            .stdout(predicate::str::is_match(concat!(
-                "Rendering \"..complete.svg\": OK\n",
-            ))?);
+        cmd.assert().success().stdout(predicate::str::is_match(
+            "Rendering \"..complete.svg\": OK\n",
+        )?);
         assert!(are_struct_similar_svgs(
             std::path::Path::new("examples/modular/complete.svg").as_os_str(),
             output_file.as_os_str(),
@@ -465,10 +525,17 @@ mod integrations {
         Ok(())
     }
 
-    fn regression_renderings(input: &str, options: &[&str]) -> Result<()> {
+    fn regression_renderings(
+        input: &str,
+        options: &[&str],
+        additional_files: Option<&[&str]>,
+    ) -> Result<()> {
         let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
         let temp = assert_fs::TempDir::new()?;
         temp.copy_from(".", &[input])?;
+        if let Some(additional_files) = additional_files {
+            temp.copy_from(".", additional_files)?;
+        }
         let output_name = input.to_string().replace(".yaml", ".svg");
         let output_file = temp.child(&output_name);
         cmd.args(options).arg(input).arg("-G").current_dir(&temp);
@@ -482,59 +549,85 @@ mod integrations {
     }
 
     #[test]
+    fn multi_parents() -> Result<()> {
+        regression_renderings("tests/multi_parents.gsn.yaml", &[], None)?;
+        Ok(())
+    }
+
+    #[test]
+    fn min_doc() -> Result<()> {
+        regression_renderings(
+            "examples/minimalcss/min.gsn.yaml",
+            &["-s", "examples/minimalcss/min.css", "-t"],
+            Some(&["examples/minimalcss/min.css"]),
+        )?;
+        Ok(())
+    }
+
+    #[test]
     fn issue250() -> Result<()> {
-        regression_renderings("tests/issue250.yaml", &[])?;
+        regression_renderings("tests/issue250.yaml", &[], None)?;
         Ok(())
     }
 
     #[test]
     fn issue249() -> Result<()> {
-        regression_renderings("tests/issue249.yaml", &[])?;
+        regression_renderings("tests/issue249.yaml", &[], None)?;
         Ok(())
     }
 
     #[test]
     fn issue313() -> Result<()> {
-        regression_renderings("tests/issue313.yaml", &[])?;
+        regression_renderings("tests/issue313.yaml", &[], None)?;
         Ok(())
     }
 
     #[test]
     fn issue339() -> Result<()> {
-        regression_renderings("tests/issue339.yaml", &[])?;
+        regression_renderings("tests/issue339.yaml", &[], None)?;
         Ok(())
     }
 
     #[test]
     fn issue84() -> Result<()> {
-        regression_renderings("tests/issue84_1.yaml", &[])?;
-        regression_renderings("tests/issue84_2.yaml", &[])?;
-        regression_renderings("tests/issue84_3.yaml", &[])?;
-        regression_renderings("tests/issue84_4.yaml", &[])?;
+        regression_renderings("tests/issue84_1.yaml", &[], None)?;
+        regression_renderings("tests/issue84_2.yaml", &[], None)?;
+        regression_renderings("tests/issue84_3.yaml", &[], None)?;
+        regression_renderings("tests/issue84_4.yaml", &[], None)?;
         Ok(())
     }
 
     #[test]
     fn issue358() -> Result<()> {
-        regression_renderings("tests/issue358.yaml", &["-l", "layer1", "-l", "layer2"])?;
+        regression_renderings(
+            "tests/issue358.yaml",
+            &["-l", "layer1", "-l", "layer2"],
+            None,
+        )?;
         Ok(())
     }
 
     #[test]
     fn issue365() -> Result<()> {
-        regression_renderings("tests/issue365.yaml", &["-w", "35"])?;
+        regression_renderings("tests/issue365.yaml", &["-w", "35"], None)?;
         Ok(())
     }
 
     #[test]
     fn issue371() -> Result<()> {
-        regression_renderings("tests/issue371.yaml", &[])?;
+        regression_renderings("tests/issue371.yaml", &[], None)?;
         Ok(())
     }
 
     #[test]
     fn issue372() -> Result<()> {
-        regression_renderings("tests/issue372.yaml", &["-w", "35"])?;
+        regression_renderings("tests/issue372.yaml", &["-w", "35"], None)?;
+        Ok(())
+    }
+
+    #[test]
+    fn issue377() -> Result<()> {
+        regression_renderings("tests/issue377.yaml", &["-w", "35"], None)?;
         Ok(())
     }
 }

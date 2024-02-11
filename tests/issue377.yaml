@@ -1,0 +1,41 @@
+module:
+  name: xxxx-2 xxxxxxx xxxxxxxxxxx
+  brief: xxxxxxxxxxxx xxxxxxxxx xx xxxxxx xxxxxx
+GProduct-PostSOP:
+  text: xxx xxxxxxx xx xxxxx xxxxxxxxxx xxxx xxxx xxxxxxxxxxxx xxxxxxxxxxxxx xxxxx xxxxx xxx xxxxx xx xxxxxxx xxx xxx.
+  supportedBy: [GProduct-VulMgmt]
+SProduct-Dev:
+  text: xxxx xxxxxxx xx xxxxxxxxxxxx xxxxxxxx xxxxx xxx xxxxxxxxxxx xx xxx xxxxx xxxxxxxxxxxxx xxxxxxxxxxxx (xxxxxxx).
+  supportedBy: [GProduct-VulMgmt]
+GProduct-VulMgmt:
+  text: xxxxxxxxxxxxxxx xx xxxxxxx xxx xxxxxxx.
+  supportedBy: [SProduct-VulMgmt]
+SProduct-VulMgmt:
+  text: xxxxxxxxxxxxx xxxxxxxxxx xx xxxxxxxxxxxx xxxxxxxxx.
+  supportedBy: [GProduct-VulMgmt.1]
+GProduct-VulMgmt.1:
+  text: xxxxxxxxxxxxxxx xxx xxxxxxxxx.
+  supportedBy: [GProduct-VulMgmt.1.1, GProduct-VulMgmt.1.2, GProduct-VulMgmt.1.3]
+GProduct-VulMgmt.1.1:
+  text: xxxxxxxx xxxxxxxx xx xxxxxxxx.
+  supportedBy: [GProduct-VulMgmt.1.1.1, GProduct-VulMgmt.1.1.2]
+GProduct-VulMgmt.1.1.1:
+  text: |
+    xxxxxxxxx' xxxxxxxx xx xxxxxxxx.
+    xxxxx "xxxxx xx" xx xxxxx xxxxxx
+  supportedBy: [SnProduct-VulMgmt.1]
+  inContextOf: [CProduct-VulMgmt.1.1.1]
+CProduct-VulMgmt.1.1.1:
+  text: xxxxxxxxxx xx xxxxxx xxxxxx xxxxx xxxxxxx xx xxxxx xxxxxxxx xx xxxxxxxx xx xxx xxxxxxx xxxxx xxx xxxxxxxxxx.
+GProduct-VulMgmt.1.1.2:
+  text: xxxxx xxxxxxx xxxxxxxx xx xxxxxxxxxx (x.x. xxxxxxxx xxxxxxxxxxxx).
+  supportedBy: [SnProduct-VulMgmt.1]
+SnProduct-VulMgmt.1:
+  text: xxxxx xxxxxxx (xxxxx xxxxx xx xxx)
+  rankIncrement: 1
+GProduct-VulMgmt.1.2:
+  text: xxxxxxxxxx xxxxxxxxxxx xx xxx xxxxxxx xxxxxxx xxxxxxxxx xxxxxxxxxxxxxxx (x.x. xx xxxxxxx, xxxxxxx).
+  supportedBy: [SnProduct-VulMgmt.1]
+GProduct-VulMgmt.1.3:
+  text: xxxxxxxx xxxxxxx xxxxxxx xxx xxxxxxxxx (x.x. xxx xxxxxxxxx)
+  supportedBy: [SnProduct-VulMgmt.1]

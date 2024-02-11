@@ -396,7 +396,7 @@ fn validate_and_check(
     modules: &BTreeMap<String, Module>,
     diags: &mut Diagnostics,
     excluded_modules: &[&str],
-    layers: &Vec<&str>,
+    layers: &[&str],
 ) {
     for (module_name, module_info) in modules {
         // Validation for well-formedness is done unconditionally.

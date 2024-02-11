@@ -118,7 +118,8 @@ mod test {
     #[test]
     fn bounding_box() {
         let font_info = FontInfo::default();
-        let (w, h) = dbg!(text_bounding_box(&font_info, "text", false));
+        let (w, h) = text_bounding_box(&font_info, "text", false);
+        println!("Width: {w} Height: {h}");
         assert!(w.abs_diff(20) <= 5);
         assert!(h.abs_diff(15) <= 5);
     }

@@ -142,11 +142,10 @@ pub(super) fn layout_nodes(
     ranks: &[Vec<Vec<&str>>],
     margin: &Margin,
 ) -> (i32, i32) {
-    let mut first_run = true;
     let nodes = graph.get_nodes();
     // This number should be safe that it yields a final, good looking image
     let limit = 3 * ranks.len();
-    for limiter in 1..=limit {
+    for run in 0..=limit {
         let mut changed = false;
         let mut y = margin.top;
         let mut cells_with_centered_parents = HashSet::new();
@@ -158,13 +157,18 @@ pub(super) fn layout_nodes(
                 let w = cell.get_max_width(nodes);
                 let old_x = cell.get_x(nodes);
                 x = std::cmp::max(x + w / 2, old_x);
-                if !first_run {
-                    if let Some(new_x) =
-                        has_node_to_be_moved(graph, cell, margin, &mut cells_with_centered_parents)
-                    {
+                // Not at the first run
+                if run > 0 {
+                    if let Some(new_x) = has_node_to_be_moved(
+                        graph,
+                        cell,
+                        margin,
+                        &mut cells_with_centered_parents,
+                        run,
+                    ) {
                         if new_x > x {
                             x = std::cmp::max(x, new_x);
-                            // eprintln!("Changed {:?} {} {} {}", &np, x, old_x, new_x);
+                            // eprintln!("Changed {:?} {} {} {}", &cell, x, old_x, new_x);
                             changed = true;
                         }
                     }
@@ -174,15 +178,14 @@ pub(super) fn layout_nodes(
             }
             y += margin.bottom + dy_max / 2 + margin.top;
         }
-        if !(first_run || changed) {
-            if limiter <= limit {
+        if !(run == 0 || changed) {
+            if run <= limit {
                 println!("OK");
             }
             break;
         }
-        first_run = false;
-        if changed && limiter == limit {
-            println!("Diagram took too many iterations ({limiter}). See documentation (https://jonasthewolf.github.io/gsn2x/) for hints how to solve this situation.");
+        if changed && run == limit {
+            println!("Diagram took too many iterations ({run}). See documentation (https://jonasthewolf.github.io/gsn2x/) for hints how to solve this situation.");
         }
     }
     calculate_size_of_document(nodes, ranks, margin)
@@ -248,6 +251,7 @@ fn has_node_to_be_moved<'b>(
     cell: &Vec<&str>,
     margin: &Margin,
     moved_nodes: &mut HashSet<&'b str>,
+    run: usize,
 ) -> Option<i32> {
     let children: Vec<_> = cell
         .iter()
@@ -261,38 +265,68 @@ fn has_node_to_be_moved<'b>(
         .iter()
         .flat_map(|n| graph.get_same_ranks_parents(n))
         .collect();
-    let my_x = cell.get_x(graph.get_nodes());
+    let nodes = graph.get_nodes();
+    let cell_x = cell.get_x(nodes);
+    let child_len = children.len();
     // If node has children, center over them
-    if !(children.is_empty() || children.len() == 1 && my_x >= children.get_x(graph.get_nodes())) {
-        let center_children = if children.len() == 1 && parents.is_empty() {
+    if child_len > 0 {
+        if child_len == 1 && cell_x < children.get_x(nodes) && parents.is_empty() {
             // If node has no parents and exactly one child, center over it
-            children
+            let child_x = children.get_x(nodes);
+            let all_parent_cells = children
+                .iter()
+                .filter_map(|c| match graph.get_real_parents(c) {
+                    // p if p.len() > 1 => Some(p.iter().map(|&p| vec![p]).collect::<Vec<_>>()),
+                    p if p.len() > 1 => Some(p),
+                    _ => None,
+                })
+                .flatten()
+                .filter(|c| graph.get_real_children(c).len() == 1)
+                .collect::<Vec<_>>();
+            let parent_center = get_center(nodes, &all_parent_cells);
+            let move_x = std::cmp::min(child_x - parent_center + cell_x, child_x);
+            if move_x > cell_x {
+                Some(move_x)
+            } else {
+                None
+            }
         } else {
-            // Otherwise center only over the children that have no other parents
-            children
+            // Only center over the children that have no other parents...
+            let center_children = children
                 .into_iter()
                 .filter(|&c| graph.get_real_parents(c).len() == 1)
-                .collect::<Vec<_>>()
-        };
-        // If node centered over multiple children, remember them.
-        // We don't move them later.
-        if center_children.len() > 1 {
-            center_children.iter().for_each(|c| {
-                moved_nodes.insert(c);
-            });
+                .collect::<Vec<_>>();
+            // ... and remember them. We don't move them later.
+            if center_children.len() > 1 {
+                center_children.iter().for_each(|c| {
+                    moved_nodes.insert(c);
+                });
+            }
+            // On the first iteration of moving, ensure that we have moved the node with a single parent
+            // exactly under its parent. This might happen if e.g. there is a large in-context node at the parent.
+            // Then the child is too far left and never moved.
+            // We disregard the margin.left, to not create unnecessary white space at the left.
+            let min_x = if run <= 1
+                && parents.len() == 1
+                && graph.get_real_children(parents.first().unwrap()).len() == 1
+            {
+                parents.get_x(nodes)
+            } else {
+                0
+            };
+            Some(std::cmp::max(min_x, get_center(nodes, &center_children)))
         }
-        Some(get_center(graph.get_nodes(), &center_children))
     } else if !parents.is_empty() {
         // else center under parents if the parent has centered above the current cell and other nodes
         if cell.iter().any(|c| moved_nodes.contains(c)) {
             None
         } else {
-            Some(get_center(graph.get_nodes(), &parents))
+            Some(get_center(nodes, &parents))
         }
     } else if same_rank_parents.len() == 1 {
         // Move same rank child closer to parent
         Some(move_closer(
-            graph.get_nodes(),
+            nodes,
             cell,
             same_rank_parents.first().unwrap(),
             margin,

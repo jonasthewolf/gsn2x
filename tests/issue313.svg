@@ -183,7 +183,7 @@ G2.2
 G2.2
 </text>
 <text font-family="Arial" font-size="12" x="261" y="336">
-Probability of Hazard H2 occuring &lt; 1x10-6 per year.
+Probability of Hazard H2 occuring &amp;lt; 1x10-6 per year.
 </text>
 </g>
 <g class="gsn_module_tests_issue313_yaml gsnelem gsngoal" id="node_G2_3">
@@ -195,7 +195,7 @@ G2.3
 G2.3
 </text>
 <text font-family="Arial" font-size="12" x="625" y="336">
-Probability of Hazard H3 occuring &lt; 1x10-3 per year.
+Probability of Hazard H3 occuring &amp;lt; 1x10-3 per year.
 </text>
 </g>
 <g class="gsn_module_tests_issue313_yaml gsnelem gsngoal" id="node_G3_1">

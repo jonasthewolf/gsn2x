@@ -292,7 +292,7 @@ fn setup_stylesheets(
                 let css_str = std::fs::read_to_string(css)
                     .context(format!("Failed to open CSS file {css} for embedding"))
                     .unwrap();
-                let style = Style::new(format!("<![CDATA[{css_str}]]>")).set("type", "text/css");
+                let style = Style::new(css_str).set("type", "text/css");
                 document = document.add(style);
             }
         } else {
