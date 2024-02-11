@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg classes="gsndiagram" viewBox="0 0 2240 261" xmlns="http://www.w3.org/2000/svg">
+<symbol id="module_icon">
+<rect fill="lightgrey" height="5" stroke="black" stroke-width="1" width="10" x="0" y="0"/>
+<rect fill="lightgrey" height="10" stroke="black" stroke-width="1" width="20" x="0" y="5"/>
+</symbol>
+<marker id="composite_arrow" markerHeight="9" markerUnits="userSpaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
+<polyline fill="none" points="0 0, 6 4.5, 0 9" stroke="black" stroke-width="1"/>
+<polyline fill="none" points="4 0, 10 4.5, 4 9" stroke="black" stroke-width="1"/>
+<polyline fill="none" points="0 4.5, 10 4.5" stroke="black" stroke-width="1"/>
+</marker>
+<marker id="supportedby_arrow" markerHeight="9" markerUnits="userSpaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
+<polyline fill="black" points="0 0, 10 4.5, 0 9"/>
+</marker>
+<marker id="incontextof_arrow" markerHeight="9" markerUnits="userSpaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
+<polyline fill="none" points="0 0, 10 4.5, 0 9, 0 0" stroke="black" stroke-width="1"/>
+</marker>
+<g class="gsn_module_examples_entangled_gsn_yaml gsnelem gsngoal" id="node_G1">
+<title>
+G1
+</title>
+<path class="border" d="M1757,20 L1861,20 L1861,66 L1757,66 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="1764" y="39">
+G1
+</text>
+<text font-family="Arial" font-size="12" x="1764" y="58">
+First
+</text>
+</g>
+<g class="gsn_module_examples_entangled_gsn_yaml gsnelem gsngoal" id="node_G2">
+<title>
+G2
+</title>
+<path class="border" d="M1901,20 L2005,20 L2005,66 L1901,66 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="1908" y="39">
+G2
+</text>
+<text font-family="Arial" font-size="12" x="1908" y="58">
+Second
+</text>
+</g>
+<g class="gsn_module_examples_entangled_gsn_yaml gsnelem gsnsltn" id="node_Sn1">
+<title>
+Sn1
+</title>
+<path class="border" d="M1886,173 a67,67,0,1,0,134,0 a67,67,0,1,0,-134,0 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="1902" y="164">
+Sn1
+</text>
+<text font-family="Arial" font-size="12" x="1902" y="183">
+Solution to Second
+</text>
+</g>
+<g class="gsn_module_examples_entangled_gsn_yaml gsnelem gsnsltn" id="node_Sn2">
+<title>
+Sn2
+</title>
+<path class="border" d="M2060,173 a60,60,0,1,0,120,0 a60,60,0,1,0,-120,0 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="2076" y="164">
+Sn2
+</text>
+<text font-family="Arial" font-size="12" x="2076" y="183">
+Solution to First
+</text>
+</g>
+<path class="gsnedge gsninspby" d="M1809,66 C1809,96,2120,83,2120,103" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M1953,66 C1953,96,1953,76,1953,96" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+</svg>
