@@ -266,17 +266,17 @@ fn has_node_to_be_moved<'b>(
         .flat_map(|n| graph.get_same_ranks_parents(n))
         .collect();
     let nodes = graph.get_nodes();
-    let my_x = cell.get_x(&nodes);
+    let my_x = cell.get_x(nodes);
     let child_len = children.len();
     // If node has children, center over them
     if child_len > 0 {
-        if child_len == 1 && my_x <= children.get_x(&nodes) && parents.len() == 0 {
+        if child_len == 1 && my_x <= children.get_x(nodes) && parents.is_empty() {
             // If node has no parents and exactly one child, center over it
-            let mut my_new_x = children.get_x(&nodes);
+            let mut my_new_x = children.get_x(nodes);
             let all_parent_cells = children
                 .iter()
-                .filter(|c| graph.get_real_children(c).len() > 0)
-                .filter_map(|c| match graph.get_real_parents(&c) {
+                .filter(|c| !graph.get_real_children(c).is_empty())
+                .filter_map(|c| match graph.get_real_parents(c) {
                     p if p.len() > 1 => Some(p.iter().map(|&p| vec![p]).collect::<Vec<_>>()),
                     _ => None,
                 })
@@ -287,7 +287,7 @@ fn has_node_to_be_moved<'b>(
             // let mut last_sub = 0; // FIXME more than two parents
             for index in (my_pos..half).rev() {
                 my_new_x -= margin.left;
-                let last_sub = all_parent_cells[index].get_max_width(&nodes) / 2;
+                let last_sub = all_parent_cells[index].get_max_width(nodes) / 2;
                 my_new_x -= last_sub;
             }
             // children
@@ -316,7 +316,7 @@ fn has_node_to_be_moved<'b>(
                 && parents.len() == 1
                 && graph.get_real_children(parents.first().unwrap()).len() == 1
             {
-                let p_x = parents.get_x(&nodes);
+                let p_x = parents.get_x(nodes);
                 if p_x <= margin.left {
                     0
                 } else {
@@ -325,19 +325,19 @@ fn has_node_to_be_moved<'b>(
             } else {
                 0
             };
-            Some(std::cmp::max(min_x, get_center(&nodes, &center_children)))
+            Some(std::cmp::max(min_x, get_center(nodes, &center_children)))
         }
-    } else if parents.len() > 0 {
+    } else if !parents.is_empty() {
         // else center under parents if the parent has centered above the current cell and other nodes
         if cell.iter().any(|c| moved_nodes.contains(c)) {
             None
         } else {
-            Some(get_center(&nodes, &parents))
+            Some(get_center(nodes, &parents))
         }
     } else if same_rank_parents.len() == 1 {
         // Move same rank child closer to parent
         Some(move_closer(
-            &nodes,
+            nodes,
             cell,
             same_rank_parents.first().unwrap(),
             margin,
