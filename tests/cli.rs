@@ -31,7 +31,7 @@ mod integrations {
             let m = (l + r) / 2;
             let min = (m as f64 * 0.9) as i64;
             let max = (m as f64 * 1.1) as i64;
-            min <= l && max >= l && min <= r && max >= r
+            dbg!(min <= l && max >= l && min <= r && max >= r)
         }
     }
 
@@ -70,24 +70,28 @@ mod integrations {
                         r.replace_all(&replaced, *rp).to_string()
                     });
                 let r_split = split_keep(&num_regex, &r_r);
-                println!("Splitted Line: {:?} {:?}", l_split, r_split);
-                assert_eq!(l_split.len(), r_split.len());
-
-                for (l_m, r_m) in l_split.into_iter().zip(r_split) {
-                    let l_num = l_m.parse::<i64>();
-                    let r_num = r_m.parse::<i64>();
-                    if match (l_num, r_num) {
-                        (Ok(l), Ok(r)) => check_within_tolerance(l, r),
-                        (Ok(_), Err(_)) => false,
-                        (Err(_), Ok(_)) => false,
-                        (Err(l), Err(r)) => l == r,
-                    } == false
-                    {
-                        println!("Match: {} {}", &l_m, &r_m);
-                        same = false;
-                        break;
+                if l_split.len() == r_split.len() {
+                    for (l_m, r_m) in l_split.into_iter().zip(r_split) {
+                        let l_num = l_m.parse::<i64>();
+                        let r_num = r_m.parse::<i64>();
+                        if match (l_num, r_num) {
+                            (Ok(l), Ok(r)) => check_within_tolerance(l, r),
+                            (Ok(_), Err(_)) => false,
+                            (Err(_), Ok(_)) => false,
+                            (Err(l), Err(r)) => l == r,
+                        } == false
+                        {
+                            println!("Match: {} {}", &l_m, &r_m);
+                            same = false;
+                            break;
+                        }
                     }
+                } else {
+                    println!("Splitted Line: {:?} {:?}", l_split, r_split);
+                    same = false;
+                    break;
                 }
+
             }
         } else {
             same = false;
