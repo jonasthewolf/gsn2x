@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg classes="gsndiagram" viewBox="0 0 1270 537" xmlns="http://www.w3.org/2000/svg">
+<svg classes="gsndiagram" viewBox="0 0 1427 537" xmlns="http://www.w3.org/2000/svg">
 <symbol id="module_icon">
 <rect fill="lightgrey" height="5" stroke="black" stroke-width="1" width="10" x="0" y="0"/>
 <rect fill="lightgrey" height="10" stroke="black" stroke-width="1" width="20" x="0" y="5"/>
@@ -19,11 +19,11 @@
 <title>
 G1
 </title>
-<path class="border" d="M637,20 L741,20 L741,66 L637,66 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="644" y="39">
+<path class="border" d="M792,20 L896,20 L896,66 L792,66 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="799" y="39">
 G1
 </text>
-<text font-family="Arial" font-size="12" x="644" y="58">
+<text font-family="Arial" font-size="12" x="799" y="58">
 Goal 1
 </text>
 </g>
@@ -31,11 +31,11 @@ Goal 1
 <title>
 G2
 </title>
-<path class="border" d="M334,106 L438,106 L438,152 L334,152 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="341" y="125">
+<path class="border" d="M488,106 L592,106 L592,152 L488,152 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="495" y="125">
 G2
 </text>
-<text font-family="Arial" font-size="12" x="341" y="144">
+<text font-family="Arial" font-size="12" x="495" y="144">
 Goal 2
 </text>
 </g>
@@ -43,11 +43,11 @@ Goal 2
 <title>
 G3
 </title>
-<path class="border" d="M940,106 L1044,106 L1044,152 L940,152 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="947" y="125">
+<path class="border" d="M1097,106 L1201,106 L1201,152 L1097,152 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="1104" y="125">
 G3
 </text>
-<text font-family="Arial" font-size="12" x="947" y="144">
+<text font-family="Arial" font-size="12" x="1104" y="144">
 Goal 3
 </text>
 </g>
@@ -55,11 +55,11 @@ Goal 3
 <title>
 C1
 </title>
-<path class="border" d="M1094,106 L1198,106 C1208,106,1208,152,1198,152 L1094,152 C1084,152,1084,106,1094,106" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="1101" y="125">
+<path class="border" d="M1251,106 L1355,106 C1365,106,1365,152,1355,152 L1251,152 C1241,152,1241,106,1251,106" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="1258" y="125">
 C1
 </text>
-<text font-family="Arial" font-size="12" x="1101" y="144">
+<text font-family="Arial" font-size="12" x="1258" y="144">
 Context 1
 </text>
 </g>
@@ -67,14 +67,14 @@ Context 1
 <title>
 J1
 </title>
-<path class="border" d="M155,236 a62,33,0,1,0,124,0 a62,33,0,1,0,-124,0 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="180" y="227">
+<path class="border" d="M309,236 a62,33,0,1,0,124,0 a62,33,0,1,0,-124,0 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="334" y="227">
 J1
 </text>
-<text font-family="Arial" font-size="12" x="180" y="246">
+<text font-family="Arial" font-size="12" x="334" y="246">
 Justification 1
 </text>
-<text font-family="Arial" font-size="12" font-weight="bold" x="274" y="264">
+<text font-family="Arial" font-size="12" font-weight="bold" x="428" y="264">
 J
 </text>
 </g>
@@ -82,11 +82,11 @@ J
 <title>
 S1
 </title>
-<path class="border" d="M326,213 L460,213 L446,259 L312,259 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="334" y="232">
+<path class="border" d="M480,213 L614,213 L600,259 L466,259 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="488" y="232">
 S1
 </text>
-<text font-family="Arial" font-size="12" x="334" y="251">
+<text font-family="Arial" font-size="12" x="488" y="251">
 Strategy 1
 </text>
 </g>
@@ -94,14 +94,14 @@ Strategy 1
 <title>
 A1
 </title>
-<path class="border" d="M493,236 a51,33,0,1,0,103,0 a51,33,0,1,0,-103,0 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="515" y="227">
+<path class="border" d="M647,236 a51,33,0,1,0,103,0 a51,33,0,1,0,-103,0 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="669" y="227">
 A1
 </text>
-<text font-family="Arial" font-size="12" x="515" y="246">
+<text font-family="Arial" font-size="12" x="669" y="246">
 Argument 1
 </text>
-<text font-family="Arial" font-size="12" font-weight="bold" x="590" y="264">
+<text font-family="Arial" font-size="12" font-weight="bold" x="744" y="264">
 A
 </text>
 </g>
@@ -109,11 +109,11 @@ A
 <title>
 S2
 </title>
-<path class="border" d="M781,213 L915,213 L901,259 L767,259 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="789" y="232">
+<path class="border" d="M938,213 L1072,213 L1058,259 L924,259 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="946" y="232">
 S2
 </text>
-<text font-family="Arial" font-size="12" x="789" y="251">
+<text font-family="Arial" font-size="12" x="946" y="251">
 Strategy 2
 </text>
 </g>
@@ -122,11 +122,11 @@ Strategy 2
 <title>
 Sn1
 </title>
-<path class="border" d="M948,236 a44,44,0,1,0,88,0 a44,44,0,1,0,-88,0 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="967" y="227">
+<path class="border" d="M1105,236 a44,44,0,1,0,88,0 a44,44,0,1,0,-88,0 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="1124" y="227">
 Sn1
 </text>
-<text font-family="Arial" font-size="12" x="967" y="246">
+<text font-family="Arial" font-size="12" x="1124" y="246">
 Solution 1
 </text>
 </g>
@@ -135,14 +135,14 @@ Solution 1
 <title>
 A2
 </title>
-<path class="border" d="M20,353 a60,33,0,1,0,120,0 a60,33,0,1,0,-120,0 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="45" y="344">
+<path class="border" d="M174,353 a60,33,0,1,0,120,0 a60,33,0,1,0,-120,0 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="199" y="344">
 A2
 </text>
-<text font-family="Arial" font-size="12" x="45" y="363">
+<text font-family="Arial" font-size="12" x="199" y="363">
 Assumption 2
 </text>
-<text font-family="Arial" font-size="12" font-weight="bold" x="135" y="381">
+<text font-family="Arial" font-size="12" font-weight="bold" x="289" y="381">
 A
 </text>
 </g>
@@ -150,11 +150,11 @@ A
 <title>
 G5
 </title>
-<path class="border" d="M180,330 L284,330 L284,376 L180,376 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="187" y="349">
+<path class="border" d="M334,330 L438,330 L438,376 L334,376 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="341" y="349">
 G5
 </text>
-<text font-family="Arial" font-size="12" x="187" y="368">
+<text font-family="Arial" font-size="12" x="341" y="368">
 Goal 5
 </text>
 </g>
@@ -162,14 +162,14 @@ Goal 5
 <title>
 C2
 </title>
-<path class="border" d="M334,323 L438,323 C448,323,448,383,438,383 L334,383 C324,383,324,323,334,323" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="341" y="342">
+<path class="border" d="M488,323 L592,323 C602,323,602,383,592,383 L488,383 C478,383,478,323,488,323" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="495" y="342">
 C2
 </text>
-<text font-family="Arial" font-size="12" x="341" y="361">
+<text font-family="Arial" font-size="12" x="495" y="361">
 Context 2
 </text>
-<text font-family="Arial" font-size="12" x="341" y="375">
+<text font-family="Arial" font-size="12" x="495" y="375">
 Multiline
 </text>
 </g>
@@ -177,11 +177,11 @@ Multiline
 <title>
 G6
 </title>
-<path class="border" d="M488,330 L592,330 L592,376 L488,376 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="495" y="349">
+<path class="border" d="M642,330 L746,330 L746,376 L642,376 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="649" y="349">
 G6
 </text>
-<text font-family="Arial" font-size="12" x="495" y="368">
+<text font-family="Arial" font-size="12" x="649" y="368">
 Goal 6
 </text>
 </g>
@@ -189,11 +189,11 @@ Goal 6
 <title>
 G4
 </title>
-<path class="border" d="M632,330 L736,330 L736,376 L632,376 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="639" y="349">
+<path class="border" d="M789,330 L893,330 L893,376 L789,376 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="796" y="349">
 G4
 </text>
-<text font-family="Arial" font-size="12" x="639" y="368">
+<text font-family="Arial" font-size="12" x="796" y="368">
 Goal 4
 </text>
 </g>
@@ -201,14 +201,14 @@ Goal 4
 <title>
 J2
 </title>
-<path class="border" d="M776,353 a62,33,0,1,0,124,0 a62,33,0,1,0,-124,0 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="801" y="344">
+<path class="border" d="M933,353 a62,33,0,1,0,124,0 a62,33,0,1,0,-124,0 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="958" y="344">
 J2
 </text>
-<text font-family="Arial" font-size="12" x="801" y="363">
+<text font-family="Arial" font-size="12" x="958" y="363">
 Justification 2
 </text>
-<text font-family="Arial" font-size="12" font-weight="bold" x="895" y="381">
+<text font-family="Arial" font-size="12" font-weight="bold" x="1052" y="381">
 J
 </text>
 </g>
@@ -216,24 +216,24 @@ J
 <title>
 G7
 </title>
-<path class="border" d="M940,327 L1056,327 L1056,379 L940,379 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="947" y="346">
+<path class="border" d="M1097,327 L1213,327 L1213,379 L1097,379 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="1104" y="346">
 G7
 </text>
-<text font-family="Arial" font-size="12" x="947" y="365">
+<text font-family="Arial" font-size="12" x="1104" y="365">
 Undeveloped Goal
 </text>
-<path d="M998,379 l5,5 l-5,5 l-5,-5 z" fill="none" stroke="black" stroke-width="1"/>
+<path d="M1155,379 l5,5 l-5,5 l-5,-5 z" fill="none" stroke="black" stroke-width="1"/>
 </g>
 <g class="gsn_module_examples_example_gsn_yaml gsnelem gsnsltn" id="node_Sn4">
 <title>
 Sn4
 </title>
-<path class="border" d="M188,470 a44,44,0,1,0,88,0 a44,44,0,1,0,-88,0 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="207" y="461">
+<path class="border" d="M342,470 a44,44,0,1,0,88,0 a44,44,0,1,0,-88,0 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="361" y="461">
 Sn4
 </text>
-<text font-family="Arial" font-size="12" x="207" y="480">
+<text font-family="Arial" font-size="12" x="361" y="480">
 Solution 4
 </text>
 </g>
@@ -241,11 +241,11 @@ Solution 4
 <title>
 Sn3
 </title>
-<path class="border" d="M342,470 a44,44,0,1,0,88,0 a44,44,0,1,0,-88,0 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="361" y="461">
+<path class="border" d="M496,470 a44,44,0,1,0,88,0 a44,44,0,1,0,-88,0 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="515" y="461">
 Sn3
 </text>
-<text font-family="Arial" font-size="12" x="361" y="480">
+<text font-family="Arial" font-size="12" x="515" y="480">
 Solution 3
 </text>
 </g>
@@ -253,11 +253,11 @@ Solution 3
 <title>
 Sn5
 </title>
-<path class="border" d="M496,470 a44,44,0,1,0,88,0 a44,44,0,1,0,-88,0 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="515" y="461">
+<path class="border" d="M650,470 a44,44,0,1,0,88,0 a44,44,0,1,0,-88,0 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="669" y="461">
 Sn5
 </text>
-<text font-family="Arial" font-size="12" x="515" y="480">
+<text font-family="Arial" font-size="12" x="669" y="480">
 Solution 5
 </text>
 </g>
@@ -265,32 +265,32 @@ Solution 5
 <title>
 Sn2
 </title>
-<path class="border" d="M640,470 a44,44,0,1,0,88,0 a44,44,0,1,0,-88,0 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="659" y="461">
+<path class="border" d="M797,470 a44,44,0,1,0,88,0 a44,44,0,1,0,-88,0 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="816" y="461">
 Sn2
 </text>
-<text font-family="Arial" font-size="12" x="659" y="480">
+<text font-family="Arial" font-size="12" x="816" y="480">
 Solution 2
 </text>
 </g>
-<path class="gsnedge gsninspby" d="M689,66 C689,96,386,76,386,96" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M689,66 C689,96,992,76,992,96" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M689,66 C689,96,841,183,841,203" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M386,152 C386,182,386,183,386,203" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninctxt" d="M1044,129 C1074,129,1054,129,1074,129" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M992,152 C992,182,992,162,992,182" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninctxt" d="M736,353 C766,353,746,353,766,353" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M684,376 C684,406,684,396,684,416" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninctxt" d="M284,353 C314,353,294,353,314,353" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninctxt" d="M180,353 C150,353,170,353,150,353" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M232,376 C232,406,386,396,386,416" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M232,376 C232,406,232,396,232,416" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M540,376 C540,406,386,396,386,416" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M540,376 C540,406,540,396,540,416" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninctxt" d="M453,236 C483,236,463,236,483,236" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninctxt" d="M319,236 C289,236,309,236,289,236" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M386,259 C386,289,232,300,232,320" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M386,259 C386,289,540,300,540,320" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M841,259 C841,289,684,300,684,320" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M841,259 C841,289,998,297,998,317" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M844,66 C844,96,540,76,540,96" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M844,66 C844,96,1149,76,1149,96" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M844,66 C844,96,998,183,998,203" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M540,152 C540,182,540,183,540,203" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M1201,129 C1231,129,1211,129,1231,129" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M1149,152 C1149,182,1149,162,1149,182" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M893,353 C923,353,903,353,923,353" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M841,376 C841,406,841,396,841,416" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M438,353 C468,353,448,353,468,353" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M334,353 C304,353,324,353,304,353" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M386,376 C386,406,540,396,540,416" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M386,376 C386,406,386,396,386,416" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M694,376 C694,406,540,396,540,416" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M694,376 C694,406,694,396,694,416" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M607,236 C637,236,617,236,637,236" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M473,236 C443,236,463,236,443,236" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M540,259 C540,289,386,300,386,320" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M540,259 C540,289,694,300,694,320" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M998,259 C998,289,841,300,841,320" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M998,259 C998,289,1155,297,1155,317" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 </svg>

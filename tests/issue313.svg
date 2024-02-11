@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg classes="gsndiagram" viewBox="0 0 2063 590" xmlns="http://www.w3.org/2000/svg">
+<svg classes="gsndiagram" viewBox="0 0 2783 590" xmlns="http://www.w3.org/2000/svg">
 <symbol id="module_icon">
 <rect fill="lightgrey" height="5" stroke="black" stroke-width="1" width="10" x="0" y="0"/>
 <rect fill="lightgrey" height="10" stroke="black" stroke-width="1" width="20" x="0" y="5"/>
@@ -19,11 +19,11 @@
 <title>
 C2
 </title>
-<path class="border" d="M591,20 L705,20 C715,20,715,66,705,66 L591,66 C581,66,581,20,591,20" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="598" y="39">
+<path class="border" d="M1311,20 L1425,20 C1435,20,1435,66,1425,66 L1311,66 C1301,66,1301,20,1311,20" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="1318" y="39">
 C2
 </text>
-<text font-family="Arial" font-size="12" x="598" y="58">
+<text font-family="Arial" font-size="12" x="1318" y="58">
 System Definition.
 </text>
 </g>
@@ -31,11 +31,11 @@ System Definition.
 <title>
 G1
 </title>
-<path class="border" d="M755,20 L981,20 L981,66 L755,66 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="762" y="39">
+<path class="border" d="M1475,20 L1701,20 L1701,66 L1475,66 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="1482" y="39">
 G1
 </text>
-<text font-family="Arial" font-size="12" x="762" y="58">
+<text font-family="Arial" font-size="12" x="1482" y="58">
 System is acceptably safe to operate.
 </text>
 </g>
@@ -43,11 +43,11 @@ System is acceptably safe to operate.
 <title>
 C1
 </title>
-<path class="border" d="M1031,20 L1205,20 C1215,20,1215,66,1205,66 L1031,66 C1021,66,1021,20,1031,20" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="1038" y="39">
+<path class="border" d="M1751,20 L1925,20 C1935,20,1935,66,1925,66 L1751,66 C1741,66,1741,20,1751,20" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="1758" y="39">
 C1
 </text>
-<text font-family="Arial" font-size="12" x="1038" y="58">
+<text font-family="Arial" font-size="12" x="1758" y="58">
 Operating Role and Context.
 </text>
 </g>
@@ -55,11 +55,11 @@ Operating Role and Context.
 <title>
 C3
 </title>
-<path class="border" d="M34,106 L198,106 C208,106,208,152,198,152 L34,152 C24,152,24,106,34,106" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="41" y="125">
+<path class="border" d="M754,106 L918,106 C928,106,928,152,918,152 L754,152 C744,152,744,106,754,106" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="761" y="125">
 C3
 </text>
-<text font-family="Arial" font-size="12" x="41" y="144">
+<text font-family="Arial" font-size="12" x="761" y="144">
 Tolerability targets (Ref Z).
 </text>
 </g>
@@ -67,11 +67,11 @@ Tolerability targets (Ref Z).
 <title>
 G2
 </title>
-<path class="border" d="M248,106 L648,106 L648,152 L248,152 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="255" y="125">
+<path class="border" d="M968,106 L1368,106 L1368,152 L968,152 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="975" y="125">
 G2
 </text>
-<text font-family="Arial" font-size="12" x="255" y="144">
+<text font-family="Arial" font-size="12" x="975" y="144">
 All identified hazards have been eliminated or sufficiently mitigated.
 </text>
 </g>
@@ -79,11 +79,11 @@ All identified hazards have been eliminated or sufficiently mitigated.
 <title>
 C4
 </title>
-<path class="border" d="M698,106 L918,106 C928,106,928,152,918,152 L698,152 C688,152,688,106,698,106" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="705" y="125">
+<path class="border" d="M1418,106 L1638,106 C1648,106,1648,152,1638,152 L1418,152 C1408,152,1408,106,1418,106" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="1425" y="125">
 C4
 </text>
-<text font-family="Arial" font-size="12" x="705" y="144">
+<text font-family="Arial" font-size="12" x="1425" y="144">
 Hazards identified from FHA (Ref Y).
 </text>
 </g>
@@ -91,11 +91,11 @@ Hazards identified from FHA (Ref Y).
 <title>
 G3
 </title>
-<path class="border" d="M1021,106 L1555,106 L1555,152 L1021,152 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="1028" y="125">
+<path class="border" d="M1741,106 L2275,106 L2275,152 L1741,152 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="1748" y="125">
 G3
 </text>
-<text font-family="Arial" font-size="12" x="1028" y="144">
+<text font-family="Arial" font-size="12" x="1748" y="144">
 Software in the Control System has been developed to SIL appropriate to hazards involved.
 </text>
 </g>
@@ -103,11 +103,11 @@ Software in the Control System has been developed to SIL appropriate to hazards 
 <title>
 C5
 </title>
-<path class="border" d="M1605,106 L1791,106 C1801,106,1801,152,1791,152 L1605,152 C1595,152,1595,106,1605,106" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="1612" y="125">
+<path class="border" d="M2325,106 L2511,106 C2521,106,2521,152,2511,152 L2325,152 C2315,152,2315,106,2325,106" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="2332" y="125">
 C5
 </text>
-<text font-family="Arial" font-size="12" x="1612" y="144">
+<text font-family="Arial" font-size="12" x="2332" y="144">
 SIL Guidelines and Processes.
 </text>
 </g>
@@ -115,11 +115,11 @@ SIL Guidelines and Processes.
 <title>
 S1
 </title>
-<path class="border" d="M341,202 L569,202 L555,248 L327,248 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="348" y="221">
+<path class="border" d="M1061,202 L1289,202 L1275,248 L1047,248 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="1068" y="221">
 S1
 </text>
-<text font-family="Arial" font-size="12" x="348" y="240">
+<text font-family="Arial" font-size="12" x="1068" y="240">
 Argument over each identified hazard.
 </text>
 </g>
@@ -127,11 +127,11 @@ Argument over each identified hazard.
 <title>
 C6
 </title>
-<path class="border" d="M874,202 L1044,202 C1054,202,1054,248,1044,248 L874,248 C864,248,864,202,874,202" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="881" y="221">
+<path class="border" d="M1594,202 L1764,202 C1774,202,1774,248,1764,248 L1594,248 C1584,248,1584,202,1594,202" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="1601" y="221">
 C6
 </text>
-<text font-family="Arial" font-size="12" x="881" y="240">
+<text font-family="Arial" font-size="12" x="1601" y="240">
 Identified software hazards.
 </text>
 </g>
@@ -139,11 +139,11 @@ Identified software hazards.
 <title>
 S2
 </title>
-<path class="border" d="M1101,202 L1489,202 L1475,248 L1087,248 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="1108" y="221">
+<path class="border" d="M1821,202 L2209,202 L2195,248 L1807,248 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="1828" y="221">
 S2
 </text>
-<text font-family="Arial" font-size="12" x="1108" y="240">
+<text font-family="Arial" font-size="12" x="1828" y="240">
 Argument over allocated SIL for Primary and Secondary elements.
 </text>
 </g>
@@ -151,14 +151,14 @@ Argument over allocated SIL for Primary and Secondary elements.
 <title>
 J1
 </title>
-<path class="border" d="M1522,225 a180,33,0,1,0,361,0 a180,33,0,1,0,-361,0 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="1581" y="216">
+<path class="border" d="M2242,225 a180,33,0,1,0,361,0 a180,33,0,1,0,-361,0 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="2301" y="216">
 J1
 </text>
-<text font-family="Arial" font-size="12" x="1581" y="235">
+<text font-family="Arial" font-size="12" x="2301" y="235">
 SIL apportionment is correct and complete.
 </text>
-<text font-family="Arial" font-size="12" font-weight="bold" x="1877" y="253">
+<text font-family="Arial" font-size="12" font-weight="bold" x="2597" y="253">
 J
 </text>
 </g>
@@ -166,11 +166,11 @@ J
 <title>
 G2.1
 </title>
-<path class="border" d="M20,298 L214,298 L214,344 L20,344 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="27" y="317">
+<path class="border" d="M740,298 L934,298 L934,344 L740,344 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="747" y="317">
 G2.1
 </text>
-<text font-family="Arial" font-size="12" x="27" y="336">
+<text font-family="Arial" font-size="12" x="747" y="336">
 Hazard H1 has been eliminated.
 </text>
 </g>
@@ -178,35 +178,35 @@ Hazard H1 has been eliminated.
 <title>
 G2.2
 </title>
-<path class="border" d="M254,298 L578,298 L578,344 L254,344 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="261" y="317">
+<path class="border" d="M974,298 L1298,298 L1298,344 L974,344 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="981" y="317">
 G2.2
 </text>
-<text font-family="Arial" font-size="12" x="261" y="336">
-Probability of Hazard H2 occuring &lt; 1x10-6 per year.
+<text font-family="Arial" font-size="12" x="981" y="336">
+Probability of Hazard H2 occuring &amp;lt; 1x10-6 per year.
 </text>
 </g>
 <g class="gsn_module_tests_issue313_yaml gsnelem gsngoal" id="node_G2_3">
 <title>
 G2.3
 </title>
-<path class="border" d="M618,298 L942,298 L942,344 L618,344 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="625" y="317">
+<path class="border" d="M1338,298 L1662,298 L1662,344 L1338,344 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="1345" y="317">
 G2.3
 </text>
-<text font-family="Arial" font-size="12" x="625" y="336">
-Probability of Hazard H3 occuring &lt; 1x10-3 per year.
+<text font-family="Arial" font-size="12" x="1345" y="336">
+Probability of Hazard H3 occuring &amp;lt; 1x10-3 per year.
 </text>
 </g>
 <g class="gsn_module_tests_issue313_yaml gsnelem gsngoal" id="node_G3_1">
 <title>
 G3.1
 </title>
-<path class="border" d="M982,298 L1262,298 L1262,344 L982,344 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="989" y="317">
+<path class="border" d="M1702,298 L1982,298 L1982,344 L1702,344 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="1709" y="317">
 G3.1
 </text>
-<text font-family="Arial" font-size="12" x="989" y="336">
+<text font-family="Arial" font-size="12" x="1709" y="336">
 Primary Protection System Developed to SIL 4.
 </text>
 </g>
@@ -214,11 +214,11 @@ Primary Protection System Developed to SIL 4.
 <title>
 G3.2
 </title>
-<path class="border" d="M1302,298 L1608,298 L1608,344 L1302,344 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="1309" y="317">
+<path class="border" d="M2022,298 L2328,298 L2328,344 L2022,344 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="2029" y="317">
 G3.2
 </text>
-<text font-family="Arial" font-size="12" x="1309" y="336">
+<text font-family="Arial" font-size="12" x="2029" y="336">
 Secondary Protection System Development to SIL2.
 </text>
 </g>
@@ -226,11 +226,11 @@ Secondary Protection System Development to SIL2.
 <title>
 Sn1
 </title>
-<path class="border" d="M47,475 a70,70,0,1,0,140,0 a70,70,0,1,0,-140,0 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="63" y="466">
+<path class="border" d="M767,475 a70,70,0,1,0,140,0 a70,70,0,1,0,-140,0 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="783" y="466">
 Sn1
 </text>
-<text font-family="Arial" font-size="12" x="63" y="485">
+<text font-family="Arial" font-size="12" x="783" y="485">
 Formal Verification.
 </text>
 </g>
@@ -238,11 +238,11 @@ Formal Verification.
 <title>
 Sn2
 </title>
-<path class="border" d="M527,475 a71,71,0,1,0,142,0 a71,71,0,1,0,-142,0 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="543" y="466">
+<path class="border" d="M1247,475 a71,71,0,1,0,142,0 a71,71,0,1,0,-142,0 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="1263" y="466">
 Sn2
 </text>
-<text font-family="Arial" font-size="12" x="543" y="485">
+<text font-family="Arial" font-size="12" x="1263" y="485">
 Fault Tree Analysis.
 </text>
 </g>
@@ -250,11 +250,11 @@ Fault Tree Analysis.
 <title>
 Sn3
 </title>
-<path class="border" d="M1031,475 a91,91,0,1,0,182,0 a91,91,0,1,0,-182,0 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="1046" y="466">
+<path class="border" d="M1751,475 a91,91,0,1,0,182,0 a91,91,0,1,0,-182,0 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="1766" y="466">
 Sn3
 </text>
-<text font-family="Arial" font-size="12" x="1046" y="485">
+<text font-family="Arial" font-size="12" x="1766" y="485">
 Process Evidence for SIL4.
 </text>
 </g>
@@ -262,34 +262,34 @@ Process Evidence for SIL4.
 <title>
 Sn4
 </title>
-<path class="border" d="M1364,475 a91,91,0,1,0,182,0 a91,91,0,1,0,-182,0 z" fill="none" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="1379" y="466">
+<path class="border" d="M2084,475 a91,91,0,1,0,182,0 a91,91,0,1,0,-182,0 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="2099" y="466">
 Sn4
 </text>
-<text font-family="Arial" font-size="12" x="1379" y="485">
+<text font-family="Arial" font-size="12" x="2099" y="485">
 Process Evidence for SIL2.
 </text>
 </g>
-<path class="gsnedge gsninctxt" d="M981,43 C1011,43,991,43,1011,43" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninctxt" d="M755,43 C725,43,745,43,725,43" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M868,66 C868,96,448,76,448,96" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M868,66 C868,96,1288,76,1288,96" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninctxt" d="M248,129 C218,129,238,129,218,129" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninctxt" d="M648,129 C678,129,658,129,678,129" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M448,152 C448,182,448,172,448,192" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M117,344 C117,374,117,375,117,395" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M416,344 C416,374,598,374,598,394" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M780,344 C780,374,598,374,598,394" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninctxt" d="M1021,129 C991,129,958,129,938,129" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninctxt" d="M1555,129 C1585,129,1565,129,1585,129" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M1288,152 C1288,182,1288,172,1288,192" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M1122,344 C1122,374,1122,354,1122,374" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M1455,344 C1455,374,1455,354,1455,374" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M448,248 C448,278,117,268,117,288" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M448,248 C448,278,416,268,416,288" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M448,248 C448,278,780,268,780,288" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninctxt" d="M1482,225 C1512,225,1492,225,1512,225" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninctxt" d="M1094,225 C1064,225,1084,225,1064,225" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M1288,248 C1288,278,1122,268,1122,288" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M1288,248 C1288,278,1455,268,1455,288" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M1701,43 C1731,43,1711,43,1731,43" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M1475,43 C1445,43,1465,43,1445,43" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M1588,66 C1588,96,1168,76,1168,96" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M1588,66 C1588,96,2008,76,2008,96" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M968,129 C938,129,958,129,938,129" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M1368,129 C1398,129,1378,129,1398,129" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M1168,152 C1168,182,1168,172,1168,192" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M837,344 C837,374,837,375,837,395" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M1136,344 C1136,374,1318,374,1318,394" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M1500,344 C1500,374,1318,374,1318,394" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M1741,129 C1711,129,1678,129,1658,129" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M2275,129 C2305,129,2285,129,2305,129" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M2008,152 C2008,182,2008,172,2008,192" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M1842,344 C1842,374,1842,354,1842,374" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M2175,344 C2175,374,2175,354,2175,374" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M1168,248 C1168,278,837,268,837,288" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M1168,248 C1168,278,1136,268,1136,288" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M1168,248 C1168,278,1500,268,1500,288" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M2202,225 C2232,225,2212,225,2232,225" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M1814,225 C1784,225,1804,225,1784,225" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M2008,248 C2008,278,1842,268,1842,288" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M2008,248 C2008,278,2175,268,2175,288" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 </svg>

@@ -16,10 +16,10 @@
 <polyline fill="none" points="0 0, 10 4.5, 0 9, 0 0" stroke="black" stroke-width="1"/>
 </marker>
 <style type="text/css">
-<![CDATA[
+
 .additionalclass1 path { fill: red; }
 .additionalclass1 text,a { fill: white; }
-]]>
+
 </style>
 <g class="additionalclass1 additionalclass2 gsn_module_examples_minimalcss_min_gsn_yaml gsnelem gsngoal gsn_undeveloped" id="node_G1">
 <title>
