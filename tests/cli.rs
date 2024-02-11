@@ -29,8 +29,6 @@ mod integrations {
             true
         } else {
             const TOLERANCE: f64 = 0.1;
-            dbg!(l);
-            dbg!(r);
             let m = dbg!((l + r) as f64 / 2.0);
             let min = std::cmp::min(
                 (m * (1.0 - TOLERANCE)) as i64,
@@ -40,7 +38,7 @@ mod integrations {
                 (m * (1.0 - TOLERANCE)) as i64,
                 (m * (1.0 + TOLERANCE)) as i64,
             );
-            dbg!(min <= l && max >= l && min <= r && max >= r)
+            min <= l && max >= l && min <= r && max >= r
         }
     }
 
