@@ -159,7 +159,7 @@ jobs:
          cargo install cargo-llvm-cov
          cargo llvm-cov --tests --lcov --output-path=coverage/coverage.lcov
     - name: Upload to codecov
-      uses: codecov/codecov-action@v3
+      uses: codecov/codecov-action@v4
       with:
         directory: coverage
 
