@@ -90,7 +90,6 @@ jobs:
       with:
         name: gsn2x
         path: gsn2x-${{ runner.os }}*
-        overwrite: true
   
   pre_release:
     needs: build_test_deploy
