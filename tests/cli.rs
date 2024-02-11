@@ -28,9 +28,11 @@ mod integrations {
         if l == r {
             true
         } else {
-            let m = (l + r) / 2;
-            let min = (m as f64 * 0.9) as i64;
-            let max = (m as f64 * 1.1) as i64;
+            dbg!(l);
+            dbg!(r);
+            let m = dbg!((l + r) as f64 / 2.0);
+            let min = dbg!((m * 0.9) as i64);
+            let max = dbg!((m * 1.1) as i64);
             dbg!(min <= l && max >= l && min <= r && max >= r)
         }
     }
