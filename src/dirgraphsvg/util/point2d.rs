@@ -156,6 +156,15 @@ mod test {
     }
 
     #[test]
+    fn cross_products() {
+        let p1 = Point2D::<i32> { x: 0, y: 1 };
+        let p2 = Point2D::<i32> { x: 1, y: 0 };
+
+        assert_eq!(p1 * p2, 0);
+        assert_eq!(p1 * p1, 1);
+    }
+
+    #[test]
     fn basics() {
         let mut p = Point2D::<i32> { x: 2, y: 3 };
         p += p + Point2D::from((1, 1)) - (2, 2).into();
