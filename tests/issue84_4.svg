@@ -79,5 +79,5 @@ G4
 <path class="gsnedge gsninspby" d="M72,66 C72,96,72,85,72,105" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsninspby" d="M72,161 C72,191,72,180,72,200" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsninspby" d="M72,256 C72,286,72,266,72,286" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M72,296 C72,266,196,305,196,233 S196,200,196,180" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M72,296 C72,266,196,273,196,233 S196,200,196,180" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 </svg>

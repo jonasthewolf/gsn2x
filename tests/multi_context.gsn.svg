@@ -175,7 +175,7 @@ A solution
 <path class="gsnedge gsninctxt" d="M505,87 C535,87,515,43,535,43" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsninctxt" d="M357,87 C327,87,347,87,327,87" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsninctxt" d="M505,87 C535,87,515,130,535,130" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M431,110 C431,140,260,140,260,227 S260,277,260,297" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M431,110 C431,140,260,134,260,227 S260,277,260,297" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsninspby" d="M431,110 C431,140,602,174,602,194" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsninctxt" d="M340,333 C370,333,350,333,370,333" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsninctxt" d="M180,333 C150,333,170,333,150,333" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>

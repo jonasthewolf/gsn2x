@@ -86,8 +86,7 @@ mod integrations {
                             (Ok(_), Err(_)) => false,
                             (Err(_), Ok(_)) => false,
                             (Err(l), Err(r)) => l == r,
-                        }
-                        {
+                        } {
                             println!("Match: {} {}", &l_m, &r_m);
                             same = false;
                             break;

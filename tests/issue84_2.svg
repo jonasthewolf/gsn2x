@@ -76,8 +76,8 @@ G4
 </text>
 </g>
 <path class="gsnedge gsninspby" d="M72,66 C72,96,72,76,72,96" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M72,66 C72,96,20,78,20,138 S72,180,72,200" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M72,66 C72,96,20,46,20,138 S72,180,72,200" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsninspby" d="M72,256 C72,286,72,266,72,286" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsninspby" d="M72,342 C72,372,72,352,72,372" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M72,382 C72,352,0,408,0,319 S0,305,0,233 S72,200,72,180" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M72,382 C72,352,0,359,0,319 S0,273,0,233 S72,200,72,180" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 </svg>

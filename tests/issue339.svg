@@ -52,6 +52,6 @@ Solution 1
 </text>
 </g>
 <path class="gsnedge gsninspby" d="M72,66 C72,96,72,76,72,96" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M72,66 C72,96,0,75,0,129 S72,162,72,182" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M72,66 C72,96,0,46,0,129 S72,162,72,182" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsninspby" d="M72,152 C72,182,72,162,72,182" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 </svg>

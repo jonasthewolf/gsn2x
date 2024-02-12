@@ -220,8 +220,8 @@ xxxxx xxxxxxx (xxxxx xxxxx xx xxx)
 <path class="gsnedge gsninctxt" d="M222,606 C252,606,232,606,252,606" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsninspby" d="M121,636 C121,666,488,660,488,680" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsninspby" d="M644,636 C644,666,488,660,488,680" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M620,522 C620,552,510,384,510,606 S488,660,488,680" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M855,508 C855,538,510,384,510,606 S488,660,488,680" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M620,522 C620,552,510,502,510,606 S488,660,488,680" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M855,508 C855,538,510,502,510,606 S488,660,488,680" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsninspby" d="M752,108 C752,138,618,118,618,138" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsninspby" d="M618,308 C618,338,618,318,618,338" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 </svg>

@@ -9,6 +9,7 @@ use crate::{
 };
 
 use super::{
+    layout::Margin,
     nodes::{Port, SvgNode},
     render::{BOTTOM_LEFT_CORNER, TOP_RIGHT_CORNER},
     util::point2d::Point2D,
@@ -82,24 +83,24 @@ pub(super) fn render_edge(
     ranks: &[Vec<Vec<&str>>],
     bounding_boxes: &[Vec<[Point2D<i32>; 4]>],
     source: &str,
-    target: &str,
-    edge_type: &EdgeType,
+    target: &(String, EdgeType),
     width: i32,
+    margin: &Margin,
 ) -> Path {
     let s = graph.get_nodes().get(source).unwrap().borrow();
     let s_rank = ranks
         .iter()
         .position(|x| x.iter().flatten().any(|&v| v == source))
         .unwrap();
-    let t = graph.get_nodes().get(target).unwrap().borrow();
+    let t = graph.get_nodes().get(&target.0).unwrap().borrow();
     let t_rank = ranks
         .iter()
-        .position(|x| x.iter().flatten().any(|&v| v == target))
+        .position(|x| x.iter().flatten().any(|&v| v == target.0))
         .unwrap();
     let s_pos = s.get_position();
     let t_pos = t.get_position();
 
-    let (marker_start_height, marker_end_height, support_distance) = match edge_type {
+    let (marker_start_height, marker_end_height, support_distance) = match target.1 {
         EdgeType::OneWay(_) => (0i32, MARKER_HEIGHT as i32, 3i32 * MARKER_HEIGHT as i32),
         EdgeType::TwoWay(_) => (
             MARKER_HEIGHT as i32,
@@ -119,16 +120,15 @@ pub(super) fn render_edge(
     add_supporting_points(
         &mut curve_points,
         bounding_boxes,
-        t_rank,
-        s_rank,
-        &s_pos,
-        &t_pos,
+        &(t_rank, t_pos),
+        &(s_rank, s_pos),
         width,
+        margin,
     );
     curve_points.push((end, end_sup));
 
     let data = create_path_data_for_points(&curve_points);
-    let arrow_end_id = match &edge_type {
+    let arrow_end_id = match &target.1 {
         EdgeType::OneWay(SingleEdge::InContextOf)
         | EdgeType::TwoWay((_, SingleEdge::InContextOf)) => Some("url(#incontextof_arrow)"),
         EdgeType::OneWay(SingleEdge::SupportedBy)
@@ -137,14 +137,14 @@ pub(super) fn render_edge(
             Some("url(#composite_arrow)")
         }
     };
-    let arrow_start_id = match &edge_type {
+    let arrow_start_id = match &target.1 {
         EdgeType::TwoWay((SingleEdge::InContextOf, _)) => Some("url(#incontextof_arrow)"),
         EdgeType::TwoWay((SingleEdge::SupportedBy, _)) => Some("url(#supportedby_arrow)"),
         EdgeType::TwoWay((SingleEdge::Composite, _)) => Some("url(#composite_arrow)"),
         _ => None,
     };
     let mut classes = "gsnedge".to_string();
-    match edge_type {
+    match target.1 {
         EdgeType::OneWay(SingleEdge::InContextOf)
         | EdgeType::TwoWay((_, SingleEdge::InContextOf))
         | EdgeType::TwoWay((SingleEdge::InContextOf, _)) => classes.push_str(" gsninctxt"),
@@ -207,11 +207,10 @@ fn create_path_data_for_points(curve_points: &[(Point2D<i32>, Point2D<i32>)]) ->
 fn add_supporting_points(
     curve_points: &mut Vec<(Point2D<i32>, Point2D<i32>)>,
     bounding_boxes: &[Vec<[Point2D<i32>; 4]>],
-    t_rank: usize,
-    s_rank: usize,
-    s_pos: &Point2D<i32>,
-    t_pos: &Point2D<i32>,
+    target: &(usize, Point2D<i32>), // target (rank, position)
+    source: &(usize, Point2D<i32>), // source (rank, position)
     width: i32,
+    margin: &Margin,
 ) {
     // If a rank is skipped, test if we hit anything.
     // If not, everything is fine. If so, we need to add supporting points to the curve.
@@ -220,12 +219,12 @@ fn add_supporting_points(
     // This way we get one supporting point for each skipped rank.
     for bboxes in bounding_boxes
         .iter()
-        .take(std::cmp::max(s_rank, t_rank))
-        .skip(std::cmp::min(s_rank, t_rank) + 1)
+        .take(std::cmp::max(source.0, target.0))
+        .skip(std::cmp::min(source.0, target.0) + 1)
     {
         if bboxes
             .iter()
-            .any(|bbox| is_line_intersecting_with_box(s_pos, t_pos, bbox))
+            .any(|bbox| is_line_intersecting_with_box(&source.1, &target.1, bbox))
         {
             // Find the empty spaces on each skipped rank.
             // For each empty space create at least three potential points incl. supporting points.
@@ -239,11 +238,11 @@ fn add_supporting_points(
             let best_free_points = boxes
                 .windows(2)
                 .flat_map(|window| {
-                    get_potential_supporting_points(window, t_pos.x, t_rank > s_rank)
+                    get_potential_supporting_points(window, target.1.x, target.0 > source.0, margin)
                 })
                 .min_by_key(|(p, _)| {
                     (p.distance(&last_point.0) as f64
-                        * f64::sqrt((t_pos.x - p.x) as f64 * (t_pos.x - p.x) as f64))
+                        * f64::sqrt((target.1.x - p.x) as f64 * (target.1.x - p.x) as f64))
                         as i32
                 })
                 .unwrap();
@@ -252,7 +251,7 @@ fn add_supporting_points(
         }
     }
     // Reverse order if t_rank < s_rank
-    if t_rank < s_rank {
+    if target.0 < source.0 {
         let tmp_first = curve_points.remove(0);
         curve_points.reverse();
         curve_points.insert(0, tmp_first);
@@ -266,6 +265,7 @@ fn get_potential_supporting_points(
     window: &[[Point2D<i32>; 4]],
     target_x: i32,
     top_down: bool,
+    margin: &Margin,
 ) -> Vec<(Point2D<i32>, Point2D<i32>)> {
     let y = (window[0][TOP_RIGHT_CORNER].y
         + window[0][BOTTOM_RIGHT_CORNER].y
@@ -274,9 +274,11 @@ fn get_potential_supporting_points(
         / 4;
     // Make the support point either further up or further down, depending on direction of the edge
     let supporting_y = if top_down {
-        0.7 * (window[0][TOP_RIGHT_CORNER].y + window[1][TOP_LEFT_CORNER].y) as f64 / 2.0
+        std::cmp::min(window[0][TOP_RIGHT_CORNER].y, window[1][TOP_LEFT_CORNER].y) as f64
+            - 2.0 * margin.top as f64
     } else {
-        1.2 * (window[0][BOTTOM_RIGHT_CORNER].y + window[1][BOTTOM_LEFT_CORNER].y) as f64 / 2.0
+        std::cmp::max(window[0][TOP_RIGHT_CORNER].y, window[1][TOP_LEFT_CORNER].y) as f64
+            + 2.0 * margin.bottom as f64
     } as i32;
 
     let mut points: Vec<_> = vec![

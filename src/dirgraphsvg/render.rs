@@ -63,15 +63,15 @@ fn render_edges(
 
     let edges = graph.get_edges();
     for (source, targets) in edges {
-        for (target, edge_type) in targets {
+        for target in targets {
             let edge = render_edge(
                 graph,
                 ranks,
                 &bounding_boxes,
                 source,
                 target,
-                edge_type,
                 width,
+                &render_graph.margin,
             );
             document.append(edge);
         }
