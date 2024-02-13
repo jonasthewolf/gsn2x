@@ -1,0 +1,26 @@
+module:
+  name: Tier-2 Design
+  brief: Design
+G9:
+  text: xxxxxx xxx xxxxxxxxxxxxxx xx xxxxxxx xxxxxxxxxxxx xxx xxxxx.
+  supportedBy: [G9.1, G9.2]
+  inContextOf: [J9]
+J9:
+  text: xxxx xxxxxxx xxx xxxxxxxxxxxx (xxx xxxx xx-xxxxxxx) xx x xxxxxxxxxxx xx xxx xxx xxxxxxxxx xxx xxxxxxxxx xx xxx xxxxxxxxx xxxxxxxxxxxxx.
+G9.2:
+  text: xxxxxx xxxxxx xxxxxxxxxx xxx xxxxxxxx.
+  supportedBy: [Sn9.2, Sn9.2.2]
+  inContextOf: [C9.2.1, C9.2.2]
+C9.2.1:
+  text: xxxxx x:xxxx xxxx (xxxx. xxxxx xxxxxxxxxx xxxx xxxxxxxx xxxxxxxxxx (x.x. xxx))
+C9.2.2:
+  text: xxxxxxxxx xxxxxxxxxxx xx xxx xxxxxxxxx xxxxxxxxxx
+Sn9.2:
+  text: xxxxxx xxx xxxxxx
+Sn9.2.2:
+  text: xxxxxxxxxxxxxx xxx xxxxx xxxxxxxxxx
+G9.1:
+  text: xxxxxx xxxxxx xxxxxxxxxx xxx xxxxxxxx.
+  supportedBy: [Sn9.1]
+Sn9.1:
+  text: xxxxxx xxxxxxxxxx

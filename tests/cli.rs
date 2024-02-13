@@ -650,4 +650,11 @@ mod integrations {
         )?;
         Ok(())
     }
+
+    #[test]
+    fn issue393() -> Result<()> {
+        regression_renderings(&["tests/issue393_1.yaml"], &["-w", "20"], None)?;
+        regression_renderings(&["tests/issue393_2.yaml"], &["-w", "20"], None)?;
+        Ok(())
+    }
 }

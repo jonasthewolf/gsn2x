@@ -159,13 +159,9 @@ pub(super) fn layout_nodes(
                 x = std::cmp::max(x + w / 2, old_x);
                 // Not at the first run
                 if run > 0 {
-                    if let Some(new_x) = has_node_to_be_moved(
-                        graph,
-                        cell,
-                        margin,
-                        &mut cells_with_centered_parents,
-                        run,
-                    ) {
+                    if let Some(new_x) =
+                        has_node_to_be_moved(graph, cell, margin, &mut cells_with_centered_parents)
+                    {
                         if new_x > x {
                             x = std::cmp::max(x, new_x);
                             // eprintln!("Changed {:?} {} {} {}", &cell, x, old_x, new_x);
@@ -251,7 +247,6 @@ fn has_node_to_be_moved<'b>(
     cell: &Vec<&str>,
     margin: &Margin,
     moved_nodes: &mut HashSet<&'b str>,
-    run: usize,
 ) -> Option<i32> {
     let children: Vec<_> = cell
         .iter()
@@ -296,18 +291,16 @@ fn has_node_to_be_moved<'b>(
                 .into_iter()
                 .filter(|&c| graph.get_real_parents(c).len() == 1)
                 .collect::<Vec<_>>();
-            // ... and remember them. We don't move them later.
-            if center_children.len() > 1 {
+            // ... and remember them. We don't move them later if they are already more to the right.
+            if center_children.len() > 1 && cell_x <= get_center(nodes, &center_children) {
                 center_children.iter().for_each(|c| {
                     moved_nodes.insert(c);
                 });
             }
-            // On the first iteration of moving, ensure that we have moved the node with a single parent
-            // exactly under its parent. This might happen if e.g. there is a large in-context node at the parent.
+            // Ensure that we have moved the node with a single parent exactly under its parent.
+            // This might happen if e.g. there is a large in-context node at the parent.
             // Then the child is too far left and never moved.
-            // We disregard the margin.left, to not create unnecessary white space at the left.
-            let min_x = if run <= 1
-                && parents.len() == 1
+            let min_x = if parents.len() == 1
                 && graph.get_real_children(parents.first().unwrap()).len() == 1
             {
                 parents.get_x(nodes)

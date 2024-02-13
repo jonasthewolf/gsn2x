@@ -1,0 +1,45 @@
+module:
+  name: Tier-2 Requirements Engineering
+  brief: Requirements Engineering
+G7:
+  text: xxx (xxx xxxxxxxxxxx xx) xxxxxxxxxxxx xxx xxxxxxx xxx xxxxxxxxx xxx xxxxxxxxx xx xxxxxxxxxx.
+  supportedBy: [G7.1, G7.2, G7.3]
+  inContextOf: [C7]
+C7:
+  text: xxxxxxxxxxxx xxxxxxxx xx xxxxxxx xxxxxxxxxx (xxxxx xx xxxxxx xxxxxxxxxx) xxx xxxxxxxxx
+G7.2:
+  text: xxxxxxxxxxxx xx xxx xxxxxxxxxxxx xx xxxxxxx.
+  supportedBy: [Sn7.1]
+  inContextOf: [J7.1]
+J7.1:
+  text: xxxxxxxx xxxxxxxx xx xxxxxxxxxxxxx xx xxxxxxxxxx.
+Sn7.1:
+  text: xxxxxxx xxxxxxxx xxxx xxxxxxxx.
+G7.3:
+  text: xxxxxxxxxxx xx xxx xxxxxxxxxxxx xx xxxxxxx.
+  supportedBy: [G7.3.1]
+G7.3.1:
+  text: xxxxxx xx xxxxxxxxxxxx xx xxxxxxxxx.
+  supportedBy: [Sn7.3.1]
+  horizontalIndex:
+    absolute: last
+Sn7.3.1:
+  text: xxxxxxxxxx xxx xxxxxx xxxxxxxx.
+G7.1:
+  text: xxxxxxxxxxxxx xxxxxxxxxxxx (x.x. xxxx) xxx xxxxxxxxxx xxx xxxxxxxx.
+  supportedBy: [S7.3]
+S7.3:
+  text: xxxx xxx xxxxxxxxx xxx xxxxxxx xxxxxxxxxxxx xx xxxxxxxxxx.
+  supportedBy: [G7.2.1, G7.2.2]
+G7.2.1:
+  text: xxxxxxxx xxx xxxxxxxx xxxxxxxxxx xx xxxxxxx xx xxxxxxxx xxxxxxxx xx *xxxxxxx* xxxxx.
+  supportedBy: [Sn7.3.1.1, Sn7.3.1.2]
+Sn7.3.1.1:
+  text: xxxxxxx xxxxxxxxxxxx xxxx xxx xx xxxxxxxxx xxxxxxxxxx
+Sn7.3.1.2:
+  text: xxxxxxxx xxxxxxxx xx xxxxxxx xxxxx
+G7.2.2:
+  text: xxxxxxxx xxx xxxxxxxx xxxxxxxxxx xx xxxxxxx xx xxxxxxxx xxxxxxxx xx *xxxxxxxxx* xxxxx.
+  supportedBy: [Sn7.3.2]
+Sn7.3.2:
+  text: xxxxxxxx xxxxxxxx xx xxxxxxxxx xxxxx

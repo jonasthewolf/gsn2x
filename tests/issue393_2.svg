@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg classes="gsndiagram" viewBox="0 0 1075 887" xmlns="http://www.w3.org/2000/svg">
+<symbol id="module_icon">
+<rect fill="lightgrey" height="5" stroke="black" stroke-width="1" width="10" x="0" y="0"/>
+<rect fill="lightgrey" height="10" stroke="black" stroke-width="1" width="20" x="0" y="5"/>
+</symbol>
+<marker id="composite_arrow" markerHeight="9" markerUnits="userSpaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
+<polyline fill="none" points="0 0, 6 4.5, 0 9" stroke="black" stroke-width="1"/>
+<polyline fill="none" points="4 0, 10 4.5, 4 9" stroke="black" stroke-width="1"/>
+<polyline fill="none" points="0 4.5, 10 4.5" stroke="black" stroke-width="1"/>
+</marker>
+<marker id="supportedby_arrow" markerHeight="9" markerUnits="userSpaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
+<polyline fill="black" points="0 0, 10 4.5, 0 9"/>
+</marker>
+<marker id="incontextof_arrow" markerHeight="9" markerUnits="userSpaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
+<polyline fill="none" points="0 0, 10 4.5, 0 9, 0 0" stroke="black" stroke-width="1"/>
+</marker>
+<g class="gsn_module_Tier-2 Requirements Engineering gsnelem gsngoal" id="node_G7">
+<title>
+G7
+</title>
+<path class="border" d="M563,20 L699,20 L699,122 L563,122 z" fill="transparent" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="570" y="39">
+G7
+</text>
+<text font-family="Arial" font-size="12" x="570" y="58">
+xxx (xxx xxxxxxxxxxx
+</text>
+<text font-family="Arial" font-size="12" x="570" y="72">
+xx) xxxxxxxxxxxx xxx
+</text>
+<text font-family="Arial" font-size="12" x="570" y="86">
+xxxxxxx xxx xxxxxxxxx
+</text>
+<text font-family="Arial" font-size="12" x="570" y="100">
+xxx xxxxxxxxx xx
+</text>
+<text font-family="Arial" font-size="12" x="570" y="114">
+xxxxxxxxxx.
+</text>
+</g>
+<g class="gsn_module_Tier-2 Requirements Engineering gsnelem gsnctxt" id="node_C7">
+<title>
+C7
+</title>
+<path class="border" d="M749,20 L889,20 C899,20,899,122,889,122 L749,122 C739,122,739,20,749,20" fill="transparent" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="756" y="39">
+C7
+</text>
+<text font-family="Arial" font-size="12" x="756" y="58">
+xxxxxxxxxxxx xxxxxxxx
+</text>
+<text font-family="Arial" font-size="12" x="756" y="72">
+xx xxxxxxx xxxxxxxxxx
+</text>
+<text font-family="Arial" font-size="12" x="756" y="86">
+(xxxxx xx xxxxxx
+</text>
+<text font-family="Arial" font-size="12" x="756" y="100">
+xxxxxxxxxx) xxx
+</text>
+<text font-family="Arial" font-size="12" x="756" y="114">
+xxxxxxxxx
+</text>
+</g>
+<g class="gsn_module_Tier-2 Requirements Engineering gsnelem gsngoal" id="node_G7_1">
+<title>
+G7.1
+</title>
+<path class="border" d="M282,171 L410,171 L410,259 L282,259 z" fill="transparent" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="289" y="190">
+G7.1
+</text>
+<text font-family="Arial" font-size="12" x="289" y="209">
+xxxxxxxxxxxxx
+</text>
+<text font-family="Arial" font-size="12" x="289" y="223">
+xxxxxxxxxxxx (x.x.
+</text>
+<text font-family="Arial" font-size="12" x="289" y="237">
+xxxx) xxx xxxxxxxxxx
+</text>
+<text font-family="Arial" font-size="12" x="289" y="251">
+xxx xxxxxxxx.
+</text>
+</g>
+<g class="gsn_module_Tier-2 Requirements Engineering gsnelem gsngoal" id="node_G7_2">
+<title>
+G7.2
+</title>
+<path class="border" d="M470,178 L594,178 L594,252 L470,252 z" fill="transparent" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="477" y="197">
+G7.2
+</text>
+<text font-family="Arial" font-size="12" x="477" y="216">
+xxxxxxxxxxxx xx xxx
+</text>
+<text font-family="Arial" font-size="12" x="477" y="230">
+xxxxxxxxxxxx xx
+</text>
+<text font-family="Arial" font-size="12" x="477" y="244">
+xxxxxxx.
+</text>
+</g>
+<g class="gsn_module_Tier-2 Requirements Engineering gsnelem gsnjust" id="node_J7_1">
+<title>
+J7.1
+</title>
+<path class="border" d="M634,215 a92,53,0,1,0,184,0 a92,53,0,1,0,-184,0 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="668" y="192">
+J7.1
+</text>
+<text font-family="Arial" font-size="12" x="668" y="211">
+xxxxxxxx xxxxxxxx xx
+</text>
+<text font-family="Arial" font-size="12" x="668" y="225">
+xxxxxxxxxxxxx xx
+</text>
+<text font-family="Arial" font-size="12" x="668" y="239">
+xxxxxxxxxx.
+</text>
+<text font-family="Arial" font-size="12" font-weight="bold" x="813" y="263">
+J
+</text>
+</g>
+<g class="gsn_module_Tier-2 Requirements Engineering gsnelem gsngoal" id="node_G7_3">
+<title>
+G7.3
+</title>
+<path class="border" d="M858,178 L976,178 L976,252 L858,252 z" fill="transparent" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="865" y="197">
+G7.3
+</text>
+<text font-family="Arial" font-size="12" x="865" y="216">
+xxxxxxxxxxx xx xxx
+</text>
+<text font-family="Arial" font-size="12" x="865" y="230">
+xxxxxxxxxxxx xx
+</text>
+<text font-family="Arial" font-size="12" x="865" y="244">
+xxxxxxx.
+</text>
+</g>
+<g class="gsn_module_Tier-2 Requirements Engineering gsnelem gsnstgy" id="node_S7_3">
+<title>
+S7.3
+</title>
+<path class="border" d="M286,343 L420,343 L406,431 L272,431 z" fill="transparent" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="294" y="362">
+S7.3
+</text>
+<text font-family="Arial" font-size="12" x="294" y="381">
+xxxx xxx xxxxxxxxx
+</text>
+<text font-family="Arial" font-size="12" x="294" y="395">
+xxx xxxxxxx
+</text>
+<text font-family="Arial" font-size="12" x="294" y="409">
+xxxxxxxxxxxx xx
+</text>
+<text font-family="Arial" font-size="12" x="294" y="423">
+xxxxxxxxxx.
+</text>
+</g>
+<g class="gsn_module_Tier-2 Requirements Engineering gsnelem gsnsltn" id="node_Sn7_1">
+<title>
+Sn7.1
+</title>
+<path class="border" d="M453,387 a79,79,0,1,0,158,0 a79,79,0,1,0,-158,0 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="471" y="371">
+Sn7.1
+</text>
+<text font-family="Arial" font-size="12" x="471" y="390">
+xxxxxxx xxxxxxxx xxxx
+</text>
+<text font-family="Arial" font-size="12" x="471" y="404">
+xxxxxxxx.
+</text>
+</g>
+<g class="gsn_module_Tier-2 Requirements Engineering gsnelem gsngoal" id="node_G7_3_1">
+<title>
+G7.3.1
+</title>
+<path class="border" d="M865,350 L969,350 L969,424 L865,424 z" fill="transparent" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="872" y="369">
+G7.3.1
+</text>
+<text font-family="Arial" font-size="12" x="872" y="388">
+xxxxxx xx
+</text>
+<text font-family="Arial" font-size="12" x="872" y="402">
+xxxxxxxxxxxx xx
+</text>
+<text font-family="Arial" font-size="12" x="872" y="416">
+xxxxxxxxx.
+</text>
+</g>
+<g class="gsn_module_Tier-2 Requirements Engineering gsnelem gsngoal" id="node_G7_2_1">
+<title>
+G7.2.1
+</title>
+<path class="border" d="M132,541 L268,541 L268,629 L132,629 z" fill="transparent" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="139" y="560">
+G7.2.1
+</text>
+<text font-family="Arial" font-size="12" x="139" y="579">
+xxxxxxxx xxx xxxxxxxx
+</text>
+<text font-family="Arial" font-size="12" x="139" y="593">
+xxxxxxxxxx xx xxxxxxx
+</text>
+<text font-family="Arial" font-size="12" x="139" y="607">
+xx xxxxxxxx xxxxxxxx
+</text>
+<text font-family="Arial" font-size="12" x="139" y="621">
+xx *xxxxxxx* xxxxx.
+</text>
+</g>
+<g class="gsn_module_Tier-2 Requirements Engineering gsnelem gsngoal" id="node_G7_2_2">
+<title>
+G7.2.2
+</title>
+<path class="border" d="M425,541 L561,541 L561,629 L425,629 z" fill="transparent" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="432" y="560">
+G7.2.2
+</text>
+<text font-family="Arial" font-size="12" x="432" y="579">
+xxxxxxxx xxx xxxxxxxx
+</text>
+<text font-family="Arial" font-size="12" x="432" y="593">
+xxxxxxxxxx xx xxxxxxx
+</text>
+<text font-family="Arial" font-size="12" x="432" y="607">
+xx xxxxxxxx xxxxxxxx
+</text>
+<text font-family="Arial" font-size="12" x="432" y="621">
+xx *xxxxxxxxx* xxxxx.
+</text>
+</g>
+<g class="gsn_module_Tier-2 Requirements Engineering gsnelem gsnsltn" id="node_Sn7_3_1">
+<title>
+Sn7.3.1
+</title>
+<path class="border" d="M838,585 a79,79,0,1,0,158,0 a79,79,0,1,0,-158,0 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="856" y="569">
+Sn7.3.1
+</text>
+<text font-family="Arial" font-size="12" x="856" y="588">
+xxxxxxxxxx xxx xxxxxx
+</text>
+<text font-family="Arial" font-size="12" x="856" y="602">
+xxxxxxxx.
+</text>
+</g>
+<g class="gsn_module_Tier-2 Requirements Engineering gsnelem gsnsltn" id="node_Sn7_3_1_1">
+<title>
+Sn7.3.1.1
+</title>
+<path class="border" d="M20,785 a81,81,0,1,0,162,0 a81,81,0,1,0,-162,0 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="41" y="762">
+Sn7.3.1.1
+</text>
+<text font-family="Arial" font-size="12" x="41" y="781">
+xxxxxxx xxxxxxxxxxxx
+</text>
+<text font-family="Arial" font-size="12" x="41" y="795">
+xxxx xxx xx xxxxxxxxx
+</text>
+<text font-family="Arial" font-size="12" x="41" y="809">
+xxxxxxxxxx
+</text>
+</g>
+<g class="gsn_module_Tier-2 Requirements Engineering gsnelem gsnsltn" id="node_Sn7_3_1_2">
+<title>
+Sn7.3.1.2
+</title>
+<path class="border" d="M222,785 a77,77,0,1,0,154,0 a77,77,0,1,0,-154,0 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="241" y="769">
+Sn7.3.1.2
+</text>
+<text font-family="Arial" font-size="12" x="241" y="788">
+xxxxxxxx xxxxxxxx xx
+</text>
+<text font-family="Arial" font-size="12" x="241" y="802">
+xxxxxxx xxxxx
+</text>
+</g>
+<g class="gsn_module_Tier-2 Requirements Engineering gsnelem gsnsltn" id="node_Sn7_3_2">
+<title>
+Sn7.3.2
+</title>
+<path class="border" d="M416,785 a77,77,0,1,0,154,0 a77,77,0,1,0,-154,0 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="435" y="769">
+Sn7.3.2
+</text>
+<text font-family="Arial" font-size="12" x="435" y="788">
+xxxxxxxx xxxxxxxx xx
+</text>
+<text font-family="Arial" font-size="12" x="435" y="802">
+xxxxxxxxx xxxxx
+</text>
+</g>
+<path class="gsnedge gsninctxt" d="M699,71 C729,71,709,71,729,71" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M631,122 C631,152,346,141,346,161" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M631,122 C631,152,532,148,532,168" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M631,122 C631,152,917,148,917,168" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M346,259 C346,289,346,313,346,333" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M594,215 C624,215,604,215,624,215" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M532,252 C532,282,532,278,532,298" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M200,629 C200,659,101,674,101,694" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M200,629 C200,659,299,678,299,698" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M493,629 C493,659,493,678,493,698" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M917,252 C917,282,917,320,917,340" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M917,424 C917,454,917,476,917,496" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M346,431 C346,461,200,511,200,531" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M346,431 C346,461,493,511,493,531" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+</svg>

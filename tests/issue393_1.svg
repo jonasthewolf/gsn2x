@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg classes="gsndiagram" viewBox="0 0 830 569" xmlns="http://www.w3.org/2000/svg">
+<symbol id="module_icon">
+<rect fill="lightgrey" height="5" stroke="black" stroke-width="1" width="10" x="0" y="0"/>
+<rect fill="lightgrey" height="10" stroke="black" stroke-width="1" width="20" x="0" y="5"/>
+</symbol>
+<marker id="composite_arrow" markerHeight="9" markerUnits="userSpaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
+<polyline fill="none" points="0 0, 6 4.5, 0 9" stroke="black" stroke-width="1"/>
+<polyline fill="none" points="4 0, 10 4.5, 4 9" stroke="black" stroke-width="1"/>
+<polyline fill="none" points="0 4.5, 10 4.5" stroke="black" stroke-width="1"/>
+</marker>
+<marker id="supportedby_arrow" markerHeight="9" markerUnits="userSpaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
+<polyline fill="black" points="0 0, 10 4.5, 0 9"/>
+</marker>
+<marker id="incontextof_arrow" markerHeight="9" markerUnits="userSpaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
+<polyline fill="none" points="0 0, 10 4.5, 0 9, 0 0" stroke="black" stroke-width="1"/>
+</marker>
+<g class="gsn_module_Tier-2 Design gsnelem gsngoal" id="node_G9">
+<title>
+G9
+</title>
+<path class="border" d="M236,78 L368,78 L368,166 L236,166 z" fill="transparent" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="243" y="97">
+G9
+</text>
+<text font-family="Arial" font-size="12" x="243" y="116">
+xxxxxx xxx
+</text>
+<text font-family="Arial" font-size="12" x="243" y="130">
+xxxxxxxxxxxxxx xx
+</text>
+<text font-family="Arial" font-size="12" x="243" y="144">
+xxxxxxx xxxxxxxxxxxx
+</text>
+<text font-family="Arial" font-size="12" x="243" y="158">
+xxx xxxxx.
+</text>
+</g>
+<g class="gsn_module_Tier-2 Design gsnelem gsnjust" id="node_J9">
+<title>
+J9
+</title>
+<path class="border" d="M408,122 a92,102,0,1,0,184,0 a92,102,0,1,0,-184,0 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="442" y="64">
+J9
+</text>
+<text font-family="Arial" font-size="12" x="442" y="83">
+xxxx xxxxxxx xxx
+</text>
+<text font-family="Arial" font-size="12" x="442" y="97">
+xxxxxxxxxxxx (xxx
+</text>
+<text font-family="Arial" font-size="12" x="442" y="111">
+xxxx xx-xxxxxxx) xx x
+</text>
+<text font-family="Arial" font-size="12" x="442" y="125">
+xxxxxxxxxxx xx xxx
+</text>
+<text font-family="Arial" font-size="12" x="442" y="139">
+xxx xxxxxxxxx xxx
+</text>
+<text font-family="Arial" font-size="12" x="442" y="153">
+xxxxxxxxx xx xxx
+</text>
+<text font-family="Arial" font-size="12" x="442" y="167">
+xxxxxxxxx
+</text>
+<text font-family="Arial" font-size="12" x="442" y="181">
+xxxxxxxxxxxxx.
+</text>
+<text font-family="Arial" font-size="12" font-weight="bold" x="587" y="219">
+J
+</text>
+</g>
+<g class="gsn_module_Tier-2 Design gsnelem gsngoal" id="node_G9_1">
+<title>
+G9.1
+</title>
+<path class="border" d="M34,278 L138,278 L138,352 L34,352 z" fill="transparent" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="41" y="297">
+G9.1
+</text>
+<text font-family="Arial" font-size="12" x="41" y="316">
+xxxxxx xxxxxx
+</text>
+<text font-family="Arial" font-size="12" x="41" y="330">
+xxxxxxxxxx xxx
+</text>
+<text font-family="Arial" font-size="12" x="41" y="344">
+xxxxxxxx.
+</text>
+</g>
+<g class="gsn_module_Tier-2 Design gsnelem gsnctxt" id="node_C9_2_2">
+<title>
+C9.2.2
+</title>
+<path class="border" d="M276,278 L416,278 C426,278,426,352,416,352 L276,352 C266,352,266,278,276,278" fill="transparent" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="283" y="297">
+C9.2.2
+</text>
+<text font-family="Arial" font-size="12" x="283" y="316">
+xxxxxxxxx xxxxxxxxxxx
+</text>
+<text font-family="Arial" font-size="12" x="283" y="330">
+xx xxx xxxxxxxxx
+</text>
+<text font-family="Arial" font-size="12" x="283" y="344">
+xxxxxxxxxx
+</text>
+</g>
+<g class="gsn_module_Tier-2 Design gsnelem gsngoal" id="node_G9_2">
+<title>
+G9.2
+</title>
+<path class="border" d="M466,278 L570,278 L570,352 L466,352 z" fill="transparent" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="473" y="297">
+G9.2
+</text>
+<text font-family="Arial" font-size="12" x="473" y="316">
+xxxxxx xxxxxx
+</text>
+<text font-family="Arial" font-size="12" x="473" y="330">
+xxxxxxxxxx xxx
+</text>
+<text font-family="Arial" font-size="12" x="473" y="344">
+xxxxxxxx.
+</text>
+</g>
+<g class="gsn_module_Tier-2 Design gsnelem gsnctxt" id="node_C9_2_1">
+<title>
+C9.2.1
+</title>
+<path class="border" d="M620,264 L746,264 C756,264,756,366,746,366 L620,366 C610,366,610,264,620,264" fill="transparent" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="627" y="283">
+C9.2.1
+</text>
+<text font-family="Arial" font-size="12" x="627" y="302">
+xxxxx x:xxxx xxxx
+</text>
+<text font-family="Arial" font-size="12" x="627" y="316">
+(xxxx. xxxxx
+</text>
+<text font-family="Arial" font-size="12" x="627" y="330">
+xxxxxxxxxx xxxx
+</text>
+<text font-family="Arial" font-size="12" x="627" y="344">
+xxxxxxxx xxxxxxxxxx
+</text>
+<text font-family="Arial" font-size="12" x="627" y="358">
+(x.x. xxx))
+</text>
+</g>
+<g class="gsn_module_Tier-2 Design gsnelem gsnsltn" id="node_Sn9_1">
+<title>
+Sn9.1
+</title>
+<path class="border" d="M20,477 a66,66,0,1,0,132,0 a66,66,0,1,0,-132,0 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="36" y="468">
+Sn9.1
+</text>
+<text font-family="Arial" font-size="12" x="36" y="487">
+xxxxxx xxxxxxxxxx
+</text>
+</g>
+<g class="gsn_module_Tier-2 Design gsnelem gsnsltn" id="node_Sn9_2">
+<title>
+Sn9.2
+</title>
+<path class="border" d="M365,477 a65,65,0,1,0,130,0 a65,65,0,1,0,-130,0 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="381" y="468">
+Sn9.2
+</text>
+<text font-family="Arial" font-size="12" x="381" y="487">
+xxxxxx xxx xxxxxx
+</text>
+</g>
+<g class="gsn_module_Tier-2 Design gsnelem gsnsltn" id="node_Sn9_2_2">
+<title>
+Sn9.2.2
+</title>
+<path class="border" d="M535,477 a71,71,0,1,0,142,0 a71,71,0,1,0,-142,0 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="553" y="461">
+Sn9.2.2
+</text>
+<text font-family="Arial" font-size="12" x="553" y="480">
+xxxxxxxxxxxxxx xxx
+</text>
+<text font-family="Arial" font-size="12" x="553" y="494">
+xxxxx xxxxxxxxxx
+</text>
+</g>
+<path class="gsnedge gsninctxt" d="M368,122 C398,122,378,122,398,122" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M302,166 C302,196,86,248,86,268" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M302,166 C302,196,518,248,518,268" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M86,352 C86,382,86,381,86,401" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M570,315 C600,315,580,315,600,315" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M466,315 C436,315,456,315,436,315" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M518,352 C518,382,430,382,430,402" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M518,352 C518,382,606,376,606,396" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+</svg>
