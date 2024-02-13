@@ -475,6 +475,22 @@ impl SvgNode {
     }
 
     ///
+    /// There is actually no "Away Strategy" in the standard, however, to set the URL we just pretend it here.
+    ///
+    pub fn new_away_strategy(
+        identifier: &str,
+        gsn_node: &GsnNode,
+        masked: bool,
+        layers: &[String],
+        module_url: Option<String>,
+        char_wrap: Option<u32>,
+    ) -> Self {
+        let mut cloned_strategy = gsn_node.clone();
+        cloned_strategy.url = module_url;
+        SvgNode::new_strategy(identifier, &cloned_strategy, masked, layers, char_wrap)
+    }
+
+    ///
     ///
     ///
     pub fn new_away_justification(

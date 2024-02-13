@@ -168,6 +168,7 @@ pub fn check_layers(diag: &mut Diagnostics, nodes: &BTreeMap<String, GsnNode>, l
         "nodeType",
         "rankIncrement",
         "horizontalIndex",
+        "wordWrap",
     ];
     for l in layers {
         if reserved_words.contains(l) {

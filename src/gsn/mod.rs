@@ -72,7 +72,7 @@ impl TryFrom<Value> for AbsoluteIndex {
 /// The main struct of this program
 /// It describes a GSN element
 ///
-#[derive(Debug, Default, Deserialize)]
+#[derive(Clone, Debug, Default, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct GsnNode {
     pub(crate) text: String,
