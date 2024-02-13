@@ -18,11 +18,12 @@
 <style>
 @import url(https://github.com/jonasthewolf/gsn2x/blob/3439402d093ba54af4771b295e78f2488bd1b978/examples/modular/modular.css)
 </style>
+<a href="./main.gsn.svg#node_S1">
 <g class="gsn_module_Main gsnelem gsnstgy" id="node_S1">
 <title>
 S1
 </title>
-<path class="border" d="M159,37 L293,37 L279,83 L145,83 z" fill="none" stroke="black" stroke-width="1"/>
+<path class="border" d="M159,37 L293,37 L279,83 L145,83 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="167" y="56">
 S1
 </text>
@@ -30,6 +31,7 @@ S1
 Divide and Conquer
 </text>
 </g>
+</a>
 <g class="gsn_module_Sub1 gsnelem gsnasmp" id="node_A1">
 <title>
 A1
@@ -91,7 +93,7 @@ Sub3
 <title>
 G3
 </title>
-<path class="border" d="M144,168 L294,168 L294,214 L144,214 z" fill="none" stroke="black" stroke-width="1"/>
+<path class="border" d="M144,168 L294,168 L294,214 L144,214 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="151" y="187">
 G3
 </text>

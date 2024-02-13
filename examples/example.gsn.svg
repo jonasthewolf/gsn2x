@@ -19,7 +19,7 @@
 <title>
 G1
 </title>
-<path class="border" d="M637,20 L741,20 L741,66 L637,66 z" fill="none" stroke="black" stroke-width="1"/>
+<path class="border" d="M637,20 L741,20 L741,66 L637,66 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="644" y="39">
 G1
 </text>
@@ -31,7 +31,7 @@ Goal 1
 <title>
 G2
 </title>
-<path class="border" d="M334,106 L438,106 L438,152 L334,152 z" fill="none" stroke="black" stroke-width="1"/>
+<path class="border" d="M334,106 L438,106 L438,152 L334,152 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="341" y="125">
 G2
 </text>
@@ -43,7 +43,7 @@ Goal 2
 <title>
 G3
 </title>
-<path class="border" d="M940,106 L1044,106 L1044,152 L940,152 z" fill="none" stroke="black" stroke-width="1"/>
+<path class="border" d="M940,106 L1044,106 L1044,152 L940,152 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="947" y="125">
 G3
 </text>
@@ -55,7 +55,7 @@ Goal 3
 <title>
 C1
 </title>
-<path class="border" d="M1094,106 L1198,106 C1208,106,1208,152,1198,152 L1094,152 C1084,152,1084,106,1094,106" fill="none" stroke="black" stroke-width="1"/>
+<path class="border" d="M1094,106 L1198,106 C1208,106,1208,152,1198,152 L1094,152 C1084,152,1084,106,1094,106" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="1101" y="125">
 C1
 </text>
@@ -82,7 +82,7 @@ J
 <title>
 S1
 </title>
-<path class="border" d="M326,213 L460,213 L446,259 L312,259 z" fill="none" stroke="black" stroke-width="1"/>
+<path class="border" d="M326,213 L460,213 L446,259 L312,259 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="334" y="232">
 S1
 </text>
@@ -109,7 +109,7 @@ A
 <title>
 S2
 </title>
-<path class="border" d="M781,213 L915,213 L901,259 L767,259 z" fill="none" stroke="black" stroke-width="1"/>
+<path class="border" d="M781,213 L915,213 L901,259 L767,259 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="789" y="232">
 S2
 </text>
@@ -150,7 +150,7 @@ A
 <title>
 G5
 </title>
-<path class="border" d="M180,330 L284,330 L284,376 L180,376 z" fill="none" stroke="black" stroke-width="1"/>
+<path class="border" d="M180,330 L284,330 L284,376 L180,376 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="187" y="349">
 G5
 </text>
@@ -162,7 +162,7 @@ Goal 5
 <title>
 C2
 </title>
-<path class="border" d="M334,323 L438,323 C448,323,448,383,438,383 L334,383 C324,383,324,323,334,323" fill="none" stroke="black" stroke-width="1"/>
+<path class="border" d="M334,323 L438,323 C448,323,448,383,438,383 L334,383 C324,383,324,323,334,323" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="341" y="342">
 C2
 </text>
@@ -177,7 +177,7 @@ Multiline
 <title>
 G6
 </title>
-<path class="border" d="M488,330 L592,330 L592,376 L488,376 z" fill="none" stroke="black" stroke-width="1"/>
+<path class="border" d="M488,330 L592,330 L592,376 L488,376 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="495" y="349">
 G6
 </text>
@@ -189,7 +189,7 @@ Goal 6
 <title>
 G4
 </title>
-<path class="border" d="M632,330 L736,330 L736,376 L632,376 z" fill="none" stroke="black" stroke-width="1"/>
+<path class="border" d="M632,330 L736,330 L736,376 L632,376 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="639" y="349">
 G4
 </text>
@@ -216,7 +216,7 @@ J
 <title>
 G7
 </title>
-<path class="border" d="M940,327 L1056,327 L1056,379 L940,379 z" fill="none" stroke="black" stroke-width="1"/>
+<path class="border" d="M940,327 L1056,327 L1056,379 L940,379 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="947" y="346">
 G7
 </text>

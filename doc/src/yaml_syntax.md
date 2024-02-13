@@ -71,6 +71,7 @@ Please see [examples/example.gsn.yaml](examples/example.gsn.yaml) for an example
 | nodeType[^nt]         |    yes   |
 | rankIncrement[^nl]    |    yes   |
 | horizontalIndex[^nl]  |    yes   |
+| wordWrap[^nw]         |    yes   |
 
 [^nu]: Mutually exclusive to `supportedBy`.
 
@@ -80,3 +81,6 @@ Please see [examples/example.gsn.yaml](examples/example.gsn.yaml) for an example
 
 [^nt]: When providing a `nodeType` you do not need to follow the standard prefix scheme above.
        Just give `Goal`, `Assumption`, `Justification`, `Solution`, `Context` and `Strategy` to give the type of the element.
+
+[^nw]: If the `wordWrap` attribute for an element is given, it will be used instead of the global option given
+       at the command line.

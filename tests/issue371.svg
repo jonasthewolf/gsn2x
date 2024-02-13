@@ -19,7 +19,7 @@
 <title>
 GXxxxxxx-XxxxXxxxxxxxxx
 </title>
-<path class="border" d="M20,20 L572,20 L572,66 L20,66 z" fill="none" stroke="black" stroke-width="1"/>
+<path class="border" d="M20,20 L572,20 L572,66 L20,66 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="27" y="39">
 GXxxxxxx-XxxxXxxxxxxxxx
 </text>
@@ -31,7 +31,7 @@ Wxxxxxxxxx xx xxxxxxx xxx xxx xxxxxxxxxx xx xxxxxxxxxx xx xxx XX xxxxxxxxxxxxxx 
 <title>
 GXxxxxxx-XxxxXxxxxxxxxx.1
 </title>
-<path class="border" d="M151,106 L441,106 L441,152 L151,152 z" fill="none" stroke="black" stroke-width="1"/>
+<path class="border" d="M151,106 L441,106 L441,152 L151,152 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="158" y="125">
 GXxxxxxx-XxxxXxxxxxxxxx.1
 </text>
@@ -43,7 +43,7 @@ Txxxx xxxx xxx xxxxxxxxxx Xxxxxxx xxx xxxxxxx.
 <title>
 GXxxxxxx-XxxxXxxxxxxxxx.1.1
 </title>
-<path class="border" d="M68,212 L524,212 L524,258 L68,258 z" fill="none" stroke="black" stroke-width="1"/>
+<path class="border" d="M68,212 L524,212 L524,258 L68,258 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="75" y="231">
 GXxxxxxx-XxxxXxxxxxxxxx.1.1
 </text>

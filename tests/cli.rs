@@ -525,38 +525,43 @@ mod integrations {
     }
 
     fn regression_renderings(
-        input: &str,
+        input: &[&str],
         options: &[&str],
         additional_files: Option<&[&str]>,
     ) -> Result<()> {
         let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
         let temp = assert_fs::TempDir::new()?;
-        temp.copy_from(".", &[input])?;
+        temp.copy_from(".", input)?;
         if let Some(additional_files) = additional_files {
             temp.copy_from(".", additional_files)?;
         }
-        let output_name = input.to_string().replace(".yaml", ".svg");
-        let output_file = temp.child(&output_name);
-        cmd.args(options).arg(input).arg("-G").current_dir(&temp);
+        let output_names = input
+            .iter()
+            .map(|i| i.to_string().replace(".yaml", ".svg"))
+            .collect::<Vec<_>>();
+        cmd.args(options).args(input).arg("-G").current_dir(&temp);
         cmd.assert().success();
-        assert!(are_struct_similar_svgs(
-            std::path::Path::new(&output_name).as_os_str(),
-            output_file.as_os_str(),
-        )?);
+        for output_name in output_names {
+            let output_file = temp.child(&output_name);
+            assert!(are_struct_similar_svgs(
+                std::path::Path::new(&output_name).as_os_str(),
+                output_file.as_os_str(),
+            )?);
+        }
         temp.close()?;
         Ok(())
     }
 
     #[test]
     fn multi_parents() -> Result<()> {
-        regression_renderings("tests/multi_parents.gsn.yaml", &[], None)?;
+        regression_renderings(&["tests/multi_parents.gsn.yaml"], &[], None)?;
         Ok(())
     }
 
     #[test]
     fn min_doc() -> Result<()> {
         regression_renderings(
-            "examples/minimalcss/min.gsn.yaml",
+            &["examples/minimalcss/min.gsn.yaml"],
             &["-s", "examples/minimalcss/min.css", "-t"],
             Some(&["examples/minimalcss/min.css"]),
         )?;
@@ -565,41 +570,41 @@ mod integrations {
 
     #[test]
     fn issue250() -> Result<()> {
-        regression_renderings("tests/issue250.yaml", &[], None)?;
+        regression_renderings(&["tests/issue250.yaml"], &[], None)?;
         Ok(())
     }
 
     #[test]
     fn issue249() -> Result<()> {
-        regression_renderings("tests/issue249.yaml", &[], None)?;
+        regression_renderings(&["tests/issue249.yaml"], &[], None)?;
         Ok(())
     }
 
     #[test]
     fn issue313() -> Result<()> {
-        regression_renderings("tests/issue313.yaml", &[], None)?;
+        regression_renderings(&["tests/issue313.yaml"], &[], None)?;
         Ok(())
     }
 
     #[test]
     fn issue339() -> Result<()> {
-        regression_renderings("tests/issue339.yaml", &[], None)?;
+        regression_renderings(&["tests/issue339.yaml"], &[], None)?;
         Ok(())
     }
 
     #[test]
     fn issue84() -> Result<()> {
-        regression_renderings("tests/issue84_1.yaml", &[], None)?;
-        regression_renderings("tests/issue84_2.yaml", &[], None)?;
-        regression_renderings("tests/issue84_3.yaml", &[], None)?;
-        regression_renderings("tests/issue84_4.yaml", &[], None)?;
+        regression_renderings(&["tests/issue84_1.yaml"], &[], None)?;
+        regression_renderings(&["tests/issue84_2.yaml"], &[], None)?;
+        regression_renderings(&["tests/issue84_3.yaml"], &[], None)?;
+        regression_renderings(&["tests/issue84_4.yaml"], &[], None)?;
         Ok(())
     }
 
     #[test]
     fn issue358() -> Result<()> {
         regression_renderings(
-            "tests/issue358.yaml",
+            &["tests/issue358.yaml"],
             &["-l", "layer1", "-l", "layer2"],
             None,
         )?;
@@ -608,25 +613,41 @@ mod integrations {
 
     #[test]
     fn issue365() -> Result<()> {
-        regression_renderings("tests/issue365.yaml", &["-w", "35"], None)?;
+        regression_renderings(&["tests/issue365.yaml"], &["-w", "35"], None)?;
         Ok(())
     }
 
     #[test]
     fn issue371() -> Result<()> {
-        regression_renderings("tests/issue371.yaml", &[], None)?;
+        regression_renderings(&["tests/issue371.yaml"], &[], None)?;
         Ok(())
     }
 
     #[test]
     fn issue372() -> Result<()> {
-        regression_renderings("tests/issue372.yaml", &["-w", "35"], None)?;
+        regression_renderings(&["tests/issue372.yaml"], &["-w", "35"], None)?;
         Ok(())
     }
 
     #[test]
     fn issue377() -> Result<()> {
-        regression_renderings("tests/issue377.yaml", &["-w", "35"], None)?;
+        regression_renderings(&["tests/issue377.yaml"], &["-w", "35"], None)?;
+        Ok(())
+    }
+
+    #[test]
+    fn issue389() -> Result<()> {
+        regression_renderings(&["tests/issue389.yaml"], &["-w", "20"], None)?;
+        Ok(())
+    }
+
+    #[test]
+    fn issue391() -> Result<()> {
+        regression_renderings(
+            &["tests/issue391_1.yaml", "tests/issue391_2.yaml"],
+            &[],
+            None,
+        )?;
         Ok(())
     }
 }

@@ -282,6 +282,8 @@ fn add_missing_nodes_and_modules(
                 name: "Unknown".to_owned(),
                 brief: None,
                 extends: None,
+                horizontal_index: None,
+                rank_increment: None,
                 additional: BTreeMap::new(),
             },
         },
@@ -325,6 +327,8 @@ fn read_inputs(
                     name: module_name,
                     brief: None,
                     extends: None,
+                    horizontal_index: None,
+                    rank_increment: None,
                     additional: BTreeMap::new(),
                 }
             }

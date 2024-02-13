@@ -19,7 +19,7 @@
 <title>
 G1
 </title>
-<path class="border" d="M20,20 L124,20 L124,66 L20,66 z" fill="none" stroke="black" stroke-width="1"/>
+<path class="border" d="M20,20 L124,20 L124,66 L20,66 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="27" y="39">
 G1
 </text>
@@ -31,7 +31,7 @@ Goal 1
 <title>
 G2
 </title>
-<path class="border" d="M20,106 L124,106 L124,152 L20,152 z" fill="none" stroke="black" stroke-width="1"/>
+<path class="border" d="M20,106 L124,106 L124,152 L20,152 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="27" y="125">
 G2
 </text>

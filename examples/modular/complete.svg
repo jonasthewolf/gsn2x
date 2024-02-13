@@ -34,7 +34,7 @@ A
 <title>
 G1
 </title>
-<path class="border" d="M187,30 L291,30 L291,76 L187,76 z" fill="none" stroke="black" stroke-width="1"/>
+<path class="border" d="M187,30 L291,30 L291,76 L187,76 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="194" y="49">
 G1
 </text>
@@ -46,7 +46,7 @@ Main Goal
 <title>
 S1
 </title>
-<path class="border" d="M179,126 L313,126 L299,172 L165,172 z" fill="none" stroke="black" stroke-width="1"/>
+<path class="border" d="M179,126 L313,126 L299,172 L165,172 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="187" y="145">
 S1
 </text>
@@ -58,7 +58,7 @@ Divide and Conquer
 <title>
 G2
 </title>
-<path class="border" d="M20,219 L124,219 L124,271 L20,271 z" fill="none" stroke="black" stroke-width="1"/>
+<path class="border" d="M20,219 L124,219 L124,271 L20,271 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="27" y="238">
 G2
 </text>
@@ -86,7 +86,7 @@ J
 <title>
 G3
 </title>
-<path class="border" d="M332,222 L482,222 L482,268 L332,268 z" fill="none" stroke="black" stroke-width="1"/>
+<path class="border" d="M332,222 L482,222 L482,268 L332,268 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="339" y="241">
 G3
 </text>
@@ -98,7 +98,7 @@ Conquer the submodules
 <title>
 C2
 </title>
-<path class="border" d="M532,222 L636,222 C646,222,646,268,636,268 L532,268 C522,268,522,222,532,222" fill="none" stroke="black" stroke-width="1"/>
+<path class="border" d="M532,222 L636,222 C646,222,646,268,636,268 L532,268 C522,268,522,222,532,222" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="539" y="241">
 C2
 </text>

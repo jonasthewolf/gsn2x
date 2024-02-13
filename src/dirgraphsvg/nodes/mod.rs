@@ -475,6 +475,22 @@ impl SvgNode {
     }
 
     ///
+    /// There is actually no "Away Strategy" in the standard, however, to set the URL we just pretend it here.
+    ///
+    pub fn new_away_strategy(
+        identifier: &str,
+        gsn_node: &GsnNode,
+        masked: bool,
+        layers: &[String],
+        module_url: Option<String>,
+        char_wrap: Option<u32>,
+    ) -> Self {
+        let mut cloned_strategy = gsn_node.clone();
+        cloned_strategy.url = module_url;
+        SvgNode::new_strategy(identifier, &cloned_strategy, masked, layers, char_wrap)
+    }
+
+    ///
     ///
     ///
     pub fn new_away_justification(
@@ -629,7 +645,7 @@ fn node_text_from_node_and_layers(
 ) -> String {
     use crate::dirgraphsvg::util::wrap_words::wrap_words;
 
-    let mut node_text = if let Some(char_wrap) = char_wrap {
+    let mut node_text = if let Some(char_wrap) = gsn_node.word_wrap.or(char_wrap) {
         wrap_words(&gsn_node.text, char_wrap, "\n")
     } else {
         gsn_node.text.to_owned()

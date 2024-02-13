@@ -72,7 +72,7 @@ impl TryFrom<Value> for AbsoluteIndex {
 /// The main struct of this program
 /// It describes a GSN element
 ///
-#[derive(Debug, Default, Deserialize)]
+#[derive(Clone, Debug, Default, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct GsnNode {
     pub(crate) text: String,
@@ -84,6 +84,7 @@ pub struct GsnNode {
     pub(crate) rank_increment: Option<usize>,
     pub(crate) horizontal_index: Option<HorizontalIndex>,
     pub(crate) node_type: Option<GsnNodeType>,
+    pub(crate) word_wrap: Option<u32>,
     #[serde(flatten)]
     pub(crate) additional: BTreeMap<String, String>,
     #[serde(skip_deserializing)]
@@ -200,6 +201,8 @@ pub struct ModuleInformation {
     pub(crate) name: String,
     pub(crate) brief: Option<String>,
     pub(crate) extends: Option<Vec<ExtendsModule>>,
+    pub(crate) horizontal_index: Option<HorizontalIndex>,
+    pub(crate) rank_increment: Option<usize>,
     #[serde(flatten)]
     pub(crate) additional: BTreeMap<String, String>,
 }

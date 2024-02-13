@@ -34,7 +34,7 @@ A
 <title>
 G3
 </title>
-<path class="border" d="M230,30 L406,30 L406,76 L230,76 z" fill="none" stroke="black" stroke-width="1"/>
+<path class="border" d="M230,30 L406,30 L406,76 L230,76 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="237" y="49">
 G3
 </text>
@@ -61,7 +61,7 @@ J
 <title>
 G4
 </title>
-<path class="border" d="M266,126 L370,126 L370,172 L266,172 z" fill="none" stroke="black" stroke-width="1"/>
+<path class="border" d="M266,126 L370,126 L370,172 L266,172 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="273" y="145">
 G4
 </text>

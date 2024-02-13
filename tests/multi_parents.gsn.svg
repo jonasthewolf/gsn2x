@@ -19,7 +19,7 @@
 <title>
 G1
 </title>
-<path class="border" d="M20,20 L124,20 L124,66 L20,66 z" fill="none" stroke="black" stroke-width="1"/>
+<path class="border" d="M20,20 L124,20 L124,66 L20,66 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="27" y="39">
 G1
 </text>
@@ -31,7 +31,7 @@ G1
 <title>
 G2
 </title>
-<path class="border" d="M164,20 L268,20 L268,66 L164,66 z" fill="none" stroke="black" stroke-width="1"/>
+<path class="border" d="M164,20 L268,20 L268,66 L164,66 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="171" y="39">
 G2
 </text>
@@ -43,7 +43,7 @@ G2
 <title>
 G3
 </title>
-<path class="border" d="M308,20 L412,20 L412,66 L308,66 z" fill="none" stroke="black" stroke-width="1"/>
+<path class="border" d="M308,20 L412,20 L412,66 L308,66 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="315" y="39">
 G3
 </text>
@@ -55,7 +55,7 @@ G3
 <title>
 G4
 </title>
-<path class="border" d="M452,20 L556,20 L556,66 L452,66 z" fill="none" stroke="black" stroke-width="1"/>
+<path class="border" d="M452,20 L556,20 L556,66 L452,66 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="459" y="39">
 G4
 </text>

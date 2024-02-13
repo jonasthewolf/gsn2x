@@ -163,7 +163,7 @@ pub fn away_svg_from_gsn_node(
             SvgNode::new_away_solution(identifier, gsn_node, masked, layers, module_url, char_wrap)
         }
         GsnNodeType::Strategy => {
-            SvgNode::new_strategy(identifier, gsn_node, masked, layers, char_wrap)
+            SvgNode::new_away_strategy(identifier, gsn_node, masked, layers, module_url, char_wrap)
         }
         GsnNodeType::Context => {
             SvgNode::new_away_context(identifier, gsn_node, masked, layers, module_url, char_wrap)
@@ -200,6 +200,8 @@ pub fn render_architecture(
                     .as_ref()
                     .map(|m| m.to_owned())
                     .unwrap_or_else(|| "".to_owned()),
+                horizontal_index: module.meta.horizontal_index,
+                rank_increment: module.meta.rank_increment,
                 ..Default::default()
             };
             let module_url = Some({

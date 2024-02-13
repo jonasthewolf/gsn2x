@@ -19,7 +19,7 @@
 <title>
 C2
 </title>
-<path class="border" d="M591,20 L705,20 C715,20,715,66,705,66 L591,66 C581,66,581,20,591,20" fill="none" stroke="black" stroke-width="1"/>
+<path class="border" d="M591,20 L705,20 C715,20,715,66,705,66 L591,66 C581,66,581,20,591,20" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="598" y="39">
 C2
 </text>
@@ -31,7 +31,7 @@ System Definition.
 <title>
 G1
 </title>
-<path class="border" d="M755,20 L981,20 L981,66 L755,66 z" fill="none" stroke="black" stroke-width="1"/>
+<path class="border" d="M755,20 L981,20 L981,66 L755,66 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="762" y="39">
 G1
 </text>
@@ -43,7 +43,7 @@ System is acceptably safe to operate.
 <title>
 C1
 </title>
-<path class="border" d="M1031,20 L1205,20 C1215,20,1215,66,1205,66 L1031,66 C1021,66,1021,20,1031,20" fill="none" stroke="black" stroke-width="1"/>
+<path class="border" d="M1031,20 L1205,20 C1215,20,1215,66,1205,66 L1031,66 C1021,66,1021,20,1031,20" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="1038" y="39">
 C1
 </text>
@@ -55,7 +55,7 @@ Operating Role and Context.
 <title>
 C3
 </title>
-<path class="border" d="M34,106 L198,106 C208,106,208,152,198,152 L34,152 C24,152,24,106,34,106" fill="none" stroke="black" stroke-width="1"/>
+<path class="border" d="M34,106 L198,106 C208,106,208,152,198,152 L34,152 C24,152,24,106,34,106" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="41" y="125">
 C3
 </text>
@@ -67,7 +67,7 @@ Tolerability targets (Ref Z).
 <title>
 G2
 </title>
-<path class="border" d="M248,106 L648,106 L648,152 L248,152 z" fill="none" stroke="black" stroke-width="1"/>
+<path class="border" d="M248,106 L648,106 L648,152 L248,152 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="255" y="125">
 G2
 </text>
@@ -79,7 +79,7 @@ All identified hazards have been eliminated or sufficiently mitigated.
 <title>
 C4
 </title>
-<path class="border" d="M698,106 L918,106 C928,106,928,152,918,152 L698,152 C688,152,688,106,698,106" fill="none" stroke="black" stroke-width="1"/>
+<path class="border" d="M698,106 L918,106 C928,106,928,152,918,152 L698,152 C688,152,688,106,698,106" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="705" y="125">
 C4
 </text>
@@ -91,7 +91,7 @@ Hazards identified from FHA (Ref Y).
 <title>
 G3
 </title>
-<path class="border" d="M1021,106 L1555,106 L1555,152 L1021,152 z" fill="none" stroke="black" stroke-width="1"/>
+<path class="border" d="M1021,106 L1555,106 L1555,152 L1021,152 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="1028" y="125">
 G3
 </text>
@@ -103,7 +103,7 @@ Software in the Control System has been developed to SIL appropriate to hazards 
 <title>
 C5
 </title>
-<path class="border" d="M1605,106 L1791,106 C1801,106,1801,152,1791,152 L1605,152 C1595,152,1595,106,1605,106" fill="none" stroke="black" stroke-width="1"/>
+<path class="border" d="M1605,106 L1791,106 C1801,106,1801,152,1791,152 L1605,152 C1595,152,1595,106,1605,106" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="1612" y="125">
 C5
 </text>
@@ -115,7 +115,7 @@ SIL Guidelines and Processes.
 <title>
 S1
 </title>
-<path class="border" d="M341,202 L569,202 L555,248 L327,248 z" fill="none" stroke="black" stroke-width="1"/>
+<path class="border" d="M341,202 L569,202 L555,248 L327,248 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="348" y="221">
 S1
 </text>
@@ -127,7 +127,7 @@ Argument over each identified hazard.
 <title>
 C6
 </title>
-<path class="border" d="M874,202 L1044,202 C1054,202,1054,248,1044,248 L874,248 C864,248,864,202,874,202" fill="none" stroke="black" stroke-width="1"/>
+<path class="border" d="M874,202 L1044,202 C1054,202,1054,248,1044,248 L874,248 C864,248,864,202,874,202" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="881" y="221">
 C6
 </text>
@@ -139,7 +139,7 @@ Identified software hazards.
 <title>
 S2
 </title>
-<path class="border" d="M1101,202 L1489,202 L1475,248 L1087,248 z" fill="none" stroke="black" stroke-width="1"/>
+<path class="border" d="M1101,202 L1489,202 L1475,248 L1087,248 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="1108" y="221">
 S2
 </text>
@@ -166,7 +166,7 @@ J
 <title>
 G2.1
 </title>
-<path class="border" d="M20,298 L214,298 L214,344 L20,344 z" fill="none" stroke="black" stroke-width="1"/>
+<path class="border" d="M20,298 L214,298 L214,344 L20,344 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="27" y="317">
 G2.1
 </text>
@@ -178,7 +178,7 @@ Hazard H1 has been eliminated.
 <title>
 G2.2
 </title>
-<path class="border" d="M254,298 L578,298 L578,344 L254,344 z" fill="none" stroke="black" stroke-width="1"/>
+<path class="border" d="M254,298 L578,298 L578,344 L254,344 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="261" y="317">
 G2.2
 </text>
@@ -190,7 +190,7 @@ Probability of Hazard H2 occuring &amp;lt; 1x10-6 per year.
 <title>
 G2.3
 </title>
-<path class="border" d="M618,298 L942,298 L942,344 L618,344 z" fill="none" stroke="black" stroke-width="1"/>
+<path class="border" d="M618,298 L942,298 L942,344 L618,344 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="625" y="317">
 G2.3
 </text>
@@ -202,7 +202,7 @@ Probability of Hazard H3 occuring &amp;lt; 1x10-3 per year.
 <title>
 G3.1
 </title>
-<path class="border" d="M982,298 L1262,298 L1262,344 L982,344 z" fill="none" stroke="black" stroke-width="1"/>
+<path class="border" d="M982,298 L1262,298 L1262,344 L982,344 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="989" y="317">
 G3.1
 </text>
@@ -214,7 +214,7 @@ Primary Protection System Developed to SIL 4.
 <title>
 G3.2
 </title>
-<path class="border" d="M1302,298 L1608,298 L1608,344 L1302,344 z" fill="none" stroke="black" stroke-width="1"/>
+<path class="border" d="M1302,298 L1608,298 L1608,344 L1302,344 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="1309" y="317">
 G3.2
 </text>

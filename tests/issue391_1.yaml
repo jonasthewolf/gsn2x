@@ -1,0 +1,6 @@
+G0:
+  text: G0
+  supportedBy: [S1]
+S1:
+  text: S1
+  supportedBy: [G1]
