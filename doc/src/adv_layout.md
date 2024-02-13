@@ -28,7 +28,9 @@ G1:
     lines
 ```
 
-Alternatively, you can use the `-w` option and provide a global shorter number for the number of characters after which the line is wrapped. Please note that wrapping is done if a whitespace is detected after the given number of characters.
+Alternatively, you can use the `-w` option and provide a global shorter number for the number of characters after which the line is wrapped. 
+An optional `wordWrap` can be used for an element to individually define the limit for word wrapping.
+Please note that wrapping is done if a whitespace is detected after the given number of characters.
 
 ## Placement of elements 
 
