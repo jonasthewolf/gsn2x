@@ -19,7 +19,7 @@
 <title>
 G1
 </title>
-<path class="border" d="M20,20 L182,20 L182,246 L20,246 z" fill="none" stroke="black" stroke-width="1"/>
+<path class="border" d="M20,20 L182,20 L182,246 L20,246 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="27" y="39">
 G1
 </text>

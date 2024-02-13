@@ -20,7 +20,7 @@
 <title>
 S1
 </title>
-<path class="border" d="M27,20 L161,20 L147,66 L13,66 z" fill="none" stroke="black" stroke-width="1"/>
+<path class="border" d="M27,20 L161,20 L147,66 L13,66 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="35" y="39">
 S1
 </text>
@@ -33,7 +33,7 @@ S1
 <title>
 G1
 </title>
-<path class="border" d="M35,106 L139,106 L139,158 L35,158 z" fill="none" stroke="black" stroke-width="1"/>
+<path class="border" d="M35,106 L139,106 L139,158 L35,158 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="42" y="125">
 G1
 </text>

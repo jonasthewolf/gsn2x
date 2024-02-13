@@ -19,7 +19,7 @@
 <title>
 G0
 </title>
-<path class="border" d="M53,20 L157,20 L157,66 L53,66 z" fill="none" stroke="black" stroke-width="1"/>
+<path class="border" d="M53,20 L157,20 L157,66 L53,66 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="60" y="39">
 G0
 </text>
@@ -31,7 +31,7 @@ G0
 <title>
 S1
 </title>
-<path class="border" d="M45,106 L179,106 L165,152 L31,152 z" fill="none" stroke="black" stroke-width="1"/>
+<path class="border" d="M45,106 L179,106 L165,152 L31,152 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="53" y="125">
 S1
 </text>

@@ -19,7 +19,7 @@
 <title>
 GXxxxxxx-XXXxxxxxxxxx
 </title>
-<path class="border" d="M144,27 L374,27 L374,87 L144,87 z" fill="none" stroke="black" stroke-width="1"/>
+<path class="border" d="M144,27 L374,27 L374,87 L144,87 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="151" y="46">
 GXxxxxxx-XXXxxxxxxxxx
 </text>
@@ -34,7 +34,7 @@ xxxxxxxxxxx xx xxxxxxxxxxxxxx xxxxx.
 <title>
 GXxxxxxx-XxxxXxxxxxxxxx
 </title>
-<path class="border" d="M555,20 L769,20 L769,94 L555,94 z" fill="none" stroke="black" stroke-width="1"/>
+<path class="border" d="M555,20 L769,20 L769,94 L555,94 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="562" y="39">
 GXxxxxxx-XxxxXxxxxxxxxx
 </text>
@@ -52,7 +52,7 @@ xxxxxxxxxxxxxx xx xxxxx.
 <title>
 GXxxxxxx-XXXxxxxxxxxx-3
 </title>
-<path class="border" d="M24,134 L226,134 L226,194 L24,194 z" fill="none" stroke="black" stroke-width="1"/>
+<path class="border" d="M24,134 L226,134 L226,194 L24,194 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="31" y="153">
 GXxxxxxx-XXXxxxxxxxxx-3
 </text>
@@ -67,7 +67,7 @@ Xxxxxx (XXXX) xx xxxxxxxxxxx.
 <title>
 GXxxxxxx-XXXxxxxxxxxx-1
 </title>
-<path class="border" d="M281,134 L507,134 L507,194 L281,194 z" fill="none" stroke="black" stroke-width="1"/>
+<path class="border" d="M281,134 L507,134 L507,194 L281,194 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="288" y="153">
 GXxxxxxx-XXXxxxxxxxxx-1
 </text>
@@ -82,7 +82,7 @@ xxx xxxxxxxxxxx.
 <title>
 GXxxxxxx-XXXxxxxxxxxx-2
 </title>
-<path class="border" d="M547,134 L777,134 L777,194 L547,194 z" fill="none" stroke="black" stroke-width="1"/>
+<path class="border" d="M547,134 L777,134 L777,194 L547,194 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="554" y="153">
 GXxxxxxx-XXXxxxxxxxxx-2
 </text>
