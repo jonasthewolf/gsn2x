@@ -46,7 +46,7 @@ A
 <title>
 G1
 </title>
-<path class="border" d="M187,48 L291,48 L291,94 L187,94 z" fill="none" stroke="black" stroke-width="1"/>
+<path class="border" d="M187,48 L291,48 L291,94 L187,94 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="194" y="67">
 G1
 </text>
@@ -58,7 +58,7 @@ Main Goal
 <title>
 S1
 </title>
-<path class="border" d="M179,162 L313,162 L299,208 L165,208 z" fill="none" stroke="black" stroke-width="1"/>
+<path class="border" d="M179,162 L313,162 L299,208 L165,208 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="187" y="181">
 S1
 </text>
@@ -70,7 +70,7 @@ Divide and Conquer
 <title>
 G2
 </title>
-<path class="border" d="M20,262 L124,262 L124,314 L20,314 z" fill="none" stroke="black" stroke-width="1"/>
+<path class="border" d="M20,262 L124,262 L124,314 L20,314 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="27" y="281">
 G2
 </text>

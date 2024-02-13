@@ -23,7 +23,7 @@
 <title>
 S1
 </title>
-<path class="border" d="M159,37 L293,37 L279,83 L145,83 z" fill="none" stroke="black" stroke-width="1"/>
+<path class="border" d="M159,37 L293,37 L279,83 L145,83 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="167" y="56">
 S1
 </text>
@@ -93,7 +93,7 @@ Sub3
 <title>
 G3
 </title>
-<path class="border" d="M144,168 L294,168 L294,214 L144,214 z" fill="none" stroke="black" stroke-width="1"/>
+<path class="border" d="M144,168 L294,168 L294,214 L144,214 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="151" y="187">
 G3
 </text>
