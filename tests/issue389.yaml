@@ -1,0 +1,33 @@
+module:
+  name: Tier-2 Verification Activities
+  brief: Verification Activities
+G11:
+  text: xxxxxxxxxxxx xxxxxxxxxx xx xxxxxxxxxxxx xx xxxxxxx xxx xxxxx.
+  supportedBy: [G11.1, G11.2, G11.3, G11.4]
+  inContextOf: [J11]
+J11:
+  text: "xxxxxxxxxx xxxxxxxxxx (xxxx xx xxxxxxxxxxx-xxxxxxx xxx xxxx-xxxxxxx) xxx \nxxx xxxxxxxxx xxxxx xxxx xxxx xx xx xxxxxxxxx xx xxxx-x xxxxx (x.x. xxxxx xxxxxxxxxxxxx xx xxxxxxx).\n"
+  wordWrap: 40
+G11.1:
+  text: xxxxxx xxxx xxxxxxxx xx xxxxxxxxx.
+  supportedBy: [Sn11.1]
+Sn11.1:
+  text: xxxxx xxxx xxxxxxx.
+G11.2:
+  text: xxxxxxxx xxxxxxxxxx xxxxxxx xx xxxxxxxxx.
+  supportedBy: [Sn11.2]
+  inContextOf: [C11.2]
+Sn11.2:
+  text: (xxxxxxxxx) xxxx xxxxxxx.
+C11.2:
+  text: xxxxxxxx xxxx xxxxxxx (x.x. xxxx) xxx xxxx xx xxxxxxxxxx.
+G11.3:
+  text: xxxx xxxxxxx xxx xxxxxxxxx.
+  supportedBy: [Sn11.3]
+Sn11.3:
+  text: xxxxxx xxx xxxxxx.
+G11.4:
+  text: xxxxxxxxxxxx xx xxxxxxx.
+  supportedBy: [Sn11.4]
+Sn11.4:
+  text: xxx xxxxxxxxxxx xxxx xxxxxxxx (xxxxxxx xx xxxxxxxxxxxxx xxxxxxxxxx xxxxxx).

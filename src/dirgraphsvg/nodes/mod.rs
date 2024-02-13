@@ -629,7 +629,7 @@ fn node_text_from_node_and_layers(
 ) -> String {
     use crate::dirgraphsvg::util::wrap_words::wrap_words;
 
-    let mut node_text = if let Some(char_wrap) = char_wrap {
+    let mut node_text = if let Some(char_wrap) = gsn_node.word_wrap.or(char_wrap) {
         wrap_words(&gsn_node.text, char_wrap, "\n")
     } else {
         gsn_node.text.to_owned()

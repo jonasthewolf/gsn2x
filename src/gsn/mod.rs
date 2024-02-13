@@ -84,6 +84,7 @@ pub struct GsnNode {
     pub(crate) rank_increment: Option<usize>,
     pub(crate) horizontal_index: Option<HorizontalIndex>,
     pub(crate) node_type: Option<GsnNodeType>,
+    pub(crate) word_wrap: Option<u32>,
     #[serde(flatten)]
     pub(crate) additional: BTreeMap<String, String>,
     #[serde(skip_deserializing)]
