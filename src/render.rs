@@ -200,6 +200,8 @@ pub fn render_architecture(
                     .as_ref()
                     .map(|m| m.to_owned())
                     .unwrap_or_else(|| "".to_owned()),
+                horizontal_index: module.meta.horizontal_index,
+                rank_increment: module.meta.rank_increment,
                 ..Default::default()
             };
             let module_url = Some({

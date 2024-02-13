@@ -113,5 +113,7 @@ module:
 
 The module information is printed as part of a legend for the argument view.
 
+To influence the position in the architecture view, you can use the `horizontalIndex` and `rankIncrement` as you would for elements in the Argument view (see [Layout of elements](adv_layout.md#placement-of-elements) ).
+
 You can use the `-G` option to suppress the legend completely, 
 or the `-g` option to limit it to `name`, `brief` and the time and date of generation of the SVG.

@@ -201,6 +201,8 @@ pub struct ModuleInformation {
     pub(crate) name: String,
     pub(crate) brief: Option<String>,
     pub(crate) extends: Option<Vec<ExtendsModule>>,
+    pub(crate) horizontal_index: Option<HorizontalIndex>,
+    pub(crate) rank_increment: Option<usize>,
     #[serde(flatten)]
     pub(crate) additional: BTreeMap<String, String>,
 }
