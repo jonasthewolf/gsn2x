@@ -18,6 +18,7 @@
 <style>
 @import url(https://github.com/jonasthewolf/gsn2x/blob/3439402d093ba54af4771b295e78f2488bd1b978/examples/modular/modular.css)
 </style>
+<a href="./main.gsn.svg#node_S1">
 <g class="gsn_module_Main gsnelem gsnstgy" id="node_S1">
 <title>
 S1
@@ -30,6 +31,7 @@ S1
 Divide and Conquer
 </text>
 </g>
+</a>
 <g class="gsn_module_Sub1 gsnelem gsnasmp" id="node_A1">
 <title>
 A1
