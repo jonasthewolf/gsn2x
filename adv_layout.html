@@ -243,17 +243,49 @@ to the very right of the graph.</p>
 <p>The horizontal index can also be applied to <code>inContextOf</code> elements.
 You would typically use an absolute index with either <code>0</code> or <code>last</code> to place them
 either left or right of the element they are referenced from.</p>
+<p><code>horizontalIndex</code> and <code>rankIncrement</code> can also be used for <code>module</code> elements.
+They will be used for the Architecture View then (see <a href="modular_extension.html#architecture-view">Modular extension</a>).</p>
 <h3 id="troubleshooting"><a class="header" href="#troubleshooting">Troubleshooting</a></h3>
 <p>There can be situations (e.g. a n:m relation between goals and solutions)
 that lead to weird looking graphs.
 You may even encounter the following message
-<code>Rendering a diagram took too many iterations. See README.md for hints how to solve this situation.</code>.
+<code>Diagram took too many iterations ({run}). See documentation (https://jonasthewolf.github.io/gsn2x/) for hints how to solve this situation.</code>
 In such cases, please use the mechanisms described above to support
 the algorithm in ranking the elements more sensibly.</p>
 <p>If you have trouble doing so, please feel free to create an issue or
 start a discussion on the GitHub site.
 The issue template on GitHub shows you how to remove intellectual property
 from the files that I would ask for then.</p>
+<h4 id="example"><a class="header" href="#example">Example</a></h4>
+<p>The following small example will yield the above mentioned message:</p>
+<pre><code class="language-yaml">G1:
+  text: First
+  supportedBy: [Sn2]
+
+G2:
+  text: Second
+  supportedBy: [Sn1]
+
+Sn1: 
+  text: Solution to Second
+
+Sn2: 
+  text: Solution to First
+</code></pre>
+<p>The created SVG is hardly readable:</p>
+<p><img src="examples/entangled.gsn.svg" alt="entangled example" /></p>
+<p>The reason for this is, that <code>G1</code> is lexicographically ordered before <code>G2</code>, but <code>Sn2</code> after <code>Sn1</code>.
+<code>Sn1</code> thus "pushes" <code>Sn2</code> to the right in each iteration of the layout algorithm.</p>
+<p>The problem is easily solvable in different ways:</p>
+<ol>
+<li>Rename <code>G1</code> and/or <code>G2</code> to change their lexicographical order.</li>
+<li>Rename <code>Sn1</code> and/or <code>Sn2</code> to change their lexicographical order.</li>
+<li>Apply <code>horizontalIndex: absolute: last</code> to <code>G1</code> <strong>or</strong> <code>Sn1</code>.</li>
+<li>Apply <code>horizontalIndex: absolute: 0</code> to <code>G2</code> <strong>or</strong> <code>Sn2</code>.</li>
+<li>Apply <code>horizontalIndex: relative: +1</code> to <code>G1</code> <strong>or</strong> <code>Sn1</code>.</li>
+<li>Apply <code>horizontalIndex: relative: -1</code> to <code>G2</code> <strong>or</strong> <code>Sn2</code>.</li>
+</ol>
+<p>The order above can be considered - as a general rule of thumb - as a suggested order when trying to resolve layout issues.</p>
 
                     </main>
 

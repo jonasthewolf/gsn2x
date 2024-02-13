@@ -267,6 +267,7 @@ C1:
 <tr><td>nodeType<sup class="footnote-reference"><a href="#nt">3</a></sup></td><td>yes</td></tr>
 <tr><td>rankIncrement<sup class="footnote-reference"><a href="#nl">4</a></sup></td><td>yes</td></tr>
 <tr><td>horizontalIndex<sup class="footnote-reference"><a href="#nl">4</a></sup></td><td>yes</td></tr>
+<tr><td>wordWrap<sup class="footnote-reference"><a href="#nw">5</a></sup></td><td>yes</td></tr>
 </tbody></table>
 </div>
 <div class="footnote-definition" id="nu"><sup class="footnote-definition-label">1</sup>
@@ -281,6 +282,10 @@ C1:
 <div class="footnote-definition" id="nt"><sup class="footnote-definition-label">3</sup>
 <p>When providing a <code>nodeType</code> you do not need to follow the standard prefix scheme above.
 Just give <code>Goal</code>, <code>Assumption</code>, <code>Justification</code>, <code>Solution</code>, <code>Context</code> and <code>Strategy</code> to give the type of the element.</p>
+</div>
+<div class="footnote-definition" id="nw"><sup class="footnote-definition-label">5</sup>
+<p>If the <code>wordWrap</code> attribute for an element is given, it will be used instead of the global option given
+at the command line.</p>
 </div>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="checks"><a class="header" href="#checks">Checks</a></h1>
 <h2 id="validation-checks"><a class="header" href="#validation-checks">Validation checks</a></h2>
@@ -395,22 +400,54 @@ to the very right of the graph.</p>
 <p>The horizontal index can also be applied to <code>inContextOf</code> elements.
 You would typically use an absolute index with either <code>0</code> or <code>last</code> to place them
 either left or right of the element they are referenced from.</p>
+<p><code>horizontalIndex</code> and <code>rankIncrement</code> can also be used for <code>module</code> elements.
+They will be used for the Architecture View then (see <a href="modular_extension.html#architecture-view">Modular extension</a>).</p>
 <h3 id="troubleshooting"><a class="header" href="#troubleshooting">Troubleshooting</a></h3>
 <p>There can be situations (e.g. a n:m relation between goals and solutions)
 that lead to weird looking graphs.
 You may even encounter the following message
-<code>Rendering a diagram took too many iterations. See README.md for hints how to solve this situation.</code>.
+<code>Diagram took too many iterations ({run}). See documentation (https://jonasthewolf.github.io/gsn2x/) for hints how to solve this situation.</code>
 In such cases, please use the mechanisms described above to support
 the algorithm in ranking the elements more sensibly.</p>
 <p>If you have trouble doing so, please feel free to create an issue or
 start a discussion on the GitHub site.
 The issue template on GitHub shows you how to remove intellectual property
 from the files that I would ask for then.</p>
+<h4 id="example-1"><a class="header" href="#example-1">Example</a></h4>
+<p>The following small example will yield the above mentioned message:</p>
+<pre><code class="language-yaml">G1:
+  text: First
+  supportedBy: [Sn2]
+
+G2:
+  text: Second
+  supportedBy: [Sn1]
+
+Sn1: 
+  text: Solution to Second
+
+Sn2: 
+  text: Solution to First
+</code></pre>
+<p>The created SVG is hardly readable:</p>
+<p><img src="examples/entangled.gsn.svg" alt="entangled example" /></p>
+<p>The reason for this is, that <code>G1</code> is lexicographically ordered before <code>G2</code>, but <code>Sn2</code> after <code>Sn1</code>.
+<code>Sn1</code> thus "pushes" <code>Sn2</code> to the right in each iteration of the layout algorithm.</p>
+<p>The problem is easily solvable in different ways:</p>
+<ol>
+<li>Rename <code>G1</code> and/or <code>G2</code> to change their lexicographical order.</li>
+<li>Rename <code>Sn1</code> and/or <code>Sn2</code> to change their lexicographical order.</li>
+<li>Apply <code>horizontalIndex: absolute: last</code> to <code>G1</code> <strong>or</strong> <code>Sn1</code>.</li>
+<li>Apply <code>horizontalIndex: absolute: 0</code> to <code>G2</code> <strong>or</strong> <code>Sn2</code>.</li>
+<li>Apply <code>horizontalIndex: relative: +1</code> to <code>G1</code> <strong>or</strong> <code>Sn1</code>.</li>
+<li>Apply <code>horizontalIndex: relative: -1</code> to <code>G2</code> <strong>or</strong> <code>Sn2</code>.</li>
+</ol>
+<p>The order above can be considered - as a general rule of thumb - as a suggested order when trying to resolve layout issues.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="additional-layers"><a class="header" href="#additional-layers">Additional layers</a></h1>
 <p>Additional attributes of an element are ignored by default.
 With the command line option <code>-l</code> or <code>--layers</code> you can enable the output of those additional attributes.
 By using this feature different views on the GSN can be generated.</p>
-<h2 id="example-1"><a class="header" href="#example-1">Example</a></h2>
+<h2 id="example-2"><a class="header" href="#example-2">Example</a></h2>
 <pre><code class="language-yaml">G1:
   text: This is a Goal
   supportedBy: [S1]
@@ -467,7 +504,7 @@ If an absolute path is used, the stylesheet will be copied to the root of the ou
 <p>You can assign additional classes by adding the <code>classes:</code> attribute. It must be a list of classes you want to assign.
 Additional layers will be added as CSS classes, too. A <code>layer1</code> will e.g. be added as <code>gsnlay_layer1</code>.</p>
 <p>For more information on how to use CSS with SVGs, see <a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/SVG_and_CSS">here</a>.</p>
-<h2 id="example-2"><a class="header" href="#example-2">Example</a></h2>
+<h2 id="example-3"><a class="header" href="#example-3">Example</a></h2>
 <p>The GSN YAML:</p>
 <pre><code class="language-yaml">
 G1:
@@ -554,7 +591,7 @@ THe architecture view is navigable to the module argument view.</p>
 <p>The architecture view only contains the links to the individual module files, if they actually exist when generating the architecture view.</p>
 <p><img src="examples/modular/architecture.svg" alt="example architecture" /></p>
 <p>See <a href="examples/modular/architecture.svg">example</a> here.</p>
-<h2 id="example-3"><a class="header" href="#example-3">Example:</a></h2>
+<h2 id="example-4"><a class="header" href="#example-4">Example:</a></h2>
 <pre><code>gsn2x -f full.svg -a arch.svg main.yml sub1.yml sub3.yml
 </code></pre>
 <p>This will generate the argument view for each module, the complete view (<code>-f full.svg</code>) of all modules and the architecture view (<code>-a arch.svg</code>). <!-- In the complete view, the elements of the `sub1` module will be represented by a module. --></p>
@@ -601,6 +638,7 @@ module:
 
 </code></pre>
 <p>The module information is printed as part of a legend for the argument view.</p>
+<p>To influence the position in the architecture view, you can use the <code>horizontalIndex</code> and <code>rankIncrement</code> as you would for elements in the Argument view (see <a href="adv_layout.html#placement-of-elements">Layout of elements</a> ).</p>
 <p>You can use the <code>-G</code> option to suppress the legend completely,
 or the <code>-g</code> option to limit it to <code>name</code>, <code>brief</code> and the time and date of generation of the SVG.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="interfacing"><a class="header" href="#interfacing">Interfacing</a></h1>
