@@ -3,11 +3,13 @@ use crate::dirgraphsvg::{escape_node_id, nodes::SvgNode};
 use crate::file_utils::{get_filename, get_relative_path, set_extension, translate_to_output_path};
 use crate::gsn::{GsnNode, GsnNodeType, Module};
 use anyhow::Result;
-use chrono::Utc;
 use clap::ArgMatches;
+use time::format_description::well_known::Iso8601;
+use time::OffsetDateTime;
 
 use std::collections::BTreeMap;
 use std::io::Write;
+use std::time::SystemTime;
 
 #[derive(Default, Eq, PartialEq)]
 pub enum RenderLegend {
@@ -401,7 +403,8 @@ pub fn render_argument(
 
     // Add meta information if requested
     if render_options.legend != RenderLegend::No {
-        let mut meta_info = vec![format!("Generated on: {}", Utc::now())];
+        let time: OffsetDateTime = SystemTime::now().into();
+        let mut meta_info = vec![format!("Generated on: {}", time.format(&Iso8601::DEFAULT)?)];
         if let Some(meta) = &modules.get(module_name).map(|x| &x.meta) {
             meta_info.insert(0, format!("Module: {}", meta.name));
             if let Some(brief) = &meta.brief {
