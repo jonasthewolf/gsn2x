@@ -150,7 +150,8 @@ where
         let mut stack = self.root_nodes.iter().map(|&n| (n, 0)).collect::<Vec<_>>();
         let mut ancestors = Vec::new();
         let mut depth = 0;
-        while let Some((p_id, rdepth)) = stack.pop() {
+        'cycle_found: {
+            while let Some((p_id, rdepth)) = stack.pop() {
             // Jump back to current ancestor
             if rdepth < depth {
                 ancestors.truncate(rdepth);
@@ -176,13 +177,14 @@ where
                         // Add nodes for reporting the found cycle
                         reported_ancestors.insert(0, child_node);
                         reported_ancestors.push(child_node);
-                        return Some((p_id, reported_ancestors));
+                        break 'cycle_found Some((p_id, reported_ancestors));
                     }
                     stack.push((&child_node, depth));
                 }
             }
         }
         None
+    }
     }
 
     ///
