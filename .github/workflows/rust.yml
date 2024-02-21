@@ -28,8 +28,12 @@ jobs:
         shared-key: ci
     - name: Annotate commit with clippy warnings
       run: cargo clippy --all-features --all --all-targets --tests -- -Dwarnings
+    - name: Check for correct formatting
+      run: cargo fmt --check
     - name: Cargo deny
       uses: EmbarkStudios/cargo-deny-action@v1
+      with:
+        command: check all
   
   build_docs:
       runs-on: ubuntu-latest
@@ -45,6 +49,7 @@ jobs:
         - run: cargo install mdbook
         - run: mdbook build doc
         - uses: JamesIves/github-pages-deploy-action@v4
+          if: ${{ github.event_name != 'pull_request' || startsWith(github.ref, 'refs/tags/') }} 
           with:
             branch: gh-pages # The branch the action should deploy to.
             folder: doc/book # The folder the action should deploy.
@@ -64,8 +69,6 @@ jobs:
       uses: Swatinem/rust-cache@v2
       with:
         shared-key: ci
-    - uses: ericcornelissen/git-tag-annotation-action@v2
-      id: tag_data
     - name: Patch version for pre-release
       id: githash
       if: ${{ !startsWith(github.ref, 'refs/tags/') }}
@@ -126,11 +129,11 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - uses: ericcornelissen/git-tag-annotation-action@v2
-      id: tag_data
     - name: Get the version
       id: get_version
       run: echo "name=VERSION::${GITHUB_REF/refs\/tags\//}" > $GITHUB_OUTPUT
+    - name: Check if version in Cargo.toml and tag are the same
+      run: awk -v version=${{ steps.get_version.outputs.VERSION }} '{ if (match($0, /^version *= *"(.*)"/, m)) exit m[1] == version }'
     - name: Download MacOS artifacts
       uses: actions/download-artifact@v4
       with:

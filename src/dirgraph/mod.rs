@@ -152,39 +152,39 @@ where
         let mut depth = 0;
         'cycle_found: {
             while let Some((p_id, rdepth)) = stack.pop() {
-            // Jump back to current ancestor
-            if rdepth < depth {
-                ancestors.truncate(rdepth);
-                depth = rdepth;
-            }
-            // Remember the current node if it has no other real children
-            if self
-                .get_real_children(p_id)
-                .iter()
-                .filter(|&&x| !self.get_real_children(x).is_empty())
-                .count()
-                > 0
-            {
-                depth += 1;
-                ancestors.push(p_id);
-            }
-            for &child_node in self.get_real_children(p_id).iter() {
-                if !self.get_real_children(child_node).is_empty() {
-                    if ancestors.contains(&child_node) {
-                        let mut reported_ancestors = Vec::from(
-                            ancestors.rsplit(|&x| x == child_node).next().unwrap(), // unwrap is ok, since it is checked above that `ancestors` contains `child_node`
-                        );
-                        // Add nodes for reporting the found cycle
-                        reported_ancestors.insert(0, child_node);
-                        reported_ancestors.push(child_node);
-                        break 'cycle_found Some((p_id, reported_ancestors));
+                // Jump back to current ancestor
+                if rdepth < depth {
+                    ancestors.truncate(rdepth);
+                    depth = rdepth;
+                }
+                // Remember the current node if it has no other real children
+                if self
+                    .get_real_children(p_id)
+                    .iter()
+                    .filter(|&&x| !self.get_real_children(x).is_empty())
+                    .count()
+                    > 0
+                {
+                    depth += 1;
+                    ancestors.push(p_id);
+                }
+                for &child_node in self.get_real_children(p_id).iter() {
+                    if !self.get_real_children(child_node).is_empty() {
+                        if ancestors.contains(&child_node) {
+                            let mut reported_ancestors = Vec::from(
+                                ancestors.rsplit(|&x| x == child_node).next().unwrap(), // unwrap is ok, since it is checked above that `ancestors` contains `child_node`
+                            );
+                            // Add nodes for reporting the found cycle
+                            reported_ancestors.insert(0, child_node);
+                            reported_ancestors.push(child_node);
+                            break 'cycle_found Some((p_id, reported_ancestors));
+                        }
+                        stack.push((&child_node, depth));
                     }
-                    stack.push((&child_node, depth));
                 }
             }
+            None
         }
-        None
-    }
     }
 
     ///
