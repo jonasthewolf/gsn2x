@@ -133,7 +133,7 @@ jobs:
       id: get_version
       run: echo "name=VERSION::${GITHUB_REF/refs\/tags\//}" > $GITHUB_OUTPUT
     - name: Check if version in Cargo.toml and tag are the same
-      run: awk -v version=${{ steps.get_version.outputs.VERSION }} '{ if (match($0, /^version *= *"(.*)"/, m)) exit m[1] == version }'
+      run: awk -v version="${{ steps.get_version.outputs.VERSION }}" '{ if (match($0, /^version *= *"(.*)"/, m)) exit m[1] == version }'
     - name: Download MacOS artifacts
       uses: actions/download-artifact@v4
       with:
