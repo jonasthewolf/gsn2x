@@ -26,6 +26,13 @@ jobs:
       uses: Swatinem/rust-cache@v2
       with:
         shared-key: ci
+    - name: Get the version
+      id: get_version
+      if: ${{ startsWith(github.ref, 'refs/tags/') }}
+      run: echo "name=VERSION::${GITHUB_REF/refs\/tags\//}" > $GITHUB_OUTPUT
+    - name: Check if version in Cargo.toml and tag are the same
+      if: ${{ startsWith(github.ref, 'refs/tags/') }}
+      run: awk -v version="${{ steps.get_version.outputs.VERSION }}" '{ if (match($0, /^version *= *"(.*)"/, m)) exit ("v" m[1]) == version }'
     - name: Annotate commit with clippy warnings
       run: cargo clippy --all-features --all --all-targets --tests -- -Dwarnings
     - name: Check for correct formatting
@@ -132,8 +139,6 @@ jobs:
     - name: Get the version
       id: get_version
       run: echo "name=VERSION::${GITHUB_REF/refs\/tags\//}" > $GITHUB_OUTPUT
-    - name: Check if version in Cargo.toml and tag are the same
-      run: awk -v version="${{ steps.get_version.outputs.VERSION }}" '{ if (match($0, /^version *= *"(.*)"/, m)) exit m[1] == version }'
     - name: Download MacOS artifacts
       uses: actions/download-artifact@v4
       with:
