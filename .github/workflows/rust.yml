@@ -32,7 +32,7 @@ jobs:
       run: echo "name=VERSION::${GITHUB_REF/refs\/tags\//}" > $GITHUB_OUTPUT
     - name: Check if version in Cargo.toml and tag are the same
       if: ${{ startsWith(github.ref, 'refs/tags/') }}
-      run: awk -v version="${{ steps.get_version.outputs.VERSION }}" '{ if (match($0, /^version *= *"(.*)"/, m)) exit ("v" m[1]) == version }'
+      run: awk -v version="${{ steps.get_version.outputs.VERSION }}" '{ if (match($0, /^version *= *"(.*)"/, m)) exit ("v" m[1]) != version }'
     - name: Annotate commit with clippy warnings
       run: cargo clippy --all-features --all --all-targets --tests -- -Dwarnings
     - name: Check for correct formatting
