@@ -31,10 +31,10 @@ jobs:
       run: |
         echo -n "CARGO_VERSION=$(sed -n -r 's/^version[[:blank:]]*=[[:blank:]]"(.*)"/v\1/p' Cargo.toml)" >> $GITHUB_ENV
     - name: Check if version in Cargo.toml and tag are the same
-      
+      if: ${{ github.ref_name != env.CARGO_VERSION }}
       run: |
           echo $CARGO_VERSION
-          echo $GITHUB_REFNAME
+          echo ${{ github.ref_name }}
           exit 1
     - name: Annotate commit with clippy warnings
       run: cargo clippy --all-features --all --all-targets --tests -- -Dwarnings
