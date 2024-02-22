@@ -33,8 +33,7 @@ jobs:
     - name: Check if version in Cargo.toml and tag are the same
       if: ${{ github.ref_name != env.CARGO_VERSION }}
       run: |
-          echo $CARGO_VERSION
-          echo ${{ github.ref_name }}
+          echo "$CARGO_VERSION is not ${{ github.ref_name }}"
           exit 1
     - name: Annotate commit with clippy warnings
       run: cargo clippy --all-features --all --all-targets --tests -- -Dwarnings
