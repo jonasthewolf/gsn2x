@@ -30,7 +30,7 @@ jobs:
       run: |
         echo -n "CARGO_VERSION=$(sed -n -r 's/^version[[:blank:]]*=[[:blank:]]"(.*)"/v\1/p' Cargo.toml)" >> $GITHUB_ENV
     - name: Check if version in Cargo.toml and tag are the same
-      if: ${{ github.ref_name != env.CARGO_VERSION }}
+      if: ${{ startsWith(github.ref, 'refs/tags/') && github.ref_name != env.CARGO_VERSION }}
       run: |
           echo "$CARGO_VERSION is not ${{ github.ref_name }}"
           exit 1
