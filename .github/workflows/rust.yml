@@ -28,7 +28,10 @@ jobs:
         shared-key: ci
     - name: Check if version in Cargo.toml and tag are the same
       if: ${{ startsWith(github.ref, 'refs/tags/') }}
-      run: awk '{ if (match($0, /^version *= *"(.*)"/, m)) exit ("v" m[1]) != ENVIRON["GITHUB_REFNAME"] }' Cargo.toml
+      run: |
+        echo "CARGO_VERSION=$(sed -n -r 's/^version[[:blank:]]*=[[:blank:]]"(.*)"/v\1/p' Cargo.toml)" >> GITHUB_ENV
+        if [ "$CARGO_VERSION" != "$GITHUB_REFNAME" ]; then exit 1; fi
+        exit 0
     - name: Annotate commit with clippy warnings
       run: cargo clippy --all-features --all --all-targets --tests -- -Dwarnings
     - name: Check for correct formatting
