@@ -17,9 +17,7 @@
 </marker>
 <a href="./main.gsn.svg">
 <g class="gsn_module_ gsnelem gsnmodule" id="node_Main">
-<title>
-Main
-</title>
+<title>Main</title>
 <path class="border" d="M20,20 h30 v10 L124,30 L124,74 L20,74 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="27" y="49">
 Main
@@ -28,9 +26,7 @@ Main
 </a>
 <a href="./sub1.gsn.svg">
 <g class="gsn_module_ gsnelem gsnmodule" id="node_Sub1">
-<title>
-Sub1
-</title>
+<title>Sub1</title>
 <path class="border" d="M20,114 h30 v10 L124,124 L124,168 L20,168 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="27" y="143">
 Sub1
@@ -39,9 +35,7 @@ Sub1
 </a>
 <a href="./sub3.gsn.svg">
 <g class="gsn_module_ gsnelem gsnmodule" id="node_Sub3">
-<title>
-Sub3
-</title>
+<title>Sub3</title>
 <path class="border" d="M20,208 h30 v10 L124,218 L124,262 L20,262 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="27" y="237">
 Sub3
