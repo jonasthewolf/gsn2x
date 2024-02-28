@@ -16,9 +16,7 @@
 <polyline fill="none" points="0 0, 10 4.5, 0 9, 0 0" stroke="black" stroke-width="1"/>
 </marker>
 <g class="gsn_module_Sub1 gsnelem gsnasmp" id="node_A1">
-<title>
-A1
-</title>
+<title>A1</title>
 <path class="border" d="M69,53 a39,33,0,1,0,78,0 a39,33,0,1,0,-78,0 z" fill="none" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="88" y="44">
 A1
@@ -31,9 +29,7 @@ A
 </text>
 </g>
 <g class="gsn_module_Main gsnelem gsngoal" id="node_G1">
-<title>
-G1
-</title>
+<title>G1</title>
 <path class="border" d="M187,30 L291,30 L291,76 L187,76 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="194" y="49">
 G1
@@ -43,9 +39,7 @@ Main Goal
 </text>
 </g>
 <g class="gsn_module_Main gsnelem gsnstgy" id="node_S1">
-<title>
-S1
-</title>
+<title>S1</title>
 <path class="border" d="M179,126 L313,126 L299,172 L165,172 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="187" y="145">
 S1
@@ -55,9 +49,7 @@ Divide and Conquer
 </text>
 </g>
 <g class="gsn_module_Main gsnelem gsngoal gsn_undeveloped" id="node_G2">
-<title>
-G2
-</title>
+<title>G2</title>
 <path class="border" d="M20,219 L124,219 L124,271 L20,271 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="27" y="238">
 G2
@@ -68,9 +60,7 @@ Divide
 <path d="M72,271 l5,5 l-5,5 l-5,-5 z" fill="none" stroke="black" stroke-width="1"/>
 </g>
 <g class="gsn_module_Main gsnelem gsnjust" id="node_J1">
-<title>
-J1
-</title>
+<title>J1</title>
 <path class="border" d="M164,245 a64,33,0,1,0,128,0 a64,33,0,1,0,-128,0 z" fill="none" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="190" y="236">
 J1
@@ -83,9 +73,7 @@ J
 </text>
 </g>
 <g class="gsn_module_Sub1 gsnelem gsngoal" id="node_G3">
-<title>
-G3
-</title>
+<title>G3</title>
 <path class="border" d="M332,222 L482,222 L482,268 L332,268 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="339" y="241">
 G3
@@ -95,9 +83,7 @@ Conquer the submodules
 </text>
 </g>
 <g class="gsn_module_Sub3 gsnelem gsnctxt" id="node_C2">
-<title>
-C2
-</title>
+<title>C2</title>
 <path class="border" d="M532,222 L636,222 C646,222,646,268,636,268 L532,268 C522,268,522,222,532,222" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="539" y="241">
 C2
@@ -107,9 +93,7 @@ Context 2
 </text>
 </g>
 <g class="gsn_module_Sub3 gsnelem gsnsltn" id="node_Sn1">
-<title>
-Sn1
-</title>
+<title>Sn1</title>
 <path class="border" d="M363,362 a44,44,0,1,0,88,0 a44,44,0,1,0,-88,0 z" fill="none" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="382" y="353">
 Sn1

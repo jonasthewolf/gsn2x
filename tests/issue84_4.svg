@@ -16,9 +16,7 @@
 <polyline fill="none" points="0 0, 10 4.5, 0 9, 0 0" stroke="black" stroke-width="1"/>
 </marker>
 <g class="gsn_module_tests_issue84_4_yaml gsnelem gsngoal" id="node_G1">
-<title>
-G1
-</title>
+<title>G1</title>
 <path class="border" d="M20,20 L124,20 L124,66 L20,66 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="27" y="39">
 G1
@@ -28,9 +26,7 @@ G1
 </text>
 </g>
 <g class="gsn_module_tests_issue84_4_yaml gsnelem gsngoal" id="node_G2">
-<title>
-G2
-</title>
+<title>G2</title>
 <path class="border" d="M20,115 L124,115 L124,161 L20,161 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="27" y="134">
 G2
@@ -40,9 +36,7 @@ G2
 </text>
 </g>
 <g class="gsn_module_tests_issue84_4_yaml gsnelem gsnsltn" id="node_Sn1">
-<title>
-Sn1
-</title>
+<title>Sn1</title>
 <path class="border" d="M164,138 a32,32,0,1,0,64,0 a32,32,0,1,0,-64,0 z" fill="none" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="188" y="129">
 Sn1
@@ -52,9 +46,7 @@ Sn1
 </text>
 </g>
 <g class="gsn_module_tests_issue84_4_yaml gsnelem gsngoal" id="node_G3">
-<title>
-G3
-</title>
+<title>G3</title>
 <path class="border" d="M20,210 L124,210 L124,256 L20,256 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="27" y="229">
 G3
@@ -64,9 +56,7 @@ G3
 </text>
 </g>
 <g class="gsn_module_tests_issue84_4_yaml gsnelem gsngoal" id="node_G4">
-<title>
-G4
-</title>
+<title>G4</title>
 <path class="border" d="M20,296 L124,296 L124,342 L20,342 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="27" y="315">
 G4

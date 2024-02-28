@@ -157,7 +157,7 @@ fn render_legend(
 ) {
     if let Some(meta) = &render_graph.meta_information {
         let mut g = create_group("gsn_module", &["gsnmodule".to_owned()]);
-        let title = Title::new().add(svg::node::Text::new("Module Information"));
+        let title = Title::new("Module Information");
         g.append(title);
 
         let mut text_height = 0;
@@ -323,12 +323,11 @@ pub(crate) fn create_group(id: &str, classes: &[String]) -> Group {
 /// Create a SVG text element
 ///
 pub(crate) fn create_text(text: &str, x: i32, y: i32, font: &FontInfo, bold: bool) -> Text {
-    let mut text = Text::new()
+    let mut text = Text::new(text)
         .set("x", x)
         .set("y", y)
         .set("font-size", font.size)
-        .set("font-family", font.name.as_str())
-        .add(svg::node::Text::new(text));
+        .set("font-family", font.name.as_str());
     if bold {
         text = text.set("font-weight", "bold");
     }

@@ -16,9 +16,7 @@
 <polyline fill="none" points="0 0, 10 4.5, 0 9, 0 0" stroke="black" stroke-width="1"/>
 </marker>
 <g class="gsn_module_tests_issue339_yaml gsnelem gsngoal" id="node_G1">
-<title>
-G1
-</title>
+<title>G1</title>
 <path class="border" d="M20,20 L124,20 L124,66 L20,66 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="27" y="39">
 G1
@@ -28,9 +26,7 @@ Goal 1
 </text>
 </g>
 <g class="gsn_module_tests_issue339_yaml gsnelem gsngoal" id="node_G2">
-<title>
-G2
-</title>
+<title>G2</title>
 <path class="border" d="M20,106 L124,106 L124,152 L20,152 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="27" y="125">
 G2
@@ -40,9 +36,7 @@ Goal 2
 </text>
 </g>
 <g class="gsn_module_tests_issue339_yaml gsnelem gsnsltn" id="node_SnX1">
-<title>
-SnX1
-</title>
+<title>SnX1</title>
 <path class="border" d="M28,236 a44,44,0,1,0,88,0 a44,44,0,1,0,-88,0 z" fill="none" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="47" y="227">
 SnX1

@@ -16,9 +16,7 @@
 <polyline fill="none" points="0 0, 10 4.5, 0 9, 0 0" stroke="black" stroke-width="1"/>
 </marker>
 <g class="gsn_module_tests_issue365_yaml gsnelem gsngoal" id="node_G1_XxxxxxxXxxxxxXxxxxxx">
-<title>
-G1-XxxxxxxXxxxxxXxxxxxx
-</title>
+<title>G1-XxxxxxxXxxxxxXxxxxxx</title>
 <path class="border" d="M655,20 L855,20 L855,66 L655,66 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="662" y="39">
 G1-XxxxxxxXxxxxxXxxxxxx
@@ -28,9 +26,7 @@ xxxxxxx xxxxxxxx xxxxx xx xx xxx
 </text>
 </g>
 <g class="gsn_module_tests_issue365_yaml gsnelem gsnstgy" id="node_S2_XxxxxXxXxxxxxxx">
-<title>
-S2-XxxxxXxXxxxxxxx
-</title>
+<title>S2-XxxxxXxXxxxxxxx</title>
 <path class="border" d="M294,106 L520,106 L506,180 L280,180 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="302" y="125">
 S2-XxxxxXxXxxxxxxx
@@ -46,9 +42,7 @@ xxxxx.
 </text>
 </g>
 <g class="gsn_module_tests_issue365_yaml gsnelem gsnstgy" id="node_S2_XxxxxXxxxxxxXxXxxxxxxx">
-<title>
-S2-XxxxxXxxxxxxXxXxxxxxxx
-</title>
+<title>S2-XxxxxXxxxxxxXxXxxxxxxx</title>
 <path class="border" d="M1005,106 L1231,106 L1217,180 L991,180 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="1013" y="125">
 S2-XxxxxXxxxxxxXxXxxxxxxx
@@ -64,9 +58,7 @@ xxxx xx xxxxxxxx xxxxx.
 </text>
 </g>
 <g class="gsn_module_tests_issue365_yaml gsnelem gsngoal" id="node_G3_XxxXxxxXxxxxxxxXxxxxxxxx">
-<title>
-G3-XxxXxxxXxxxxxxxXxxxxxxxx
-</title>
+<title>G3-XxxXxxxXxxxxxxxXxxxxxxxx</title>
 <path class="border" d="M20,220 L246,220 L246,322 L20,322 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="27" y="239">
 G3-XxxXxxxXxxxxxxxXxxxxxxxx
@@ -88,9 +80,7 @@ xxxxxxxxxx.
 </text>
 </g>
 <g class="gsn_module_tests_issue365_yaml gsnelem gsngoal" id="node_G3_XxxXxxxxxXxxx">
-<title>
-G3-XxxXxxxxxXxxx
-</title>
+<title>G3-XxxXxxxxxXxxx</title>
 <path class="border" d="M286,227 L514,227 L514,315 L286,315 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="293" y="246">
 G3-XxxXxxxxxXxxx
@@ -109,9 +99,7 @@ xxxxxx xxxxxxxxxxxxx.
 </text>
 </g>
 <g class="gsn_module_tests_issue365_yaml gsnelem gsngoal" id="node_G3_XxxXxxxxxxxXxxxXxxxxxxxXxxx">
-<title>
-G3-XxxXxxxxxxxXxxxXxxxxxxxXxxx
-</title>
+<title>G3-XxxXxxxxxxxXxxxXxxxxxxxXxxx</title>
 <path class="border" d="M554,234 L782,234 L782,308 L554,308 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="561" y="253">
 G3-XxxXxxxxxxxXxxxXxxxxxxxXxxx
@@ -127,9 +115,7 @@ xxx_xxxxxxxxxxxx.
 </text>
 </g>
 <g class="gsn_module_tests_issue365_yaml gsnelem gsngoal gsn_undeveloped" id="node_G3_XxxxxXxxxxxxXxxxxxXxxxxxxxXxxxxx">
-<title>
-G3-XxxxxXxxxxxxXxxxxxXxxxxxxxXxxxxx
-</title>
+<title>G3-XxxxxXxxxxxxXxxxxxXxxxxxxxXxxxxx</title>
 <path class="border" d="M822,231 L1086,231 L1086,311 L822,311 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="829" y="250">
 G3-XxxxxXxxxxxxXxxxxxXxxxxxxxXxxxxx
@@ -146,9 +132,7 @@ xxxxx.
 <path d="M954,311 l5,5 l-5,5 l-5,-5 z" fill="none" stroke="black" stroke-width="1"/>
 </g>
 <g class="gsn_module_tests_issue365_yaml gsnelem gsngoal gsn_undeveloped" id="node_G3_XxxxxXxxxxxxXxxxxxxxxXxxxxxxxXxxxxx">
-<title>
-G3-XxxxxXxxxxxxXxxxxxxxxXxxxxxxxXxxxxx
-</title>
+<title>G3-XxxxxXxxxxxxXxxxxxxxxXxxxxxxxXxxxxx</title>
 <path class="border" d="M1126,231 L1412,231 L1412,311 L1126,311 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="1133" y="250">
 G3-XxxxxXxxxxxxXxxxxxxxxXxxxxxxxXxxxxx
@@ -165,9 +149,7 @@ xxxxxxxx xxxxx.
 <path d="M1269,311 l5,5 l-5,5 l-5,-5 z" fill="none" stroke="black" stroke-width="1"/>
 </g>
 <g class="gsn_module_tests_issue365_yaml gsnelem gsnsltn" id="node_Sn1_XXXXxxxxxxxxxxx">
-<title>
-Sn1-XXXXxxxxxxxxxxx
-</title>
+<title>Sn1-XXXXxxxxxxxxxxx</title>
 <path class="border" d="M317,445 a83,83,0,1,0,166,0 a83,83,0,1,0,-166,0 z" fill="none" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="333" y="436">
 Sn1-XXXXxxxxxxxxxxx

@@ -20,9 +20,7 @@
 </style>
 <a href="./main.gsn.svg#node_S1">
 <g class="gsn_module_Main gsnelem gsnstgy" id="node_S1">
-<title>
-S1
-</title>
+<title>S1</title>
 <path class="border" d="M159,37 L293,37 L279,83 L145,83 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="167" y="56">
 S1
@@ -33,9 +31,7 @@ Divide and Conquer
 </g>
 </a>
 <g class="gsn_module_Sub1 gsnelem gsnasmp" id="node_A1">
-<title>
-A1
-</title>
+<title>A1</title>
 <path class="border" d="M326,60 a39,33,0,1,0,78,0 a39,33,0,1,0,-78,0 z" fill="none" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="345" y="51">
 A1
@@ -49,9 +45,7 @@ A
 </g>
 <a href="./main.gsn.svg#node_G1">
 <g class="gsn_module_Main gsnelem gsnawaygoal" id="node_G1">
-<title>
-G1
-</title>
+<title>G1</title>
 <path class="border" d="M444,72 V20 H528 V72" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="451" y="39">
 G1
@@ -70,9 +64,7 @@ Main
 </a>
 <a href="./sub3.gsn.svg#node_C2">
 <g class="gsn_module_Sub3 gsnelem gsnawayctxt" id="node_C2">
-<title>
-C2
-</title>
+<title>C2</title>
 <path class="border" d="M20,207 V155 C20,151,24,147,28,147 h68 C100,147,104,151,104,155 V207" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="27" y="174">
 C2
@@ -90,9 +82,7 @@ Sub3
 </g>
 </a>
 <g class="gsn_module_Sub1 gsnelem gsngoal" id="node_G3">
-<title>
-G3
-</title>
+<title>G3</title>
 <path class="border" d="M144,168 L294,168 L294,214 L144,214 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="151" y="187">
 G3
@@ -103,9 +93,7 @@ Conquer the submodules
 </g>
 <a href="./main.gsn.svg#node_J1">
 <g class="gsn_module_Main gsnelem gsnawayjust" id="node_J1">
-<title>
-J1
-</title>
+<title>J1</title>
 <path class="border" d="M334,214 V162 A45,22,0,0,1,424,162 V214" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="341" y="181">
 J1
@@ -127,9 +115,7 @@ J
 </a>
 <a href="./sub3.gsn.svg#node_Sn1">
 <g class="gsn_module_Sub3 gsnelem gsnawaysltn" id="node_Sn1">
-<title>
-Sn1
-</title>
+<title>Sn1</title>
 <path class="border" d="M177,376 V324 A42,42,0,0,1,261,324 V376" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="184" y="343">
 Sn1

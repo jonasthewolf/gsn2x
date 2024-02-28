@@ -16,9 +16,7 @@
 <polyline fill="none" points="0 0, 10 4.5, 0 9, 0 0" stroke="black" stroke-width="1"/>
 </marker>
 <g class="gsn_module_xxxx-2 xxxxxxx xxxxxxxxxxx gsnelem gsngoal" id="node_GProduct_PostSOP">
-<title>
-GProduct-PostSOP
-</title>
+<title>GProduct-PostSOP</title>
 <path class="border" d="M371,20 L597,20 L597,108 L371,108 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="378" y="39">
 GProduct-PostSOP
@@ -37,9 +35,7 @@ xxx.
 </text>
 </g>
 <g class="gsn_module_xxxx-2 xxxxxxx xxxxxxxxxxx gsnelem gsnstgy" id="node_SProduct_Dev">
-<title>
-SProduct-Dev
-</title>
+<title>SProduct-Dev</title>
 <path class="border" d="M644,20 L874,20 L860,108 L630,108 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="652" y="39">
 SProduct-Dev
@@ -58,9 +54,7 @@ xxx xxxxx xxxxxxxxxxxxx xxxxxxxxxxxx
 </text>
 </g>
 <g class="gsn_module_xxxx-2 xxxxxxx xxxxxxxxxxx gsnelem gsngoal" id="node_GProduct_VulMgmt">
-<title>
-GProduct-VulMgmt
-</title>
+<title>GProduct-VulMgmt</title>
 <path class="border" d="M522,148 L714,148 L714,208 L522,208 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="529" y="167">
 GProduct-VulMgmt
@@ -73,9 +67,7 @@ xxxxxxx.
 </text>
 </g>
 <g class="gsn_module_xxxx-2 xxxxxxx xxxxxxxxxxx gsnelem gsnstgy" id="node_SProduct_VulMgmt">
-<title>
-SProduct-VulMgmt
-</title>
+<title>SProduct-VulMgmt</title>
 <path class="border" d="M538,248 L712,248 L698,308 L524,308 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="545" y="267">
 SProduct-VulMgmt
@@ -88,9 +80,7 @@ xxxxxxxxxxxx xxxxxxxxx.
 </text>
 </g>
 <g class="gsn_module_xxxx-2 xxxxxxx xxxxxxxxxxx gsnelem gsngoal" id="node_GProduct_VulMgmt_1">
-<title>
-GProduct-VulMgmt.1
-</title>
+<title>GProduct-VulMgmt.1</title>
 <path class="border" d="M521,348 L715,348 L715,394 L521,394 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="528" y="367">
 GProduct-VulMgmt.1
@@ -100,9 +90,7 @@ xxxxxxxxxxxxxxx xxx xxxxxxxxx.
 </text>
 </g>
 <g class="gsn_module_xxxx-2 xxxxxxx xxxxxxxxxxx gsnelem gsngoal" id="node_GProduct_VulMgmt_1_1">
-<title>
-GProduct-VulMgmt.1.1
-</title>
+<title>GProduct-VulMgmt.1.1</title>
 <path class="border" d="M286,455 L478,455 L478,501 L286,501 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="293" y="474">
 GProduct-VulMgmt.1.1
@@ -112,9 +100,7 @@ xxxxxxxx xxxxxxxx xx xxxxxxxx.
 </text>
 </g>
 <g class="gsn_module_xxxx-2 xxxxxxx xxxxxxxxxxx gsnelem gsngoal" id="node_GProduct_VulMgmt_1_2">
-<title>
-GProduct-VulMgmt.1.2
-</title>
+<title>GProduct-VulMgmt.1.2</title>
 <path class="border" d="M518,434 L722,434 L722,522 L518,522 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="525" y="453">
 GProduct-VulMgmt.1.2
@@ -133,9 +119,7 @@ xxxxxxx).
 </text>
 </g>
 <g class="gsn_module_xxxx-2 xxxxxxx xxxxxxxxxxx gsnelem gsngoal" id="node_GProduct_VulMgmt_1_3">
-<title>
-GProduct-VulMgmt.1.3
-</title>
+<title>GProduct-VulMgmt.1.3</title>
 <path class="border" d="M762,448 L948,448 L948,508 L762,508 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="769" y="467">
 GProduct-VulMgmt.1.3
@@ -148,9 +132,7 @@ xxxxxxxxx (x.x. xxx xxxxxxxxx)
 </text>
 </g>
 <g class="gsn_module_xxxx-2 xxxxxxx xxxxxxxxxxx gsnelem gsngoal" id="node_GProduct_VulMgmt_1_1_1">
-<title>
-GProduct-VulMgmt.1.1.1
-</title>
+<title>GProduct-VulMgmt.1.1.1</title>
 <path class="border" d="M20,576 L222,576 L222,636 L20,636 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="27" y="595">
 GProduct-VulMgmt.1.1.1
@@ -163,9 +145,7 @@ xxxxx "xxxxx xx" xx xxxxx xxxxxx
 </text>
 </g>
 <g class="gsn_module_xxxx-2 xxxxxxx xxxxxxxxxxx gsnelem gsnctxt" id="node_CProduct_VulMgmt_1_1_1">
-<title>
-CProduct-VulMgmt.1.1.1
-</title>
+<title>CProduct-VulMgmt.1.1.1</title>
 <path class="border" d="M272,562 L480,562 C490,562,490,650,480,650 L272,650 C262,650,262,562,272,562" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="279" y="581">
 CProduct-VulMgmt.1.1.1
@@ -184,9 +164,7 @@ xxxxxxxxxx.
 </text>
 </g>
 <g class="gsn_module_xxxx-2 xxxxxxx xxxxxxxxxxx gsnelem gsngoal" id="node_GProduct_VulMgmt_1_1_2">
-<title>
-GProduct-VulMgmt.1.1.2
-</title>
+<title>GProduct-VulMgmt.1.1.2</title>
 <path class="border" d="M530,576 L758,576 L758,636 L530,636 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="537" y="595">
 GProduct-VulMgmt.1.1.2
@@ -199,9 +177,7 @@ xxxxx xxxxxxx xxxxxxxx xx xxxxxxxxxx
 </text>
 </g>
 <g class="gsn_module_xxxx-2 xxxxxxx xxxxxxxxxxx gsnelem gsnsltn" id="node_SnProduct_VulMgmt_1">
-<title>
-SnProduct-VulMgmt.1
-</title>
+<title>SnProduct-VulMgmt.1</title>
 <path class="border" d="M375,803 a113,113,0,1,0,226,0 a113,113,0,1,0,-226,0 z" fill="none" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="390" y="794">
 SnProduct-VulMgmt.1

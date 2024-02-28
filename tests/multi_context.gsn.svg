@@ -16,9 +16,7 @@
 <polyline fill="none" points="0 0, 10 4.5, 0 9, 0 0" stroke="black" stroke-width="1"/>
 </marker>
 <g class="gsn_module_tests_multi_context_gsn_yaml gsnelem gsnctxt" id="node_C2">
-<title>
-C2
-</title>
+<title>C2</title>
 <path class="border" d="M203,64 L307,64 C317,64,317,110,307,110 L203,110 C193,110,193,64,203,64" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="210" y="83">
 C2
@@ -28,9 +26,7 @@ Context 2
 </text>
 </g>
 <g class="gsn_module_tests_multi_context_gsn_yaml gsnelem gsngoal" id="node_G1">
-<title>
-G1
-</title>
+<title>G1</title>
 <path class="border" d="M357,64 L505,64 L505,110 L357,110 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="364" y="83">
 G1
@@ -40,9 +36,7 @@ Goal with many contexts
 </text>
 </g>
 <g class="gsn_module_tests_multi_context_gsn_yaml gsnelem gsnctxt" id="node_C1">
-<title>
-C1
-</title>
+<title>C1</title>
 <path class="border" d="M555,20 L659,20 C669,20,669,66,659,66 L555,66 C545,66,545,20,555,20" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="562" y="39">
 C1
@@ -52,9 +46,7 @@ Context 1
 </text>
 </g>
 <g class="gsn_module_tests_multi_context_gsn_yaml gsnelem gsnctxt" id="node_C3">
-<title>
-C3
-</title>
+<title>C3</title>
 <path class="border" d="M555,107 L659,107 C669,107,669,153,659,153 L555,153 C545,153,545,107,555,107" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="562" y="126">
 C3
@@ -64,9 +56,7 @@ Context 3
 </text>
 </g>
 <g class="gsn_module_tests_multi_context_gsn_yaml gsnelem gsnasmp" id="node_A2">
-<title>
-A2
-</title>
+<title>A2</title>
 <path class="border" d="M304,227 a85,33,0,1,0,170,0 a85,33,0,1,0,-170,0 z" fill="none" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="336" y="218">
 A2
@@ -79,9 +69,7 @@ A
 </text>
 </g>
 <g class="gsn_module_tests_multi_context_gsn_yaml gsnelem gsngoal" id="node_G3">
-<title>
-G3
-</title>
+<title>G3</title>
 <path class="border" d="M514,204 L690,204 L690,250 L514,250 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="521" y="223">
 G3
@@ -91,9 +79,7 @@ Yet another goal with context
 </text>
 </g>
 <g class="gsn_module_tests_multi_context_gsn_yaml gsnelem gsnjust" id="node_J2">
-<title>
-J2
-</title>
+<title>J2</title>
 <path class="border" d="M730,227 a86,33,0,1,0,172,0 a86,33,0,1,0,-172,0 z" fill="none" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="762" y="218">
 J2
@@ -106,9 +92,7 @@ J
 </text>
 </g>
 <g class="gsn_module_tests_multi_context_gsn_yaml gsnelem gsnjust" id="node_J1">
-<title>
-J1
-</title>
+<title>J1</title>
 <path class="border" d="M20,333 a60,33,0,1,0,120,0 a60,33,0,1,0,-120,0 z" fill="none" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="45" y="324">
 J1
@@ -121,9 +105,7 @@ J
 </text>
 </g>
 <g class="gsn_module_tests_multi_context_gsn_yaml gsnelem gsngoal gsn_undeveloped" id="node_G2">
-<title>
-G2
-</title>
+<title>G2</title>
 <path class="border" d="M180,307 L340,307 L340,359 L180,359 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="187" y="326">
 G2
@@ -134,9 +116,7 @@ Another goal with contexts
 <path d="M260,359 l5,5 l-5,5 l-5,-5 z" fill="none" stroke="black" stroke-width="1"/>
 </g>
 <g class="gsn_module_tests_multi_context_gsn_yaml gsnelem gsnasmp" id="node_A1">
-<title>
-A1
-</title>
+<title>A1</title>
 <path class="border" d="M380,333 a65,33,0,1,0,130,0 a65,33,0,1,0,-130,0 z" fill="none" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="406" y="324">
 A1
@@ -149,9 +129,7 @@ A
 </text>
 </g>
 <g class="gsn_module_tests_multi_context_gsn_yaml gsnelem gsngoal" id="node_G4">
-<title>
-G4
-</title>
+<title>G4</title>
 <path class="border" d="M550,310 L654,310 L654,356 L550,356 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="557" y="329">
 G4
@@ -161,9 +139,7 @@ Simple goal
 </text>
 </g>
 <g class="gsn_module_tests_multi_context_gsn_yaml gsnelem gsnsltn" id="node_Sn1">
-<title>
-Sn1
-</title>
+<title>Sn1</title>
 <path class="border" d="M559,449 a43,43,0,1,0,86,0 a43,43,0,1,0,-86,0 z" fill="none" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="577" y="440">
 Sn1

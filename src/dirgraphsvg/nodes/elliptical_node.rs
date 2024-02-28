@@ -70,7 +70,7 @@ impl EllipticalType {
         context: &mut Element,
         border_color: &str,
     ) {
-        let title = Title::new().add(svg::node::Text::new(&node.identifier));
+        let title = Title::new(&node.identifier);
 
         let data = Data::new()
             .move_to((node.x - node.width / 2, node.y))

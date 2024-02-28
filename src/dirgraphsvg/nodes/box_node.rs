@@ -70,7 +70,7 @@ impl BoxType {
         context: &mut Element,
         border_color: &str,
     ) {
-        let title = Title::new().add(svg::node::Text::new(&node.identifier));
+        let title = Title::new(&node.identifier);
         use svg::Node;
         context.append(title);
 
