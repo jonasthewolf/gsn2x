@@ -654,9 +654,12 @@ fn node_text_from_node_and_layers(
     for layer in layers {
         if let Some(layer_text) = gsn_node.additional.get(layer) {
             additional_text.push(format!("\n{}:", layer.to_ascii_uppercase()));
-            for layer_line in layer_text.split('\n') {
-                additional_text.push(layer_line.to_owned());
-            }
+            let wrapped_layer_line = if let Some(char_wrap) = gsn_node.word_wrap.or(char_wrap) {
+                wrap_words(layer_text, char_wrap, "\n")
+            } else {
+                layer_text.to_owned()
+            };
+            additional_text.push(wrapped_layer_line);
         }
     }
     if !additional_text.is_empty() {
