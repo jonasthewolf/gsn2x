@@ -20,6 +20,9 @@ cargo run -- -A -E -F -G tests/multi_context.gsn.yaml
 # minimal css example
 cargo run -- -G -E -t -s examples/minimalcss/min.css examples/minimalcss/min.gsn.yaml
 
+# entangled
+cargo run -- -G -E examples/entangled.gsn.yaml
+
 # issue regressions
 cargo run -- -G -E tests/issue84_1.yaml
 cargo run -- -G -E tests/issue84_2.yaml
@@ -37,4 +40,5 @@ cargo run -- -G -E -w 35 tests/issue377.yaml
 cargo run -- -G -E tests/issue391_1.yaml tests/issue391_2.yaml
 cargo run -- -G -E -w 20 tests/issue393_1.yaml
 cargo run -- -G -E -w 20 tests/issue393_2.yaml
+cargo run -- -G -E -w 20 tests/issue389.yaml
 cargo run -- -G -E tests/multi_parents.gsn.yaml

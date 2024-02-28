@@ -16,10 +16,8 @@
 <polyline fill="none" points="0 0, 10 4.5, 0 9, 0 0" stroke="black" stroke-width="1"/>
 </marker>
 <g class="gsn_module_Tier-2 Verification Activities gsnelem gsngoal" id="node_G11">
-<title>
-G11
-</title>
-<path class="border" d="M393,48 L511,48 L511,136 L393,136 z" fill="none" stroke="black" stroke-width="1"/>
+<title>G11</title>
+<path class="border" d="M393,48 L511,48 L511,136 L393,136 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="400" y="67">
 G11
 </text>
@@ -37,9 +35,7 @@ xxxxxxx xxx xxxxx.
 </text>
 </g>
 <g class="gsn_module_Tier-2 Verification Activities gsnelem gsnjust" id="node_J11">
-<title>
-J11
-</title>
+<title>J11</title>
 <path class="border" d="M551,92 a180,72,0,1,0,361,0 a180,72,0,1,0,-361,0 z" fill="none" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="610" y="55">
 J11
@@ -64,10 +60,8 @@ J
 </text>
 </g>
 <g class="gsn_module_Tier-2 Verification Activities gsnelem gsngoal" id="node_G11_1">
-<title>
-G11.1
-</title>
-<path class="border" d="M26,211 L156,211 L156,271 L26,271 z" fill="none" stroke="black" stroke-width="1"/>
+<title>G11.1</title>
+<path class="border" d="M26,211 L156,211 L156,271 L26,271 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="33" y="230">
 G11.1
 </text>
@@ -79,10 +73,8 @@ xx xxxxxxxxx.
 </text>
 </g>
 <g class="gsn_module_Tier-2 Verification Activities gsnelem gsngoal" id="node_G11_2">
-<title>
-G11.2
-</title>
-<path class="border" d="M198,211 L334,211 L334,271 L198,271 z" fill="none" stroke="black" stroke-width="1"/>
+<title>G11.2</title>
+<path class="border" d="M198,211 L334,211 L334,271 L198,271 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="205" y="230">
 G11.2
 </text>
@@ -94,10 +86,8 @@ xxxxxxx xx xxxxxxxxx.
 </text>
 </g>
 <g class="gsn_module_Tier-2 Verification Activities gsnelem gsnctxt" id="node_C11_2">
-<title>
-C11.2
-</title>
-<path class="border" d="M384,204 L520,204 C530,204,530,278,520,278 L384,278 C374,278,374,204,384,204" fill="none" stroke="black" stroke-width="1"/>
+<title>C11.2</title>
+<path class="border" d="M384,204 L520,204 C530,204,530,278,520,278 L384,278 C374,278,374,204,384,204" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="391" y="223">
 C11.2
 </text>
@@ -112,10 +102,8 @@ xx xxxxxxxxxx.
 </text>
 </g>
 <g class="gsn_module_Tier-2 Verification Activities gsnelem gsngoal" id="node_G11_3">
-<title>
-G11.3
-</title>
-<path class="border" d="M570,211 L674,211 L674,271 L570,271 z" fill="none" stroke="black" stroke-width="1"/>
+<title>G11.3</title>
+<path class="border" d="M570,211 L674,211 L674,271 L570,271 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="577" y="230">
 G11.3
 </text>
@@ -127,10 +115,8 @@ xxxxxxxxx.
 </text>
 </g>
 <g class="gsn_module_Tier-2 Verification Activities gsnelem gsngoal" id="node_G11_4">
-<title>
-G11.4
-</title>
-<path class="border" d="M761,211 L865,211 L865,271 L761,271 z" fill="none" stroke="black" stroke-width="1"/>
+<title>G11.4</title>
+<path class="border" d="M761,211 L865,211 L865,271 L761,271 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="768" y="230">
 G11.4
 </text>
@@ -142,9 +128,7 @@ xxxxxxx.
 </text>
 </g>
 <g class="gsn_module_Tier-2 Verification Activities gsnelem gsnsltn" id="node_Sn11_1">
-<title>
-Sn11.1
-</title>
+<title>Sn11.1</title>
 <path class="border" d="M20,401 a71,71,0,1,0,142,0 a71,71,0,1,0,-142,0 z" fill="none" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="36" y="392">
 Sn11.1
@@ -154,9 +138,7 @@ xxxxx xxxx xxxxxxx.
 </text>
 </g>
 <g class="gsn_module_Tier-2 Verification Activities gsnelem gsnsltn" id="node_Sn11_2">
-<title>
-Sn11.2
-</title>
+<title>Sn11.2</title>
 <path class="border" d="M202,401 a64,64,0,1,0,128,0 a64,64,0,1,0,-128,0 z" fill="none" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="221" y="385">
 Sn11.2
@@ -169,9 +151,7 @@ xxxxxxx.
 </text>
 </g>
 <g class="gsn_module_Tier-2 Verification Activities gsnelem gsnsltn" id="node_Sn11_3">
-<title>
-Sn11.3
-</title>
+<title>Sn11.3</title>
 <path class="border" d="M554,401 a68,68,0,1,0,136,0 a68,68,0,1,0,-136,0 z" fill="none" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="570" y="392">
 Sn11.3
@@ -181,9 +161,7 @@ xxxxxx xxx xxxxxx.
 </text>
 </g>
 <g class="gsn_module_Tier-2 Verification Activities gsnelem gsnsltn" id="node_Sn11_4">
-<title>
-Sn11.4
-</title>
+<title>Sn11.4</title>
 <path class="border" d="M730,401 a83,83,0,1,0,166,0 a83,83,0,1,0,-166,0 z" fill="none" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="755" y="371">
 Sn11.4
