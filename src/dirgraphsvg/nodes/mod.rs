@@ -647,11 +647,13 @@ fn node_text_from_node_and_layers(
     use crate::dirgraphsvg::util::wrap_words::wrap_words;
 
     let mut node_text = if let Some(char_wrap) = gsn_node.word_wrap.or(char_wrap) {
-        wrap_words(
-            &gsn_node.text,
-            std::cmp::min(char_wrap, identifier.len() as u32),
-            "\n",
-        )
+        let id_len = identifier.len() as u32;
+        let new_wrap = if char_wrap < id_len {
+            id_len
+        } else {
+            char_wrap
+        };
+        wrap_words(&gsn_node.text, new_wrap, "\n")
     } else {
         gsn_node.text.to_owned()
     };
