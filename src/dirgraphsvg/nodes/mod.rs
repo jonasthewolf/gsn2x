@@ -223,7 +223,7 @@ impl SvgNode {
         char_wrap: Option<u32>,
     ) -> Self {
         // Add layer to node output
-        let node_text = node_text_from_node_and_layers(gsn_node, layers, char_wrap);
+        let node_text = node_text_from_node_and_layers(identifier, gsn_node, layers, char_wrap);
         // Setup CSS classes
         let mut classes = node_classes_from_node(gsn_node, masked);
         classes.push("gsnelem".to_owned());
@@ -639,6 +639,7 @@ fn node_classes_from_node(gsn_node: &GsnNode, masked: bool) -> Vec<String> {
 ///
 ///
 fn node_text_from_node_and_layers(
+    identifier: &str,
     gsn_node: &GsnNode,
     layers: &[String],
     char_wrap: Option<u32>,
@@ -646,7 +647,11 @@ fn node_text_from_node_and_layers(
     use crate::dirgraphsvg::util::wrap_words::wrap_words;
 
     let mut node_text = if let Some(char_wrap) = gsn_node.word_wrap.or(char_wrap) {
-        wrap_words(&gsn_node.text, char_wrap, "\n")
+        wrap_words(
+            &gsn_node.text,
+            std::cmp::min(char_wrap, identifier.len() as u32),
+            "\n",
+        )
     } else {
         gsn_node.text.to_owned()
     };
@@ -686,7 +691,7 @@ mod test {
             additional: BTreeMap::from([("layer1".to_owned(), "text for layer1".to_owned())]),
             ..Default::default()
         };
-        let res = node_text_from_node_and_layers(&n1, &["layer1".to_owned()], None);
+        let res = node_text_from_node_and_layers("id", &n1, &["layer1".to_owned()], None);
         assert_eq!(res, "test text\n\nLAYER1:\ntext for layer1");
     }
 }

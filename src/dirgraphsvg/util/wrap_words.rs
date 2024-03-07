@@ -5,7 +5,7 @@ pub fn wrap_words(s: &str, width: u32, wrapstr: &str) -> String {
     let mut out = Vec::<String>::new();
     for line in s.lines() {
         let mut cur_line = String::new();
-        for word in line.split_whitespace() {
+        for word in line.split_ascii_whitespace() {
             if cur_line.len() + word.len() > width as usize {
                 if !cur_line.is_empty() {
                     // Relevant if cur_line.len = 0 and word.len > width
@@ -50,6 +50,7 @@ mod test {
         let out = wrap_words(input, 50, "\n");
         assert_eq!(out, expected);
     }
+
     #[test]
     fn shorter() {
         let input = "Lorem ipsum dolor sit amet, consetetur";
@@ -57,6 +58,7 @@ mod test {
         let out = wrap_words(input, 50, "\n");
         assert_eq!(out, expected);
     }
+
     #[test]
     fn empty_line() {
         let input = " ";
@@ -86,6 +88,13 @@ mod test {
         );
         let out = wrap_words(input, 50, "<br align=\"left\"/>");
         assert_eq!(out, expected);
+    }
+
+    #[test]
+    fn non_breaking_space() {
+        let input = "aaaa bbbb\u{00a0}cccc";
+        let expected = "aaaa\nbbbb\u{00a0}cccc";
+        assert_eq!(wrap_words(input, 2, "\n"), expected);
     }
 
     #[test]
