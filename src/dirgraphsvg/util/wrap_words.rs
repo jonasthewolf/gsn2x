@@ -103,4 +103,19 @@ mod test {
         let out = wrap_words(input, 5, "\n");
         assert_eq!(input, out);
     }
+
+    #[test]
+    fn zero_no_space() {
+        let input = "Devide";
+        let out = wrap_words(input, 0, "\n");
+        assert_eq!(input, out);
+    }
+
+    #[test]
+    fn zero_some_space() {
+        let input = "Devide and conquer";
+        let expected = "Devide\nand\nconquer";
+        let out = wrap_words(input, 0, "\n");
+        assert_eq!(expected, out);
+    }
 }

@@ -316,7 +316,7 @@ fn has_node_to_be_moved<'b>(
         } else {
             let parent_center = get_center(nodes, &parents);
             if parents.len() == 1 {
-                // If there is just one parent, save some space if 
+                // If there is just one parent, save some space if
                 // there are other children of that parent (with again only one parent, so it will center over it)
                 // by just moving as far as necessary to the right
                 let center_children = parents
