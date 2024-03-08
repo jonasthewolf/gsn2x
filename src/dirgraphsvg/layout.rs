@@ -314,7 +314,24 @@ fn has_node_to_be_moved<'b>(
         if cell.iter().any(|c| moved_nodes.contains(c)) {
             None
         } else {
-            Some(get_center(nodes, &parents))
+            let parent_center = get_center(nodes, &parents);
+            if parents.len() == 1 {
+                // If there is just one parent, save some space if 
+                // there are other children of that parent (with again only one parent, so it will center over it)
+                // by just moving as far as necessary to the right
+                let center_children = parents
+                    .into_iter()
+                    .flat_map(|c| graph.get_real_children(c))
+                    .filter(|&c| !moved_nodes.contains(c))
+                    .filter(|&c| graph.get_real_parents(c).len() == 1)
+                    .collect::<Vec<_>>();
+                Some(std::cmp::min(
+                    parent_center,
+                    cell_x + parent_center - get_center(nodes, &center_children),
+                ))
+            } else {
+                Some(parent_center)
+            }
         }
     } else if same_rank_parents.len() == 1 {
         // Move same rank child closer to parent
