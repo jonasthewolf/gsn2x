@@ -37,11 +37,10 @@ pub fn get_relative_path(
     let mut prefix = match source_canon_stripped
         .parent()
         .map(|p| p.components().count())
-        .unwrap_or(0)
+        .unwrap_or(0usize)
     {
         0 => "./".to_owned(),
-        x if x > 0 => "../".repeat(x),
-        _ => unreachable!(),
+        x => "../".repeat(x), // x > 0
     };
     if let Some(ext) = target_extension {
         target_canon_stripped.set_extension(ext);
@@ -163,6 +162,13 @@ mod test {
         assert_eq!(get_filename("./../b.svg"), Some("b.svg"));
         assert_eq!(get_filename("./.."), None);
         assert_eq!(get_filename("a.b"), Some("a.b"));
+    }
+
+    #[test]
+    fn relative_path() -> Result<()> {
+        let rel = get_relative_path("./Cargo.toml", "./examples/modular/main.gsn.yaml", None)?;
+        assert_eq!(rel, "../../Cargo.toml");
+        Ok(())
     }
 
     #[test]
