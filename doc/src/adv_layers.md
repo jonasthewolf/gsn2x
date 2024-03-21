@@ -1,7 +1,8 @@
 
 # Additional layers
 
-Additional attributes of an element are ignored by default.
+Additional attributes of an element are not output into the rendered diagram.
+
 With the command line option `-l` or `--layers` you can enable the output of those additional attributes.
 By using this feature different views on the GSN can be generated.
 
@@ -31,3 +32,5 @@ Of course, using `text`, `inContextOf`, `supportedBy`, `url`, `undeveloped`,
 Please note that using `module` and passing it as a layer option will also not work. 
 
 It is intentional that information is only added for a view, but not hidden to ensure consistency of the GSN in all variants.
+
+Only additional associative arrays with a string key can be used as additional layers.
