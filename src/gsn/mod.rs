@@ -4,7 +4,7 @@ use crate::{
     dirgraphsvg::edges::{EdgeType, SingleEdge},
 };
 use anyhow::{anyhow, Error};
-use serde::Deserialize;
+use serde::{Deserialize, Deserializer};
 use serde_yaml::Value;
 use std::{
     collections::{BTreeMap, BTreeSet},
@@ -85,10 +85,37 @@ pub struct GsnNode {
     pub(crate) horizontal_index: Option<HorizontalIndex>,
     pub(crate) node_type: Option<GsnNodeType>,
     pub(crate) word_wrap: Option<u32>,
-    #[serde(flatten)]
+    #[serde(flatten, deserialize_with = "deser_additional")]
     pub(crate) additional: BTreeMap<String, String>,
     #[serde(skip_deserializing)]
     pub(crate) module: String,
+}
+
+///
+/// Deserialize everything that is a Map<String, Value> to a Map<String, String>
+/// and ignore the rest
+///
+///
+fn deser_additional<'de, D>(deserializer: D) -> Result<BTreeMap<String, String>, D::Error>
+where
+    D: Deserializer<'de>,
+{
+    let mut result = BTreeMap::new();
+    let map: Result<BTreeMap<String, Value>, D::Error> = Deserialize::deserialize(deserializer);
+    if let Ok(map) = map {
+        map.into_iter().for_each(|(k, v)| {
+            result.insert(
+                k,
+                if v.is_string() {
+                    v.as_str().unwrap().to_owned()
+                } else {
+                    serde_yaml::to_string(&v).unwrap()
+                },
+            ); // unwraps are ok, since deserialization from YAML just worked.
+        });
+    }
+
+    Ok(result)
 }
 
 impl GsnNode {
