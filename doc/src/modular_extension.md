@@ -3,7 +3,6 @@
 # Modular extension
 
 gsn2x partially supports the Modular Extension of the GSN standard (see [Standard support](./standard_support.md)).
-Module Interfaces (Section 1:4.6) and Inter-Module Contracts (Section 1:4.7) are not supported.
 
 Each module is a separate file. The name of the module is the file name (incl. the path provided to the gsn2x command line).
 
@@ -12,6 +11,7 @@ Element IDs must be unique across all modules. Checks will by default be perform
 Check messages for individual modules can be omitted using the `-x` option.
 
 The argument view of individual modules will show "away" elements if elements from other modules are referenced.
+All elements are public, meaning they can be referenced from other modules.
 
 Note: There is no "away strategy" in the standard.
 

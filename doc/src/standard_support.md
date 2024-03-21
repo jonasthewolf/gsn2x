@@ -9,6 +9,6 @@ This table shows the support of `gsn2x` for the different parts of the standard.
 |-----------------------------|-----------------------------------------------------------------------|
 |Core GSN                     | &#9989; full                                                          |
 |Argument Pattern Extension   | &#10060; not planned                                                  |
-|Modular Extension            | &#128993; partially, see [Modular Extension](./modular_extension.md)  |
+|Modular Extension            | &#128993; partially, see [Modular Extension](./modular_extension.md); Module Interfaces (Section 1:4.6) and Inter-Module Contracts (Section 1:4.7) are not supported (this includes public decorators and module interface connectors). |
 |Confidence Argument Extension| &#10060; not planned                                                  |
 |Dialectic Extension          | &#10060; not planned                                                  |
