@@ -446,8 +446,8 @@ Sn2:
 </ol>
 <p>The order above can be considered - as a general rule of thumb - as a suggested order when trying to resolve layout issues.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="additional-layers"><a class="header" href="#additional-layers">Additional layers</a></h1>
-<p>Additional attributes of an element are ignored by default.
-With the command line option <code>-l</code> or <code>--layers</code> you can enable the output of those additional attributes.
+<p>Additional attributes of an element are not output into the rendered diagram.</p>
+<p>With the command line option <code>-l</code> or <code>--layers</code> you can enable the output of those additional attributes.
 By using this feature different views on the GSN can be generated.</p>
 <h2 id="example-2"><a class="header" href="#example-2">Example</a></h2>
 <pre><code class="language-yaml">G1:
@@ -469,6 +469,7 @@ C1:
 <code>horizontalRank</code>, <code>rankIncrement</code> or <code>classes</code> are not sensible parameters to pass for the <code>-l</code> option.</p>
 <p>Please note that using <code>module</code> and passing it as a layer option will also not work.</p>
 <p>It is intentional that information is only added for a view, but not hidden to ensure consistency of the GSN in all variants.</p>
+<p>Only additional associative arrays with a string key can be used as additional layers.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="stylesheets-for-svg-rendering"><a class="header" href="#stylesheets-for-svg-rendering">Stylesheets for SVG rendering</a></h1>
 <p>You can provide (multiple) custom CSS stylesheets for SVG via the <code>-s</code> or <code>--stylesheet</code> options.</p>
 <p>The path may be relative to the current working directory, absolute, or an URL (i.e. starting with <code>http://</code>, <code>https://</code> or <code>file://</code>).</p>
@@ -693,9 +694,12 @@ Caused by:
     No valid GSN element can be found starting from line &lt;n&gt;.
     This typically means that the YAML is completely invalid, or 
     the `text:` attribute is missing for an element.
+    Please see the documentation for details (https://jonasthewolf.github.io/gsn2x/troubleshooting.html).
     Original error message: data did not match any variant of untagged enum GsnDocument.
 </code></pre>
 <p>Please see the <a href="./yaml_syntax.html">YAML Syntax</a> what is expected by the programs.</p>
+<p>A good strategy to find out which element is causing the problem is to remove all but the first element from the input YAML file. Then running gsn2x again and incrementally adding the elements one by one again, until you hit the
+error message again.</p>
 <p>Unfortunately, it is currently not possible to improve on the location of the error messages in this case.</p>
 <h2 id="sanitizing-files-that-you-need-to"><a class="header" href="#sanitizing-files-that-you-need-to">Sanitizing files that you need to</a></h2>
 <p>You can sanitize your files from your intellectual property using, e.g. https://mikefarah.gitbook.io/yq/ .</p>

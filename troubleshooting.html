@@ -185,9 +185,12 @@ Caused by:
     No valid GSN element can be found starting from line &lt;n&gt;.
     This typically means that the YAML is completely invalid, or 
     the `text:` attribute is missing for an element.
+    Please see the documentation for details (https://jonasthewolf.github.io/gsn2x/troubleshooting.html).
     Original error message: data did not match any variant of untagged enum GsnDocument.
 </code></pre>
 <p>Please see the <a href="./yaml_syntax.html">YAML Syntax</a> what is expected by the programs.</p>
+<p>A good strategy to find out which element is causing the problem is to remove all but the first element from the input YAML file. Then running gsn2x again and incrementally adding the elements one by one again, until you hit the
+error message again.</p>
 <p>Unfortunately, it is currently not possible to improve on the location of the error messages in this case.</p>
 <h2 id="sanitizing-files-that-you-need-to"><a class="header" href="#sanitizing-files-that-you-need-to">Sanitizing files that you need to</a></h2>
 <p>You can sanitize your files from your intellectual property using, e.g. https://mikefarah.gitbook.io/yq/ .</p>
