@@ -40,6 +40,8 @@ This table shows the CSS classes assigned to a certain element:
 | gsninctxt           | In Context Of                              | path         |
 | gsnspby             | Supported By                               | path         | 
 | gsncomposite        | Composite (In Context Of AND Supported By) | path         |
+| gsn_masked          | Masked elements                            | g            |
+| acp_`acp_name`      | Elements or edges with an ACP              | g or path    |      
 
 You can assign additional classes by adding the `classes:` attribute. It must be a list of classes you want to assign. 
 Additional layers will be added as CSS classes, too. A `layer1` will e.g. be added as `gsnlay_layer1`.

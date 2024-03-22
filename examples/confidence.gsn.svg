@@ -4,6 +4,9 @@
 <rect fill="lightgrey" height="5" stroke="black" stroke-width="1" width="10" x="0" y="0"/>
 <rect fill="lightgrey" height="10" stroke="black" stroke-width="1" width="20" x="0" y="5"/>
 </symbol>
+<symbol id="acp">
+<rect fill="black" height="10" stroke="black" stroke-width="1" width="10" x="0" y="0"/>
+</symbol>
 <marker id="composite_arrow" markerHeight="9" markerUnits="userSpaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
 <polyline fill="none" points="0 0, 6 4.5, 0 9" stroke="black" stroke-width="1"/>
 <polyline fill="none" points="4 0, 10 4.5, 4 9" stroke="black" stroke-width="1"/>
@@ -35,7 +38,7 @@ S1
 Argument over all hazards
 </text>
 </g>
-<g class="gsn_module_examples_confidence_gsn_yaml gsnelem gsnctxt" id="node_C1">
+<g class="gsn_module_examples_confidence_gsn_yaml acp_ACP6 gsnelem gsnctxt" id="node_C1">
 <title>C1</title>
 <path class="border" d="M372,106 L476,106 C486,106,486,152,476,152 L372,152 C362,152,362,106,372,106" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="379" y="125">
@@ -43,6 +46,10 @@ C1
 </text>
 <text font-family="Arial" font-size="12" x="379" y="144">
 Hazard list
+</text>
+<use href="#acp" x="419" y="152"/>
+<text font-family="Arial" font-size="12" x="436" y="166">
+ACP6
 </text>
 </g>
 <g class="gsn_module_examples_confidence_gsn_yaml gsnelem gsngoal" id="node_G2">
@@ -85,7 +92,7 @@ Sn2a
 Evidence for Hazard 2
 </text>
 </g>
-<g class="gsn_module_examples_confidence_gsn_yaml gsnelem gsnsltn" id="node_Sn2b">
+<g class="gsn_module_examples_confidence_gsn_yaml acp_ACP5 gsnelem gsnsltn" id="node_Sn2b">
 <title>Sn2b</title>
 <path class="border" d="M404,369 a91,91,0,1,0,182,0 a91,91,0,1,0,-182,0 z" fill="none" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="419" y="360">
@@ -93,6 +100,10 @@ Sn2b
 </text>
 <text font-family="Arial" font-size="12" x="419" y="379">
 More evidence for Hazard 2
+</text>
+<use href="#acp" x="490" y="460"/>
+<text font-family="Arial" font-size="12" x="507" y="474">
+ACP5
 </text>
 </g>
 <path class="gsnedge gsninspby" d="M243,66 C243,96,243,76,243,96" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
@@ -108,7 +119,7 @@ More evidence for Hazard 2
 Module: examples_confidence_gsn_yaml
 </text>
 <text font-family="Arial" font-size="12" x="382" y="531">
-Generated on: 2024-03-22T21:01:33.430733000Z
+Generated on: 2024-03-22T22:00:31.241845000Z
 </text>
 </g>
 </svg>
