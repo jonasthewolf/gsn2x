@@ -4,7 +4,10 @@ use crate::{
     dirgraphsvg::edges::{EdgeType, SingleEdge},
 };
 use anyhow::{anyhow, Error};
-use serde::{Deserialize, Deserializer};
+use serde::{
+    de::{self},
+    Deserialize, Deserializer,
+};
 use serde_yaml::Value;
 use std::{
     collections::{BTreeMap, BTreeSet},
@@ -76,15 +79,20 @@ impl TryFrom<Value> for AbsoluteIndex {
 #[serde(rename_all = "camelCase")]
 pub struct GsnNode {
     pub(crate) text: String,
-    pub(crate) in_context_of: Option<Vec<String>>,
-    pub(crate) supported_by: Option<Vec<String>>,
+    #[serde(default)]
+    pub(crate) in_context_of: Vec<String>,
+    #[serde(default)]
+    pub(crate) supported_by: Vec<String>,
     pub(crate) undeveloped: Option<bool>,
-    pub(crate) classes: Option<Vec<String>>,
+    #[serde(default)]
+    pub(crate) classes: Vec<String>,
     pub(crate) url: Option<String>,
     pub(crate) rank_increment: Option<usize>,
     pub(crate) horizontal_index: Option<HorizontalIndex>,
     pub(crate) node_type: Option<GsnNodeType>,
     pub(crate) word_wrap: Option<u32>,
+    #[serde(default, deserialize_with = "deser_acp")]
+    pub(crate) acp: BTreeMap<String, Vec<String>>,
     #[serde(flatten, deserialize_with = "deser_additional")]
     pub(crate) additional: BTreeMap<String, String>,
     #[serde(skip_deserializing)]
@@ -118,26 +126,60 @@ where
     Ok(result)
 }
 
+///
+///
+///
+fn deser_acp<'de, D>(deserializer: D) -> Result<BTreeMap<String, Vec<String>>, D::Error>
+where
+    D: Deserializer<'de>,
+{
+    let mut result = BTreeMap::new();
+    let map: Result<BTreeMap<String, Value>, D::Error> = Deserialize::deserialize(deserializer);
+    if let Ok(map) = map {
+        for (k, v) in map {
+            let val = if v.is_string() {
+                Ok(vec![v.as_str().unwrap().to_owned()])
+            } else if v.is_sequence() {
+                let seq = v.as_sequence().unwrap();
+                if seq.iter().all(|c| c.is_string()) {
+                    Ok(seq.iter().map(|x| x.as_str().unwrap().to_owned()).collect())
+                } else {
+                    Err(de::Error::invalid_type(
+                        de::Unexpected::Other("Unknown"),
+                        &"string",
+                    ))
+                }
+            } else {
+                Err(de::Error::invalid_type(
+                    de::Unexpected::Other("Unknown"),
+                    &"string of list of strings",
+                ))
+            }?;
+            result.insert(k, val); // unwraps are ok, since deserialization from YAML just worked.
+        }
+    }
+
+    Ok(result)
+}
+
 impl GsnNode {
     ///
     ///
     ///
     pub fn get_edges(&self) -> Vec<(String, GsnEdgeType)> {
         let mut edges = Vec::new();
-        if let Some(c_nodes) = &self.in_context_of {
-            let mut es: Vec<(String, GsnEdgeType)> = c_nodes
-                .iter()
-                .map(|target| (target.to_owned(), GsnEdgeType::InContextOf))
-                .collect();
-            edges.append(&mut es);
-        }
-        if let Some(s_nodes) = &self.supported_by {
-            let mut es: Vec<(String, GsnEdgeType)> = s_nodes
-                .iter()
-                .map(|target| (target.to_owned(), GsnEdgeType::SupportedBy))
-                .collect();
-            edges.append(&mut es);
-        }
+        let mut es: Vec<(String, GsnEdgeType)> = self
+            .in_context_of
+            .iter()
+            .map(|target| (target.to_owned(), GsnEdgeType::InContextOf))
+            .collect();
+        edges.append(&mut es);
+        let mut es: Vec<(String, GsnEdgeType)> = self
+            .supported_by
+            .iter()
+            .map(|target| (target.to_owned(), GsnEdgeType::SupportedBy))
+            .collect();
+        edges.append(&mut es);
         edges
     }
 
@@ -230,6 +272,7 @@ pub struct ModuleInformation {
     pub(crate) extends: Option<Vec<ExtendsModule>>,
     pub(crate) horizontal_index: Option<HorizontalIndex>,
     pub(crate) rank_increment: Option<usize>,
+    pub(crate) _word_wrap: Option<u32>,
     #[serde(flatten)]
     pub(crate) additional: BTreeMap<String, String>,
 }
@@ -284,7 +327,7 @@ pub fn extend_modules(
                                     format!("C10: Element {} is not undeveloped, but is supposed to be extended by {}.", foreign_id, local_ids.join(",")),
                                 );
                         } else {
-                            foreign_node.supported_by = Some(local_ids.to_vec());
+                            foreign_node.supported_by = local_ids.to_vec();
                             foreign_node.undeveloped = Some(false);
                         }
                     } else {
@@ -308,15 +351,11 @@ fn get_root_nodes(nodes: &BTreeMap<String, GsnNode>) -> Vec<String> {
     let mut root_nodes: BTreeSet<String> = nodes.keys().cloned().collect();
     for node in nodes.values() {
         // Remove all keys if they are referenced; used to see if there is more than one top level node
-        if let Some(context) = node.in_context_of.as_ref() {
-            for cnode in context {
-                root_nodes.remove(cnode);
-            }
+        for cnode in &node.in_context_of {
+            root_nodes.remove(cnode);
         }
-        if let Some(support) = node.supported_by.as_ref() {
-            for snode in support {
-                root_nodes.remove(snode);
-            }
+        for snode in &node.supported_by {
+            root_nodes.remove(snode);
         }
     }
     Vec::from_iter(root_nodes)
@@ -333,11 +372,17 @@ pub fn calculate_module_dependencies(
     let mut res = BTreeMap::<String, BTreeMap<String, EdgeType>>::new();
 
     for v in nodes.values() {
-        if let Some(sups) = &v.supported_by {
-            add_dependencies(sups, nodes, v, &mut res, SingleEdge::SupportedBy);
+        if !v.supported_by.is_empty() {
+            add_dependencies(&v.supported_by, nodes, v, &mut res, SingleEdge::SupportedBy);
         }
-        if let Some(ctxs) = &v.in_context_of {
-            add_dependencies(ctxs, nodes, v, &mut res, SingleEdge::InContextOf);
+        if !v.in_context_of.is_empty() {
+            add_dependencies(
+                &v.in_context_of,
+                nodes,
+                v,
+                &mut res,
+                SingleEdge::InContextOf,
+            );
         }
     }
 

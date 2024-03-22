@@ -19,6 +19,8 @@ pub fn validate_module(
         validate_id(diag, module_name, id, node);
         // Validate all references of node
         validate_references(diag, module_name, nodes, id, node);
+        // Validate all assurance claim points
+        validate_assurance_claim_point(diag, module_name, nodes, id, node);
     }
     validate_module_extensions(module_info, nodes, module_name, diag);
 }
@@ -75,7 +77,7 @@ fn validate_references(
     id: &str,
     node: &GsnNode,
 ) {
-    if let Some(in_context_refs) = node.in_context_of.as_ref() {
+    if !node.in_context_of.is_empty() {
         let mut valid_ref_types = vec![];
         // Only goals and strategies can have contexts, assumptions and justifications
         if node.node_type == Some(GsnNodeType::Strategy)
@@ -92,12 +94,12 @@ fn validate_references(
             module,
             nodes,
             id,
-            in_context_refs,
+            &node.in_context_of,
             "context",
             &valid_ref_types,
         );
     }
-    if let Some(supported_by_refs) = node.supported_by.as_ref() {
+    if !node.supported_by.is_empty() {
         let mut valid_ref_types = vec![];
         // Only goals and strategies can have other goals, strategies and solutions
         if node.node_type == Some(GsnNodeType::Strategy)
@@ -114,7 +116,7 @@ fn validate_references(
             module,
             nodes,
             id,
-            supported_by_refs,
+            &node.supported_by,
             "supported by element",
             &valid_ref_types,
         );
@@ -171,6 +173,41 @@ fn validate_reference(
                 diag.add_error(
                     Some(module),
                     format!("V04: Element {node} has invalid type of reference {n} in {diag_str}."),
+                );
+            }
+        }
+    }
+}
+
+///
+///
+///
+fn validate_assurance_claim_point(
+    diag: &mut Diagnostics,
+    module: &str,
+    nodes: &BTreeMap<String, GsnNode>,
+    id: &str,
+    node: &GsnNode,
+) {
+    let mut potential_references = vec![id];
+    potential_references.extend(
+        node.supported_by
+            .iter()
+            .filter(|&n| nodes.contains_key(n))
+            .map(String::as_str),
+    );
+    potential_references.extend(
+        node.in_context_of
+            .iter()
+            .filter(|&n| nodes.contains_key(n))
+            .map(String::as_str),
+    );
+    for (acp, references) in &node.acp {
+        for r in references {
+            if !potential_references.contains(&r.as_str()) {
+                diag.add_error(
+                    Some(module),
+                    format!("V09: Element {id} has an assurance claim point {acp} that references {r}, but this is neither its own ID nor any of the connected elements."),
                 );
             }
         }
@@ -299,7 +336,7 @@ mod test {
         nodes.insert(
             "Sn1".to_owned(),
             GsnNode {
-                supported_by: Some(vec!["G2".to_owned()]),
+                supported_by: vec!["G2".to_owned()],
                 node_type: Some(GsnNodeType::Solution),
                 ..Default::default()
             },
@@ -331,7 +368,7 @@ mod test {
         nodes.insert(
             "C1".to_owned(),
             GsnNode {
-                in_context_of: Some(vec!["C1".to_owned()]),
+                in_context_of: vec!["C1".to_owned()],
                 node_type: Some(GsnNodeType::Context),
                 ..Default::default()
             },
@@ -361,7 +398,7 @@ mod test {
         nodes.insert(
             "G1".to_owned(),
             GsnNode {
-                supported_by: Some(vec!["G1".to_owned()]),
+                supported_by: vec!["G1".to_owned()],
                 node_type: Some(GsnNodeType::Goal),
                 ..Default::default()
             },
@@ -393,7 +430,7 @@ mod test {
         nodes.insert(
             "C1".to_owned(),
             GsnNode {
-                supported_by: Some(vec!["C1".to_owned()]),
+                supported_by: vec!["C1".to_owned()],
                 node_type: Some(GsnNodeType::Context),
                 ..Default::default()
             },
@@ -423,7 +460,7 @@ mod test {
         nodes.insert(
             "G1".to_owned(),
             GsnNode {
-                in_context_of: Some(vec!["G1".to_owned()]),
+                in_context_of: vec!["G1".to_owned()],
                 undeveloped: Some(true),
                 node_type: Some(GsnNodeType::Goal),
                 ..Default::default()
@@ -454,8 +491,8 @@ mod test {
         nodes.insert(
             "G1".to_owned(),
             GsnNode {
-                in_context_of: Some(vec!["C1".to_owned(), "C1".to_owned()]),
-                supported_by: Some(vec!["Sn1".to_owned()]),
+                in_context_of: vec!["C1".to_owned(), "C1".to_owned()],
+                supported_by: vec!["Sn1".to_owned()],
                 node_type: Some(GsnNodeType::Goal),
                 ..Default::default()
             },
@@ -493,7 +530,7 @@ mod test {
         nodes.insert(
             "G1".to_owned(),
             GsnNode {
-                supported_by: Some(vec!["G2".to_owned(), "G2".to_owned()]),
+                supported_by: vec!["G2".to_owned(), "G2".to_owned()],
                 node_type: Some(GsnNodeType::Goal),
                 ..Default::default()
             },
@@ -525,7 +562,7 @@ mod test {
         nodes.insert(
             "G1".to_owned(),
             GsnNode {
-                in_context_of: Some(vec!["G2".to_owned(), "S1".to_owned(), "Sn1".to_owned()]),
+                in_context_of: vec!["G2".to_owned(), "S1".to_owned(), "Sn1".to_owned()],
                 undeveloped: Some(true),
                 node_type: Some(GsnNodeType::Goal),
                 ..Default::default()
@@ -585,7 +622,7 @@ mod test {
         nodes.insert(
             "G1".to_owned(),
             GsnNode {
-                supported_by: Some(vec!["C1".to_owned(), "J1".to_owned(), "A1".to_owned()]),
+                supported_by: vec!["C1".to_owned(), "J1".to_owned(), "A1".to_owned()],
                 node_type: Some(GsnNodeType::Goal),
                 ..Default::default()
             },
@@ -704,7 +741,7 @@ mod test {
         nodes.insert(
             "G1".to_owned(),
             GsnNode {
-                supported_by: Some(vec!["Sn2".to_owned()]),
+                supported_by: vec!["Sn2".to_owned()],
                 undeveloped: Some(true),
                 node_type: Some(GsnNodeType::Goal),
                 ..Default::default()
@@ -749,6 +786,7 @@ mod test {
                     }]),
                     horizontal_index: None,
                     rank_increment: None,
+                    _word_wrap: None,
                     additional: BTreeMap::new(),
                 },
             },
@@ -785,6 +823,7 @@ mod test {
                     }]),
                     horizontal_index: None,
                     rank_increment: None,
+                    _word_wrap: None,
                     additional: BTreeMap::new(),
                 },
             },

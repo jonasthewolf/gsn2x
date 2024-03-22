@@ -607,13 +607,13 @@ impl SvgNode {
 ///
 ///
 fn node_classes_from_node(gsn_node: &GsnNode, masked: bool) -> Vec<String> {
-    let layer_classes: Option<Vec<String>> = gsn_node
+    let layer_classes: Vec<String> = gsn_node
         .additional
         .keys()
         .map(|k| {
             let mut t = escape_text(&k.to_ascii_lowercase());
             t.insert_str(0, "gsn_");
-            Some(t.to_owned())
+            t.to_owned()
         })
         .collect();
     let mut mod_class = gsn_node.module.to_owned();
@@ -626,7 +626,6 @@ fn node_classes_from_node(gsn_node: &GsnNode, masked: bool) -> Vec<String> {
         .classes
         .iter()
         .chain(layer_classes.iter())
-        .flatten()
         .chain(&[mod_class])
         .chain(masked_class.iter())
         .cloned()
