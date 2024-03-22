@@ -667,4 +667,14 @@ mod integrations {
         )?;
         Ok(())
     }
+
+    #[test]
+    fn additionals() -> Result<()> {
+        regression_renderings(
+            &["tests/additionals.yaml"],
+            &["-E", "-l", "add1", "-l", "unsupported", "-l", "additional"],
+            None,
+        )?;
+        Ok(())
+    }
 }

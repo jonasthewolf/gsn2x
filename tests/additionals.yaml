@@ -1,0 +1,16 @@
+G1:
+  text: asdfkjaslkdfj
+  underminded: true
+  unsupported: false
+  undeveloped: true
+
+G2:
+  text: ASDFasdfjkp
+  additional:
+    - asdfkjaslkdfj
+    - asdfasdf
+
+G3:
+  text: asdfasdf
+  add1: { a: "b", c: "d" }
+  

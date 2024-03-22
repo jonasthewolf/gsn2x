@@ -23,6 +23,9 @@ cargo run -- -G -E -t -s examples/minimalcss/min.css examples/minimalcss/min.gsn
 # entangled
 cargo run -- -G -E examples/entangled.gsn.yaml
 
+# additionals
+cargo run -- -G -E -l add1 -l additional -l unsupported tests/additionals.yaml
+
 # issue regressions
 cargo run -- -G -E tests/issue84_1.yaml
 cargo run -- -G -E tests/issue84_2.yaml
@@ -37,7 +40,7 @@ cargo run -- -G -E -w 35 tests/issue365.yaml
 cargo run -- -G -E tests/issue371.yaml
 cargo run -- -G -E -w 35 tests/issue372.yaml
 cargo run -- -G -E -w 35 tests/issue377.yaml
-cargo run -- -G -E tests/issue391_1.yaml tests/issue391_2.yaml
+cargo run -- -G -E -A -F tests/issue391_1.yaml tests/issue391_2.yaml
 cargo run -- -G -E -w 20 tests/issue393_1.yaml
 cargo run -- -G -E -w 20 tests/issue393_2.yaml
 cargo run -- -G -E -w 20 tests/issue389.yaml
