@@ -1,5 +1,4 @@
 
-
 # Modular extension
 
 gsn2x partially supports the Modular Extension of the GSN standard (see [Standard support](./standard_support.md)).
@@ -54,66 +53,3 @@ See [example](examples/modular/architecture.svg) here.
     gsn2x -f full.svg -a arch.svg main.yml sub1.yml sub3.yml
 
 This will generate the argument view for each module, the complete view (`-f full.svg`) of all modules and the architecture view (`-a arch.svg`). <!-- In the complete view, the elements of the `sub1` module will be represented by a module. -->
-
-## Developing undeveloped elements from other modules
-
-In a customer supplier relationship it may be helpful to develop otherwise undeveloped elements from other modules.
-This allows creating distributed assurance cases.
-
-Example for a module with undeveloped elements:
-
-```yaml
-module:
-  name: template 
-  brief: Template for an assurance case
-
-G1:
-  text: A claim somebody else should support
-  undeveloped: true
-```
-
-Example for developing those elements in another module:
-
-```yaml
-module:
-  name: instance
-  brief: Extending instance
-  extends: 
-    - module: template
-      develops:
-        G1: [G2]
-
-G2:
-  text: This is the argument provided by somebody else.
-  supportedBy: [Sn1]
-
-Sn1:
-  text: A solution
-```
-
-
-# Optional module information
-
-It is possible to add additional `module` information in the source YAML.
-This allows describing the module`s name and an optional brief description.
-Even arbitrary information can be added. 
-
-`name` and `brief` are mandatory if a `module` is added.
-
-```yaml
-
-module: 
-   name: MainModule
-   brief: This is a short description of the module
-   additionalInformation: 
-    v1: Changed line 2
-    v2: Added line 4
-
-```
-
-The module information is printed as part of a legend for the argument view.
-
-To influence the position in the architecture view, you can use the `horizontalIndex` and `rankIncrement` as you would for elements in the Argument view (see [Layout of elements](adv_layout.md#placement-of-elements) ).
-
-You can use the `-G` option to suppress the legend completely, 
-or the `-g` option to limit it to `name`, `brief` and the time and date of generation of the SVG.
