@@ -4,6 +4,9 @@
 <rect fill="lightgrey" height="5" stroke="black" stroke-width="1" width="10" x="0" y="0"/>
 <rect fill="lightgrey" height="10" stroke="black" stroke-width="1" width="20" x="0" y="5"/>
 </symbol>
+<symbol id="acp">
+<rect fill="black" height="10" stroke="black" stroke-width="1" width="10" x="0" y="0"/>
+</symbol>
 <marker id="composite_arrow" markerHeight="9" markerUnits="userSpaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
 <polyline fill="none" points="0 0, 6 4.5, 0 9" stroke="black" stroke-width="1"/>
 <polyline fill="none" points="4 0, 10 4.5, 4 9" stroke="black" stroke-width="1"/>
