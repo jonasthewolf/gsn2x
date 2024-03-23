@@ -192,41 +192,61 @@ pub(super) fn render_edge(
     }
     e = e.set("class", classes);
     let mut result: Vec<Element> = vec![e.into()];
-    if let Some(acps) = graph.get_edge_decorator(source.to_owned(), target.0.to_owned()) {
-        if !acps.is_empty() {
-            let mut svg_acp = Group::new()
-                .set("id", format!("acp_{}", acps.join("_").to_lowercase()))
-                .set("class", "gsnacp");
-            let acp_x = (curve_points[0].0.x + curve_points[0].1.x) / 2 - ACP_BOX_SIZE;
-            let acp_y = (curve_points[0].0.y + curve_points[0].1.y) / 2 - ACP_BOX_SIZE;
-            let y_axis = Point2D { x: 0, y: 1 };
-            let angle = 180.0 * (curve_points[1].1 - curve_points[0].0).angle(&y_axis)
-                / std::f32::consts::PI;
-            let acp_text = acps.join(", ");
-            let acp_text_bb = text_bounding_box(&render_graph.font, &acp_text, false);
-            let mut acp_x_text = acp_x + 2 * ACP_BOX_SIZE + PADDING_HORIZONTAL;
-            let mut acp_y_text = acp_y + acp_text_bb.1;
-            if (85.0..=95.0).contains(&angle) {
-                acp_x_text = acp_x + ACP_BOX_SIZE - acp_text_bb.0 / 2;
-                acp_y_text += ACP_BOX_SIZE + PADDING_VERTICAL;
-            }
-            svg_acp.append(
-                Use::new()
-                    .set("href", "#acp")
-                    .set("x", acp_x)
-                    .set("y", acp_y),
-            );
-            svg_acp.append(create_text(
-                &acp_text,
-                acp_x_text,
-                acp_y_text,
-                &render_graph.font,
-                false,
-            ));
-            result.push(svg_acp.into());
-        }
-    }
+    result.extend(render_acps(
+        graph,
+        render_graph,
+        source,
+        target,
+        curve_points,
+    ));
     result
+}
+
+///
+///
+///
+///
+fn render_acps(
+    graph: &DirectedGraph<'_, RefCell<SvgNode>, EdgeType>,
+    render_graph: &DirGraph<'_>,
+    source: &str,
+    target: &(String, EdgeType),
+    curve_points: Vec<(Point2D<i32>, Point2D<i32>)>,
+) -> Option<Element> {
+    if let Some(acps) = graph.get_edge_decorator(source.to_owned(), target.0.to_owned()) {
+        let mut svg_acp = Group::new()
+            .set("id", format!("acp_{}", acps.join("_").to_lowercase()))
+            .set("class", "gsnacp");
+        let acp_x = (curve_points[0].0.x + curve_points[0].1.x) / 2 - ACP_BOX_SIZE;
+        let acp_y = (curve_points[0].0.y + curve_points[0].1.y) / 2 - ACP_BOX_SIZE;
+        let y_axis = Point2D { x: 0, y: 1 };
+        let angle =
+            180.0 * (curve_points[1].1 - curve_points[0].0).angle(&y_axis) / std::f32::consts::PI;
+        let acp_text = acps.join(", ");
+        let acp_text_bb = text_bounding_box(&render_graph.font, &acp_text, false);
+        let mut acp_x_text = acp_x + 2 * ACP_BOX_SIZE + PADDING_HORIZONTAL;
+        let mut acp_y_text = acp_y + acp_text_bb.1;
+        if (85.0..=95.0).contains(&angle) {
+            acp_x_text = acp_x + ACP_BOX_SIZE - acp_text_bb.0 / 2;
+            acp_y_text += ACP_BOX_SIZE + PADDING_VERTICAL;
+        }
+        svg_acp.append(
+            Use::new()
+                .set("href", "#acp")
+                .set("x", acp_x)
+                .set("y", acp_y),
+        );
+        svg_acp.append(create_text(
+            &acp_text,
+            acp_x_text,
+            acp_y_text,
+            &render_graph.font,
+            false,
+        ));
+        Some(svg_acp.into())
+    } else {
+        None
+    }
 }
 
 ///
