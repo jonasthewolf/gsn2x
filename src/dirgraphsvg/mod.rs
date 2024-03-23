@@ -12,31 +12,11 @@ use edges::EdgeType;
 use nodes::{Port, SvgNode};
 
 use crate::dirgraph::DirectedGraph;
-use crate::dirgraph::DirectedGraphEdgeType;
 use crate::dirgraphsvg::layout::layout_nodes;
 use crate::dirgraphsvg::render::render_graph;
 
-use self::edges::SingleEdge;
 use self::layout::Margin;
 use self::util::font::FontInfo;
-
-impl<'a> DirectedGraphEdgeType<'a> for EdgeType {
-    fn is_primary_child_edge(&self) -> bool {
-        matches!(
-            *self,
-            EdgeType::OneWay(SingleEdge::SupportedBy)
-                | EdgeType::OneWay(SingleEdge::Composite)
-                | EdgeType::TwoWay((SingleEdge::SupportedBy, _))
-                | EdgeType::TwoWay((_, SingleEdge::SupportedBy))
-                | EdgeType::TwoWay((SingleEdge::Composite, _))
-                | EdgeType::TwoWay((_, SingleEdge::Composite))
-        )
-    }
-
-    fn is_secondary_child_edge(&self) -> bool {
-        matches!(*self, EdgeType::OneWay(SingleEdge::InContextOf))
-    }
-}
 
 #[derive(Default)]
 pub struct DirGraph<'a> {

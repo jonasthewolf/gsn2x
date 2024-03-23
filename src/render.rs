@@ -1,7 +1,7 @@
-use crate::dirgraphsvg::edges::EdgeType;
+use crate::dirgraphsvg::edges::{EdgeType, WayType};
 use crate::dirgraphsvg::{escape_node_id, nodes::SvgNode};
 use crate::file_utils::{get_filename, get_relative_path, set_extension, translate_to_output_path};
-use crate::gsn::{GsnNode, GsnNodeType, Module};
+use crate::gsn::{GsnEdgeType, GsnNode, GsnNodeType, Module};
 use anyhow::Result;
 use clap::ArgMatches;
 use time::format_description::well_known::Iso8601;
@@ -182,6 +182,17 @@ pub fn away_svg_from_gsn_node(
 ///
 ///
 ///
+fn svg_from_gsn_edge<'a>(acp: &'a Vec<String>, edge_type: &GsnEdgeType) -> EdgeType<'a> {
+    let mut e = EdgeType::new(WayType::from(edge_type));
+    if !acp.is_empty() {
+        e.add_acp(acp);
+    }
+    e
+}
+
+///
+///
+///
 pub fn render_architecture(
     output: &mut impl Write,
     modules: &BTreeMap<String, Module>,
@@ -265,6 +276,7 @@ pub fn render_complete(
     //     .values_of("MASK_MODULE")
     //     .map(|x| x.map(|y| y.to_owned()).collect::<Vec<String>>());
     // let masked_modules = masked_modules_opt.iter().flatten().collect::<Vec<_>>();
+    let acps = vec![];
     let mut dg = crate::dirgraphsvg::DirGraph::default();
     let edges: BTreeMap<String, Vec<(String, EdgeType)>> = nodes
         .iter()
@@ -275,7 +287,7 @@ pub fn render_complete(
                 id.to_owned(),
                 node.get_edges()
                     .iter()
-                    .map(|(s, t)| (s.to_owned(), EdgeType::from(t)))
+                    .map(|(s, t)| (s.to_owned(), svg_from_gsn_edge(&acps, t)))
                     .collect(),
             )
         })
@@ -365,6 +377,7 @@ pub fn render_argument(
             .collect::<Result<BTreeMap<_, _>>>()?,
     );
 
+    let acps = vec![];
     let edges: BTreeMap<String, Vec<(String, EdgeType)>> = nodes
         .iter()
         .map(|(id, node)| {
@@ -377,7 +390,7 @@ pub fn render_argument(
                             // unwrap is ok, since all references are checked at the beginning
                             && nodes.get(target).unwrap().module != module_name)
                     })
-                    .map(|(s, t)| (s.to_owned(), EdgeType::from(&t)))
+                    .map(|(s, t)| (s.to_owned(), svg_from_gsn_edge(&acps, &t)))
                     .collect::<Vec<(String, EdgeType)>>(),
             )
         })

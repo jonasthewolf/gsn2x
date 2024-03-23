@@ -555,7 +555,7 @@ mod test {
 
     use crate::{
         dirgraph::{DirectedGraphEdgeType, DirectedGraphNodeType},
-        dirgraphsvg::edges::{self, EdgeType},
+        dirgraphsvg::edges::{self, EdgeType, WayType},
     };
 
     use super::DirectedGraph;
@@ -593,7 +593,7 @@ mod test {
             "a".to_owned(),
             vec![(
                 "b".to_owned(),
-                EdgeType::OneWay(edges::SingleEdge::SupportedBy),
+                EdgeType::new(WayType::OneWay(edges::SingleEdge::SupportedBy)),
             )],
         )]);
         let dg = DirectedGraph::new(&nodes, &edges);
@@ -609,14 +609,14 @@ mod test {
                 "a".to_owned(),
                 vec![(
                     "b".to_owned(),
-                    EdgeType::OneWay(edges::SingleEdge::SupportedBy),
+                    EdgeType::new(WayType::OneWay(edges::SingleEdge::SupportedBy)),
                 )],
             ),
             (
                 "b".to_owned(),
                 vec![(
                     "a".to_owned(),
-                    EdgeType::OneWay(edges::SingleEdge::SupportedBy),
+                    EdgeType::new(WayType::OneWay(edges::SingleEdge::SupportedBy)),
                 )],
             ),
         ]);
