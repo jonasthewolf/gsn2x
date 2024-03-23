@@ -254,7 +254,7 @@ pub fn render_architecture(
                 .collect(),
         );
 
-    dg.write(svg_nodes, edges, output, true)?;
+    dg.write(svg_nodes, edges, output, BTreeMap::new())?;
 
     Ok(())
 }
@@ -317,7 +317,7 @@ pub fn render_complete(
                 .collect(),
         );
 
-    dg.write(svg_nodes, edges, output, false)?;
+    dg.write(svg_nodes, edges, output, BTreeMap::new())?;
 
     Ok(())
 }
@@ -431,7 +431,7 @@ pub fn render_argument(
         dg = dg.add_meta_information(&mut meta_info);
     }
 
-    dg.write(svg_nodes, edges, output, false)?;
+    dg.write(svg_nodes, edges, output, BTreeMap::new())?;
 
     Ok(())
 }

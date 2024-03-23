@@ -53,6 +53,7 @@ where
     edges: &'a BTreeMap<String, Vec<(String, EdgeType)>>,
     root_nodes: Vec<&'a str>,
     parent_edges: BTreeMap<&'a str, Vec<(&'a str, EdgeType)>>,
+    edge_decorators: BTreeMap<(String, String), Vec<String>>,
 }
 
 impl<'a, NodeType, EdgeType> DirectedGraph<'a, NodeType, EdgeType>
@@ -73,11 +74,19 @@ where
             edges,
             root_nodes: vec![],
             parent_edges: BTreeMap::new(),
+            edge_decorators: BTreeMap::new(),
         };
         node_info.calculate_parent_edge_map();
         node_info.find_root_nodes();
 
         node_info
+    }
+
+    pub fn add_edge_decorators(
+        &mut self,
+        edge_decorators: BTreeMap<(String, String), Vec<String>>,
+    ) {
+        self.edge_decorators = edge_decorators;
     }
 
     ///
