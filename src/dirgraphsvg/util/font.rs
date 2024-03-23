@@ -108,6 +108,8 @@ pub fn text_bounding_box(font_info: &FontInfo, text: &str, bold: bool) -> (i32, 
 #[cfg(test)]
 mod test {
 
+    use glyph_brush_layout::ab_glyph::Font;
+
     use super::*;
 
     #[test]
@@ -117,7 +119,7 @@ mod test {
 
     #[test]
     fn non_existing_font() {
-        assert!(dbg!(get_font("afontthatprobablydoesnotexist", false, false)).is_err());
+        assert!(dbg!(get_font("afontthatprobablydoesnotexist", false, false).unwrap().glyph_count()) == 0);
     }
 
     #[test]
