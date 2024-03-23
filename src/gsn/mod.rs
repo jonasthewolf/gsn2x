@@ -157,9 +157,13 @@ where
             }?;
             result.insert(k, val); // unwraps are ok, since deserialization from YAML just worked.
         }
+        Ok(result)
+    } else {
+        Err(de::Error::invalid_type(
+            de::Unexpected::Other("Unknown"),
+            &"map of string to string or list of strings",
+        ))
     }
-
-    Ok(result)
 }
 
 impl GsnNode {
@@ -540,6 +544,40 @@ C1:
         } else {
             Err(anyhow!("Serialization did not work"))
         }
+    }
+
+    #[test]
+    fn deser_acp1() {
+        let gsn = r#"
+G1:
+  text: Goal1
+  acp:
+    - C1
+    - G2
+"#;
+        assert!(serde_yaml::from_str::<BTreeMap<String, GsnDocument>>(gsn).is_err());
+    }
+
+    #[test]
+    fn deser_acp2() {
+        let gsn = r#"
+G1:
+  text: Goal1
+  acp:
+    ACP1: true
+"#;
+        assert!(serde_yaml::from_str::<BTreeMap<String, GsnDocument>>(gsn).is_err());
+    }
+
+    #[test]
+    fn deser_acp3() {
+        let gsn = r#"
+G1:
+  text: Goal1
+  acp:
+    ACP1: [true, 123]
+"#;
+        assert!(serde_yaml::from_str::<BTreeMap<String, GsnDocument>>(gsn).is_err());
     }
 
     #[test]
