@@ -116,6 +116,11 @@ mod test {
     }
 
     #[test]
+    fn non_existing_font() {
+        assert!(get_font("afontthatprobablydoesnotexist", false, false).is_err());
+    }
+
+    #[test]
     fn bounding_box() {
         let font_info = FontInfo::default();
         let (w, h) = text_bounding_box(&font_info, "text", false);

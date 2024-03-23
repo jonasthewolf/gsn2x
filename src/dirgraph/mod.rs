@@ -82,11 +82,23 @@ where
         node_info
     }
 
+    ///
+    ///
+    ///
+    ///
     pub fn add_edge_decorators(
         &mut self,
         edge_decorators: BTreeMap<(String, String), Vec<String>>,
     ) {
         self.edge_decorators = edge_decorators;
+    }
+
+    ///
+    ///
+    ///
+    ///
+    pub fn get_edge_decorator(&self, source: String, target: String) -> Option<&Vec<String>> {
+        self.edge_decorators.get(&(source, target))
     }
 
     ///

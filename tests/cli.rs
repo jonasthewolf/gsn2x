@@ -677,4 +677,10 @@ mod integrations {
         )?;
         Ok(())
     }
+
+    #[test]
+    fn confidence_extension() -> Result<()> {
+        regression_renderings(&["examples/confidence.gsn.yaml"], &["-E"], None)?;
+        Ok(())
+    }
 }

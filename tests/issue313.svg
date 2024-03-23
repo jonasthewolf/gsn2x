@@ -104,7 +104,7 @@ SIL Guidelines and Processes.
 <text font-family="Arial" font-size="12" font-weight="bold" x="348" y="221">
 S1
 </text>
-<text font-family="Arial" font-size="12" x="348" y="240">
+<text font-family="Arial" font-size="12" x="344" y="240">
 Argument over each identified hazard.
 </text>
 </g>
@@ -124,7 +124,7 @@ Identified software hazards.
 <text font-family="Arial" font-size="12" font-weight="bold" x="1108" y="221">
 S2
 </text>
-<text font-family="Arial" font-size="12" x="1108" y="240">
+<text font-family="Arial" font-size="12" x="1104" y="240">
 Argument over allocated SIL for Primary and Secondary elements.
 </text>
 </g>

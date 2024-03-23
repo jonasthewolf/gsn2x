@@ -43,16 +43,16 @@ xxx.
 <text font-family="Arial" font-size="12" font-weight="bold" x="652" y="39">
 SProduct-Dev
 </text>
-<text font-family="Arial" font-size="12" x="652" y="58">
+<text font-family="Arial" font-size="12" x="650" y="58">
 xxxx xxxxxxx xx xxxxxxxxxxxx
 </text>
-<text font-family="Arial" font-size="12" x="652" y="72">
+<text font-family="Arial" font-size="12" x="646" y="72">
 xxxxxxxx xxxxx xxx xxxxxxxxxxx xx
 </text>
-<text font-family="Arial" font-size="12" x="652" y="86">
+<text font-family="Arial" font-size="12" x="639" y="86">
 xxx xxxxx xxxxxxxxxxxxx xxxxxxxxxxxx
 </text>
-<text font-family="Arial" font-size="12" x="652" y="100">
+<text font-family="Arial" font-size="12" x="630" y="100">
 (xxxxxxx).
 </text>
 </g>
@@ -75,10 +75,10 @@ xxxxxxx.
 <text font-family="Arial" font-size="12" font-weight="bold" x="545" y="267">
 SProduct-VulMgmt
 </text>
-<text font-family="Arial" font-size="12" x="545" y="286">
+<text font-family="Arial" font-size="12" x="542" y="286">
 xxxxxxxxxxxxx xxxxxxxxxx xx
 </text>
-<text font-family="Arial" font-size="12" x="545" y="300">
+<text font-family="Arial" font-size="12" x="536" y="300">
 xxxxxxxxxxxx xxxxxxxxx.
 </text>
 </g>

@@ -2,12 +2,14 @@ use svg::node::element::{path::Data, Anchor, Element, Path, Title, Use};
 
 use crate::dirgraphsvg::{
     nodes::OFFSET_IDENTIFIER,
-    render::create_text,
-    util::escape_url,
-    util::font::{text_bounding_box, FontInfo},
+    render::{create_text, PADDING_HORIZONTAL, PADDING_VERTICAL},
+    util::{
+        escape_url,
+        font::{text_bounding_box, FontInfo},
+    },
 };
 
-use super::{SizeContext, SvgNode, PADDING_HORIZONTAL, PADDING_VERTICAL};
+use super::{SizeContext, SvgNode};
 
 const MODULE_IMAGE: i32 = 20;
 

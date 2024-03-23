@@ -2,11 +2,11 @@ use svg::node::element::{path::Data, Element, Path, Title};
 
 use crate::dirgraphsvg::{
     nodes::OFFSET_IDENTIFIER,
-    render::create_text,
+    render::{create_text, PADDING_HORIZONTAL},
     util::font::{text_bounding_box, FontInfo},
 };
 
-use super::{SizeContext, SvgNode, PADDING_HORIZONTAL};
+use super::{SizeContext, SvgNode};
 
 pub(crate) struct EllipticalType {
     pub(super) admonition: Option<String>,

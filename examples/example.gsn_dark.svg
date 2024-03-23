@@ -81,7 +81,7 @@ J
 <text font-family="Arial" font-size="12" font-weight="bold" x="334" y="232">
 S1
 </text>
-<text font-family="Arial" font-size="12" x="334" y="251">
+<text font-family="Arial" font-size="12" x="330" y="251">
 Strategy 1
 </text>
 </g>
@@ -104,7 +104,7 @@ A
 <text font-family="Arial" font-size="12" font-weight="bold" x="789" y="232">
 S2
 </text>
-<text font-family="Arial" font-size="12" x="789" y="251">
+<text font-family="Arial" font-size="12" x="785" y="251">
 Strategy 2
 </text>
 </g>

@@ -418,7 +418,7 @@ dependencies = [
 
 [[package]]
 name = "gsn2x"
-version = "3.0.9"
+version = "3.1.0"
 dependencies = [
  "anyhow",
  "assert_cmd",

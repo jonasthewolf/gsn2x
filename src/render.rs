@@ -418,7 +418,24 @@ pub fn render_argument(
         dg = dg.add_meta_information(&mut meta_info);
     }
 
-    dg.write(svg_nodes, edges, output, BTreeMap::new())?;
+    // Create ACPs as edge decorators from node information.
+    let mut acps: BTreeMap<(String, String), Vec<String>> = BTreeMap::new();
+    nodes.iter().for_each(|(s, n)| {
+        n.acp.iter().for_each(|(acp, ts)| {
+            ts.iter().filter(|&t| s != t).for_each(|t| {
+                acps.entry((s.to_owned(), t.to_owned()))
+                    .and_modify(|a: &mut Vec<String>| {
+                        if !a.contains(acp) {
+                            a.push(acp.to_owned());
+                        }
+                    })
+                    .or_insert_with(|| vec![acp.to_owned()]);
+            });
+        })
+    });
+    acps.retain(|_, v| !v.is_empty());
+
+    dg.write(svg_nodes, edges, output, acps)?;
 
     Ok(())
 }

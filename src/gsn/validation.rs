@@ -839,4 +839,37 @@ mod test {
         assert_eq!(d.errors, 1);
         assert_eq!(d.warnings, 0);
     }
+
+    #[test]
+    fn invalid_acp_ref() {
+        let mut d = Diagnostics::default();
+        let mut nodes = BTreeMap::<String, GsnNode>::new();
+        nodes.insert(
+            "G1".to_owned(),
+            GsnNode {
+                supported_by: vec!["G2".to_owned()],
+                node_type: Some(GsnNodeType::Goal),
+                acp: BTreeMap::from([("ACP1".to_owned(), vec!["G3".to_owned()])]),
+                ..Default::default()
+            },
+        );
+        nodes.insert(
+            "G2".to_owned(),
+            GsnNode {
+                undeveloped: Some(true),
+                node_type: Some(GsnNodeType::Goal),
+                ..Default::default()
+            },
+        );
+        validate_module(&mut d, "", &Module::default(), &nodes);
+        assert_eq!(d.messages.len(), 1);
+        assert_eq!(d.messages[0].module, Some("".to_owned()));
+        assert_eq!(d.messages[0].diag_type, DiagType::Error);
+        assert_eq!(
+            d.messages[0].msg,
+            "V09: Element G1 has an assurance claim point ACP1 that references G3, but this is neither its own ID nor any of the connected elements."
+        );
+        assert_eq!(d.errors, 1);
+        assert_eq!(d.warnings, 0);
+    }
 }

@@ -18,6 +18,8 @@ use super::{
 };
 
 pub const ACP_BOX_SIZE: i32 = 5;
+pub const PADDING_VERTICAL: i32 = 7;
+pub const PADDING_HORIZONTAL: i32 = 7;
 
 ///
 /// Render the complete graph
@@ -66,16 +68,16 @@ fn render_edges(
     let edges = graph.get_edges();
     for (source, targets) in edges {
         for target in targets {
-            let edge = render_edge(
+            let elements = render_edge(
                 graph,
+                render_graph,
                 ranks,
                 &bounding_boxes,
                 source,
                 target,
                 width,
-                &render_graph.margin,
             );
-            document.append(edge);
+            elements.into_iter().for_each(|e| document.append(e));
         }
     }
 }

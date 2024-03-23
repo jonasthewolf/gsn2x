@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg classes="gsndiagram" viewBox="0 0 677 551" xmlns="http://www.w3.org/2000/svg">
+<svg classes="gsndiagram" viewBox="0 0 677 483" xmlns="http://www.w3.org/2000/svg">
 <symbol id="module_icon">
 <rect fill="lightgrey" height="5" stroke="black" stroke-width="1" width="10" x="0" y="0"/>
 <rect fill="lightgrey" height="10" stroke="black" stroke-width="1" width="20" x="0" y="5"/>
@@ -34,7 +34,7 @@ System is acceptably safe to operate
 <text font-family="Arial" font-size="12" font-weight="bold" x="178" y="125">
 S1
 </text>
-<text font-family="Arial" font-size="12" x="178" y="144">
+<text font-family="Arial" font-size="12" x="174" y="144">
 Argument over all hazards
 </text>
 </g>
@@ -107,19 +107,40 @@ ACP5
 </text>
 </g>
 <path class="gsnedge gsninspby" d="M243,66 C243,96,243,76,243,96" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M96,238 C96,268,96,263,96,283" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M391,238 C391,268,288,263,288,283" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M391,238 C391,268,495,248,495,268" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninctxt" d="M322,129 C352,129,332,129,352,129" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M243,152 C243,182,96,162,96,182" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M243,152 C243,182,391,162,391,182" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<g class="gsnmodule" id="node_gsn_module">
-<title>Module Information</title>
-<text font-family="Arial" font-size="12" x="382" y="517">
-Module: examples_confidence_gsn_yaml
-</text>
-<text font-family="Arial" font-size="12" x="382" y="531">
-Generated on: 2024-03-22T22:00:31.241845000Z
+<g class="gsnacp" id="acp_acp1">
+<use href="#acp" x="238" y="76"/>
+<text font-family="Arial" font-size="12" x="255" y="90">
+ACP1
 </text>
 </g>
+<path class="gsnedge gsninspby" d="M96,238 C96,268,96,263,96,283" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<g class="gsnacp" id="acp_acp2">
+<use href="#acp" x="91" y="248"/>
+<text font-family="Arial" font-size="12" x="108" y="262">
+ACP2
+</text>
+</g>
+<path class="gsnedge gsninspby" d="M391,238 C391,268,288,263,288,283" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<g class="gsnacp" id="acp_acp3">
+<use href="#acp" x="386" y="248"/>
+<text font-family="Arial" font-size="12" x="403" y="262">
+ACP3
+</text>
+</g>
+<path class="gsnedge gsninspby" d="M391,238 C391,268,495,248,495,268" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<g class="gsnacp" id="acp_acp3">
+<use href="#acp" x="386" y="248"/>
+<text font-family="Arial" font-size="12" x="403" y="262">
+ACP3
+</text>
+</g>
+<path class="gsnedge gsninctxt" d="M322,129 C352,129,332,129,352,129" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<g class="gsnacp" id="acp_acp4">
+<use href="#acp" x="332" y="124"/>
+<text font-family="Arial" font-size="12" x="324" y="150">
+ACP4
+</text>
+</g>
+<path class="gsnedge gsninspby" d="M243,152 C243,182,96,162,96,182" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M243,152 C243,182,391,162,391,182" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 </svg>

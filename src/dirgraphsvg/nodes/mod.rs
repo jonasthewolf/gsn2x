@@ -23,7 +23,7 @@ use self::{
 
 use super::{
     escape_text,
-    render::create_group,
+    render::{create_group, PADDING_HORIZONTAL},
     util::{escape_url, font::text_bounding_box},
 };
 
@@ -85,8 +85,6 @@ struct SizeContext {
     text_height: i32,
 }
 
-const PADDING_VERTICAL: i32 = 7;
-const PADDING_HORIZONTAL: i32 = 7;
 const OFFSET_IDENTIFIER: i32 = 5;
 const MODULE_TAB_HEIGHT: i32 = 10;
 

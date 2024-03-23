@@ -17,6 +17,7 @@ Validations can be performed on individual input files.
 | V06 | All referenced elements in `supportedBy` and `inContextOf` must not refer to the element itself.            |
 | V07 | All elements listed as extending other elements must be known elements of the current module and semantically sensible (see V04). |
 | V08 | The IDs start contradicts the type of the element set with `node_type`. |
+| V09 | Element has an assurance claim point that references another element, that this is neither its own ID nor any of the connected elements.|
 
 The following checks apply to the complete set of input files.
 

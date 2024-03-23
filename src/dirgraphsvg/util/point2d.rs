@@ -26,6 +26,20 @@ impl Point2D<i32> {
                 + (self.y - p2.y) as f64 * (self.y - p2.y) as f64,
         ) as i32
     }
+
+    ///
+    /// Get angle between self and other point
+    ///
+    pub fn angle(&self, p2: &Point2D<i32>) -> f32 {
+        f32::acos((self.x * p2.x + self.y * p2.y) as f32 / (self.norm() * p2.norm()))
+    }
+
+    ///
+    /// Get the norm of the point
+    ///
+    pub fn norm(&self) -> f32 {
+        f32::sqrt((self.x * self.x + self.y * self.y) as f32)
+    }
 }
 
 impl<T> Debug for Point2D<T>

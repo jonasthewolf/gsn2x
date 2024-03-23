@@ -138,16 +138,16 @@ xxxxxxx.
 <text font-family="Arial" font-size="12" font-weight="bold" x="294" y="362">
 S7.3
 </text>
-<text font-family="Arial" font-size="12" x="294" y="381">
+<text font-family="Arial" font-size="12" x="292" y="381">
 xxxx xxx xxxxxxxxx
 </text>
-<text font-family="Arial" font-size="12" x="294" y="395">
+<text font-family="Arial" font-size="12" x="288" y="395">
 xxx xxxxxxx
 </text>
-<text font-family="Arial" font-size="12" x="294" y="409">
+<text font-family="Arial" font-size="12" x="281" y="409">
 xxxxxxxxxxxx xx
 </text>
-<text font-family="Arial" font-size="12" x="294" y="423">
+<text font-family="Arial" font-size="12" x="272" y="423">
 xxxxxxxxxx.
 </text>
 </g>
