@@ -12,8 +12,9 @@
     - [Stylesheets](./adv_stylesheets.md)
     - [Evidences](./adv_evidences.md)
 - [Modular Extension](./mod_extension.md)
-    - [Continued Development](./mod_dev.md)
+    - [Distributed Development](./mod_distdev.md)
     - [Module Info](./mod_info.md)
+- [Confidence Argument Extension](./confidence.md)
 - [Interfacing](./interfacing.md)
 
 ---
