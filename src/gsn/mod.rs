@@ -1,7 +1,7 @@
 use crate::{
     diagnostics::Diagnostics,
     dirgraph::{DirectedGraphEdgeType, DirectedGraphNodeType},
-    dirgraphsvg::edges::{EdgeType, SingleEdge, WayType},
+    dirgraphsvg::edges::{EdgeType, SingleEdge},
 };
 use anyhow::{anyhow, Error};
 use serde::{
@@ -431,26 +431,26 @@ fn add_dependencies(
                 // Here, both are false
                 let e = dependencies.entry(cur_node.module.to_owned()).or_default();
                 e.entry(other_module.to_owned())
-                    .or_insert(EdgeType::new(WayType::OneWay(dep_type)));
+                    .or_insert(EdgeType::OneWay(dep_type));
             }
             // unwrap is ok, since oneway_module is either newly inserted (else-case above),
             // or found in `dependencies` before the if-else if-else.
             let e = dependencies.get_mut(oneway_module).unwrap();
             e.entry(otherway_module.to_owned())
                 .and_modify(|x| {
-                    x.set_way(match &x.get_way() {
-                        WayType::OneWay(et) if normal_dir => WayType::OneWay(*et | dep_type),
-                        WayType::OneWay(et) if !normal_dir => WayType::TwoWay((dep_type, *et)),
-                        WayType::TwoWay((te, et)) if normal_dir => {
-                            WayType::TwoWay((*te, *et | dep_type))
+                    *x = match &x {
+                        EdgeType::OneWay(et) if normal_dir => EdgeType::OneWay(*et | dep_type),
+                        EdgeType::OneWay(et) if !normal_dir => EdgeType::TwoWay((dep_type, *et)),
+                        EdgeType::TwoWay((te, et)) if normal_dir => {
+                            EdgeType::TwoWay((*te, *et | dep_type))
                         }
-                        WayType::TwoWay((te, et)) if !normal_dir => {
-                            WayType::TwoWay((*te | dep_type, *et))
+                        EdgeType::TwoWay((te, et)) if !normal_dir => {
+                            EdgeType::TwoWay((*te | dep_type, *et))
                         }
-                        y => *y,
-                    });
+                        _ => *x,
+                    }
                 })
-                .or_insert(EdgeType::new(WayType::OneWay(dep_type)));
+                .or_insert(EdgeType::OneWay(dep_type));
         }
     }
 }

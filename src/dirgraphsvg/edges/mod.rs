@@ -3,7 +3,7 @@ use std::{cell::RefCell, ops::BitOr};
 use svg::node::element::{path::Data, Path};
 
 use crate::{
-    dirgraph::{DirectedGraph, DirectedGraphEdgeType},
+    dirgraph::DirectedGraph,
     dirgraphsvg::render::{BOTTOM_RIGHT_CORNER, TOP_LEFT_CORNER},
     gsn::GsnEdgeType,
 };
@@ -49,53 +49,11 @@ impl BitOr for SingleEdge {
     }
 }
 
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
-pub struct EdgeType<'a> {
-    acp: Option<&'a Vec<String>>,
-    way: WayType,
-}
-
-impl<'a, 'b> DirectedGraphEdgeType<'a> for EdgeType<'b> {
-    fn is_primary_child_edge(&self) -> bool {
-        matches!(
-            self.way,
-            WayType::OneWay(SingleEdge::SupportedBy)
-                | WayType::OneWay(SingleEdge::Composite)
-                | WayType::TwoWay((SingleEdge::SupportedBy, _))
-                | WayType::TwoWay((_, SingleEdge::SupportedBy))
-                | WayType::TwoWay((SingleEdge::Composite, _))
-                | WayType::TwoWay((_, SingleEdge::Composite))
-        )
-    }
-
-    fn is_secondary_child_edge(&self) -> bool {
-        matches!(self.way, WayType::OneWay(SingleEdge::InContextOf))
-    }
-}
-
-impl<'a> EdgeType<'a> {
-    pub fn get_way(&self) -> WayType {
-        self.way
-    }
-
-    pub fn set_way(&mut self, way: WayType) {
-        self.way = way;
-    }
-
-    pub fn new(way: WayType) -> Self {
-        EdgeType { acp: None, way }
-    }
-
-    pub fn add_acp(&mut self, acp: &'a Vec<String>) {
-        self.acp = Some(acp);
-    }
-}
-
 ///
 /// The edge type used for rendering
 ///
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
-pub enum WayType {
+pub enum EdgeType {
     OneWay(SingleEdge),
     TwoWay((SingleEdge, SingleEdge)),
 }
@@ -103,7 +61,7 @@ pub enum WayType {
 ///
 /// Convert from GsnEdgeType to EdgeType
 ///
-impl From<&GsnEdgeType> for WayType {
+impl From<&GsnEdgeType> for EdgeType {
     fn from(value: &GsnEdgeType) -> Self {
         match value {
             GsnEdgeType::SupportedBy => Self::OneWay(SingleEdge::SupportedBy),
@@ -142,9 +100,9 @@ pub(super) fn render_edge(
     let s_pos = s.get_position();
     let t_pos = t.get_position();
 
-    let (marker_start_height, marker_end_height, support_distance) = match target.1.way {
-        WayType::OneWay(_) => (0i32, MARKER_HEIGHT as i32, 3i32 * MARKER_HEIGHT as i32),
-        WayType::TwoWay(_) => (
+    let (marker_start_height, marker_end_height, support_distance) = match target.1 {
+        EdgeType::OneWay(_) => (0i32, MARKER_HEIGHT as i32, 3i32 * MARKER_HEIGHT as i32),
+        EdgeType::TwoWay(_) => (
             MARKER_HEIGHT as i32,
             MARKER_HEIGHT as i32,
             3i32 * MARKER_HEIGHT as i32,
@@ -170,30 +128,30 @@ pub(super) fn render_edge(
     curve_points.push((end, end_sup));
 
     let data = create_path_data_for_points(&curve_points);
-    let arrow_end_id = match &target.1.way {
-        WayType::OneWay(SingleEdge::InContextOf)
-        | WayType::TwoWay((_, SingleEdge::InContextOf)) => Some("url(#incontextof_arrow)"),
-        WayType::OneWay(SingleEdge::SupportedBy)
-        | WayType::TwoWay((_, SingleEdge::SupportedBy)) => Some("url(#supportedby_arrow)"),
-        WayType::OneWay(SingleEdge::Composite) | WayType::TwoWay((_, SingleEdge::Composite)) => {
+    let arrow_end_id = match &target.1 {
+        EdgeType::OneWay(SingleEdge::InContextOf)
+        | EdgeType::TwoWay((_, SingleEdge::InContextOf)) => Some("url(#incontextof_arrow)"),
+        EdgeType::OneWay(SingleEdge::SupportedBy)
+        | EdgeType::TwoWay((_, SingleEdge::SupportedBy)) => Some("url(#supportedby_arrow)"),
+        EdgeType::OneWay(SingleEdge::Composite) | EdgeType::TwoWay((_, SingleEdge::Composite)) => {
             Some("url(#composite_arrow)")
         }
     };
-    let arrow_start_id = match &target.1.way {
-        WayType::TwoWay((SingleEdge::InContextOf, _)) => Some("url(#incontextof_arrow)"),
-        WayType::TwoWay((SingleEdge::SupportedBy, _)) => Some("url(#supportedby_arrow)"),
-        WayType::TwoWay((SingleEdge::Composite, _)) => Some("url(#composite_arrow)"),
+    let arrow_start_id = match &target.1 {
+        EdgeType::TwoWay((SingleEdge::InContextOf, _)) => Some("url(#incontextof_arrow)"),
+        EdgeType::TwoWay((SingleEdge::SupportedBy, _)) => Some("url(#supportedby_arrow)"),
+        EdgeType::TwoWay((SingleEdge::Composite, _)) => Some("url(#composite_arrow)"),
         _ => None,
     };
     let mut classes = "gsnedge".to_string();
-    match target.1.way {
-        WayType::OneWay(SingleEdge::InContextOf)
-        | WayType::TwoWay((_, SingleEdge::InContextOf))
-        | WayType::TwoWay((SingleEdge::InContextOf, _)) => classes.push_str(" gsninctxt"),
-        WayType::OneWay(SingleEdge::SupportedBy)
-        | WayType::TwoWay((_, SingleEdge::SupportedBy))
-        | WayType::TwoWay((SingleEdge::SupportedBy, _)) => classes.push_str(" gsninspby"),
-        WayType::OneWay(SingleEdge::Composite) | WayType::TwoWay((_, SingleEdge::Composite)) => {
+    match target.1 {
+        EdgeType::OneWay(SingleEdge::InContextOf)
+        | EdgeType::TwoWay((_, SingleEdge::InContextOf))
+        | EdgeType::TwoWay((SingleEdge::InContextOf, _)) => classes.push_str(" gsninctxt"),
+        EdgeType::OneWay(SingleEdge::SupportedBy)
+        | EdgeType::TwoWay((_, SingleEdge::SupportedBy))
+        | EdgeType::TwoWay((SingleEdge::SupportedBy, _)) => classes.push_str(" gsninspby"),
+        EdgeType::OneWay(SingleEdge::Composite) | EdgeType::TwoWay((_, SingleEdge::Composite)) => {
             // Already covered by all other matches
             //| EdgeType::TwoWay((SingleEdge::Composite, _))
             classes.push_str(" gsncomposite")
@@ -471,7 +429,7 @@ mod test {
     #[test]
     fn formatting() {
         assert_eq!(
-            format!("{:?}", WayType::OneWay(SingleEdge::InContextOf)),
+            format!("{:?}", EdgeType::OneWay(SingleEdge::InContextOf)),
             "OneWay(InContextOf)"
         );
     }
