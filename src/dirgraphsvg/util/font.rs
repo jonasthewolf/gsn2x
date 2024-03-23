@@ -117,7 +117,7 @@ mod test {
 
     #[test]
     fn non_existing_font() {
-        assert!(get_font("afontthatprobablydoesnotexist", false, false).is_err());
+        assert!(dbg!(get_font("afontthatprobablydoesnotexist", false, false)).is_err());
     }
 
     #[test]
