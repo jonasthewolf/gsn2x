@@ -4,6 +4,9 @@
 <rect fill="lightgrey" height="5" stroke="black" stroke-width="1" width="10" x="0" y="0"/>
 <rect fill="lightgrey" height="10" stroke="black" stroke-width="1" width="20" x="0" y="5"/>
 </symbol>
+<symbol id="acp">
+<rect fill="black" height="10" stroke="black" stroke-width="1" width="10" x="0" y="0"/>
+</symbol>
 <marker id="composite_arrow" markerHeight="9" markerUnits="userSpaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
 <polyline fill="none" points="0 0, 6 4.5, 0 9" stroke="black" stroke-width="1"/>
 <polyline fill="none" points="4 0, 10 4.5, 4 9" stroke="black" stroke-width="1"/>
@@ -15,7 +18,7 @@
 <marker id="incontextof_arrow" markerHeight="9" markerUnits="userSpaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
 <polyline fill="none" points="0 0, 10 4.5, 0 9, 0 0" stroke="black" stroke-width="1"/>
 </marker>
-<g class="gsn_module_tests_issue249_yaml gsnelem gsnasmp" id="node_A2">
+<g class="gsn_module_tests_issue249_yaml gsnelem gsnasmp" id="node_a2">
 <title>A2</title>
 <path class="border" d="M20,53 a85,33,0,1,0,170,0 a85,33,0,1,0,-170,0 z" fill="none" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="52" y="44">
@@ -28,7 +31,7 @@ Another assumption
 A
 </text>
 </g>
-<g class="gsn_module_tests_issue249_yaml gsnelem gsngoal" id="node_G3">
+<g class="gsn_module_tests_issue249_yaml gsnelem gsngoal" id="node_g3">
 <title>G3</title>
 <path class="border" d="M230,30 L406,30 L406,76 L230,76 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="237" y="49">
@@ -38,7 +41,7 @@ G3
 Yet another goal with context
 </text>
 </g>
-<g class="gsn_module_tests_issue249_yaml gsnelem gsnjust" id="node_J2">
+<g class="gsn_module_tests_issue249_yaml gsnelem gsnjust" id="node_j2">
 <title>J2</title>
 <path class="border" d="M446,53 a86,33,0,1,0,172,0 a86,33,0,1,0,-172,0 z" fill="none" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="478" y="44">
@@ -51,7 +54,7 @@ Another justification
 J
 </text>
 </g>
-<g class="gsn_module_tests_issue249_yaml gsnelem gsngoal" id="node_G4">
+<g class="gsn_module_tests_issue249_yaml gsnelem gsngoal" id="node_g4">
 <title>G4</title>
 <path class="border" d="M266,126 L370,126 L370,172 L266,172 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="273" y="145">
@@ -61,7 +64,7 @@ G4
 Simple goal
 </text>
 </g>
-<g class="gsn_module_tests_issue249_yaml gsnelem gsnsltn" id="node_Sn1">
+<g class="gsn_module_tests_issue249_yaml gsnelem gsnsltn" id="node_sn1">
 <title>Sn1</title>
 <path class="border" d="M275,255 a43,43,0,1,0,86,0 a43,43,0,1,0,-86,0 z" fill="none" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="293" y="246">

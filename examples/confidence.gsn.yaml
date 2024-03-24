@@ -1,0 +1,40 @@
+G1:
+  text: System is acceptably safe to operate
+  supportedBy: [S1]
+  acp:
+    ACP1: S1
+
+S1:
+  text: Argument over all hazards
+  supportedBy: [G2, G3]
+  inContextOf: [C1]
+  acp:
+    ACP4: C1
+
+C1:
+  text: Hazard list
+  acp:
+    ACP6: C1
+
+G2:
+  text: Hazard 1 mitigated
+  supportedBy: [Sn1]
+  acp:
+    ACP2: Sn1
+
+Sn1:
+  text: Evidence for Hazard 1
+
+G3:
+  text: Hazard 2 mitigated
+  supportedBy: [Sn2a, Sn2b]
+  acp:
+    ACP3: [Sn2a, Sn2b]
+
+Sn2a:
+  text: Evidence for Hazard 2
+
+Sn2b:
+  text: More evidence for Hazard 2
+  acp:
+    ACP5: Sn2b

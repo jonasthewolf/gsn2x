@@ -86,31 +86,27 @@ fn check_node_references(
         .iter()
         .filter(|(_, n)| !excluded_modules.contains(&n.module.as_str()))
     {
-        if let Some(context) = node.in_context_of.as_ref() {
-            context
-                .iter()
-                .filter(|&n| !nodes.contains_key(n))
-                .for_each(|wref| {
-                    diag.add_error(
-                        Some(&node.module),
-                        format!("C03: Element {} has unresolved {}: {}", id, "context", wref),
-                    );
-                });
-        }
-        if let Some(support) = node.supported_by.as_ref() {
-            support
-                .iter()
-                .filter(|&n| !nodes.contains_key(n))
-                .for_each(|wref| {
-                    diag.add_error(
-                        Some(&node.module),
-                        format!(
-                            "C03: Element {} has unresolved {}: {}",
-                            id, "supported by element", wref
-                        ),
-                    );
-                });
-        }
+        node.in_context_of
+            .iter()
+            .filter(|&n| !nodes.contains_key(n))
+            .for_each(|wref| {
+                diag.add_error(
+                    Some(&node.module),
+                    format!("C03: Element {} has unresolved {}: {}", id, "context", wref),
+                );
+            });
+        node.supported_by
+            .iter()
+            .filter(|&n| !nodes.contains_key(n))
+            .for_each(|wref| {
+                diag.add_error(
+                    Some(&node.module),
+                    format!(
+                        "C03: Element {} has unresolved {}: {}",
+                        id, "supported by element", wref
+                    ),
+                );
+            });
     }
 }
 
@@ -169,6 +165,7 @@ pub fn check_layers(diag: &mut Diagnostics, nodes: &BTreeMap<String, GsnNode>, l
         "rankIncrement",
         "horizontalIndex",
         "wordWrap",
+        "acp",
     ];
     for l in layers {
         if reserved_words.contains(l) {
@@ -204,7 +201,7 @@ mod test {
         nodes.insert(
             "G1".to_owned(),
             GsnNode {
-                in_context_of: Some(vec!["C1".to_owned()]),
+                in_context_of: vec!["C1".to_owned()],
                 undeveloped: Some(true),
                 node_type: Some(GsnNodeType::Goal),
                 ..Default::default()
@@ -229,7 +226,7 @@ mod test {
         nodes.insert(
             "G1".to_owned(),
             GsnNode {
-                supported_by: Some(vec!["G2".to_owned()]),
+                supported_by: vec!["G2".to_owned()],
                 node_type: Some(GsnNodeType::Goal),
                 ..Default::default()
             },
@@ -277,21 +274,21 @@ mod test {
         nodes.insert(
             "G0".to_owned(),
             GsnNode {
-                supported_by: Some(vec!["G1".to_owned()]),
+                supported_by: vec!["G1".to_owned()],
                 ..Default::default()
             },
         );
         nodes.insert(
             "G1".to_owned(),
             GsnNode {
-                supported_by: Some(vec!["G2".to_owned()]),
+                supported_by: vec!["G2".to_owned()],
                 ..Default::default()
             },
         );
         nodes.insert(
             "G2".to_owned(),
             GsnNode {
-                supported_by: Some(vec!["G1".to_owned()]),
+                supported_by: vec!["G1".to_owned()],
                 ..Default::default()
             },
         );
@@ -319,21 +316,21 @@ mod test {
         nodes.insert(
             "G1".to_owned(),
             GsnNode {
-                supported_by: Some(vec!["S1".to_owned()]),
+                supported_by: vec!["S1".to_owned()],
                 ..Default::default()
             },
         );
         nodes.insert(
             "S1".to_owned(),
             GsnNode {
-                supported_by: Some(vec!["G2".to_owned()]),
+                supported_by: vec!["G2".to_owned()],
                 ..Default::default()
             },
         );
         nodes.insert(
             "G2".to_owned(),
             GsnNode {
-                supported_by: Some(vec!["G1".to_owned()]),
+                supported_by: vec!["G1".to_owned()],
                 ..Default::default()
             },
         );
@@ -356,7 +353,7 @@ mod test {
         nodes.insert(
             "G1".to_owned(),
             GsnNode {
-                supported_by: Some(vec!["S1".to_owned()]),
+                supported_by: vec!["S1".to_owned()],
                 node_type: Some(GsnNodeType::Goal),
                 ..Default::default()
             },
@@ -364,7 +361,7 @@ mod test {
         nodes.insert(
             "S1".to_owned(),
             GsnNode {
-                supported_by: Some(vec!["G2".to_owned(), "G3".to_owned()]),
+                supported_by: vec!["G2".to_owned(), "G3".to_owned()],
                 node_type: Some(GsnNodeType::Strategy),
                 ..Default::default()
             },
@@ -380,7 +377,7 @@ mod test {
         nodes.insert(
             "G3".to_owned(),
             GsnNode {
-                supported_by: Some(vec!["G2".to_owned()]),
+                supported_by: vec!["G2".to_owned()],
                 node_type: Some(GsnNodeType::Goal),
                 ..Default::default()
             },
@@ -398,7 +395,7 @@ mod test {
         nodes.insert(
             "G1".to_owned(),
             GsnNode {
-                supported_by: Some(vec!["S1".to_owned()]),
+                supported_by: vec!["S1".to_owned()],
                 node_type: Some(GsnNodeType::Goal),
                 ..Default::default()
             },
@@ -406,7 +403,7 @@ mod test {
         nodes.insert(
             "S1".to_owned(),
             GsnNode {
-                supported_by: Some(vec!["G2".to_owned()]),
+                supported_by: vec!["G2".to_owned()],
                 node_type: Some(GsnNodeType::Strategy),
                 ..Default::default()
             },
@@ -414,7 +411,7 @@ mod test {
         nodes.insert(
             "G2".to_owned(),
             GsnNode {
-                supported_by: Some(vec!["G1".to_owned()]),
+                supported_by: vec!["G1".to_owned()],
                 node_type: Some(GsnNodeType::Goal),
                 ..Default::default()
             },
@@ -429,8 +426,8 @@ mod test {
         nodes.insert(
             "G3".to_owned(),
             GsnNode {
-                supported_by: Some(vec!["Sn1".to_owned(), "G4".to_owned()]),
-                in_context_of: Some(vec!["A1".to_owned()]),
+                supported_by: vec!["Sn1".to_owned(), "G4".to_owned()],
+                in_context_of: vec!["A1".to_owned()],
                 node_type: Some(GsnNodeType::Goal),
                 ..Default::default()
             },
@@ -439,7 +436,7 @@ mod test {
             "G4".to_owned(),
             GsnNode {
                 undeveloped: Some(true),
-                in_context_of: Some(vec!["J1".to_owned()]),
+                in_context_of: vec!["J1".to_owned()],
                 node_type: Some(GsnNodeType::Goal),
                 ..Default::default()
             },

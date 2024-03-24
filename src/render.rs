@@ -11,7 +11,7 @@ use std::collections::BTreeMap;
 use std::io::Write;
 use std::time::SystemTime;
 
-#[derive(Default, Eq, PartialEq)]
+#[derive(Debug, Default, Eq, PartialEq)]
 pub enum RenderLegend {
     No,
     #[default]
@@ -40,13 +40,7 @@ impl<'a> RenderOptions<'a> {
         embed_stylesheets: bool,
         output_directory: Option<&'a String>,
     ) -> Self {
-        let legend = if matches.get_flag("NO_LEGEND") {
-            RenderLegend::No
-        } else if matches.get_flag("FULL_LEGEND") {
-            RenderLegend::Full
-        } else {
-            RenderLegend::Short
-        };
+        let legend = get_render_legend(matches);
         let layers = matches
             .get_many::<String>("LAYERS")
             .into_iter()
@@ -92,6 +86,19 @@ impl<'a> RenderOptions<'a> {
             skip_argument: matches.get_flag("NO_ARGUMENT_VIEW"),
             word_wrap: matches.get_one::<u32>("WORD_WRAP").copied(),
         }
+    }
+}
+
+///
+/// Get RenderLegend form ArgMatches
+///
+fn get_render_legend(matches: &ArgMatches) -> RenderLegend {
+    if matches.get_flag("NO_LEGEND") {
+        RenderLegend::No
+    } else if matches.get_flag("FULL_LEGEND") {
+        RenderLegend::Full
+    } else {
+        RenderLegend::Short
     }
 }
 
@@ -243,7 +250,7 @@ pub fn render_architecture(
                 .collect(),
         );
 
-    dg.write(svg_nodes, edges, output, true)?;
+    dg.write(svg_nodes, edges, output, BTreeMap::new())?;
 
     Ok(())
 }
@@ -305,7 +312,7 @@ pub fn render_complete(
                 .collect(),
         );
 
-    dg.write(svg_nodes, edges, output, false)?;
+    dg.write(svg_nodes, edges, output, BTreeMap::new())?;
 
     Ok(())
 }
@@ -418,7 +425,24 @@ pub fn render_argument(
         dg = dg.add_meta_information(&mut meta_info);
     }
 
-    dg.write(svg_nodes, edges, output, false)?;
+    // Create ACPs as edge decorators from node information.
+    let mut acps: BTreeMap<(String, String), Vec<String>> = BTreeMap::new();
+    nodes.iter().for_each(|(s, n)| {
+        n.acp.iter().for_each(|(acp, ts)| {
+            ts.iter().filter(|&t| s != t).for_each(|t| {
+                acps.entry((s.to_owned(), t.to_owned()))
+                    .and_modify(|a: &mut Vec<String>| {
+                        if !a.contains(acp) {
+                            a.push(acp.to_owned());
+                        }
+                    })
+                    .or_insert_with(|| vec![acp.to_owned()]);
+            });
+        })
+    });
+    acps.retain(|_, v| !v.is_empty());
+
+    dg.write(svg_nodes, edges, output, acps)?;
 
     Ok(())
 }
@@ -496,14 +520,34 @@ pub(crate) fn render_evidences(
 #[cfg(test)]
 mod test {
 
-    use crate::gsn::GsnNode;
+    use clap::{Arg, ArgAction, Command};
 
-    use super::svg_from_gsn_node;
+    use crate::{gsn::GsnNode, render::RenderLegend};
+
+    use super::{get_render_legend, svg_from_gsn_node};
 
     #[test]
     #[should_panic]
     fn cover_unreachable() {
         let gsn_node = GsnNode::default();
         svg_from_gsn_node("X2", &gsn_node, false, &[], None);
+    }
+
+    #[test]
+    fn translate_render_legend() -> anyhow::Result<()> {
+        let cmd = Command::new("gsn2x")
+            .arg(Arg::new("NO_LEGEND").short('G').action(ArgAction::SetTrue))
+            .arg(
+                Arg::new("FULL_LEGEND")
+                    .short('g')
+                    .action(ArgAction::SetTrue),
+            );
+        let matches = cmd.clone().try_get_matches_from(vec!["gsn2x"])?;
+        assert_eq!(get_render_legend(&matches), RenderLegend::Short);
+        let matches = cmd.clone().try_get_matches_from(vec!["gsn2x", "-G"])?;
+        assert_eq!(get_render_legend(&matches), RenderLegend::No);
+        let matches = cmd.clone().try_get_matches_from(vec!["gsn2x", "-g"])?;
+        assert_eq!(get_render_legend(&matches), RenderLegend::Full);
+        Ok(())
     }
 }

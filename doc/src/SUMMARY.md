@@ -11,7 +11,10 @@
     - [Layers](./adv_layers.md)
     - [Stylesheets](./adv_stylesheets.md)
     - [Evidences](./adv_evidences.md)
-- [Modular Extension](./modular_extension.md)
+- [Modular Extension](./mod_extension.md)
+    - [Distributed Development](./mod_distdev.md)
+    - [Module Info](./mod_info.md)
+- [Confidence Argument Extension](./confidence.md)
 - [Interfacing](./interfacing.md)
 
 ---

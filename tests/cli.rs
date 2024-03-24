@@ -62,7 +62,6 @@ mod integrations {
         println!("Lines: {l_line_count} {r_line_count}");
         if l_line_count == r_line_count {
             for (l, r) in left_c.lines().zip(right_c.lines()) {
-                // TODO Compare numbers in range of 5%
                 let l_r = replace_regex
                     .iter()
                     .flatten()
@@ -675,6 +674,12 @@ mod integrations {
             &["-E", "-l", "add1", "-l", "unsupported", "-l", "additional"],
             None,
         )?;
+        Ok(())
+    }
+
+    #[test]
+    fn confidence_extension() -> Result<()> {
+        regression_renderings(&["examples/confidence.gsn.yaml"], &["-E"], None)?;
         Ok(())
     }
 }

@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg classes="gsndiagram" viewBox="0 0 677 483" xmlns="http://www.w3.org/2000/svg">
+<symbol id="module_icon">
+<rect fill="lightgrey" height="5" stroke="black" stroke-width="1" width="10" x="0" y="0"/>
+<rect fill="lightgrey" height="10" stroke="black" stroke-width="1" width="20" x="0" y="5"/>
+</symbol>
+<symbol id="acp">
+<rect fill="black" height="10" stroke="black" stroke-width="1" width="10" x="0" y="0"/>
+</symbol>
+<marker id="composite_arrow" markerHeight="9" markerUnits="userSpaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
+<polyline fill="none" points="0 0, 6 4.5, 0 9" stroke="black" stroke-width="1"/>
+<polyline fill="none" points="4 0, 10 4.5, 4 9" stroke="black" stroke-width="1"/>
+<polyline fill="none" points="0 4.5, 10 4.5" stroke="black" stroke-width="1"/>
+</marker>
+<marker id="supportedby_arrow" markerHeight="9" markerUnits="userSpaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
+<polyline fill="black" points="0 0, 10 4.5, 0 9"/>
+</marker>
+<marker id="incontextof_arrow" markerHeight="9" markerUnits="userSpaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
+<polyline fill="none" points="0 0, 10 4.5, 0 9, 0 0" stroke="black" stroke-width="1"/>
+</marker>
+<g class="gsn_module_examples_confidence_gsn_yaml gsnelem gsngoal" id="node_g1">
+<title>G1</title>
+<path class="border" d="M134,20 L352,20 L352,66 L134,66 z" fill="transparent" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="141" y="39">
+G1
+</text>
+<text font-family="Arial" font-size="12" x="141" y="58">
+System is acceptably safe to operate
+</text>
+</g>
+<g class="gsn_module_examples_confidence_gsn_yaml gsnelem gsnstgy" id="node_s1">
+<title>S1</title>
+<path class="border" d="M171,106 L329,106 L315,152 L157,152 z" fill="transparent" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="178" y="125">
+S1
+</text>
+<text font-family="Arial" font-size="12" x="174" y="144">
+Argument over all hazards
+</text>
+</g>
+<g class="gsn_module_examples_confidence_gsn_yaml acp_acp6 gsnelem gsnctxt" id="node_c1">
+<title>C1</title>
+<path class="border" d="M372,106 L476,106 C486,106,486,152,476,152 L372,152 C362,152,362,106,372,106" fill="transparent" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="379" y="125">
+C1
+</text>
+<text font-family="Arial" font-size="12" x="379" y="144">
+Hazard list
+</text>
+<use href="#acp" x="419" y="152"/>
+<text font-family="Arial" font-size="12" x="436" y="166">
+ACP6
+</text>
+</g>
+<g class="gsn_module_examples_confidence_gsn_yaml gsnelem gsngoal" id="node_g2">
+<title>G2</title>
+<path class="border" d="M38,192 L154,192 L154,238 L38,238 z" fill="transparent" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="45" y="211">
+G2
+</text>
+<text font-family="Arial" font-size="12" x="45" y="230">
+Hazard 1 mitigated
+</text>
+</g>
+<g class="gsn_module_examples_confidence_gsn_yaml gsnelem gsngoal" id="node_g3">
+<title>G3</title>
+<path class="border" d="M333,192 L449,192 L449,238 L333,238 z" fill="transparent" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="340" y="211">
+G3
+</text>
+<text font-family="Arial" font-size="12" x="340" y="230">
+Hazard 2 mitigated
+</text>
+</g>
+<g class="gsn_module_examples_confidence_gsn_yaml gsnelem gsnsltn" id="node_sn1">
+<title>Sn1</title>
+<path class="border" d="M20,369 a76,76,0,1,0,152,0 a76,76,0,1,0,-152,0 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="36" y="360">
+Sn1
+</text>
+<text font-family="Arial" font-size="12" x="36" y="379">
+Evidence for Hazard 1
+</text>
+</g>
+<g class="gsn_module_examples_confidence_gsn_yaml gsnelem gsnsltn" id="node_sn2a">
+<title>Sn2a</title>
+<path class="border" d="M212,369 a76,76,0,1,0,152,0 a76,76,0,1,0,-152,0 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="228" y="360">
+Sn2a
+</text>
+<text font-family="Arial" font-size="12" x="228" y="379">
+Evidence for Hazard 2
+</text>
+</g>
+<g class="gsn_module_examples_confidence_gsn_yaml acp_acp5 gsnelem gsnsltn" id="node_sn2b">
+<title>Sn2b</title>
+<path class="border" d="M404,369 a91,91,0,1,0,182,0 a91,91,0,1,0,-182,0 z" fill="none" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="419" y="360">
+Sn2b
+</text>
+<text font-family="Arial" font-size="12" x="419" y="379">
+More evidence for Hazard 2
+</text>
+<use href="#acp" x="490" y="460"/>
+<text font-family="Arial" font-size="12" x="507" y="474">
+ACP5
+</text>
+</g>
+<path class="gsnedge gsninspby" d="M243,66 C243,96,243,76,243,96" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<g class="gsnacp" id="acp_g1_s1_acp1">
+<use href="#acp" x="237" y="80"/>
+<text font-family="Arial" font-size="12" x="254" y="94">
+ACP1
+</text>
+</g>
+<path class="gsnedge gsninspby" d="M96,238 C96,268,96,263,96,283" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<g class="gsnacp" id="acp_g2_sn1_acp2">
+<use href="#acp" x="91" y="260"/>
+<text font-family="Arial" font-size="12" x="108" y="274">
+ACP2
+</text>
+</g>
+<path class="gsnedge gsninspby" d="M391,238 C391,268,288,263,288,283" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<g class="gsnacp" id="acp_g3_sn2a_acp3">
+<use href="#acp" x="335" y="260"/>
+<text font-family="Arial" font-size="12" x="352" y="274">
+ACP3
+</text>
+</g>
+<path class="gsnedge gsninspby" d="M391,238 C391,268,495,248,495,268" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<g class="gsnacp" id="acp_g3_sn2b_acp3">
+<use href="#acp" x="439" y="253"/>
+<text font-family="Arial" font-size="12" x="431" y="279">
+ACP3
+</text>
+</g>
+<path class="gsnedge gsninctxt" d="M322,129 C352,129,332,129,352,129" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<g class="gsnacp" id="acp_s1_c1_acp4">
+<use href="#acp" x="336" y="123"/>
+<text font-family="Arial" font-size="12" x="328" y="149">
+ACP4
+</text>
+</g>
+<path class="gsnedge gsninspby" d="M243,152 C243,182,96,162,96,182" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M243,152 C243,182,391,162,391,182" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+</svg>

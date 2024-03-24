@@ -26,6 +26,20 @@ impl Point2D<i32> {
                 + (self.y - p2.y) as f64 * (self.y - p2.y) as f64,
         ) as i32
     }
+
+    ///
+    /// Get angle between self and other point
+    ///
+    pub fn angle(&self, p2: &Point2D<i32>) -> f32 {
+        f32::acos((self.x * p2.x + self.y * p2.y) as f32 / (self.norm() * p2.norm()))
+    }
+
+    ///
+    /// Get the norm of the point
+    ///
+    pub fn norm(&self) -> f32 {
+        f32::sqrt((self.x * self.x + self.y * self.y) as f32)
+    }
 }
 
 impl<T> Debug for Point2D<T>
@@ -98,16 +112,60 @@ where
     }
 }
 
-impl<T> Mul<T> for Point2D<T>
-where
-    T: Sized + Add + Mul<Output = T> + Copy,
-{
-    type Output = Point2D<T>;
+// impl<T> Mul<T> for Point2D<T>
+// where
+//     T: Sized + Add + Mul<Output = T> + Copy,
+// {
+//     type Output = Point2D<T>;
 
-    fn mul(self, rhs: T) -> Self::Output {
+//     fn mul(self, rhs: T) -> Self::Output {
+//         Point2D {
+//             x: self.x * rhs,
+//             y: self.y * rhs,
+//         }
+//     }
+// }
+
+impl Mul<i32> for Point2D<i32> {
+    type Output = Point2D<i32>;
+
+    fn mul(self, rhs: i32) -> Self::Output {
         Point2D {
             x: self.x * rhs,
             y: self.y * rhs,
+        }
+    }
+}
+
+impl Mul<Point2D<i32>> for i32 {
+    type Output = Point2D<i32>;
+
+    fn mul(self, rhs: Point2D<i32>) -> Self::Output {
+        Point2D {
+            x: rhs.x * self,
+            y: rhs.y * self,
+        }
+    }
+}
+
+impl Mul<f64> for Point2D<i32> {
+    type Output = Point2D<i32>;
+
+    fn mul(self, rhs: f64) -> Self::Output {
+        Point2D {
+            x: ((self.x as f64) * rhs).round() as i32,
+            y: ((self.y as f64) * rhs).round() as i32,
+        }
+    }
+}
+
+impl Mul<Point2D<i32>> for f64 {
+    type Output = Point2D<i32>;
+
+    fn mul(self, rhs: Point2D<i32>) -> Self::Output {
+        Point2D {
+            x: ((rhs.x as f64) * self).round() as i32,
+            y: ((rhs.y as f64) * self).round() as i32,
         }
     }
 }
@@ -151,8 +209,17 @@ mod test {
     fn scalar() {
         let p = Point2D::<i32> { x: 14, y: 23 };
         let p_new = p * 2;
+        let p_new2 = 2 * p;
+        let p_new3 = 4.0 * p;
+        let p_new4 = p * 3.0;
         assert_eq!(p_new.x, p.x * 2);
         assert_eq!(p_new.y, p.y * 2);
+        assert_eq!(p_new2.x, p.x * 2);
+        assert_eq!(p_new2.y, p.y * 2);
+        assert_eq!(p_new3.x, p.x * 4);
+        assert_eq!(p_new3.y, p.y * 4);
+        assert_eq!(p_new4.x, p.x * 3);
+        assert_eq!(p_new4.y, p.y * 3);
     }
 
     #[test]

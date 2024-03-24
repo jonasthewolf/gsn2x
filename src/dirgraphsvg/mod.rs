@@ -12,31 +12,11 @@ use edges::EdgeType;
 use nodes::{Port, SvgNode};
 
 use crate::dirgraph::DirectedGraph;
-use crate::dirgraph::DirectedGraphEdgeType;
 use crate::dirgraphsvg::layout::layout_nodes;
 use crate::dirgraphsvg::render::render_graph;
 
-use self::edges::SingleEdge;
 use self::layout::Margin;
 use self::util::font::FontInfo;
-
-impl<'a> DirectedGraphEdgeType<'a> for EdgeType {
-    fn is_primary_child_edge(&self) -> bool {
-        matches!(
-            *self,
-            EdgeType::OneWay(SingleEdge::SupportedBy)
-                | EdgeType::OneWay(SingleEdge::Composite)
-                | EdgeType::TwoWay((SingleEdge::SupportedBy, _))
-                | EdgeType::TwoWay((_, SingleEdge::SupportedBy))
-                | EdgeType::TwoWay((SingleEdge::Composite, _))
-                | EdgeType::TwoWay((_, SingleEdge::Composite))
-        )
-    }
-
-    fn is_secondary_child_edge(&self) -> bool {
-        matches!(*self, EdgeType::OneWay(SingleEdge::InContextOf))
-    }
-}
 
 #[derive(Default)]
 pub struct DirGraph<'a> {
@@ -68,7 +48,7 @@ impl<'a> DirGraph<'a> {
         mut nodes: BTreeMap<String, SvgNode>,
         edges: BTreeMap<String, Vec<(String, EdgeType)>>,
         mut output: impl std::io::Write,
-        _cycles_allowed: bool,
+        edge_decorators: BTreeMap<(String, String), Vec<String>>,
     ) -> Result<(), std::io::Error> {
         // Calculate node sizes
         nodes
@@ -80,7 +60,8 @@ impl<'a> DirGraph<'a> {
             .map(|(a, b)| (a, RefCell::new(b)))
             .collect();
         // Rank nodes
-        let graph = DirectedGraph::new(&nodes, &edges);
+        let mut graph = DirectedGraph::new(&nodes, &edges);
+        graph.add_edge_decorators(edge_decorators);
         let ranks = &graph.rank_nodes();
         // Layout graph
         let (width, height) = layout_nodes(&graph, ranks, &self.margin);
@@ -111,7 +92,7 @@ mod test {
         nodes.insert("G1".to_owned(), b1);
         d = d.add_meta_information(&mut vec!["A1".to_owned(), "B2".to_owned()]);
         let mut string_buffer = Vec::new();
-        d.write(nodes, BTreeMap::new(), &mut string_buffer, false)
+        d.write(nodes, BTreeMap::new(), &mut string_buffer, BTreeMap::new())
             .unwrap();
         println!("{}", std::str::from_utf8(string_buffer.as_slice()).unwrap());
     }

@@ -1,13 +1,17 @@
 use std::cell::RefCell;
 
 use svg::{
-    node::element::{Anchor, Element},
+    node::element::{Anchor, Element, Use},
     Node,
 };
 
 use crate::{
     dirgraph::DirectedGraphNodeType,
-    dirgraphsvg::{util::point2d::Point2D, FontInfo},
+    dirgraphsvg::{
+        render::{create_text, ACP_BOX_SIZE},
+        util::point2d::Point2D,
+        FontInfo,
+    },
     gsn::{GsnNode, HorizontalIndex},
 };
 
@@ -19,7 +23,7 @@ use self::{
 
 use super::{
     escape_text,
-    render::create_group,
+    render::{create_group, PADDING_HORIZONTAL},
     util::{escape_url, font::text_bounding_box},
 };
 
@@ -54,6 +58,7 @@ pub struct SvgNode {
     rank_increment: Option<usize>,
     horizontal_index: Option<HorizontalIndex>,
     node_type: NodeType,
+    acp: Vec<String>,
 }
 
 impl<'a> DirectedGraphNodeType<'a> for RefCell<SvgNode> {
@@ -80,8 +85,6 @@ struct SizeContext {
     text_height: i32,
 }
 
-const PADDING_VERTICAL: i32 = 7;
-const PADDING_HORIZONTAL: i32 = 7;
 const OFFSET_IDENTIFIER: i32 = 5;
 const MODULE_TAB_HEIGHT: i32 = 10;
 
@@ -202,6 +205,9 @@ impl SvgNode {
             NodeType::Ellipsis(x) => x.render(self, font, &mut g, border_color),
             NodeType::Away(x) => x.render(self, font, &mut g, border_color),
         };
+
+        render_acp_box(self, font, &mut g);
+
         if let Some(url) = &self.url {
             let link = Anchor::new().set("href", escape_url(url.as_str())).add(g);
             document.append(link);
@@ -225,7 +231,7 @@ impl SvgNode {
         // Add layer to node output
         let node_text = node_text_from_node_and_layers(identifier, gsn_node, layers, char_wrap);
         // Setup CSS classes
-        let mut classes = node_classes_from_node(gsn_node, masked);
+        let mut classes = node_classes_from_node(identifier, gsn_node, masked);
         classes.push("gsnelem".to_owned());
         classes.append(
             &mut add_classes
@@ -233,6 +239,20 @@ impl SvgNode {
                 .map(|&c| c.to_owned())
                 .collect::<Vec<String>>(),
         );
+
+        // Get all ACPs of this node that affect this node
+        let acp = gsn_node
+            .acp
+            .iter()
+            .filter_map(|(acp, ids)| {
+                if ids.iter().any(|id| id == identifier) {
+                    Some(acp)
+                } else {
+                    None
+                }
+            })
+            .cloned()
+            .collect();
 
         SvgNode {
             x: 0,
@@ -247,6 +267,7 @@ impl SvgNode {
             horizontal_index: gsn_node.horizontal_index,
             rank_increment: gsn_node.rank_increment,
             node_type: NodeType::Box(BoxType::Context),
+            acp,
         }
     }
 
@@ -604,31 +625,69 @@ impl SvgNode {
 }
 
 ///
+/// Render an element ACP box
 ///
 ///
-fn node_classes_from_node(gsn_node: &GsnNode, masked: bool) -> Vec<String> {
-    let layer_classes: Option<Vec<String>> = gsn_node
+fn render_acp_box(node: &SvgNode, font: &FontInfo, context: &mut Element) {
+    if !node.acp.is_empty() {
+        context.append(
+            Use::new()
+                .set("href", "#acp")
+                .set("x", node.x - ACP_BOX_SIZE)
+                .set("y", node.y + node.height / 2),
+        );
+        let acp_text = node.acp.join(", ");
+        let acp_y = node.y + node.height / 2 + text_bounding_box(font, &acp_text, false).1;
+        context.append(create_text(
+            &acp_text,
+            node.x + ACP_BOX_SIZE + PADDING_HORIZONTAL,
+            acp_y,
+            font,
+            false,
+        ));
+    }
+}
+
+///
+///
+///
+fn node_classes_from_node(identifier: &str, gsn_node: &GsnNode, masked: bool) -> Vec<String> {
+    let layer_classes: Vec<String> = gsn_node
         .additional
         .keys()
         .map(|k| {
-            let mut t = escape_text(&k.to_ascii_lowercase());
+            let mut t = escape_text(&k.to_lowercase());
             t.insert_str(0, "gsn_");
-            Some(t.to_owned())
+            t.to_owned()
         })
         .collect();
-    let mut mod_class = gsn_node.module.to_owned();
-    mod_class.insert_str(0, "gsn_module_");
-    let mut masked_class = vec![];
-    if masked {
-        masked_class.push("gsn_masked".to_owned());
-    }
+    let mod_class = [format!(
+        "gsn_module_{}",
+        escape_text(&gsn_node.module).to_lowercase()
+    )];
+    let masked_class = if masked {
+        vec!["gsn_masked".to_owned()]
+    } else {
+        vec![]
+    };
+    let acp_classes: Vec<String> = gsn_node
+        .acp
+        .iter()
+        .filter_map(|(acp, ids)| {
+            if ids.iter().any(|id| id == identifier) {
+                Some(format!("acp_{}", escape_text(acp).to_lowercase()))
+            } else {
+                None
+            }
+        })
+        .collect();
     let classes = gsn_node
         .classes
         .iter()
         .chain(layer_classes.iter())
-        .flatten()
-        .chain(&[mod_class])
+        .chain(mod_class.iter())
         .chain(masked_class.iter())
+        .chain(acp_classes.iter())
         .cloned()
         .collect();
     classes

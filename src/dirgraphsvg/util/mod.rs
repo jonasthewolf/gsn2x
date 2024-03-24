@@ -1,3 +1,4 @@
+pub mod curve;
 pub mod font;
 pub mod point2d;
 pub mod wrap_words;
@@ -13,7 +14,7 @@ pub fn escape_text(input: &str) -> String {
 /// Create node identifiers for the rendered SVG.
 ///
 pub fn escape_node_id(id: &str) -> String {
-    format!("node_{}", escape_text(id))
+    format!("node_{}", escape_text(id)).to_lowercase()
 }
 
 ///

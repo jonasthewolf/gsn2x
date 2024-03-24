@@ -26,5 +26,9 @@ I also noticed that (also for myself) it is good to note down some history of th
 
   In addition, I changed the license from CC-BY-4.0 to MIT. MIT is shorter and more applicable to software.
 
+- Own usage and feedback from various people led to improvements of the layout algorithm.
+  And now also to the implementation of the Confidence Argument Extension of the GSN standard as 
+  part of version 3.1.
+
 Any feedback, especially the use-case in your company is very much appreciated.
 

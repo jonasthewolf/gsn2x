@@ -17,6 +17,10 @@ use super::{
     DirGraph,
 };
 
+pub const ACP_BOX_SIZE: i32 = 5;
+pub const PADDING_VERTICAL: i32 = 7;
+pub const PADDING_HORIZONTAL: i32 = 7;
+
 ///
 /// Render the complete graph
 ///
@@ -64,16 +68,16 @@ fn render_edges(
     let edges = graph.get_edges();
     for (source, targets) in edges {
         for target in targets {
-            let edge = render_edge(
+            let elements = render_edge(
                 graph,
+                render_graph,
                 ranks,
                 &bounding_boxes,
                 source,
                 target,
                 width,
-                &render_graph.margin,
             );
-            document.append(edge);
+            elements.into_iter().for_each(|e| document.append(e));
         }
     }
 }
@@ -269,6 +273,17 @@ fn setup_basics(mut document: Document) -> Document {
         .set("fill", "lightgrey");
     let module_image = Symbol::new().set("id", "module_icon").add(mi_r1).add(mi_r2);
     document.append(module_image);
+
+    let acp_black_box = Rectangle::new()
+        .set("x", 0u32)
+        .set("y", 0u32)
+        .set("width", ACP_BOX_SIZE * 2)
+        .set("height", ACP_BOX_SIZE * 2)
+        .set("stroke", "black")
+        .set("stroke-width", 1u32)
+        .set("fill", "black");
+    let acp_image = Symbol::new().set("id", "acp").add(acp_black_box);
+    document.append(acp_image);
 
     document = document
         .add(composite_arrow)

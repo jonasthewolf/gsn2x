@@ -4,6 +4,9 @@
 <rect fill="lightgrey" height="5" stroke="black" stroke-width="1" width="10" x="0" y="0"/>
 <rect fill="lightgrey" height="10" stroke="black" stroke-width="1" width="20" x="0" y="5"/>
 </symbol>
+<symbol id="acp">
+<rect fill="black" height="10" stroke="black" stroke-width="1" width="10" x="0" y="0"/>
+</symbol>
 <marker id="composite_arrow" markerHeight="9" markerUnits="userSpaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
 <polyline fill="none" points="0 0, 6 4.5, 0 9" stroke="black" stroke-width="1"/>
 <polyline fill="none" points="4 0, 10 4.5, 4 9" stroke="black" stroke-width="1"/>
@@ -15,7 +18,7 @@
 <marker id="incontextof_arrow" markerHeight="9" markerUnits="userSpaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
 <polyline fill="none" points="0 0, 10 4.5, 0 9, 0 0" stroke="black" stroke-width="1"/>
 </marker>
-<g class="gsn_module_tests_issue391_1_yaml gsnelem gsngoal" id="node_G0">
+<g class="gsn_module_tests_issue391_1_yaml gsnelem gsngoal" id="node_g0">
 <title>G0</title>
 <path class="border" d="M53,20 L157,20 L157,66 L53,66 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="60" y="39">
@@ -25,18 +28,18 @@ G0
 G0
 </text>
 </g>
-<g class="gsn_module_tests_issue391_1_yaml gsnelem gsnstgy" id="node_S1">
+<g class="gsn_module_tests_issue391_1_yaml gsnelem gsnstgy" id="node_s1">
 <title>S1</title>
 <path class="border" d="M45,106 L179,106 L165,152 L31,152 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="53" y="125">
 S1
 </text>
-<text font-family="Arial" font-size="12" x="53" y="144">
+<text font-family="Arial" font-size="12" x="49" y="144">
 S1
 </text>
 </g>
-<a href="./issue391_2.svg#node_G1">
-<g class="gsn_module_tests_issue391_2_yaml gsnelem gsnawaygoal" id="node_G1">
+<a href="./issue391_2.svg#node_g1">
+<g class="gsn_module_tests_issue391_2_yaml gsnelem gsnawaygoal" id="node_g1">
 <title>G1</title>
 <path class="border" d="M20,244 V192 H190 V244" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="27" y="211">
@@ -45,7 +48,7 @@ G1
 <text font-family="Arial" font-size="12" x="27" y="230">
 G1
 </text>
-<a href="./issue391_2.svg#node_G1">
+<a href="./issue391_2.svg#node_g1">
 <path class="border" d="M20,244 h171 v28 h-171 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="54" y="265">
 tests_issue391_2_yaml

@@ -1,18 +1,26 @@
 use std::{cell::RefCell, ops::BitOr};
 
-use svg::node::element::{path::Data, Path};
+use svg::{
+    node::element::{path::Data, Element, Group, Path, Use},
+    Node,
+};
 
 use crate::{
-    dirgraph::DirectedGraph,
-    dirgraphsvg::render::{BOTTOM_RIGHT_CORNER, TOP_LEFT_CORNER},
+    dirgraph::{DirectedGraph, DirectedGraphEdgeType},
+    dirgraphsvg::{
+        escape_text,
+        render::{BOTTOM_RIGHT_CORNER, PADDING_VERTICAL, TOP_LEFT_CORNER},
+        util::curve::CubicBezierCurve,
+    },
     gsn::GsnEdgeType,
 };
 
 use super::{
     layout::Margin,
     nodes::{Port, SvgNode},
-    render::{BOTTOM_LEFT_CORNER, TOP_RIGHT_CORNER},
-    util::point2d::Point2D,
+    render::{create_text, ACP_BOX_SIZE, BOTTOM_LEFT_CORNER, PADDING_HORIZONTAL, TOP_RIGHT_CORNER},
+    util::{font::text_bounding_box, point2d::Point2D},
+    DirGraph,
 };
 
 ///
@@ -58,6 +66,24 @@ pub enum EdgeType {
     TwoWay((SingleEdge, SingleEdge)),
 }
 
+impl<'a> DirectedGraphEdgeType<'a> for EdgeType {
+    fn is_primary_child_edge(&self) -> bool {
+        matches!(
+            *self,
+            EdgeType::OneWay(SingleEdge::SupportedBy)
+                | EdgeType::OneWay(SingleEdge::Composite)
+                | EdgeType::TwoWay((SingleEdge::SupportedBy, _))
+                | EdgeType::TwoWay((_, SingleEdge::SupportedBy))
+                | EdgeType::TwoWay((SingleEdge::Composite, _))
+                | EdgeType::TwoWay((_, SingleEdge::Composite))
+        )
+    }
+
+    fn is_secondary_child_edge(&self) -> bool {
+        matches!(*self, EdgeType::OneWay(SingleEdge::InContextOf))
+    }
+}
+
 ///
 /// Convert from GsnEdgeType to EdgeType
 ///
@@ -80,13 +106,13 @@ const MARKER_HEIGHT: u32 = 10;
 ///
 pub(super) fn render_edge(
     graph: &DirectedGraph<'_, RefCell<SvgNode>, EdgeType>,
+    render_graph: &DirGraph,
     ranks: &[Vec<Vec<&str>>],
     bounding_boxes: &[Vec<[Point2D<i32>; 4]>],
     source: &str,
     target: &(String, EdgeType),
     width: i32,
-    margin: &Margin,
-) -> Path {
+) -> Vec<Element> {
     let s = graph.get_nodes().get(source).unwrap().borrow();
     let s_rank = ranks
         .iter()
@@ -123,7 +149,7 @@ pub(super) fn render_edge(
         &(t_rank, t_pos),
         &(s_rank, s_pos),
         width,
-        margin,
+        &render_graph.margin,
     );
     curve_points.push((end, end_sup));
 
@@ -169,7 +195,78 @@ pub(super) fn render_edge(
         e = e.set("marker-start", arrow_id);
     }
     e = e.set("class", classes);
-    e
+    let mut result: Vec<Element> = vec![e.into()];
+    result.extend(render_acps(
+        graph,
+        render_graph,
+        source,
+        target,
+        curve_points,
+    ));
+    result
+}
+
+///
+/// Render an Assurance Claim Point (ACP)
+///
+///
+fn render_acps(
+    graph: &DirectedGraph<'_, RefCell<SvgNode>, EdgeType>,
+    render_graph: &DirGraph<'_>,
+    source: &str,
+    target: &(String, EdgeType),
+    curve_points: Vec<(Point2D<i32>, Point2D<i32>)>,
+) -> Option<Element> {
+    if let Some(acps) = graph.get_edge_decorator(source.to_owned(), target.0.to_owned()) {
+        let mut svg_acp = Group::new()
+            .set(
+                "id",
+                format!(
+                    "acp_{}_{}_{}",
+                    escape_text(source).to_lowercase(),
+                    escape_text(&target.0).to_lowercase(),
+                    escape_text(&acps.join("_")).to_lowercase()
+                ),
+            )
+            .set("class", "gsnacp");
+        let center_segment = (curve_points.len() - 1) / 2;
+        let y_axis = Point2D { x: 0, y: 1 };
+        let curve = CubicBezierCurve::new(
+            curve_points[center_segment].0,
+            curve_points[center_segment].1,
+            curve_points[center_segment + 1].1,
+            curve_points[center_segment + 1].0,
+        );
+        let coords = curve.get_coordinates_for_t(0.5);
+        let angle =
+            curve.get_first_derivative_for_t(0.5).angle(&y_axis) * (180.0 / std::f32::consts::PI);
+        let acp_x = coords.x - ACP_BOX_SIZE;
+        let acp_y = coords.y - ACP_BOX_SIZE;
+        let acp_text = acps.join(", ");
+        let acp_text_bb = text_bounding_box(&render_graph.font, &acp_text, false);
+        let mut acp_x_text = acp_x + 2 * ACP_BOX_SIZE + PADDING_HORIZONTAL;
+        let mut acp_y_text = acp_y + acp_text_bb.1;
+        if (85.0..=95.0).contains(&angle) {
+            acp_x_text = acp_x + ACP_BOX_SIZE - acp_text_bb.0 / 2;
+            acp_y_text += ACP_BOX_SIZE + PADDING_VERTICAL;
+        }
+        svg_acp.append(
+            Use::new()
+                .set("href", "#acp")
+                .set("x", acp_x)
+                .set("y", acp_y),
+        );
+        svg_acp.append(create_text(
+            &acp_text,
+            acp_x_text,
+            acp_y_text,
+            &render_graph.font,
+            false,
+        ));
+        Some(svg_acp.into())
+    } else {
+        None
+    }
 }
 
 ///

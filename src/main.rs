@@ -257,7 +257,6 @@ fn add_missing_nodes_and_modules(
             .supported_by
             .iter()
             .chain(node.in_context_of.iter())
-            .flatten()
             .collect();
         for ref_node in ref_nodes {
             if !nodes.contains_key(ref_node) {
@@ -284,6 +283,7 @@ fn add_missing_nodes_and_modules(
                 extends: None,
                 horizontal_index: None,
                 rank_increment: None,
+                _word_wrap: None,
                 additional: BTreeMap::new(),
             },
         },
@@ -328,6 +328,7 @@ fn read_inputs(
                     name: module_name,
                     brief: None,
                     extends: None,
+                    _word_wrap: None,
                     horizontal_index: None,
                     rank_increment: None,
                     additional: BTreeMap::new(),

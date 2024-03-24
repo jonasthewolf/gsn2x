@@ -115,6 +115,8 @@ mod test {
         assert!(get_default_font(false, false).is_ok());
     }
 
+    // We cannot test for non-existing fonts, since Linux will use a default font anyway.
+
     #[test]
     fn bounding_box() {
         let font_info = FontInfo::default();

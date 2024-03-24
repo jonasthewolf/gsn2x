@@ -2,11 +2,11 @@ use svg::node::element::{path::Data, Element, Path, Title};
 
 use crate::dirgraphsvg::{
     nodes::OFFSET_IDENTIFIER,
-    render::create_text,
+    render::{create_text, PADDING_HORIZONTAL, PADDING_VERTICAL},
     util::font::{text_bounding_box, FontInfo},
 };
 
-use super::{SizeContext, SvgNode, PADDING_HORIZONTAL, PADDING_VERTICAL};
+use super::{SizeContext, SvgNode};
 
 const MODULE_TAB_HEIGHT: i32 = 10;
 const UNDEVELOPED_DIAMOND: i32 = 5;
@@ -144,9 +144,11 @@ impl BoxType {
         context.append(create_text(&node.identifier, x, y, font, true));
         y += OFFSET_IDENTIFIER;
 
+        let y_start_text = y;
         if !node.masked {
             for text in node.text.lines() {
                 y += text_bounding_box(font, text, false).1;
+                x -= skew * (y - y_start_text) / node.height;
                 context.append(create_text(text, x, y, font, false));
             }
         }
