@@ -209,8 +209,17 @@ mod test {
     fn scalar() {
         let p = Point2D::<i32> { x: 14, y: 23 };
         let p_new = p * 2;
+        let p_new2 = 2 * p;
+        let p_new3 = 4.0 * p;
+        let p_new4 = p * 3.0;
         assert_eq!(p_new.x, p.x * 2);
         assert_eq!(p_new.y, p.y * 2);
+        assert_eq!(p_new2.x, p.x * 2);
+        assert_eq!(p_new2.y, p.y * 2);
+        assert_eq!(p_new3.x, p.x * 4);
+        assert_eq!(p_new3.y, p.y * 4);
+        assert_eq!(p_new4.x, p.x * 3);
+        assert_eq!(p_new4.y, p.y * 3);
     }
 
     #[test]
