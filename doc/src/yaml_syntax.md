@@ -72,6 +72,7 @@ Please see [examples/example.gsn.yaml](examples/example.gsn.yaml) for an example
 | rankIncrement[^nl]    |    yes   |
 | horizontalIndex[^nl]  |    yes   |
 | wordWrap[^nw]         |    yes   |
+| acp[^na]              |    yes   |
 
 [^nu]: Mutually exclusive to `supportedBy`.
 
@@ -84,3 +85,5 @@ Please see [examples/example.gsn.yaml](examples/example.gsn.yaml) for an example
 
 [^nw]: If the `wordWrap` attribute for an element is given, it will be used instead of the global option given
        at the command line.
+
+[^na]: See [Confidence Argument Extension](./confidence.md).
