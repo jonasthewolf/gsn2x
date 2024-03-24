@@ -4,6 +4,9 @@
 <rect fill="lightgrey" height="5" stroke="black" stroke-width="1" width="10" x="0" y="0"/>
 <rect fill="lightgrey" height="10" stroke="black" stroke-width="1" width="20" x="0" y="5"/>
 </symbol>
+<symbol id="acp">
+<rect fill="black" height="10" stroke="black" stroke-width="1" width="10" x="0" y="0"/>
+</symbol>
 <marker id="composite_arrow" markerHeight="9" markerUnits="userSpaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
 <polyline fill="none" points="0 0, 6 4.5, 0 9" stroke="black" stroke-width="1"/>
 <polyline fill="none" points="4 0, 10 4.5, 4 9" stroke="black" stroke-width="1"/>
@@ -16,7 +19,7 @@
 <polyline fill="none" points="0 0, 10 4.5, 0 9, 0 0" stroke="black" stroke-width="1"/>
 </marker>
 <a href="./main.gsn.svg">
-<g class="gsn_module_ gsnelem gsnmodule" id="node_Main">
+<g class="gsn_module_ gsnelem gsnmodule" id="node_main">
 <title>Main</title>
 <path class="border" d="M20,20 h30 v10 L124,30 L124,74 L20,74 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="27" y="49">
@@ -25,7 +28,7 @@ Main
 </g>
 </a>
 <a href="./sub1.gsn.svg">
-<g class="gsn_module_ gsnelem gsnmodule" id="node_Sub1">
+<g class="gsn_module_ gsnelem gsnmodule" id="node_sub1">
 <title>Sub1</title>
 <path class="border" d="M20,114 h30 v10 L124,124 L124,168 L20,168 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="27" y="143">
@@ -34,7 +37,7 @@ Sub1
 </g>
 </a>
 <a href="./sub3.gsn.svg">
-<g class="gsn_module_ gsnelem gsnmodule" id="node_Sub3">
+<g class="gsn_module_ gsnelem gsnmodule" id="node_sub3">
 <title>Sub3</title>
 <path class="border" d="M20,208 h30 v10 L124,218 L124,262 L20,262 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="27" y="237">

@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Migration from v2.x - gsn2x User Manual</title>
+        <title>Modular Extension - gsn2x User Manual</title>
 
 
         <!-- Custom HTML head -->
@@ -89,7 +89,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="basic_usage.html"><strong aria-hidden="true">1.</strong> Basic Usage</a></li><li class="chapter-item expanded "><a href="yaml_syntax.html"><strong aria-hidden="true">2.</strong> Syntax</a></li><li class="chapter-item expanded "><a href="checks.html"><strong aria-hidden="true">3.</strong> Checks</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="advanced_usecases.html"><strong aria-hidden="true">4.</strong> Advanced Use-cases</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="adv_layout.html"><strong aria-hidden="true">4.1.</strong> Layout</a></li><li class="chapter-item expanded "><a href="adv_layers.html"><strong aria-hidden="true">4.2.</strong> Layers</a></li><li class="chapter-item expanded "><a href="adv_stylesheets.html"><strong aria-hidden="true">4.3.</strong> Stylesheets</a></li><li class="chapter-item expanded "><a href="adv_evidences.html"><strong aria-hidden="true">4.4.</strong> Evidences</a></li></ol></li><li class="chapter-item expanded "><a href="mod_extension.html"><strong aria-hidden="true">5.</strong> Modular Extension</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="mod_distdev.html"><strong aria-hidden="true">5.1.</strong> Distributed Development</a></li><li class="chapter-item expanded "><a href="mod_info.html"><strong aria-hidden="true">5.2.</strong> Module Info</a></li></ol></li><li class="chapter-item expanded "><a href="confidence.html"><strong aria-hidden="true">6.</strong> Confidence Argument Extension</a></li><li class="chapter-item expanded "><a href="interfacing.html"><strong aria-hidden="true">7.</strong> Interfacing</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="standard_support.html"><strong aria-hidden="true">8.</strong> Standard Support</a></li><li class="chapter-item expanded "><a href="troubleshooting.html"><strong aria-hidden="true">9.</strong> Troubleshooting</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="design_goals.html"><strong aria-hidden="true">10.</strong> Design Goals</a></li><li class="chapter-item expanded "><a href="history.html"><strong aria-hidden="true">11.</strong> History</a></li><li class="chapter-item expanded "><a href="migration_v2x.html" class="active"><strong aria-hidden="true">12.</strong> Migration from v2.x</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="basic_usage.html"><strong aria-hidden="true">1.</strong> Basic Usage</a></li><li class="chapter-item expanded "><a href="yaml_syntax.html"><strong aria-hidden="true">2.</strong> Syntax</a></li><li class="chapter-item expanded "><a href="checks.html"><strong aria-hidden="true">3.</strong> Checks</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="advanced_usecases.html"><strong aria-hidden="true">4.</strong> Advanced Use-cases</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="adv_layout.html"><strong aria-hidden="true">4.1.</strong> Layout</a></li><li class="chapter-item expanded "><a href="adv_layers.html"><strong aria-hidden="true">4.2.</strong> Layers</a></li><li class="chapter-item expanded "><a href="adv_stylesheets.html"><strong aria-hidden="true">4.3.</strong> Stylesheets</a></li><li class="chapter-item expanded "><a href="adv_evidences.html"><strong aria-hidden="true">4.4.</strong> Evidences</a></li></ol></li><li class="chapter-item expanded "><a href="mod_extension.html" class="active"><strong aria-hidden="true">5.</strong> Modular Extension</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="mod_distdev.html"><strong aria-hidden="true">5.1.</strong> Distributed Development</a></li><li class="chapter-item expanded "><a href="mod_info.html"><strong aria-hidden="true">5.2.</strong> Module Info</a></li></ol></li><li class="chapter-item expanded "><a href="confidence.html"><strong aria-hidden="true">6.</strong> Confidence Argument Extension</a></li><li class="chapter-item expanded "><a href="interfacing.html"><strong aria-hidden="true">7.</strong> Interfacing</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="standard_support.html"><strong aria-hidden="true">8.</strong> Standard Support</a></li><li class="chapter-item expanded "><a href="troubleshooting.html"><strong aria-hidden="true">9.</strong> Troubleshooting</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="design_goals.html"><strong aria-hidden="true">10.</strong> Design Goals</a></li><li class="chapter-item expanded "><a href="history.html"><strong aria-hidden="true">11.</strong> History</a></li><li class="chapter-item expanded "><a href="migration_v2x.html"><strong aria-hidden="true">12.</strong> Migration from v2.x</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
@@ -174,26 +174,55 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="migrating-from-version-2x-to-version-3x"><a class="header" href="#migrating-from-version-2x-to-version-3x">Migrating from Version 2.x to Version 3.x</a></h1>
-<p>Version 2 of gsn2x tried to fully automate the layout of diagrams.
-Version 3 intentionally changed this approach.</p>
-<p>To get similar or even better renderings, please follow the guidelines below.</p>
-<h2 id="replace-level-with-rankincrement"><a class="header" href="#replace-level-with-rankincrement">Replace <code>level</code> with <code>rankIncrement</code></a></h2>
-<p><code>level</code> was deprecated. Instead, increment the rank of the elements that should be pushed further down.</p>
-<p>Please see <a href="./adv_layout.html">Layout</a> for more information on how to use <code>rankIncrement</code>.</p>
-<h2 id="use-strict-lexicographical-sorting-and-horizontal-reordering-to-optimize-the-graph"><a class="header" href="#use-strict-lexicographical-sorting-and-horizontal-reordering-to-optimize-the-graph">Use strict lexicographical sorting and horizontal reordering to optimize the graph</a></h2>
-<p>If you find situations that are not rendered correctly by default,
-please check if your IDs are sensibly defined (i.e. lexicographically increasing).
-Use <code>horizontalIndex</code> as described <a href="./adv_layout.html">here</a> to fix e.g., crossing edges.</p>
+                        <h1 id="modular-extension"><a class="header" href="#modular-extension">Modular extension</a></h1>
+<p>gsn2x partially supports the Modular Extension of the GSN standard (see <a href="./standard_support.html">Standard support</a>).</p>
+<p>Each module is a separate file. The name of the module is the file name (incl. the path provided to the gsn2x command line).</p>
+<p>If modules are used, all related module files must be provided to the command line of gsn2x.
+Element IDs must be unique across all modules. Checks will by default be performed across all modules.
+Check messages for individual modules can be omitted using the <code>-x</code> option.</p>
+<p>The argument view of individual modules will show "away" elements if elements from other modules are referenced.
+All elements are public, meaning they can be referenced from other modules.</p>
+<p>Note: There is no "away strategy" in the standard.</p>
+<p>In addition to the default argument view for each module, there are two output files generated (if more than one input file is provided):</p>
+<ol>
+<li>Complete View (default to: <code>complete.svg</code>)</li>
+<li>Architecture View (default to: <code>architecture.svg</code>)</li>
+</ol>
+<p>You can only change the file names of these additional views.
+They are put in the directory that all input files have in common.
+The <code>-o</code> option can be used for these views, too.</p>
+<p>If the argument view should not be updated, use the <code>-N</code> option.
+If the complete view should not be output, use the <code>-F</code> option.
+If the architecture view should not be output, use the <code>-A</code> option.</p>
+<h2 id="complete-view"><a class="header" href="#complete-view">Complete view</a></h2>
+<p>The complete view is a similar to an argument view for a single module,
+but showing all modules within the same diagram. The modules are "unrolled".</p>
+<!-- Modules can be masked i.e., unrolling is prevented, 
+by additionally adding those modules with the `-m` option. -->
+<p><img src="examples/modular/complete.svg" alt="example complete" /></p>
+<p>See <a href="examples/modular/complete.svg">example</a> here.</p>
+<h2 id="architecture-view"><a class="header" href="#architecture-view">Architecture view</a></h2>
+<p>The architecture view only shows the selected modules and their dependencies.
+THe architecture view is navigable to the module argument view.</p>
+<p>The architecture view only contains the links to the individual module files, if they actually exist when generating the architecture view.</p>
+<p><img src="examples/modular/architecture.svg" alt="example architecture" /></p>
+<p>See <a href="examples/modular/architecture.svg">example</a> here.</p>
+<h2 id="example"><a class="header" href="#example">Example:</a></h2>
+<pre><code>gsn2x -f full.svg -a arch.svg main.yml sub1.yml sub3.yml
+</code></pre>
+<p>This will generate the argument view for each module, the complete view (<code>-f full.svg</code>) of all modules and the architecture view (<code>-a arch.svg</code>). <!-- In the complete view, the elements of the `sub1` module will be represented by a module. --></p>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="history.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="adv_evidences.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
+                            <a rel="next prefetch" href="mod_distdev.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
 
                         <div style="clear: both"></div>
                     </nav>
@@ -201,10 +230,13 @@ Use <code>horizontalIndex</code> as described <a href="./adv_layout.html">here</
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="history.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="adv_evidences.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
 
+                    <a rel="next prefetch" href="mod_distdev.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
             </nav>
 
         </div>

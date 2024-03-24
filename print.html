@@ -90,7 +90,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="basic_usage.html"><strong aria-hidden="true">1.</strong> Basic Usage</a></li><li class="chapter-item expanded "><a href="yaml_syntax.html"><strong aria-hidden="true">2.</strong> Syntax</a></li><li class="chapter-item expanded "><a href="checks.html"><strong aria-hidden="true">3.</strong> Checks</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="advanced_usecases.html"><strong aria-hidden="true">4.</strong> Advanced Use-cases</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="adv_layout.html"><strong aria-hidden="true">4.1.</strong> Layout</a></li><li class="chapter-item expanded "><a href="adv_layers.html"><strong aria-hidden="true">4.2.</strong> Layers</a></li><li class="chapter-item expanded "><a href="adv_stylesheets.html"><strong aria-hidden="true">4.3.</strong> Stylesheets</a></li><li class="chapter-item expanded "><a href="adv_evidences.html"><strong aria-hidden="true">4.4.</strong> Evidences</a></li></ol></li><li class="chapter-item expanded "><a href="modular_extension.html"><strong aria-hidden="true">5.</strong> Modular Extension</a></li><li class="chapter-item expanded "><a href="interfacing.html"><strong aria-hidden="true">6.</strong> Interfacing</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="standard_support.html"><strong aria-hidden="true">7.</strong> Standard Support</a></li><li class="chapter-item expanded "><a href="troubleshooting.html"><strong aria-hidden="true">8.</strong> Troubleshooting</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="design_goals.html"><strong aria-hidden="true">9.</strong> Design Goals</a></li><li class="chapter-item expanded "><a href="history.html"><strong aria-hidden="true">10.</strong> History</a></li><li class="chapter-item expanded "><a href="migration_v2x.html"><strong aria-hidden="true">11.</strong> Migration from v2.x</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="basic_usage.html"><strong aria-hidden="true">1.</strong> Basic Usage</a></li><li class="chapter-item expanded "><a href="yaml_syntax.html"><strong aria-hidden="true">2.</strong> Syntax</a></li><li class="chapter-item expanded "><a href="checks.html"><strong aria-hidden="true">3.</strong> Checks</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="advanced_usecases.html"><strong aria-hidden="true">4.</strong> Advanced Use-cases</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="adv_layout.html"><strong aria-hidden="true">4.1.</strong> Layout</a></li><li class="chapter-item expanded "><a href="adv_layers.html"><strong aria-hidden="true">4.2.</strong> Layers</a></li><li class="chapter-item expanded "><a href="adv_stylesheets.html"><strong aria-hidden="true">4.3.</strong> Stylesheets</a></li><li class="chapter-item expanded "><a href="adv_evidences.html"><strong aria-hidden="true">4.4.</strong> Evidences</a></li></ol></li><li class="chapter-item expanded "><a href="mod_extension.html"><strong aria-hidden="true">5.</strong> Modular Extension</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="mod_distdev.html"><strong aria-hidden="true">5.1.</strong> Distributed Development</a></li><li class="chapter-item expanded "><a href="mod_info.html"><strong aria-hidden="true">5.2.</strong> Module Info</a></li></ol></li><li class="chapter-item expanded "><a href="confidence.html"><strong aria-hidden="true">6.</strong> Confidence Argument Extension</a></li><li class="chapter-item expanded "><a href="interfacing.html"><strong aria-hidden="true">7.</strong> Interfacing</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="standard_support.html"><strong aria-hidden="true">8.</strong> Standard Support</a></li><li class="chapter-item expanded "><a href="troubleshooting.html"><strong aria-hidden="true">9.</strong> Troubleshooting</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="design_goals.html"><strong aria-hidden="true">10.</strong> Design Goals</a></li><li class="chapter-item expanded "><a href="history.html"><strong aria-hidden="true">11.</strong> History</a></li><li class="chapter-item expanded "><a href="migration_v2x.html"><strong aria-hidden="true">12.</strong> Migration from v2.x</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
@@ -268,6 +268,7 @@ C1:
 <tr><td>rankIncrement<sup class="footnote-reference"><a href="#nl">4</a></sup></td><td>yes</td></tr>
 <tr><td>horizontalIndex<sup class="footnote-reference"><a href="#nl">4</a></sup></td><td>yes</td></tr>
 <tr><td>wordWrap<sup class="footnote-reference"><a href="#nw">5</a></sup></td><td>yes</td></tr>
+<tr><td>acp<sup class="footnote-reference"><a href="#na">6</a></sup></td><td>yes</td></tr>
 </tbody></table>
 </div>
 <div class="footnote-definition" id="nu"><sup class="footnote-definition-label">1</sup>
@@ -287,6 +288,9 @@ Just give <code>Goal</code>, <code>Assumption</code>, <code>Justification</code>
 <p>If the <code>wordWrap</code> attribute for an element is given, it will be used instead of the global option given
 at the command line.</p>
 </div>
+<div class="footnote-definition" id="na"><sup class="footnote-definition-label">6</sup>
+<p>See <a href="./confidence.html">Confidence Argument Extension</a>.</p>
+</div>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="checks"><a class="header" href="#checks">Checks</a></h1>
 <h2 id="validation-checks"><a class="header" href="#validation-checks">Validation checks</a></h2>
 <p>The tool automatically performs the following validation checks on the input YAML.</p>
@@ -300,6 +304,7 @@ at the command line.</p>
 <tr><td>V06</td><td>All referenced elements in <code>supportedBy</code> and <code>inContextOf</code> must not refer to the element itself.</td></tr>
 <tr><td>V07</td><td>All elements listed as extending other elements must be known elements of the current module and semantically sensible (see V04).</td></tr>
 <tr><td>V08</td><td> The IDs start contradicts the type of the element set with <code>node_type</code>.</td></tr>
+<tr><td>V09</td><td>Element has an assurance claim point that references another element, that this is neither its own ID nor any of the connected elements.</td></tr>
 </tbody></table>
 </div>
 <p>The following checks apply to the complete set of input files.</p>
@@ -466,7 +471,7 @@ C1:
 </code></pre>
 <p>In this example, a call to <code>gsn2x -l layer1</code> will show the additional information to each element prefixed with <em><code>LAYER1: </code></em>.</p>
 <p>Of course, using <code>text</code>, <code>inContextOf</code>, <code>supportedBy</code>, <code>url</code>, <code>undeveloped</code>,
-<code>horizontalRank</code>, <code>rankIncrement</code> or <code>classes</code> are not sensible parameters to pass for the <code>-l</code> option.</p>
+<code>horizontalRank</code>, <code>rankIncrement</code>, <code>acp</code> or <code>classes</code> are not sensible parameters to pass for the <code>-l</code> option.</p>
 <p>Please note that using <code>module</code> and passing it as a layer option will also not work.</p>
 <p>It is intentional that information is only added for a view, but not hidden to ensure consistency of the GSN in all variants.</p>
 <p>Only additional associative arrays with a string key can be used as additional layers.</p>
@@ -502,6 +507,8 @@ If an absolute path is used, the stylesheet will be copied to the root of the ou
 <tr><td>gsninctxt</td><td>In Context Of</td><td>path</td></tr>
 <tr><td>gsnspby</td><td>Supported By</td><td>path</td></tr>
 <tr><td>gsncomposite</td><td>Composite (In Context Of AND Supported By)</td><td>path</td></tr>
+<tr><td>gsn_masked</td><td>Masked elements</td><td>g  </td></tr>
+<tr><td>acp_<code>acp_name</code></td><td>Elements or edges with an ACP</td><td>g or path</td></tr>
 </tbody></table>
 </div>
 <p>You can assign additional classes by adding the <code>classes:</code> attribute. It must be a list of classes you want to assign.
@@ -598,7 +605,7 @@ THe architecture view is navigable to the module argument view.</p>
 <pre><code>gsn2x -f full.svg -a arch.svg main.yml sub1.yml sub3.yml
 </code></pre>
 <p>This will generate the argument view for each module, the complete view (<code>-f full.svg</code>) of all modules and the architecture view (<code>-a arch.svg</code>). <!-- In the complete view, the elements of the `sub1` module will be represented by a module. --></p>
-<h2 id="developing-undeveloped-elements-from-other-modules"><a class="header" href="#developing-undeveloped-elements-from-other-modules">Developing undeveloped elements from other modules</a></h2>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="developing-undeveloped-elements-from-other-modules"><a class="header" href="#developing-undeveloped-elements-from-other-modules">Developing undeveloped elements from other modules</a></h1>
 <p>In a customer supplier relationship it may be helpful to develop otherwise undeveloped elements from other modules.
 This allows creating distributed assurance cases.</p>
 <p>Example for a module with undeveloped elements:</p>
@@ -626,7 +633,7 @@ G2:
 Sn1:
   text: A solution
 </code></pre>
-<h1 id="optional-module-information"><a class="header" href="#optional-module-information">Optional module information</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="optional-module-information"><a class="header" href="#optional-module-information">Optional module information</a></h1>
 <p>It is possible to add additional <code>module</code> information in the source YAML.
 This allows describing the module`s name and an optional brief description.
 Even arbitrary information can be added.</p>
@@ -644,6 +651,59 @@ module:
 <p>To influence the position in the architecture view, you can use the <code>horizontalIndex</code> and <code>rankIncrement</code> as you would for elements in the Argument view (see <a href="adv_layout.html#placement-of-elements">Layout of elements</a> ).</p>
 <p>You can use the <code>-G</code> option to suppress the legend completely,
 or the <code>-g</code> option to limit it to <code>name</code>, <code>brief</code> and the time and date of generation of the SVG.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="confidence-argument-extension"><a class="header" href="#confidence-argument-extension">Confidence Argument Extension</a></h1>
+<p>The Confidence Argument Extension is supported. It defines so called Assurance Claim Points (ACPs).</p>
+<p>They can be defined either for an element or for the relation between elements.</p>
+<p>The following YAML shows an example of their usage:</p>
+<pre><code class="language-yaml">G1:
+  text: System is acceptably safe to operate
+  supportedBy: [S1]
+  acp:
+    ACP1: S1
+
+S1:
+  text: Argument over all hazards
+  supportedBy: [G2, G3]
+  inContextOf: [C1]
+  acp:
+    ACP4: C1
+
+C1:
+  text: Hazard list
+  acp:
+    ACP6: C1
+
+G2:
+  text: Hazard 1 mitigated
+  supportedBy: [Sn1]
+  acp:
+    ACP2: Sn1
+
+Sn1:
+  text: Evidence for Hazard 1
+
+G3:
+  text: Hazard 2 mitigated
+  supportedBy: [Sn2a, Sn2b]
+  acp:
+    ACP3: [Sn2a, Sn2b]
+
+Sn2a:
+  text: Evidence for Hazard 2
+
+Sn2b:
+  text: More evidence for Hazard 2
+  acp:
+    ACP5: Sn2b
+</code></pre>
+<p>Assurance Claim Points (ACP) are defined with the <code>acp</code> attribute.
+The name of the ACP is followed by:</p>
+<ul>
+<li>either a reference to the element itself, or</li>
+<li>a reference or a list of references to elements that are directly related (<code>supportedBy</code> or <code>inContextOf</code>).</li>
+</ul>
+<p>There can be multiple ACPs per element.</p>
+<p><img src="examples/confidence.gsn.svg" alt="Rendered Example" /></p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="interfacing"><a class="header" href="#interfacing">Interfacing</a></h1>
 <p>Here is some guidance on interfacing with external sources.</p>
 <p>I currently see two use-cases:</p>
@@ -680,7 +740,7 @@ with the part after.</p>
 <tr><td>Core GSN</td><td>✅ full</td></tr>
 <tr><td>Argument Pattern Extension</td><td>❌ not planned</td></tr>
 <tr><td>Modular Extension</td><td>🟡 partially, see <a href="./modular_extension.html">Modular Extension</a>; Module Interfaces (Section 1:4.6) and Inter-Module Contracts (Section 1:4.7) are not supported (this includes public decorators and module interface connectors).</td></tr>
-<tr><td>Confidence Argument Extension</td><td>❌ not planned</td></tr>
+<tr><td>Confidence Argument Extension</td><td>✅ full, see <a href="./confidence.html">Confidence Argument Extension</a></td></tr>
 <tr><td>Dialectic Extension</td><td>❌ not planned</td></tr>
 </tbody></table>
 </div><div style="break-before: page; page-break-before: always;"></div><h1 id="troubleshooting-1"><a class="header" href="#troubleshooting-1">Troubleshooting</a></h1>
@@ -771,6 +831,11 @@ finally released in April 2022.</p>
 Moreover, I recognized that it is anyway preferable if the user is in full control of the layout of the diagram.
 Thus, I decided to redesign the layout algorithm and create version 3. A new major version was needed because of different user input that is required now.</p>
 <p>In addition, I changed the license from CC-BY-4.0 to MIT. MIT is shorter and more applicable to software.</p>
+</li>
+<li>
+<p>Own usage and feedback from various people led to improvements of the layout algorithm.
+And now also to the implementation of the Confidence Argument Extension of the GSN standard as
+part of version 3.1.</p>
 </li>
 </ul>
 <p>Any feedback, especially the use-case in your company is very much appreciated.</p>
