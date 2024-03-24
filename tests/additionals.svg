@@ -18,7 +18,7 @@
 <marker id="incontextof_arrow" markerHeight="9" markerUnits="userSpaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
 <polyline fill="none" points="0 0, 10 4.5, 0 9, 0 0" stroke="black" stroke-width="1"/>
 </marker>
-<g class="gsn_underminded gsn_unsupported gsn_module_tests_additionals_yaml gsnelem gsngoal gsn_undeveloped" id="node_G1">
+<g class="gsn_underminded gsn_unsupported gsn_module_tests_additionals_yaml gsnelem gsngoal gsn_undeveloped" id="node_g1">
 <title>G1</title>
 <path class="border" d="M20,24 L128,24 L128,116 L20,116 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="27" y="43">
@@ -38,7 +38,7 @@ false
 </text>
 <path d="M74,116 l5,5 l-5,5 l-5,-5 z" fill="none" stroke="black" stroke-width="1"/>
 </g>
-<g class="gsn_additional gsn_module_tests_additionals_yaml gsnelem gsngoal" id="node_G2">
+<g class="gsn_additional gsn_module_tests_additionals_yaml gsnelem gsngoal" id="node_g2">
 <title>G2</title>
 <path class="border" d="M168,20 L272,20 L272,120 L168,120 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="175" y="39">
@@ -60,7 +60,7 @@ ADDITIONAL:
 - asdfasdf
 </text>
 </g>
-<g class="gsn_add1 gsn_module_tests_additionals_yaml gsnelem gsngoal" id="node_G3">
+<g class="gsn_add1 gsn_module_tests_additionals_yaml gsnelem gsngoal" id="node_g3">
 <title>G3</title>
 <path class="border" d="M312,20 L416,20 L416,120 L312,120 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="319" y="39">

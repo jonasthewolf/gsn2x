@@ -18,7 +18,7 @@
 <marker id="incontextof_arrow" markerHeight="9" markerUnits="userSpaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
 <polyline fill="none" points="0 0, 10 4.5, 0 9, 0 0" stroke="black" stroke-width="1"/>
 </marker>
-<g class="gsn_module_Tier-2 Design gsnelem gsngoal" id="node_G9">
+<g class="gsn_module_tier_2_design gsnelem gsngoal" id="node_g9">
 <title>G9</title>
 <path class="border" d="M192,78 L324,78 L324,166 L192,166 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="199" y="97">
@@ -37,7 +37,7 @@ xxxxxxx xxxxxxxxxxxx
 xxx xxxxx.
 </text>
 </g>
-<g class="gsn_module_Tier-2 Design gsnelem gsnjust" id="node_J9">
+<g class="gsn_module_tier_2_design gsnelem gsnjust" id="node_j9">
 <title>J9</title>
 <path class="border" d="M364,122 a92,102,0,1,0,184,0 a92,102,0,1,0,-184,0 z" fill="none" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="398" y="64">
@@ -71,7 +71,7 @@ xxxxxxxxxxxxx.
 J
 </text>
 </g>
-<g class="gsn_module_Tier-2 Design gsnelem gsngoal" id="node_G9_1">
+<g class="gsn_module_tier_2_design gsnelem gsngoal" id="node_g9_1">
 <title>G9.1</title>
 <path class="border" d="M34,278 L138,278 L138,352 L34,352 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="41" y="297">
@@ -87,7 +87,7 @@ xxxxxxxxxx xxx
 xxxxxxxx.
 </text>
 </g>
-<g class="gsn_module_Tier-2 Design gsnelem gsnctxt" id="node_C9_2_2">
+<g class="gsn_module_tier_2_design gsnelem gsnctxt" id="node_c9_2_2">
 <title>C9.2.2</title>
 <path class="border" d="M188,278 L328,278 C338,278,338,352,328,352 L188,352 C178,352,178,278,188,278" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="195" y="297">
@@ -103,7 +103,7 @@ xx xxx xxxxxxxxx
 xxxxxxxxxx
 </text>
 </g>
-<g class="gsn_module_Tier-2 Design gsnelem gsngoal" id="node_G9_2">
+<g class="gsn_module_tier_2_design gsnelem gsngoal" id="node_g9_2">
 <title>G9.2</title>
 <path class="border" d="M378,278 L482,278 L482,352 L378,352 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="385" y="297">
@@ -119,7 +119,7 @@ xxxxxxxxxx xxx
 xxxxxxxx.
 </text>
 </g>
-<g class="gsn_module_Tier-2 Design gsnelem gsnctxt" id="node_C9_2_1">
+<g class="gsn_module_tier_2_design gsnelem gsnctxt" id="node_c9_2_1">
 <title>C9.2.1</title>
 <path class="border" d="M532,264 L658,264 C668,264,668,366,658,366 L532,366 C522,366,522,264,532,264" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="539" y="283">
@@ -141,7 +141,7 @@ xxxxxxxx xxxxxxxxxx
 (x.x. xxx))
 </text>
 </g>
-<g class="gsn_module_Tier-2 Design gsnelem gsnsltn" id="node_Sn9_1">
+<g class="gsn_module_tier_2_design gsnelem gsnsltn" id="node_sn9_1">
 <title>Sn9.1</title>
 <path class="border" d="M20,477 a66,66,0,1,0,132,0 a66,66,0,1,0,-132,0 z" fill="none" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="36" y="468">
@@ -151,7 +151,7 @@ Sn9.1
 xxxxxx xxxxxxxxxx
 </text>
 </g>
-<g class="gsn_module_Tier-2 Design gsnelem gsnsltn" id="node_Sn9_2">
+<g class="gsn_module_tier_2_design gsnelem gsnsltn" id="node_sn9_2">
 <title>Sn9.2</title>
 <path class="border" d="M277,477 a65,65,0,1,0,130,0 a65,65,0,1,0,-130,0 z" fill="none" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="293" y="468">
@@ -161,7 +161,7 @@ Sn9.2
 xxxxxx xxx xxxxxx
 </text>
 </g>
-<g class="gsn_module_Tier-2 Design gsnelem gsnsltn" id="node_Sn9_2_2">
+<g class="gsn_module_tier_2_design gsnelem gsnsltn" id="node_sn9_2_2">
 <title>Sn9.2.2</title>
 <path class="border" d="M447,477 a71,71,0,1,0,142,0 a71,71,0,1,0,-142,0 z" fill="none" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="465" y="461">

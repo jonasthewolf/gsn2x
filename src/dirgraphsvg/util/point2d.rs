@@ -112,16 +112,60 @@ where
     }
 }
 
-impl<T> Mul<T> for Point2D<T>
-where
-    T: Sized + Add + Mul<Output = T> + Copy,
-{
-    type Output = Point2D<T>;
+// impl<T> Mul<T> for Point2D<T>
+// where
+//     T: Sized + Add + Mul<Output = T> + Copy,
+// {
+//     type Output = Point2D<T>;
 
-    fn mul(self, rhs: T) -> Self::Output {
+//     fn mul(self, rhs: T) -> Self::Output {
+//         Point2D {
+//             x: self.x * rhs,
+//             y: self.y * rhs,
+//         }
+//     }
+// }
+
+impl Mul<i32> for Point2D<i32> {
+    type Output = Point2D<i32>;
+
+    fn mul(self, rhs: i32) -> Self::Output {
         Point2D {
             x: self.x * rhs,
             y: self.y * rhs,
+        }
+    }
+}
+
+impl Mul<Point2D<i32>> for i32 {
+    type Output = Point2D<i32>;
+
+    fn mul(self, rhs: Point2D<i32>) -> Self::Output {
+        Point2D {
+            x: rhs.x * self,
+            y: rhs.y * self,
+        }
+    }
+}
+
+impl Mul<f64> for Point2D<i32> {
+    type Output = Point2D<i32>;
+
+    fn mul(self, rhs: f64) -> Self::Output {
+        Point2D {
+            x: ((self.x as f64) * rhs).round() as i32,
+            y: ((self.y as f64) * rhs).round() as i32,
+        }
+    }
+}
+
+impl Mul<Point2D<i32>> for f64 {
+    type Output = Point2D<i32>;
+
+    fn mul(self, rhs: Point2D<i32>) -> Self::Output {
+        Point2D {
+            x: ((rhs.x as f64) * self).round() as i32,
+            y: ((rhs.y as f64) * self).round() as i32,
         }
     }
 }

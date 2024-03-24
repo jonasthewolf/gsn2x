@@ -7,7 +7,11 @@ use svg::{
 
 use crate::{
     dirgraph::{DirectedGraph, DirectedGraphEdgeType},
-    dirgraphsvg::render::{BOTTOM_RIGHT_CORNER, PADDING_VERTICAL, TOP_LEFT_CORNER},
+    dirgraphsvg::{
+        escape_text,
+        render::{BOTTOM_RIGHT_CORNER, PADDING_VERTICAL, TOP_LEFT_CORNER},
+        util::curve::CubicBezierCurve,
+    },
     gsn::GsnEdgeType,
 };
 
@@ -203,7 +207,7 @@ pub(super) fn render_edge(
 }
 
 ///
-///
+/// Render an Assurance Claim Point (ACP)
 ///
 ///
 fn render_acps(
@@ -215,13 +219,29 @@ fn render_acps(
 ) -> Option<Element> {
     if let Some(acps) = graph.get_edge_decorator(source.to_owned(), target.0.to_owned()) {
         let mut svg_acp = Group::new()
-            .set("id", format!("acp_{}", acps.join("_").to_lowercase()))
+            .set(
+                "id",
+                format!(
+                    "acp_{}_{}_{}",
+                    escape_text(source).to_lowercase(),
+                    escape_text(&target.0).to_lowercase(),
+                    escape_text(&acps.join("_")).to_lowercase()
+                ),
+            )
             .set("class", "gsnacp");
-        let acp_x = (curve_points[0].0.x + curve_points[0].1.x) / 2 - ACP_BOX_SIZE;
-        let acp_y = (curve_points[0].0.y + curve_points[0].1.y) / 2 - ACP_BOX_SIZE;
+        let center_segment = (curve_points.len() - 1) / 2;
         let y_axis = Point2D { x: 0, y: 1 };
+        let curve = CubicBezierCurve::new(
+            curve_points[center_segment].0,
+            curve_points[center_segment].1,
+            curve_points[center_segment + 1].1,
+            curve_points[center_segment + 1].0,
+        );
+        let coords = curve.get_coordinates_for_t(0.5);
         let angle =
-            180.0 * (curve_points[1].1 - curve_points[0].0).angle(&y_axis) / std::f32::consts::PI;
+            curve.get_first_derivative_for_t(0.5).angle(&y_axis) * (180.0 / std::f32::consts::PI);
+        let acp_x = coords.x - ACP_BOX_SIZE;
+        let acp_y = coords.y - ACP_BOX_SIZE;
         let acp_text = acps.join(", ");
         let acp_text_bb = text_bounding_box(&render_graph.font, &acp_text, false);
         let mut acp_x_text = acp_x + 2 * ACP_BOX_SIZE + PADDING_HORIZONTAL;

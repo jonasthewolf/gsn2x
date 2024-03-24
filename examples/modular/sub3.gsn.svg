@@ -21,8 +21,8 @@
 <style>
 @import url(https://github.com/jonasthewolf/gsn2x/blob/3439402d093ba54af4771b295e78f2488bd1b978/examples/modular/modular.css)
 </style>
-<a href="./sub1.gsn.svg#node_G3">
-<g class="gsn_module_Sub1 gsnelem gsnawaygoal" id="node_G3">
+<a href="./sub1.gsn.svg#node_g3">
+<g class="gsn_module_sub1 gsnelem gsnawaygoal" id="node_g3">
 <title>G3</title>
 <path class="border" d="M20,72 V20 H170 V72" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="27" y="39">
@@ -31,7 +31,7 @@ G3
 <text font-family="Arial" font-size="12" x="27" y="58">
 Conquer the submodules
 </text>
-<a href="./sub1.gsn.svg#node_G3">
+<a href="./sub1.gsn.svg#node_g3">
 <path class="border" d="M20,72 h150 v28 h-150 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="54" y="93">
 Sub1
@@ -40,7 +40,7 @@ Sub1
 <use href="#module_icon" x="27" y="79"/>
 </g>
 </a>
-<g class="gsn_module_Sub3 gsnelem gsnctxt" id="node_C2">
+<g class="gsn_module_sub3 gsnelem gsnctxt" id="node_c2">
 <title>C2</title>
 <path class="border" d="M220,37 L324,37 C334,37,334,83,324,83 L220,83 C210,83,210,37,220,37" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="227" y="56">
@@ -50,7 +50,7 @@ C2
 Context 2
 </text>
 </g>
-<g class="gsn_module_Sub3 gsnelem gsnsltn" id="node_Sn1">
+<g class="gsn_module_sub3 gsnelem gsnsltn" id="node_sn1">
 <title>Sn1</title>
 <path class="border" d="M51,184 a44,44,0,1,0,88,0 a44,44,0,1,0,-88,0 z" fill="none" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="70" y="175">

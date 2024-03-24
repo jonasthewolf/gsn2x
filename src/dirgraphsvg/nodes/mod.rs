@@ -656,12 +656,15 @@ fn node_classes_from_node(identifier: &str, gsn_node: &GsnNode, masked: bool) ->
         .additional
         .keys()
         .map(|k| {
-            let mut t = escape_text(&k.to_ascii_lowercase());
+            let mut t = escape_text(&k.to_lowercase());
             t.insert_str(0, "gsn_");
             t.to_owned()
         })
         .collect();
-    let mod_class = [format!("gsn_module_{}", gsn_node.module)];
+    let mod_class = [format!(
+        "gsn_module_{}",
+        escape_text(&gsn_node.module).to_lowercase()
+    )];
     let masked_class = if masked {
         vec!["gsn_masked".to_owned()]
     } else {
@@ -672,7 +675,7 @@ fn node_classes_from_node(identifier: &str, gsn_node: &GsnNode, masked: bool) ->
         .iter()
         .filter_map(|(acp, ids)| {
             if ids.iter().any(|id| id == identifier) {
-                Some(format!("acp_{}", escape_text(acp)))
+                Some(format!("acp_{}", escape_text(acp).to_lowercase()))
             } else {
                 None
             }

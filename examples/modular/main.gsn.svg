@@ -21,8 +21,8 @@
 <style>
 @import url(https://github.com/jonasthewolf/gsn2x/blob/3439402d093ba54af4771b295e78f2488bd1b978/examples/modular/modular.css)
 </style>
-<a href="./sub1.gsn.svg#node_A1">
-<g class="gsn_module_Sub1 gsnelem gsnawayasmp" id="node_A1">
+<a href="./sub1.gsn.svg#node_a1">
+<g class="gsn_module_sub1 gsnelem gsnawayasmp" id="node_a1">
 <title>A1</title>
 <path class="border" d="M63,94 V41 A42,21,0,0,1,147,41 V94" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="70" y="60">
@@ -31,7 +31,7 @@ A1
 <text font-family="Arial" font-size="12" x="70" y="79">
 TestABC
 </text>
-<a href="./sub1.gsn.svg#node_A1">
+<a href="./sub1.gsn.svg#node_a1">
 <path class="border" d="M63,94 h84 v28 h-84 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="97" y="115">
 Sub1
@@ -43,7 +43,7 @@ A
 </text>
 </g>
 </a>
-<g class="gsn_module_Main gsnelem gsngoal" id="node_G1">
+<g class="gsn_module_main gsnelem gsngoal" id="node_g1">
 <title>G1</title>
 <path class="border" d="M187,48 L291,48 L291,94 L187,94 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="194" y="67">
@@ -53,7 +53,7 @@ G1
 Main Goal
 </text>
 </g>
-<g class="gsn_module_Main gsnelem gsnstgy" id="node_S1">
+<g class="gsn_module_main gsnelem gsnstgy" id="node_s1">
 <title>S1</title>
 <path class="border" d="M179,162 L313,162 L299,208 L165,208 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="187" y="181">
@@ -63,7 +63,7 @@ S1
 Divide and Conquer
 </text>
 </g>
-<g class="gsn_module_Main gsnelem gsngoal gsn_undeveloped" id="node_G2">
+<g class="gsn_module_main gsnelem gsngoal gsn_undeveloped" id="node_g2">
 <title>G2</title>
 <path class="border" d="M20,262 L124,262 L124,314 L20,314 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="27" y="281">
@@ -74,7 +74,7 @@ Divide
 </text>
 <path d="M72,314 l5,5 l-5,5 l-5,-5 z" fill="none" stroke="black" stroke-width="1"/>
 </g>
-<g class="gsn_module_Main gsnelem gsnjust" id="node_J1">
+<g class="gsn_module_main gsnelem gsnjust" id="node_j1">
 <title>J1</title>
 <path class="border" d="M164,288 a64,33,0,1,0,128,0 a64,33,0,1,0,-128,0 z" fill="none" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="190" y="279">
@@ -87,8 +87,8 @@ Some Context
 J
 </text>
 </g>
-<a href="./sub1.gsn.svg#node_G3">
-<g class="gsn_module_Sub1 gsnelem gsnawaygoal" id="node_G3">
+<a href="./sub1.gsn.svg#node_g3">
+<g class="gsn_module_sub1 gsnelem gsnawaygoal" id="node_g3">
 <title>G3</title>
 <path class="border" d="M332,300 V248 H482 V300" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="339" y="267">
@@ -97,7 +97,7 @@ G3
 <text font-family="Arial" font-size="12" x="339" y="286">
 Conquer the submodules
 </text>
-<a href="./sub1.gsn.svg#node_G3">
+<a href="./sub1.gsn.svg#node_g3">
 <path class="border" d="M332,300 h150 v28 h-150 z" fill="transparent" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="366" y="321">
 Sub1
