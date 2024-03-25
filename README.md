@@ -6,7 +6,7 @@
 
 # gsn2x
 
-This little program renders [Goal Structuring Notation](https://scsc.uk/gsn) in a YAML format to a scalable vector graphics (SVG) image.
+This little program renders [Goal Structuring Notation](https://scsc.uk/gsn) from a YAML format to a scalable vector graphics (SVG) image.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="examples/example.gsn_dark.svg">

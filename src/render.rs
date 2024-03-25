@@ -230,7 +230,7 @@ pub fn render_architecture(
                     render_options.masked_elements.contains(&module.meta.name),
                     &[],
                     module_url,
-                    render_options.word_wrap,
+                    module.meta.word_wrap.or(render_options.word_wrap),
                 ),
             ))
         })
@@ -344,7 +344,10 @@ pub fn render_argument(
                     node,
                     render_options.masked_elements.contains(id),
                     &render_options.layers,
-                    render_options.word_wrap,
+                    modules
+                        .get(module_name)
+                        .and_then(|m| m.meta.word_wrap)
+                        .or(render_options.word_wrap),
                 ),
             )
         })
@@ -365,7 +368,10 @@ pub fn render_argument(
                         modules.get(&node.module).unwrap(),
                         modules.get(module_name).unwrap(),
                         &render_options.layers,
-                        render_options.word_wrap,
+                        modules
+                            .get(module_name)
+                            .and_then(|m| m.meta.word_wrap)
+                            .or(render_options.word_wrap),
                     )?,
                 ))
             })
