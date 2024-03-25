@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg classes="gsndiagram" viewBox="0 0 677 483" xmlns="http://www.w3.org/2000/svg">
+<svg class="gsndiagram" viewBox="0 0 677 483" xmlns="http://www.w3.org/2000/svg">
 <symbol id="module_icon">
 <rect fill="lightgrey" height="5" stroke="black" stroke-width="1" width="10" x="0" y="0"/>
 <rect fill="lightgrey" height="10" stroke="black" stroke-width="1" width="20" x="0" y="5"/>
@@ -20,7 +20,7 @@
 </marker>
 <g class="gsn_module_examples_confidence_gsn_yaml gsnelem gsngoal" id="node_g1">
 <title>G1</title>
-<path class="border" d="M134,20 L352,20 L352,66 L134,66 z" fill="transparent" stroke="black" stroke-width="1"/>
+<path class="border" d="M134,20 L352,20 L352,66 L134,66 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="141" y="39">
 G1
 </text>
@@ -30,7 +30,7 @@ System is acceptably safe to operate
 </g>
 <g class="gsn_module_examples_confidence_gsn_yaml gsnelem gsnstgy" id="node_s1">
 <title>S1</title>
-<path class="border" d="M171,106 L329,106 L315,152 L157,152 z" fill="transparent" stroke="black" stroke-width="1"/>
+<path class="border" d="M171,106 L329,106 L315,152 L157,152 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="178" y="125">
 S1
 </text>
@@ -40,7 +40,7 @@ Argument over all hazards
 </g>
 <g class="gsn_module_examples_confidence_gsn_yaml acp_acp6 gsnelem gsnctxt" id="node_c1">
 <title>C1</title>
-<path class="border" d="M372,106 L476,106 C486,106,486,152,476,152 L372,152 C362,152,362,106,372,106" fill="transparent" stroke="black" stroke-width="1"/>
+<path class="border" d="M372,106 L476,106 C486,106,486,152,476,152 L372,152 C362,152,362,106,372,106" fill-opacity="0" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="379" y="125">
 C1
 </text>
@@ -54,7 +54,7 @@ ACP6
 </g>
 <g class="gsn_module_examples_confidence_gsn_yaml gsnelem gsngoal" id="node_g2">
 <title>G2</title>
-<path class="border" d="M38,192 L154,192 L154,238 L38,238 z" fill="transparent" stroke="black" stroke-width="1"/>
+<path class="border" d="M38,192 L154,192 L154,238 L38,238 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="45" y="211">
 G2
 </text>
@@ -64,7 +64,7 @@ Hazard 1 mitigated
 </g>
 <g class="gsn_module_examples_confidence_gsn_yaml gsnelem gsngoal" id="node_g3">
 <title>G3</title>
-<path class="border" d="M333,192 L449,192 L449,238 L333,238 z" fill="transparent" stroke="black" stroke-width="1"/>
+<path class="border" d="M333,192 L449,192 L449,238 L333,238 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="340" y="211">
 G3
 </text>
@@ -74,7 +74,7 @@ Hazard 2 mitigated
 </g>
 <g class="gsn_module_examples_confidence_gsn_yaml gsnelem gsnsltn" id="node_sn1">
 <title>Sn1</title>
-<path class="border" d="M20,369 a76,76,0,1,0,152,0 a76,76,0,1,0,-152,0 z" fill="none" stroke="black" stroke-width="1"/>
+<path class="border" d="M20,369 a76,76,0,1,0,152,0 a76,76,0,1,0,-152,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="36" y="360">
 Sn1
 </text>
@@ -84,7 +84,7 @@ Evidence for Hazard 1
 </g>
 <g class="gsn_module_examples_confidence_gsn_yaml gsnelem gsnsltn" id="node_sn2a">
 <title>Sn2a</title>
-<path class="border" d="M212,369 a76,76,0,1,0,152,0 a76,76,0,1,0,-152,0 z" fill="none" stroke="black" stroke-width="1"/>
+<path class="border" d="M212,369 a76,76,0,1,0,152,0 a76,76,0,1,0,-152,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="228" y="360">
 Sn2a
 </text>
@@ -94,7 +94,7 @@ Evidence for Hazard 2
 </g>
 <g class="gsn_module_examples_confidence_gsn_yaml acp_acp5 gsnelem gsnsltn" id="node_sn2b">
 <title>Sn2b</title>
-<path class="border" d="M404,369 a91,91,0,1,0,182,0 a91,91,0,1,0,-182,0 z" fill="none" stroke="black" stroke-width="1"/>
+<path class="border" d="M404,369 a91,91,0,1,0,182,0 a91,91,0,1,0,-182,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="419" y="360">
 Sn2b
 </text>
