@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg classes="gsndiagram" viewBox="0 0 988 514" xmlns="http://www.w3.org/2000/svg">
+<svg class="gsndiagram" viewBox="0 0 988 514" xmlns="http://www.w3.org/2000/svg">
 <symbol id="module_icon">
 <rect fill="lightgrey" height="5" stroke="black" stroke-width="1" width="10" x="0" y="0"/>
 <rect fill="lightgrey" height="10" stroke="black" stroke-width="1" width="20" x="0" y="5"/>
@@ -20,7 +20,7 @@
 </marker>
 <g class="gsn_module_tests_multi_context_gsn_yaml gsnelem gsnctxt" id="node_c2">
 <title>C2</title>
-<path class="border" d="M203,64 L307,64 C317,64,317,110,307,110 L203,110 C193,110,193,64,203,64" fill="transparent" stroke="black" stroke-width="1"/>
+<path class="border" d="M203,64 L307,64 C317,64,317,110,307,110 L203,110 C193,110,193,64,203,64" fill-opacity="0" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="210" y="83">
 C2
 </text>
@@ -30,7 +30,7 @@ Context 2
 </g>
 <g class="gsn_module_tests_multi_context_gsn_yaml gsnelem gsngoal" id="node_g1">
 <title>G1</title>
-<path class="border" d="M357,64 L505,64 L505,110 L357,110 z" fill="transparent" stroke="black" stroke-width="1"/>
+<path class="border" d="M357,64 L505,64 L505,110 L357,110 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="364" y="83">
 G1
 </text>
@@ -40,7 +40,7 @@ Goal with many contexts
 </g>
 <g class="gsn_module_tests_multi_context_gsn_yaml gsnelem gsnctxt" id="node_c1">
 <title>C1</title>
-<path class="border" d="M555,20 L659,20 C669,20,669,66,659,66 L555,66 C545,66,545,20,555,20" fill="transparent" stroke="black" stroke-width="1"/>
+<path class="border" d="M555,20 L659,20 C669,20,669,66,659,66 L555,66 C545,66,545,20,555,20" fill-opacity="0" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="562" y="39">
 C1
 </text>
@@ -50,7 +50,7 @@ Context 1
 </g>
 <g class="gsn_module_tests_multi_context_gsn_yaml gsnelem gsnctxt" id="node_c3">
 <title>C3</title>
-<path class="border" d="M555,107 L659,107 C669,107,669,153,659,153 L555,153 C545,153,545,107,555,107" fill="transparent" stroke="black" stroke-width="1"/>
+<path class="border" d="M555,107 L659,107 C669,107,669,153,659,153 L555,153 C545,153,545,107,555,107" fill-opacity="0" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="562" y="126">
 C3
 </text>
@@ -60,7 +60,7 @@ Context 3
 </g>
 <g class="gsn_module_tests_multi_context_gsn_yaml gsnelem gsnasmp" id="node_a2">
 <title>A2</title>
-<path class="border" d="M304,227 a85,33,0,1,0,170,0 a85,33,0,1,0,-170,0 z" fill="none" stroke="black" stroke-width="1"/>
+<path class="border" d="M304,227 a85,33,0,1,0,170,0 a85,33,0,1,0,-170,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="336" y="218">
 A2
 </text>
@@ -73,7 +73,7 @@ A
 </g>
 <g class="gsn_module_tests_multi_context_gsn_yaml gsnelem gsngoal" id="node_g3">
 <title>G3</title>
-<path class="border" d="M514,204 L690,204 L690,250 L514,250 z" fill="transparent" stroke="black" stroke-width="1"/>
+<path class="border" d="M514,204 L690,204 L690,250 L514,250 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="521" y="223">
 G3
 </text>
@@ -83,7 +83,7 @@ Yet another goal with context
 </g>
 <g class="gsn_module_tests_multi_context_gsn_yaml gsnelem gsnjust" id="node_j2">
 <title>J2</title>
-<path class="border" d="M730,227 a86,33,0,1,0,172,0 a86,33,0,1,0,-172,0 z" fill="none" stroke="black" stroke-width="1"/>
+<path class="border" d="M730,227 a86,33,0,1,0,172,0 a86,33,0,1,0,-172,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="762" y="218">
 J2
 </text>
@@ -96,7 +96,7 @@ J
 </g>
 <g class="gsn_module_tests_multi_context_gsn_yaml gsnelem gsnjust" id="node_j1">
 <title>J1</title>
-<path class="border" d="M20,333 a60,33,0,1,0,120,0 a60,33,0,1,0,-120,0 z" fill="none" stroke="black" stroke-width="1"/>
+<path class="border" d="M20,333 a60,33,0,1,0,120,0 a60,33,0,1,0,-120,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="45" y="324">
 J1
 </text>
@@ -109,7 +109,7 @@ J
 </g>
 <g class="gsn_module_tests_multi_context_gsn_yaml gsnelem gsngoal gsn_undeveloped" id="node_g2">
 <title>G2</title>
-<path class="border" d="M180,307 L340,307 L340,359 L180,359 z" fill="transparent" stroke="black" stroke-width="1"/>
+<path class="border" d="M180,307 L340,307 L340,359 L180,359 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="187" y="326">
 G2
 </text>
@@ -120,7 +120,7 @@ Another goal with contexts
 </g>
 <g class="gsn_module_tests_multi_context_gsn_yaml gsnelem gsnasmp" id="node_a1">
 <title>A1</title>
-<path class="border" d="M380,333 a65,33,0,1,0,130,0 a65,33,0,1,0,-130,0 z" fill="none" stroke="black" stroke-width="1"/>
+<path class="border" d="M380,333 a65,33,0,1,0,130,0 a65,33,0,1,0,-130,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="406" y="324">
 A1
 </text>
@@ -133,7 +133,7 @@ A
 </g>
 <g class="gsn_module_tests_multi_context_gsn_yaml gsnelem gsngoal" id="node_g4">
 <title>G4</title>
-<path class="border" d="M550,310 L654,310 L654,356 L550,356 z" fill="transparent" stroke="black" stroke-width="1"/>
+<path class="border" d="M550,310 L654,310 L654,356 L550,356 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="557" y="329">
 G4
 </text>
@@ -143,7 +143,7 @@ Simple goal
 </g>
 <g class="gsn_module_tests_multi_context_gsn_yaml gsnelem gsnsltn" id="node_sn1">
 <title>Sn1</title>
-<path class="border" d="M559,449 a43,43,0,1,0,86,0 a43,43,0,1,0,-86,0 z" fill="none" stroke="black" stroke-width="1"/>
+<path class="border" d="M559,449 a43,43,0,1,0,86,0 a43,43,0,1,0,-86,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="577" y="440">
 Sn1
 </text>

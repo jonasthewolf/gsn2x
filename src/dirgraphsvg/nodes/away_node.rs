@@ -182,7 +182,7 @@ impl AwayType {
         };
 
         let upper_line = Path::new()
-            .set("fill", "transparent")
+            .set("fill-opacity", "0")
             .set("stroke", border_color)
             .set("stroke-width", 1u32)
             .set("d", data)
@@ -215,7 +215,7 @@ impl AwayType {
             .close();
 
         let module_box = Path::new()
-            .set("fill", "transparent")
+            .set("fill-opacity", "none")
             .set("stroke", border_color)
             .set("stroke-width", 1u32)
             .set("d", module_box_data)

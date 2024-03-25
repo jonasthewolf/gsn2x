@@ -124,7 +124,7 @@ impl BoxType {
         };
 
         let border = Path::new()
-            .set("fill", "transparent")
+            .set("fill-opacity", "0")
             .set("stroke", border_color)
             .set("stroke-width", 1u32)
             .set("d", data)

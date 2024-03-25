@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg classes="gsndiagram" viewBox="0 0 176 302" xmlns="http://www.w3.org/2000/svg">
+<svg class="gsndiagram" viewBox="0 0 176 302" xmlns="http://www.w3.org/2000/svg">
 <symbol id="module_icon">
 <rect fill="lightgrey" height="5" stroke="black" stroke-width="1" width="10" x="0" y="0"/>
 <rect fill="lightgrey" height="10" stroke="black" stroke-width="1" width="20" x="0" y="5"/>
@@ -20,7 +20,7 @@
 </marker>
 <g class="gsn_module_tests_issue339_yaml gsnelem gsngoal" id="node_g1">
 <title>G1</title>
-<path class="border" d="M20,20 L124,20 L124,66 L20,66 z" fill="transparent" stroke="black" stroke-width="1"/>
+<path class="border" d="M20,20 L124,20 L124,66 L20,66 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="27" y="39">
 G1
 </text>
@@ -30,7 +30,7 @@ Goal 1
 </g>
 <g class="gsn_module_tests_issue339_yaml gsnelem gsngoal" id="node_g2">
 <title>G2</title>
-<path class="border" d="M20,106 L124,106 L124,152 L20,152 z" fill="transparent" stroke="black" stroke-width="1"/>
+<path class="border" d="M20,106 L124,106 L124,152 L20,152 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="27" y="125">
 G2
 </text>
@@ -40,7 +40,7 @@ Goal 2
 </g>
 <g class="gsn_module_tests_issue339_yaml gsnelem gsnsltn" id="node_snx1">
 <title>SnX1</title>
-<path class="border" d="M28,236 a44,44,0,1,0,88,0 a44,44,0,1,0,-88,0 z" fill="none" stroke="black" stroke-width="1"/>
+<path class="border" d="M28,236 a44,44,0,1,0,88,0 a44,44,0,1,0,-88,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="47" y="227">
 SnX1
 </text>

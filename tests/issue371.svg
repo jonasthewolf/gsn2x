@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg classes="gsndiagram" viewBox="0 0 2646 560" xmlns="http://www.w3.org/2000/svg">
+<svg class="gsndiagram" viewBox="0 0 2646 560" xmlns="http://www.w3.org/2000/svg">
 <symbol id="module_icon">
 <rect fill="lightgrey" height="5" stroke="black" stroke-width="1" width="10" x="0" y="0"/>
 <rect fill="lightgrey" height="10" stroke="black" stroke-width="1" width="20" x="0" y="5"/>
@@ -20,7 +20,7 @@
 </marker>
 <g class="gsn_module_txxx_2_xxxx_xxxxxxxxxx gsnelem gsngoal" id="node_gxxxxxxx_xxxxxxxxxxxxxx">
 <title>GXxxxxxx-XxxxXxxxxxxxxx</title>
-<path class="border" d="M20,20 L572,20 L572,66 L20,66 z" fill="transparent" stroke="black" stroke-width="1"/>
+<path class="border" d="M20,20 L572,20 L572,66 L20,66 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="27" y="39">
 GXxxxxxx-XxxxXxxxxxxxxx
 </text>
@@ -30,7 +30,7 @@ Wxxxxxxxxx xx xxxxxxx xxx xxx xxxxxxxxxx xx xxxxxxxxxx xx xxx XX xxxxxxxxxxxxxx 
 </g>
 <g class="gsn_module_txxx_2_xxxx_xxxxxxxxxx gsnelem gsngoal" id="node_gxxxxxxx_xxxxxxxxxxxxxx_1">
 <title>GXxxxxxx-XxxxXxxxxxxxxx.1</title>
-<path class="border" d="M151,106 L441,106 L441,152 L151,152 z" fill="transparent" stroke="black" stroke-width="1"/>
+<path class="border" d="M151,106 L441,106 L441,152 L151,152 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="158" y="125">
 GXxxxxxx-XxxxXxxxxxxxxx.1
 </text>
@@ -40,7 +40,7 @@ Txxxx xxxx xxx xxxxxxxxxx Xxxxxxx xxx xxxxxxx.
 </g>
 <g class="gsn_module_txxx_2_xxxx_xxxxxxxxxx gsnelem gsngoal" id="node_gxxxxxxx_xxxxxxxxxxxxxx_1_1">
 <title>GXxxxxxx-XxxxXxxxxxxxxx.1.1</title>
-<path class="border" d="M68,212 L524,212 L524,258 L68,258 z" fill="transparent" stroke="black" stroke-width="1"/>
+<path class="border" d="M68,212 L524,212 L524,258 L68,258 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="75" y="231">
 GXxxxxxx-XxxxXxxxxxxxxx.1.1
 </text>
@@ -50,7 +50,7 @@ Cxxxxxxxxx xx xxx xxx xx xxxxxxxx xxxxx xxxx XXX 26262-8:2018 xx xxxxxxx.
 </g>
 <g class="gsn_module_txxx_2_xxxx_xxxxxxxxxx gsnelem gsnjust" id="node_jxxxxxxx_xxxxxxxxxxxxxx_1_1">
 <title>JXxxxxxx-XxxxXxxxxxxxxx.1.1</title>
-<path class="border" d="M564,235 a694,43,0,1,0,1388,0 a694,43,0,1,0,-1388,0 z" fill="none" stroke="black" stroke-width="1"/>
+<path class="border" d="M564,235 a694,43,0,1,0,1388,0 a694,43,0,1,0,-1388,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="770" y="219">
 JXxxxxxx-XxxxXxxxxxxxxx.1.1
 </text>
@@ -66,7 +66,7 @@ J
 </g>
 <g class="gsn_module_txxx_2_xxxx_xxxxxxxxxx gsnelem gsnsltn" id="node_snxxxxxxx_xxxxxxxxxxxxxx_1_1">
 <title>SnXxxxxxx-XxxxXxxxxxxxxx.1.1</title>
-<path class="border" d="M186,428 a110,110,0,1,0,220,0 a110,110,0,1,0,-220,0 z" fill="none" stroke="black" stroke-width="1"/>
+<path class="border" d="M186,428 a110,110,0,1,0,220,0 a110,110,0,1,0,-220,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="201" y="419">
 SnXxxxxxx-XxxxXxxxxxxxxx.1.1
 </text>

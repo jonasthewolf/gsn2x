@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg classes="gsndiagram" viewBox="0 0 221 179" xmlns="http://www.w3.org/2000/svg">
+<svg class="gsndiagram" viewBox="0 0 221 179" xmlns="http://www.w3.org/2000/svg">
 <symbol id="module_icon">
 <rect fill="lightgrey" height="5" stroke="black" stroke-width="1" width="10" x="0" y="0"/>
 <rect fill="lightgrey" height="10" stroke="black" stroke-width="1" width="20" x="0" y="5"/>
@@ -21,7 +21,7 @@
 <a href="./issue391_1.svg#node_s1">
 <g class="gsn_module_tests_issue391_1_yaml gsnelem gsnstgy" id="node_s1">
 <title>S1</title>
-<path class="border" d="M27,20 L161,20 L147,66 L13,66 z" fill="transparent" stroke="black" stroke-width="1"/>
+<path class="border" d="M27,20 L161,20 L147,66 L13,66 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="35" y="39">
 S1
 </text>
@@ -32,7 +32,7 @@ S1
 </a>
 <g class="gsn_module_tests_issue391_2_yaml gsnelem gsngoal gsn_undeveloped" id="node_g1">
 <title>G1</title>
-<path class="border" d="M35,106 L139,106 L139,158 L35,158 z" fill="transparent" stroke="black" stroke-width="1"/>
+<path class="border" d="M35,106 L139,106 L139,158 L35,158 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="42" y="125">
 G1
 </text>
