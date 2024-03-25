@@ -30,9 +30,9 @@ impl Point2D<i32> {
     ///
     /// Get angle between self and other point
     ///
-    pub fn angle(&self, p2: &Point2D<i32>) -> f64 {
-        f64::acos((self.x * p2.x + self.y * p2.y) as f64 / (self.norm() * p2.norm()))
-    }
+    // pub fn angle(&self, p2: &Point2D<i32>) -> f64 {
+    //     f64::acos((self.x * p2.x + self.y * p2.y) as f64 / (self.norm() * p2.norm()))
+    // }
 
     ///
     /// Get the norm of the point
@@ -178,12 +178,6 @@ impl Mul<Point2D<i32>> for f64 {
     }
 }
 
-impl MulAssign<f64> for Point2D<i32> {
-    fn mul_assign(&mut self, rhs: f64) {
-        self.x = (self.x as f64 * rhs) as i32;
-        self.y = (self.y as f64 * rhs) as i32;
-    }
-}
 
 impl<T> Mul<Point2D<T>> for Point2D<T>
 where
