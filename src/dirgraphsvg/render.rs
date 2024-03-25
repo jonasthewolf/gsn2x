@@ -289,7 +289,7 @@ fn setup_basics(mut document: Document) -> Document {
         .add(composite_arrow)
         .add(supportedby_arrow)
         .add(incontext_arrow)
-        .set("classes", "gsndiagram");
+        .set("class", "gsndiagram");
     document
 }
 
