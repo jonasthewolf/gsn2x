@@ -18,7 +18,7 @@
 <marker id="incontextof_arrow" markerHeight="9" markerUnits="userSpaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
 <polyline fill="none" points="0 0, 10 4.5, 0 9, 0 0" stroke="black" stroke-width="1"/>
 </marker>
-<a href="./main.gsn.svg">
+<a href="./index.gsn.svg">
 <g class="gsn_module_ gsnelem gsnmodule" id="node_main">
 <title>Main</title>
 <path class="border" d="M20,20 h30 v10 L124,30 L124,74 L20,74 z" fill-opacity="0" stroke="black" stroke-width="1"/>

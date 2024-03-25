@@ -225,27 +225,26 @@ fn validate_module_extensions(
     module_name: &str,
     diag: &mut Diagnostics,
 ) {
-    if let Some(extensions) = &module_info.meta.extends {
-        for ext in extensions {
-            for (foreign_id, local_ids) in &ext.develops {
-                for local_id in local_ids {
-                    if !(local_id.starts_with("Sn")
-                        || local_id.starts_with('S')
-                        || local_id.starts_with('G'))
-                    {
-                        diag.add_msg(
+    for ext in &module_info.meta.extends {
+        for (foreign_id, local_ids) in &ext.develops {
+            for local_id in local_ids {
+                if !(local_id.starts_with("Sn")
+                    || local_id.starts_with('S')
+                    || local_id.starts_with('G'))
+                {
+                    diag.add_msg(
                             DiagType::Error,
                             Some(module_name),
                             format!(
                                 "V07: Element {local_id} is of wrong type. Only Strategies, Goals and Solutions can develop other Goals and Strategies."
                             ),
                         );
-                    } else if !nodes
-                        .iter()
-                        .filter(|(_, n)| n.module == module_name)
-                        .any(|(id, _)| id == local_id)
-                    {
-                        diag.add_msg(
+                } else if !nodes
+                    .iter()
+                    .filter(|(_, n)| n.module == module_name)
+                    .any(|(id, _)| id == local_id)
+                {
+                    diag.add_msg(
                             DiagType::Error,
                             Some(module_name),
                             format!(
@@ -256,9 +255,8 @@ fn validate_module_extensions(
                                 ext.module
                             ),
                         );
-                    } else {
-                        // All fine.
-                    }
+                } else {
+                    // All fine.
                 }
             }
         }
@@ -780,13 +778,14 @@ mod test {
                 meta: ModuleInformation {
                     name: "mod".to_owned(),
                     brief: Some("brief".to_owned()),
-                    extends: Some(vec![ExtendsModule {
+                    extends: vec![ExtendsModule {
                         module: "mod2".to_owned(),
                         develops,
-                    }]),
+                    }],
+                    requires: vec![],
                     horizontal_index: None,
                     rank_increment: None,
-                    _word_wrap: None,
+                    word_wrap: None,
                     additional: BTreeMap::new(),
                 },
             },
@@ -817,13 +816,14 @@ mod test {
                 meta: ModuleInformation {
                     name: "mod".to_owned(),
                     brief: Some("brief".to_owned()),
-                    extends: Some(vec![ExtendsModule {
+                    extends: vec![ExtendsModule {
                         module: "mod2".to_owned(),
                         develops,
-                    }]),
+                    }],
+                    requires: vec![],
                     horizontal_index: None,
                     rank_increment: None,
-                    _word_wrap: None,
+                    word_wrap: None,
                     additional: BTreeMap::new(),
                 },
             },

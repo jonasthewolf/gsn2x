@@ -277,15 +277,7 @@ fn add_missing_nodes_and_modules(
         "Unknown".to_owned(),
         Module {
             relative_module_path: "".to_owned(),
-            meta: ModuleInformation {
-                name: "Unknown".to_owned(),
-                brief: None,
-                extends: None,
-                horizontal_index: None,
-                rank_increment: None,
-                _word_wrap: None,
-                additional: BTreeMap::new(),
-            },
+            meta: ModuleInformation::new("Unknown".to_owned()),
         },
     );
 }
@@ -300,11 +292,14 @@ fn read_inputs(
     modules: &mut BTreeMap<String, Module>,
     diags: &mut Diagnostics,
 ) -> Result<()> {
-    for input in inputs {
-        let reader =
-            BufReader::new(File::open(input).context(format!("Failed to open file {input}"))?);
+    let mut copied_inputs = inputs.to_owned();
+    loop {
+        let mut additional_inputs = vec![];
+        for input in &copied_inputs {
+            let reader =
+                BufReader::new(File::open(input).context(format!("Failed to open file {input}"))?);
 
-        let mut n: BTreeMap<String, GsnDocument> = serde_yaml::from_reader(reader)
+            let mut n: BTreeMap<String, GsnDocument> = serde_yaml::from_reader(reader)
             .map(|n: yaml_fix::YamlFixMap<String, GsnDocument>| n.into_inner())
             .map_err(|e| {
                 anyhow!(format!(
@@ -320,68 +315,84 @@ fn read_inputs(
                 ))
             })
             .context(format!("Failed to parse YAML from file {input}"))?;
-        let meta: ModuleInformation = match n.remove_entry(MODULE_INFORMATION_NODE) {
-            Some((_, GsnDocument::ModuleInformation(x))) => x,
-            _ => {
-                let module_name = escape_text(input);
-                ModuleInformation {
-                    name: module_name,
-                    brief: None,
-                    extends: None,
-                    _word_wrap: None,
-                    horizontal_index: None,
-                    rank_increment: None,
-                    additional: BTreeMap::new(),
+            let meta: ModuleInformation = match n.remove_entry(MODULE_INFORMATION_NODE) {
+                Some((_, GsnDocument::ModuleInformation(x))) => x,
+                _ => {
+                    let module_name = escape_text(&input.to_owned());
+                    ModuleInformation::new(module_name)
                 }
+            };
+            // Remember additional files to read
+            // TODO Should we just warn about double included files?
+            let required_files = meta
+                .requires
+                .iter()
+                .filter_map(|r| {
+                    PathBuf::from(input).parent().and_then(|p| {
+                        let mut new_r = p.to_path_buf();
+                        new_r.push(r);
+                        Some(new_r.to_string_lossy().to_string())
+                    })
+                })
+                .collect::<Vec<_>>();
+            additional_inputs.extend(required_files);
+            // Add filename and module name to module list
+            let module = meta.name.to_owned();
+
+            // Check for duplicate module name
+            if let std::collections::btree_map::Entry::Vacant(e) = modules.entry(module.to_owned())
+            {
+                e.insert(Module {
+                    relative_module_path: input.to_owned().to_owned(),
+                    meta,
+                });
+            } else {
+                diags.add_error(
+                    Some(&module),
+                    format!(
+                        "C06: Module name {} in {} was already present in {}.",
+                        module,
+                        input,
+                        modules.get(&module).unwrap().relative_module_path // unwrap is ok, otherwise Entry would not have been Vacant
+                    ),
+                );
             }
-        };
-        // Add filename and module name to module list
-        let module = meta.name.to_owned();
 
-        if let std::collections::btree_map::Entry::Vacant(e) = modules.entry(module.to_owned()) {
-            e.insert(Module {
-                relative_module_path: input.to_owned().to_owned(),
-                meta,
-            });
-        } else {
-            diags.add_error(
-                Some(&module),
-                format!(
-                    "C06: Module name {} in {} was already present in {}.",
-                    module,
-                    input,
-                    modules.get(&module).unwrap().relative_module_path // unwrap is ok, otherwise Entry would not have been Vacant
-                ),
-            );
-        }
-
-        // Check for duplicates, since they might be in separate files.
-        let node_names: Vec<String> = n.keys().cloned().collect();
-        for node_name in node_names {
-            if let Some((k, v)) = n.remove_entry(&node_name) {
-                if let std::collections::btree_map::Entry::Vacant(e) = nodes.entry(k.to_owned()) {
-                    match v {
-                        GsnDocument::GsnNode(mut x) => {
-                            // Remember module for node
-                            x.module = module.to_owned();
-                            x.fix_node_type(&k);
-                            e.insert(x);
+            // Check for duplicates, since they might be in separate files.
+            let node_names: Vec<String> = n.keys().cloned().collect();
+            for node_name in node_names {
+                if let Some((k, v)) = n.remove_entry(&node_name) {
+                    if let std::collections::btree_map::Entry::Vacant(e) = nodes.entry(k.to_owned())
+                    {
+                        match v {
+                            GsnDocument::GsnNode(mut x) => {
+                                // Remember module for node
+                                x.module = module.to_owned();
+                                x.fix_node_type(&k);
+                                e.insert(x);
+                            }
+                            _ => unreachable!(), // There can be only one MetaNode
                         }
-                        _ => unreachable!(), // There can be only one MetaNode
+                    } else {
+                        diags.add_error(
+                            Some(&module),
+                            format!(
+                                "C07: Element {} in {} was already present in {}.",
+                                k,
+                                input,
+                                nodes.get(&k).unwrap().module // unwrap is ok, otherwise Entry would not have been Vacant
+                            ),
+                        );
+                        break;
                     }
-                } else {
-                    diags.add_error(
-                        Some(&module),
-                        format!(
-                            "C07: Element {} in {} was already present in {}.",
-                            k,
-                            input,
-                            nodes.get(&k).unwrap().module // unwrap is ok, otherwise Entry would not have been Vacant
-                        ),
-                    );
-                    break;
                 }
             }
+        }
+        if additional_inputs.is_empty() {
+            break;
+        } else {
+            copied_inputs.clear();
+            copied_inputs.append(&mut additional_inputs);
         }
     }
     if nodes.is_empty() {

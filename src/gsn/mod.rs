@@ -273,12 +273,30 @@ fn get_node_type_from_text(text: &str) -> Option<GsnNodeType> {
 pub struct ModuleInformation {
     pub(crate) name: String,
     pub(crate) brief: Option<String>,
-    pub(crate) extends: Option<Vec<ExtendsModule>>,
+    #[serde(default)]
+    pub(crate) extends: Vec<ExtendsModule>,
     pub(crate) horizontal_index: Option<HorizontalIndex>,
     pub(crate) rank_increment: Option<usize>,
-    pub(crate) _word_wrap: Option<u32>,
-    #[serde(flatten)]
+    pub(crate) word_wrap: Option<u32>,
+    #[serde(default)]
+    pub(crate) requires: Vec<String>,
+    #[serde(flatten, deserialize_with = "deser_additional")]
     pub(crate) additional: BTreeMap<String, String>,
+}
+
+impl ModuleInformation {
+    pub fn new(name: String) -> Self {
+        ModuleInformation {
+            name,
+            brief: None,
+            extends: vec![],
+            requires: vec![],
+            word_wrap: None,
+            horizontal_index: None,
+            rank_increment: None,
+            additional: BTreeMap::new(),
+        }
+    }
 }
 
 #[derive(Debug, Deserialize)]
@@ -310,36 +328,41 @@ pub fn extend_modules(
     modules: &BTreeMap<String, Module>,
 ) {
     for (module_name, module_info) in modules {
-        if let Some(extensions) = &module_info.meta.extends {
-            for ext in extensions {
-                if !modules.contains_key(&ext.module) {
-                    diags.add_error(
-                            Some(module_name),
-                            format!("C09: Module {} is not found, but is supposed to be extended by module {}.", ext.module, module_name),
-                        );
-                }
-                for (foreign_id, local_ids) in &ext.develops {
-                    if let Some(foreign_node) = nodes.get_mut(foreign_id) {
-                        if foreign_node.module != ext.module {
-                            diags.add_error(
+        for ext in &module_info.meta.extends {
+            if !modules.contains_key(&ext.module) {
+                diags.add_error(
+                    Some(module_name),
+                    format!(
+                        "C09: Module {} is not found, but is supposed to be extended by module {}.",
+                        ext.module, module_name
+                    ),
+                );
+            }
+            for (foreign_id, local_ids) in &ext.develops {
+                if let Some(foreign_node) = nodes.get_mut(foreign_id) {
+                    if foreign_node.module != ext.module {
+                        diags.add_error(
                                     Some(module_name),
                                     format!("C10: Element {} does not exist in module {}, but is supposed to be extended by {}.", foreign_id, ext.module, local_ids.join(",")),
                                 );
-                        } else if foreign_node.undeveloped != Some(true) {
-                            diags.add_error(
+                    } else if foreign_node.undeveloped != Some(true) {
+                        diags.add_error(
                                     Some(module_name),
                                     format!("C10: Element {} is not undeveloped, but is supposed to be extended by {}.", foreign_id, local_ids.join(",")),
                                 );
-                        } else {
-                            foreign_node.supported_by = local_ids.to_vec();
-                            foreign_node.undeveloped = Some(false);
-                        }
                     } else {
-                        diags.add_error(
-                                Some(module_name),
-                                format!("C10: Element {} does not exist, but is supposed to be extended by {}.", foreign_id, local_ids.join(",")),
-                            );
+                        foreign_node.supported_by = local_ids.to_vec();
+                        foreign_node.undeveloped = Some(false);
                     }
+                } else {
+                    diags.add_error(
+                        Some(module_name),
+                        format!(
+                            "C10: Element {} does not exist, but is supposed to be extended by {}.",
+                            foreign_id,
+                            local_ids.join(",")
+                        ),
+                    );
                 }
             }
         }

@@ -6,13 +6,13 @@ cp examples/example.gsn.svg examples/example.gsn_dark.svg
 cargo run -- -G -E examples/example.gsn.yaml
 
 # arch_view
-cargo run -- -G -E -F -N -o examples/modular examples/modular/main.gsn.yaml examples/modular/sub1.gsn.yaml examples/modular/sub3.gsn.yaml
+cargo run -- -G -E -F -N -o examples/modular examples/modular/index.gsn.yaml 
 
 # multiple_view
-cargo run -- -G -E -A -F -s https://github.com/jonasthewolf/gsn2x/blob/3439402d093ba54af4771b295e78f2488bd1b978/examples/modular/modular.css examples/modular/main.gsn.yaml examples/modular/sub1.gsn.yaml examples/modular/sub3.gsn.yaml
+cargo run -- -G -E -A -F -s https://github.com/jonasthewolf/gsn2x/blob/3439402d093ba54af4771b295e78f2488bd1b978/examples/modular/modular.css examples/modular/index.gsn.yaml 
 
 # complete_view
-cargo run -- -G -E -A -N -o examples/modular examples/modular/main.gsn.yaml examples/modular/sub1.gsn.yaml examples/modular/sub3.gsn.yaml
+cargo run -- -G -E -A -N -o examples/modular examples/modular/index.gsn.yaml 
 
 # multi context
 cargo run -- -G -E -A -F tests/multi_context.gsn.yaml

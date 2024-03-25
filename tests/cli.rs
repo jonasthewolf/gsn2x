@@ -232,7 +232,7 @@ mod integrations {
     fn validate_multiple_only() -> Result<()> {
         let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
         cmd.arg("-c")
-            .arg("examples/modular/main.gsn.yaml")
+            .arg("examples/modular/index.gsn.yaml")
             .arg("examples/modular/sub1.gsn.yaml")
             .arg("examples/modular/sub3.gsn.yaml");
         cmd.assert()
@@ -246,7 +246,7 @@ mod integrations {
     fn validate_multiple_only_error() -> Result<()> {
         let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
         cmd.arg("-c")
-            .arg("examples/modular/main.gsn.yaml")
+            .arg("examples/modular/index.gsn.yaml")
             .arg("examples/modular/sub2.gsn.yaml");
         cmd.assert().failure().stderr(predicate::str::contains(
             "Error: 1 errors and 0 warnings detected.",
@@ -258,7 +258,7 @@ mod integrations {
     fn validate_multiple_only_error_exclude() -> Result<()> {
         let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
         cmd.arg("-c")
-            .arg("examples/modular/main.gsn.yaml")
+            .arg("examples/modular/index.gsn.yaml")
             .arg("examples/modular/sub2.gsn.yaml")
             .arg("-x")
             .arg("examples/modular/sub2.gsn.yaml");
@@ -384,7 +384,7 @@ mod integrations {
     fn absolute_input() -> Result<()> {
         let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
         let temp = assert_fs::TempDir::new()?;
-        let input_file = temp.child("main.gsn.yaml");
+        let input_file = temp.child("index.gsn.yaml");
         cmd.arg(input_file.as_os_str())
             .arg("-E")
             .arg("-F")
@@ -402,7 +402,7 @@ mod integrations {
         let temp = assert_fs::TempDir::new()?;
         temp.copy_from(".", &["examples/modular/*.yaml"])?;
         let output_file = temp.child("examples/modular/architecture.svg");
-        cmd.arg("examples/modular/main.gsn.yaml")
+        cmd.arg("examples/modular/index.gsn.yaml")
             .arg("examples/modular/sub1.gsn.yaml")
             .arg("examples/modular/sub3.gsn.yaml")
             .arg("-o")
@@ -414,7 +414,7 @@ mod integrations {
         cmd.assert()
             .success()
             .stdout(predicate::str::is_match(concat!(
-                "Rendering \"examples.modular.main.gsn.svg\": OK\n",
+                "Rendering \"examples.modular.index.gsn.svg\": OK\n",
                 "Rendering \"examples.modular.sub1.gsn.svg\": OK\n",
                 "Rendering \"examples.modular.sub3.gsn.svg\": OK\n",
                 "Rendering \"examples.modular.architecture.svg\": OK\n",
@@ -432,10 +432,10 @@ mod integrations {
         let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
         let temp = assert_fs::TempDir::new()?;
         temp.copy_from(".", &["examples/modular/*.yaml"])?;
-        let output_file1 = temp.child("examples/modular/main.gsn.svg");
+        let output_file1 = temp.child("examples/modular/index.gsn.svg");
         let output_file2 = temp.child("examples/modular/sub1.gsn.svg");
         let output_file3 = temp.child("examples/modular/sub3.gsn.svg");
-        cmd.arg("examples/modular/main.gsn.yaml")
+        cmd.arg("examples/modular/index.gsn.yaml")
             .arg("examples/modular/sub1.gsn.yaml")
             .arg("examples/modular/sub3.gsn.yaml")
             .arg("-A")
@@ -448,12 +448,12 @@ mod integrations {
         cmd.assert()
             .success()
             .stdout(predicate::str::is_match(concat!(
-                "Rendering \"..examples.modular.main.gsn.svg\": OK\n",
+                "Rendering \"..examples.modular.index.gsn.svg\": OK\n",
                 "Rendering \"..examples.modular.sub1.gsn.svg\": OK\n",
                 "Rendering \"..examples.modular.sub3.gsn.svg\": OK\n",
             ))?);
         assert!(are_struct_similar_svgs(
-            std::path::Path::new("examples/modular/main.gsn.svg").as_os_str(),
+            std::path::Path::new("examples/modular/index.gsn.svg").as_os_str(),
             output_file1.as_os_str(),
         )?);
         assert!(are_struct_similar_svgs(
@@ -474,7 +474,7 @@ mod integrations {
         let temp = assert_fs::TempDir::new()?;
         temp.copy_from(".", &["examples/modular/*.yaml"])?;
         let output_file = temp.child("complete.svg");
-        cmd.arg("examples/modular/main.gsn.yaml")
+        cmd.arg("examples/modular/index.gsn.yaml")
             .arg("examples/modular/sub1.gsn.yaml")
             .arg("examples/modular/sub3.gsn.yaml")
             .arg("-N")

@@ -166,7 +166,7 @@ mod test {
 
     #[test]
     fn relative_path() -> Result<()> {
-        let rel = get_relative_path("./Cargo.toml", "./examples/modular/main.gsn.yaml", None)?;
+        let rel = get_relative_path("./Cargo.toml", "./examples/modular/index.gsn.yaml", None)?;
         assert_eq!(rel, "../../Cargo.toml");
         Ok(())
     }
