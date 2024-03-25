@@ -328,10 +328,10 @@ fn read_inputs(
                 .requires
                 .iter()
                 .filter_map(|r| {
-                    PathBuf::from(input).parent().and_then(|p| {
+                    PathBuf::from(input).parent().map(|p| {
                         let mut new_r = p.to_path_buf();
                         new_r.push(r);
-                        Some(new_r.to_string_lossy().to_string())
+                        new_r.to_string_lossy().to_string()
                     })
                 })
                 .collect::<Vec<_>>();
