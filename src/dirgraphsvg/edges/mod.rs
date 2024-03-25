@@ -9,7 +9,7 @@ use crate::{
     dirgraph::{DirectedGraph, DirectedGraphEdgeType},
     dirgraphsvg::{
         escape_text,
-        render::{BOTTOM_RIGHT_CORNER, PADDING_VERTICAL, TOP_LEFT_CORNER},
+        render::{BOTTOM_RIGHT_CORNER, PADDING_HORIZONTAL, PADDING_VERTICAL, TOP_LEFT_CORNER},
         util::curve::CubicBezierCurve,
     },
     gsn::GsnEdgeType,
@@ -18,7 +18,7 @@ use crate::{
 use super::{
     layout::Margin,
     nodes::{Port, SvgNode},
-    render::{create_text, ACP_BOX_SIZE, BOTTOM_LEFT_CORNER, PADDING_HORIZONTAL, TOP_RIGHT_CORNER},
+    render::{create_text, ACP_BOX_SIZE, BOTTOM_LEFT_CORNER, TOP_RIGHT_CORNER},
     util::{font::text_bounding_box, point2d::Point2D},
     DirGraph,
 };
@@ -230,7 +230,6 @@ fn render_acps(
             )
             .set("class", "gsnacp");
         let center_segment = (curve_points.len() - 1) / 2;
-        let y_axis = Point2D { x: 0, y: 1 };
         let curve = CubicBezierCurve::new(
             curve_points[center_segment].0,
             curve_points[center_segment].1,
@@ -238,18 +237,17 @@ fn render_acps(
             curve_points[center_segment + 1].0,
         );
         let coords = curve.get_coordinates_for_t(0.5);
-        let angle =
-            curve.get_first_derivative_for_t(0.5).angle(&y_axis) * (180.0 / std::f32::consts::PI);
+        let turning_vector = curve.get_first_derivative_for_t(0.5).normalize();
+        let acp_text = acps.join(", ");
         let acp_x = coords.x - ACP_BOX_SIZE;
         let acp_y = coords.y - ACP_BOX_SIZE;
-        let acp_text = acps.join(", ");
         let acp_text_bb = text_bounding_box(&render_graph.font, &acp_text, false);
-        let mut acp_x_text = acp_x + 2 * ACP_BOX_SIZE + PADDING_HORIZONTAL;
-        let mut acp_y_text = acp_y + acp_text_bb.1;
-        if (85.0..=95.0).contains(&angle) {
-            acp_x_text = acp_x + ACP_BOX_SIZE - acp_text_bb.0 / 2;
-            acp_y_text += ACP_BOX_SIZE + PADDING_VERTICAL;
-        }
+        let acp_x_text = coords.x
+            + ((ACP_BOX_SIZE + PADDING_HORIZONTAL) as f64 * turning_vector.y) as i32
+            - ((1.0 - turning_vector.y) * ((acp_text_bb.0) as f64 / 2.0)) as i32;
+        let acp_y_text = coords.y
+            + ((acp_text_bb.1 + PADDING_VERTICAL) as f64 * turning_vector.x) as i32
+            + ((1.0 - turning_vector.x) * ACP_BOX_SIZE as f64) as i32;
         svg_acp.append(
             Use::new()
                 .set("href", "#acp")
