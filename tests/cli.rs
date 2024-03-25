@@ -231,8 +231,7 @@ mod integrations {
     #[test]
     fn validate_multiple_only() -> Result<()> {
         let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
-        cmd.arg("-c")
-            .arg("examples/modular/index.gsn.yaml");
+        cmd.arg("-c").arg("examples/modular/index.gsn.yaml");
         cmd.assert()
             .success()
             .stdout(predicate::str::is_empty())
