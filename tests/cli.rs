@@ -232,9 +232,7 @@ mod integrations {
     fn validate_multiple_only() -> Result<()> {
         let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
         cmd.arg("-c")
-            .arg("examples/modular/index.gsn.yaml")
-            .arg("examples/modular/sub1.gsn.yaml")
-            .arg("examples/modular/sub3.gsn.yaml");
+            .arg("examples/modular/index.gsn.yaml");
         cmd.assert()
             .success()
             .stdout(predicate::str::is_empty())
@@ -403,8 +401,6 @@ mod integrations {
         temp.copy_from(".", &["examples/modular/*.yaml"])?;
         let output_file = temp.child("examples/modular/architecture.svg");
         cmd.arg("examples/modular/index.gsn.yaml")
-            .arg("examples/modular/sub1.gsn.yaml")
-            .arg("examples/modular/sub3.gsn.yaml")
             .arg("-o")
             .arg("examples/modular")
             .arg("-E")
@@ -436,8 +432,6 @@ mod integrations {
         let output_file2 = temp.child("examples/modular/sub1.gsn.svg");
         let output_file3 = temp.child("examples/modular/sub3.gsn.svg");
         cmd.arg("examples/modular/index.gsn.yaml")
-            .arg("examples/modular/sub1.gsn.yaml")
-            .arg("examples/modular/sub3.gsn.yaml")
             .arg("-A")
             .arg("-E")
             .arg("-F")
@@ -475,8 +469,6 @@ mod integrations {
         temp.copy_from(".", &["examples/modular/*.yaml"])?;
         let output_file = temp.child("complete.svg");
         cmd.arg("examples/modular/index.gsn.yaml")
-            .arg("examples/modular/sub1.gsn.yaml")
-            .arg("examples/modular/sub3.gsn.yaml")
             .arg("-N")
             .arg("-E")
             .arg("-A")
