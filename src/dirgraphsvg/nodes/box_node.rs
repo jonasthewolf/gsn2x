@@ -144,11 +144,11 @@ impl BoxType {
         context.append(create_text(&node.identifier, x, y, font, true));
         y += OFFSET_IDENTIFIER;
 
-        let y_start_text = y;
         if !node.masked {
             for text in node.text.lines() {
-                y += text_bounding_box(font, text, false).1;
-                x -= skew * (y - y_start_text) / node.height;
+                let text_bb = text_bounding_box(font, text, false);
+                y += text_bb.1;
+                x -= skew * text_bb.1 / node.height;
                 context.append(create_text(text, x, y, font, false));
             }
         }
