@@ -1,7 +1,7 @@
 use core::fmt::Debug;
 use std::{
     fmt::Display,
-    ops::{Add, AddAssign, Mul, MulAssign, Sub},
+    ops::{Add, AddAssign, Mul, Sub},
 };
 
 ///
@@ -177,7 +177,6 @@ impl Mul<Point2D<i32>> for f64 {
         }
     }
 }
-
 
 impl<T> Mul<Point2D<T>> for Point2D<T>
 where
