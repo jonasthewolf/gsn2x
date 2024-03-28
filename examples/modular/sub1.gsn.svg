@@ -56,8 +56,13 @@ G1
 <text font-family="Arial" font-size="12" x="451" y="58">
 Main Goal
 </text>
+<<<<<<< HEAD
 <a href="./index.gsn.svg#node_g1">
 <path class="border" d="M444,72 h84 v28 h-84 z" fill-opacity="none" stroke="black" stroke-width="1"/>
+=======
+<a href="./main.gsn.svg#node_g1">
+<path class="border" d="M444,72 h84 v28 h-84 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+>>>>>>> 94b08a373163444bb7b2f3b91d906b42564515ca
 <text font-family="Arial" font-size="12" font-weight="bold" x="478" y="93">
 Main
 </text>
@@ -76,7 +81,7 @@ C2
 Context 2
 </text>
 <a href="./sub3.gsn.svg#node_c2">
-<path class="border" d="M20,207 h84 v28 h-84 z" fill-opacity="none" stroke="black" stroke-width="1"/>
+<path class="border" d="M20,207 h84 v28 h-84 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="54" y="228">
 Sub3
 </text>
@@ -104,8 +109,8 @@ J1
 <text font-family="Arial" font-size="12" x="341" y="200">
 Some Context
 </text>
-<a href="./index.gsn.svg#node_j1">
-<path class="border" d="M334,214 h91 v28 h-91 z" fill-opacity="none" stroke="black" stroke-width="1"/>
+<a href="./main.gsn.svg#node_j1">
+<path class="border" d="M334,214 h91 v28 h-91 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="368" y="235">
 Main
 </text>
@@ -127,7 +132,7 @@ Sn1
 Solution 1
 </text>
 <a href="./sub3.gsn.svg#node_sn1">
-<path class="border" d="M177,376 h84 v28 h-84 z" fill-opacity="none" stroke="black" stroke-width="1"/>
+<path class="border" d="M177,376 h84 v28 h-84 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="211" y="397">
 Sub3
 </text>

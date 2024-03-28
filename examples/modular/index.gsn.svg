@@ -32,7 +32,7 @@ A1
 TestABC
 </text>
 <a href="./sub1.gsn.svg#node_a1">
-<path class="border" d="M63,94 h84 v28 h-84 z" fill-opacity="none" stroke="black" stroke-width="1"/>
+<path class="border" d="M63,94 h84 v28 h-84 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="97" y="115">
 Sub1
 </text>
@@ -98,7 +98,7 @@ G3
 Conquer the submodules
 </text>
 <a href="./sub1.gsn.svg#node_g3">
-<path class="border" d="M332,300 h150 v28 h-150 z" fill-opacity="none" stroke="black" stroke-width="1"/>
+<path class="border" d="M332,300 h150 v28 h-150 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="366" y="321">
 Sub1
 </text>
