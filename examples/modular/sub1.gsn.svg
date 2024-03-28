@@ -56,13 +56,8 @@ G1
 <text font-family="Arial" font-size="12" x="451" y="58">
 Main Goal
 </text>
-<<<<<<< HEAD
-<a href="./index.gsn.svg#node_g1">
-<path class="border" d="M444,72 h84 v28 h-84 z" fill-opacity="none" stroke="black" stroke-width="1"/>
-=======
 <a href="./main.gsn.svg#node_g1">
 <path class="border" d="M444,72 h84 v28 h-84 z" fill-opacity="0" stroke="black" stroke-width="1"/>
->>>>>>> 94b08a373163444bb7b2f3b91d906b42564515ca
 <text font-family="Arial" font-size="12" font-weight="bold" x="478" y="93">
 Main
 </text>
