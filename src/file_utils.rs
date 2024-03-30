@@ -1,22 +1,5 @@
-use anyhow::{anyhow, Context, Result};
+use anyhow::{Context, Result};
 use std::{fs::create_dir_all, path::PathBuf};
-
-///
-/// Check that all inputs are relative path names.
-/// Replace backslashes with slashes.
-///
-///
-pub fn prepare_and_check_input_paths(inputs: &mut [String]) -> Result<()> {
-    if inputs.iter().all(|i| PathBuf::from(i).is_relative()) {
-        // Replace backslash with slash
-        inputs.iter_mut().for_each(|i| {
-            *i = i.replace('\\', "/");
-        });
-        Ok(())
-    } else {
-        Err(anyhow!("All input paths must be relative."))
-    }
-}
 
 ///
 /// Get a relative path from `source` to `target`.

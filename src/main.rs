@@ -1,11 +1,12 @@
 use anyhow::{anyhow, Context, Result};
 use clap::{value_parser, Arg, ArgAction};
-use file_utils::{prepare_and_check_input_paths, set_extension, translate_to_output_path};
+use file_utils::{set_extension, translate_to_output_path};
 use render::RenderOptions;
-use std::collections::BTreeMap;
+use std::collections::btree_map::Entry;
 use std::fs::File;
 use std::io::BufReader;
 use std::path::PathBuf;
+use std::{collections::BTreeMap, fmt::Display};
 
 mod diagnostics;
 mod dirgraph;
@@ -189,7 +190,7 @@ fn main() -> Result<()> {
                 .help_heading("OUTPUT MODIFICATION"),
         );
     let matches = app.get_matches();
-    let mut inputs: Vec<String> = matches
+    let inputs: Vec<String> = matches
         .get_many::<String>("INPUT")
         .into_iter()
         .flatten()
@@ -215,7 +216,6 @@ fn main() -> Result<()> {
     let mut modules: BTreeMap<String, Module> = BTreeMap::new();
 
     // Read input
-    prepare_and_check_input_paths(&mut inputs)?;
     read_inputs(&inputs, &mut nodes, &mut modules, &mut diags)?;
 
     // Validate
@@ -282,6 +282,21 @@ fn add_missing_nodes_and_modules(
     );
 }
 
+#[derive(Clone)]
+enum Origin {
+    CommandLine,
+    File(String),
+}
+
+impl Display for Origin {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Origin::CommandLine => f.write_str("command line"),
+            Origin::File(file) => f.write_fmt(format_args!("file {file}")),
+        }
+    }
+}
+
 ///
 /// Read inputs
 ///
@@ -292,6 +307,8 @@ fn read_inputs(
     modules: &mut BTreeMap<String, Module>,
     diags: &mut Diagnostics,
 ) -> Result<()> {
+    let mut file_map: BTreeMap<PathBuf, (String, Origin)> = BTreeMap::new();
+    add_files_to_map(&mut file_map, inputs, Origin::CommandLine)?;
     let mut copied_inputs = inputs.to_owned();
     loop {
         let mut additional_inputs = vec![];
@@ -302,6 +319,7 @@ fn read_inputs(
             let mut n: BTreeMap<String, GsnDocument> = serde_yaml::from_reader(reader)
             .map(|n: yaml_fix::YamlFixMap<String, GsnDocument>| n.into_inner())
             .map_err(|e| {
+                // TODO add as diag error
                 anyhow!(format!(
                     "No valid GSN element can be found starting from line {}.\n\
                      This typically means that the YAML is completely invalid, or \n\
@@ -323,19 +341,31 @@ fn read_inputs(
                 }
             };
             // Remember additional files to read
-            // TODO Should we just warn about double included files?
-            let required_files = meta
-                .requires
+            let imported_files: Vec<String> = meta
+                .uses
                 .iter()
-                .filter_map(|r| {
-                    PathBuf::from(input).parent().map(|p| {
+                .filter_map(|r| match PathBuf::from(r) {
+                    x if x.is_relative() => PathBuf::from(input).parent().map(|p| {
                         let mut new_r = p.to_path_buf();
                         new_r.push(r);
                         new_r.to_string_lossy().to_string()
-                    })
+                    }),
+                    x if x.is_absolute() => Some(r.to_owned()),
+                    _ => {
+                        diags.add_warning(
+                            Some(&meta.name),
+                            format!("Could not identify used file {r} in module; ignoring it."),
+                        );
+                        None
+                    }
                 })
-                .collect::<Vec<_>>();
-            additional_inputs.extend(required_files);
+                .collect();
+            additional_inputs.extend(imported_files.to_vec());
+            add_files_to_map(
+                &mut file_map,
+                &imported_files,
+                Origin::File(input.to_owned()),
+            )?;
             // Add filename and module name to module list
             let module = meta.name.to_owned();
 
@@ -362,9 +392,8 @@ fn read_inputs(
             let node_names: Vec<String> = n.keys().cloned().collect();
             for node_name in node_names {
                 if let Some((k, v)) = n.remove_entry(&node_name) {
-                    if let std::collections::btree_map::Entry::Vacant(e) = nodes.entry(k.to_owned())
-                    {
-                        match v {
+                    match nodes.entry(k.to_owned()) {
+                        Entry::Vacant(e) => match v {
                             GsnDocument::GsnNode(mut x) => {
                                 // Remember module for node
                                 x.module = module.to_owned();
@@ -372,18 +401,19 @@ fn read_inputs(
                                 e.insert(x);
                             }
                             _ => unreachable!(), // There can be only one MetaNode
+                        },
+                        Entry::Occupied(e) => {
+                            diags.add_error(
+                                Some(&module),
+                                format!(
+                                    "C07: Element {} in {} was already present in {}.",
+                                    k,
+                                    input,
+                                    e.get().module
+                                ),
+                            );
+                            break;
                         }
-                    } else {
-                        diags.add_error(
-                            Some(&module),
-                            format!(
-                                "C07: Element {} in {} was already present in {}.",
-                                k,
-                                input,
-                                nodes.get(&k).unwrap().module // unwrap is ok, otherwise Entry would not have been Vacant
-                            ),
-                        );
-                        break;
                     }
                 }
             }
@@ -400,6 +430,37 @@ fn read_inputs(
     } else {
         Ok(())
     }
+}
+
+fn add_files_to_map(
+    file_map: &mut BTreeMap<PathBuf, (String, Origin)>,
+    new_files: &[String],
+    origin: Origin,
+) -> Result<()> {
+    new_files
+        .iter()
+        .map(|i| {
+            PathBuf::from(i)
+                .canonicalize()
+                .with_context(|| format!("Failed to open file {i}."))
+                .map(|p| (p, i.replace('\\', "/")))
+            // Slash replacement was for easier escaping later on?!
+        })
+        .collect::<Result<Vec<(PathBuf, String)>, anyhow::Error>>()?
+        .into_iter()
+        .try_for_each(|(p, s)| match file_map.entry(p) {
+            std::collections::btree_map::Entry::Vacant(e) => {
+                e.insert((s, origin.to_owned()));
+                Ok(())
+            }
+            // TODO add as diag error
+            std::collections::btree_map::Entry::Occupied(e) => Err(anyhow!(
+                "File {s} provided at {origin} already read as {} from {}",
+                e.get().0,
+                e.get().1
+            )),
+        })?;
+    Ok(())
 }
 
 ///

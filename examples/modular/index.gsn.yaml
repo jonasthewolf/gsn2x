@@ -1,6 +1,6 @@
 module:
   name: Main
-  requires: [sub1.gsn.yaml, sub3.gsn.yaml]
+  uses: [sub1.gsn.yaml, sub3.gsn.yaml]
   
 G1:
   text: Main Goal

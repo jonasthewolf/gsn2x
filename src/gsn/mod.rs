@@ -279,7 +279,7 @@ pub struct ModuleInformation {
     pub(crate) rank_increment: Option<usize>,
     pub(crate) word_wrap: Option<u32>,
     #[serde(default)]
-    pub(crate) requires: Vec<String>,
+    pub(crate) uses: Vec<String>,
     #[serde(flatten, deserialize_with = "deser_additional")]
     pub(crate) additional: BTreeMap<String, String>,
 }
@@ -290,7 +290,7 @@ impl ModuleInformation {
             name,
             brief: None,
             extends: vec![],
-            requires: vec![],
+            uses: vec![],
             word_wrap: None,
             horizontal_index: None,
             rank_increment: None,
@@ -306,6 +306,7 @@ pub enum GsnDocument {
     ModuleInformation(ModuleInformation),
 }
 
+// TODO Do we still need that if we have absolute paths again
 #[derive(Default)]
 pub struct Module {
     pub relative_module_path: String,

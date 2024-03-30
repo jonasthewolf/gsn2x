@@ -378,22 +378,6 @@ mod integrations {
     }
 
     #[test]
-    fn absolute_input() -> Result<()> {
-        let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
-        let temp = assert_fs::TempDir::new()?;
-        let input_file = temp.child("index.gsn.yaml");
-        cmd.arg(input_file.as_os_str())
-            .arg("-E")
-            .arg("-F")
-            .arg("-G")
-            .current_dir(&temp);
-        cmd.assert().failure().stderr(predicate::str::contains(
-            "Error: All input paths must be relative.",
-        ));
-        Ok(())
-    }
-
-    #[test]
     fn arch_view() -> Result<()> {
         let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
         let temp = assert_fs::TempDir::new()?;
