@@ -295,7 +295,7 @@ fn read_inputs(
     modules: &mut BTreeMap<String, Module>,
     diags: &mut Diagnostics,
 ) -> Result<()> {
-    let mut copied_inputs = inputs.to_owned();
+    let mut copied_inputs: Vec<String> = inputs.into_iter().map(|i| (i.replace('\\', "/"))).collect();
     let mut first_run = true;
     'outer: loop {
         let mut additional_inputs = vec![];
@@ -407,6 +407,7 @@ fn get_uses_files(
                 None
             }
         })
+        .map(|i| i.replace('\\', "/"))
         .collect();
     imported_files
 }
