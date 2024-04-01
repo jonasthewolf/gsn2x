@@ -325,7 +325,6 @@ impl Display for Origin {
     }
 }
 
-// TODO Do we still need that if we have absolute paths again
 #[derive(Default)]
 pub struct Module {
     pub orig_file_name: String,

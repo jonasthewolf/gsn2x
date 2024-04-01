@@ -353,7 +353,7 @@ fn read_inputs(
                     additional_inputs.extend(imported_files.to_vec());
                 }
                 Entry::Vacant(_) => {
-                    // TOOD report error
+                    // TODO report error
                 }
                 Entry::Occupied(e) => {
                     diags.add_error(
@@ -454,37 +454,6 @@ fn check_and_add_nodes(
     }
 }
 
-// TODO Remove when done
-// fn add_files_to_map(
-//     file_map: &mut BTreeMap<PathBuf, (String, Origin)>,
-//     new_files: &[String],
-//     origin: Origin,
-// ) -> Result<()> {
-//     new_files
-//         .iter()
-//         .map(|i| {
-//             PathBuf::from(i)
-//                 .canonicalize()
-//                 .with_context(|| format!("Failed to open file {i}."))
-//                 .map(|p| (p, i.replace('\\', "/")))
-//             // Slash replacement was for easier escaping later on?!
-//         })
-//         .collect::<Result<Vec<(PathBuf, String)>, anyhow::Error>>()?
-//         .into_iter()
-//         .try_for_each(|(p, s)| match file_map.entry(p) {
-//             std::collections::btree_map::Entry::Vacant(e) => {
-//                 e.insert((s, origin.to_owned()));
-//                 Ok(())
-//             }
-//             // TODO add as diag error
-//             std::collections::btree_map::Entry::Occupied(e) => Err(anyhow!(
-//                 "File {s} provided at {origin} already read as {} from {}",
-//                 e.get().0,
-//                 e.get().1
-//             )),
-//         })?;
-//     Ok(())
-// }
 
 ///
 /// Validate and check modules
