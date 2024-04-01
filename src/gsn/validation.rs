@@ -405,8 +405,10 @@ mod test {
             &mut d,
             "",
             &Module {
-                relative_module_path: "".to_owned(),
+                orig_file_name: "".to_owned(),
                 meta: ModuleInformation::default(),
+                origin: crate::gsn::Origin::CommandLine,
+                canonical_path: None,
             },
             &nodes,
         );
@@ -774,7 +776,7 @@ mod test {
             &mut d,
             "mod",
             &Module {
-                relative_module_path: "mod".to_owned(),
+                orig_file_name: "mod".to_owned(),
                 meta: ModuleInformation {
                     name: "mod".to_owned(),
                     brief: Some("brief".to_owned()),
@@ -788,6 +790,8 @@ mod test {
                     word_wrap: None,
                     additional: BTreeMap::new(),
                 },
+                origin: crate::gsn::Origin::CommandLine,
+                canonical_path: None,
             },
             &nodes,
         );
@@ -812,7 +816,7 @@ mod test {
             &mut d,
             "",
             &Module {
-                relative_module_path: "".to_owned(),
+                orig_file_name: "".to_owned(),
                 meta: ModuleInformation {
                     name: "mod".to_owned(),
                     brief: Some("brief".to_owned()),
@@ -826,6 +830,8 @@ mod test {
                     word_wrap: None,
                     additional: BTreeMap::new(),
                 },
+                origin: crate::gsn::Origin::CommandLine,
+                canonical_path: None,
             },
             &nodes,
         );

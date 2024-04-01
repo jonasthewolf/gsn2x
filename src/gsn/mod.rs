@@ -12,6 +12,7 @@ use serde_yaml::Value;
 use std::{
     collections::{BTreeMap, BTreeSet},
     fmt::Display,
+    path::{Path, PathBuf},
 };
 
 pub mod check;
@@ -268,7 +269,7 @@ fn get_node_type_from_text(text: &str) -> Option<GsnNodeType> {
     }
 }
 
-#[derive(Debug, Default, Deserialize)]
+#[derive(Clone, Debug, Default, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct ModuleInformation {
     pub(crate) name: String,
@@ -306,14 +307,45 @@ pub enum GsnDocument {
     ModuleInformation(ModuleInformation),
 }
 
+#[derive(Clone, Default)]
+pub enum Origin {
+    #[default]
+    CommandLine,
+    File(String),
+    Excluded,
+}
+
+impl Display for Origin {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Origin::CommandLine => f.write_str("command line"),
+            Origin::File(file) => f.write_fmt(format_args!("file {file}")),
+            Origin::Excluded => f.write_str("automatic extension by gsn2x"),
+        }
+    }
+}
+
 // TODO Do we still need that if we have absolute paths again
 #[derive(Default)]
 pub struct Module {
-    pub relative_module_path: String,
+    pub orig_file_name: String,
+    pub canonical_path: Option<PathBuf>,
+    pub origin: Origin,
     pub meta: ModuleInformation,
 }
 
-#[derive(Debug, Deserialize)]
+pub trait FindModuleByPath {
+    fn find_module_by_path(&self, module_path: &Path) -> Option<&Module>;
+}
+
+impl FindModuleByPath for BTreeMap<String, Module> {
+    fn find_module_by_path(&self, module_path: &Path) -> Option<&Module> {
+        self.values()
+            .find(|m| m.canonical_path == Some(module_path.to_path_buf()))
+    }
+}
+
+#[derive(Clone, Debug, Deserialize)]
 pub struct ExtendsModule {
     pub module: String,
     pub develops: BTreeMap<String, Vec<String>>,

@@ -1,0 +1,3 @@
+module:
+  name: C
+  uses: [circle1.yaml]

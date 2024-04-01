@@ -154,8 +154,8 @@ pub fn away_svg_from_gsn_node(
         None
     } else {
         let mut x = get_relative_path(
-            &module.relative_module_path,
-            &source_module.relative_module_path,
+            &module.orig_file_name,
+            &source_module.orig_file_name,
             Some("svg"),
         )?;
         x.push('#');
@@ -214,7 +214,7 @@ pub fn render_architecture(
                 ..Default::default()
             };
             let module_url = Some({
-                let target_svg = set_extension(&module.relative_module_path, "svg");
+                let target_svg = set_extension(&module.orig_file_name, "svg");
                 let target_path = translate_to_output_path(output_path, &target_svg)?;
                 get_relative_path(
                     &target_path,

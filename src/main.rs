@@ -2,11 +2,10 @@ use anyhow::{anyhow, Context, Result};
 use clap::{value_parser, Arg, ArgAction};
 use file_utils::{set_extension, translate_to_output_path};
 use render::RenderOptions;
-use std::collections::btree_map::Entry;
-use std::fs::File;
+use std::collections::BTreeMap;
 use std::io::BufReader;
 use std::path::PathBuf;
-use std::{collections::BTreeMap, fmt::Display};
+use std::{collections::btree_map::Entry, fs::File};
 
 mod diagnostics;
 mod dirgraph;
@@ -18,7 +17,7 @@ mod yaml_fix;
 
 use diagnostics::Diagnostics;
 use dirgraphsvg::escape_text;
-use gsn::{GsnDocument, GsnNode, Module, ModuleInformation};
+use gsn::{FindModuleByPath, GsnDocument, GsnNode, Module, ModuleInformation, Origin};
 
 const MODULE_INFORMATION_NODE: &str = "module";
 
@@ -218,8 +217,10 @@ fn main() -> Result<()> {
     // Read input
     read_inputs(&inputs, &mut nodes, &mut modules, &mut diags)?;
 
-    // Validate
-    validate_and_check(&mut nodes, &modules, &mut diags, &excluded_modules, &layers);
+    if diags.errors == 0 {
+        // Validate
+        validate_and_check(&mut nodes, &modules, &mut diags, &excluded_modules, &layers);
+    }
 
     if diags.errors == 0 && !matches.get_flag("CHECKONLY") {
         let embed_stylesheets = matches.get_flag("EMBED_CSS");
@@ -273,28 +274,15 @@ fn add_missing_nodes_and_modules(
         nodes.insert(node.to_owned(), gsn_node);
         render_options.masked_elements.push(node);
     }
-    modules.insert(
+    let _ = modules.insert(
         "Unknown".to_owned(),
         Module {
-            relative_module_path: "".to_owned(),
+            orig_file_name: "".to_owned(),
             meta: ModuleInformation::new("Unknown".to_owned()),
+            origin: Origin::Excluded,
+            canonical_path: None,
         },
     );
-}
-
-#[derive(Clone)]
-enum Origin {
-    CommandLine,
-    File(String),
-}
-
-impl Display for Origin {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            Origin::CommandLine => f.write_str("command line"),
-            Origin::File(file) => f.write_fmt(format_args!("file {file}")),
-        }
-    }
 }
 
 ///
@@ -307,10 +295,9 @@ fn read_inputs(
     modules: &mut BTreeMap<String, Module>,
     diags: &mut Diagnostics,
 ) -> Result<()> {
-    let mut file_map: BTreeMap<PathBuf, (String, Origin)> = BTreeMap::new();
-    add_files_to_map(&mut file_map, inputs, Origin::CommandLine)?;
     let mut copied_inputs = inputs.to_owned();
-    loop {
+    let mut first_run = true;
+    'outer: loop {
         let mut additional_inputs = vec![];
         for input in &copied_inputs {
             let reader =
@@ -340,128 +327,163 @@ fn read_inputs(
                     ModuleInformation::new(module_name)
                 }
             };
-            // Remember additional files to read
-            let imported_files: Vec<String> = meta
-                .uses
-                .iter()
-                .filter_map(|r| match PathBuf::from(r) {
-                    x if x.is_relative() => PathBuf::from(input).parent().map(|p| {
-                        let mut new_r = p.to_path_buf();
-                        new_r.push(r);
-                        new_r.to_string_lossy().to_string()
-                    }),
-                    x if x.is_absolute() => Some(r.to_owned()),
-                    _ => {
-                        diags.add_warning(
-                            Some(&meta.name),
-                            format!("Could not identify used file {r} in module; ignoring it."),
-                        );
-                        None
-                    }
-                })
-                .collect();
-            additional_inputs.extend(imported_files.to_vec());
-            add_files_to_map(
-                &mut file_map,
-                &imported_files,
-                Origin::File(input.to_owned()),
-            )?;
+
             // Add filename and module name to module list
             let module = meta.name.to_owned();
-
+            let pb = PathBuf::from(input)
+                .canonicalize()
+                .with_context(|| format!("Failed to open file {input}."))?;
+            let module_name_exists = modules.find_module_by_path(&pb).is_some();
             // Check for duplicate module name
-            if let std::collections::btree_map::Entry::Vacant(e) = modules.entry(module.to_owned())
-            {
-                e.insert(Module {
-                    relative_module_path: input.to_owned().to_owned(),
-                    meta,
-                });
-            } else {
-                diags.add_error(
-                    Some(&module),
-                    format!(
-                        "C06: Module name {} in {} was already present in {}.",
-                        module,
-                        input,
-                        modules.get(&module).unwrap().relative_module_path // unwrap is ok, otherwise Entry would not have been Vacant
-                    ),
-                );
-            }
-
-            // Check for duplicates, since they might be in separate files.
-            let node_names: Vec<String> = n.keys().cloned().collect();
-            for node_name in node_names {
-                if let Some((k, v)) = n.remove_entry(&node_name) {
-                    match nodes.entry(k.to_owned()) {
-                        Entry::Vacant(e) => match v {
-                            GsnDocument::GsnNode(mut x) => {
-                                // Remember module for node
-                                x.module = module.to_owned();
-                                x.fix_node_type(&k);
-                                e.insert(x);
-                            }
-                            _ => unreachable!(), // There can be only one MetaNode
+            match modules.entry(module.to_owned()) {
+                Entry::Vacant(e) if !module_name_exists => {
+                    e.insert(Module {
+                        orig_file_name: input.to_owned().to_owned(),
+                        meta: meta.clone(),
+                        origin: if first_run {
+                            Origin::CommandLine
+                        } else {
+                            Origin::File(input.to_owned())
                         },
-                        Entry::Occupied(e) => {
-                            diags.add_error(
-                                Some(&module),
-                                format!(
-                                    "C07: Element {} in {} was already present in {}.",
-                                    k,
-                                    input,
-                                    e.get().module
-                                ),
-                            );
-                            break;
-                        }
-                    }
+                        canonical_path: Some(pb),
+                    });
+                    check_and_add_nodes(n, nodes, &module, diags, input);
+                    // Remember additional files to read
+                    let imported_files = get_uses_files(&meta, input, diags);
+                    additional_inputs.extend(imported_files.to_vec());
+                }
+                Entry::Vacant(_) => {
+                    // TOOD report error
+                }
+                Entry::Occupied(e) => {
+                    diags.add_error(
+                        Some(&module),
+                        format!(
+                            "C06: Module in {} was already present in {} provided by {}.",
+                            input,
+                            e.get().orig_file_name,
+                            e.get().origin,
+                        ),
+                    );
+                    // A circle may be detected, conservatively bail out completely.
+                    break 'outer Ok(());
                 }
             }
         }
         if additional_inputs.is_empty() {
-            break;
+            break Ok(());
         } else {
             copied_inputs.clear();
             copied_inputs.append(&mut additional_inputs);
         }
-    }
-    if nodes.is_empty() {
-        Err(anyhow!("No input elements found."))
-    } else {
-        Ok(())
+        first_run = false;
     }
 }
 
-fn add_files_to_map(
-    file_map: &mut BTreeMap<PathBuf, (String, Origin)>,
-    new_files: &[String],
-    origin: Origin,
-) -> Result<()> {
-    new_files
+///
+/// Get files that are marked as "uses" by current module.
+///
+///
+fn get_uses_files(
+    meta: &ModuleInformation,
+    input: &String,
+    diags: &mut Diagnostics,
+) -> Vec<String> {
+    let imported_files: Vec<String> = meta
+        .uses
         .iter()
-        .map(|i| {
-            PathBuf::from(i)
-                .canonicalize()
-                .with_context(|| format!("Failed to open file {i}."))
-                .map(|p| (p, i.replace('\\', "/")))
-            // Slash replacement was for easier escaping later on?!
-        })
-        .collect::<Result<Vec<(PathBuf, String)>, anyhow::Error>>()?
-        .into_iter()
-        .try_for_each(|(p, s)| match file_map.entry(p) {
-            std::collections::btree_map::Entry::Vacant(e) => {
-                e.insert((s, origin.to_owned()));
-                Ok(())
+        .filter_map(|r| match PathBuf::from(r) {
+            x if x.is_relative() => PathBuf::from(input).parent().map(|p| {
+                let mut new_r = p.to_path_buf();
+                new_r.push(r);
+                new_r.to_string_lossy().to_string()
+            }),
+            x if x.is_absolute() => Some(r.to_owned()),
+            _ => {
+                diags.add_warning(
+                    Some(&meta.name),
+                    format!("Could not identify used file {r} in module; ignoring it."),
+                );
+                None
             }
-            // TODO add as diag error
-            std::collections::btree_map::Entry::Occupied(e) => Err(anyhow!(
-                "File {s} provided at {origin} already read as {} from {}",
-                e.get().0,
-                e.get().1
-            )),
-        })?;
-    Ok(())
+        })
+        .collect();
+    imported_files
 }
+
+///
+/// Check and potentially add nodes of new module
+///
+///
+fn check_and_add_nodes(
+    mut n: BTreeMap<String, GsnDocument>,
+    nodes: &mut BTreeMap<String, GsnNode>,
+    module: &String,
+    diags: &mut Diagnostics,
+    input: &String,
+) {
+    // Check for duplicates, since they might be in separate files.
+    let node_names: Vec<String> = n.keys().cloned().collect();
+    for node_name in node_names {
+        if let Some((k, v)) = n.remove_entry(&node_name) {
+            match nodes.entry(k.to_owned()) {
+                Entry::Vacant(e) => match v {
+                    GsnDocument::GsnNode(mut x) => {
+                        // Remember module for node
+                        x.module = module.to_owned();
+                        x.fix_node_type(&k);
+                        e.insert(x);
+                    }
+                    _ => unreachable!(), // There can be only one MetaNode
+                },
+                Entry::Occupied(e) => {
+                    diags.add_error(
+                        Some(module),
+                        format!(
+                            "C07: Element {} in {} was already present in {}.",
+                            k,
+                            input,
+                            e.get().module,
+                        ),
+                    );
+                    break;
+                }
+            }
+        }
+    }
+}
+
+// TODO Remove when done
+// fn add_files_to_map(
+//     file_map: &mut BTreeMap<PathBuf, (String, Origin)>,
+//     new_files: &[String],
+//     origin: Origin,
+// ) -> Result<()> {
+//     new_files
+//         .iter()
+//         .map(|i| {
+//             PathBuf::from(i)
+//                 .canonicalize()
+//                 .with_context(|| format!("Failed to open file {i}."))
+//                 .map(|p| (p, i.replace('\\', "/")))
+//             // Slash replacement was for easier escaping later on?!
+//         })
+//         .collect::<Result<Vec<(PathBuf, String)>, anyhow::Error>>()?
+//         .into_iter()
+//         .try_for_each(|(p, s)| match file_map.entry(p) {
+//             std::collections::btree_map::Entry::Vacant(e) => {
+//                 e.insert((s, origin.to_owned()));
+//                 Ok(())
+//             }
+//             // TODO add as diag error
+//             std::collections::btree_map::Entry::Occupied(e) => Err(anyhow!(
+//                 "File {s} provided at {origin} already read as {} from {}",
+//                 e.get().0,
+//                 e.get().1
+//             )),
+//         })?;
+//     Ok(())
+// }
 
 ///
 /// Validate and check modules
@@ -476,18 +498,23 @@ fn validate_and_check(
     excluded_modules: &[&str],
     layers: &[&str],
 ) {
-    for (module_name, module_info) in modules {
-        // Validation for well-formedness is done unconditionally.
-        gsn::validation::validate_module(diags, module_name, module_info, nodes);
-        if diags.errors > 0 {
-            break;
+    if nodes.is_empty() {
+        // TODO Add correct error message
+        diags.add_error(None, "No input elements are found.".to_owned());
+    } else {
+        for module_info in modules.values() {
+            // Validation for well-formedness is done unconditionally.
+            gsn::validation::validate_module(diags, &module_info.meta.name, module_info, nodes);
+            if diags.errors > 0 {
+                break;
+            }
         }
-    }
-    if diags.errors == 0 {
-        gsn::extend_modules(diags, nodes, modules);
-        gsn::check::check_nodes(diags, nodes, excluded_modules);
-        if !layers.is_empty() {
-            gsn::check::check_layers(diags, nodes, layers);
+        if diags.errors == 0 {
+            gsn::extend_modules(diags, nodes, modules);
+            gsn::check::check_nodes(diags, nodes, excluded_modules);
+            if !layers.is_empty() {
+                gsn::check::check_layers(diags, nodes, layers);
+            }
         }
     }
 }
@@ -505,9 +532,9 @@ fn print_outputs(
 ) -> Result<()> {
     let output_path = render_options.output_directory.to_owned().unwrap_or(".");
     if !render_options.skip_argument {
-        for (module_name, module) in modules.iter().filter(|(m, _)| m.as_str() != "Unknown") {
+        for (_, module) in modules.iter().filter(|(m, _)| *m != "Unknown") {
             let output_path = set_extension(
-                &translate_to_output_path(output_path, &module.relative_module_path)?,
+                &translate_to_output_path(output_path, &module.orig_file_name)?,
                 "svg",
             );
             let mut output_file = Box::new(
@@ -518,19 +545,14 @@ fn print_outputs(
             print!("Rendering \"{output_path}\": ");
             render::render_argument(
                 &mut output_file,
-                module_name,
+                &module.meta.name,
                 modules,
                 &nodes,
                 render_options,
             )?;
         }
     }
-    if modules
-        .iter()
-        .filter(|(m, _)| m.as_str() != "Unknown")
-        .count()
-        > 1
-    {
+    if modules.iter().filter(|(m, _)| *m != "Unknown").count() > 1 {
         if let Some(architecture_filename) = &render_options.architecture_filename {
             let arch_output_path = translate_to_output_path(output_path, architecture_filename)?;
             let mut output_file = File::create(&arch_output_path)

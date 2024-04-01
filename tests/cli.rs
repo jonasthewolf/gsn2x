@@ -472,9 +472,9 @@ mod integrations {
     fn empty_input() -> Result<()> {
         let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
         cmd.arg("tests/empty.yaml");
-        cmd.assert()
-            .failure()
-            .stderr(predicate::str::contains("Error: No input elements found"));
+        cmd.assert().failure().stderr(predicate::str::contains(
+            "Error: No input elements are found.",
+        ));
         Ok(())
     }
 
@@ -655,6 +655,16 @@ mod integrations {
     #[test]
     fn confidence_extension() -> Result<()> {
         regression_renderings(&["examples/confidence.gsn.yaml"], &["-E"], None)?;
+        Ok(())
+    }
+
+    #[test]
+    fn uses_circle_detection() -> Result<()> {
+        let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
+        cmd.arg("tests/circle1.yaml");
+        cmd.assert()
+            .failure()
+            .stderr(predicate::str::contains("Error: (A) C06: Module in tests/circle1.yaml was already present in tests/circle1.yaml provided by command line."));
         Ok(())
     }
 }
