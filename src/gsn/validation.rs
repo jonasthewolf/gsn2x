@@ -1,5 +1,7 @@
+use anyhow::Result;
+
 use super::{get_node_type_from_text, GsnNode, GsnNodeType, Module};
-use crate::diagnostics::{DiagType, Diagnostics};
+use crate::diagnostics::Diagnostics;
 use std::collections::{BTreeMap, HashSet};
 
 ///
@@ -11,18 +13,27 @@ pub fn validate_module(
     module_name: &str,
     module_info: &Module,
     nodes: &BTreeMap<String, GsnNode>,
-) {
-    for (id, node) in nodes.iter().filter(|(_, n)| n.module == module_name) {
-        // Validate that type of node is known
-        validate_type(diag, module_name, id, node);
-        // Validate if id and type do not contradict
-        validate_id(diag, module_name, id, node);
-        // Validate all references of node
-        validate_references(diag, module_name, nodes, id, node);
-        // Validate all assurance claim points
-        validate_assurance_claim_point(diag, module_name, nodes, id, node);
-    }
-    validate_module_extensions(module_info, nodes, module_name, diag);
+) -> Result<(), ()> {
+    let all_results = nodes
+        .iter()
+        .filter(|(_, n)| n.module == module_name)
+        .flat_map(|(id, node)| {
+            [
+                // Validate that type of node is known
+                validate_type(diag, module_name, id, node),
+                // Validate if id and type do not contradict
+                validate_id(diag, module_name, id, node),
+                // Validate all references of node
+                validate_references(diag, module_name, nodes, id, node),
+                // Validate all assurance claim points
+                validate_assurance_claim_point(diag, module_name, nodes, id, node),
+            ]
+        })
+        .collect::<Vec<Result<(), ()>>>();
+    all_results
+        .into_iter()
+        .collect::<Result<Vec<_>, ()>>()
+        .and_then(|_| validate_module_extensions(module_info, nodes, module_name, diag))
 }
 
 ///
@@ -31,13 +42,15 @@ pub fn validate_module(
 /// Check if the node has a type assigned.
 /// The type is typically derived from the id, but can be overwritten by the `node_type` attribute.
 ///
-fn validate_type(diag: &mut Diagnostics, module: &str, id: &str, node: &GsnNode) {
+fn validate_type(diag: &mut Diagnostics, module: &str, id: &str, node: &GsnNode) -> Result<(), ()> {
     if node.node_type.is_none() {
-        diag.add_msg(
-            DiagType::Error,
+        diag.add_error(
             Some(module),
             format!("V01: Element {id} is of unknown type. Please see documentation for supported types"),
         );
+        Err(())
+    } else {
+        Ok(())
     }
 }
 
@@ -46,12 +59,11 @@ fn validate_type(diag: &mut Diagnostics, module: &str, id: &str, node: &GsnNode)
 ///
 /// Check if node id starts with a know prefix
 ///
-fn validate_id(diag: &mut Diagnostics, module: &str, id: &str, node: &GsnNode) {
+fn validate_id(diag: &mut Diagnostics, module: &str, id: &str, node: &GsnNode) -> Result<(), ()> {
     if let Some(type_from_id) = get_node_type_from_text(id) {
         if let Some(type_from_node) = node.node_type {
             if type_from_node != type_from_id {
-                diag.add_msg(
-                    DiagType::Warning,
+                diag.add_warning(
                     Some(module),
                     format!(
                         "V08: Element {} has type {}, but ID indicates type {}",
@@ -61,6 +73,7 @@ fn validate_id(diag: &mut Diagnostics, module: &str, id: &str, node: &GsnNode) {
             }
         }
     }
+    Ok(())
 }
 
 ///
@@ -76,8 +89,10 @@ fn validate_references(
     nodes: &BTreeMap<String, GsnNode>,
     id: &str,
     node: &GsnNode,
-) {
-    if !node.in_context_of.is_empty() {
+) -> Result<(), ()> {
+    let incontext_res = if node.in_context_of.is_empty() {
+        Ok(())
+    } else {
         let mut valid_ref_types = vec![];
         // Only goals and strategies can have contexts, assumptions and justifications
         if node.node_type == Some(GsnNodeType::Strategy)
@@ -97,9 +112,9 @@ fn validate_references(
             &node.in_context_of,
             "context",
             &valid_ref_types,
-        );
-    }
-    if !node.supported_by.is_empty() {
+        )
+    };
+    let supportedby_res = if !node.supported_by.is_empty() {
         let mut valid_ref_types = vec![];
         // Only goals and strategies can have other goals, strategies and solutions
         if node.node_type == Some(GsnNodeType::Strategy)
@@ -111,7 +126,8 @@ fn validate_references(
                 GsnNodeType::Strategy,
             ]);
         }
-        validate_reference(
+
+        let valid_refs = validate_reference(
             diag,
             module,
             nodes,
@@ -120,18 +136,26 @@ fn validate_references(
             "supported by element",
             &valid_ref_types,
         );
-        if Some(true) == node.undeveloped {
+        let devundev = if Some(true) == node.undeveloped {
             diag.add_error(
                 Some(module),
                 format!("V03: Undeveloped element {id} has supporting arguments."),
             );
-        }
+            Err(())
+        } else {
+            Ok(())
+        };
+        valid_refs.and(devundev)
     } else if (id.starts_with('S') && !id.starts_with("Sn") || id.starts_with('G'))
         && (Some(false) == node.undeveloped || node.undeveloped.is_none())
     {
         // No "supported by" entries, but Strategy and Goal => undeveloped
         diag.add_warning(Some(module), format!("V02: Element {id} is undeveloped."));
-    }
+        Ok(())
+    } else {
+        Ok(())
+    };
+    incontext_res.and(supportedby_res)
 }
 
 ///
@@ -149,34 +173,53 @@ fn validate_reference(
     refs: &[String],
     diag_str: &str,
     valid_ref_types: &[GsnNodeType],
-) {
+) -> Result<(), ()> {
     // HashSet ok, since order is never important.
     let mut set = HashSet::with_capacity(refs.len());
-    for n in refs {
-        if n == node {
-            diag.add_error(
-                Some(module),
-                format!("V06: Element {node} references itself in {diag_str}."),
-            );
-        }
-        if !set.insert(n) {
-            diag.add_warning(
-                Some(module),
-                format!("V05: Element {node} has duplicate entry {n} in {diag_str}."),
-            );
-        }
-        if let Some(ref_node) = nodes.get(n) {
-            if !valid_ref_types
-                .iter()
-                .any(|&r| ref_node.node_type.unwrap() == r)
-            {
-                diag.add_error(
+    let valid_references = refs
+        .iter()
+        .flat_map(|n| {
+            [
+                if n == node {
+                    diag.add_error(
+                        Some(module),
+                        format!("V06: Element {node} references itself in {diag_str}."),
+                    );
+                    Err(())
+                } else {
+                    Ok(())
+                },
+                {
+                    if !set.insert(n) {
+                        diag.add_warning(
+                            Some(module),
+                            format!("V05: Element {node} has duplicate entry {n} in {diag_str}."),
+                        );
+                    }
+                    if let Some(ref_node) = nodes.get(n) {
+                        if !valid_ref_types
+                            .iter()
+                            .any(|&r| ref_node.node_type.unwrap() == r)
+                        {
+                            diag.add_error(
                     Some(module),
                     format!("V04: Element {node} has invalid type of reference {n} in {diag_str}."),
                 );
-            }
-        }
-    }
+                            Err(())
+                        } else {
+                            Ok(())
+                        }
+                    } else {
+                        Ok(())
+                    }
+                },
+            ]
+        })
+        .collect::<Vec<_>>();
+    valid_references
+        .into_iter()
+        .collect::<Result<Vec<_>, ()>>()
+        .map(|_| ())
 }
 
 ///
@@ -188,7 +231,7 @@ fn validate_assurance_claim_point(
     nodes: &BTreeMap<String, GsnNode>,
     id: &str,
     node: &GsnNode,
-) {
+) -> Result<(), ()> {
     let mut potential_references = vec![id];
     potential_references.extend(
         node.supported_by
@@ -202,16 +245,21 @@ fn validate_assurance_claim_point(
             .filter(|&n| nodes.contains_key(n))
             .map(String::as_str),
     );
-    for (acp, references) in &node.acp {
-        for r in references {
-            if !potential_references.contains(&r.as_str()) {
+    let results = node.acp.iter().flat_map(|(acp, references)|
+        references.iter().map(|r| {
+            if !&potential_references.contains(&r.as_str()) {
                 diag.add_error(
                     Some(module),
                     format!("V09: Element {id} has an assurance claim point {acp} that references {r}, but this is neither its own ID nor any of the connected elements."),
                 );
-            }
-        }
-    }
+                Err(())
+            } else { Ok(()) }
+        }).collect::<Vec<Result<(),()>>>()
+    ).collect::<Vec<_>>();
+    results
+        .into_iter()
+        .collect::<Result<Vec<_>, ()>>()
+        .map(|_| ())
 }
 
 ///
@@ -224,28 +272,27 @@ fn validate_module_extensions(
     nodes: &BTreeMap<String, GsnNode>,
     module_name: &str,
     diag: &mut Diagnostics,
-) {
-    for ext in &module_info.meta.extends {
-        for (foreign_id, local_ids) in &ext.develops {
-            for local_id in local_ids {
+) -> Result<(), ()> {
+    let results = module_info.meta.extends.iter().flat_map(|ext| {
+        ext.develops.iter().flat_map(|(foreign_id, local_ids)| {
+            local_ids.iter().map(|local_id| {
                 if !(local_id.starts_with("Sn")
                     || local_id.starts_with('S')
                     || local_id.starts_with('G'))
                 {
-                    diag.add_msg(
-                            DiagType::Error,
+                    diag.add_error(
                             Some(module_name),
                             format!(
                                 "V07: Element {local_id} is of wrong type. Only Strategies, Goals and Solutions can develop other Goals and Strategies."
                             ),
                         );
+                    Err(())
                 } else if !nodes
                     .iter()
                     .filter(|(_, n)| n.module == module_name)
                     .any(|(id, _)| id == local_id)
                 {
-                    diag.add_msg(
-                            DiagType::Error,
+                    diag.add_error(
                             Some(module_name),
                             format!(
                                 "V07: Element {} in module {} supposed to develop {} in module {} does not exist.",
@@ -255,17 +302,26 @@ fn validate_module_extensions(
                                 ext.module
                             ),
                         );
+                    Err(())
                 } else {
                     // All fine.
+                    Ok(())
                 }
-            }
-        }
-    }
+            }).collect::<Vec<_>>()
+        }).collect::<Vec<_>>()
+    }).collect::<Vec<_>>();
+    results
+        .into_iter()
+        .collect::<Result<Vec<_>, ()>>()
+        .map(|_| ())
 }
 
 #[cfg(test)]
 mod test {
-    use crate::gsn::{ExtendsModule, ModuleInformation};
+    use crate::{
+        diagnostics::DiagType,
+        gsn::{ExtendsModule, ModuleInformation},
+    };
 
     use super::*;
     #[test]
@@ -273,7 +329,7 @@ mod test {
         let mut d = Diagnostics::default();
         let mut node = GsnNode::default();
         node.fix_node_type("X1");
-        validate_type(&mut d, "", "X1", &node);
+        assert!(validate_type(&mut d, "", "X1", &node).is_err());
         assert_eq!(d.messages.len(), 1);
         assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
@@ -290,7 +346,7 @@ mod test {
         // validate_id is not supposed to detect that situation
         let mut d = Diagnostics::default();
         let node = GsnNode::default();
-        validate_id(&mut d, "", "X1", &node);
+        assert!(validate_id(&mut d, "", "X1", &node).is_ok());
         assert_eq!(d.messages.len(), 0);
         assert_eq!(d.errors, 0);
         assert_eq!(d.warnings, 0);
@@ -304,7 +360,7 @@ mod test {
             ..Default::default()
         };
         node.fix_node_type("Sn1");
-        validate_id(&mut d, "", "Sn1", &node);
+        assert!(validate_id(&mut d, "", "Sn1", &node).is_ok());
         assert_eq!(d.messages.len(), 1);
         assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Warning);
@@ -320,7 +376,7 @@ mod test {
     fn known_id() {
         let mut d = Diagnostics::default();
         let node = GsnNode::default();
-        validate_id(&mut d, "", "Sn1", &node);
+        assert!(validate_id(&mut d, "", "Sn1", &node).is_ok());
         assert_eq!(d.messages.len(), 0);
         assert_eq!(d.errors, 0);
         assert_eq!(d.warnings, 0);
@@ -347,7 +403,7 @@ mod test {
                 ..Default::default()
             },
         );
-        validate_module(&mut d, "", &Module::default(), &nodes);
+        assert!(validate_module(&mut d, "", &Module::default(), &nodes).is_err());
         assert_eq!(d.messages.len(), 1);
         assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
@@ -371,7 +427,7 @@ mod test {
                 ..Default::default()
             },
         );
-        validate_module(&mut d, "", &Module::default(), &nodes);
+        assert!(validate_module(&mut d, "", &Module::default(), &nodes).is_err());
         assert_eq!(d.messages.len(), 2);
         assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
@@ -401,7 +457,7 @@ mod test {
                 ..Default::default()
             },
         );
-        validate_module(
+        assert!(validate_module(
             &mut d,
             "",
             &Module {
@@ -411,7 +467,8 @@ mod test {
                 canonical_path: None,
             },
             &nodes,
-        );
+        )
+        .is_err());
         assert_eq!(d.messages.len(), 1);
         assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
@@ -435,7 +492,7 @@ mod test {
                 ..Default::default()
             },
         );
-        validate_module(&mut d, "", &Module::default(), &nodes);
+        assert!(validate_module(&mut d, "", &Module::default(), &nodes).is_err());
         assert_eq!(d.messages.len(), 2);
         assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
@@ -466,7 +523,7 @@ mod test {
                 ..Default::default()
             },
         );
-        validate_module(&mut d, "", &Module::default(), &nodes);
+        assert!(validate_module(&mut d, "", &Module::default(), &nodes).is_err());
         assert_eq!(d.messages.len(), 2);
         assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
@@ -511,7 +568,7 @@ mod test {
                 ..Default::default()
             },
         );
-        validate_module(&mut d, "", &Module::default(), &nodes);
+        assert!(validate_module(&mut d, "", &Module::default(), &nodes).is_ok());
         assert_eq!(d.messages.len(), 1);
         assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Warning);
@@ -543,7 +600,7 @@ mod test {
                 ..Default::default()
             },
         );
-        validate_module(&mut d, "", &Module::default(), &nodes);
+        assert!(validate_module(&mut d, "", &Module::default(), &nodes).is_ok());
         assert_eq!(d.messages.len(), 1);
         assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Warning);
@@ -591,7 +648,7 @@ mod test {
                 ..Default::default()
             },
         );
-        validate_module(&mut d, "", &Module::default(), &nodes);
+        assert!(validate_module(&mut d, "", &Module::default(), &nodes).is_err());
         assert_eq!(d.messages.len(), 3);
         assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
@@ -648,7 +705,7 @@ mod test {
                 ..Default::default()
             },
         );
-        validate_module(&mut d, "", &Module::default(), &nodes);
+        assert!(validate_module(&mut d, "", &Module::default(), &nodes).is_err());
         assert_eq!(d.messages.len(), 3);
         assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
@@ -691,7 +748,7 @@ mod test {
                 ..Default::default()
             },
         );
-        validate_module(&mut d, "", &Module::default(), &nodes);
+        assert!(validate_module(&mut d, "", &Module::default(), &nodes).is_ok());
         assert_eq!(d.messages.len(), 2);
         assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Warning);
@@ -722,7 +779,7 @@ mod test {
                 ..Default::default()
             },
         );
-        validate_module(&mut d, "", &Module::default(), &nodes);
+        assert!(validate_module(&mut d, "", &Module::default(), &nodes).is_ok());
         assert_eq!(d.messages.len(), 2);
         assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Warning);
@@ -754,7 +811,7 @@ mod test {
                 ..Default::default()
             },
         );
-        validate_module(&mut d, "", &Module::default(), &nodes);
+        assert!(validate_module(&mut d, "", &Module::default(), &nodes).is_err());
         assert_eq!(d.messages.len(), 1);
         assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
@@ -772,7 +829,7 @@ mod test {
         let nodes = BTreeMap::<String, GsnNode>::new();
         let mut develops = BTreeMap::new();
         develops.insert("G1".to_owned(), vec!["G2".to_owned()]);
-        validate_module(
+        assert!(validate_module(
             &mut d,
             "mod",
             &Module {
@@ -794,7 +851,8 @@ mod test {
                 canonical_path: None,
             },
             &nodes,
-        );
+        )
+        .is_err());
         assert_eq!(d.messages.len(), 1);
         assert_eq!(d.messages[0].module, Some("mod".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
@@ -812,7 +870,7 @@ mod test {
         let nodes = BTreeMap::<String, GsnNode>::new();
         let mut develops = BTreeMap::new();
         develops.insert("G1".to_owned(), vec!["X2".to_owned()]);
-        validate_module(
+        assert!(validate_module(
             &mut d,
             "",
             &Module {
@@ -834,7 +892,8 @@ mod test {
                 canonical_path: None,
             },
             &nodes,
-        );
+        )
+        .is_err());
         assert_eq!(d.messages.len(), 1);
         assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
@@ -867,7 +926,7 @@ mod test {
                 ..Default::default()
             },
         );
-        validate_module(&mut d, "", &Module::default(), &nodes);
+        assert!(validate_module(&mut d, "", &Module::default(), &nodes).is_err());
         assert_eq!(d.messages.len(), 1);
         assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Error);

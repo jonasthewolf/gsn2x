@@ -1,8 +1,10 @@
 use anyhow::{anyhow, Context, Result};
-use clap::{value_parser, Arg, ArgAction};
+use clap::{value_parser, Arg, ArgAction, ArgMatches};
 use file_utils::{set_extension, translate_to_output_path};
 use render::RenderOptions;
 use std::collections::BTreeMap;
+use std::error::Error;
+use std::fmt::Display;
 use std::io::BufReader;
 use std::path::PathBuf;
 use std::{collections::btree_map::Entry, fs::File};
@@ -26,6 +28,89 @@ const MODULE_INFORMATION_NODE: &str = "module";
 ///
 ///
 fn main() -> Result<()> {
+    let matches = build_command_options();
+    let mut diags = Diagnostics::default();
+
+    let inputs: Vec<String> = matches
+        .get_many::<String>("INPUT")
+        .into_iter()
+        .flatten()
+        .cloned()
+        .collect();
+    let layers = matches
+        .get_many::<String>("LAYERS")
+        .into_iter()
+        .flatten()
+        .map(AsRef::as_ref)
+        .collect::<Vec<_>>();
+    let excluded_modules = matches
+        .get_many::<String>("EXCLUDED_MODULE")
+        .into_iter()
+        .flatten()
+        .map(AsRef::as_ref)
+        .collect::<Vec<_>>();
+
+    let mut nodes = BTreeMap::<String, GsnNode>::new();
+
+    // Module name to module mapping
+    let mut modules: BTreeMap<String, Module> = BTreeMap::new();
+    // Closure is important here, otherwise main is left with ? operator
+    let read_and_check = || -> Result<()> {
+        read_inputs(&inputs, &mut nodes, &mut modules, &mut diags)?;
+        // Validate
+        validate_and_check(&mut nodes, &modules, &mut diags, &excluded_modules, &layers)
+    }();
+    // Ignore error, if errors are found, this is handled in output_messages
+    match read_and_check {
+        Err(e) if e.is::<ValidationOrCheckError>() => Ok(()),
+        Err(e) => Err(e),
+        Ok(_) => {
+            if !matches.get_flag("CHECK_ONLY") {
+                let embed_stylesheets = matches.get_flag("EMBED_CSS");
+                let output_directory = matches.get_one::<String>("OUTPUT_DIRECTORY");
+                let mut stylesheets = matches
+                    .get_many::<String>("STYLESHEETS")
+                    .into_iter()
+                    .flatten()
+                    .map(|css| css.to_owned())
+                    .collect::<Vec<_>>();
+                // Copy stylesheets if necessary and prepare paths
+                copy_and_prepare_stylesheets(
+                    &mut stylesheets,
+                    embed_stylesheets,
+                    &output_directory,
+                )?;
+                let mut render_options =
+                    RenderOptions::new(&matches, stylesheets, embed_stylesheets, output_directory);
+                // Add missing nodes that may not exist because references checks have been excluded
+                add_missing_nodes_and_modules(&mut nodes, &mut modules, &mut render_options);
+                // Output views
+                print_outputs(nodes, &modules, &render_options)?;
+            }
+            Ok(())
+        }
+    }?;
+
+    // Output diagnostic messages
+    output_messages(&diags)
+}
+
+#[derive(PartialEq, Debug)]
+struct ValidationOrCheckError {}
+
+impl Display for ValidationOrCheckError {
+    fn fmt(&self, _: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        unreachable!()
+    }
+}
+
+impl Error for ValidationOrCheckError {}
+
+///
+///
+///
+///
+fn build_command_options() -> ArgMatches {
     let app = clap::command!()
         .arg(
             Arg::new("INPUT")
@@ -34,7 +119,7 @@ fn main() -> Result<()> {
                 .required(true),
         )
         .arg(
-            Arg::new("CHECKONLY")
+            Arg::new("CHECK_ONLY")
                 .help("Only check the input file(s), but do not output graphs.")
                 .short('c')
                 .long("check")
@@ -64,7 +149,7 @@ fn main() -> Result<()> {
                 .long("full")
                 .action(ArgAction::Set)
                 .default_value("complete.svg")
-                .conflicts_with_all(["CHECKONLY", "NO_COMPLETE_VIEW"])
+                .conflicts_with_all(["CHECK_ONLY", "NO_COMPLETE_VIEW"])
                 .help_heading("OUTPUT"),
         )
         .arg(
@@ -83,7 +168,7 @@ fn main() -> Result<()> {
                 .long("arch")
                 .action(ArgAction::Set)
                 .default_value("architecture.svg")
-                .conflicts_with_all(["CHECKONLY", "NO_ARCHITECTURE_VIEW"])
+                .conflicts_with_all(["CHECK_ONLY", "NO_ARCHITECTURE_VIEW"])
                 .help_heading("OUTPUT"),
         )
         .arg(
@@ -102,7 +187,7 @@ fn main() -> Result<()> {
                 .long("evidences")
                 .action(ArgAction::Set)
                 .default_value("evidences.md")
-                .conflicts_with_all(["CHECKONLY", "NO_EVIDENCES"])
+                .conflicts_with_all(["CHECK_ONLY", "NO_EVIDENCES"])
                 .help_heading("OUTPUT"),
         )
         .arg(
@@ -120,7 +205,7 @@ fn main() -> Result<()> {
                 .short('o')
                 .long("output-dir")
                 .action(ArgAction::Set)
-                .conflicts_with("CHECKONLY")
+                .conflicts_with("CHECK_ONLY")
                 .help_heading("OUTPUT"),
         )
         .arg(
@@ -130,7 +215,7 @@ fn main() -> Result<()> {
                 .long("layer")
                 .action(ArgAction::Append)
                 .use_value_delimiter(true)
-                .conflicts_with("CHECKONLY")
+                .conflicts_with("CHECK_ONLY")
                 .help_heading("OUTPUT MODIFICATION"),
         )
         .arg(
@@ -139,7 +224,7 @@ fn main() -> Result<()> {
                 .short('s')
                 .long("stylesheet")
                 .action(ArgAction::Append)
-                .conflicts_with("CHECKONLY")
+                .conflicts_with("CHECK_ONLY")
                 .help_heading("OUTPUT MODIFICATION"),
         )
         .arg(
@@ -148,7 +233,7 @@ fn main() -> Result<()> {
                 .short('t')
                 .long("embed-css")
                 .action(ArgAction::SetTrue)
-                .conflicts_with("CHECKONLY")
+                .conflicts_with("CHECK_ONLY")
                 .help_heading("OUTPUT MODIFICATION"),
         )
         .arg(
@@ -157,7 +242,7 @@ fn main() -> Result<()> {
                 .short('m')
                 .long("mask")
                 .action(ArgAction::Append)
-                .conflicts_with("CHECKONLY")
+                .conflicts_with("CHECK_ONLY")
                 .help_heading("OUTPUT MODIFICATION"),
         )
         .arg(
@@ -166,7 +251,7 @@ fn main() -> Result<()> {
                 .short('G')
                 .long("no-legend")
                 .action(ArgAction::SetTrue)
-                .conflicts_with("CHECKONLY")
+                .conflicts_with("CHECK_ONLY")
                 .help_heading("OUTPUT MODIFICATION"),
         )
         .arg(
@@ -175,7 +260,7 @@ fn main() -> Result<()> {
                 .short('g')
                 .long("full-legend")
                 .action(ArgAction::SetTrue)
-                .conflicts_with("CHECKONLY")
+                .conflicts_with("CHECK_ONLY")
                 .help_heading("OUTPUT MODIFICATION"),
         )
         .arg(
@@ -185,63 +270,10 @@ fn main() -> Result<()> {
                 .long("wrap")
                 .action(ArgAction::Set)
                 .value_parser(value_parser!(u32))
-                .conflicts_with("CHECKONLY")
+                .conflicts_with("CHECK_ONLY")
                 .help_heading("OUTPUT MODIFICATION"),
         );
-    let matches = app.get_matches();
-    let inputs: Vec<String> = matches
-        .get_many::<String>("INPUT")
-        .into_iter()
-        .flatten()
-        .cloned()
-        .collect();
-    let layers = matches
-        .get_many::<String>("LAYERS")
-        .into_iter()
-        .flatten()
-        .map(AsRef::as_ref)
-        .collect::<Vec<_>>();
-    let excluded_modules = matches
-        .get_many::<String>("EXCLUDED_MODULE")
-        .into_iter()
-        .flatten()
-        .map(AsRef::as_ref)
-        .collect::<Vec<_>>();
-
-    let mut diags = Diagnostics::default();
-    let mut nodes = BTreeMap::<String, GsnNode>::new();
-
-    // Module name to module mapping
-    let mut modules: BTreeMap<String, Module> = BTreeMap::new();
-
-    // Read input
-    read_inputs(&inputs, &mut nodes, &mut modules, &mut diags)?;
-
-    if diags.errors == 0 {
-        // Validate
-        validate_and_check(&mut nodes, &modules, &mut diags, &excluded_modules, &layers);
-    }
-
-    if diags.errors == 0 && !matches.get_flag("CHECKONLY") {
-        let embed_stylesheets = matches.get_flag("EMBED_CSS");
-        let output_directory = matches.get_one::<String>("OUTPUT_DIRECTORY");
-        let mut stylesheets = matches
-            .get_many::<String>("STYLESHEETS")
-            .into_iter()
-            .flatten()
-            .map(|css| css.to_owned())
-            .collect::<Vec<_>>();
-        // Copy stylesheets if necessary and prepare paths
-        copy_and_prepare_stylesheets(&mut stylesheets, embed_stylesheets, &output_directory)?;
-        let mut render_options =
-            RenderOptions::new(&matches, stylesheets, embed_stylesheets, output_directory);
-        // Add missing nodes that may not exist because references checks have been excluded
-        add_missing_nodes_and_modules(&mut nodes, &mut modules, &mut render_options);
-        // Output views
-        print_outputs(nodes, &modules, &render_options)?;
-    }
-    // Output diagnostic messages
-    output_messages(&diags)
+    app.get_matches()
 }
 
 ///
@@ -366,7 +398,7 @@ fn read_inputs(
                         ),
                     );
                     // A circle may be detected, conservatively bail out completely.
-                    break 'outer Ok(());
+                    break 'outer Err(ValidationOrCheckError {}.into());
                 }
             }
         }
@@ -466,26 +498,30 @@ fn validate_and_check(
     diags: &mut Diagnostics,
     excluded_modules: &[&str],
     layers: &[&str],
-) {
-    if nodes.is_empty() {
-        // TODO Add correct error message
-        diags.add_error(None, "No input elements are found.".to_owned());
-    } else {
-        for module_info in modules.values() {
-            // Validation for well-formedness is done unconditionally.
-            gsn::validation::validate_module(diags, &module_info.meta.name, module_info, nodes);
-            if diags.errors > 0 {
-                break;
+) -> Result<()> {
+    // Compiler complains if this is not a closure, but a simple block
+    let result = || -> Result<(), ()> {
+        if nodes.is_empty() {
+            // TODO Add correct error message
+            diags.add_error(None, "No input elements are found.".to_owned());
+            Err(())
+        } else {
+            for module_info in modules.values() {
+                // Validation for well-formedness is done unconditionally.
+                gsn::validation::validate_module(
+                    diags,
+                    &module_info.meta.name,
+                    module_info,
+                    nodes,
+                )?;
             }
-        }
-        if diags.errors == 0 {
             gsn::extend_modules(diags, nodes, modules);
-            gsn::check::check_nodes(diags, nodes, excluded_modules);
-            if !layers.is_empty() {
-                gsn::check::check_layers(diags, nodes, layers);
-            }
+            // TODO correct result handling
+            let _ = gsn::check::check_nodes(diags, nodes, excluded_modules);
+            gsn::check::check_layers(diags, nodes, layers)
         }
-    }
+    }();
+    result.map_err(|_| ValidationOrCheckError {}.into())
 }
 
 ///
