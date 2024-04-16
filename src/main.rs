@@ -385,7 +385,7 @@ fn read_inputs(
                     additional_inputs.extend(imported_files.to_vec());
                 }
                 Entry::Vacant(_) => {
-                    // TODO report error
+                    unreachable!()
                 }
                 Entry::Occupied(e) => {
                     diags.add_error(
@@ -515,9 +515,8 @@ fn validate_and_check(
                     nodes,
                 )?;
             }
-            gsn::extend_modules(diags, nodes, modules);
-            // TODO correct result handling
-            let _ = gsn::check::check_nodes(diags, nodes, excluded_modules);
+            gsn::extend_modules(diags, nodes, modules)?;
+            gsn::check::check_nodes(diags, nodes, excluded_modules)?;
             gsn::check::check_layers(diags, nodes, layers)
         }
     }();

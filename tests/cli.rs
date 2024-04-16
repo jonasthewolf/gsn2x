@@ -282,7 +282,7 @@ mod integrations {
             .arg("examples/template/template.gsn.yaml")
             .arg("tests/inval1_instance.gsn.yaml");
         cmd.assert().failure().stderr(predicate::str::contains(
-            "Error: 2 errors and 1 warnings detected.",
+            "Error: 2 errors and 0 warnings detected.",
         ));
         Ok(())
     }
@@ -294,7 +294,7 @@ mod integrations {
             .arg("examples/template/template.gsn.yaml")
             .arg("tests/inval2_instance.gsn.yaml");
         cmd.assert().failure().stderr(predicate::str::contains(
-            "Error: 1 errors and 1 warnings detected.",
+            "Error: 1 errors and 0 warnings detected.",
         ));
         Ok(())
     }
@@ -306,7 +306,7 @@ mod integrations {
             .arg("examples/template/template.gsn.yaml")
             .arg("tests/inval3_instance.gsn.yaml");
         cmd.assert().failure().stderr(predicate::str::contains(
-            "Error: 1 errors and 1 warnings detected.",
+            "Error: 1 errors and 0 warnings detected.",
         ));
         Ok(())
     }
@@ -318,7 +318,7 @@ mod integrations {
             .arg("examples/template/template.gsn.yaml")
             .arg("tests/inval4_instance.gsn.yaml");
         cmd.assert().failure().stderr(predicate::str::contains(
-            "Error: 1 errors and 1 warnings detected.",
+            "Error: 1 errors and 0 warnings detected.",
         ));
         Ok(())
     }

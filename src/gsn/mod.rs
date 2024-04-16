@@ -358,7 +358,8 @@ pub fn extend_modules(
     diags: &mut Diagnostics,
     nodes: &mut BTreeMap<String, GsnNode>,
     modules: &BTreeMap<String, Module>,
-) {
+) -> Result<(), ()> {
+    let mut errors = 0;
     for (module_name, module_info) in modules {
         for ext in &module_info.meta.extends {
             if !modules.contains_key(&ext.module) {
@@ -369,6 +370,7 @@ pub fn extend_modules(
                         ext.module, module_name
                     ),
                 );
+                errors += 1;
             }
             for (foreign_id, local_ids) in &ext.develops {
                 if let Some(foreign_node) = nodes.get_mut(foreign_id) {
@@ -377,11 +379,13 @@ pub fn extend_modules(
                                     Some(module_name),
                                     format!("C10: Element {} does not exist in module {}, but is supposed to be extended by {}.", foreign_id, ext.module, local_ids.join(",")),
                                 );
+                        errors += 1;
                     } else if foreign_node.undeveloped != Some(true) {
                         diags.add_error(
                                     Some(module_name),
                                     format!("C10: Element {} is not undeveloped, but is supposed to be extended by {}.", foreign_id, local_ids.join(",")),
                                 );
+                        errors += 1;
                     } else {
                         foreign_node.supported_by = local_ids.to_vec();
                         foreign_node.undeveloped = Some(false);
@@ -395,9 +399,15 @@ pub fn extend_modules(
                             local_ids.join(",")
                         ),
                     );
+                    errors += 1;
                 }
             }
         }
+    }
+    if errors == 0 {
+        Ok(())
+    } else {
+        Err(())
     }
 }
 
