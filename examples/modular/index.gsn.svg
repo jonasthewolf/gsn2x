@@ -8,15 +8,15 @@
 <rect fill="black" height="10" stroke="black" stroke-width="1" width="10" x="0" y="0"/>
 </symbol>
 <marker id="composite_arrow" markerHeight="9" markerUnits="userSpaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
-<polyline fill="none" points="0 0, 6 4.5, 0 9" stroke="black" stroke-width="1"/>
-<polyline fill="none" points="4 0, 10 4.5, 4 9" stroke="black" stroke-width="1"/>
-<polyline fill="none" points="0 4.5, 10 4.5" stroke="black" stroke-width="1"/>
+<polyline fill-opacity="0" points="0 0, 6 4.5, 0 9" stroke="black" stroke-width="1"/>
+<polyline fill-opacity="0" points="4 0, 10 4.5, 4 9" stroke="black" stroke-width="1"/>
+<polyline fill-opacity="0" points="0 4.5, 10 4.5" stroke="black" stroke-width="1"/>
 </marker>
 <marker id="supportedby_arrow" markerHeight="9" markerUnits="userSpaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
 <polyline fill="black" points="0 0, 10 4.5, 0 9"/>
 </marker>
 <marker id="incontextof_arrow" markerHeight="9" markerUnits="userSpaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
-<polyline fill="none" points="0 0, 10 4.5, 0 9, 0 0" stroke="black" stroke-width="1"/>
+<polyline fill-opacity="0" points="0 0, 10 4.5, 0 9, 0 0" stroke="black" stroke-width="1"/>
 </marker>
 <style>
 @import url(https://github.com/jonasthewolf/gsn2x/blob/3439402d093ba54af4771b295e78f2488bd1b978/examples/modular/modular.css)
@@ -72,7 +72,7 @@ G2
 <text font-family="Arial" font-size="12" x="27" y="300">
 Divide
 </text>
-<path d="M72,314 l5,5 l-5,5 l-5,-5 z" fill="none" stroke="black" stroke-width="1"/>
+<path d="M72,314 l5,5 l-5,5 l-5,-5 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 </g>
 <g class="gsn_module_main gsnelem gsnjust" id="node_j1">
 <title>J1</title>
@@ -106,10 +106,10 @@ Sub1
 <use href="#module_icon" x="339" y="307"/>
 </g>
 </a>
-<path class="gsnedge gsninctxt" d="M187,71 C157,71,177,71,157,71" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M239,94 C239,124,239,132,239,152" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninctxt" d="M124,288 C154,288,134,288,154,288" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninctxt" d="M332,288 C302,288,322,288,302,288" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M239,208 C239,238,72,232,72,252" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M239,208 C239,238,407,218,407,238" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M187,71 C157,71,177,71,157,71" fill-opacity="0" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M239,94 C239,124,239,132,239,152" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M124,288 C154,288,134,288,154,288" fill-opacity="0" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M332,288 C302,288,322,288,302,288" fill-opacity="0" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M239,208 C239,238,72,232,72,252" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M239,208 C239,238,407,218,407,238" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 </svg>

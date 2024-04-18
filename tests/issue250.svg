@@ -8,15 +8,15 @@
 <rect fill="black" height="10" stroke="black" stroke-width="1" width="10" x="0" y="0"/>
 </symbol>
 <marker id="composite_arrow" markerHeight="9" markerUnits="userSpaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
-<polyline fill="none" points="0 0, 6 4.5, 0 9" stroke="black" stroke-width="1"/>
-<polyline fill="none" points="4 0, 10 4.5, 4 9" stroke="black" stroke-width="1"/>
-<polyline fill="none" points="0 4.5, 10 4.5" stroke="black" stroke-width="1"/>
+<polyline fill-opacity="0" points="0 0, 6 4.5, 0 9" stroke="black" stroke-width="1"/>
+<polyline fill-opacity="0" points="4 0, 10 4.5, 4 9" stroke="black" stroke-width="1"/>
+<polyline fill-opacity="0" points="0 4.5, 10 4.5" stroke="black" stroke-width="1"/>
 </marker>
 <marker id="supportedby_arrow" markerHeight="9" markerUnits="userSpaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
 <polyline fill="black" points="0 0, 10 4.5, 0 9"/>
 </marker>
 <marker id="incontextof_arrow" markerHeight="9" markerUnits="userSpaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
-<polyline fill="none" points="0 0, 10 4.5, 0 9, 0 0" stroke="black" stroke-width="1"/>
+<polyline fill-opacity="0" points="0 0, 10 4.5, 0 9, 0 0" stroke="black" stroke-width="1"/>
 </marker>
 <g class="gsn_module_tests_issue250_yaml gsnelem gsngoal" id="node_g1">
 <title>G1</title>
@@ -37,7 +37,7 @@ G2
 <text font-family="Arial" font-size="12" x="27" y="151">
 G2
 </text>
-<path d="M72,165 l5,5 l-5,5 l-5,-5 z" fill="none" stroke="black" stroke-width="1"/>
+<path d="M72,165 l5,5 l-5,5 l-5,-5 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 </g>
 <g class="gsn_module_tests_issue250_yaml gsnelem gsnasmp" id="node_a2">
 <title>A2</title>
@@ -84,12 +84,12 @@ G4
 <text font-family="Arial" font-size="12" x="265" y="250">
 G4
 </text>
-<path d="M310,264 l5,5 l-5,5 l-5,-5 z" fill="none" stroke="black" stroke-width="1"/>
+<path d="M310,264 l5,5 l-5,5 l-5,-5 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 </g>
-<path class="gsnedge gsninspby" d="M191,66 C191,96,72,83,72,103" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M191,66 C191,96,310,86,310,106" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninctxt" d="M124,139 C154,139,134,139,154,139" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninctxt" d="M362,139 C392,139,372,139,392,139" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninctxt" d="M258,139 C228,139,248,139,228,139" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M310,162 C310,192,310,182,310,202" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M191,66 C191,96,72,83,72,103" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M191,66 C191,96,310,86,310,106" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M124,139 C154,139,134,139,154,139" fill-opacity="0" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M362,139 C392,139,372,139,392,139" fill-opacity="0" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M258,139 C228,139,248,139,228,139" fill-opacity="0" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M310,162 C310,192,310,182,310,202" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 </svg>

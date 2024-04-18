@@ -8,15 +8,15 @@
 <rect fill="black" height="10" stroke="black" stroke-width="1" width="10" x="0" y="0"/>
 </symbol>
 <marker id="composite_arrow" markerHeight="9" markerUnits="userSpaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
-<polyline fill="none" points="0 0, 6 4.5, 0 9" stroke="black" stroke-width="1"/>
-<polyline fill="none" points="4 0, 10 4.5, 4 9" stroke="black" stroke-width="1"/>
-<polyline fill="none" points="0 4.5, 10 4.5" stroke="black" stroke-width="1"/>
+<polyline fill-opacity="0" points="0 0, 6 4.5, 0 9" stroke="black" stroke-width="1"/>
+<polyline fill-opacity="0" points="4 0, 10 4.5, 4 9" stroke="black" stroke-width="1"/>
+<polyline fill-opacity="0" points="0 4.5, 10 4.5" stroke="black" stroke-width="1"/>
 </marker>
 <marker id="supportedby_arrow" markerHeight="9" markerUnits="userSpaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
 <polyline fill="black" points="0 0, 10 4.5, 0 9"/>
 </marker>
 <marker id="incontextof_arrow" markerHeight="9" markerUnits="userSpaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
-<polyline fill="none" points="0 0, 10 4.5, 0 9, 0 0" stroke="black" stroke-width="1"/>
+<polyline fill-opacity="0" points="0 0, 10 4.5, 0 9, 0 0" stroke="black" stroke-width="1"/>
 </marker>
 <g class="gsn_module_tests_issue391_1_yaml gsnelem gsngoal" id="node_g0">
 <title>G0</title>
@@ -57,6 +57,6 @@ tests_issue391_2_yaml
 <use href="#module_icon" x="27" y="251"/>
 </g>
 </a>
-<path class="gsnedge gsninspby" d="M105,66 C105,96,105,76,105,96" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M105,152 C105,182,105,162,105,182" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M105,66 C105,96,105,76,105,96" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M105,152 C105,182,105,162,105,182" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 </svg>

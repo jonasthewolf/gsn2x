@@ -8,15 +8,15 @@
 <rect fill="black" height="10" stroke="black" stroke-width="1" width="10" x="0" y="0"/>
 </symbol>
 <marker id="composite_arrow" markerHeight="9" markerUnits="userSpaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
-<polyline fill="none" points="0 0, 6 4.5, 0 9" stroke="black" stroke-width="1"/>
-<polyline fill="none" points="4 0, 10 4.5, 4 9" stroke="black" stroke-width="1"/>
-<polyline fill="none" points="0 4.5, 10 4.5" stroke="black" stroke-width="1"/>
+<polyline fill-opacity="0" points="0 0, 6 4.5, 0 9" stroke="black" stroke-width="1"/>
+<polyline fill-opacity="0" points="4 0, 10 4.5, 4 9" stroke="black" stroke-width="1"/>
+<polyline fill-opacity="0" points="0 4.5, 10 4.5" stroke="black" stroke-width="1"/>
 </marker>
 <marker id="supportedby_arrow" markerHeight="9" markerUnits="userSpaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
 <polyline fill="black" points="0 0, 10 4.5, 0 9"/>
 </marker>
 <marker id="incontextof_arrow" markerHeight="9" markerUnits="userSpaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
-<polyline fill="none" points="0 0, 10 4.5, 0 9, 0 0" stroke="black" stroke-width="1"/>
+<polyline fill-opacity="0" points="0 0, 10 4.5, 0 9, 0 0" stroke="black" stroke-width="1"/>
 </marker>
 <g class="gsn_module_examples_confidence_gsn_yaml gsnelem gsngoal" id="node_g1">
 <title>G1</title>
@@ -106,41 +106,41 @@ More evidence for Hazard 2
 ACP5
 </text>
 </g>
-<path class="gsnedge gsninspby" d="M243,66 C243,96,243,76,243,96" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M243,66 C243,96,243,76,243,96" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 <g class="gsnacp" id="acp_g1_s1_acp1">
 <use href="#acp" x="237" y="80"/>
 <text font-family="Arial" font-size="12" x="254" y="90">
 ACP1
 </text>
 </g>
-<path class="gsnedge gsninspby" d="M96,238 C96,268,96,263,96,283" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M96,238 C96,268,96,263,96,283" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 <g class="gsnacp" id="acp_g2_sn1_acp2">
 <use href="#acp" x="91" y="260"/>
 <text font-family="Arial" font-size="12" x="108" y="270">
 ACP2
 </text>
 </g>
-<path class="gsnedge gsninspby" d="M391,238 C391,268,288,263,288,283" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M391,238 C391,268,288,263,288,283" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 <g class="gsnacp" id="acp_g3_sn2a_acp3">
 <use href="#acp" x="335" y="260"/>
 <text font-family="Arial" font-size="12" x="332" y="254">
 ACP3
 </text>
 </g>
-<path class="gsnedge gsninspby" d="M391,238 C391,268,495,248,495,268" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M391,238 C391,268,495,248,495,268" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 <g class="gsnacp" id="acp_g3_sn2b_acp3">
 <use href="#acp" x="439" y="253"/>
 <text font-family="Arial" font-size="12" x="432" y="278">
 ACP3
 </text>
 </g>
-<path class="gsnedge gsninctxt" d="M322,129 C352,129,332,129,352,129" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M322,129 C352,129,332,129,352,129" fill-opacity="0" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
 <g class="gsnacp" id="acp_s1_c1_acp4">
 <use href="#acp" x="336" y="123"/>
 <text font-family="Arial" font-size="12" x="328" y="149">
 ACP4
 </text>
 </g>
-<path class="gsnedge gsninspby" d="M243,152 C243,182,96,162,96,182" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M243,152 C243,182,391,162,391,182" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M243,152 C243,182,96,162,96,182" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M243,152 C243,182,391,162,391,182" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 </svg>
