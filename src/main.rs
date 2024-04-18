@@ -503,7 +503,7 @@ fn validate_and_check(
 ) -> Result<()> {
     // Compiler complains if this is not a closure, but a simple block
     if nodes.is_empty() {
-        Err(anyhow!("No input elements are found.").into())
+        Err(anyhow!("No input elements are found."))
     } else {
         let result = || -> Result<(), ()> {
             for module_info in modules.values() {
