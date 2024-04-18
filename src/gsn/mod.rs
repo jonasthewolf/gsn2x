@@ -329,6 +329,7 @@ impl Display for Origin {
 pub struct Module {
     pub orig_file_name: String,
     pub canonical_path: Option<PathBuf>,
+    pub output_path: Option<String>,
     pub origin: Origin,
     pub meta: ModuleInformation,
 }

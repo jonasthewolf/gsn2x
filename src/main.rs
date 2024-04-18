@@ -114,7 +114,7 @@ fn build_command_options() -> ArgMatches {
     let app = clap::command!()
         .arg(
             Arg::new("INPUT")
-                .help("Sets the input file(s) to use. Only relative paths are accepted.")
+                .help("Sets the input file(s) to use.")
                 .action(ArgAction::Append)
                 .required(true),
         )
@@ -206,6 +206,7 @@ fn build_command_options() -> ArgMatches {
                 .long("output-dir")
                 .action(ArgAction::Set)
                 .conflicts_with("CHECK_ONLY")
+                .default_value(".")
                 .help_heading("OUTPUT"),
         )
         .arg(
@@ -229,7 +230,7 @@ fn build_command_options() -> ArgMatches {
         )
         .arg(
             Arg::new("EMBED_CSS")
-                .help("Embed stylehseets instead of linking them.")
+                .help("Embed stylesheets instead of linking them.")
                 .short('t')
                 .long("embed-css")
                 .action(ArgAction::SetTrue)
@@ -313,6 +314,7 @@ fn add_missing_nodes_and_modules(
             meta: ModuleInformation::new("Unknown".to_owned()),
             origin: Origin::Excluded,
             canonical_path: None,
+            output_path: None,
         },
     );
 }
@@ -338,7 +340,6 @@ fn read_inputs(
             let mut n: BTreeMap<String, GsnDocument> = serde_yaml::from_reader(reader)
             .map(|n: yaml_fix::YamlFixMap<String, GsnDocument>| n.into_inner())
             .map_err(|e| {
-                // TODO add as diag error
                 anyhow!(format!(
                     "No valid GSN element can be found starting from line {}.\n\
                      This typically means that the YAML is completely invalid, or \n\
@@ -378,6 +379,7 @@ fn read_inputs(
                             Origin::File(input.to_owned())
                         },
                         canonical_path: Some(pb),
+                        output_path: None, // TOOD Definitely wrong
                     });
                     check_and_add_nodes(n, nodes, &module, diags, input);
                     // Remember additional files to read
@@ -500,12 +502,10 @@ fn validate_and_check(
     layers: &[&str],
 ) -> Result<()> {
     // Compiler complains if this is not a closure, but a simple block
-    let result = || -> Result<(), ()> {
-        if nodes.is_empty() {
-            // TODO Add correct error message
-            diags.add_error(None, "No input elements are found.".to_owned());
-            Err(())
-        } else {
+    if nodes.is_empty() {
+        Err(anyhow!("No input elements are found.").into())
+    } else {
+        let result = || -> Result<(), ()> {
             for module_info in modules.values() {
                 // Validation for well-formedness is done unconditionally.
                 gsn::validation::validate_module(
@@ -518,9 +518,9 @@ fn validate_and_check(
             gsn::extend_modules(diags, nodes, modules)?;
             gsn::check::check_nodes(diags, nodes, excluded_modules)?;
             gsn::check::check_layers(diags, nodes, layers)
-        }
-    }();
-    result.map_err(|_| ValidationOrCheckError {}.into())
+        }();
+        result.map_err(|_| ValidationOrCheckError {}.into())
+    }
 }
 
 ///

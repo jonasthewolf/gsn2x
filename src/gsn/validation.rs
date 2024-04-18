@@ -210,7 +210,7 @@ fn validate_reference(
                             Ok(())
                         }
                     } else {
-                        Ok(())
+                        Ok(()) // Ok is correct, since not all references must exist yet. Checked by C03.
                     }
                 },
             ]
@@ -465,6 +465,7 @@ mod test {
                 meta: ModuleInformation::default(),
                 origin: crate::gsn::Origin::CommandLine,
                 canonical_path: None,
+                output_path: None,
             },
             &nodes,
         )
@@ -730,6 +731,24 @@ mod test {
     }
 
     #[test]
+    fn unknown_ref() {
+        let mut d = Diagnostics::default();
+        let mut nodes = BTreeMap::<String, GsnNode>::new();
+        nodes.insert(
+            "G1".to_owned(),
+            GsnNode {
+                supported_by: vec!["Sn2".to_owned()],
+                node_type: Some(GsnNodeType::Goal),
+                ..Default::default()
+            },
+        );
+        assert!(validate_module(&mut d, "", &Module::default(), &nodes).is_ok());
+        assert_eq!(d.messages.len(), 0);
+        assert_eq!(d.errors, 0);
+        assert_eq!(d.warnings, 0);
+    }
+
+    #[test]
     fn undeveloped_goal() {
         let mut d = Diagnostics::default();
         let mut nodes = BTreeMap::<String, GsnNode>::new();
@@ -849,6 +868,7 @@ mod test {
                 },
                 origin: crate::gsn::Origin::CommandLine,
                 canonical_path: None,
+                output_path: None,
             },
             &nodes,
         )
@@ -890,6 +910,7 @@ mod test {
                 },
                 origin: crate::gsn::Origin::CommandLine,
                 canonical_path: None,
+                output_path: None,
             },
             &nodes,
         )
