@@ -23,7 +23,7 @@ G1:
 You can sanitize your files from your intellectual property using, e.g. https://mikefarah.gitbook.io/yq/
 
 ```
- yq "(.[] | select(. | has(\"text\"))) .text |=sub(\"[a-zA-Z0-9]\",\"x\")"  inputfile.yaml | yq "... comments=\"\"" > outputfile.yaml
+ yq "(.[] | select(. | has(\"text\"))) .text |=sub(\"[a-zA-Z0-9]\",\"x\"), ... comments=\"\""  inputfile.yaml > outputfile.yaml
 ```
 
 **Expected behavior**
