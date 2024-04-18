@@ -159,7 +159,7 @@ pub fn away_svg_from_gsn_node(
             Some("svg"),
         )?;
         // TODO continue
-    //    .unwrap_or(module.output_path.as_ref().map(|p| p.to_owned()));
+        //    .unwrap_or(module.output_path.as_ref().map(|p| p.to_owned()));
         x.push('#');
         x.push_str(&escape_node_id(identifier));
         Some(x)
