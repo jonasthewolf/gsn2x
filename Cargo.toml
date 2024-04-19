@@ -18,7 +18,7 @@ time = { version = "0.3", default-features = false, features = ["formatting"] }
 clap = { version = "4.4", default-features = false, features = ["std", "cargo", "help", "usage", "suggestions", "color"] }
 serde = { version = "1.0", default-features = false, features = ["derive"] }
 serde_yaml = "0.9" # No features
-svg = "0.16" # No features
+svg = "0.17" # No features
 font-loader = "0.11" # No features
 glyph_brush_layout = "0.2" # No featues
 
