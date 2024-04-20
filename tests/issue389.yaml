@@ -7,7 +7,7 @@ G11:
   inContextOf: [J11]
 J11:
   text: "xxxxxxxxxx xxxxxxxxxx (xxxx xx xxxxxxxxxxx-xxxxxxx xxx xxxx-xxxxxxx) xxx \nxxx xxxxxxxxx xxxxx xxxx xxxx xx xx xxxxxxxxx xx xxxx-x xxxxx (x.x. xxxxx xxxxxxxxxxxxx xx xxxxxxx).\n"
-  wordWrap: 40
+  charWrap: 40
 G11.1:
   text: xxxxxx xxxx xxxxxxxx xx xxxxxxxxx.
   supportedBy: [Sn11.1]

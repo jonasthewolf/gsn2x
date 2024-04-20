@@ -191,7 +191,7 @@ pub fn check_layers(
         "nodeType",
         "rankIncrement",
         "horizontalIndex",
-        "wordWrap",
+        "charWrap",
         "acp",
     ];
     let layer_results = layers

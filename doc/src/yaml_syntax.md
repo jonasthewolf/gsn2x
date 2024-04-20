@@ -60,30 +60,19 @@ Please see [examples/example.gsn.yaml](examples/example.gsn.yaml) for an example
 ## Summary
 
 
-| Attribute             | Optional |
-|-----------------------|----------|
-| text                  |    no    | 
-| supportedBy           |    yes   |
-| inContextOf           |    yes   | 
-| undeveloped[^nu]      |    yes   |
-| url                   |    yes   |   
-| classes[^nc]          |    yes   |
-| nodeType[^nt]         |    yes   |
-| rankIncrement[^nl]    |    yes   |
-| horizontalIndex[^nl]  |    yes   |
-| wordWrap[^nw]         |    yes   |
-| acp[^na]              |    yes   |
-
-[^nu]: Mutually exclusive to `supportedBy`.
-
-[^nc]: See [Stylesheets](./adv_stylesheets.md).
-
-[^nl]: See [Layout](./adv_layout.md).
+| Attribute       | Optional | Notes                                                  |
+|-----------------|----------|--------------------------------------------------------|
+| text            |    no    |                                                        | 
+| supportedBy     |    yes   |                                                        |
+| inContextOf     |    yes   |                                                        | 
+| undeveloped     |    yes   | Mutually exclusive to `supportedBy`.                   |
+| url             |    yes   |                                                        |   
+| classes         |    yes   | See [Stylesheets](./adv_stylesheets.md).               |
+| nodeType        |    yes   | See footnote[^nt]                                      |
+| rankIncrement   |    yes   | See [Layout](./adv_layout.md).                         |
+| horizontalIndex |    yes   | See [Layout](./adv_layout.md).                         |
+| charWrap        |    yes   | See [Line Breaks](./adv_linebreaks.md).                |
+| acp             |    yes   | See [Confidence Argument Extension](./confidence.md).  |
 
 [^nt]: When providing a `nodeType` you do not need to follow the standard prefix scheme above.
        Just give `Goal`, `Assumption`, `Justification`, `Solution`, `Context` and `Strategy` to give the type of the element.
-
-[^nw]: If the `wordWrap` attribute for an element is given, it will be used instead of the global option given
-       at the command line.
-
-[^na]: See [Confidence Argument Extension](./confidence.md).

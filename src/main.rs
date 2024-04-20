@@ -1,6 +1,6 @@
 use anyhow::{anyhow, Context, Result};
 use clap::{value_parser, Arg, ArgAction, ArgMatches};
-use file_utils::{set_extension, translate_to_output_path};
+use file_utils::translate_to_output_path;
 use render::RenderOptions;
 use std::collections::BTreeMap;
 use std::error::Error;
@@ -49,6 +49,8 @@ fn main() -> Result<()> {
         .flatten()
         .map(AsRef::as_ref)
         .collect::<Vec<_>>();
+    // unwrap ok, since default value provided.
+    let output_directory = matches.get_one::<String>("OUTPUT_DIRECTORY").unwrap();
 
     let mut nodes = BTreeMap::<String, GsnNode>::new();
 
@@ -56,7 +58,13 @@ fn main() -> Result<()> {
     let mut modules: BTreeMap<String, Module> = BTreeMap::new();
     // Closure is important here, otherwise main is left with ? operator
     let read_and_check = || -> Result<()> {
-        read_inputs(&inputs, &mut nodes, &mut modules, &mut diags)?;
+        read_inputs(
+            &inputs,
+            &mut nodes,
+            &mut modules,
+            &mut diags,
+            output_directory,
+        )?;
         // Validate
         validate_and_check(&mut nodes, &modules, &mut diags, &excluded_modules, &layers)
     }();
@@ -67,7 +75,6 @@ fn main() -> Result<()> {
         Ok(_) => {
             if !matches.get_flag("CHECK_ONLY") {
                 let embed_stylesheets = matches.get_flag("EMBED_CSS");
-                let output_directory = matches.get_one::<String>("OUTPUT_DIRECTORY");
                 let mut stylesheets = matches
                     .get_many::<String>("STYLESHEETS")
                     .into_iter()
@@ -78,7 +85,7 @@ fn main() -> Result<()> {
                 copy_and_prepare_stylesheets(
                     &mut stylesheets,
                     embed_stylesheets,
-                    &output_directory,
+                    output_directory,
                 )?;
                 let mut render_options =
                     RenderOptions::new(&matches, stylesheets, embed_stylesheets, output_directory);
@@ -265,7 +272,7 @@ fn build_command_options() -> ArgMatches {
                 .help_heading("OUTPUT MODIFICATION"),
         )
         .arg(
-            Arg::new("WORD_WRAP")
+            Arg::new("CHAR_WRAP")
                 .help("Define the number of characters after which a line of text is wrapped.")
                 .short('w')
                 .long("wrap")
@@ -273,6 +280,7 @@ fn build_command_options() -> ArgMatches {
                 .value_parser(value_parser!(u32))
                 .conflicts_with("CHECK_ONLY")
                 .help_heading("OUTPUT MODIFICATION"),
+            // Intentionally no default value, to allow formatting via YAML.
         );
     app.get_matches()
 }
@@ -328,6 +336,7 @@ fn read_inputs(
     nodes: &mut BTreeMap<String, GsnNode>,
     modules: &mut BTreeMap<String, Module>,
     diags: &mut Diagnostics,
+    output_directory: &str,
 ) -> Result<()> {
     let mut copied_inputs: Vec<String> = inputs.iter().map(|i| (i.replace('\\', "/"))).collect();
     let mut first_run = true;
@@ -379,9 +388,10 @@ fn read_inputs(
                             Origin::File(input.to_owned())
                         },
                         canonical_path: Some(pb),
-                        output_path: None, // TOOD Definitely wrong
+                        output_path: translate_to_output_path(output_directory, input, Some("svg"))
+                            .ok(), // TODO Definitely wrong
                     });
-                    check_and_add_nodes(n, nodes, &module, diags, input);
+                    check_and_add_nodes(n, nodes, &module, diags, input, meta.char_wrap);
                     // Remember additional files to read
                     let imported_files = get_uses_files(&meta, input, diags);
                     additional_inputs.extend(imported_files.to_vec());
@@ -456,6 +466,7 @@ fn check_and_add_nodes(
     module: &String,
     diags: &mut Diagnostics,
     input: &String,
+    char_wrap: Option<u32>,
 ) {
     // Check for duplicates, since they might be in separate files.
     let node_names: Vec<String> = n.keys().cloned().collect();
@@ -467,6 +478,9 @@ fn check_and_add_nodes(
                         // Remember module for node
                         x.module = module.to_owned();
                         x.fix_node_type(&k);
+                        if x.char_wrap.is_none() {
+                            x.char_wrap = char_wrap;
+                        }
                         e.insert(x);
                     }
                     _ => unreachable!(), // There can be only one MetaNode
@@ -534,15 +548,12 @@ fn print_outputs(
     modules: &BTreeMap<String, Module>,
     render_options: &RenderOptions,
 ) -> Result<()> {
-    let output_path = render_options.output_directory.to_owned().unwrap_or(".");
+    let output_path = render_options.output_directory.to_owned();
     if !render_options.skip_argument {
         for (_, module) in modules.iter().filter(|(m, _)| *m != "Unknown") {
-            let output_path = set_extension(
-                &translate_to_output_path(output_path, &module.orig_file_name)?,
-                "svg",
-            );
+            let output_path = module.output_path.as_ref().unwrap(); // unwrap ok, since we set it for each module.
             let mut output_file = Box::new(
-                File::create(&output_path)
+                File::create(output_path)
                     .context(format!("Failed to open output file {output_path}"))?,
             ) as Box<dyn std::io::Write>;
 
@@ -558,7 +569,8 @@ fn print_outputs(
     }
     if modules.iter().filter(|(m, _)| *m != "Unknown").count() > 1 {
         if let Some(architecture_filename) = &render_options.architecture_filename {
-            let arch_output_path = translate_to_output_path(output_path, architecture_filename)?;
+            let arch_output_path =
+                translate_to_output_path(&output_path, architecture_filename, None)?;
             let mut output_file = File::create(&arch_output_path)
                 .context(format!("Failed to open output file {arch_output_path}"))?;
             let deps = crate::gsn::calculate_module_dependencies(&nodes);
@@ -569,11 +581,11 @@ fn print_outputs(
                 deps,
                 render_options,
                 &arch_output_path,
-                output_path,
+                &output_path,
             )?;
         }
         if let Some(complete_filename) = &render_options.complete_filename {
-            let output_path = translate_to_output_path(output_path, complete_filename)?;
+            let output_path = translate_to_output_path(&output_path, complete_filename, None)?;
             let mut output_file = File::create(&output_path)
                 .context(format!("Failed to open output file {output_path}"))?;
             print!("Rendering \"{output_path}\": ");
@@ -581,7 +593,7 @@ fn print_outputs(
         }
     }
     if let Some(evidences_filename) = &render_options.evidences_filename {
-        let output_path = translate_to_output_path(output_path, evidences_filename)?;
+        let output_path = translate_to_output_path(&output_path, evidences_filename, None)?;
         let mut output_file = File::create(&output_path)
             .context(format!("Failed to open output file {output_path}"))?;
         print!("Writing evidences \"{output_path}\": ");
@@ -619,7 +631,7 @@ fn output_messages(diags: &Diagnostics) -> Result<()> {
 pub(crate) fn copy_and_prepare_stylesheets(
     stylesheets: &mut [String],
     embed_stylesheets: bool,
-    output_directory: &Option<&String>,
+    output_directory: &str,
 ) -> Result<()> {
     for stylesheet in stylesheets {
         let new_name = if stylesheet.starts_with("http://")
@@ -631,25 +643,27 @@ pub(crate) fn copy_and_prepare_stylesheets(
         } else if embed_stylesheets {
             // No need to transform path when embedding stylesheets
             stylesheet.to_owned()
-        } else if let Some(output_directory) = output_directory {
+        } else {
+            // TODO output = input will kill it
             // Copy stylesheet to output path
             let css_path = PathBuf::from(&stylesheet);
             let mut out_path = PathBuf::from(output_directory);
-            std::fs::create_dir_all(&out_path)?;
+            if css_path != out_path {
+                // TODO move to a different place; maybe not even necessary
+                std::fs::create_dir_all(&out_path)?;
+                std::fs::copy(&css_path, &out_path).with_context(|| {
+                    format!(
+                        "Could not copy stylesheet from {} to {}",
+                        css_path.display(),
+                        &out_path.display()
+                    )
+                })?;
+            }
             out_path.push(css_path.file_name().ok_or(anyhow!(
                 "Could not identify stylesheet filename in {}",
                 stylesheet
             ))?);
-            std::fs::copy(&css_path, &out_path).with_context(|| {
-                format!(
-                    "Could not copy stylesheet from {} to {}",
-                    css_path.display(),
-                    &out_path.display()
-                )
-            })?;
             out_path.to_string_lossy().to_string().to_owned()
-        } else {
-            stylesheet.to_owned()
         };
         *stylesheet = new_name.to_owned();
     }

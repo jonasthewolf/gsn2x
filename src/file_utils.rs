@@ -43,15 +43,6 @@ pub fn get_filename(path: &str) -> Option<&str> {
 }
 
 ///
-/// Set extension `ext` for file in `path`.
-/// If no extension in `path` is found, `ext` is added.
-///
-pub fn set_extension(path: &str, ext: &str) -> String {
-    let split: Vec<_> = path.rsplitn(2, '.').collect();
-    format!("{}.{}", split.last().unwrap(), ext) // unwrap ok, since there is always a last()
-}
-
-///
 /// Find common ancestors in all paths in `inputs`.
 /// The output is an absolute path containing all common ancestors.
 ///
@@ -101,17 +92,33 @@ fn find_common_ancestors_in_paths(inputs: &[&str]) -> Result<PathBuf> {
 ///
 /// Prefix `input_filename` with `output_path`.
 ///
-/// `input_filename` is a relative path or only a filename.
-/// If `input_filename` starts with `output_path`,  `input_filename` is used.
+/// If `input_filename` is a relative path, append it to output path.
+/// If `input_filename` is an absolute path, put it directly in output path.
+/// If `input_filename` starts with `output_path`, `input_filename` is used.
 /// If directories up to the final path do not exist, they are created.
 ///
-pub fn translate_to_output_path(output_path: &str, input_filename: &str) -> Result<String> {
-    let mut output_path_buf = std::path::PathBuf::from(&output_path);
-    if input_filename.starts_with(output_path) {
-        output_path_buf = std::path::PathBuf::from(&input_filename);
-    } else {
-        output_path_buf.push(input_filename);
+pub fn translate_to_output_path(
+    output_path: &str,
+    input: &str,
+    new_extension: Option<&str>,
+) -> Result<String> {
+    let mut input_path_buf = std::path::PathBuf::from(input);
+    if let Some(new_extension) = new_extension {
+        input_path_buf.set_extension(new_extension);
     }
+    let mut output_path_buf = std::path::PathBuf::from(&output_path);
+    if input_path_buf.is_relative() {
+        output_path_buf.push(if input_path_buf.starts_with(&output_path_buf) {
+            input_path_buf.strip_prefix(&output_path_buf)?
+        } else {
+            &input_path_buf
+        });
+    } else {
+        // absolute assumed
+        let filename = input_path_buf.file_name().unwrap(); // unwrap ok, since file exists and we already read from it
+        output_path_buf.push(filename);
+    }
+    // TODO move to other place
     if let Some(dir) = output_path_buf.parent() {
         if !dir.exists() {
             create_dir_all(dir)
@@ -152,19 +159,5 @@ mod test {
         let rel = get_relative_path("./Cargo.toml", "./examples/modular/index.gsn.yaml", None)?;
         assert_eq!(rel, "../../Cargo.toml");
         Ok(())
-    }
-
-    #[test]
-    fn extension() {
-        assert_eq!(set_extension("path", "ext"), "path.ext".to_owned());
-        assert_eq!(
-            set_extension("/var/log/some_text.txt", "svg"),
-            "/var/log/some_text.svg".to_owned()
-        );
-        assert_eq!(
-            set_extension("examples/example.gsn.yaml", "svg"),
-            "examples/example.gsn.svg".to_owned()
-        );
-        assert_eq!(set_extension("", "test"), ".test".to_owned());
     }
 }

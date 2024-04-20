@@ -3,23 +3,21 @@
 ///
 pub fn wrap_words(s: &str, width: u32, wrapstr: &str) -> String {
     let mut out = Vec::<String>::new();
-    for line in s.lines() {
-        let mut cur_line = String::new();
-        for word in line.split_ascii_whitespace() {
-            if cur_line.len() + word.len() > width as usize {
-                if !cur_line.is_empty() {
-                    // Relevant if cur_line.len = 0 and word.len > width
-                    out.push(cur_line);
-                }
-                cur_line = String::new();
-            } else if !cur_line.is_empty() {
-                cur_line.push(' ');
+    let mut cur_line = String::new();
+    for word in s.split_ascii_whitespace() {
+        if cur_line.chars().count() + word.chars().count() > width as usize {
+            if !cur_line.is_empty() {
+                // Relevant if cur_line.len = 0 and word.len > width
+                out.push(cur_line);
             }
-            cur_line.push_str(word);
+            cur_line = String::new();
+        } else if !cur_line.is_empty() {
+            cur_line.push(' ');
         }
-        if !cur_line.is_empty() {
-            out.push(cur_line);
-        }
+        cur_line.push_str(word);
+    }
+    if !cur_line.is_empty() {
+        out.push(cur_line);
     }
     out.join(wrapstr)
 }
@@ -82,11 +80,11 @@ mod test {
     fn with_newlines() {
         let input = "Lorem ipsum dolor sit amet,\nconsetetur sadipscing\nelitr, sed diam nonumy eirmod tempor invidunt";
         let expected = concat!(
-            "Lorem ipsum dolor sit amet,<br align=\"left\"/>",
-            "consetetur sadipscing<br align=\"left\"/>",
-            "elitr, sed diam nonumy eirmod tempor invidunt",
+            "Lorem ipsum dolor sit amet, consetetur\n",
+            "sadipscing elitr, sed diam nonumy eirmod\n",
+            "tempor invidunt",
         );
-        let out = wrap_words(input, 50, "<br align=\"left\"/>");
+        let out = wrap_words(input, 45, "\n");
         assert_eq!(out, expected);
     }
 

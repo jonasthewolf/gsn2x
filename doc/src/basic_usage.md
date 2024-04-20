@@ -47,4 +47,4 @@ The output is an argument view in SVG format and automatically written to `<your
       -m, --mask <MASKED_MODULE>      Do not show this module in views.
       -G, --no-legend                 Do not output a legend based on module information.
       -g, --full-legend               Output a legend based on all module information.
-      -w, --wrap <WORD_WRAP>          Define the number of characters after which a line of text is wrapped.
+      -w, --wrap <CHAR_WRAP>          Define the number of characters after which a line of text is wrapped.

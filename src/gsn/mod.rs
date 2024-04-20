@@ -91,7 +91,7 @@ pub struct GsnNode {
     pub(crate) rank_increment: Option<usize>,
     pub(crate) horizontal_index: Option<HorizontalIndex>,
     pub(crate) node_type: Option<GsnNodeType>,
-    pub(crate) word_wrap: Option<u32>,
+    pub(crate) char_wrap: Option<u32>,
     #[serde(default, deserialize_with = "deser_acp")]
     pub(crate) acp: BTreeMap<String, Vec<String>>,
     #[serde(flatten, deserialize_with = "deser_additional")]
@@ -278,7 +278,7 @@ pub struct ModuleInformation {
     pub(crate) extends: Vec<ExtendsModule>,
     pub(crate) horizontal_index: Option<HorizontalIndex>,
     pub(crate) rank_increment: Option<usize>,
-    pub(crate) word_wrap: Option<u32>,
+    pub(crate) char_wrap: Option<u32>,
     #[serde(default)]
     pub(crate) uses: Vec<String>,
     #[serde(flatten, deserialize_with = "deser_additional")]
@@ -292,7 +292,7 @@ impl ModuleInformation {
             brief: None,
             extends: vec![],
             uses: vec![],
-            word_wrap: None,
+            char_wrap: None,
             horizontal_index: None,
             rank_increment: None,
             additional: BTreeMap::new(),
