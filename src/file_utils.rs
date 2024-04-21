@@ -3,33 +3,71 @@ use std::{fs::create_dir_all, path::PathBuf};
 
 ///
 /// Get a relative path from `source` to `target`.
-/// Optionally, change extension of `target` to `target_extension` after existence has been checked.
-/// It does not matter if `source` or `target` are relative or absolute.
-/// However, they must both exist.
+/// If `target` is an absolute path, the absolute path to `target` is returned.
+/// If `source` is an absolute path, but not `target` we calculate `target`'s absolute path.
+/// The files don't need to exist.
 ///
-pub fn get_relative_path(
-    target: &str,
-    source: &str,
-    target_extension: Option<&str>,
-) -> Result<String> {
-    let source_canon = &PathBuf::from(source).canonicalize().with_context(|| format!("Could not find relative path between {source} and {target}, because {source} not found"))?;
-    let target_canon = &PathBuf::from(target).canonicalize().with_context(|| format!("Could not find relative path between {source} and {target}, because {target} not found"))?;
-    let common = find_common_ancestors_in_paths(&[source, target])?;
-    let source_canon_stripped = source_canon.strip_prefix(&common)?.to_path_buf();
-    let mut target_canon_stripped = target_canon.strip_prefix(&common)?.to_path_buf();
-    let mut prefix = match source_canon_stripped
-        .parent()
-        .map(|p| p.components().count())
-        .unwrap_or(0usize)
-    {
-        0 => "./".to_owned(),
-        x => "../".repeat(x), // x > 0
-    };
-    if let Some(ext) = target_extension {
-        target_canon_stripped.set_extension(ext);
+pub fn get_relative_path(target: &str, source: &str) -> Result<String> {
+    let source_path = &PathBuf::from(source);
+    let target_path = &PathBuf::from(target);
+    if target_path.is_absolute() {
+        Ok(target_path.to_string_lossy().to_string())
+    } else if source_path.is_absolute() {
+        // Target path is relative
+        let mut cwd = PathBuf::from(".").canonicalize().unwrap(); // unwrap ok, since current working directory must exist
+        cwd.push(target_path);
+        Ok(cwd.to_string_lossy().to_string())
+    } else {
+        // TODO if both (source and target) have some components in common: filter them
+        // if both start with the same components (ignore CurDir), zip them
+        // both are relative paths
+        let mut relative_path = PathBuf::from_iter(
+            source_path
+                .parent()
+                .unwrap() // unwrap ok, since file always has a parent
+                .components()
+                .filter_map(|c| match c {
+                    // Map Normals to Parents
+                    std::path::Component::CurDir => None,
+                    std::path::Component::ParentDir => Some(c),
+                    std::path::Component::Normal(_) => Some(std::path::Component::ParentDir),
+                    _ => unreachable!(), // Root and Prefix should not be in relative paths.
+                })
+                .chain(
+                    target_path
+                        .parent()
+                        .unwrap() // unwrap ok?
+                        .components()
+                        .filter_map(|c| match c {
+                            // Map Normals to Normals
+                            std::path::Component::CurDir => None,
+                            std::path::Component::ParentDir => Some(c),
+                            std::path::Component::Normal(n) => {
+                                Some(std::path::Component::Normal(n))
+                            }
+                            _ => unreachable!(), // Root and Prefix should not be in relative paths.
+                        }),
+                ),
+        );
+        relative_path.push(target_path.file_name().unwrap()); // unwrap ok?
+
+        Ok(relative_path.to_string_lossy().to_string())
     }
-    prefix.push_str(&target_canon_stripped.to_string_lossy());
-    Ok(prefix)
+    // let common = find_common_ancestors_in_paths(&[source, target])?;
+    // dbg!(&common);
+    // let source_canon_stripped = source_path.strip_prefix(&common)?.to_path_buf();
+    // let target_canon_stripped = target_path.strip_prefix(&common)?.to_path_buf();
+    // let mut prefix = match source_canon_stripped
+    //     .parent()
+    //     .map(|p| p.components().count())
+    //     .unwrap_or(0usize)
+    // {
+    //     0 => "./".to_owned(),
+    //     x => "../".repeat(x), // x > 0
+    // };
+    // dbg!(&prefix);
+    // prefix.push_str(&target_canon_stripped.to_string_lossy());
+    // Ok(prefix)
 }
 
 ///
@@ -43,59 +81,14 @@ pub fn get_filename(path: &str) -> Option<&str> {
 }
 
 ///
-/// Find common ancestors in all paths in `inputs`.
-/// The output is an absolute path containing all common ancestors.
-///
-fn find_common_ancestors_in_paths(inputs: &[&str]) -> Result<PathBuf> {
-    let input_paths = inputs
-        .iter()
-        .map(|i| {
-            PathBuf::from(i)
-                .canonicalize()
-                .with_context(|| format!("Failed to open file {}", i))
-        })
-        .collect::<Result<Vec<_>, _>>()?;
-    let components = input_paths
-        .iter()
-        .map(|p| p.components().collect::<Vec<_>>())
-        .collect::<Vec<_>>();
-
-    let mut result = PathBuf::new();
-
-    if let Some(min_components) = components.iter().map(|c| c.len()).min() {
-        for component in 1..min_components {
-            if components
-                .iter()
-                .skip(1)
-                .scan(components[0][component], |orig, x| {
-                    if x[component] == *orig {
-                        Some(1)
-                    } else {
-                        None
-                    }
-                })
-                .count()
-                > 0
-            {
-                if component == 1 {
-                    result.push(components[0][0]);
-                }
-                result.push(components[0][component]);
-            } else {
-                break;
-            }
-        }
-    }
-    Ok(result)
-}
-
-///
 /// Prefix `input_filename` with `output_path`.
 ///
 /// If `input_filename` is a relative path, append it to output path.
 /// If `input_filename` is an absolute path, put it directly in output path.
 /// If `input_filename` starts with `output_path`, `input_filename` is used.
 /// If directories up to the final path do not exist, they are created.
+///
+/// Function must not assume that output nor input with new extension exists.
 ///
 pub fn translate_to_output_path(
     output_path: &str,
@@ -135,14 +128,6 @@ mod test {
     use super::*;
 
     #[test]
-    fn common_ancestor_single() -> Result<()> {
-        let inputs = ["examples/example.gsn.yaml"];
-        let result = find_common_ancestors_in_paths(&inputs)?;
-        assert_eq!(result, PathBuf::from(""));
-        Ok(())
-    }
-
-    #[test]
     fn filename() {
         assert_eq!(get_filename("C:\\Temp/test.txt"), Some("test.txt"));
         assert_eq!(get_filename("/var/tmp"), Some("tmp"));
@@ -156,8 +141,15 @@ mod test {
 
     #[test]
     fn relative_path() -> Result<()> {
-        let rel = get_relative_path("./Cargo.toml", "./examples/modular/index.gsn.yaml", None)?;
+        let rel = get_relative_path("./Cargo.toml", "examples/modular/index.gsn.yaml")?;
         assert_eq!(rel, "../../Cargo.toml");
+        Ok(())
+    }
+
+    #[test]
+    fn relative_path2() -> Result<()> {
+        let rel = get_relative_path("../gsn2x/Cargo.toml", "./examples/modular/index.gsn.yaml")?;
+        assert_eq!(rel, "../../../gsn2x/Cargo.toml");
         Ok(())
     }
 }

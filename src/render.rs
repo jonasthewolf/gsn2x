@@ -1,6 +1,6 @@
 use crate::dirgraphsvg::edges::EdgeType;
 use crate::dirgraphsvg::{escape_node_id, nodes::SvgNode};
-use crate::file_utils::{get_filename, get_relative_path, translate_to_output_path};
+use crate::file_utils::{get_filename, get_relative_path};
 use crate::gsn::{GsnNode, GsnNodeType, Module};
 use anyhow::Result;
 use clap::ArgMatches;
@@ -154,12 +154,9 @@ pub fn away_svg_from_gsn_node(
         None
     } else {
         let mut x = get_relative_path(
-            &module.orig_file_name,
-            &source_module.orig_file_name,
-            Some("svg"),
+            module.output_path.as_ref().unwrap(), // unwrap ok, since output_path is set initially.
+            source_module.output_path.as_ref().unwrap(), // unwrap ok, since output_path is set initially.
         )?;
-        // TODO continue
-        //    .unwrap_or(module.output_path.as_ref().map(|p| p.to_owned()));
         x.push('#');
         x.push_str(&escape_node_id(identifier));
         Some(x)
@@ -197,7 +194,6 @@ pub fn render_architecture(
     dependencies: BTreeMap<String, BTreeMap<String, EdgeType>>,
     render_options: &RenderOptions,
     architecture_path: &str,
-    output_path: &str,
 ) -> Result<()> {
     let mut dg = crate::dirgraphsvg::DirGraph::default();
     let svg_nodes: BTreeMap<String, SvgNode> = modules
@@ -216,14 +212,8 @@ pub fn render_architecture(
                 ..Default::default()
             };
             let module_url = Some({
-                let target_path =
-                    translate_to_output_path(output_path, &module.orig_file_name, Some("svg"))?;
-                get_relative_path(
-                    &target_path,
-                    architecture_path,
-                    None, // is already made "svg" above
-                )?
-            });
+                get_relative_path(module.output_path.as_ref().unwrap(), architecture_path)?
+            }); // TODO Check if we can do that better
             Ok((
                 k.to_owned(),
                 SvgNode::new_module(

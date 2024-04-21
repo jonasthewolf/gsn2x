@@ -18,7 +18,7 @@
 <marker id="incontextof_arrow" markerHeight="9" markerUnits="userSpaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
 <polyline fill-opacity="0" points="0 0, 10 4.5, 0 9, 0 0" stroke="black" stroke-width="1"/>
 </marker>
-<a href="./issue391_1.svg#node_s1">
+<a href="../tests/issue391_1.svg#node_s1">
 <g class="gsn_module_tests_issue391_1_yaml gsnelem gsnstgy" id="node_s1">
 <title>S1</title>
 <path class="border" d="M27,20 L161,20 L147,66 L13,66 z" fill-opacity="0" stroke="black" stroke-width="1"/>

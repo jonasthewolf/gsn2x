@@ -389,7 +389,7 @@ fn read_inputs(
                         },
                         canonical_path: Some(pb),
                         output_path: translate_to_output_path(output_directory, input, Some("svg"))
-                            .ok(), // TODO Definitely wrong
+                            .ok(),
                     });
                     check_and_add_nodes(n, nodes, &module, diags, input, meta.char_wrap);
                     // Remember additional files to read
@@ -573,15 +573,14 @@ fn print_outputs(
                 translate_to_output_path(&output_path, architecture_filename, None)?;
             let mut output_file = File::create(&arch_output_path)
                 .context(format!("Failed to open output file {arch_output_path}"))?;
-            let deps = crate::gsn::calculate_module_dependencies(&nodes);
+            let dependencies = crate::gsn::calculate_module_dependencies(&nodes);
             print!("Rendering \"{arch_output_path}\": ");
             render::render_architecture(
                 &mut output_file,
                 modules,
-                deps,
+                dependencies,
                 render_options,
                 &arch_output_path,
-                &output_path,
             )?;
         }
         if let Some(complete_filename) = &render_options.complete_filename {
