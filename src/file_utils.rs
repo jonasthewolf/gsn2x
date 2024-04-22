@@ -53,6 +53,7 @@ pub fn get_relative_path(target: &str, source: &str) -> Result<String> {
 
         Ok(relative_path.to_string_lossy().to_string())
     }
+    .map(|i| i.replace('\\', "/"))
     // let common = find_common_ancestors_in_paths(&[source, target])?;
     // dbg!(&common);
     // let source_canon_stripped = source_path.strip_prefix(&common)?.to_path_buf();
