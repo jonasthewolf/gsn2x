@@ -1,5 +1,6 @@
 use anyhow::{anyhow, Context, Result};
-use clap::{value_parser, Arg, ArgAction, ArgMatches};
+use clap::parser::ValueSource;
+use clap::{value_parser, Arg, ArgAction, Command};
 use file_utils::translate_to_output_path;
 use render::RenderOptions;
 use std::collections::BTreeMap;
@@ -28,7 +29,9 @@ const MODULE_INFORMATION_NODE: &str = "module";
 ///
 ///
 fn main() -> Result<()> {
-    let matches = build_command_options();
+    let mut command = build_command_options();
+    let matches = command.clone().get_matches();
+
     let mut diags = Diagnostics::default();
 
     let inputs: Vec<String> = matches
@@ -49,63 +52,76 @@ fn main() -> Result<()> {
         .flatten()
         .map(AsRef::as_ref)
         .collect::<Vec<_>>();
-    // unwrap ok, since default value provided.
-    let output_directory = matches.get_one::<String>("OUTPUT_DIRECTORY").unwrap();
+    if matches.value_source("INPUT") == Some(ValueSource::DefaultValue)
+        && !Path::new(inputs.first().unwrap()).exists()
+    // unwrap ok, since default provided
+    {
+        command.print_help()?;
+        Err(anyhow!("index.gsn.yaml not found."))
+    } else {
+        // unwrap ok, since default value provided.
+        let output_directory = matches.get_one::<String>("OUTPUT_DIRECTORY").unwrap();
 
-    let mut nodes = BTreeMap::<String, GsnNode>::new();
+        let mut nodes = BTreeMap::<String, GsnNode>::new();
 
-    // Module name to module mapping
-    let mut modules: BTreeMap<String, Module> = BTreeMap::new();
-    // Closure is important here, otherwise main is left with ? operator
-    let read_and_check = || -> Result<()> {
-        read_inputs(
-            &inputs,
-            &mut nodes,
-            &mut modules,
-            &mut diags,
-            output_directory,
-        )?;
-        // Validate
-        validate_and_check(&mut nodes, &modules, &mut diags, &excluded_modules, &layers)
-    }();
-    // Ignore error, if errors are found, this is handled in output_messages
-    match read_and_check {
-        Err(e) if e.is::<ValidationOrCheckError>() => Ok(()),
-        Err(e) => Err(e),
-        Ok(_) => {
-            if !matches.get_flag("CHECK_ONLY") {
-                // Create output directory
-                if !std::path::Path::new(&output_directory).exists() {
-                    std::fs::create_dir_all(output_directory).with_context(|| {
-                        format!("Could not create output directory {output_directory}")
-                    })?;
+        // Module name to module mapping
+        let mut modules: BTreeMap<String, Module> = BTreeMap::new();
+
+        // Closure is important here, otherwise main is left with ? operator
+        let read_and_check = || -> Result<()> {
+            read_inputs(
+                &inputs,
+                &mut nodes,
+                &mut modules,
+                &mut diags,
+                output_directory,
+            )?;
+            // Validate
+            validate_and_check(&mut nodes, &modules, &mut diags, &excluded_modules, &layers)
+        }();
+        // Ignore error, if errors are found, this is handled in output_messages
+        match read_and_check {
+            Err(e) if e.is::<ValidationOrCheckError>() => Ok(()),
+            Err(e) => Err(e),
+            Ok(_) => {
+                if !matches.get_flag("CHECK_ONLY") {
+                    // Create output directory
+                    if !std::path::Path::new(&output_directory).exists() {
+                        std::fs::create_dir_all(output_directory).with_context(|| {
+                            format!("Could not create output directory {output_directory}")
+                        })?;
+                    }
+                    let embed_stylesheets = matches.get_flag("EMBED_CSS");
+                    let mut stylesheets = matches
+                        .get_many::<String>("STYLESHEETS")
+                        .into_iter()
+                        .flatten()
+                        .map(|css| css.to_owned())
+                        .collect::<Vec<_>>();
+                    // Copy stylesheets if necessary and prepare paths
+                    copy_and_prepare_stylesheets(
+                        &mut stylesheets,
+                        embed_stylesheets,
+                        output_directory,
+                    )?;
+                    let mut render_options = RenderOptions::new(
+                        &matches,
+                        stylesheets,
+                        embed_stylesheets,
+                        output_directory,
+                    );
+                    // Add missing nodes that may not exist because references checks have been excluded
+                    add_missing_nodes_and_modules(&mut nodes, &mut modules, &mut render_options);
+                    // Output views
+                    print_outputs(nodes, &modules, &render_options)?;
                 }
-                let embed_stylesheets = matches.get_flag("EMBED_CSS");
-                let mut stylesheets = matches
-                    .get_many::<String>("STYLESHEETS")
-                    .into_iter()
-                    .flatten()
-                    .map(|css| css.to_owned())
-                    .collect::<Vec<_>>();
-                // Copy stylesheets if necessary and prepare paths
-                copy_and_prepare_stylesheets(
-                    &mut stylesheets,
-                    embed_stylesheets,
-                    output_directory,
-                )?;
-                let mut render_options =
-                    RenderOptions::new(&matches, stylesheets, embed_stylesheets, output_directory);
-                // Add missing nodes that may not exist because references checks have been excluded
-                add_missing_nodes_and_modules(&mut nodes, &mut modules, &mut render_options);
-                // Output views
-                print_outputs(nodes, &modules, &render_options)?;
+                Ok(())
             }
-            Ok(())
-        }
-    }?;
+        }?;
 
-    // Output diagnostic messages
-    output_messages(&diags)
+        // Output diagnostic messages
+        output_messages(&diags)
+    }
 }
 
 #[derive(PartialEq, Debug)]
@@ -123,13 +139,13 @@ impl Error for ValidationOrCheckError {}
 ///
 ///
 ///
-fn build_command_options() -> ArgMatches {
-    let app = clap::command!()
+fn build_command_options() -> Command {
+    clap::command!()
         .arg(
             Arg::new("INPUT")
                 .help("Sets the input file(s) to use.")
                 .action(ArgAction::Append)
-                .required(true),
+                .default_values(["index.gsn.yaml"]),
         )
         .arg(
             Arg::new("CHECK_ONLY")
@@ -287,8 +303,7 @@ fn build_command_options() -> ArgMatches {
                 .conflicts_with("CHECK_ONLY")
                 .help_heading("OUTPUT MODIFICATION"),
             // Intentionally no default value, to allow formatting via YAML.
-        );
-    app.get_matches()
+        )
 }
 
 ///
