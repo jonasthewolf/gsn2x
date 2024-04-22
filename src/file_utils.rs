@@ -200,7 +200,7 @@ mod test {
             .to_string_lossy()
             .to_string()
             .replace('\\', "/");
-        let out_path = translate_to_output_path(".", &absolute, Some("svg"))?;
+        let out_path = translate_to_output_path(".", &absolute, Some("svg"))?.replace('\\', "/");
         assert_eq!(out_path, "./example.gsn.svg");
         Ok(())
     }
