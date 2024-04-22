@@ -1,5 +1,8 @@
 use anyhow::{Context, Result};
-use std::{fs::create_dir_all, path::PathBuf};
+use std::{
+    fs::create_dir_all,
+    path::{Component, Path, PathBuf},
+};
 
 ///
 /// Get a relative path from `source` to `target`.
@@ -18,29 +21,26 @@ pub fn get_relative_path(target: &str, source: &str) -> Result<String> {
         cwd.push(target_path);
         Ok(cwd.to_string_lossy().to_string())
     } else {
-        // TODO if both (source and target) have some components in common: filter them
-        // if both start with the same components (ignore CurDir), zip them
         // both are relative paths
+        let common = get_stripped_components(source_path)
+            .zip(get_stripped_components(target_path))
+            .take_while(|(a, b)| a == b)
+            .map(|(a, _)| a)
+            .collect::<Vec<_>>();
         let mut relative_path = PathBuf::from_iter(
-            source_path
-                .parent()
-                .unwrap() // unwrap ok, since file always has a parent
-                .components()
+            get_stripped_components(source_path)
+                .skip(common.len())
                 .filter_map(|c| match c {
                     // Map Normals to Parents
-                    std::path::Component::CurDir => None,
                     std::path::Component::ParentDir => Some(c),
                     std::path::Component::Normal(_) => Some(std::path::Component::ParentDir),
                     _ => unreachable!(), // Root and Prefix should not be in relative paths.
                 })
                 .chain(
-                    target_path
-                        .parent()
-                        .unwrap() // unwrap ok?
-                        .components()
+                    get_stripped_components(target_path)
+                        .skip(common.len())
                         .filter_map(|c| match c {
                             // Map Normals to Normals
-                            std::path::Component::CurDir => None,
                             std::path::Component::ParentDir => Some(c),
                             std::path::Component::Normal(n) => {
                                 Some(std::path::Component::Normal(n))
@@ -54,21 +54,17 @@ pub fn get_relative_path(target: &str, source: &str) -> Result<String> {
         Ok(relative_path.to_string_lossy().to_string())
     }
     .map(|i| i.replace('\\', "/"))
-    // let common = find_common_ancestors_in_paths(&[source, target])?;
-    // dbg!(&common);
-    // let source_canon_stripped = source_path.strip_prefix(&common)?.to_path_buf();
-    // let target_canon_stripped = target_path.strip_prefix(&common)?.to_path_buf();
-    // let mut prefix = match source_canon_stripped
-    //     .parent()
-    //     .map(|p| p.components().count())
-    //     .unwrap_or(0usize)
-    // {
-    //     0 => "./".to_owned(),
-    //     x => "../".repeat(x), // x > 0
-    // };
-    // dbg!(&prefix);
-    // prefix.push_str(&target_canon_stripped.to_string_lossy());
-    // Ok(prefix)
+}
+
+///
+/// Removes filename and CurDir if there.
+///
+///
+fn get_stripped_components(path: &Path) -> impl Iterator<Item = Component> {
+    path.parent()
+        .unwrap() // TODO unwrap ok?
+        .components()
+        .filter(|c| !matches!(c, std::path::Component::CurDir))
 }
 
 ///
@@ -151,6 +147,16 @@ mod test {
     fn relative_path2() -> Result<()> {
         let rel = get_relative_path("../gsn2x/Cargo.toml", "./examples/modular/index.gsn.yaml")?;
         assert_eq!(rel, "../../../gsn2x/Cargo.toml");
+        Ok(())
+    }
+
+    #[test]
+    fn relative_path3() -> Result<()> {
+        let rel = get_relative_path(
+            "./examples/modular/sub1.gsn.yaml",
+            "./examples/modular/sub3.gsn.yaml",
+        )?;
+        assert_eq!(rel, "sub1.gsn.yaml");
         Ok(())
     }
 }

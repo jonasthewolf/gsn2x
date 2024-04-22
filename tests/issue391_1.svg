@@ -38,7 +38,7 @@ S1
 S1
 </text>
 </g>
-<a href="../tests/issue391_2.svg#node_g1">
+<a href="issue391_2.svg#node_g1">
 <g class="gsn_module_tests_issue391_2_yaml gsnelem gsnawaygoal" id="node_g1">
 <title>G1</title>
 <path class="border" d="M20,244 V192 H190 V244" fill-opacity="0" stroke="black" stroke-width="1"/>
@@ -48,7 +48,7 @@ G1
 <text font-family="Arial" font-size="12" x="27" y="230">
 G1
 </text>
-<a href="../tests/issue391_2.svg#node_g1">
+<a href="issue391_2.svg#node_g1">
 <path class="border" d="M20,244 h171 v28 h-171 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="54" y="265">
 tests_issue391_2_yaml

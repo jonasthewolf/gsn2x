@@ -21,7 +21,7 @@
 <style>
 @import url(https://github.com/jonasthewolf/gsn2x/blob/3439402d093ba54af4771b295e78f2488bd1b978/examples/modular/modular.css)
 </style>
-<a href="../../examples/modular/sub1.gsn.svg#node_a1">
+<a href="sub1.gsn.svg#node_a1">
 <g class="gsn_module_sub1 gsnelem gsnawayasmp" id="node_a1">
 <title>A1</title>
 <path class="border" d="M63,94 V41 A42,21,0,0,1,147,41 V94" fill-opacity="0" stroke="black" stroke-width="1"/>
@@ -31,7 +31,7 @@ A1
 <text font-family="Arial" font-size="12" x="70" y="79">
 TestABC
 </text>
-<a href="../../examples/modular/sub1.gsn.svg#node_a1">
+<a href="sub1.gsn.svg#node_a1">
 <path class="border" d="M63,94 h84 v28 h-84 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="97" y="115">
 Sub1
@@ -87,7 +87,7 @@ Some Context
 J
 </text>
 </g>
-<a href="../../examples/modular/sub1.gsn.svg#node_g3">
+<a href="sub1.gsn.svg#node_g3">
 <g class="gsn_module_sub1 gsnelem gsnawaygoal" id="node_g3">
 <title>G3</title>
 <path class="border" d="M332,300 V248 H482 V300" fill-opacity="0" stroke="black" stroke-width="1"/>
@@ -97,7 +97,7 @@ G3
 <text font-family="Arial" font-size="12" x="339" y="286">
 Conquer the submodules
 </text>
-<a href="../../examples/modular/sub1.gsn.svg#node_g3">
+<a href="sub1.gsn.svg#node_g3">
 <path class="border" d="M332,300 h150 v28 h-150 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="366" y="321">
 Sub1
