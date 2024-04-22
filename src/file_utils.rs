@@ -1,70 +1,74 @@
-use anyhow::{Context, Result};
-use std::{
-    fs::create_dir_all,
-    path::{Component, Path, PathBuf},
-};
+use anyhow::Result;
+use std::path::{Component, Path, PathBuf};
 
 ///
-/// Get a relative path from `source` to `target`.
+/// Get a relative path from `source` file to `target` file.
 /// If `target` is an absolute path, the absolute path to `target` is returned.
 /// If `source` is an absolute path, but not `target` we calculate `target`'s absolute path.
 /// The files don't need to exist.
 ///
-pub fn get_relative_path(target: &str, source: &str) -> Result<String> {
-    let source_path = &PathBuf::from(source);
-    let target_path = &PathBuf::from(target);
-    if target_path.is_absolute() {
-        Ok(target_path.to_string_lossy().to_string())
+pub fn get_relative_path(target: &str, source: &str) -> String {
+    let source_path = PathBuf::from(source);
+    let target_path = PathBuf::from(target);
+    let relative_target = if target_path.is_absolute() {
+        target_path
     } else if source_path.is_absolute() {
         // Target path is relative
         let mut cwd = PathBuf::from(".").canonicalize().unwrap(); // unwrap ok, since current working directory must exist
         cwd.push(target_path);
-        Ok(cwd.to_string_lossy().to_string())
+        cwd
     } else {
+        let source_components = get_stripped_components(&source_path);
+        let target_components = get_stripped_components(&target_path);
         // both are relative paths
-        let common = get_stripped_components(source_path)
-            .zip(get_stripped_components(target_path))
+        let common = source_components
+            .iter()
+            .zip(target_components.iter())
             .take_while(|(a, b)| a == b)
             .map(|(a, _)| a)
             .collect::<Vec<_>>();
         let mut relative_path = PathBuf::from_iter(
-            get_stripped_components(source_path)
+            source_components
+                .iter()
                 .skip(common.len())
                 .filter_map(|c| match c {
                     // Map Normals to Parents
                     std::path::Component::ParentDir => Some(c),
-                    std::path::Component::Normal(_) => Some(std::path::Component::ParentDir),
+                    std::path::Component::Normal(_) => Some(&std::path::Component::ParentDir),
                     _ => unreachable!(), // Root and Prefix should not be in relative paths.
                 })
                 .chain(
-                    get_stripped_components(target_path)
+                    target_components
+                        .iter()
                         .skip(common.len())
                         .filter_map(|c| match c {
                             // Map Normals to Normals
                             std::path::Component::ParentDir => Some(c),
-                            std::path::Component::Normal(n) => {
-                                Some(std::path::Component::Normal(n))
-                            }
+                            std::path::Component::Normal(_) => Some(c),
                             _ => unreachable!(), // Root and Prefix should not be in relative paths.
                         }),
                 ),
         );
         relative_path.push(target_path.file_name().unwrap()); // unwrap ok?
 
-        Ok(relative_path.to_string_lossy().to_string())
-    }
-    .map(|i| i.replace('\\', "/"))
+        relative_path
+    };
+    relative_target
+        .to_string_lossy()
+        .to_string()
+        .replace('\\', "/")
 }
 
 ///
-/// Removes filename and CurDir if there.
+/// Removes filename and CurDir if there is one.
+/// `path` must point to a file. Thus, there is a parent.
 ///
-///
-fn get_stripped_components(path: &Path) -> impl Iterator<Item = Component> {
+fn get_stripped_components(path: &Path) -> Vec<Component> {
     path.parent()
-        .unwrap() // TODO unwrap ok?
+        .unwrap() // unwrap ok, since function contract
         .components()
         .filter(|c| !matches!(c, std::path::Component::CurDir))
+        .collect()
 }
 
 ///
@@ -108,13 +112,6 @@ pub fn translate_to_output_path(
         let filename = input_path_buf.file_name().unwrap(); // unwrap ok, since file exists and we already read from it
         output_path_buf.push(filename);
     }
-    // TODO move to other place
-    if let Some(dir) = output_path_buf.parent() {
-        if !dir.exists() {
-            create_dir_all(dir)
-                .with_context(|| format!("Trying to create directory {}", dir.display()))?;
-        }
-    }
     Ok(output_path_buf.to_string_lossy().into_owned())
 }
 
@@ -138,14 +135,14 @@ mod test {
 
     #[test]
     fn relative_path() -> Result<()> {
-        let rel = get_relative_path("./Cargo.toml", "examples/modular/index.gsn.yaml")?;
+        let rel = get_relative_path("./Cargo.toml", "examples/modular/index.gsn.yaml");
         assert_eq!(rel, "../../Cargo.toml");
         Ok(())
     }
 
     #[test]
     fn relative_path2() -> Result<()> {
-        let rel = get_relative_path("../gsn2x/Cargo.toml", "./examples/modular/index.gsn.yaml")?;
+        let rel = get_relative_path("../gsn2x/Cargo.toml", "./examples/modular/index.gsn.yaml");
         assert_eq!(rel, "../../../gsn2x/Cargo.toml");
         Ok(())
     }
@@ -155,7 +152,7 @@ mod test {
         let rel = get_relative_path(
             "./examples/modular/sub1.gsn.yaml",
             "./examples/modular/sub3.gsn.yaml",
-        )?;
+        );
         assert_eq!(rel, "sub1.gsn.yaml");
         Ok(())
     }

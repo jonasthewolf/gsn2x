@@ -156,7 +156,7 @@ pub fn away_svg_from_gsn_node(
         let mut x = get_relative_path(
             module.output_path.as_ref().unwrap(), // unwrap ok, since output_path is set initially.
             source_module.output_path.as_ref().unwrap(), // unwrap ok, since output_path is set initially.
-        )?;
+        );
         x.push('#');
         x.push_str(&escape_node_id(identifier));
         Some(x)
@@ -211,9 +211,10 @@ pub fn render_architecture(
                 rank_increment: module.meta.rank_increment,
                 ..Default::default()
             };
-            let module_url = Some({
-                get_relative_path(module.output_path.as_ref().unwrap(), architecture_path)?
-            }); // TODO Check if we can do that better
+            let module_url = Some(get_relative_path(
+                module.output_path.as_ref().unwrap(),
+                architecture_path,
+            ));
             Ok((
                 k.to_owned(),
                 SvgNode::new_module(

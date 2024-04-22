@@ -6,7 +6,7 @@ use std::collections::BTreeMap;
 use std::error::Error;
 use std::fmt::Display;
 use std::io::BufReader;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use std::{collections::btree_map::Entry, fs::File};
 
 mod diagnostics;
@@ -74,6 +74,12 @@ fn main() -> Result<()> {
         Err(e) => Err(e),
         Ok(_) => {
             if !matches.get_flag("CHECK_ONLY") {
+                // Create output directory
+                if !std::path::Path::new(&output_directory).exists() {
+                    std::fs::create_dir_all(output_directory).with_context(|| {
+                        format!("Could not create output directory {output_directory}")
+                    })?;
+                }
                 let embed_stylesheets = matches.get_flag("EMBED_CSS");
                 let mut stylesheets = matches
                     .get_many::<String>("STYLESHEETS")
@@ -551,13 +557,23 @@ fn print_outputs(
     let output_path = render_options.output_directory.to_owned();
     if !render_options.skip_argument {
         for (_, module) in modules.iter().filter(|(m, _)| *m != "Unknown") {
-            let output_path = module.output_path.as_ref().unwrap(); // unwrap ok, since we set it for each module.
-            let mut output_file = Box::new(
-                File::create(output_path)
-                    .context(format!("Failed to open output file {output_path}"))?,
-            ) as Box<dyn std::io::Write>;
+            let output_path = Path::new(module.output_path.as_ref().unwrap()); // unwrap ok, since we set it for each module.
+            if !&output_path.parent().unwrap().exists() {
+                // Create output directory; unwraps are ok, since file always have a parent
+                std::fs::create_dir_all(output_path.parent().unwrap()).with_context(|| {
+                    format!(
+                        "Could not create directory {} for {}",
+                        output_path.display(),
+                        module.orig_file_name
+                    )
+                })?;
+            }
+            let mut output_file = Box::new(File::create(output_path).context(format!(
+                "Failed to open output file {}",
+                output_path.display()
+            ))?) as Box<dyn std::io::Write>;
 
-            print!("Rendering \"{output_path}\": ");
+            print!("Rendering \"{}\": ", output_path.display());
             render::render_argument(
                 &mut output_file,
                 &module.meta.name,
@@ -567,6 +583,7 @@ fn print_outputs(
             )?;
         }
     }
+    // Output directory is already created. No need to add that.
     if modules.iter().filter(|(m, _)| *m != "Unknown").count() > 1 {
         if let Some(architecture_filename) = &render_options.architecture_filename {
             let arch_output_path =
@@ -643,13 +660,10 @@ pub(crate) fn copy_and_prepare_stylesheets(
             // No need to transform path when embedding stylesheets
             stylesheet.to_owned()
         } else {
-            // TODO output = input will kill it
             // Copy stylesheet to output path
-            let css_path = PathBuf::from(&stylesheet);
-            let mut out_path = PathBuf::from(output_directory);
+            let css_path = PathBuf::from(&stylesheet).canonicalize()?;
+            let mut out_path = PathBuf::from(output_directory).canonicalize()?;
             if css_path != out_path {
-                // TODO move to a different place; maybe not even necessary
-                std::fs::create_dir_all(&out_path)?;
                 std::fs::copy(&css_path, &out_path).with_context(|| {
                     format!(
                         "Could not copy stylesheet from {} to {}",
