@@ -141,9 +141,16 @@ mod test {
     }
 
     #[test]
-    fn relative_path2() -> Result<()> {
+    fn relative_path2a() -> Result<()> {
         let rel = get_relative_path("../gsn2x/Cargo.toml", "./examples/modular/index.gsn.yaml");
         assert_eq!(rel, "../../../gsn2x/Cargo.toml");
+        Ok(())
+    }
+
+    #[test]
+    fn relative_path2b() -> Result<()> {
+        let rel = get_relative_path("./examples/modular/index.gsn.yaml", "../gsn2x/Cargo.toml");
+        assert_eq!(rel, "../../examples/modular/index.gsn.yaml");
         Ok(())
     }
 
@@ -154,6 +161,47 @@ mod test {
             "./examples/modular/sub3.gsn.yaml",
         );
         assert_eq!(rel, "sub1.gsn.yaml");
+        Ok(())
+    }
+
+    #[test]
+    fn relative_path_target_absolute() -> Result<()> {
+        let absolute = Path::new("./Cargo.toml")
+            .canonicalize()?
+            .to_string_lossy()
+            .to_string()
+            .replace('\\', "/");
+        let rel = get_relative_path(&absolute, "Cargo.lock");
+        assert_eq!(rel, absolute);
+        Ok(())
+    }
+
+    #[test]
+    fn relative_path_source_absolute() -> Result<()> {
+        let absolute_src = Path::new("./Cargo.toml")
+            .canonicalize()?
+            .to_string_lossy()
+            .to_string()
+            .replace('\\', "/");
+        let absolute_target = Path::new("./Cargo.lock")
+            .canonicalize()?
+            .to_string_lossy()
+            .to_string()
+            .replace('\\', "/");
+        let rel = get_relative_path("Cargo.lock", &absolute_src);
+        assert_eq!(rel, absolute_target);
+        Ok(())
+    }
+
+    #[test]
+    fn translate_absolute() -> Result<()> {
+        let absolute = Path::new("./examples/example.gsn.yaml")
+            .canonicalize()?
+            .to_string_lossy()
+            .to_string()
+            .replace('\\', "/");
+        let out_path = translate_to_output_path(".", &absolute, Some("svg"))?;
+        assert_eq!(out_path, "./example.gsn.svg");
         Ok(())
     }
 }
