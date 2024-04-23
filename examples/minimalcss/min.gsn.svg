@@ -20,7 +20,7 @@
 </marker>
 <style type="text/css">
 
-.additionalclass1 path { fill: red; }
+.additionalclass1 path { fill: red; fill-opacity: 1;}
 .additionalclass1 text,a { fill: white; }
 
 </style>

@@ -46,5 +46,9 @@ The command line is now simplified to:
 
     gsn2x index.gsn.yaml
 
+Or even (if you name the entry point file: `index.gsn.yaml`):
+
+    gsn2x
+
 Of course, "used" modules can also include other modules on their own.
 There is a check implemented to prevent circular includes.
