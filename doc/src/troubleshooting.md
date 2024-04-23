@@ -13,7 +13,8 @@ Error: Failed to parse YAML from file <filename>
 Caused by:
     No valid GSN element can be found starting from line <n>.
     This typically means that the YAML is completely invalid, or 
-    the `text:` attribute is missing for an element.
+    the `text:` attribute is missing for an element,
+    or `supportedBy` or `inContextOf` are not followed by a list ([]).
     Please see the documentation for details (https://jonasthewolf.github.io/gsn2x/troubleshooting.html).
     Original error message: data did not match any variant of untagged enum GsnDocument.
 ```
