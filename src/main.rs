@@ -373,7 +373,8 @@ fn read_inputs(
                 anyhow!(format!(
                     "No valid GSN element can be found starting from line {}.\n\
                      This typically means that the YAML is completely invalid, or \n\
-                     the `text:` attribute is missing for an element.\n\
+                     the `text:` attribute is missing for an element, 
+                     or `supportedBy` or `inContextOf` are not followed by a list ([]).\n\
                      Please see the documentation for details (https://jonasthewolf.github.io/gsn2x/troubleshooting.html).\n\
                      Original error message: {}.",
                     e.location()
