@@ -75,6 +75,7 @@ An example could look like this:
 ```css
 g:target path {
     fill: lightsteelblue;
+    fill-opacity: 1;
 }
 ```
 

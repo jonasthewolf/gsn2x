@@ -12,6 +12,7 @@ use serde_yaml::Value;
 use std::{
     collections::{BTreeMap, BTreeSet},
     fmt::Display,
+    path::{Path, PathBuf},
 };
 
 pub mod check;
@@ -90,7 +91,7 @@ pub struct GsnNode {
     pub(crate) rank_increment: Option<usize>,
     pub(crate) horizontal_index: Option<HorizontalIndex>,
     pub(crate) node_type: Option<GsnNodeType>,
-    pub(crate) word_wrap: Option<u32>,
+    pub(crate) char_wrap: Option<u32>,
     #[serde(default, deserialize_with = "deser_acp")]
     pub(crate) acp: BTreeMap<String, Vec<String>>,
     #[serde(flatten, deserialize_with = "deser_additional")]
@@ -268,17 +269,35 @@ fn get_node_type_from_text(text: &str) -> Option<GsnNodeType> {
     }
 }
 
-#[derive(Debug, Default, Deserialize)]
+#[derive(Clone, Debug, Default, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct ModuleInformation {
     pub(crate) name: String,
     pub(crate) brief: Option<String>,
-    pub(crate) extends: Option<Vec<ExtendsModule>>,
+    #[serde(default)]
+    pub(crate) extends: Vec<ExtendsModule>,
     pub(crate) horizontal_index: Option<HorizontalIndex>,
     pub(crate) rank_increment: Option<usize>,
-    pub(crate) _word_wrap: Option<u32>,
-    #[serde(flatten)]
+    pub(crate) char_wrap: Option<u32>,
+    #[serde(default)]
+    pub(crate) uses: Vec<String>,
+    #[serde(flatten, deserialize_with = "deser_additional")]
     pub(crate) additional: BTreeMap<String, String>,
+}
+
+impl ModuleInformation {
+    pub fn new(name: String) -> Self {
+        ModuleInformation {
+            name,
+            brief: None,
+            extends: vec![],
+            uses: vec![],
+            char_wrap: None,
+            horizontal_index: None,
+            rank_increment: None,
+            additional: BTreeMap::new(),
+        }
+    }
 }
 
 #[derive(Debug, Deserialize)]
@@ -288,13 +307,45 @@ pub enum GsnDocument {
     ModuleInformation(ModuleInformation),
 }
 
+#[derive(Clone, Default)]
+pub enum Origin {
+    #[default]
+    CommandLine,
+    File(String),
+    Excluded,
+}
+
+impl Display for Origin {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Origin::CommandLine => f.write_str("command line"),
+            Origin::File(file) => f.write_fmt(format_args!("file {file}")),
+            Origin::Excluded => f.write_str("automatic extension by gsn2x"),
+        }
+    }
+}
+
 #[derive(Default)]
 pub struct Module {
-    pub relative_module_path: String,
+    pub orig_file_name: String,
+    pub canonical_path: Option<PathBuf>,
+    pub output_path: Option<String>,
+    pub origin: Origin,
     pub meta: ModuleInformation,
 }
 
-#[derive(Debug, Deserialize)]
+pub trait FindModuleByPath {
+    fn find_module_by_path(&self, module_path: &Path) -> Option<&Module>;
+}
+
+impl FindModuleByPath for BTreeMap<String, Module> {
+    fn find_module_by_path(&self, module_path: &Path) -> Option<&Module> {
+        self.values()
+            .find(|m| m.canonical_path == Some(module_path.to_path_buf()))
+    }
+}
+
+#[derive(Clone, Debug, Deserialize)]
 pub struct ExtendsModule {
     pub module: String,
     pub develops: BTreeMap<String, Vec<String>>,
@@ -308,41 +359,56 @@ pub fn extend_modules(
     diags: &mut Diagnostics,
     nodes: &mut BTreeMap<String, GsnNode>,
     modules: &BTreeMap<String, Module>,
-) {
+) -> Result<(), ()> {
+    let mut errors = 0;
     for (module_name, module_info) in modules {
-        if let Some(extensions) = &module_info.meta.extends {
-            for ext in extensions {
-                if !modules.contains_key(&ext.module) {
-                    diags.add_error(
-                            Some(module_name),
-                            format!("C09: Module {} is not found, but is supposed to be extended by module {}.", ext.module, module_name),
-                        );
-                }
-                for (foreign_id, local_ids) in &ext.develops {
-                    if let Some(foreign_node) = nodes.get_mut(foreign_id) {
-                        if foreign_node.module != ext.module {
-                            diags.add_error(
+        for ext in &module_info.meta.extends {
+            if !modules.contains_key(&ext.module) {
+                diags.add_error(
+                    Some(module_name),
+                    format!(
+                        "C09: Module {} is not found, but is supposed to be extended by module {}.",
+                        ext.module, module_name
+                    ),
+                );
+                errors += 1;
+            }
+            for (foreign_id, local_ids) in &ext.develops {
+                if let Some(foreign_node) = nodes.get_mut(foreign_id) {
+                    if foreign_node.module != ext.module {
+                        diags.add_error(
                                     Some(module_name),
                                     format!("C10: Element {} does not exist in module {}, but is supposed to be extended by {}.", foreign_id, ext.module, local_ids.join(",")),
                                 );
-                        } else if foreign_node.undeveloped != Some(true) {
-                            diags.add_error(
+                        errors += 1;
+                    } else if foreign_node.undeveloped != Some(true) {
+                        diags.add_error(
                                     Some(module_name),
                                     format!("C10: Element {} is not undeveloped, but is supposed to be extended by {}.", foreign_id, local_ids.join(",")),
                                 );
-                        } else {
-                            foreign_node.supported_by = local_ids.to_vec();
-                            foreign_node.undeveloped = Some(false);
-                        }
+                        errors += 1;
                     } else {
-                        diags.add_error(
-                                Some(module_name),
-                                format!("C10: Element {} does not exist, but is supposed to be extended by {}.", foreign_id, local_ids.join(",")),
-                            );
+                        foreign_node.supported_by = local_ids.to_vec();
+                        foreign_node.undeveloped = Some(false);
                     }
+                } else {
+                    diags.add_error(
+                        Some(module_name),
+                        format!(
+                            "C10: Element {} does not exist, but is supposed to be extended by {}.",
+                            foreign_id,
+                            local_ids.join(",")
+                        ),
+                    );
+                    errors += 1;
                 }
             }
         }
+    }
+    if errors == 0 {
+        Ok(())
+    } else {
+        Err(())
     }
 }
 

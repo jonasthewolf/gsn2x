@@ -1,0 +1,3 @@
+module:
+  name: B
+  uses: [circle3.yaml]

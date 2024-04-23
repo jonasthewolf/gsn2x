@@ -1,6 +1,6 @@
 use crate::dirgraphsvg::edges::EdgeType;
 use crate::dirgraphsvg::{escape_node_id, nodes::SvgNode};
-use crate::file_utils::{get_filename, get_relative_path, set_extension, translate_to_output_path};
+use crate::file_utils::{get_filename, get_relative_path};
 use crate::gsn::{GsnNode, GsnNodeType, Module};
 use anyhow::Result;
 use clap::ArgMatches;
@@ -28,9 +28,9 @@ pub struct RenderOptions<'a> {
     pub architecture_filename: Option<&'a str>,
     pub evidences_filename: Option<&'a str>,
     pub complete_filename: Option<&'a str>,
-    pub output_directory: Option<&'a str>,
+    pub output_directory: &'a str,
     pub skip_argument: bool,
-    pub word_wrap: Option<u32>,
+    pub char_wrap: Option<u32>,
 }
 
 impl<'a> RenderOptions<'a> {
@@ -38,7 +38,7 @@ impl<'a> RenderOptions<'a> {
         matches: &'a ArgMatches,
         stylesheets: Vec<String>,
         embed_stylesheets: bool,
-        output_directory: Option<&'a String>,
+        output_directory: &'a str,
     ) -> Self {
         let legend = get_render_legend(matches);
         let layers = matches
@@ -82,9 +82,9 @@ impl<'a> RenderOptions<'a> {
                     .get_one::<String>("COMPLETE_VIEW")
                     .and_then(|p| get_filename(p)),
             },
-            output_directory: output_directory.map(|x| x.as_str()),
+            output_directory,
             skip_argument: matches.get_flag("NO_ARGUMENT_VIEW"),
-            word_wrap: matches.get_one::<u32>("WORD_WRAP").copied(),
+            char_wrap: matches.get_one::<u32>("CHAR_WRAP").copied(),
         }
     }
 }
@@ -154,10 +154,9 @@ pub fn away_svg_from_gsn_node(
         None
     } else {
         let mut x = get_relative_path(
-            &module.relative_module_path,
-            &source_module.relative_module_path,
-            Some("svg"),
-        )?;
+            module.output_path.as_ref().unwrap(), // unwrap ok, since output_path is set initially.
+            source_module.output_path.as_ref().unwrap(), // unwrap ok, since output_path is set initially.
+        );
         x.push('#');
         x.push_str(&escape_node_id(identifier));
         Some(x)
@@ -195,7 +194,6 @@ pub fn render_architecture(
     dependencies: BTreeMap<String, BTreeMap<String, EdgeType>>,
     render_options: &RenderOptions,
     architecture_path: &str,
-    output_path: &str,
 ) -> Result<()> {
     let mut dg = crate::dirgraphsvg::DirGraph::default();
     let svg_nodes: BTreeMap<String, SvgNode> = modules
@@ -213,15 +211,10 @@ pub fn render_architecture(
                 rank_increment: module.meta.rank_increment,
                 ..Default::default()
             };
-            let module_url = Some({
-                let target_svg = set_extension(&module.relative_module_path, "svg");
-                let target_path = translate_to_output_path(output_path, &target_svg)?;
-                get_relative_path(
-                    &target_path,
-                    architecture_path,
-                    None, // is already made "svg" above
-                )?
-            });
+            let module_url = Some(get_relative_path(
+                module.output_path.as_ref().unwrap(),
+                architecture_path,
+            ));
             Ok((
                 k.to_owned(),
                 SvgNode::new_module(
@@ -230,7 +223,7 @@ pub fn render_architecture(
                     render_options.masked_elements.contains(&module.meta.name),
                     &[],
                     module_url,
-                    render_options.word_wrap,
+                    module.meta.char_wrap.or(render_options.char_wrap),
                 ),
             ))
         })
@@ -297,7 +290,7 @@ pub fn render_complete(
                     node,
                     render_options.masked_elements.contains(id),
                     &render_options.layers,
-                    render_options.word_wrap,
+                    render_options.char_wrap,
                 ),
             )
         })
@@ -344,7 +337,10 @@ pub fn render_argument(
                     node,
                     render_options.masked_elements.contains(id),
                     &render_options.layers,
-                    render_options.word_wrap,
+                    modules
+                        .get(module_name)
+                        .and_then(|m| m.meta.char_wrap)
+                        .or(render_options.char_wrap),
                 ),
             )
         })
@@ -365,7 +361,10 @@ pub fn render_argument(
                         modules.get(&node.module).unwrap(),
                         modules.get(module_name).unwrap(),
                         &render_options.layers,
-                        render_options.word_wrap,
+                        modules
+                            .get(module_name)
+                            .and_then(|m| m.meta.char_wrap)
+                            .or(render_options.char_wrap),
                     )?,
                 ))
             })

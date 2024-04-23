@@ -24,3 +24,31 @@ To influence the position in the architecture view, you can use the `horizontalI
 
 You can use the `-G` option to suppress the legend completely, 
 or the `-g` option to limit it to `name`, `brief` and the time and date of generation of the SVG.
+
+## Including other modules
+
+Multiple modules, i.e. files, can be provided at the command line:
+
+    gsn2x index.gsn.yaml required_module1.gsn.yaml required_module2.gsn.yaml required_module3.gsn.yaml
+
+However, this might requires long and complex calls at the command line for reasonably large arguments.
+
+Another way to use multiple modules is to "use" them from others. You can do so by adding a `uses` attribute to a module:
+
+```yaml
+module:
+   name: MainModule
+   brief: This is the index.gsn.yaml file
+   uses: [required_module1.yaml, required_module2.gsn.yaml, required_module3.gsn.yaml]
+```
+
+The command line is now simplified to:
+
+    gsn2x index.gsn.yaml
+
+Or even (if you name the entry point file: `index.gsn.yaml`):
+
+    gsn2x
+
+Of course, "used" modules can also include other modules on their own.
+There is a check implemented to prevent circular includes.

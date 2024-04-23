@@ -15,8 +15,10 @@ pub struct DiagMsg {
 impl Display for DiagMsg {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self.diag_type {
-            DiagType::Error => write!(f, "Error:")?,
-            DiagType::Warning => write!(f, "Warning:")?,
+            // DiagType::Error => f.write_str("\x1b[31;1mError:\x1b[0m")?,
+            // DiagType::Warning => f.write_str("\x1b[33;1mWarning:\x1b[0m")?,
+            DiagType::Error => f.write_str("Error:")?,
+            DiagType::Warning => f.write_str("Warning:")?,
         }
         if let Some(module) = &self.module {
             write!(f, " ({module})")?;
@@ -41,7 +43,7 @@ impl Diagnostics {
         self.add_msg(DiagType::Warning, module, msg);
     }
 
-    pub fn add_msg(&mut self, dtype: DiagType, module: Option<&str>, msg: String) {
+    fn add_msg(&mut self, dtype: DiagType, module: Option<&str>, msg: String) {
         match dtype {
             DiagType::Error => self.errors += 1,
             DiagType::Warning => self.warnings += 1,

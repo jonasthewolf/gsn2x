@@ -18,33 +18,33 @@ The output is an argument view in SVG format and automatically written to `<your
 ## Options
 
     Usage: gsn2x [OPTIONS] <INPUT>...
-    
+
     Arguments:
-      <INPUT>...  Sets the input file(s) to use. Only relative paths are accepted.
-    
+      <INPUT>...  Sets the input file(s) to use.
+
     Options:
       -h, --help     Print help
       -V, --version  Print version
-    
+
     CHECKS:
       -c, --check                      Only check the input file(s), but do not output graphs.
       -x, --exclude <EXCLUDED_MODULE>  Exclude this module from reference checks.
-    
+
     OUTPUT:
       -N, --no-arg                         Do not output of argument view for provided input files.
-      -f, --full <COMPLETE_VIEW>           Output the complete view to file with name <COMPLETE_VIEW>. [default: complete.svg]
+      -f, --full <COMPLETE_VIEW>           Output the complete view to file with name <COMPLETE_VIEW>.    [default: complete.svg]
       -F, --no-full                        Do not output the complete view.
-      -a, --arch <ARCHITECTURE_VIEW>       Output the architecture view to file with name <ARCHITECTURE_VIEW>. [default:     architecture.svg]
+      -a, --arch <ARCHITECTURE_VIEW>       Output the architecture view to file with name <ARCHITECTURE_VIEW>. [default: architecture.svg]
       -A, --no-arch                        Do not output the architecture view.
       -e, --evidences <EVIDENCES>          Output list of all evidences to file with name <EVIDENCES>. [default: evidences.md]
       -E, --no-evidences                   Do not output list of all evidences.
-      -o, --output-dir <OUTPUT_DIRECTORY>  Emit all output files to directory <OUTPUT_DIRECTORY>. [default: .]
-    
+      -o, --output-dir <OUTPUT_DIRECTORY>  Emit all output files to directory <OUTPUT_DIRECTORY>.      [default: .]
+
     OUTPUT MODIFICATION:
       -l, --layer <LAYERS>            Output additional layer. Can be used multiple times.
       -s, --stylesheet <STYLESHEETS>  Links a stylesheet in SVG output. Can be used multiple times.
-      -t, --embed-css                 Embed stylehseets instead of linking them.
+      -t, --embed-css                 Embed stylesheets instead of linking them.
+      -m, --mask <MASKED_MODULE>      Do not show this module in views.
       -G, --no-legend                 Do not output a legend based on module information.
       -g, --full-legend               Output a legend based on all module information.
-      -w, --wrap <WORD_WRAP>          Define the number of characters after which a line of text is wrapped.
-    
+      -w, --wrap <CHAR_WRAP>          Define the number of characters after which a line of text is wrapped.

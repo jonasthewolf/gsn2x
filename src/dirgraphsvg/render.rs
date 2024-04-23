@@ -217,7 +217,7 @@ fn setup_basics(mut document: Document) -> Document {
         .set("points", "0 0, 10 4.5, 0 9, 0 0")
         .set("stroke", "black")
         .set("stroke-width", 1u32)
-        .set("fill", "none");
+        .set("fill-opacity", "0");
     let incontext_arrow = Marker::new()
         .set("id", "incontextof_arrow")
         .set("markerWidth", 10u32)
@@ -232,17 +232,17 @@ fn setup_basics(mut document: Document) -> Document {
         .set("points", "0 0, 6 4.5, 0 9")
         .set("stroke", "black")
         .set("stroke-width", 1u32)
-        .set("fill", "none");
+        .set("fill-opacity", "0");
     let composite_polyline2 = Polyline::new()
         .set("points", "4 0, 10 4.5, 4 9")
         .set("stroke", "black")
         .set("stroke-width", 1u32)
-        .set("fill", "none");
+        .set("fill-opacity", "0");
     let composite_polyline3 = Polyline::new()
         .set("points", "0 4.5, 10 4.5")
         .set("stroke", "black")
         .set("stroke-width", 1u32)
-        .set("fill", "none");
+        .set("fill-opacity", "0");
     let composite_arrow = Marker::new()
         .set("id", "composite_arrow")
         .set("markerWidth", 10u32)

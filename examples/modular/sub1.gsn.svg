@@ -8,20 +8,20 @@
 <rect fill="black" height="10" stroke="black" stroke-width="1" width="10" x="0" y="0"/>
 </symbol>
 <marker id="composite_arrow" markerHeight="9" markerUnits="userSpaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
-<polyline fill="none" points="0 0, 6 4.5, 0 9" stroke="black" stroke-width="1"/>
-<polyline fill="none" points="4 0, 10 4.5, 4 9" stroke="black" stroke-width="1"/>
-<polyline fill="none" points="0 4.5, 10 4.5" stroke="black" stroke-width="1"/>
+<polyline fill-opacity="0" points="0 0, 6 4.5, 0 9" stroke="black" stroke-width="1"/>
+<polyline fill-opacity="0" points="4 0, 10 4.5, 4 9" stroke="black" stroke-width="1"/>
+<polyline fill-opacity="0" points="0 4.5, 10 4.5" stroke="black" stroke-width="1"/>
 </marker>
 <marker id="supportedby_arrow" markerHeight="9" markerUnits="userSpaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
 <polyline fill="black" points="0 0, 10 4.5, 0 9"/>
 </marker>
 <marker id="incontextof_arrow" markerHeight="9" markerUnits="userSpaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
-<polyline fill="none" points="0 0, 10 4.5, 0 9, 0 0" stroke="black" stroke-width="1"/>
+<polyline fill-opacity="0" points="0 0, 10 4.5, 0 9, 0 0" stroke="black" stroke-width="1"/>
 </marker>
 <style>
 @import url(https://github.com/jonasthewolf/gsn2x/blob/3439402d093ba54af4771b295e78f2488bd1b978/examples/modular/modular.css)
 </style>
-<a href="./main.gsn.svg#node_s1">
+<a href="index.gsn.svg#node_s1">
 <g class="gsn_module_main gsnelem gsnstgy" id="node_s1">
 <title>S1</title>
 <path class="border" d="M159,37 L293,37 L279,83 L145,83 z" fill-opacity="0" stroke="black" stroke-width="1"/>
@@ -46,7 +46,7 @@ TestABC
 A
 </text>
 </g>
-<a href="./main.gsn.svg#node_g1">
+<a href="index.gsn.svg#node_g1">
 <g class="gsn_module_main gsnelem gsnawaygoal" id="node_g1">
 <title>G1</title>
 <path class="border" d="M444,72 V20 H528 V72" fill-opacity="0" stroke="black" stroke-width="1"/>
@@ -56,7 +56,7 @@ G1
 <text font-family="Arial" font-size="12" x="451" y="58">
 Main Goal
 </text>
-<a href="./main.gsn.svg#node_g1">
+<a href="index.gsn.svg#node_g1">
 <path class="border" d="M444,72 h84 v28 h-84 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="478" y="93">
 Main
@@ -65,7 +65,7 @@ Main
 <use href="#module_icon" x="451" y="79"/>
 </g>
 </a>
-<a href="./sub3.gsn.svg#node_c2">
+<a href="sub3.gsn.svg#node_c2">
 <g class="gsn_module_sub3 gsnelem gsnawayctxt" id="node_c2">
 <title>C2</title>
 <path class="border" d="M20,207 V155 C20,151,24,147,28,147 h68 C100,147,104,151,104,155 V207" fill-opacity="0" stroke="black" stroke-width="1"/>
@@ -75,7 +75,7 @@ C2
 <text font-family="Arial" font-size="12" x="27" y="193">
 Context 2
 </text>
-<a href="./sub3.gsn.svg#node_c2">
+<a href="sub3.gsn.svg#node_c2">
 <path class="border" d="M20,207 h84 v28 h-84 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="54" y="228">
 Sub3
@@ -94,7 +94,7 @@ G3
 Conquer the submodules
 </text>
 </g>
-<a href="./main.gsn.svg#node_j1">
+<a href="index.gsn.svg#node_j1">
 <g class="gsn_module_main gsnelem gsnawayjust" id="node_j1">
 <title>J1</title>
 <path class="border" d="M334,214 V162 A45,22,0,0,1,424,162 V214" fill-opacity="0" stroke="black" stroke-width="1"/>
@@ -104,7 +104,7 @@ J1
 <text font-family="Arial" font-size="12" x="341" y="200">
 Some Context
 </text>
-<a href="./main.gsn.svg#node_j1">
+<a href="index.gsn.svg#node_j1">
 <path class="border" d="M334,214 h91 v28 h-91 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="368" y="235">
 Main
@@ -116,7 +116,7 @@ J
 </text>
 </g>
 </a>
-<a href="./sub3.gsn.svg#node_sn1">
+<a href="sub3.gsn.svg#node_sn1">
 <g class="gsn_module_sub3 gsnelem gsnawaysltn" id="node_sn1">
 <title>Sn1</title>
 <path class="border" d="M177,376 V324 A42,42,0,0,1,261,324 V376" fill-opacity="0" stroke="black" stroke-width="1"/>
@@ -126,7 +126,7 @@ Sn1
 <text font-family="Arial" font-size="12" x="184" y="362">
 Solution 1
 </text>
-<a href="./sub3.gsn.svg#node_sn1">
+<a href="sub3.gsn.svg#node_sn1">
 <path class="border" d="M177,376 h84 v28 h-84 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="211" y="397">
 Sub3
@@ -135,9 +135,9 @@ Sub3
 <use href="#module_icon" x="184" y="383"/>
 </g>
 </a>
-<path class="gsnedge gsninctxt" d="M444,60 C414,60,434,60,414,60" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninctxt" d="M294,191 C324,191,304,191,324,191" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninctxt" d="M144,191 C114,191,134,191,114,191" fill="none" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M219,214 C219,244,219,252,219,272" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M219,83 C219,113,219,138,219,158" fill="none" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M444,60 C414,60,434,60,414,60" fill-opacity="0" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M294,191 C324,191,304,191,324,191" fill-opacity="0" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M144,191 C114,191,134,191,114,191" fill-opacity="0" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M219,214 C219,244,219,252,219,272" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M219,83 C219,113,219,138,219,158" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 </svg>

@@ -185,7 +185,7 @@ pub(super) fn render_edge(
     };
     let mut e = Path::new()
         .set("d", data)
-        .set("fill", "none")
+        .set("fill-opacity", "0")
         .set("stroke", "black")
         .set("stroke-width", 1u32);
     if let Some(arrow_id) = arrow_end_id {
