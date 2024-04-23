@@ -89,7 +89,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="basic_usage.html"><strong aria-hidden="true">1.</strong> Basic Usage</a></li><li class="chapter-item expanded "><a href="yaml_syntax.html" class="active"><strong aria-hidden="true">2.</strong> Syntax</a></li><li class="chapter-item expanded "><a href="checks.html"><strong aria-hidden="true">3.</strong> Checks</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="advanced_usecases.html"><strong aria-hidden="true">4.</strong> Advanced Use-cases</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="adv_layout.html"><strong aria-hidden="true">4.1.</strong> Layout</a></li><li class="chapter-item expanded "><a href="adv_layers.html"><strong aria-hidden="true">4.2.</strong> Layers</a></li><li class="chapter-item expanded "><a href="adv_stylesheets.html"><strong aria-hidden="true">4.3.</strong> Stylesheets</a></li><li class="chapter-item expanded "><a href="adv_evidences.html"><strong aria-hidden="true">4.4.</strong> Evidences</a></li></ol></li><li class="chapter-item expanded "><a href="mod_extension.html"><strong aria-hidden="true">5.</strong> Modular Extension</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="mod_distdev.html"><strong aria-hidden="true">5.1.</strong> Distributed Development</a></li><li class="chapter-item expanded "><a href="mod_info.html"><strong aria-hidden="true">5.2.</strong> Module Info</a></li></ol></li><li class="chapter-item expanded "><a href="confidence.html"><strong aria-hidden="true">6.</strong> Confidence Argument Extension</a></li><li class="chapter-item expanded "><a href="interfacing.html"><strong aria-hidden="true">7.</strong> Interfacing</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="standard_support.html"><strong aria-hidden="true">8.</strong> Standard Support</a></li><li class="chapter-item expanded "><a href="troubleshooting.html"><strong aria-hidden="true">9.</strong> Troubleshooting</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="design_goals.html"><strong aria-hidden="true">10.</strong> Design Goals</a></li><li class="chapter-item expanded "><a href="history.html"><strong aria-hidden="true">11.</strong> History</a></li><li class="chapter-item expanded "><a href="migration_v2x.html"><strong aria-hidden="true">12.</strong> Migration from v2.x</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="basic_usage.html"><strong aria-hidden="true">1.</strong> Basic Usage</a></li><li class="chapter-item expanded "><a href="yaml_syntax.html" class="active"><strong aria-hidden="true">2.</strong> Syntax</a></li><li class="chapter-item expanded "><a href="checks.html"><strong aria-hidden="true">3.</strong> Checks</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="advanced_usecases.html"><strong aria-hidden="true">4.</strong> Advanced Use-cases</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="adv_linebreaks.html"><strong aria-hidden="true">4.1.</strong> Line Breaks</a></li><li class="chapter-item expanded "><a href="adv_layout.html"><strong aria-hidden="true">4.2.</strong> Layout</a></li><li class="chapter-item expanded "><a href="adv_layers.html"><strong aria-hidden="true">4.3.</strong> Layers</a></li><li class="chapter-item expanded "><a href="adv_stylesheets.html"><strong aria-hidden="true">4.4.</strong> Stylesheets</a></li><li class="chapter-item expanded "><a href="adv_evidences.html"><strong aria-hidden="true">4.5.</strong> Evidences</a></li></ol></li><li class="chapter-item expanded "><a href="mod_extension.html"><strong aria-hidden="true">5.</strong> Modular Extension</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="mod_distdev.html"><strong aria-hidden="true">5.1.</strong> Distributed Development</a></li><li class="chapter-item expanded "><a href="mod_info.html"><strong aria-hidden="true">5.2.</strong> Module Info</a></li></ol></li><li class="chapter-item expanded "><a href="confidence.html"><strong aria-hidden="true">6.</strong> Confidence Argument Extension</a></li><li class="chapter-item expanded "><a href="interfacing.html"><strong aria-hidden="true">7.</strong> Interfacing</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="standard_support.html"><strong aria-hidden="true">8.</strong> Standard Support</a></li><li class="chapter-item expanded "><a href="troubleshooting.html"><strong aria-hidden="true">9.</strong> Troubleshooting</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="design_goals.html"><strong aria-hidden="true">10.</strong> Design Goals</a></li><li class="chapter-item expanded "><a href="history.html"><strong aria-hidden="true">11.</strong> History</a></li><li class="chapter-item expanded "><a href="migration_v2x.html"><strong aria-hidden="true">12.</strong> Migration from v2.x</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
@@ -216,39 +216,23 @@ C1:
 </code></pre>
 <p>Please see <a href="examples/example.gsn.yaml">examples/example.gsn.yaml</a> for an example of the used syntax.</p>
 <h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
-<div class="table-wrapper"><table><thead><tr><th>Attribute</th><th>Optional</th></tr></thead><tbody>
-<tr><td>text</td><td>no</td></tr>
-<tr><td>supportedBy</td><td>yes</td></tr>
-<tr><td>inContextOf</td><td>yes</td></tr>
-<tr><td>undeveloped<sup class="footnote-reference"><a href="#nu">1</a></sup></td><td>yes</td></tr>
-<tr><td>url</td><td>yes</td></tr>
-<tr><td>classes<sup class="footnote-reference"><a href="#nc">2</a></sup></td><td>yes</td></tr>
-<tr><td>nodeType<sup class="footnote-reference"><a href="#nt">3</a></sup></td><td>yes</td></tr>
-<tr><td>rankIncrement<sup class="footnote-reference"><a href="#nl">4</a></sup></td><td>yes</td></tr>
-<tr><td>horizontalIndex<sup class="footnote-reference"><a href="#nl">4</a></sup></td><td>yes</td></tr>
-<tr><td>wordWrap<sup class="footnote-reference"><a href="#nw">5</a></sup></td><td>yes</td></tr>
-<tr><td>acp<sup class="footnote-reference"><a href="#na">6</a></sup></td><td>yes</td></tr>
+<div class="table-wrapper"><table><thead><tr><th>Attribute</th><th>Optional</th><th>Notes</th></tr></thead><tbody>
+<tr><td>text</td><td>no</td><td></td></tr>
+<tr><td>supportedBy</td><td>yes</td><td></td></tr>
+<tr><td>inContextOf</td><td>yes</td><td></td></tr>
+<tr><td>undeveloped</td><td>yes</td><td>Mutually exclusive to <code>supportedBy</code>.</td></tr>
+<tr><td>url</td><td>yes</td><td></td></tr>
+<tr><td>classes</td><td>yes</td><td>See <a href="./adv_stylesheets.html">Stylesheets</a>.</td></tr>
+<tr><td>nodeType</td><td>yes</td><td>See footnote<sup class="footnote-reference"><a href="#nt">1</a></sup></td></tr>
+<tr><td>rankIncrement</td><td>yes</td><td>See <a href="./adv_layout.html">Layout</a>.</td></tr>
+<tr><td>horizontalIndex</td><td>yes</td><td>See <a href="./adv_layout.html">Layout</a>.</td></tr>
+<tr><td>charWrap</td><td>yes</td><td>See <a href="./adv_linebreaks.html">Line Breaks</a>.</td></tr>
+<tr><td>acp</td><td>yes</td><td>See <a href="./confidence.html">Confidence Argument Extension</a>.</td></tr>
 </tbody></table>
 </div>
-<div class="footnote-definition" id="nu"><sup class="footnote-definition-label">1</sup>
-<p>Mutually exclusive to <code>supportedBy</code>.</p>
-</div>
-<div class="footnote-definition" id="nc"><sup class="footnote-definition-label">2</sup>
-<p>See <a href="./adv_stylesheets.html">Stylesheets</a>.</p>
-</div>
-<div class="footnote-definition" id="nl"><sup class="footnote-definition-label">4</sup>
-<p>See <a href="./adv_layout.html">Layout</a>.</p>
-</div>
-<div class="footnote-definition" id="nt"><sup class="footnote-definition-label">3</sup>
+<div class="footnote-definition" id="nt"><sup class="footnote-definition-label">1</sup>
 <p>When providing a <code>nodeType</code> you do not need to follow the standard prefix scheme above.
 Just give <code>Goal</code>, <code>Assumption</code>, <code>Justification</code>, <code>Solution</code>, <code>Context</code> and <code>Strategy</code> to give the type of the element.</p>
-</div>
-<div class="footnote-definition" id="nw"><sup class="footnote-definition-label">5</sup>
-<p>If the <code>wordWrap</code> attribute for an element is given, it will be used instead of the global option given
-at the command line.</p>
-</div>
-<div class="footnote-definition" id="na"><sup class="footnote-definition-label">6</sup>
-<p>See <a href="./confidence.html">Confidence Argument Extension</a>.</p>
 </div>
 
                     </main>

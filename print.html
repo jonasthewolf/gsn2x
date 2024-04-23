@@ -90,7 +90,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="basic_usage.html"><strong aria-hidden="true">1.</strong> Basic Usage</a></li><li class="chapter-item expanded "><a href="yaml_syntax.html"><strong aria-hidden="true">2.</strong> Syntax</a></li><li class="chapter-item expanded "><a href="checks.html"><strong aria-hidden="true">3.</strong> Checks</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="advanced_usecases.html"><strong aria-hidden="true">4.</strong> Advanced Use-cases</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="adv_layout.html"><strong aria-hidden="true">4.1.</strong> Layout</a></li><li class="chapter-item expanded "><a href="adv_layers.html"><strong aria-hidden="true">4.2.</strong> Layers</a></li><li class="chapter-item expanded "><a href="adv_stylesheets.html"><strong aria-hidden="true">4.3.</strong> Stylesheets</a></li><li class="chapter-item expanded "><a href="adv_evidences.html"><strong aria-hidden="true">4.4.</strong> Evidences</a></li></ol></li><li class="chapter-item expanded "><a href="mod_extension.html"><strong aria-hidden="true">5.</strong> Modular Extension</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="mod_distdev.html"><strong aria-hidden="true">5.1.</strong> Distributed Development</a></li><li class="chapter-item expanded "><a href="mod_info.html"><strong aria-hidden="true">5.2.</strong> Module Info</a></li></ol></li><li class="chapter-item expanded "><a href="confidence.html"><strong aria-hidden="true">6.</strong> Confidence Argument Extension</a></li><li class="chapter-item expanded "><a href="interfacing.html"><strong aria-hidden="true">7.</strong> Interfacing</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="standard_support.html"><strong aria-hidden="true">8.</strong> Standard Support</a></li><li class="chapter-item expanded "><a href="troubleshooting.html"><strong aria-hidden="true">9.</strong> Troubleshooting</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="design_goals.html"><strong aria-hidden="true">10.</strong> Design Goals</a></li><li class="chapter-item expanded "><a href="history.html"><strong aria-hidden="true">11.</strong> History</a></li><li class="chapter-item expanded "><a href="migration_v2x.html"><strong aria-hidden="true">12.</strong> Migration from v2.x</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="basic_usage.html"><strong aria-hidden="true">1.</strong> Basic Usage</a></li><li class="chapter-item expanded "><a href="yaml_syntax.html"><strong aria-hidden="true">2.</strong> Syntax</a></li><li class="chapter-item expanded "><a href="checks.html"><strong aria-hidden="true">3.</strong> Checks</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="advanced_usecases.html"><strong aria-hidden="true">4.</strong> Advanced Use-cases</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="adv_linebreaks.html"><strong aria-hidden="true">4.1.</strong> Line Breaks</a></li><li class="chapter-item expanded "><a href="adv_layout.html"><strong aria-hidden="true">4.2.</strong> Layout</a></li><li class="chapter-item expanded "><a href="adv_layers.html"><strong aria-hidden="true">4.3.</strong> Layers</a></li><li class="chapter-item expanded "><a href="adv_stylesheets.html"><strong aria-hidden="true">4.4.</strong> Stylesheets</a></li><li class="chapter-item expanded "><a href="adv_evidences.html"><strong aria-hidden="true">4.5.</strong> Evidences</a></li></ol></li><li class="chapter-item expanded "><a href="mod_extension.html"><strong aria-hidden="true">5.</strong> Modular Extension</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="mod_distdev.html"><strong aria-hidden="true">5.1.</strong> Distributed Development</a></li><li class="chapter-item expanded "><a href="mod_info.html"><strong aria-hidden="true">5.2.</strong> Module Info</a></li></ol></li><li class="chapter-item expanded "><a href="confidence.html"><strong aria-hidden="true">6.</strong> Confidence Argument Extension</a></li><li class="chapter-item expanded "><a href="interfacing.html"><strong aria-hidden="true">7.</strong> Interfacing</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="standard_support.html"><strong aria-hidden="true">8.</strong> Standard Support</a></li><li class="chapter-item expanded "><a href="troubleshooting.html"><strong aria-hidden="true">9.</strong> Troubleshooting</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="design_goals.html"><strong aria-hidden="true">10.</strong> Design Goals</a></li><li class="chapter-item expanded "><a href="history.html"><strong aria-hidden="true">11.</strong> History</a></li><li class="chapter-item expanded "><a href="migration_v2x.html"><strong aria-hidden="true">12.</strong> Migration from v2.x</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
@@ -187,7 +187,7 @@
 <pre><code>Usage: gsn2x [OPTIONS] &lt;INPUT&gt;...
 
 Arguments:
-  &lt;INPUT&gt;...  Sets the input file(s) to use. Only relative paths are accepted.
+  &lt;INPUT&gt;...  Sets the input file(s) to use.
 
 Options:
   -h, --help     Print help
@@ -199,22 +199,22 @@ CHECKS:
 
 OUTPUT:
   -N, --no-arg                         Do not output of argument view for provided input files.
-  -f, --full &lt;COMPLETE_VIEW&gt;           Output the complete view to file with name &lt;COMPLETE_VIEW&gt;. [default: complete.svg]
+  -f, --full &lt;COMPLETE_VIEW&gt;           Output the complete view to file with name &lt;COMPLETE_VIEW&gt;.    [default: complete.svg]
   -F, --no-full                        Do not output the complete view.
-  -a, --arch &lt;ARCHITECTURE_VIEW&gt;       Output the architecture view to file with name &lt;ARCHITECTURE_VIEW&gt;. [default:     architecture.svg]
+  -a, --arch &lt;ARCHITECTURE_VIEW&gt;       Output the architecture view to file with name &lt;ARCHITECTURE_VIEW&gt;. [default: architecture.svg]
   -A, --no-arch                        Do not output the architecture view.
   -e, --evidences &lt;EVIDENCES&gt;          Output list of all evidences to file with name &lt;EVIDENCES&gt;. [default: evidences.md]
   -E, --no-evidences                   Do not output list of all evidences.
-  -o, --output-dir &lt;OUTPUT_DIRECTORY&gt;  Emit all output files to directory &lt;OUTPUT_DIRECTORY&gt;. [default: .]
+  -o, --output-dir &lt;OUTPUT_DIRECTORY&gt;  Emit all output files to directory &lt;OUTPUT_DIRECTORY&gt;.      [default: .]
 
 OUTPUT MODIFICATION:
   -l, --layer &lt;LAYERS&gt;            Output additional layer. Can be used multiple times.
   -s, --stylesheet &lt;STYLESHEETS&gt;  Links a stylesheet in SVG output. Can be used multiple times.
-  -t, --embed-css                 Embed stylehseets instead of linking them.
+  -t, --embed-css                 Embed stylesheets instead of linking them.
+  -m, --mask &lt;MASKED_MODULE&gt;      Do not show this module in views.
   -G, --no-legend                 Do not output a legend based on module information.
   -g, --full-legend               Output a legend based on all module information.
-  -w, --wrap &lt;WORD_WRAP&gt;          Define the number of characters after which a line of text is wrapped.
-</code></pre>
+  -w, --wrap &lt;CHAR_WRAP&gt;          Define the number of characters after which a line of text is wrapped.</code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="syntax-in-yaml"><a class="header" href="#syntax-in-yaml">Syntax in YAML</a></h1>
 <h2 id="elements"><a class="header" href="#elements">Elements</a></h2>
 <p>The following Goal Structuring Notation (GSN) core elements are supported:</p>
@@ -257,39 +257,23 @@ C1:
 </code></pre>
 <p>Please see <a href="examples/example.gsn.yaml">examples/example.gsn.yaml</a> for an example of the used syntax.</p>
 <h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
-<div class="table-wrapper"><table><thead><tr><th>Attribute</th><th>Optional</th></tr></thead><tbody>
-<tr><td>text</td><td>no</td></tr>
-<tr><td>supportedBy</td><td>yes</td></tr>
-<tr><td>inContextOf</td><td>yes</td></tr>
-<tr><td>undeveloped<sup class="footnote-reference"><a href="#nu">1</a></sup></td><td>yes</td></tr>
-<tr><td>url</td><td>yes</td></tr>
-<tr><td>classes<sup class="footnote-reference"><a href="#nc">2</a></sup></td><td>yes</td></tr>
-<tr><td>nodeType<sup class="footnote-reference"><a href="#nt">3</a></sup></td><td>yes</td></tr>
-<tr><td>rankIncrement<sup class="footnote-reference"><a href="#nl">4</a></sup></td><td>yes</td></tr>
-<tr><td>horizontalIndex<sup class="footnote-reference"><a href="#nl">4</a></sup></td><td>yes</td></tr>
-<tr><td>wordWrap<sup class="footnote-reference"><a href="#nw">5</a></sup></td><td>yes</td></tr>
-<tr><td>acp<sup class="footnote-reference"><a href="#na">6</a></sup></td><td>yes</td></tr>
+<div class="table-wrapper"><table><thead><tr><th>Attribute</th><th>Optional</th><th>Notes</th></tr></thead><tbody>
+<tr><td>text</td><td>no</td><td></td></tr>
+<tr><td>supportedBy</td><td>yes</td><td></td></tr>
+<tr><td>inContextOf</td><td>yes</td><td></td></tr>
+<tr><td>undeveloped</td><td>yes</td><td>Mutually exclusive to <code>supportedBy</code>.</td></tr>
+<tr><td>url</td><td>yes</td><td></td></tr>
+<tr><td>classes</td><td>yes</td><td>See <a href="./adv_stylesheets.html">Stylesheets</a>.</td></tr>
+<tr><td>nodeType</td><td>yes</td><td>See footnote<sup class="footnote-reference"><a href="#nt">1</a></sup></td></tr>
+<tr><td>rankIncrement</td><td>yes</td><td>See <a href="./adv_layout.html">Layout</a>.</td></tr>
+<tr><td>horizontalIndex</td><td>yes</td><td>See <a href="./adv_layout.html">Layout</a>.</td></tr>
+<tr><td>charWrap</td><td>yes</td><td>See <a href="./adv_linebreaks.html">Line Breaks</a>.</td></tr>
+<tr><td>acp</td><td>yes</td><td>See <a href="./confidence.html">Confidence Argument Extension</a>.</td></tr>
 </tbody></table>
 </div>
-<div class="footnote-definition" id="nu"><sup class="footnote-definition-label">1</sup>
-<p>Mutually exclusive to <code>supportedBy</code>.</p>
-</div>
-<div class="footnote-definition" id="nc"><sup class="footnote-definition-label">2</sup>
-<p>See <a href="./adv_stylesheets.html">Stylesheets</a>.</p>
-</div>
-<div class="footnote-definition" id="nl"><sup class="footnote-definition-label">4</sup>
-<p>See <a href="./adv_layout.html">Layout</a>.</p>
-</div>
-<div class="footnote-definition" id="nt"><sup class="footnote-definition-label">3</sup>
+<div class="footnote-definition" id="nt"><sup class="footnote-definition-label">1</sup>
 <p>When providing a <code>nodeType</code> you do not need to follow the standard prefix scheme above.
 Just give <code>Goal</code>, <code>Assumption</code>, <code>Justification</code>, <code>Solution</code>, <code>Context</code> and <code>Strategy</code> to give the type of the element.</p>
-</div>
-<div class="footnote-definition" id="nw"><sup class="footnote-definition-label">5</sup>
-<p>If the <code>wordWrap</code> attribute for an element is given, it will be used instead of the global option given
-at the command line.</p>
-</div>
-<div class="footnote-definition" id="na"><sup class="footnote-definition-label">6</sup>
-<p>See <a href="./confidence.html">Confidence Argument Extension</a>.</p>
 </div>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="checks"><a class="header" href="#checks">Checks</a></h1>
 <h2 id="validation-checks"><a class="header" href="#validation-checks">Validation checks</a></h2>
@@ -336,18 +320,8 @@ The checks for references (Cxx) can be skipped for individual files by using the
 <li><a href="./adv_stylesheets.html">Stylesheets</a></li>
 <li><a href="./adv_evidences.html">Evidences</a></li>
 </ul>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="layout-of-elements"><a class="header" href="#layout-of-elements">Layout of elements</a></h1>
-<h2 id="how-does-the-default-layout-of-the-graph-work"><a class="header" href="#how-does-the-default-layout-of-the-graph-work">How does the default layout of the graph work?</a></h2>
-<p>At first, the root elements are identified. Root elements are elements
-that are not referenced as <code>supportedBy</code> or <code>inContextOf</code>.</p>
-<p>Each level in the rendered graph is called rank.
-The elements on each rank are sorted lexicographically before being placed on that rank.
-Then, starting with the first element on the current rank, the elements of the next rank are identified.
-An element is only ranked if all elements referencing it are already placed.
-Finally, the <code>inContextOf</code> elements are placed on that rank.</p>
-<h2 id="text-layout-within-elements"><a class="header" href="#text-layout-within-elements">Text layout within elements</a></h2>
-<p>There is a default line wrap implemented. However, this might be too wide for your diagram.
-You can break lines by YAML means, e.g. following this example:</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="text-layout-within-elements"><a class="header" href="#text-layout-within-elements">Text layout within elements</a></h1>
+<p>You can control line breaks by YAML means, e.g. following this example:</p>
 <pre><code class="language-yaml">G1:
   text: |
     This
@@ -357,9 +331,18 @@ You can break lines by YAML means, e.g. following this example:</p>
     separate
     lines
 </code></pre>
-<p>Alternatively, you can use the <code>-w</code> option and provide a global shorter number for the number of characters after which the line is wrapped.
-An optional <code>wordWrap</code> can be used for an element to individually define the limit for word wrapping.
-Please note that wrapping is done if a whitespace is detected after the given number of characters.</p>
+<p>Alternatively, you can use the <code>-w</code> option and provide a global number of characters after which lines are wrapped.</p>
+<p>You can also use the optional <code>charWrap</code> attribute for an element to individually define the number of characters after which line is wrapped. The same attribute can be applied for a complete module at the <code>module</code> <a href="./mod_info.html">section</a>.</p>
+<p><strong>Please note that wrapping is done if a whitespace is detected after the given number of characters.</strong></p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="layout-of-elements"><a class="header" href="#layout-of-elements">Layout of elements</a></h1>
+<h2 id="how-does-the-default-layout-of-the-graph-work"><a class="header" href="#how-does-the-default-layout-of-the-graph-work">How does the default layout of the graph work?</a></h2>
+<p>At first, the root elements are identified. Root elements are elements
+that are not referenced as <code>supportedBy</code> or <code>inContextOf</code>.</p>
+<p>Each level in the rendered graph is called rank.
+The elements on each rank are sorted lexicographically before being placed on that rank.
+Then, starting with the first element on the current rank, the elements of the next rank are identified.
+An element is only ranked if all elements referencing it are already placed.
+Finally, the <code>inContextOf</code> elements are placed on that rank.</p>
 <h2 id="placement-of-elements"><a class="header" href="#placement-of-elements">Placement of elements</a></h2>
 <h3 id="vertical-placement"><a class="header" href="#vertical-placement">Vertical placement</a></h3>
 <p>To influence the vertical placement i.e., the rank, of an element in the rendered graph,
@@ -524,7 +507,7 @@ G1:
 </code></pre>
 <p>The corresponding CSS:</p>
 <pre><code class="language-css">
-.additionalclass1 path { fill: red; }
+.additionalclass1 path { fill: red; fill-opacity: 1;}
 .additionalclass1 text,a { fill: white; }
 </code></pre>
 <p>The result looks like this:</p>
@@ -534,6 +517,7 @@ G1:
 <p>An example could look like this:</p>
 <pre><code class="language-css">g:target path {
     fill: lightsteelblue;
+    fill-opacity: 1;
 }
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="list-of-evidences"><a class="header" href="#list-of-evidences">List of evidences</a></h1>
@@ -651,6 +635,25 @@ module:
 <p>To influence the position in the architecture view, you can use the <code>horizontalIndex</code> and <code>rankIncrement</code> as you would for elements in the Argument view (see <a href="adv_layout.html#placement-of-elements">Layout of elements</a> ).</p>
 <p>You can use the <code>-G</code> option to suppress the legend completely,
 or the <code>-g</code> option to limit it to <code>name</code>, <code>brief</code> and the time and date of generation of the SVG.</p>
+<h2 id="including-other-modules"><a class="header" href="#including-other-modules">Including other modules</a></h2>
+<p>Multiple modules, i.e. files, can be provided at the command line:</p>
+<pre><code>gsn2x index.gsn.yaml required_module1.gsn.yaml required_module2.gsn.yaml required_module3.gsn.yaml
+</code></pre>
+<p>However, this might requires long and complex calls at the command line for reasonably large arguments.</p>
+<p>Another way to use multiple modules is to "use" them from others. You can do so by adding a <code>uses</code> attribute to a module:</p>
+<pre><code class="language-yaml">module:
+   name: MainModule
+   brief: This is the index.gsn.yaml file
+   uses: [required_module1.yaml, required_module2.gsn.yaml, required_module3.gsn.yaml]
+</code></pre>
+<p>The command line is now simplified to:</p>
+<pre><code>gsn2x index.gsn.yaml
+</code></pre>
+<p>Or even (if you name the entry point file: <code>index.gsn.yaml</code>):</p>
+<pre><code>gsn2x
+</code></pre>
+<p>Of course, "used" modules can also include other modules on their own.
+There is a check implemented to prevent circular includes.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="confidence-argument-extension"><a class="header" href="#confidence-argument-extension">Confidence Argument Extension</a></h1>
 <p>The Confidence Argument Extension is supported. It defines so called Assurance Claim Points (ACPs).</p>
 <p>They can be defined either for an element or for the relation between elements.</p>
@@ -753,7 +756,8 @@ of the input file:</p>
 Caused by:
     No valid GSN element can be found starting from line &lt;n&gt;.
     This typically means that the YAML is completely invalid, or 
-    the `text:` attribute is missing for an element.
+    the `text:` attribute is missing for an element,
+    or `supportedBy` or `inContextOf` are not followed by a list ([]).
     Please see the documentation for details (https://jonasthewolf.github.io/gsn2x/troubleshooting.html).
     Original error message: data did not match any variant of untagged enum GsnDocument.
 </code></pre>
@@ -761,13 +765,12 @@ Caused by:
 <p>A good strategy to find out which element is causing the problem is to remove all but the first element from the input YAML file. Then running gsn2x again and incrementally adding the elements one by one again, until you hit the
 error message again.</p>
 <p>Unfortunately, it is currently not possible to improve on the location of the error messages in this case.</p>
-<h2 id="sanitizing-files-that-you-need-to"><a class="header" href="#sanitizing-files-that-you-need-to">Sanitizing files that you need to</a></h2>
-<p>You can sanitize your files from your intellectual property using, e.g. https://mikefarah.gitbook.io/yq/ .</p>
-<p>This might be necessary to provide input for getting support.</p>
-<p>The statement replaces all text with <code>x</code>es while keeping the number of characters.
-Please note that <a href="./adv_layers.html">additional layers</a> are not sanitizied.</p>
-<pre><code> yq "(.[] | select(. | has(\"text\"))) .text |=sub(\"[a-zA-Z0-9]\",\"x\")"  inputfile.yaml | yq "... comments=\"\"" &gt; outputfile.yaml
+<h2 id="sanitizing-files-for-eg-support-requests"><a class="header" href="#sanitizing-files-for-eg-support-requests">Sanitizing files for e.g. support requests</a></h2>
+<p>You can sanitize your files from your intellectual property using, e.g. <a href="https://mikefarah.gitbook.io/yq/">https://mikefarah.gitbook.io/yq/</a>.</p>
+<p>This statement replaces all text with <code>x</code>es while keeping the number of characters:</p>
+<pre><code> yq "(.[] | select(. | has(\"text\"))) .text |=sub(\"[a-zA-Z0-9]\",\"x\"), ... comments=\"\""  inputfile.yaml &gt; outputfile.yaml
 </code></pre>
+<p><strong>Please note that element identifiers and <a href="./adv_layers.html">additional layers</a> are not sanitizied.</strong></p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="design-goals"><a class="header" href="#design-goals">Design goals</a></h1>
 <p>I noticed that it might make sense to add some information about the goals I have set for myself for this project:</p>
 <ul>
