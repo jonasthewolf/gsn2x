@@ -17,16 +17,14 @@ pub(crate) struct EllipticalType {
 
 impl EllipticalType {
     ///
-    ///
-    ///
+    /// Almost arbitrary minimum size.
     ///
     pub(super) fn get_minimum_size(&self) -> (i32, i32) {
         (PADDING_HORIZONTAL * 2 + 40, PADDING_HORIZONTAL * 2 + 40)
     }
 
     ///
-    ///
-    ///
+    /// Calculate minimums size of Away node based on text context and padding.
     ///
     pub(super) fn calculate_size(
         &self,
@@ -60,8 +58,7 @@ impl EllipticalType {
     }
 
     ///
-    ///
-    ///
+    /// Render the node
     ///
     pub(super) fn render(
         &self,

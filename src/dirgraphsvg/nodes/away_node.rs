@@ -63,14 +63,14 @@ pub(crate) struct AwayType {
 
 impl AwayType {
     ///
-    ///
+    /// Almost arbitrary minimum size.
     ///
     pub(super) fn get_minimum_size(&self) -> (i32, i32) {
         (PADDING_HORIZONTAL * 2 + 70, PADDING_VERTICAL * 2 + 30)
     }
 
     ///
-    ///
+    /// Calculate minimums size of Away node based on text context and padding.
     ///
     pub(super) fn calculate_size(
         &self,
@@ -103,7 +103,7 @@ impl AwayType {
     }
 
     ///
-    ///
+    /// Get the height add on based on type.
     ///
     ///
     fn get_addon_height(&self, width: i32) -> i32 {
@@ -117,8 +117,7 @@ impl AwayType {
     }
 
     ///
-    ///
-    ///
+    /// Render the node
     ///
     pub(super) fn render(
         &self,

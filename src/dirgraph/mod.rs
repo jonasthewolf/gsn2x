@@ -83,7 +83,9 @@ where
     }
 
     ///
-    ///
+    /// Add edge decorators.
+    /// Edge decorators are required to implement Assurance Claim Points.
+    /// A decorator is basically a string (better list of strings).
     ///
     ///
     pub fn add_edge_decorators(
@@ -94,7 +96,7 @@ where
     }
 
     ///
-    ///
+    /// Get the edge decorators.
     ///
     ///
     pub fn get_edge_decorator(&self, source: String, target: String) -> Option<&Vec<String>> {
@@ -403,8 +405,8 @@ where
     }
 
     ///
-    ///
-    ///
+    /// Reorder nodes horizontally based on forced re-indexation: `horizontalIndex`
+    /// This can be done relative to the current position or absolute.
     ///
     fn reorder_horizontally(&self, current_rank_nodes: &mut Vec<&str>) {
         let current_rank_nodes_len = current_rank_nodes.len();

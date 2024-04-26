@@ -104,7 +104,7 @@ fn get_render_legend(matches: &ArgMatches) -> RenderLegend {
 
 ///
 /// Create a SVG node from a GSN Node
-/// 
+///
 ///
 ///
 pub fn svg_from_gsn_node(

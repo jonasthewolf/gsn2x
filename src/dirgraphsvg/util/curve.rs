@@ -35,7 +35,7 @@ impl CubicBezierCurve<i32> {
     // }
 
     ///
-    ///
+    /// Get the x,y coordinates for parameter t of cubic Bezier curve.
     ///
     pub fn get_coordinates_for_t(&self, t: f64) -> Point2D<i32> {
         (1.0 - t).powf(3.0) * self.p0
@@ -45,7 +45,7 @@ impl CubicBezierCurve<i32> {
     }
 
     ///
-    ///
+    /// Get the first derivative at t for cubic Bezier curve in x,y coordinate system.
     ///
     pub fn get_first_derivative_for_t(&self, t: f64) -> Point2D<i32> {
         3.0 * (1.0 - t).powf(2.0) * (self.p1 - self.p0)

@@ -147,7 +147,7 @@ fn check_cycles(
 }
 
 ///
-///
+/// Check if nodes are unreachable from the root nodes.
 ///
 fn check_unreachable(
     diag: &mut Diagnostics,

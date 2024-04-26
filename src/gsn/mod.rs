@@ -340,8 +340,7 @@ pub struct ExtendsModule {
 }
 
 ///
-/// 
-///
+/// Perform the extension of modules.
 ///
 pub fn extend_modules(
     diags: &mut Diagnostics,
@@ -454,7 +453,7 @@ pub fn calculate_module_dependencies(
 }
 
 ///
-/// 
+/// Add dependencies of nodes.
 ///
 fn add_dependencies(
     children: &Vec<String>,

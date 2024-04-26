@@ -223,7 +223,7 @@ fn validate_reference(
 }
 
 ///
-///
+/// Check if the Assurance Claim Points are referencing sensible
 ///
 fn validate_assurance_claim_point(
     diag: &mut Diagnostics,

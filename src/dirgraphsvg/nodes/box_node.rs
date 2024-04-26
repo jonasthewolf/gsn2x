@@ -21,7 +21,7 @@ pub(crate) enum BoxType {
 
 impl BoxType {
     ///
-    ///
+    /// Almost arbitrary minimum size.
     ///
     pub(super) fn get_minimum_size(&self) -> (i32, i32) {
         let skew = if let BoxType::Normal(x) = self { *x } else { 0 };
@@ -32,7 +32,7 @@ impl BoxType {
     }
 
     ///
-    ///
+    /// Calculate minimums size of Away node based on text context and padding.
     ///
     pub(super) fn calculate_size(
         &self,
@@ -60,8 +60,7 @@ impl BoxType {
     }
 
     ///
-    ///
-    ///
+    /// Render the node
     ///
     pub(super) fn render(
         &self,

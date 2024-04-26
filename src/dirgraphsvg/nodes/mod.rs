@@ -31,6 +31,9 @@ mod away_node;
 mod box_node;
 mod elliptical_node;
 
+///
+/// The direction of the port where edges dock to nodes.
+///
 #[derive(Eq, PartialEq)]
 pub enum Port {
     North,
@@ -45,6 +48,9 @@ enum NodeType {
     Away(AwayType),
 }
 
+///
+/// The node type when rendering SVGs
+///
 pub struct SvgNode {
     x: i32,
     y: i32,
@@ -134,7 +140,7 @@ impl SvgNode {
     }
 
     ///
-    ///
+    /// Calculate size of the SVG node based on its type.
     ///
     ///
     pub fn calculate_size(&mut self, font: &FontInfo) {
@@ -192,8 +198,7 @@ impl SvgNode {
     }
 
     ///
-    ///
-    ///
+    /// Render the nodes (entry point for rendering all SVG node types)
     ///
     pub fn render(&self, font: &FontInfo, document: &mut Element) {
         let mut g = create_group(&self.identifier, &self.classes);
@@ -217,7 +222,7 @@ impl SvgNode {
     }
 
     ///
-    ///
+    /// Create a new SVG node
     ///
     fn new(
         identifier: &str,
@@ -272,7 +277,7 @@ impl SvgNode {
     }
 
     ///
-    ///
+    /// New Assumption.
     ///
     pub fn new_assumption(
         identifier: &str,
@@ -300,7 +305,7 @@ impl SvgNode {
     }
 
     ///
-    ///
+    /// New Context.
     ///
     pub fn new_context(
         identifier: &str,
@@ -321,7 +326,7 @@ impl SvgNode {
     }
 
     ///
-    ///
+    /// New Justification.
     ///
     pub fn new_justification(
         identifier: &str,
@@ -349,7 +354,7 @@ impl SvgNode {
     }
 
     ///
-    ///
+    /// New Solution.
     ///
     pub fn new_solution(
         identifier: &str,
@@ -377,8 +382,7 @@ impl SvgNode {
     }
 
     ///
-    ///
-    ///
+    /// New Strategy.
     ///
     pub fn new_strategy(
         identifier: &str,
@@ -405,8 +409,7 @@ impl SvgNode {
     }
 
     ///
-    ///
-    ///
+    /// New Goal.
     ///
     pub fn new_goal(
         identifier: &str,
@@ -438,7 +441,7 @@ impl SvgNode {
     }
 
     ///
-    ///
+    /// New Away Assumption.
     ///
     pub fn new_away_assumption(
         identifier: &str,
@@ -467,7 +470,7 @@ impl SvgNode {
     }
 
     ///
-    ///
+    /// New Away Goal.
     ///
     pub fn new_away_goal(
         identifier: &str,
@@ -512,7 +515,7 @@ impl SvgNode {
     }
 
     ///
-    ///
+    /// New Away Justification.
     ///
     pub fn new_away_justification(
         identifier: &str,
@@ -541,7 +544,7 @@ impl SvgNode {
     }
 
     ///
-    ///
+    /// New Away Context.
     ///
     pub fn new_away_context(
         identifier: &str,
@@ -570,7 +573,7 @@ impl SvgNode {
     }
 
     ///
-    ///
+    /// New Away Solution.
     ///
     pub fn new_away_solution(
         identifier: &str,
@@ -599,8 +602,7 @@ impl SvgNode {
     }
 
     ///
-    ///
-    ///
+    /// New Module for Architecture View.
     ///
     pub fn new_module(
         identifier: &str,
@@ -649,7 +651,13 @@ fn render_acp_box(node: &SvgNode, font: &FontInfo, context: &mut Element) {
 }
 
 ///
+/// Add CSS classes for node.
+/// What is added as class?
+///  - All additional layers (the name of the layer)
+///  - The name of the module the node belongs to
+///  - The associated ACPs
 ///
+/// The class for type of the node is added when they are created.
 ///
 fn node_classes_from_node(identifier: &str, gsn_node: &GsnNode, masked: bool) -> Vec<String> {
     let layer_classes: Vec<String> = gsn_node

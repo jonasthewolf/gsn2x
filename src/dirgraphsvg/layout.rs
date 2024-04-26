@@ -66,7 +66,7 @@ pub(crate) trait Cell {
 
 impl Cell for Vec<&str> {
     ///
-    ///
+    /// Get the maximum width of all nodes in the cell
     ///
     fn get_max_width(&self, nodes: &BTreeMap<String, RefCell<SvgNode>>) -> i32 {
         self.iter()
@@ -77,7 +77,8 @@ impl Cell for Vec<&str> {
     }
 
     ///
-    ///
+    /// Get the x coordinate of the cell based on the first node.
+    /// All node of the cell have the same x coordinate.
     ///
     fn get_x(&self, nodes: &BTreeMap<String, RefCell<SvgNode>>) -> i32 {
         let n = nodes.get(self.first().unwrap().to_owned()).unwrap(); // unwraps ok, since nodes must exist.
@@ -85,7 +86,8 @@ impl Cell for Vec<&str> {
     }
 
     ///
-    ///
+    /// Get the center y coordinate of the cell.
+    /// All nodes of a cell are vertically stacked.
     ///
     fn get_center_y(&self, nodes: &BTreeMap<String, RefCell<SvgNode>>) -> i32 {
         (self
@@ -96,7 +98,9 @@ impl Cell for Vec<&str> {
     }
 
     ///
-    ///
+    /// Set the position of the cell.
+    /// The x coordinate is the same for all nodes.
+    /// The nodes are vertically stacked and separated by the top and bottom margin.
     ///
     fn set_position(
         &self,
@@ -122,7 +126,7 @@ impl Cell for Vec<&str> {
     }
 
     ///
-    ///
+    /// Get the height of the cell by iteration of all nodes in the cell.
     ///
     fn get_height(&self, nodes: &BTreeMap<String, RefCell<SvgNode>>, margin: &Margin) -> i32 {
         self.iter()
@@ -164,6 +168,7 @@ pub(super) fn layout_nodes(
                     {
                         if new_x > x {
                             x = std::cmp::max(x, new_x);
+                            // Often needed for debugging.
                             // eprintln!("Changed {:?} {} {} {}", &cell, x, old_x, new_x);
                             changed = true;
                         }
