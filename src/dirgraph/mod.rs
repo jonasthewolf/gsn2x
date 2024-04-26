@@ -200,7 +200,7 @@ where
                             reported_ancestors.push(child_node);
                             break 'cycle_found Some((p_id, reported_ancestors));
                         }
-                        stack.push((&child_node, depth));
+                        stack.push((child_node, depth));
                     }
                 }
             }

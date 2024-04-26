@@ -136,7 +136,7 @@ impl Display for ValidationOrCheckError {
 impl Error for ValidationOrCheckError {}
 
 ///
-///
+/// Create clap command line arguments
 ///
 ///
 fn build_command_options() -> Command {
@@ -498,7 +498,7 @@ fn check_and_add_nodes(
                 Entry::Vacant(e) => match v {
                     GsnDocument::GsnNode(mut x) => {
                         // Remember module for node
-                        x.module = module.to_owned();
+                        module.clone_into(&mut x.module);
                         x.fix_node_type(&k);
                         if x.char_wrap.is_none() {
                             x.char_wrap = char_wrap;
@@ -657,8 +657,9 @@ fn output_messages(diags: &Diagnostics) -> Result<()> {
 }
 
 ///
-///
-///
+/// Copy the stylesheets if they need to be in the output directory
+/// If they actually reference a URL, make the stylesheet reference a url.
+/// Don't do anything if the stylesheet is anyway embedded.
 ///
 pub(crate) fn copy_and_prepare_stylesheets(
     stylesheets: &mut [String],
@@ -694,7 +695,7 @@ pub(crate) fn copy_and_prepare_stylesheets(
             ))?);
             out_path.to_string_lossy().to_string().to_owned()
         };
-        *stylesheet = new_name.to_owned();
+        new_name.clone_into(stylesheet);
     }
 
     Ok(())

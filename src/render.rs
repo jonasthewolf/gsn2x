@@ -103,8 +103,8 @@ fn get_render_legend(matches: &ArgMatches) -> RenderLegend {
 }
 
 ///
-///
-///
+/// Create a SVG node from a GSN Node
+/// 
 ///
 ///
 pub fn svg_from_gsn_node(
@@ -137,7 +137,7 @@ pub fn svg_from_gsn_node(
 }
 
 ///
-///
+/// Create an Away SVG node from a normal Node.
 ///
 ///
 ///
@@ -186,7 +186,7 @@ pub fn away_svg_from_gsn_node(
 }
 
 ///
-///
+/// Render architecture view
 ///
 pub fn render_architecture(
     output: &mut impl Write,

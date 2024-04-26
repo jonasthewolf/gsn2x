@@ -128,7 +128,8 @@ where
 }
 
 ///
-///
+/// Deserialize an ACP.
+/// It can be either a string or a sequence of strings.
 ///
 fn deser_acp<'de, D>(deserializer: D) -> Result<BTreeMap<String, Vec<String>>, D::Error>
 where
@@ -169,7 +170,8 @@ where
 
 impl GsnNode {
     ///
-    ///
+    /// Get edges of node.
+    /// Edge is tuple of target node id and edge type.
     ///
     pub fn get_edges(&self) -> Vec<(String, GsnEdgeType)> {
         let mut edges = Vec::new();
@@ -189,7 +191,7 @@ impl GsnNode {
     }
 
     ///
-    ///
+    /// Set the `node_type` based on prefix or explicit type.
     ///
     pub fn fix_node_type(&mut self, id: &str) {
         self.node_type = if let Some(node_type) = self.node_type {
@@ -200,21 +202,11 @@ impl GsnNode {
     }
 }
 
-///
-///
-///
-///
 impl<'a> DirectedGraphNodeType<'a> for GsnNode {
-    ///
-    ///
-    ///
     fn get_forced_level(&self) -> Option<usize> {
         self.rank_increment
     }
 
-    ///
-    ///
-    ///
     fn get_horizontal_index(&self, current_index: usize) -> Option<usize> {
         match self.horizontal_index {
             Some(HorizontalIndex::Absolute(idx)) => match idx {
@@ -228,12 +220,11 @@ impl<'a> DirectedGraphNodeType<'a> for GsnNode {
 }
 
 ///
-///
+/// Implement the `DirectedGraphEdgeType` for the GsnEdges
+/// Primary childs are SupportedBy edges
+/// Secondary childs (=same rank) are InContextOf edges
 ///
 impl<'a> DirectedGraphEdgeType<'a> for GsnEdgeType {
-    ///
-    ///
-    ///
     fn is_primary_child_edge(&self) -> bool {
         match self {
             GsnEdgeType::SupportedBy => true,
@@ -241,9 +232,6 @@ impl<'a> DirectedGraphEdgeType<'a> for GsnEdgeType {
         }
     }
 
-    ///
-    ///
-    ///
     fn is_secondary_child_edge(&self) -> bool {
         match self {
             GsnEdgeType::SupportedBy => false,
@@ -253,7 +241,7 @@ impl<'a> DirectedGraphEdgeType<'a> for GsnEdgeType {
 }
 
 ///
-///
+/// Get the node type from a prefix
 ///
 ///
 fn get_node_type_from_text(text: &str) -> Option<GsnNodeType> {
@@ -352,7 +340,7 @@ pub struct ExtendsModule {
 }
 
 ///
-///
+/// 
 ///
 ///
 pub fn extend_modules(
@@ -466,7 +454,7 @@ pub fn calculate_module_dependencies(
 }
 
 ///
-///
+/// 
 ///
 fn add_dependencies(
     children: &Vec<String>,
