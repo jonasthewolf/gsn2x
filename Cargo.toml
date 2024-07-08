@@ -4,7 +4,7 @@ description = "Tool to create a graphical representation from a Goal Structuring
 keywords = ["gsn", "yaml", "svg", "assurancecases"]
 categories = ["visualization", "rendering::data-formats"]
 authors = ["Jonas Wolf <jonas.wolf@jonaswolf.org>"]
-version = "3.2.0"
+version = "3.2.1"
 edition = "2021"
 license = "MIT"
 repository = "https://github.com/jonasthewolf/gsn2x"
@@ -14,7 +14,7 @@ documentation = "https://jonasthewolf.github.io/gsn2x"
 
 [dependencies]
 anyhow = "1.0" # Only std feature
-clap = { version = "4.4", default-features = false, features = [
+clap = { version = "4.5", default-features = false, features = [
     "std",
     "cargo",
     "help",
@@ -31,8 +31,8 @@ time = { version = "0.3", default-features = false, features = ["formatting"] }
 
 [dev-dependencies]
 assert_cmd = "2.0"
-assert_fs = "1.0"
-predicates = "3.0"
+assert_fs = "1.1"
+predicates = "3.1"
 regex = "1.10"
 
 [profile.release]
