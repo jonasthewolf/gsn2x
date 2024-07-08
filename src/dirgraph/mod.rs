@@ -425,17 +425,18 @@ where
                 .iter()
                 .position(|n| *n == next_reorder)
                 .unwrap(); // unwrap ok, since nodes exist.
-            let new_pos = self
+            if let Some(new_pos) = self
                 .nodes
                 .get(next_reorder)
                 .unwrap() // unwrap ok, since nodes exist.
                 .get_horizontal_index(cur_pos)
-                .unwrap();
-            let tmp = current_rank_nodes.remove(cur_pos);
-            if new_pos > current_rank_nodes_len - 1 {
-                current_rank_nodes.push(tmp);
-            } else {
-                current_rank_nodes.insert(new_pos, tmp);
+            {
+                let tmp = current_rank_nodes.remove(cur_pos);
+                if new_pos > current_rank_nodes_len - 1 {
+                    current_rank_nodes.push(tmp);
+                } else {
+                    current_rank_nodes.insert(new_pos, tmp);
+                }
             }
         }
     }

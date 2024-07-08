@@ -48,4 +48,5 @@ cargo run -- -G -E -w 20 tests/issue393_1.yaml
 cargo run -- -G -E -w 20 tests/issue393_2.yaml
 cargo run -- -G -E -w 20 tests/issue389.yaml
 cargo run -- -G -E -w 20 -l layer1 tests/issue396.yaml
+cargo run -- -G -E -w 20 tests/issue433_1.yaml
 cargo run -- -G -E tests/multi_parents.gsn.yaml

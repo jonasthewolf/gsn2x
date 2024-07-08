@@ -1,0 +1,47 @@
+module:
+  name: MainClaim
+  brief: This is the index.gsn.yaml file
+  uses: [issue433_2.yaml]
+
+G00001:
+  text: |-
+    Some text
+  supportedBy: [S00001, S00002]
+S00001:
+  text: |-
+    Some text
+  supportedBy: [Sn00001]
+  inContextOf: [J00001, A00001, C00001]
+  # rankIncrement: 2
+  horizontalIndex:
+    relative: 0
+S00002:
+  text: |-
+    Some text
+  supportedBy: [G00002]
+  horizontalIndex:
+    relative: 1
+G00002:
+  text: |-
+    Some text
+  undeveloped: true
+J00001:
+  text: |-
+    Some text
+  horizontalIndex:
+    relative: 1
+A00001:
+  text: |-
+    Some text
+  horizontalIndex:
+    relative: -1
+C00001:
+  text: |-
+    Some text
+  horizontalIndex:
+    relative: -1
+Sn00001:
+  text: Some text
+  rankIncrement: 2
+  horizontalIndex:
+    relative: -1

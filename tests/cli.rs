@@ -626,6 +626,16 @@ mod integrations {
     }
 
     #[test]
+    fn issue433() -> Result<()> {
+        regression_renderings(
+            &["tests/issue433_1.yaml"],
+            &["-w", "20"],
+            Some(&["tests/issue433_2.yaml"]),
+        )?;
+        Ok(())
+    }
+
+    #[test]
     fn issue393() -> Result<()> {
         regression_renderings(&["tests/issue393_1.yaml"], &["-w", "20"], None)?;
         regression_renderings(&["tests/issue393_2.yaml"], &["-w", "20"], None)?;
