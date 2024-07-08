@@ -1,0 +1,65 @@
+
+module:
+  name: ClaimHazard
+  brief: This is a template for any hazard
+  #  uses: [uca.gsn.yaml]
+  extends:
+    - module: MainClaim
+      develops:
+        G00002: [G00003]
+G00003:
+  text: |-
+    Some text
+  supportedBy: [S00003, S00004]
+#  horizontalIndex:
+#    absolute: 3
+
+S00003:
+  text: |-
+    Some text
+  supportedBy: [Sn00002]
+  inContextOf: [A00003, J00003, C00003]
+  horizontalIndex:
+    relative: 2
+S00004:
+  text: |-
+    Some text
+  supportedBy: [G00004]
+  horizontalIndex:
+    relative: 1
+#  rankIncrement: 1
+
+G00004:
+  text: |-
+    Some text
+  supportedBy: [S00005]
+  # undeveloped: true
+S00005:
+  text: |-
+    Some text
+  undeveloped: true
+A00003:
+  text: |-
+    Some text
+  horizontalIndex:
+    relative: -1
+#  rankIncrement: 5
+#  horizontalIndex:
+#    absolute: 1
+J00003:
+  text: |-
+    Some text
+  horizontalIndex:
+    relative: -1
+#  rankIncrement: 5
+C00003:
+  text: |-
+    Some text
+  horizontalIndex:
+    relative: -1
+Sn00002:
+  text: |-
+    Some text
+  rankIncrement: 2
+#  horizontalIndex:
+#      relative: -1
