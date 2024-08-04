@@ -678,8 +678,13 @@ pub(crate) fn copy_and_prepare_stylesheets(
             stylesheet.to_owned()
         } else {
             // Copy stylesheet to output path
+
             let css_path = PathBuf::from(&stylesheet).canonicalize()?;
             let mut out_path = PathBuf::from(output_directory).canonicalize()?;
+            out_path.push(css_path.file_name().ok_or(anyhow!(
+                "Could not identify stylesheet filename in {}",
+                stylesheet
+            ))?);
             if css_path != out_path {
                 std::fs::copy(&css_path, &out_path).with_context(|| {
                     format!(
@@ -689,10 +694,6 @@ pub(crate) fn copy_and_prepare_stylesheets(
                     )
                 })?;
             }
-            out_path.push(css_path.file_name().ok_or(anyhow!(
-                "Could not identify stylesheet filename in {}",
-                stylesheet
-            ))?);
             out_path.to_string_lossy().to_string().to_owned()
         };
         new_name.clone_into(stylesheet);
