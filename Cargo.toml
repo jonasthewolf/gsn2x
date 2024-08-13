@@ -4,7 +4,7 @@ description = "Tool to create a graphical representation from a Goal Structuring
 keywords = ["gsn", "yaml", "svg", "assurancecases"]
 categories = ["visualization", "rendering::data-formats"]
 authors = ["Jonas Wolf <jonas.wolf@jonaswolf.org>"]
-version = "3.2.2"
+version = "3.2.3"
 edition = "2021"
 license = "MIT"
 repository = "https://github.com/jonasthewolf/gsn2x"
@@ -25,7 +25,7 @@ clap = { version = "4.5", default-features = false, features = [
 font-loader = "0.11" # No features
 glyph_brush_layout = "0.2" # No featues
 serde = { version = "1.0", default-features = false, features = ["derive"] }
-serde_yaml = "0.9" # No features
+serde_yml = "0.0" # No features
 svg = "0.17" # No features
 time = { version = "0.3", default-features = false, features = ["formatting"] }
 
