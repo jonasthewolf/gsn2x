@@ -8,7 +8,7 @@ use serde::{
     de::{self},
     Deserialize, Deserializer,
 };
-use serde_yaml::Value;
+use serde_yml::Value;
 use std::{
     collections::{BTreeMap, BTreeSet},
     fmt::Display,
@@ -118,7 +118,7 @@ where
                 if v.is_string() {
                     v.as_str().unwrap().to_owned()
                 } else {
-                    serde_yaml::to_string(&v).unwrap()
+                    serde_yml::to_string(&v).unwrap()
                 },
             ); // unwraps are ok, since deserialization from YAML just worked.
         });
@@ -518,43 +518,43 @@ mod test {
     use anyhow::{anyhow, Result};
     #[test]
     fn serde_hor_index() -> Result<()> {
-        let res: HorizontalIndex = serde_yaml::from_str("!relative 5")?;
+        let res: HorizontalIndex = serde_yml::from_str("!relative 5")?;
         assert_eq!(res, HorizontalIndex::Relative(5));
-        let res: HorizontalIndex = serde_yaml::from_str("!relative -3")?;
+        let res: HorizontalIndex = serde_yml::from_str("!relative -3")?;
         assert_eq!(res, HorizontalIndex::Relative(-3));
-        let res: HorizontalIndex = serde_yaml::from_str("!relative 0")?;
+        let res: HorizontalIndex = serde_yml::from_str("!relative 0")?;
         assert_eq!(res, HorizontalIndex::Relative(0));
-        let res: HorizontalIndex = serde_yaml::from_str("!absolute 0")?;
+        let res: HorizontalIndex = serde_yml::from_str("!absolute 0")?;
         assert_eq!(res, HorizontalIndex::Absolute(AbsoluteIndex::Number(0)));
-        let res: HorizontalIndex = serde_yaml::from_str("!absolute 7")?;
+        let res: HorizontalIndex = serde_yml::from_str("!absolute 7")?;
         assert_eq!(res, HorizontalIndex::Absolute(AbsoluteIndex::Number(7)));
-        let res: HorizontalIndex = serde_yaml::from_str("!absolute last")?;
+        let res: HorizontalIndex = serde_yml::from_str("!absolute last")?;
         assert_eq!(res, HorizontalIndex::Absolute(AbsoluteIndex::Last));
         Ok(())
     }
 
     #[test]
     fn serde_hor_invalid_index() -> Result<()> {
-        let res: Result<HorizontalIndex, _> = serde_yaml::from_str("+asdf");
+        let res: Result<HorizontalIndex, _> = serde_yml::from_str("+asdf");
         assert!(res.is_err());
-        let res: Result<HorizontalIndex, _> = serde_yaml::from_str("");
+        let res: Result<HorizontalIndex, _> = serde_yml::from_str("");
         assert!(res.is_err());
         // 2**32 + 1
-        let res: Result<HorizontalIndex, _> = serde_yaml::from_str("4294967297");
+        let res: Result<HorizontalIndex, _> = serde_yml::from_str("4294967297");
         assert!(res.is_err());
-        let res: Result<HorizontalIndex, _> = serde_yaml::from_str("+4294967297");
+        let res: Result<HorizontalIndex, _> = serde_yml::from_str("+4294967297");
         assert!(res.is_err());
-        let res: Result<HorizontalIndex, _> = serde_yaml::from_str("-4294967297");
+        let res: Result<HorizontalIndex, _> = serde_yml::from_str("-4294967297");
         assert!(res.is_err());
-        let res: Result<HorizontalIndex, _> = serde_yaml::from_str("-x");
+        let res: Result<HorizontalIndex, _> = serde_yml::from_str("-x");
         assert!(res.is_err());
-        let res: Result<HorizontalIndex, _> = serde_yaml::from_str("bslkdf");
+        let res: Result<HorizontalIndex, _> = serde_yml::from_str("bslkdf");
         assert!(res.is_err());
-        let res: Result<HorizontalIndex, _> = serde_yaml::from_str("!absolute null");
+        let res: Result<HorizontalIndex, _> = serde_yml::from_str("!absolute null");
         assert!(res.is_err());
-        let res: Result<HorizontalIndex, _> = serde_yaml::from_str("!absolute");
+        let res: Result<HorizontalIndex, _> = serde_yml::from_str("!absolute");
         assert!(res.is_err());
-        let res: Result<HorizontalIndex, _> = serde_yaml::from_str("null");
+        let res: Result<HorizontalIndex, _> = serde_yml::from_str("null");
         assert!(res.is_err());
         Ok(())
     }
@@ -567,7 +567,7 @@ undeveloped: true
 horizontalIndex:
   relative: -23
 "#;
-        let res: GsnDocument = serde_yaml::from_str(goal)?;
+        let res: GsnDocument = serde_yml::from_str(goal)?;
         if let GsnDocument::GsnNode(node) = res {
             assert_eq!(node.horizontal_index, Some(HorizontalIndex::Relative(-23)));
             Ok(())
@@ -578,7 +578,7 @@ horizontalIndex:
 
     #[test]
     fn nodetype() -> Result<()> {
-        let nt: GsnNodeType = serde_yaml::from_str("Solution")?;
+        let nt: GsnNodeType = serde_yml::from_str("Solution")?;
         assert_eq!(nt, GsnNodeType::Solution);
 
         let gsn = r#"
@@ -590,7 +590,7 @@ C1:
   text: Solution1
   nodeType: Solution
 "#;
-        let res: BTreeMap<String, GsnDocument> = serde_yaml::from_str(gsn)?;
+        let res: BTreeMap<String, GsnDocument> = serde_yml::from_str(gsn)?;
         if let Some(GsnDocument::GsnNode(n)) = res.get("C1") {
             assert_eq!(n.node_type, Some(GsnNodeType::Solution));
             Ok(())
@@ -608,7 +608,7 @@ G1:
     - C1
     - G2
 "#;
-        assert!(serde_yaml::from_str::<BTreeMap<String, GsnDocument>>(gsn).is_err());
+        assert!(serde_yml::from_str::<BTreeMap<String, GsnDocument>>(gsn).is_err());
     }
 
     #[test]
@@ -619,7 +619,7 @@ G1:
   acp:
     ACP1: true
 "#;
-        assert!(serde_yaml::from_str::<BTreeMap<String, GsnDocument>>(gsn).is_err());
+        assert!(serde_yml::from_str::<BTreeMap<String, GsnDocument>>(gsn).is_err());
     }
 
     #[test]
@@ -630,7 +630,7 @@ G1:
   acp:
     ACP1: [true, 123]
 "#;
-        assert!(serde_yaml::from_str::<BTreeMap<String, GsnDocument>>(gsn).is_err());
+        assert!(serde_yml::from_str::<BTreeMap<String, GsnDocument>>(gsn).is_err());
     }
 
     #[test]

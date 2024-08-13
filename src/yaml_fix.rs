@@ -109,7 +109,7 @@ mod test {
     }
     #[test]
     fn duplicate() {
-        let m = serde_yaml::from_str::<YamlFixMap<String, String>>("x:\n\nx:");
+        let m = serde_yml::from_str::<YamlFixMap<String, String>>("x:\n\nx:");
         assert!(m.is_err());
         assert_eq!(
             format!("{:?}", m),
@@ -119,7 +119,7 @@ mod test {
     #[test]
     fn unknown_format() {
         let input = "- A\n\n- B\n\n- C\n";
-        let res = serde_yaml::from_str::<YamlFixMap<String, String>>(input);
+        let res = serde_yml::from_str::<YamlFixMap<String, String>>(input);
         assert!(res.is_err());
         assert_eq!(
             format!("{:?}", res),
