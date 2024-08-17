@@ -21,158 +21,78 @@
 <g class="gsn_module_tier_2_design gsnelem gsngoal" id="node_g9">
 <title>G9</title>
 <path class="border" d="M192,78 L324,78 L324,166 L192,166 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="199" y="97">
-G9
-</text>
-<text font-family="Arial" font-size="12" x="199" y="116">
-xxxxxx xxx
-</text>
-<text font-family="Arial" font-size="12" x="199" y="130">
-xxxxxxxxxxxxxx xx
-</text>
-<text font-family="Arial" font-size="12" x="199" y="144">
-xxxxxxx xxxxxxxxxxxx
-</text>
-<text font-family="Arial" font-size="12" x="199" y="158">
-xxx xxxxx.
-</text>
+<text font-family="Arial" font-size="12" font-weight="bold" x="199" y="97">G9</text>
+<text font-family="Arial" font-size="12" x="199" y="116">xxxxxx xxx</text>
+<text font-family="Arial" font-size="12" x="199" y="130">xxxxxxxxxxxxxx xx</text>
+<text font-family="Arial" font-size="12" x="199" y="144">xxxxxxx xxxxxxxxxxxx</text>
+<text font-family="Arial" font-size="12" x="199" y="158">xxx xxxxx.</text>
 </g>
 <g class="gsn_module_tier_2_design gsnelem gsnjust" id="node_j9">
 <title>J9</title>
 <path class="border" d="M364,122 a92,102,0,1,0,184,0 a92,102,0,1,0,-184,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="398" y="64">
-J9
-</text>
-<text font-family="Arial" font-size="12" x="398" y="83">
-xxxx xxxxxxx xxx
-</text>
-<text font-family="Arial" font-size="12" x="398" y="97">
-xxxxxxxxxxxx (xxx
-</text>
-<text font-family="Arial" font-size="12" x="398" y="111">
-xxxx xx-xxxxxxx) xx x
-</text>
-<text font-family="Arial" font-size="12" x="398" y="125">
-xxxxxxxxxxx xx xxx
-</text>
-<text font-family="Arial" font-size="12" x="398" y="139">
-xxx xxxxxxxxx xxx
-</text>
-<text font-family="Arial" font-size="12" x="398" y="153">
-xxxxxxxxx xx xxx
-</text>
-<text font-family="Arial" font-size="12" x="398" y="167">
-xxxxxxxxx
-</text>
-<text font-family="Arial" font-size="12" x="398" y="181">
-xxxxxxxxxxxxx.
-</text>
-<text font-family="Arial" font-size="12" font-weight="bold" x="543" y="219">
-J
-</text>
+<text font-family="Arial" font-size="12" font-weight="bold" x="398" y="64">J9</text>
+<text font-family="Arial" font-size="12" x="398" y="83">xxxx xxxxxxx xxx</text>
+<text font-family="Arial" font-size="12" x="398" y="97">xxxxxxxxxxxx (xxx</text>
+<text font-family="Arial" font-size="12" x="398" y="111">xxxx xx-xxxxxxx) xx x</text>
+<text font-family="Arial" font-size="12" x="398" y="125">xxxxxxxxxxx xx xxx</text>
+<text font-family="Arial" font-size="12" x="398" y="139">xxx xxxxxxxxx xxx</text>
+<text font-family="Arial" font-size="12" x="398" y="153">xxxxxxxxx xx xxx</text>
+<text font-family="Arial" font-size="12" x="398" y="167">xxxxxxxxx</text>
+<text font-family="Arial" font-size="12" x="398" y="181">xxxxxxxxxxxxx.</text>
+<text font-family="Arial" font-size="12" font-weight="bold" x="543" y="219">J</text>
 </g>
 <g class="gsn_module_tier_2_design gsnelem gsngoal" id="node_g9_1">
 <title>G9.1</title>
 <path class="border" d="M34,278 L138,278 L138,352 L34,352 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="41" y="297">
-G9.1
-</text>
-<text font-family="Arial" font-size="12" x="41" y="316">
-xxxxxx xxxxxx
-</text>
-<text font-family="Arial" font-size="12" x="41" y="330">
-xxxxxxxxxx xxx
-</text>
-<text font-family="Arial" font-size="12" x="41" y="344">
-xxxxxxxx.
-</text>
+<text font-family="Arial" font-size="12" font-weight="bold" x="41" y="297">G9.1</text>
+<text font-family="Arial" font-size="12" x="41" y="316">xxxxxx xxxxxx</text>
+<text font-family="Arial" font-size="12" x="41" y="330">xxxxxxxxxx xxx</text>
+<text font-family="Arial" font-size="12" x="41" y="344">xxxxxxxx.</text>
 </g>
 <g class="gsn_module_tier_2_design gsnelem gsnctxt" id="node_c9_2_2">
 <title>C9.2.2</title>
 <path class="border" d="M188,278 L328,278 C338,278,338,352,328,352 L188,352 C178,352,178,278,188,278" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="195" y="297">
-C9.2.2
-</text>
-<text font-family="Arial" font-size="12" x="195" y="316">
-xxxxxxxxx xxxxxxxxxxx
-</text>
-<text font-family="Arial" font-size="12" x="195" y="330">
-xx xxx xxxxxxxxx
-</text>
-<text font-family="Arial" font-size="12" x="195" y="344">
-xxxxxxxxxx
-</text>
+<text font-family="Arial" font-size="12" font-weight="bold" x="195" y="297">C9.2.2</text>
+<text font-family="Arial" font-size="12" x="195" y="316">xxxxxxxxx xxxxxxxxxxx</text>
+<text font-family="Arial" font-size="12" x="195" y="330">xx xxx xxxxxxxxx</text>
+<text font-family="Arial" font-size="12" x="195" y="344">xxxxxxxxxx</text>
 </g>
 <g class="gsn_module_tier_2_design gsnelem gsngoal" id="node_g9_2">
 <title>G9.2</title>
 <path class="border" d="M378,278 L482,278 L482,352 L378,352 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="385" y="297">
-G9.2
-</text>
-<text font-family="Arial" font-size="12" x="385" y="316">
-xxxxxx xxxxxx
-</text>
-<text font-family="Arial" font-size="12" x="385" y="330">
-xxxxxxxxxx xxx
-</text>
-<text font-family="Arial" font-size="12" x="385" y="344">
-xxxxxxxx.
-</text>
+<text font-family="Arial" font-size="12" font-weight="bold" x="385" y="297">G9.2</text>
+<text font-family="Arial" font-size="12" x="385" y="316">xxxxxx xxxxxx</text>
+<text font-family="Arial" font-size="12" x="385" y="330">xxxxxxxxxx xxx</text>
+<text font-family="Arial" font-size="12" x="385" y="344">xxxxxxxx.</text>
 </g>
 <g class="gsn_module_tier_2_design gsnelem gsnctxt" id="node_c9_2_1">
 <title>C9.2.1</title>
 <path class="border" d="M532,264 L658,264 C668,264,668,366,658,366 L532,366 C522,366,522,264,532,264" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="539" y="283">
-C9.2.1
-</text>
-<text font-family="Arial" font-size="12" x="539" y="302">
-xxxxx x:xxxx xxxx
-</text>
-<text font-family="Arial" font-size="12" x="539" y="316">
-(xxxx. xxxxx
-</text>
-<text font-family="Arial" font-size="12" x="539" y="330">
-xxxxxxxxxx xxxx
-</text>
-<text font-family="Arial" font-size="12" x="539" y="344">
-xxxxxxxx xxxxxxxxxx
-</text>
-<text font-family="Arial" font-size="12" x="539" y="358">
-(x.x. xxx))
-</text>
+<text font-family="Arial" font-size="12" font-weight="bold" x="539" y="283">C9.2.1</text>
+<text font-family="Arial" font-size="12" x="539" y="302">xxxxx x:xxxx xxxx</text>
+<text font-family="Arial" font-size="12" x="539" y="316">(xxxx. xxxxx</text>
+<text font-family="Arial" font-size="12" x="539" y="330">xxxxxxxxxx xxxx</text>
+<text font-family="Arial" font-size="12" x="539" y="344">xxxxxxxx xxxxxxxxxx</text>
+<text font-family="Arial" font-size="12" x="539" y="358">(x.x. xxx))</text>
 </g>
 <g class="gsn_module_tier_2_design gsnelem gsnsltn" id="node_sn9_1">
 <title>Sn9.1</title>
 <path class="border" d="M20,477 a66,66,0,1,0,132,0 a66,66,0,1,0,-132,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="36" y="468">
-Sn9.1
-</text>
-<text font-family="Arial" font-size="12" x="36" y="487">
-xxxxxx xxxxxxxxxx
-</text>
+<text font-family="Arial" font-size="12" font-weight="bold" x="36" y="468">Sn9.1</text>
+<text font-family="Arial" font-size="12" x="36" y="487">xxxxxx xxxxxxxxxx</text>
 </g>
 <g class="gsn_module_tier_2_design gsnelem gsnsltn" id="node_sn9_2">
 <title>Sn9.2</title>
 <path class="border" d="M277,477 a65,65,0,1,0,130,0 a65,65,0,1,0,-130,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="293" y="468">
-Sn9.2
-</text>
-<text font-family="Arial" font-size="12" x="293" y="487">
-xxxxxx xxx xxxxxx
-</text>
+<text font-family="Arial" font-size="12" font-weight="bold" x="293" y="468">Sn9.2</text>
+<text font-family="Arial" font-size="12" x="293" y="487">xxxxxx xxx xxxxxx</text>
 </g>
 <g class="gsn_module_tier_2_design gsnelem gsnsltn" id="node_sn9_2_2">
 <title>Sn9.2.2</title>
 <path class="border" d="M447,477 a71,71,0,1,0,142,0 a71,71,0,1,0,-142,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="465" y="461">
-Sn9.2.2
-</text>
-<text font-family="Arial" font-size="12" x="465" y="480">
-xxxxxxxxxxxxxx xxx
-</text>
-<text font-family="Arial" font-size="12" x="465" y="494">
-xxxxx xxxxxxxxxx
-</text>
+<text font-family="Arial" font-size="12" font-weight="bold" x="465" y="461">Sn9.2.2</text>
+<text font-family="Arial" font-size="12" x="465" y="480">xxxxxxxxxxxxxx xxx</text>
+<text font-family="Arial" font-size="12" x="465" y="494">xxxxx xxxxxxxxxx</text>
 </g>
 <path class="gsnedge gsninctxt" d="M324,122 C354,122,334,122,354,122" fill-opacity="0" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsninspby" d="M258,166 C258,196,86,248,86,268" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>

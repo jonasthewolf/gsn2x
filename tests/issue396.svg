@@ -21,33 +21,15 @@
 <g class="gsn_layer1 gsn_module_tests_issue396_yaml gsnelem gsngoal gsn_undeveloped" id="node_g1">
 <title>G1</title>
 <path class="border" d="M20,20 L146,20 L146,168 L20,168 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="27" y="39">
-G1
-</text>
-<text font-family="Arial" font-size="12" x="27" y="58">
-G1
-</text>
-<text font-family="Arial" font-size="12" x="27" y="70">
-
-</text>
-<text font-family="Arial" font-size="12" x="27" y="84">
-LAYER1:
-</text>
-<text font-family="Arial" font-size="12" x="27" y="98">
-testa askjdfnw jnf
-</text>
-<text font-family="Arial" font-size="12" x="27" y="112">
-kndsfn jknwer wnkd
-</text>
-<text font-family="Arial" font-size="12" x="27" y="126">
-wn23no pan nsfn
-</text>
-<text font-family="Arial" font-size="12" x="27" y="140">
-nwekjn naa nnswenr
-</text>
-<text font-family="Arial" font-size="12" x="27" y="154">
-naksdk anknskn
-</text>
+<text font-family="Arial" font-size="12" font-weight="bold" x="27" y="39">G1</text>
+<text font-family="Arial" font-size="12" x="27" y="58">G1</text>
+<text font-family="Arial" font-size="12" x="27" y="70"></text>
+<text font-family="Arial" font-size="12" x="27" y="84">LAYER1:</text>
+<text font-family="Arial" font-size="12" x="27" y="98">testa askjdfnw jnf</text>
+<text font-family="Arial" font-size="12" x="27" y="112">kndsfn jknwer wnkd</text>
+<text font-family="Arial" font-size="12" x="27" y="126">wn23no pan nsfn</text>
+<text font-family="Arial" font-size="12" x="27" y="140">nwekjn naa nnswenr</text>
+<text font-family="Arial" font-size="12" x="27" y="154">naksdk anknskn</text>
 <path d="M83,168 l5,5 l-5,5 l-5,-5 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 </g>
 </svg>

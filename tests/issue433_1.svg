@@ -21,94 +21,56 @@
 <g class="gsn_module_mainclaim gsnelem gsngoal" id="node_g00001">
 <title>G00001</title>
 <path class="border" d="M340,20 L444,20 L444,66 L340,66 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="347" y="39">
-G00001
-</text>
-<text font-family="Arial" font-size="12" x="347" y="58">
-Some text
-</text>
+<text font-family="Arial" font-size="12" font-weight="bold" x="347" y="39">G00001</text>
+<text font-family="Arial" font-size="12" x="347" y="58">Some text</text>
 </g>
 <g class="gsn_module_mainclaim gsnelem gsnasmp" id="node_a00001">
 <title>A00001</title>
 <path class="border" d="M20,183 a48,33,0,1,0,96,0 a48,33,0,1,0,-96,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="41" y="174">
-A00001
-</text>
-<text font-family="Arial" font-size="12" x="41" y="193">
-Some text
-</text>
-<text font-family="Arial" font-size="12" font-weight="bold" x="111" y="211">
-A
-</text>
+<text font-family="Arial" font-size="12" font-weight="bold" x="41" y="174">A00001</text>
+<text font-family="Arial" font-size="12" x="41" y="193">Some text</text>
+<text font-family="Arial" font-size="12" font-weight="bold" x="111" y="211">A</text>
 </g>
 <g class="gsn_module_mainclaim gsnelem gsnstgy" id="node_s00001">
 <title>S00001</title>
 <path class="border" d="M163,160 L297,160 L283,206 L149,206 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="171" y="179">
-S00001
-</text>
-<text font-family="Arial" font-size="12" x="167" y="198">
-Some text
-</text>
+<text font-family="Arial" font-size="12" font-weight="bold" x="171" y="179">S00001</text>
+<text font-family="Arial" font-size="12" x="167" y="198">Some text</text>
 </g>
 <g class="gsn_module_mainclaim gsnelem gsnjust" id="node_j00001">
 <title>J00001</title>
 <path class="border" d="M344,139 a48,33,0,1,0,96,0 a48,33,0,1,0,-96,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="365" y="130">
-J00001
-</text>
-<text font-family="Arial" font-size="12" x="365" y="149">
-Some text
-</text>
-<text font-family="Arial" font-size="12" font-weight="bold" x="435" y="167">
-J
-</text>
+<text font-family="Arial" font-size="12" font-weight="bold" x="365" y="130">J00001</text>
+<text font-family="Arial" font-size="12" x="365" y="149">Some text</text>
+<text font-family="Arial" font-size="12" font-weight="bold" x="435" y="167">J</text>
 </g>
 <g class="gsn_module_mainclaim gsnelem gsnctxt" id="node_c00001">
 <title>C00001</title>
 <path class="border" d="M340,213 L444,213 C454,213,454,259,444,259 L340,259 C330,259,330,213,340,213" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="347" y="232">
-C00001
-</text>
-<text font-family="Arial" font-size="12" x="347" y="251">
-Some text
-</text>
+<text font-family="Arial" font-size="12" font-weight="bold" x="347" y="232">C00001</text>
+<text font-family="Arial" font-size="12" x="347" y="251">Some text</text>
 </g>
 <g class="gsn_module_mainclaim gsnelem gsnstgy" id="node_s00002">
 <title>S00002</title>
 <path class="border" d="M501,160 L635,160 L621,206 L487,206 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="509" y="179">
-S00002
-</text>
-<text font-family="Arial" font-size="12" x="505" y="198">
-Some text
-</text>
+<text font-family="Arial" font-size="12" font-weight="bold" x="509" y="179">S00002</text>
+<text font-family="Arial" font-size="12" x="505" y="198">Some text</text>
 </g>
 <g class="gsn_module_mainclaim gsnelem gsngoal" id="node_g00002">
 <title>G00002</title>
 <path class="border" d="M509,300 L613,300 L613,346 L509,346 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="516" y="319">
-G00002
-</text>
-<text font-family="Arial" font-size="12" x="516" y="338">
-Some text
-</text>
+<text font-family="Arial" font-size="12" font-weight="bold" x="516" y="319">G00002</text>
+<text font-family="Arial" font-size="12" x="516" y="338">Some text</text>
 </g>
 <a href="issue433_2.svg#node_g00003">
 <g class="gsn_module_claimhazard gsnelem gsnawaygoal" id="node_g00003">
 <title>G00003</title>
 <path class="border" d="M507,438 V386 H615 V438" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="514" y="405">
-G00003
-</text>
-<text font-family="Arial" font-size="12" x="514" y="424">
-Some text
-</text>
+<text font-family="Arial" font-size="12" font-weight="bold" x="514" y="405">G00003</text>
+<text font-family="Arial" font-size="12" x="514" y="424">Some text</text>
 <a href="issue433_2.svg#node_g00003">
 <path class="border" d="M507,438 h108 v28 h-108 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="541" y="459">
-ClaimHazard
-</text>
+<text font-family="Arial" font-size="12" font-weight="bold" x="541" y="459">ClaimHazard</text>
 </a>
 <use href="#module_icon" x="514" y="445"/>
 </g>
@@ -116,12 +78,8 @@ ClaimHazard
 <g class="gsn_module_mainclaim gsnelem gsnsltn" id="node_sn00001">
 <title>Sn00001</title>
 <path class="border" d="M178,551 a45,45,0,1,0,90,0 a45,45,0,1,0,-90,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="196" y="542">
-Sn00001
-</text>
-<text font-family="Arial" font-size="12" x="196" y="561">
-Some text
-</text>
+<text font-family="Arial" font-size="12" font-weight="bold" x="196" y="542">Sn00001</text>
+<text font-family="Arial" font-size="12" x="196" y="561">Some text</text>
 </g>
 <path class="gsnedge gsninspby" d="M392,66 C392,96,223,130,223,150" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsninspby" d="M392,66 C392,96,561,130,561,150" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
