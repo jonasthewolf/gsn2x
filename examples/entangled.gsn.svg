@@ -21,42 +21,26 @@
 <g class="gsn_module_examples_entangled_gsn_yaml gsnelem gsngoal" id="node_g1">
 <title>G1</title>
 <path class="border" d="M1757,20 L1861,20 L1861,66 L1757,66 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="1764" y="39">
-G1
-</text>
-<text font-family="Arial" font-size="12" x="1764" y="58">
-First
-</text>
+<text font-family="Arial" font-size="12" font-weight="bold" x="1764" y="39">G1</text>
+<text font-family="Arial" font-size="12" x="1764" y="58">First</text>
 </g>
 <g class="gsn_module_examples_entangled_gsn_yaml gsnelem gsngoal" id="node_g2">
 <title>G2</title>
 <path class="border" d="M1901,20 L2005,20 L2005,66 L1901,66 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="1908" y="39">
-G2
-</text>
-<text font-family="Arial" font-size="12" x="1908" y="58">
-Second
-</text>
+<text font-family="Arial" font-size="12" font-weight="bold" x="1908" y="39">G2</text>
+<text font-family="Arial" font-size="12" x="1908" y="58">Second</text>
 </g>
 <g class="gsn_module_examples_entangled_gsn_yaml gsnelem gsnsltn" id="node_sn1">
 <title>Sn1</title>
 <path class="border" d="M1886,173 a67,67,0,1,0,134,0 a67,67,0,1,0,-134,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="1902" y="164">
-Sn1
-</text>
-<text font-family="Arial" font-size="12" x="1902" y="183">
-Solution to Second
-</text>
+<text font-family="Arial" font-size="12" font-weight="bold" x="1902" y="164">Sn1</text>
+<text font-family="Arial" font-size="12" x="1902" y="183">Solution to Second</text>
 </g>
 <g class="gsn_module_examples_entangled_gsn_yaml gsnelem gsnsltn" id="node_sn2">
 <title>Sn2</title>
 <path class="border" d="M2060,173 a60,60,0,1,0,120,0 a60,60,0,1,0,-120,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="2076" y="164">
-Sn2
-</text>
-<text font-family="Arial" font-size="12" x="2076" y="183">
-Solution to First
-</text>
+<text font-family="Arial" font-size="12" font-weight="bold" x="2076" y="164">Sn2</text>
+<text font-family="Arial" font-size="12" x="2076" y="183">Solution to First</text>
 </g>
 <path class="gsnedge gsninspby" d="M1809,66 C1809,96,2120,83,2120,103" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsninspby" d="M1953,66 C1953,96,1953,76,1953,96" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>

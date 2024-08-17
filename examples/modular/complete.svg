@@ -21,89 +21,53 @@
 <g class="gsn_module_sub1 gsnelem gsnasmp" id="node_a1">
 <title>A1</title>
 <path class="border" d="M69,53 a39,33,0,1,0,78,0 a39,33,0,1,0,-78,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="88" y="44">
-A1
-</text>
-<text font-family="Arial" font-size="12" x="88" y="63">
-TestABC
-</text>
-<text font-family="Arial" font-size="12" font-weight="bold" x="142" y="81">
-A
-</text>
+<text font-family="Arial" font-size="12" font-weight="bold" x="88" y="44">A1</text>
+<text font-family="Arial" font-size="12" x="88" y="63">TestABC</text>
+<text font-family="Arial" font-size="12" font-weight="bold" x="142" y="81">A</text>
 </g>
 <g class="gsn_module_main gsnelem gsngoal" id="node_g1">
 <title>G1</title>
 <path class="border" d="M187,30 L291,30 L291,76 L187,76 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="194" y="49">
-G1
-</text>
-<text font-family="Arial" font-size="12" x="194" y="68">
-Main Goal
-</text>
+<text font-family="Arial" font-size="12" font-weight="bold" x="194" y="49">G1</text>
+<text font-family="Arial" font-size="12" x="194" y="68">Main Goal</text>
 </g>
 <g class="gsn_module_main gsnelem gsnstgy" id="node_s1">
 <title>S1</title>
 <path class="border" d="M179,126 L313,126 L299,172 L165,172 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="187" y="145">
-S1
-</text>
-<text font-family="Arial" font-size="12" x="183" y="164">
-Divide and Conquer
-</text>
+<text font-family="Arial" font-size="12" font-weight="bold" x="187" y="145">S1</text>
+<text font-family="Arial" font-size="12" x="183" y="164">Divide and Conquer</text>
 </g>
 <g class="gsn_module_main gsnelem gsngoal gsn_undeveloped" id="node_g2">
 <title>G2</title>
 <path class="border" d="M20,219 L124,219 L124,271 L20,271 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="27" y="238">
-G2
-</text>
-<text font-family="Arial" font-size="12" x="27" y="257">
-Divide
-</text>
+<text font-family="Arial" font-size="12" font-weight="bold" x="27" y="238">G2</text>
+<text font-family="Arial" font-size="12" x="27" y="257">Divide</text>
 <path d="M72,271 l5,5 l-5,5 l-5,-5 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 </g>
 <g class="gsn_module_main gsnelem gsnjust" id="node_j1">
 <title>J1</title>
 <path class="border" d="M164,245 a64,33,0,1,0,128,0 a64,33,0,1,0,-128,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="190" y="236">
-J1
-</text>
-<text font-family="Arial" font-size="12" x="190" y="255">
-Some Context
-</text>
-<text font-family="Arial" font-size="12" font-weight="bold" x="287" y="273">
-J
-</text>
+<text font-family="Arial" font-size="12" font-weight="bold" x="190" y="236">J1</text>
+<text font-family="Arial" font-size="12" x="190" y="255">Some Context</text>
+<text font-family="Arial" font-size="12" font-weight="bold" x="287" y="273">J</text>
 </g>
 <g class="gsn_module_sub1 gsnelem gsngoal" id="node_g3">
 <title>G3</title>
 <path class="border" d="M332,222 L482,222 L482,268 L332,268 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="339" y="241">
-G3
-</text>
-<text font-family="Arial" font-size="12" x="339" y="260">
-Conquer the submodules
-</text>
+<text font-family="Arial" font-size="12" font-weight="bold" x="339" y="241">G3</text>
+<text font-family="Arial" font-size="12" x="339" y="260">Conquer the submodules</text>
 </g>
 <g class="gsn_module_sub3 gsnelem gsnctxt" id="node_c2">
 <title>C2</title>
 <path class="border" d="M532,222 L636,222 C646,222,646,268,636,268 L532,268 C522,268,522,222,532,222" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="539" y="241">
-C2
-</text>
-<text font-family="Arial" font-size="12" x="539" y="260">
-Context 2
-</text>
+<text font-family="Arial" font-size="12" font-weight="bold" x="539" y="241">C2</text>
+<text font-family="Arial" font-size="12" x="539" y="260">Context 2</text>
 </g>
 <g class="gsn_module_sub3 gsnelem gsnsltn" id="node_sn1">
 <title>Sn1</title>
 <path class="border" d="M363,362 a44,44,0,1,0,88,0 a44,44,0,1,0,-88,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="382" y="353">
-Sn1
-</text>
-<text font-family="Arial" font-size="12" x="382" y="372">
-Solution 1
-</text>
+<text font-family="Arial" font-size="12" font-weight="bold" x="382" y="353">Sn1</text>
+<text font-family="Arial" font-size="12" x="382" y="372">Solution 1</text>
 </g>
 <path class="gsnedge gsninctxt" d="M187,53 C157,53,177,53,157,53" fill-opacity="0" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsninspby" d="M239,76 C239,106,239,96,239,116" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>

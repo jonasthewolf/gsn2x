@@ -115,6 +115,13 @@ pub fn translate_to_output_path(
     Ok(output_path_buf.to_string_lossy().into_owned())
 }
 
+///
+/// Returns true if path seems to be an URL, otherwise false.
+///
+pub fn is_url(input: &str) -> bool {
+    input.starts_with("http://") || input.starts_with("https://") || input.starts_with("file://")
+}
+
 #[cfg(test)]
 mod test {
     use anyhow::Result;

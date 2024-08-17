@@ -21,38 +21,24 @@
 <g class="gsn_module_tests_issue391_1_yaml gsnelem gsngoal" id="node_g0">
 <title>G0</title>
 <path class="border" d="M53,20 L157,20 L157,66 L53,66 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="60" y="39">
-G0
-</text>
-<text font-family="Arial" font-size="12" x="60" y="58">
-G0
-</text>
+<text font-family="Arial" font-size="12" font-weight="bold" x="60" y="39">G0</text>
+<text font-family="Arial" font-size="12" x="60" y="58">G0</text>
 </g>
 <g class="gsn_module_tests_issue391_1_yaml gsnelem gsnstgy" id="node_s1">
 <title>S1</title>
 <path class="border" d="M45,106 L179,106 L165,152 L31,152 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="53" y="125">
-S1
-</text>
-<text font-family="Arial" font-size="12" x="49" y="144">
-S1
-</text>
+<text font-family="Arial" font-size="12" font-weight="bold" x="53" y="125">S1</text>
+<text font-family="Arial" font-size="12" x="49" y="144">S1</text>
 </g>
 <a href="issue391_2.svg#node_g1">
 <g class="gsn_module_tests_issue391_2_yaml gsnelem gsnawaygoal" id="node_g1">
 <title>G1</title>
 <path class="border" d="M20,244 V192 H190 V244" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="27" y="211">
-G1
-</text>
-<text font-family="Arial" font-size="12" x="27" y="230">
-G1
-</text>
+<text font-family="Arial" font-size="12" font-weight="bold" x="27" y="211">G1</text>
+<text font-family="Arial" font-size="12" x="27" y="230">G1</text>
 <a href="issue391_2.svg#node_g1">
 <path class="border" d="M20,244 h171 v28 h-171 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="54" y="265">
-tests_issue391_2_yaml
-</text>
+<text font-family="Arial" font-size="12" font-weight="bold" x="54" y="265">tests_issue391_2_yaml</text>
 </a>
 <use href="#module_icon" x="27" y="251"/>
 </g>

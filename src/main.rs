@@ -667,10 +667,7 @@ pub(crate) fn copy_and_prepare_stylesheets(
     output_directory: &str,
 ) -> Result<()> {
     for stylesheet in stylesheets {
-        let new_name = if stylesheet.starts_with("http://")
-            || stylesheet.starts_with("https://")
-            || stylesheet.starts_with("file://")
-        {
+        let new_name = if file_utils::is_url(stylesheet) {
             // Stylesheets provided as a URL, are neither copied nor embedded
             format!("url({stylesheet})")
         } else if embed_stylesheets {

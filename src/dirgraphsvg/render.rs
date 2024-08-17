@@ -2,7 +2,9 @@ use std::{cell::RefCell, collections::BTreeMap};
 
 use anyhow::Context;
 use svg::{
-    node::element::{Group, Marker, Polyline, Rectangle, Style, Symbol, Text, Title},
+    node::element::{
+        Anchor, Element, Group, Marker, Polyline, Rectangle, Style, Symbol, Text, Title,
+    },
     Document, Node,
 };
 
@@ -13,7 +15,7 @@ use super::{
     escape_node_id,
     layout::{Cell, Margin},
     nodes::SvgNode,
-    util::{font::FontInfo, point2d::Point2D},
+    util::{escape_url, font::FontInfo, point2d::Point2D},
     DirGraph,
 };
 
@@ -337,8 +339,8 @@ pub(crate) fn create_group(id: &str, classes: &[String]) -> Group {
 ///
 /// Create a SVG text element
 ///
-pub(crate) fn create_text(text: &str, x: i32, y: i32, font: &FontInfo, bold: bool) -> Text {
-    let mut text = Text::new(text)
+pub(crate) fn create_text(input: &str, x: i32, y: i32, font: &FontInfo, bold: bool) -> Element {
+    let mut text = Text::new(input)
         .set("x", x)
         .set("y", y)
         .set("font-size", font.size)
@@ -346,5 +348,11 @@ pub(crate) fn create_text(text: &str, x: i32, y: i32, font: &FontInfo, bold: boo
     if bold {
         text = text.set("font-weight", "bold");
     }
-    text
+
+    if crate::file_utils::is_url(input) {
+        let link = Anchor::new().set("href", escape_url(input)).add(text);
+        link.into()
+    } else {
+        text.into()
+    }
 }
