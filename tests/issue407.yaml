@@ -1,0 +1,6 @@
+
+G1:
+  text: Test
+  url: https://www.google.com
+  layer2: https://www.duckduckgo.com
+  undeveloped: true
