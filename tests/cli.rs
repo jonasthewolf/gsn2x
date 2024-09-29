@@ -533,6 +533,13 @@ mod integrations {
     }
 
     #[test]
+    fn multi_children() -> Result<()> {
+        regression_renderings(&["tests/multi_children.yaml"], &[], None)?;
+        Ok(())
+    }
+
+
+    #[test]
     fn min_doc() -> Result<()> {
         regression_renderings(
             &["examples/minimalcss/min.gsn.yaml"],
@@ -629,7 +636,7 @@ mod integrations {
     fn issue433() -> Result<()> {
         regression_renderings(
             &["tests/issue433_1.yaml"],
-            &["-w", "20"],
+            &["-w", "20", "-F", "-A"],
             Some(&["tests/issue433_2.yaml"]),
         )?;
         Ok(())
