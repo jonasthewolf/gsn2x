@@ -1,5 +1,5 @@
 use std::cell::RefCell;
-use std::collections::{BTreeMap, HashSet};
+use std::collections::{BTreeMap, BTreeSet, HashSet};
 
 use crate::dirgraph::DirectedGraph;
 
@@ -261,9 +261,13 @@ fn has_node_to_be_moved<'b>(
         .iter()
         .flat_map(|n| graph.get_real_parents(n))
         .collect();
+    // Collect in a set first, since cell can have more than one entry pointing to the same parent.
+    // Here, we are only interested in the unique set of parents.
     let same_rank_parents: Vec<_> = cell
         .iter()
         .flat_map(|n| graph.get_same_ranks_parents(n))
+        .collect::<BTreeSet<_>>()
+        .into_iter()
         .collect();
     let nodes = graph.get_nodes();
     let cell_x = cell.get_x(nodes);
