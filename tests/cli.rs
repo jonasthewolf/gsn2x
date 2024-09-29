@@ -538,7 +538,6 @@ mod integrations {
         Ok(())
     }
 
-
     #[test]
     fn min_doc() -> Result<()> {
         regression_renderings(
