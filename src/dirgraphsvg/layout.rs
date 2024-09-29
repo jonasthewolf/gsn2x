@@ -1,5 +1,5 @@
 use std::cell::RefCell;
-use std::collections::{BTreeMap, HashSet};
+use std::collections::{BTreeMap, BTreeSet, HashSet};
 
 use crate::dirgraph::DirectedGraph;
 
@@ -261,9 +261,13 @@ fn has_node_to_be_moved<'b>(
         .iter()
         .flat_map(|n| graph.get_real_parents(n))
         .collect();
+    // Collect in a set first, since cell can have more than one entry pointing to the same parent.
+    // Here, we are only interested in the unique set of parents.
     let same_rank_parents: Vec<_> = cell
         .iter()
         .flat_map(|n| graph.get_same_ranks_parents(n))
+        .collect::<BTreeSet<_>>()
+        .into_iter()
         .collect();
     let nodes = graph.get_nodes();
     let cell_x = cell.get_x(nodes);
@@ -293,8 +297,9 @@ fn has_node_to_be_moved<'b>(
         } else {
             // Only center over the children that have no other parents...
             let center_children = children
-                .into_iter()
+                .iter()
                 .filter(|&c| graph.get_real_parents(c).len() == 1)
+                .cloned()
                 .collect::<Vec<_>>();
             // ... and remember them. We don't move them later if they are already more to the right.
             if center_children.len() > 1 && cell_x <= get_center(nodes, &center_children) {
@@ -302,6 +307,7 @@ fn has_node_to_be_moved<'b>(
                     moved_nodes.insert(c);
                 });
             }
+
             // Ensure that we have moved the node with a single parent exactly under its parent.
             // This might happen if e.g. there is a large in-context node at the parent.
             // Then the child is too far left and never moved.
@@ -309,6 +315,15 @@ fn has_node_to_be_moved<'b>(
                 && graph.get_real_children(parents.first().unwrap()).len() == 1
             {
                 parents.get_x(nodes)
+            } else if center_children.is_empty() && child_len > 1 {
+                // If there is more than one child but only with at least one other parent,
+                // make sure that the current parent are at least the same x as its parents.
+                let min_cx = children
+                    .iter()
+                    .map(|&c| vec![c].get_x(nodes))
+                    .min()
+                    .unwrap_or(0);
+                std::cmp::max(min_cx, cell_x)
             } else {
                 0
             };
