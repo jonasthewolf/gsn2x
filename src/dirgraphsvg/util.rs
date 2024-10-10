@@ -1,5 +1,6 @@
 pub mod curve;
 pub mod font;
+pub mod markdown;
 pub mod point2d;
 pub mod wrap_words;
 

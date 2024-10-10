@@ -1,4 +1,7 @@
-use std::{cell::RefCell, collections::BTreeMap};
+use std::{
+    cell::RefCell,
+    collections::{BTreeMap, VecDeque},
+};
 
 use anyhow::Context;
 use svg::{
@@ -15,7 +18,12 @@ use super::{
     escape_node_id,
     layout::{Cell, Margin},
     nodes::SvgNode,
-    util::{escape_url, font::FontInfo, point2d::Point2D},
+    util::{
+        escape_url,
+        font::FontInfo,
+        markdown::{self, parse_markdown_links},
+        point2d::Point2D,
+    },
     DirGraph,
 };
 
@@ -340,19 +348,33 @@ pub(crate) fn create_group(id: &str, classes: &[String]) -> Group {
 /// Create a SVG text element
 ///
 pub(crate) fn create_text(input: &str, x: i32, y: i32, font: &FontInfo, bold: bool) -> Element {
-    let mut text = Text::new(input)
-        .set("x", x)
-        .set("y", y)
-        .set("font-size", font.size)
-        .set("font-family", font.name.as_str());
+    let mut parsed = VecDeque::from(parse_markdown_links(input));
+    let mut root = Text::new(match parsed.pop_front() {
+        Some(markdown::Text::String(t)) => t.to_owned(),
+        Some(t) => {
+            parsed.push_front(t);
+            "".to_owned()
+        }
+        None => "".to_owned(),
+    })
+    .set("x", x)
+    .set("y", y)
+    .set("font-size", font.size)
+    .set("font-family", font.name.as_str());
     if bold {
-        text = text.set("font-weight", "bold");
+        root = root.set("font-weight", "bold");
     }
 
-    if crate::file_utils::is_url(input) {
-        let link = Anchor::new().set("href", escape_url(input)).add(text);
-        link.into()
-    } else {
-        text.into()
+    // Add rest (if existing)
+    for p in parsed.into_iter() {
+        root = match p {
+            markdown::Text::String(t) => root.add(svg::node::Text::new(t)),
+            markdown::Text::Link(link) => root.add(
+                Anchor::new()
+                    .set("href", escape_url(link.href))
+                    .add(svg::node::Text::new(link.text.unwrap_or(link.href))),
+            ),
+        }
     }
+    root.into() // Returning an Element removes unnecessary whitespace from final SVG
 }
