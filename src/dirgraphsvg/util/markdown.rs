@@ -171,4 +171,19 @@ mod test {
             ]
         );
     }
+
+    #[test]
+    fn simple_link_with_just_opening_bracket() {
+        let res = parse_markdown_links("(https://www.google.com");
+        assert_eq!(
+            res,
+            vec![
+                Text::String("("),
+                Text::Link(Link {
+                    href: "https://www.google.com",
+                    text: None
+                }),
+            ]
+        );
+    }
 }
