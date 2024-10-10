@@ -116,10 +116,19 @@ pub fn translate_to_output_path(
 }
 
 ///
+/// Get strings that identify the start of a URL.
+///
+pub const fn get_url_identifiers() -> &'static [&'static str] {
+    &["http://", "https://", "file://"]
+}
+
+///
 /// Returns true if path seems to be an URL, otherwise false.
 ///
 pub fn is_url(input: &str) -> bool {
-    input.starts_with("http://") || input.starts_with("https://") || input.starts_with("file://")
+    get_url_identifiers()
+        .iter()
+        .any(|start| input.starts_with(start))
 }
 
 #[cfg(test)]

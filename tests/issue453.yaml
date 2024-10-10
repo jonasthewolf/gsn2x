@@ -1,0 +1,10 @@
+G1:
+  text: |
+   Test
+   - [DuckDuckGo](https://www.duckduckgo.com)
+   - [Yahoo](https://www.yahoo.com)
+  url: https://www.bing.com
+  layer2:
+     - "[DuckDuckGo](https://www.duckduckgo.com)"
+     - "[Yahoo](https://www.yahoo.com)"
+  undeveloped: true
