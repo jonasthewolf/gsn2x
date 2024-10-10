@@ -174,7 +174,7 @@ mod test {
 
     #[test]
     fn simple_link_with_just_opening_bracket() {
-        let res = parse_markdown_links("(https://www.google.com");
+        let res = parse_markdown_links("(https://www.google.com and some other string");
         assert_eq!(
             res,
             vec![
@@ -183,6 +183,7 @@ mod test {
                     href: "https://www.google.com",
                     text: None
                 }),
+                Text::String(" and some other string"),
             ]
         );
     }
