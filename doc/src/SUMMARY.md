@@ -7,7 +7,7 @@
 ---
 
 - [Advanced Use-cases](./advanced_usecases.md)
-    - [Line Breaks](./adv_linebreaks.md)
+    - [Formatting](./adv_formatting.md)
     - [Layout](./adv_layout.md)
     - [Layers](./adv_layers.md)
     - [Stylesheets](./adv_stylesheets.md)
