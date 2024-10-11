@@ -392,10 +392,10 @@ pub(crate) fn create_text(input: &str, x: i32, y: i32, font: &FontInfo, bold: bo
                         anchor_elem = map_texttype(anchor_elem, at);
                     }
                     root.append(anchor_elem);
-                } 
+                }
                 root
             }
         };
     }
-    root.into() // Returning an Element removes unnecessary whitespace from final SVG
+    root // Returning an Element removes unnecessary whitespace from final SVG
 }

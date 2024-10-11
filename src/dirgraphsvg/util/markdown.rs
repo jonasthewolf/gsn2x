@@ -100,12 +100,12 @@ pub fn parse_markdown_text(input: &str) -> Vec<TextType> {
         .flat_map(|url_id| input.match_indices(url_id))
         .collect::<Vec<_>>();
     indices.sort();
-    let mut indices_iter = indices.into_iter();
+    let indices_iter = indices.into_iter();
     let mut last_index = 0;
     let mut in_emph_char = None;
     let mut start_emph = 0;
 
-    while let Some((cur_index, emph_char)) = indices_iter.next() {
+    for (cur_index, emph_char) in indices_iter {
         if let Some(open_char) = in_emph_char {
             if emph_char == open_char
                 && (cur_index == input.len() - 1
