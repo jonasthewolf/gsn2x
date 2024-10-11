@@ -1,24 +1,64 @@
 
 # Formatting
 
-gsn2x allows for formatting of hyperlinks 
+gsn2x allows for different ways to formatting text.
+Formatting loosely follows Markdown syntax, even though not the full specification is supported.
+
+## Text emphasis
+
+You can use `*` and `_` to emphasize text.
+
+Text enclosed in `*`'s will be assigned a CSS class "bold".
+
+Text enclosed in `_`'s will be assigned a CSS class "italic".
+
+A default inline style is also assigned.
+
+### Example
+
+This text:
+
+```
+This is a *bold* text. This is an _italic_ text.
+```
+
+will be rendered to:
+
+`This is a`**`bold`**`text. This is an`*`italic`*`text.`
 
 
 ## Hyperlinks
 
-Markdown without title, only text and href
-URL without whitespace
+You can add hyperlinks for `text:` attributes as well as all additional layers.
+Hyperlinks are automatically detected when they start with "http://", "https://", "file://".
 
+If you like to hide the actual URL, you can assign a text to the link that is rendered instead.
+The syntax for this follows Markdown syntax. However, a title is not supported, only `text` and `href` are.
+URLs may not contain whitespace characters. If you URL has one, just replace with `%20`.
 
-hyperlinks are automatically detected http://, https://, file://
-
-Please note that the link created by `url:` cannot have additional text, since it is invisible and applicable to the complete node.
-
-### Example
-
-## Text emphasis
+Please note that the link created by `url:` cannot have additional text, since it is anyway invisible and applicable to the complete node.
 
 ### Example
+
+This link:
+
+```
+[Link Text](https://github.com/jonasthewolf/gsn2x)
+```
+
+will be rendered to:
+
+[Link Text](https://github.com/jonasthewolf/gsn2x)
+
+This link:
+
+```
+https://github.com/jonasthewolf/gsn2x
+```
+
+will be rendered to:
+
+[https://github.com/jonasthewolf/gsn2x](https://github.com/jonasthewolf/gsn2x)
 
 # Text layout within elements
 

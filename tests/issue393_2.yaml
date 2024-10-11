@@ -14,7 +14,7 @@ G7.2:
 J7.1:
   text: xxxxxxxx xxxxxxxx xx xxxxxxxxxxxxx xx xxxxxxxxxx.
 Sn7.1:
-  text: xxxxxxx xxxxxxxx xxxx xxxxxxxx.
+  text: xxxxxxx _xxxxxxxx_ xxxx xxxxxxxx.
 G7.3:
   text: xxxxxxxxxxx xx xxx xxxxxxxxxxxx xx xxxxxxx.
   supportedBy: [G7.3.1]

@@ -367,11 +367,19 @@ pub(crate) fn create_text(input: &str, x: i32, y: i32, font: &FontInfo, bold: bo
                 root
             }
             TextType::Bold(t) => {
-                root.append(TSpan::new(t).set("class", "bold"));
+                root.append(
+                    TSpan::new(t)
+                        .set("class", "bold")
+                        .set("style", "font-weight:bold;"),
+                );
                 root
             }
             TextType::Italic(t) => {
-                root.append(TSpan::new(t).set("class", "italic"));
+                root.append(
+                    TSpan::new(t)
+                        .set("class", "italic")
+                        .set("style", "font-style:italic;"),
+                );
                 root
             }
         }
