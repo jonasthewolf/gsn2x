@@ -90,7 +90,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="basic_usage.html"><strong aria-hidden="true">1.</strong> Basic Usage</a></li><li class="chapter-item expanded "><a href="yaml_syntax.html"><strong aria-hidden="true">2.</strong> Syntax</a></li><li class="chapter-item expanded "><a href="checks.html"><strong aria-hidden="true">3.</strong> Checks</a></li><li class="chapter-item expanded affix "><li class="spacer"></li><li class="chapter-item expanded "><a href="advanced_usecases.html"><strong aria-hidden="true">4.</strong> Advanced Use-cases</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="adv_linebreaks.html"><strong aria-hidden="true">4.1.</strong> Line Breaks</a></li><li class="chapter-item expanded "><a href="adv_layout.html"><strong aria-hidden="true">4.2.</strong> Layout</a></li><li class="chapter-item expanded "><a href="adv_layers.html"><strong aria-hidden="true">4.3.</strong> Layers</a></li><li class="chapter-item expanded "><a href="adv_stylesheets.html"><strong aria-hidden="true">4.4.</strong> Stylesheets</a></li><li class="chapter-item expanded "><a href="adv_evidences.html"><strong aria-hidden="true">4.5.</strong> Evidences</a></li></ol></li><li class="chapter-item expanded "><a href="mod_extension.html"><strong aria-hidden="true">5.</strong> Modular Extension</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="mod_distdev.html"><strong aria-hidden="true">5.1.</strong> Distributed Development</a></li><li class="chapter-item expanded "><a href="mod_info.html"><strong aria-hidden="true">5.2.</strong> Module Info</a></li></ol></li><li class="chapter-item expanded "><a href="confidence.html"><strong aria-hidden="true">6.</strong> Confidence Argument Extension</a></li><li class="chapter-item expanded "><a href="interfacing.html"><strong aria-hidden="true">7.</strong> Interfacing</a></li><li class="chapter-item expanded affix "><li class="spacer"></li><li class="chapter-item expanded "><a href="standard_support.html"><strong aria-hidden="true">8.</strong> Standard Support</a></li><li class="chapter-item expanded "><a href="troubleshooting.html"><strong aria-hidden="true">9.</strong> Troubleshooting</a></li><li class="chapter-item expanded affix "><li class="spacer"></li><li class="chapter-item expanded "><a href="design_goals.html"><strong aria-hidden="true">10.</strong> Design Goals</a></li><li class="chapter-item expanded "><a href="history.html"><strong aria-hidden="true">11.</strong> History</a></li><li class="chapter-item expanded "><a href="migration_v2x.html"><strong aria-hidden="true">12.</strong> Migration from v2.x</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="basic_usage.html"><strong aria-hidden="true">1.</strong> Basic Usage</a></li><li class="chapter-item expanded "><a href="yaml_syntax.html"><strong aria-hidden="true">2.</strong> Syntax</a></li><li class="chapter-item expanded "><a href="checks.html"><strong aria-hidden="true">3.</strong> Checks</a></li><li class="chapter-item expanded affix "><li class="spacer"></li><li class="chapter-item expanded "><a href="advanced_usecases.html"><strong aria-hidden="true">4.</strong> Advanced Use-cases</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="adv_formatting.html"><strong aria-hidden="true">4.1.</strong> Formatting</a></li><li class="chapter-item expanded "><a href="adv_layout.html"><strong aria-hidden="true">4.2.</strong> Layout</a></li><li class="chapter-item expanded "><a href="adv_layers.html"><strong aria-hidden="true">4.3.</strong> Layers</a></li><li class="chapter-item expanded "><a href="adv_stylesheets.html"><strong aria-hidden="true">4.4.</strong> Stylesheets</a></li><li class="chapter-item expanded "><a href="adv_evidences.html"><strong aria-hidden="true">4.5.</strong> Evidences</a></li></ol></li><li class="chapter-item expanded "><a href="mod_extension.html"><strong aria-hidden="true">5.</strong> Modular Extension</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="mod_distdev.html"><strong aria-hidden="true">5.1.</strong> Distributed Development</a></li><li class="chapter-item expanded "><a href="mod_info.html"><strong aria-hidden="true">5.2.</strong> Module Info</a></li></ol></li><li class="chapter-item expanded "><a href="confidence.html"><strong aria-hidden="true">6.</strong> Confidence Argument Extension</a></li><li class="chapter-item expanded "><a href="interfacing.html"><strong aria-hidden="true">7.</strong> Interfacing</a></li><li class="chapter-item expanded affix "><li class="spacer"></li><li class="chapter-item expanded "><a href="standard_support.html"><strong aria-hidden="true">8.</strong> Standard Support</a></li><li class="chapter-item expanded "><a href="troubleshooting.html"><strong aria-hidden="true">9.</strong> Troubleshooting</a></li><li class="chapter-item expanded affix "><li class="spacer"></li><li class="chapter-item expanded "><a href="design_goals.html"><strong aria-hidden="true">10.</strong> Design Goals</a></li><li class="chapter-item expanded "><a href="history.html"><strong aria-hidden="true">11.</strong> History</a></li><li class="chapter-item expanded "><a href="migration_v2x.html"><strong aria-hidden="true">12.</strong> Migration from v2.x</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
@@ -320,7 +320,39 @@ The checks for references (Cxx) can be skipped for individual files by using the
 <li><a href="./adv_stylesheets.html">Stylesheets</a></li>
 <li><a href="./adv_evidences.html">Evidences</a></li>
 </ul>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="text-layout-within-elements"><a class="header" href="#text-layout-within-elements">Text layout within elements</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="formatting"><a class="header" href="#formatting">Formatting</a></h1>
+<p>gsn2x allows for different ways to formatting text.
+Formatting loosely follows Markdown syntax, even though not the full specification is supported.</p>
+<h2 id="text-emphasis"><a class="header" href="#text-emphasis">Text emphasis</a></h2>
+<p>You can use <code>*</code> and <code>_</code> to emphasize text.</p>
+<p>Text enclosed in <code>*</code>'s will be assigned a CSS class "bold".</p>
+<p>Text enclosed in <code>_</code>'s will be assigned a CSS class "italic".</p>
+<p>A default inline style is also assigned.</p>
+<h3 id="example-1"><a class="header" href="#example-1">Example</a></h3>
+<p>This text:</p>
+<pre><code>This is a *bold* text. This is an _italic_ text.
+</code></pre>
+<p>will be rendered to:</p>
+<p><code>This is a</code><strong><code>bold</code></strong><code>text. This is an</code><em><code>italic</code></em><code>text.</code></p>
+<h2 id="hyperlinks"><a class="header" href="#hyperlinks">Hyperlinks</a></h2>
+<p>You can add hyperlinks for <code>text:</code> attributes as well as all additional layers.
+Hyperlinks are automatically detected when they start with "http://", "https://", "file://".</p>
+<p>If you like to hide the actual URL, you can assign a text to the link that is rendered instead.
+The syntax for this follows Markdown syntax. However, a title is not supported, only <code>text</code> and <code>href</code> are.
+URLs may not contain whitespace characters. If you URL has one, just replace with <code>%20</code>.</p>
+<p>Please note that the link created by <code>url:</code> cannot have additional text, since it is anyway invisible and applicable to the complete node.</p>
+<h3 id="example-2"><a class="header" href="#example-2">Example</a></h3>
+<p>This link:</p>
+<pre><code>[Link Text](https://github.com/jonasthewolf/gsn2x)
+</code></pre>
+<p>will be rendered to:</p>
+<p><a href="https://github.com/jonasthewolf/gsn2x">Link Text</a></p>
+<p>This link:</p>
+<pre><code>https://github.com/jonasthewolf/gsn2x
+</code></pre>
+<p>will be rendered to:</p>
+<p><a href="https://github.com/jonasthewolf/gsn2x">https://github.com/jonasthewolf/gsn2x</a></p>
+<h1 id="text-layout-within-elements"><a class="header" href="#text-layout-within-elements">Text layout within elements</a></h1>
 <p>You can control line breaks by YAML means, e.g. following this example:</p>
 <pre><code class="language-yaml">G1:
   text: |
@@ -403,7 +435,7 @@ the algorithm in ranking the elements more sensibly.</p>
 start a discussion on the GitHub site.
 The issue template on GitHub shows you how to remove intellectual property
 from the files that I would ask for then.</p>
-<h4 id="example-1"><a class="header" href="#example-1">Example</a></h4>
+<h4 id="example-3"><a class="header" href="#example-3">Example</a></h4>
 <p>The following small example will yield the above mentioned message:</p>
 <pre><code class="language-yaml">G1:
   text: First
@@ -437,7 +469,7 @@ Sn2:
 <p>Additional attributes of an element are not output into the rendered diagram.</p>
 <p>With the command line option <code>-l</code> or <code>--layers</code> you can enable the output of those additional attributes.
 By using this feature different views on the GSN can be generated.</p>
-<h2 id="example-2"><a class="header" href="#example-2">Example</a></h2>
+<h2 id="example-4"><a class="header" href="#example-4">Example</a></h2>
 <pre><code class="language-yaml">G1:
   text: This is a Goal
   supportedBy: [S1]
@@ -497,7 +529,7 @@ If an absolute path is used, the stylesheet will be copied to the root of the ou
 <p>You can assign additional classes by adding the <code>classes:</code> attribute. It must be a list of classes you want to assign.
 Additional layers will be added as CSS classes, too. A <code>layer1</code> will e.g. be added as <code>gsnlay_layer1</code>.</p>
 <p>For more information on how to use CSS with SVGs, see <a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/SVG_and_CSS">here</a>.</p>
-<h2 id="example-3"><a class="header" href="#example-3">Example</a></h2>
+<h2 id="example-5"><a class="header" href="#example-5">Example</a></h2>
 <p>The GSN YAML:</p>
 <pre><code class="language-yaml">
 G1:
@@ -585,7 +617,7 @@ THe architecture view is navigable to the module argument view.</p>
 <p>The architecture view only contains the links to the individual module files, if they actually exist when generating the architecture view.</p>
 <p><img src="examples/modular/architecture.svg" alt="example architecture" /></p>
 <p>See <a href="examples/modular/architecture.svg">example</a> here.</p>
-<h2 id="example-4"><a class="header" href="#example-4">Example:</a></h2>
+<h2 id="example-6"><a class="header" href="#example-6">Example:</a></h2>
 <pre><code>gsn2x -f full.svg -a arch.svg main.yml sub1.yml sub3.yml
 </code></pre>
 <p>This will generate the argument view for each module, the complete view (<code>-f full.svg</code>) of all modules and the architecture view (<code>-a arch.svg</code>). <!-- In the complete view, the elements of the `sub1` module will be represented by a module. --></p>
