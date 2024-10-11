@@ -1,12 +1,9 @@
-use std::{
-    cell::RefCell,
-    collections::{BTreeMap, VecDeque},
-};
+use std::{cell::RefCell, collections::BTreeMap};
 
 use anyhow::Context;
 use svg::{
     node::element::{
-        Anchor, Element, Group, Marker, Polyline, Rectangle, Style, Symbol, Text, Title,
+        Anchor, Element, Group, Marker, Polyline, Rectangle, Style, Symbol, TSpan, Text, Title,
     },
     Document, Node,
 };
@@ -21,7 +18,7 @@ use super::{
     util::{
         escape_url,
         font::FontInfo,
-        markdown::{self, parse_markdown_links},
+        markdown::{self, parse_markdown_links, TextType},
         point2d::Point2D,
     },
     DirGraph,
@@ -347,34 +344,58 @@ pub(crate) fn create_group(id: &str, classes: &[String]) -> Group {
 ///
 /// Create a SVG text element
 ///
+/// <a><text x="" y="">xyz</text></a>
+/// <text x="" y=""><a>xyz</a></text>
+///
+///
 pub(crate) fn create_text(input: &str, x: i32, y: i32, font: &FontInfo, bold: bool) -> Element {
-    let mut parsed = VecDeque::from(parse_markdown_links(input));
-    let mut root = Text::new(match parsed.pop_front() {
-        Some(markdown::Text::String(t)) => t.to_owned(),
-        Some(t) => {
-            parsed.push_front(t);
-            "".to_owned()
-        }
-        None => "".to_owned(),
-    })
-    .set("x", x)
-    .set("y", y)
-    .set("font-size", font.size)
-    .set("font-family", font.name.as_str());
+    let parsed = parse_markdown_links(input);
+    let mut text = Text::new("")
+        .set("x", x)
+        .set("y", y)
+        .set("font-size", font.size)
+        .set("font-family", font.name.as_str());
     if bold {
-        root = root.set("font-weight", "bold");
+        text = text.set("font-weight", "bold");
+    }
+    let mut root: Element = text.into();
+    // Needed for normal texts and anchors
+    fn map_texttype(mut root: Element, t: TextType) -> Element {
+        match t {
+            TextType::Normal(t) => {
+                root.append(svg::node::Text::new(t));
+                root
+            }
+            TextType::Bold(t) => {
+                root.append(TSpan::new(t).set("class", "bold"));
+                root
+            }
+            TextType::Italic(t) => {
+                root.append(TSpan::new(t).set("class", "italic"));
+                root
+            }
+        }
     }
 
     // Add rest (if existing)
     for p in parsed.into_iter() {
         root = match p {
-            markdown::Text::String(t) => root.add(svg::node::Text::new(t)),
-            markdown::Text::Link(link) => root.add(
-                Anchor::new()
-                    .set("href", escape_url(link.href))
-                    .add(svg::node::Text::new(link.text.unwrap_or(link.href))),
-            ),
-        }
+            markdown::Text::String(t) => map_texttype(root, t),
+            markdown::Text::Link(link) => {
+                let mut anchor = Anchor::new().set("href", escape_url(link.href));
+                if link.text.is_empty() {
+                    anchor.append(svg::node::Text::new(link.href));
+                    root.append(anchor);
+                } else {
+                    let mut anchor_elem: Element = anchor.into();
+                    for at in link.text {
+                        anchor_elem = map_texttype(anchor_elem, at);
+                    }
+                    root.append(anchor_elem);
+                } 
+                root
+            }
+        };
     }
     root.into() // Returning an Element removes unnecessary whitespace from final SVG
 }

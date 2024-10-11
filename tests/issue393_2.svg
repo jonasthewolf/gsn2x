@@ -103,7 +103,8 @@
 <text font-family="Arial" font-size="12" x="139" y="579">xxxxxxxx xxx xxxxxxxx</text>
 <text font-family="Arial" font-size="12" x="139" y="593">xxxxxxxxxx xx xxxxxxx</text>
 <text font-family="Arial" font-size="12" x="139" y="607">xx xxxxxxxx xxxxxxxx</text>
-<text font-family="Arial" font-size="12" x="139" y="621">xx *xxxxxxx* xxxxx.</text>
+<text font-family="Arial" font-size="12" x="139" y="621">xx 
+<tspan class="bold">xxxxxxx</tspan> xxxxx.</text>
 </g>
 <g class="gsn_module_tier_2_requirements_engineering gsnelem gsngoal" id="node_g7_2_2">
 <title>G7.2.2</title>
@@ -112,7 +113,8 @@
 <text font-family="Arial" font-size="12" x="432" y="579">xxxxxxxx xxx xxxxxxxx</text>
 <text font-family="Arial" font-size="12" x="432" y="593">xxxxxxxxxx xx xxxxxxx</text>
 <text font-family="Arial" font-size="12" x="432" y="607">xx xxxxxxxx xxxxxxxx</text>
-<text font-family="Arial" font-size="12" x="432" y="621">xx *xxxxxxxxx* xxxxx.</text>
+<text font-family="Arial" font-size="12" x="432" y="621">xx 
+<tspan class="bold">xxxxxxxxx</tspan> xxxxx.</text>
 </g>
 <g class="gsn_module_tier_2_requirements_engineering gsnelem gsnsltn" id="node_sn7_3_1">
 <title>Sn7.3.1</title>
