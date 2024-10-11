@@ -669,6 +669,12 @@ mod integrations {
     }
 
     #[test]
+    fn issue453() -> Result<()> {
+        regression_renderings(&["tests/issue453.yaml"], &["-l", "layer2"], None)?;
+        Ok(())
+    }
+
+    #[test]
     fn additionals() -> Result<()> {
         regression_renderings(
             &["tests/additionals.yaml"],

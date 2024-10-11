@@ -213,6 +213,7 @@ impl SvgNode {
 
         render_acp_box(self, font, &mut g);
 
+        // Add link to self.url for complete node
         if let Some(url) = &self.url {
             let link = Anchor::new().set("href", escape_url(url.as_str())).add(g);
             document.append(link);
