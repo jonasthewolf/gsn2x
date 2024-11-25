@@ -21,8 +21,8 @@ Caused by:
 
 Please see the [YAML Syntax](./yaml_syntax.md) what is expected by the programs.
 
-A good strategy to find out which element is causing the problem is to remove all but the first element from the input YAML file. Then running gsn2x again and incrementally adding the elements one by one again, until you hit the
-error message again.
+A good strategy to find out which element is causing the problem is to remove all but the first element from the input YAML file. 
+Then running gsn2x again and incrementally adding the elements one by one again, until you hit the error message again.
 
 Unfortunately, it is currently not possible to improve on the location of the error messages in this case.
 

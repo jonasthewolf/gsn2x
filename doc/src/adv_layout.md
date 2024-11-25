@@ -89,6 +89,8 @@ You may even encounter the following message
 In such cases, please use the mechanisms described above to support 
 the algorithm in ranking the elements more sensibly.
 
+Moreover, gsn2x also outputs a hint on the list of elements that might cause the problem.
+
 If you have trouble doing so, please feel free to create an issue or 
 start a discussion on the GitHub site. 
 The issue template on GitHub shows you how to remove intellectual property

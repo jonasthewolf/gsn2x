@@ -699,4 +699,14 @@ mod integrations {
             .stderr(predicate::str::contains("Error: (A) C06: Module in tests/circle1.yaml was already present in tests/circle1.yaml provided by command line."));
         Ok(())
     }
+
+    #[test]
+    fn issue467() -> Result<()> {
+        let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
+        cmd.arg("-G").arg("-E").arg("tests/issue467.yaml");
+        cmd.assert().success().stdout(predicate::str::contains(
+            "The following nodes might cause the problem: GA, SnA",
+        ));
+        Ok(())
+    }
 }

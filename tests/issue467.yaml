@@ -1,0 +1,15 @@
+
+GA:
+  text: A
+  supportedBy: [SnB]
+
+
+GB:
+  text: B
+  supportedBy: [SnA]
+
+SnA:
+  text: A
+
+SnB:
+  text: B

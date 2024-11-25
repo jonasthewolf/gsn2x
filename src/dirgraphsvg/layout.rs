@@ -147,6 +147,7 @@ pub(super) fn layout_nodes(
     margin: &Margin,
 ) -> (i32, i32) {
     let nodes = graph.get_nodes();
+    let mut unstable_nodes = BTreeMap::new();
     // This number should be safe that it yields a final, good looking image
     let limit = 3 * ranks.len();
     for run in 0..=limit {
@@ -170,6 +171,10 @@ pub(super) fn layout_nodes(
                             x = std::cmp::max(x, new_x);
                             // Often needed for debugging.
                             // eprintln!("Changed {:?} {} {} {}", &cell, x, old_x, new_x);
+                            unstable_nodes
+                                .entry(cell)
+                                .and_modify(|e| *e += 1)
+                                .or_insert(1);
                             changed = true;
                         }
                     }
@@ -187,6 +192,23 @@ pub(super) fn layout_nodes(
         }
         if changed && run == limit {
             println!("Diagram took too many iterations ({run}). See documentation (https://jonasthewolf.github.io/gsn2x/) for hints how to solve this situation.");
+            if let Some(max_value) = unstable_nodes.values().max() {
+                let nodes_to_report = unstable_nodes
+                    .iter()
+                    .filter_map(|(c, v)| {
+                        if v == max_value {
+                            Some(c.join(", "))
+                        } else {
+                            None
+                        }
+                    })
+                    .collect::<Vec<_>>()
+                    .join(", ");
+                println!(
+                    "The following nodes might cause the problem: {}",
+                    nodes_to_report
+                );
+            }
         }
     }
     calculate_size_of_document(nodes, ranks, margin)
