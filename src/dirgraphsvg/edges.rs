@@ -66,7 +66,7 @@ pub enum EdgeType {
     TwoWay((SingleEdge, SingleEdge)),
 }
 
-impl<'a> DirectedGraphEdgeType<'a> for EdgeType {
+impl DirectedGraphEdgeType<'_> for EdgeType {
     fn is_primary_child_edge(&self) -> bool {
         matches!(
             *self,

@@ -18,23 +18,6 @@ impl CubicBezierCurve<i32> {
     }
 
     ///
-    /// B'' == 0
-    /// (1-t)*(P2-2*P1+P0) = t*(P3-2*P2+P1)
-    /// (P2-2*P1+P0) - t*(P2-2*P1+P0) = t*(P3-2*P2+P1)
-    /// (P2-2*P1+P0) = t*(P2-2*P1+P0 + P3-2*P2+P1)
-    /// (P2-2*P1+P0) = t*(-P2-P1+P0+P3)
-    /// (P2-2*P1+P0) * (P3-P2-P1+P0)^-1 = t
-    /// (P0-2*P1+P2) * (P0-P1-P2+P3)^-1 = t
-    ///
-    ///
-    // pub fn get_turning_point(&self) -> f64 {
-    //     let num = self.p0.x - 2 * self.p1.x + self.p2.x;
-    //     let denom = self.p0.x - self.p1.x - self.p2.x + self.p3.x;
-
-    //     num as f64 / denom as f64
-    // }
-
-    ///
     /// Get the x,y coordinates for parameter t of cubic Bezier curve.
     ///
     pub fn get_coordinates_for_t(&self, t: f64) -> Point2D<i32> {

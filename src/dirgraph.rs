@@ -449,7 +449,7 @@ where
         &'b self,
         current_rank_nodes: Vec<&'b str>,
         visited: &mut BTreeSet<&'b str>,
-    ) -> Vec<Vec<&str>> {
+    ) -> Vec<Vec<&'b str>> {
         let mut current_rank: Vec<Vec<&str>> =
             current_rank_nodes.iter().map(|&n| vec![n]).collect();
         // Add inContext nodes

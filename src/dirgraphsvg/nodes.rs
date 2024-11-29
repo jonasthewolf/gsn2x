@@ -67,7 +67,7 @@ pub struct SvgNode {
     acp: Vec<String>,
 }
 
-impl<'a> DirectedGraphNodeType<'a> for RefCell<SvgNode> {
+impl DirectedGraphNodeType<'_> for RefCell<SvgNode> {
     fn get_forced_level(&self) -> Option<usize> {
         self.borrow().rank_increment
     }

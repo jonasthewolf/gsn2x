@@ -28,13 +28,6 @@ impl Point2D<i32> {
     }
 
     ///
-    /// Get angle between self and other point
-    ///
-    // pub fn angle(&self, p2: &Point2D<i32>) -> f64 {
-    //     f64::acos((self.x * p2.x + self.y * p2.y) as f64 / (self.norm() * p2.norm()))
-    // }
-
-    ///
     /// Get the norm of the point
     ///
     pub fn norm(&self) -> f64 {

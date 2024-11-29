@@ -60,7 +60,6 @@ pub(crate) struct AwayType {
 ///                  +--+------------------------+--+
 ///                  |           width              |
 ///
-
 impl AwayType {
     ///
     /// Almost arbitrary minimum size.

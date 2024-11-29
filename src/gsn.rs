@@ -202,7 +202,7 @@ impl GsnNode {
     }
 }
 
-impl<'a> DirectedGraphNodeType<'a> for GsnNode {
+impl DirectedGraphNodeType<'_> for GsnNode {
     fn get_forced_level(&self) -> Option<usize> {
         self.rank_increment
     }
@@ -224,7 +224,7 @@ impl<'a> DirectedGraphNodeType<'a> for GsnNode {
 /// Primary childs are SupportedBy edges
 /// Secondary childs (=same rank) are InContextOf edges
 ///
-impl<'a> DirectedGraphEdgeType<'a> for GsnEdgeType {
+impl DirectedGraphEdgeType<'_> for GsnEdgeType {
     fn is_primary_child_edge(&self) -> bool {
         match self {
             GsnEdgeType::SupportedBy => true,
