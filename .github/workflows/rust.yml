@@ -88,9 +88,7 @@ jobs:
     - name: Release build
       env:
         GSN2X_VERSION: ${{ steps.githash.outputs.GSN2X_VERSION }}
-      run: 
-        echo $GSN2X_VERSION
-        cargo build --release --verbose
+      run: cargo build --release --verbose
     - name: Copy binaries
       if: hashFiles('target/release/gsn2x')
       run: |
