@@ -246,7 +246,7 @@ mod integrations {
             .arg("examples/modular/index.gsn.yaml")
             .arg("examples/modular/sub2.gsn.yaml");
         cmd.assert().failure().stderr(predicate::str::contains(
-            "Error: 1 errors and 0 warnings detected.",
+            "Error: 2 errors and 0 warnings detected.",
         ));
         Ok(())
     }
@@ -260,7 +260,7 @@ mod integrations {
             .arg("-x")
             .arg("examples/modular/sub2.gsn.yaml");
         cmd.assert().failure().stderr(predicate::str::contains(
-            "Error: 1 errors and 0 warnings detected.",
+            "Error: 2 errors and 0 warnings detected.",
         ));
         Ok(())
     }
@@ -706,6 +706,16 @@ mod integrations {
         cmd.arg("-G").arg("-E").arg("tests/issue467.yaml");
         cmd.assert().success().stdout(predicate::str::contains(
             "The following nodes might cause the problem: GA, SnA",
+        ));
+        Ok(())
+    }
+
+    #[test]
+    fn issue472() -> Result<()> {
+        let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
+        cmd.arg("tests/issue472.yaml");
+        cmd.assert().failure().stderr(predicate::str::contains(
+            "Error: (Test) The module does not contain elements.",
         ));
         Ok(())
     }

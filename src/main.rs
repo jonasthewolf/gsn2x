@@ -539,7 +539,27 @@ fn validate_and_check(
 ) -> Result<()> {
     // Compiler complains if this is not a closure, but a simple block
     if nodes.is_empty() {
-        Err(anyhow!("No input elements are found."))
+        diags.add_error(None, "No input elements are found.".to_owned());
+        Err(ValidationOrCheckError {}.into())
+    } else if let Some(empty_modules) = {
+        let empty_modules = modules
+            .keys()
+            .filter(|m| nodes.values().filter(|n| &&n.module == m).count() == 0)
+            .cloned()
+            .collect::<Vec<_>>();
+        if empty_modules.is_empty() {
+            None
+        } else {
+            Some(empty_modules)
+        }
+    } {
+        for empty_module in empty_modules {
+            diags.add_error(
+                Some(&empty_module),
+                "The module does not contain elements.".to_owned(),
+            );
+        }
+        Err(ValidationOrCheckError {}.into())
     } else {
         let result = || -> Result<(), ()> {
             for module_info in modules.values() {
