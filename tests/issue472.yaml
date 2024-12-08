@@ -1,0 +1,3 @@
+module:
+  name: Test
+  uses: ["issue472_2.yaml"]
