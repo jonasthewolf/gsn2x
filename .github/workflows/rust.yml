@@ -81,9 +81,10 @@ jobs:
     - name: Patch version for pre-release
       id: githash
       if: ${{ !startsWith(github.ref, 'refs/tags/') }}
+      shell: bash
       run: |
-        echo "GSN2X_VERSION=${{GITHUB_SHA::6}}"
-        echo "GSN2X_VERSION=${{GITHUB_SHA::6}}" >> $GITHUB_OUTPUT
+        echo "GSN2X_VERSION=${GITHUB_SHA::6}"
+        echo "GSN2X_VERSION=${GITHUB_SHA::6}" >> $GITHUB_OUTPUT
     - name: Test
       run: cargo test --verbose
     - name: Release build
