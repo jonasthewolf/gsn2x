@@ -19,7 +19,7 @@ use super::{
     layout::Margin,
     nodes::{Port, SvgNode},
     render::{create_text, ACP_BOX_SIZE, BOTTOM_LEFT_CORNER, TOP_RIGHT_CORNER},
-    util::{font::text_bounding_box, point2d::Point2D},
+    util::{font::str_line_bounding_box, point2d::Point2D},
     DirGraph,
 };
 
@@ -104,8 +104,8 @@ const MARKER_HEIGHT: u32 = 10;
 ///
 /// Render a single edge
 ///
-pub(super) fn render_edge(
-    graph: &DirectedGraph<'_, RefCell<SvgNode>, EdgeType>,
+pub(super) fn render_edge<'a>(
+    graph: &DirectedGraph<'a, RefCell<SvgNode>, EdgeType>,
     render_graph: &DirGraph,
     ranks: &[Vec<Vec<&str>>],
     bounding_boxes: &[Vec<[Point2D<i32>; 4]>],
@@ -210,8 +210,8 @@ pub(super) fn render_edge(
 /// Render an Assurance Claim Point (ACP)
 ///
 ///
-fn render_acps(
-    graph: &DirectedGraph<'_, RefCell<SvgNode>, EdgeType>,
+fn render_acps<'a>(
+    graph: &DirectedGraph<'a, RefCell<SvgNode>, EdgeType>,
     render_graph: &DirGraph<'_>,
     source: &str,
     target: &(String, EdgeType),
@@ -241,7 +241,7 @@ fn render_acps(
         let acp_text = acps.join(", ");
         let acp_x = coords.x - ACP_BOX_SIZE;
         let acp_y = coords.y - ACP_BOX_SIZE;
-        let acp_text_bb = text_bounding_box(&render_graph.font, &acp_text, false);
+        let acp_text_bb = str_line_bounding_box(&render_graph.font, &acp_text, false);
         let acp_x_text = coords.x
             + ((ACP_BOX_SIZE + PADDING_HORIZONTAL) as f64 * turning_vector.y) as i32
             - ((1.0 - turning_vector.y) * ((acp_text_bb.0) as f64 / 2.0)) as i32;
@@ -255,7 +255,7 @@ fn render_acps(
                 .set("y", acp_y),
         );
         svg_acp.append(create_text(
-            &acp_text,
+            &acp_text.into(),
             acp_x_text,
             acp_y_text,
             &render_graph.font,

@@ -5,7 +5,7 @@ use crate::dirgraphsvg::{
     render::{create_text, PADDING_HORIZONTAL, PADDING_VERTICAL},
     util::{
         escape_url,
-        font::{text_bounding_box, FontInfo},
+        font::{str_line_bounding_box, text_line_bounding_box, FontInfo},
     },
 };
 
@@ -79,7 +79,7 @@ impl AwayType {
         size_context: &mut SizeContext,
     ) -> (i32, i32) {
         // no wrapping of module names
-        let (mod_width, _) = text_bounding_box(font, &self.module, false);
+        let (mod_width, _) = str_line_bounding_box(font, &self.module, false);
 
         let width = *[
             min_width,
@@ -190,14 +190,14 @@ impl AwayType {
         let x = node.x - node.width / 2 + PADDING_HORIZONTAL;
         let mut y = y_id + font.size as i32;
         // Identifier
-        context.append(create_text(&node.identifier, x, y, font, true));
+        context.append(create_text(&(&node.identifier).into(), x, y, font, true));
         y += OFFSET_IDENTIFIER;
 
         // Text
         if !node.masked {
             for text in node.text.lines() {
-                y += text_bounding_box(font, text, false).1;
-                context.append(create_text(text, x, y, font, false));
+                y += text_line_bounding_box(font, text, false).1;
+                context.append(create_text(&text.into(), x, y, font, false));
             }
         }
 
@@ -224,7 +224,7 @@ impl AwayType {
             None
         } else {
             Some(create_text(
-                &self.module,
+                &(&self.module).into(),
                 node.x - node.width / 2 + PADDING_HORIZONTAL + MODULE_IMAGE + PADDING_HORIZONTAL,
                 node.y + node.height / 2 - PADDING_VERTICAL,
                 font,
@@ -264,7 +264,7 @@ impl AwayType {
         };
         if let Some(adm) = admonition {
             context.append(create_text(
-                adm,
+                &adm.into(),
                 node.x + node.width / 2 - PADDING_HORIZONTAL,
                 node.y - node.height / 2,
                 font,

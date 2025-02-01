@@ -1,28 +1,191 @@
+use std::slice::Split;
+
 use crate::file_utils::get_url_identifiers;
 
-#[derive(Debug, PartialEq, Eq)]
-pub struct Link<'a> {
-    pub href: &'a str,
-    pub text: Vec<TextType<'a>>,
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct Link {
+    pub href: String,
+    pub text: Vec<TextType>,
 }
 
-#[derive(Debug, PartialEq, Eq)]
-pub enum TextType<'a> {
-    Normal(&'a str),
-    Italic(&'a str),
-    Bold(&'a str),
+impl From<Link> for String {
+    fn from(value: Link) -> Self {
+        value
+            .text
+            .into_iter()
+            .map(|l| l.into())
+            .collect::<Vec<String>>()
+            .join(" ")
+    }
 }
 
-#[derive(Debug, PartialEq, Eq)]
-pub enum Text<'a> {
-    String(TextType<'a>),
-    Link(Link<'a>),
+impl From<&Link> for String {
+    fn from(value: &Link) -> Self {
+        <&Link as Into<String>>::into(value).to_owned()
+    }
+}
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum TextType {
+    Normal(String),
+    Italic(String),
+    Bold(String),
+}
+
+impl<'a> From<TextType> for String {
+    fn from(value: TextType) -> Self {
+        value.into()
+    }
+}
+
+impl From<&TextType> for String {
+    fn from(value: &TextType) -> Self {
+        <&TextType as Into<String>>::into(value).to_owned()
+    }
+}
+
+impl<'a> From<&'a TextType> for &'a str {
+    fn from(value: &'a TextType) -> Self {
+        match value {
+            TextType::Normal(t) => t,
+            TextType::Italic(t) => t,
+            TextType::Bold(t) => t,
+        }
+    }
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum Text {
+    String(TextType),
+    Link(Link),
+    Newline,
+}
+
+pub struct TextSlice<'a>(&'a [Text]);
+
+#[derive(Clone)]
+pub struct MarkdownText(Vec<Text>);
+
+impl<'a> From<&'a str> for MarkdownText {
+    fn from(value: &'a str) -> Self {
+        MarkdownText(
+            value
+                .lines()
+                .flat_map(|line| [parse_markdown_line(line), vec![Text::Newline]])
+                .flatten()
+                .collect(),
+        )
+    }
+}
+
+impl<'a> From<TextSlice<'a>> for String {
+    fn from(value: TextSlice) -> Self {
+        value
+            .0
+            .into_iter()
+            .map(|v| v.into())
+            .collect::<Vec<String>>()
+            .join(" ")
+    }
+}
+
+impl From<Text> for String {
+    fn from(value: Text) -> Self {
+        match value {
+            Text::String(text_type) => text_type.into(),
+            Text::Link(link) => link.into(),
+            Text::Newline => "\n".to_owned(),
+        }
+    }
+}
+
+impl From<&Text> for String {
+    fn from(value: &Text) -> Self {
+        match value {
+            Text::String(text_type) => <&TextType as Into<String>>::into(text_type).to_owned(),
+            Text::Link(link) => <&Link as Into<String>>::into(link).to_owned(),
+            Text::Newline => "\n".to_owned(),
+        }
+    }
+}
+
+impl From<&MarkdownText> for &String {
+    fn from(value: &MarkdownText) -> Self {
+        value.into()
+    }
+}
+
+impl From<MarkdownText> for String {
+    fn from(value: MarkdownText) -> Self {
+        value
+            .0
+            .into_iter()
+            .map(|t| match t {
+                Text::Newline => "\n".to_owned(),
+                Text::String(text_type) => text_type.into(),
+                Text::Link(link) => link.into(),
+            })
+            .collect::<Vec<String>>()
+            .join(" ")
+    }
+}
+
+impl From<String> for MarkdownText {
+    fn from(value: String) -> Self {
+        MarkdownText(
+            value
+                .lines()
+                .flat_map(|line| [parse_markdown_line(line), vec![Text::Newline]])
+                .flatten()
+                .collect(),
+        )
+    }
+}
+
+impl From<&String> for MarkdownText {
+    fn from(value: &String) -> Self {
+        value.to_owned().into()
+    }
+}
+
+impl From<Text> for MarkdownText {
+    fn from(value: Text) -> Self {
+        MarkdownText(vec![value])
+    }
+}
+
+impl From<Vec<Text>> for MarkdownText {
+    fn from(value: Vec<Text>) -> Self {
+        MarkdownText(value)
+    }
+}
+
+impl From<&[Text]> for MarkdownText {
+    fn from(value: &[Text]) -> Self {
+        MarkdownText(value.to_vec())
+    }
+}
+
+impl IntoIterator for MarkdownText {
+    type Item = Text;
+
+    type IntoIter = std::vec::IntoIter<Text>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.0.into_iter()
+    }
+}
+
+impl MarkdownText {
+    pub fn lines<'a>(&'a self) -> Split<'a, Text, impl FnMut(&Text) -> bool> {
+        let x = self.0.split(|t| *t == Text::Newline);
+        x
+    }
 }
 
 ///
 /// Parse text and search for markdown syntax links
 ///
-pub fn parse_markdown_links(input: &str) -> Vec<Text> {
+pub fn parse_markdown_line(input: &str) -> Vec<Text> {
     let mut output: Vec<Text> = Vec::new();
     let mut indices = get_url_identifiers()
         .iter()
@@ -65,7 +228,7 @@ pub fn parse_markdown_links(input: &str) -> Vec<Text> {
         }
         // Add the link itself
         output.push(Text::Link(Link {
-            href: &input[start_link..end_link],
+            href: input[start_link..end_link].to_owned(),
             text: if let Some(link_text) = link_text {
                 parse_markdown_text(link_text)
             } else {
@@ -118,13 +281,15 @@ pub fn parse_markdown_text(input: &str) -> Vec<TextType> {
 
                 // Add the non-emphasized part before the current match
                 if start_emph - 1 > last_index {
-                    output.push(TextType::Normal(&input[last_index..start_emph - 1]));
+                    output.push(TextType::Normal(
+                        input[last_index..start_emph - 1].to_owned(),
+                    ));
                 }
 
                 // Add the emphasized part itself
                 output.push(match emph_char {
-                    "*" => TextType::Bold(&input[start_emph..end_emph]),
-                    "_" => TextType::Italic(&input[start_emph..end_emph]),
+                    "*" => TextType::Bold(input[start_emph..end_emph].to_owned()),
+                    "_" => TextType::Italic(input[start_emph..end_emph].to_owned()),
                     _ => unreachable!(),
                 });
                 in_emph_char = None;
@@ -144,7 +309,7 @@ pub fn parse_markdown_text(input: &str) -> Vec<TextType> {
     }
     // Add remaining text as normal text
     if last_index < input.len() {
-        output.push(TextType::Normal(&input[last_index..]));
+        output.push(TextType::Normal(input[last_index..].to_owned()));
     }
     output
 }
@@ -162,29 +327,32 @@ mod test {
 
     #[test]
     fn empty() {
-        let res = parse_markdown_links("");
+        let res = parse_markdown_line("");
         assert_eq!(res, vec![]);
     }
 
     #[test]
     fn only_emphasis_char() {
         let res = parse_markdown_text("*");
-        assert_eq!(res, vec![TextType::Normal("*")]);
+        assert_eq!(res, vec![TextType::Normal("*".to_owned())]);
     }
 
     #[test]
     fn no_link() {
-        let res = parse_markdown_links("no link, file");
-        assert_eq!(res, vec![Text::String(TextType::Normal("no link, file"))]);
+        let res = parse_markdown_line("no link, file");
+        assert_eq!(
+            res,
+            vec![Text::String(TextType::Normal("no link, file".to_owned()))]
+        );
     }
 
     #[test]
     fn simple_link() {
-        let res = parse_markdown_links("https://www.google.com");
+        let res = parse_markdown_line("https://www.google.com");
         assert_eq!(
             res,
             vec![Text::Link(Link {
-                href: "https://www.google.com",
+                href: "https://www.google.com".to_owned(),
                 text: vec![]
             })]
         );
@@ -192,30 +360,33 @@ mod test {
 
     #[test]
     fn link_with_emphasis() {
-        let res = parse_markdown_links("[*Bold Title* normal](https://www.google.com)");
+        let res = parse_markdown_line("[*Bold Title* normal](https://www.google.com)");
         assert_eq!(
             res,
             vec![Text::Link(Link {
-                href: "https://www.google.com",
-                text: vec![TextType::Bold("Bold Title"), TextType::Normal(" normal")]
+                href: "https://www.google.com".to_owned(),
+                text: vec![
+                    TextType::Bold("Bold Title".to_owned()),
+                    TextType::Normal(" normal".to_owned())
+                ]
             })]
         );
     }
 
     #[test]
     fn two_simple_links() {
-        let res = parse_markdown_links("Goto (https://www.google.com) or https://www.yahoo.com");
+        let res = parse_markdown_line("Goto (https://www.google.com) or https://www.yahoo.com");
         assert_eq!(
             res,
             vec![
-                Text::String(TextType::Normal("Goto (")),
+                Text::String(TextType::Normal("Goto (".to_owned())),
                 Text::Link(Link {
-                    href: "https://www.google.com",
+                    href: "https://www.google.com".to_owned(),
                     text: vec![]
                 }),
-                Text::String(TextType::Normal(") or ")),
+                Text::String(TextType::Normal(") or ".to_owned())),
                 Text::Link(Link {
-                    href: "https://www.yahoo.com",
+                    href: "https://www.yahoo.com".to_owned(),
                     text: vec![]
                 })
             ]
@@ -224,30 +395,30 @@ mod test {
 
     #[test]
     fn simple_link_with_text() {
-        let res = parse_markdown_links("[Google](https://www.google.com)");
+        let res = parse_markdown_line("[Google](https://www.google.com)");
         assert_eq!(
             res,
             vec![Text::Link(Link {
-                href: "https://www.google.com",
-                text: vec![TextType::Normal("Google")]
+                href: "https://www.google.com".to_owned(),
+                text: vec![TextType::Normal("Google".to_owned())]
             })]
         );
     }
 
     #[test]
     fn nested_link() {
-        let res = parse_markdown_links("[[Yahoo](https://www.yahoo.com)](https://www.google.com)");
+        let res = parse_markdown_line("[[Yahoo](https://www.yahoo.com)](https://www.google.com)");
         assert_eq!(
             res,
             vec![
-                Text::String(TextType::Normal("[")),
+                Text::String(TextType::Normal("[".to_owned())),
                 Text::Link(Link {
-                    href: "https://www.yahoo.com",
-                    text: vec![TextType::Normal("Yahoo")]
+                    href: "https://www.yahoo.com".to_owned(),
+                    text: vec![TextType::Normal("Yahoo".to_owned())]
                 }),
                 Text::Link(Link {
-                    href: "https://www.google.com",
-                    text: vec![TextType::Normal("Yahoo](https://www.yahoo.com)")]
+                    href: "https://www.google.com".to_owned(),
+                    text: vec![TextType::Normal("Yahoo](https://www.yahoo.com)".to_owned())]
                 })
             ]
         );
@@ -255,64 +426,64 @@ mod test {
 
     #[test]
     fn simple_link_with_quoted_text() {
-        let res = parse_markdown_links("- \"[Google](https://www.google.com)\"");
+        let res = parse_markdown_line("- \"[Google](https://www.google.com)\"");
         assert_eq!(
             res,
             vec![
-                Text::String(TextType::Normal("- \"")),
+                Text::String(TextType::Normal("- \"".to_owned())),
                 Text::Link(Link {
-                    href: "https://www.google.com",
-                    text: vec![TextType::Normal("Google")]
+                    href: "https://www.google.com".to_owned(),
+                    text: vec![TextType::Normal("Google".to_owned())]
                 }),
-                Text::String(TextType::Normal("\""))
+                Text::String(TextType::Normal("\"".to_owned()))
             ]
         );
     }
 
     #[test]
     fn simple_link_with_incomplete_text() {
-        let res = parse_markdown_links("Google](https://www.google.com)");
+        let res = parse_markdown_line("Google](https://www.google.com)");
         assert_eq!(
             res,
             vec![
-                Text::String(TextType::Normal("Google](")),
+                Text::String(TextType::Normal("Google](".to_owned())),
                 Text::Link(Link {
-                    href: "https://www.google.com",
+                    href: "https://www.google.com".to_owned(),
                     text: vec![]
                 }),
-                Text::String(TextType::Normal(")")),
+                Text::String(TextType::Normal(")".to_owned())),
             ]
         );
     }
 
     #[test]
     fn simple_link_with_just_brackets() {
-        let res = parse_markdown_links("(https://www.google.com)");
+        let res = parse_markdown_line("(https://www.google.com)");
         assert_eq!(
             res,
             vec![
-                Text::String(TextType::Normal("(")),
+                Text::String(TextType::Normal("(".to_owned())),
                 Text::Link(Link {
-                    href: "https://www.google.com",
+                    href: "https://www.google.com".to_owned(),
                     text: vec![]
                 }),
-                Text::String(TextType::Normal(")")),
+                Text::String(TextType::Normal(")".to_owned())),
             ]
         );
     }
 
     #[test]
     fn simple_link_with_just_opening_bracket() {
-        let res = parse_markdown_links("(https://www.google.com and some other string");
+        let res = parse_markdown_line("(https://www.google.com and some other string");
         assert_eq!(
             res,
             vec![
-                Text::String(TextType::Normal("(")),
+                Text::String(TextType::Normal("(".to_owned())),
                 Text::Link(Link {
-                    href: "https://www.google.com",
+                    href: "https://www.google.com".to_owned(),
                     text: vec![]
                 }),
-                Text::String(TextType::Normal(" and some other string")),
+                Text::String(TextType::Normal(" and some other string".to_owned())),
             ]
         );
     }
@@ -323,9 +494,9 @@ mod test {
         assert_eq!(
             res,
             vec![
-                TextType::Normal("This is an "),
-                TextType::Italic("italic"),
-                TextType::Normal(" text.")
+                TextType::Normal("This is an ".to_owned()),
+                TextType::Italic("italic".to_owned()),
+                TextType::Normal(" text.".to_owned())
             ]
         );
     }
@@ -336,9 +507,9 @@ mod test {
         assert_eq!(
             res,
             vec![
-                TextType::Normal("This is an "),
-                TextType::Bold("bold"),
-                TextType::Normal(" text.")
+                TextType::Normal("This is an ".to_owned()),
+                TextType::Bold("bold".to_owned()),
+                TextType::Normal(" text.".to_owned())
             ]
         );
     }
@@ -346,7 +517,7 @@ mod test {
     #[test]
     fn double_italic() {
         let res = parse_markdown_text("__what is this__");
-        assert_eq!(res, vec![TextType::Italic("_what is this_"),]);
+        assert_eq!(res, vec![TextType::Italic("_what is this_".to_owned()),]);
     }
 
     #[test]
@@ -354,7 +525,10 @@ mod test {
         let res = parse_markdown_text("_*_or this* _ * ");
         assert_eq!(
             res,
-            vec![TextType::Italic("*_or this* "), TextType::Normal(" * ")]
+            vec![
+                TextType::Italic("*_or this* ".to_owned()),
+                TextType::Normal(" * ".to_owned())
+            ]
         );
     }
 
@@ -364,9 +538,9 @@ mod test {
         assert_eq!(
             res,
             vec![
-                TextType::Normal("This is* another "),
-                TextType::Italic("scary_crazy_string"),
-                TextType::Normal("."),
+                TextType::Normal("This is* another ".to_owned()),
+                TextType::Italic("scary_crazy_string".to_owned()),
+                TextType::Normal(".".to_owned()),
             ]
         );
     }
@@ -377,7 +551,7 @@ mod test {
         assert_eq!(
             res,
             vec![TextType::Normal(
-                "This should not * match, and this neither _."
+                "This should not * match, and this neither _.".to_owned()
             ),]
         );
     }

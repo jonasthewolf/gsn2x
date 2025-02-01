@@ -141,8 +141,8 @@ impl Cell for Vec<&str> {
 /// Iteratively move nodes horizontally until no movement detected
 ///  
 ///
-pub(super) fn layout_nodes(
-    graph: &DirectedGraph<'_, RefCell<SvgNode>, EdgeType>,
+pub(super) fn layout_nodes<'a>(
+    graph: &DirectedGraph<'a, RefCell<SvgNode>, EdgeType>,
     ranks: &[Vec<Vec<&str>>],
     margin: &Margin,
 ) -> (i32, i32) {
