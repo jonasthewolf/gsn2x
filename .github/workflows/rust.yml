@@ -192,7 +192,7 @@ jobs:
          cargo install cargo-llvm-cov
          cargo llvm-cov --tests --lcov --output-path=coverage/coverage.lcov
     - name: Upload to codecov
-      uses: codecov/codecov-action@v4
+      uses: codecov/codecov-action@v5
       with:
         directory: coverage
         token: ${{ secrets.CODECOV_TOKEN }}
