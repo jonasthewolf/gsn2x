@@ -52,11 +52,6 @@ pub enum Text {
 #[derive(Clone, Debug)]
 pub struct MarkdownText(Vec<Text>);
 
-impl From<Text> for String {
-    fn from(value: Text) -> Self {
-        (&value).into()
-    }
-}
 
 impl From<&Text> for String {
     fn from(value: &Text) -> Self {
@@ -68,20 +63,6 @@ impl From<&Text> for String {
     }
 }
 
-impl From<MarkdownText> for String {
-    fn from(value: MarkdownText) -> Self {
-        value
-            .0
-            .into_iter()
-            .map(|t| match t {
-                Text::Newline => "\n".to_owned(),
-                Text::String(text_type) => text_type.to_string(),
-                Text::Link(link) => link.to_string(),
-            })
-            .collect::<Vec<String>>()
-            .join(" ")
-    }
-}
 
 impl<'a> From<&'a str> for MarkdownText {
     fn from(value: &'a str) -> Self {
@@ -104,18 +85,6 @@ impl From<String> for MarkdownText {
 impl From<&String> for MarkdownText {
     fn from(value: &String) -> Self {
         value.to_owned().into()
-    }
-}
-
-impl From<Text> for MarkdownText {
-    fn from(value: Text) -> Self {
-        MarkdownText(vec![value])
-    }
-}
-
-impl From<Vec<Text>> for MarkdownText {
-    fn from(value: Vec<Text>) -> Self {
-        MarkdownText(value)
     }
 }
 
