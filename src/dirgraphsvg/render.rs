@@ -31,9 +31,9 @@ pub const PADDING_HORIZONTAL: i32 = 7;
 ///
 /// Render the complete graph
 ///
-pub(super) fn render_graph<'a>(
+pub(super) fn render_graph(
     render_graph: &DirGraph,
-    graph: &DirectedGraph<'a, RefCell<SvgNode>, EdgeType>,
+    graph: &DirectedGraph<'_, RefCell<SvgNode>, EdgeType>,
     ranks: &Vec<Vec<Vec<&str>>>,
     width: i32,
     height: i32,
@@ -60,9 +60,9 @@ pub(super) fn render_graph<'a>(
 ///
 /// Render the edges
 ///
-fn render_edges<'a>(
+fn render_edges(
     document: &mut Document,
-    graph: &DirectedGraph<'a, RefCell<SvgNode>, EdgeType>,
+    graph: &DirectedGraph<'_, RefCell<SvgNode>, EdgeType>,
     render_graph: &DirGraph,
     ranks: &[Vec<Vec<&str>>],
     width: i32,
@@ -139,9 +139,9 @@ fn get_bounding_boxes_in_rank(
 ///
 /// Render nodes
 ///
-fn render_nodes<'a>(
+fn render_nodes(
     document: &mut Document,
-    graph: &DirectedGraph<'a, RefCell<SvgNode>, EdgeType>,
+    graph: &DirectedGraph<'_, RefCell<SvgNode>, EdgeType>,
     render_graph: &DirGraph,
     ranks: &Vec<Vec<Vec<&str>>>,
 ) {
@@ -408,7 +408,7 @@ pub(crate) fn create_text(
                 }
                 root
             }
-            markdown::Text::Newline => unreachable!(),
+            markdown::Text::Newline => root, // Ignore
         };
     }
     root // Returning an Element removes unnecessary whitespace from final SVG

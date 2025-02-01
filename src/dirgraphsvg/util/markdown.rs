@@ -1,4 +1,4 @@
-use std::slice::Split;
+use std::{fmt::Display, slice::Split};
 
 use crate::file_utils::get_url_identifiers;
 
@@ -8,22 +8,23 @@ pub struct Link {
     pub text: Vec<TextType>,
 }
 
-impl From<Link> for String {
-    fn from(value: Link) -> Self {
-        value
-            .text
-            .into_iter()
-            .map(|l| l.into())
-            .collect::<Vec<String>>()
-            .join(" ")
+impl Display for Link {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        if self.text.is_empty() {
+            f.write_str(&self.href)
+        } else {
+            f.write_str(
+                &self
+                    .text
+                    .iter()
+                    .map(|l| l.to_string())
+                    .collect::<Vec<String>>()
+                    .join(" "),
+            )
+        }
     }
 }
 
-impl From<&Link> for String {
-    fn from(value: &Link) -> Self {
-        <&Link as Into<String>>::into(value).to_owned()
-    }
-}
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum TextType {
     Normal(String),
@@ -31,25 +32,13 @@ pub enum TextType {
     Bold(String),
 }
 
-impl<'a> From<TextType> for String {
-    fn from(value: TextType) -> Self {
-        value.into()
-    }
-}
-
-impl From<&TextType> for String {
-    fn from(value: &TextType) -> Self {
-        <&TextType as Into<String>>::into(value).to_owned()
-    }
-}
-
-impl<'a> From<&'a TextType> for &'a str {
-    fn from(value: &'a TextType) -> Self {
-        match value {
+impl Display for TextType {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(match self {
             TextType::Normal(t) => t,
             TextType::Italic(t) => t,
             TextType::Bold(t) => t,
-        }
+        })
     }
 }
 
@@ -60,57 +49,22 @@ pub enum Text {
     Newline,
 }
 
-pub struct TextSlice<'a>(&'a [Text]);
-
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct MarkdownText(Vec<Text>);
-
-impl<'a> From<&'a str> for MarkdownText {
-    fn from(value: &'a str) -> Self {
-        MarkdownText(
-            value
-                .lines()
-                .flat_map(|line| [parse_markdown_line(line), vec![Text::Newline]])
-                .flatten()
-                .collect(),
-        )
-    }
-}
-
-impl<'a> From<TextSlice<'a>> for String {
-    fn from(value: TextSlice) -> Self {
-        value
-            .0
-            .into_iter()
-            .map(|v| v.into())
-            .collect::<Vec<String>>()
-            .join(" ")
-    }
-}
 
 impl From<Text> for String {
     fn from(value: Text) -> Self {
-        match value {
-            Text::String(text_type) => text_type.into(),
-            Text::Link(link) => link.into(),
-            Text::Newline => "\n".to_owned(),
-        }
+        (&value).into()
     }
 }
 
 impl From<&Text> for String {
     fn from(value: &Text) -> Self {
         match value {
-            Text::String(text_type) => <&TextType as Into<String>>::into(text_type).to_owned(),
-            Text::Link(link) => <&Link as Into<String>>::into(link).to_owned(),
+            Text::String(text_type) => text_type.to_string(),
+            Text::Link(link) => link.to_string(),
             Text::Newline => "\n".to_owned(),
         }
-    }
-}
-
-impl From<&MarkdownText> for &String {
-    fn from(value: &MarkdownText) -> Self {
-        value.into()
     }
 }
 
@@ -121,11 +75,17 @@ impl From<MarkdownText> for String {
             .into_iter()
             .map(|t| match t {
                 Text::Newline => "\n".to_owned(),
-                Text::String(text_type) => text_type.into(),
-                Text::Link(link) => link.into(),
+                Text::String(text_type) => text_type.to_string(),
+                Text::Link(link) => link.to_string(),
             })
             .collect::<Vec<String>>()
             .join(" ")
+    }
+}
+
+impl<'a> From<&'a str> for MarkdownText {
+    fn from(value: &'a str) -> Self {
+        value.to_owned().into()
     }
 }
 
@@ -134,9 +94,9 @@ impl From<String> for MarkdownText {
         MarkdownText(
             value
                 .lines()
-                .flat_map(|line| [parse_markdown_line(line), vec![Text::Newline]])
-                .flatten()
-                .collect(),
+                .map(parse_markdown_line)
+                .collect::<Vec<_>>()
+                .join(&Text::Newline),
         )
     }
 }
@@ -176,7 +136,7 @@ impl IntoIterator for MarkdownText {
 }
 
 impl MarkdownText {
-    pub fn lines<'a>(&'a self) -> Split<'a, Text, impl FnMut(&Text) -> bool> {
+    pub fn lines(&self) -> Split<'_, Text, impl FnMut(&Text) -> bool> {
         let x = self.0.split(|t| *t == Text::Newline);
         x
     }

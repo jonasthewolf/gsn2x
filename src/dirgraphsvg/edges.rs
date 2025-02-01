@@ -104,8 +104,8 @@ const MARKER_HEIGHT: u32 = 10;
 ///
 /// Render a single edge
 ///
-pub(super) fn render_edge<'a>(
-    graph: &DirectedGraph<'a, RefCell<SvgNode>, EdgeType>,
+pub(super) fn render_edge(
+    graph: &DirectedGraph<'_, RefCell<SvgNode>, EdgeType>,
     render_graph: &DirGraph,
     ranks: &[Vec<Vec<&str>>],
     bounding_boxes: &[Vec<[Point2D<i32>; 4]>],
@@ -210,8 +210,8 @@ pub(super) fn render_edge<'a>(
 /// Render an Assurance Claim Point (ACP)
 ///
 ///
-fn render_acps<'a>(
-    graph: &DirectedGraph<'a, RefCell<SvgNode>, EdgeType>,
+fn render_acps(
+    graph: &DirectedGraph<'_, RefCell<SvgNode>, EdgeType>,
     render_graph: &DirGraph<'_>,
     source: &str,
     target: &(String, EdgeType),

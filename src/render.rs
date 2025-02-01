@@ -107,9 +107,9 @@ fn get_render_legend(matches: &ArgMatches) -> RenderLegend {
 ///
 ///
 ///
-pub fn svg_from_gsn_node<'a>(
+pub fn svg_from_gsn_node(
     identifier: &str,
-    gsn_node: &'a GsnNode,
+    gsn_node: &GsnNode,
     masked: bool,
     layers: &[String],
     char_wrap: Option<u32>,
@@ -141,9 +141,9 @@ pub fn svg_from_gsn_node<'a>(
 ///
 ///
 ///
-pub fn away_svg_from_gsn_node<'a>(
+pub fn away_svg_from_gsn_node(
     identifier: &str,
-    gsn_node: &'a GsnNode,
+    gsn_node: &GsnNode,
     masked: bool,
     module: &Module,
     source_module: &Module,

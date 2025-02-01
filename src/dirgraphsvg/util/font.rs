@@ -68,7 +68,7 @@ fn get_font(font_name: &str, bold: bool, italic: bool) -> Result<FontVec> {
 
 pub fn text_line_bounding_box(font_info: &FontInfo, text: &[Text], bold: bool) -> (i32, i32) {
     let text = text
-        .into_iter()
+        .iter()
         .map(Into::into)
         .collect::<Vec<String>>()
         .join(" ");
