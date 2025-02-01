@@ -28,7 +28,7 @@ jobs:
         shared-key: ci
     - name: Install dependencies
       run: |
-        apt-get install libfreetype6-dev
+        sudo apt-get install libfreetype6-dev
     - name: Extract version from Cargo.toml
       run: |
         echo -n "CARGO_VERSION=$(sed -n -r 's/^version[[:blank:]]*=[[:blank:]]"(.*)"/v\1/p' Cargo.toml)" >> $GITHUB_ENV
