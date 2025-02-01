@@ -1,4 +1,4 @@
-use std::{fmt::Display, slice::Split};
+use std::fmt::Display;
 
 use crate::file_utils::get_url_identifiers;
 
@@ -136,9 +136,11 @@ impl IntoIterator for MarkdownText {
 }
 
 impl MarkdownText {
-    pub fn lines(&self) -> Split<'_, Text, impl FnMut(&Text) -> bool> {
-        let x = self.0.split(|t| *t == Text::Newline);
-        x
+    pub fn lines(&self) -> impl Iterator<Item = &[Text]> {
+        // Skip empty slices
+        self.0
+            .split(|t| *t == Text::Newline)
+            .skip_while(|x| x.is_empty())
     }
 }
 
@@ -514,5 +516,39 @@ mod test {
                 "This should not * match, and this neither _.".to_owned()
             ),]
         );
+    }
+
+    #[test]
+    fn lines_empty() {
+        let m = MarkdownText::from("");
+        assert_eq!(m.lines().next(), None);
+    }
+
+    #[test]
+    fn lines_one_line() {
+        let m = MarkdownText::from("G1\n");
+        let mut iter = m.lines();
+        assert_eq!(
+            iter.next(),
+            Some([Text::String(TextType::Normal("G1".to_owned()))].as_slice())
+        );
+        assert_eq!(iter.next(), None);
+    }
+
+    #[test]
+    fn lines_two_empty_lines() {
+        let m = MarkdownText::from("G1\n\n\nG2");
+        let mut iter = m.lines();
+        assert_eq!(
+            iter.next(),
+            Some([Text::String(TextType::Normal("G1".to_owned()))].as_slice())
+        );
+        assert_eq!(iter.next(), Some([].as_slice()));
+        assert_eq!(iter.next(), Some([].as_slice()));
+        assert_eq!(
+            iter.next(),
+            Some([Text::String(TextType::Normal("G2".to_owned()))].as_slice())
+        );
+        assert_eq!(iter.next(), None);
     }
 }
