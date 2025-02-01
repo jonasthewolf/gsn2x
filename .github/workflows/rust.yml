@@ -81,6 +81,10 @@ jobs:
       uses: Swatinem/rust-cache@v2
       with:
         shared-key: ci
+    - name: Install dependencies
+      if: matrix.os == 'ubuntu-latest'
+      run: |
+        sudo apt-get install libfreetype6-dev
     - name: Patch version for pre-release
       id: githash
       if: ${{ !startsWith(github.ref, 'refs/tags/') }}
