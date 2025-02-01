@@ -186,7 +186,6 @@ jobs:
       with:
         shared-key: ci
     - name: Install dependencies
-      if: matrix.os == 'ubuntu-latest'
       run: |
         sudo apt-get install libfreetype6-dev
     - name: Coverage measurement
