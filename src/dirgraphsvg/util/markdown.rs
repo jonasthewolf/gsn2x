@@ -52,7 +52,6 @@ pub enum Text {
 #[derive(Clone, Debug)]
 pub struct MarkdownText(Vec<Text>);
 
-
 impl From<&Text> for String {
     fn from(value: &Text) -> Self {
         match value {
@@ -62,7 +61,6 @@ impl From<&Text> for String {
         }
     }
 }
-
 
 impl<'a> From<&'a str> for MarkdownText {
     fn from(value: &'a str) -> Self {
