@@ -24,7 +24,11 @@ use self::{
 use super::{
     escape_text,
     render::{create_group, PADDING_HORIZONTAL},
-    util::{escape_url, font::text_bounding_box},
+    util::{
+        escape_url,
+        font::{str_line_bounding_box, text_line_bounding_box},
+        markdown::MarkdownText,
+    },
 };
 
 mod away_node;
@@ -57,7 +61,7 @@ pub struct SvgNode {
     width: i32,
     height: i32,
     identifier: String,
-    text: String,
+    text: MarkdownText,
     masked: bool,
     url: Option<String>,
     classes: Vec<String>,
@@ -167,7 +171,7 @@ impl SvgNode {
                 x.text_height = size_context.text_height;
             }
             NodeType::Away(x) => {
-                (_, x.mod_height) = text_bounding_box(font, &x.module, false);
+                (_, x.mod_height) = str_line_bounding_box(font, &x.module, false);
             }
         }
     }
@@ -181,11 +185,11 @@ impl SvgNode {
     ///
     fn calculate_text_size(&self, font: &FontInfo) -> SizeContext {
         // First row is identifier, thus treated differently
-        let (head_width, head_height) = text_bounding_box(font, &self.identifier, true);
+        let (head_width, head_height) = str_line_bounding_box(font, &self.identifier, true);
         let mut text_height = head_height + OFFSET_IDENTIFIER;
         let mut text_width = head_width;
         for text_line in self.text.lines() {
-            let (line_width, line_height) = text_bounding_box(font, text_line, false);
+            let (line_width, line_height) = text_line_bounding_box(font, text_line, false);
             text_height += line_height;
             text_width = std::cmp::max(text_width, line_width);
         }
@@ -267,7 +271,7 @@ impl SvgNode {
             height: 0,
             masked,
             identifier: identifier.to_owned(),
-            text: node_text.to_owned(),
+            text: node_text.into(),
             url: module_url,
             classes,
             horizontal_index: gsn_node.horizontal_index,
@@ -640,9 +644,9 @@ fn render_acp_box(node: &SvgNode, font: &FontInfo, context: &mut Element) {
                 .set("y", node.y + node.height / 2),
         );
         let acp_text = node.acp.join(", ");
-        let acp_y = node.y + node.height / 2 + text_bounding_box(font, &acp_text, false).1;
+        let acp_y = node.y + node.height / 2 + str_line_bounding_box(font, &acp_text, false).1;
         context.append(create_text(
-            &acp_text,
+            &acp_text.into(),
             node.x + ACP_BOX_SIZE + PADDING_HORIZONTAL,
             acp_y,
             font,

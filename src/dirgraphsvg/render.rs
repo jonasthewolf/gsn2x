@@ -18,7 +18,7 @@ use super::{
     util::{
         escape_url,
         font::FontInfo,
-        markdown::{self, parse_markdown_links, TextType},
+        markdown::{self, MarkdownText, TextType},
         point2d::Point2D,
     },
     DirGraph,
@@ -176,7 +176,7 @@ fn render_legend(
         let mut lines = Vec::new();
         for t in meta {
             let (width, height) =
-                crate::dirgraphsvg::util::font::text_bounding_box(&render_graph.font, t, false);
+                crate::dirgraphsvg::util::font::str_line_bounding_box(&render_graph.font, t, false);
             lines.push((width, height));
             text_height += height;
             text_width = std::cmp::max(text_width, width);
@@ -192,7 +192,7 @@ fn render_legend(
         for (text, (_, h)) in meta.iter().zip(lines) {
             y_running += h;
             g.append(create_text(
-                text,
+                &text.into(),
                 x,
                 y_base + y_running,
                 &render_graph.font,
@@ -348,8 +348,13 @@ pub(crate) fn create_group(id: &str, classes: &[String]) -> Group {
 /// <text x="" y=""><a>xyz</a></text>
 ///
 ///
-pub(crate) fn create_text(input: &str, x: i32, y: i32, font: &FontInfo, bold: bool) -> Element {
-    let parsed = parse_markdown_links(input);
+pub(crate) fn create_text(
+    input: &MarkdownText,
+    x: i32,
+    y: i32,
+    font: &FontInfo,
+    bold: bool,
+) -> Element {
     let mut text = Text::new("")
         .set("x", x)
         .set("y", y)
@@ -386,11 +391,11 @@ pub(crate) fn create_text(input: &str, x: i32, y: i32, font: &FontInfo, bold: bo
     }
 
     // Add rest (if existing)
-    for p in parsed.into_iter() {
+    for p in input.clone().into_iter() {
         root = match p {
             markdown::Text::String(t) => map_texttype(root, t),
             markdown::Text::Link(link) => {
-                let mut anchor = Anchor::new().set("href", escape_url(link.href));
+                let mut anchor = Anchor::new().set("href", escape_url(&link.href));
                 if link.text.is_empty() {
                     anchor.append(svg::node::Text::new(link.href));
                     root.append(anchor);
@@ -403,6 +408,7 @@ pub(crate) fn create_text(input: &str, x: i32, y: i32, font: &FontInfo, bold: bo
                 }
                 root
             }
+            markdown::Text::Newline => root, // Ignore
         };
     }
     root // Returning an Element removes unnecessary whitespace from final SVG

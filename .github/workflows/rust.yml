@@ -26,6 +26,9 @@ jobs:
       uses: Swatinem/rust-cache@v2
       with:
         shared-key: ci
+    - name: Install dependencies
+      run: |
+        sudo apt-get install libfreetype6-dev
     - name: Extract version from Cargo.toml
       run: |
         echo -n "CARGO_VERSION=$(sed -n -r 's/^version[[:blank:]]*=[[:blank:]]"(.*)"/v\1/p' Cargo.toml)" >> $GITHUB_ENV
@@ -78,6 +81,10 @@ jobs:
       uses: Swatinem/rust-cache@v2
       with:
         shared-key: ci
+    - name: Install dependencies
+      if: matrix.os == 'ubuntu-latest'
+      run: |
+        sudo apt-get install libfreetype6-dev
     - name: Patch version for pre-release
       id: githash
       if: ${{ !startsWith(github.ref, 'refs/tags/') }}
@@ -178,6 +185,9 @@ jobs:
       uses: Swatinem/rust-cache@v2
       with:
         shared-key: ci
+    - name: Install dependencies
+      run: |
+        sudo apt-get install libfreetype6-dev
     - name: Coverage measurement
       continue-on-error: true
       run: |
@@ -185,7 +195,7 @@ jobs:
          cargo install cargo-llvm-cov
          cargo llvm-cov --tests --lcov --output-path=coverage/coverage.lcov
     - name: Upload to codecov
-      uses: codecov/codecov-action@v4
+      uses: codecov/codecov-action@v5
       with:
         directory: coverage
         token: ${{ secrets.CODECOV_TOKEN }}

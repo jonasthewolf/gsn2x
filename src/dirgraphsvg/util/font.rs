@@ -5,6 +5,8 @@ use glyph_brush_layout::{
     FontId, GlyphPositioner, Layout, SectionGeometry, SectionText,
 };
 
+use super::markdown::Text;
+
 ///
 /// Default font family names on different operating systems
 ///
@@ -64,11 +66,21 @@ fn get_font(font_name: &str, bold: bool, italic: bool) -> Result<FontVec> {
     FontVec::try_from_vec(fd.to_vec()).map_err(Error::from)
 }
 
+pub fn text_line_bounding_box(font_info: &FontInfo, text: &[Text], bold: bool) -> (i32, i32) {
+    let text = text
+        .iter()
+        .map(Into::into)
+        .collect::<Vec<String>>()
+        .join(" ");
+    str_line_bounding_box(font_info, &text, bold)
+}
+
 ///
-/// Get the bounding box of `text` for the font described by `font_info` and `bold`
+/// Get the bounding box of `text` for the font described by `font_info` and `bold`.
+/// `text` is a single line of text.
 /// If the line is empty, font_info.size is returned as height
 ///
-pub fn text_bounding_box(font_info: &FontInfo, text: &str, bold: bool) -> (i32, i32) {
+pub fn str_line_bounding_box(font_info: &FontInfo, text: &str, bold: bool) -> (i32, i32) {
     if text.chars().filter(|c| !c.is_whitespace()).count() == 0 {
         (0, font_info.size as i32)
     } else {
@@ -120,7 +132,7 @@ mod test {
     #[test]
     fn bounding_box() {
         let font_info = FontInfo::default();
-        let (w, h) = text_bounding_box(&font_info, "text", false);
+        let (w, h) = str_line_bounding_box(&font_info, "text", false);
         println!("Width: {w} Height: {h}");
         assert!(w.abs_diff(20) <= 5);
         assert!(h.abs_diff(15) <= 5);

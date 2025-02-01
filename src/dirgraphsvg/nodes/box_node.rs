@@ -3,7 +3,7 @@ use svg::node::element::{path::Data, Element, Path, Title};
 use crate::dirgraphsvg::{
     nodes::OFFSET_IDENTIFIER,
     render::{create_text, PADDING_HORIZONTAL, PADDING_VERTICAL},
-    util::font::{text_bounding_box, FontInfo},
+    util::font::{text_line_bounding_box, FontInfo},
 };
 
 use super::{SizeContext, SvgNode};
@@ -140,15 +140,15 @@ impl BoxType {
             y += MODULE_TAB_HEIGHT;
         }
         y += font.size as i32;
-        context.append(create_text(&node.identifier, x, y, font, true));
+        context.append(create_text(&(&node.identifier).into(), x, y, font, true));
         y += OFFSET_IDENTIFIER;
 
         if !node.masked {
             for text in node.text.lines() {
-                let text_bb = text_bounding_box(font, text, false);
+                let text_bb = text_line_bounding_box(font, text, false);
                 y += text_bb.1;
                 x -= skew * text_bb.1 / node.height;
-                context.append(create_text(text, x, y, font, false));
+                context.append(create_text(&text.into(), x, y, font, false));
             }
         }
 
