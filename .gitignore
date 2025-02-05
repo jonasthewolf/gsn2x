@@ -3,9 +3,8 @@
 /coverage/
 /doc/book
 /.vscode/
-evidences.md
+evidence.md
 *.prof*
-*.svg
-*.yaml
-TODOS.md
 localtests
+examples/template/*.svg
+examples/template/*.md
