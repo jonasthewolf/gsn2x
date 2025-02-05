@@ -324,24 +324,24 @@ mod integrations {
     }
 
     #[test]
-    fn no_evidences() -> Result<()> {
+    fn no_evidence() -> Result<()> {
         let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
         let temp = assert_fs::TempDir::new()?;
-        temp.copy_from("tests", &["no_evidences.gsn.test.*"])?;
+        temp.copy_from("tests", &["no_evidence.gsn.test.*"])?;
         cmd.arg("-N")
             .arg("-e")
-            .arg("my_evidences.md")
-            .arg("no_evidences.gsn.test.yaml")
+            .arg("my_evidence.md")
+            .arg("no_evidence.gsn.test.yaml")
             .current_dir(&temp);
         cmd.assert()
             .success()
             .stdout(predicate::str::is_match(
-                "Writing evidences \"..my_evidences.md\": No evidences found.",
+                "Writing evidence \"..my_evidence.md\": No evidence found.",
             )?)
             .stderr(predicate::str::is_empty());
         assert!(compare_lines_with_replace(
-            temp.child("my_evidences.md").as_os_str(),
-            temp.child("no_evidences.gsn.test.md").as_os_str(),
+            temp.child("my_evidence.md").as_os_str(),
+            temp.child("no_evidence.gsn.test.md").as_os_str(),
             None
         )?);
         temp.close()?;
@@ -349,14 +349,14 @@ mod integrations {
     }
 
     #[test]
-    fn some_evidences() -> Result<()> {
+    fn some_evidence() -> Result<()> {
         let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
         let temp = assert_fs::TempDir::new()?;
         temp.copy_from("tests", &["example.gsn.test.md"])?;
         temp.copy_from(".", &["examples/example.gsn.yaml"])?;
 
         cmd.arg("-e")
-            .arg("my_evidences.md")
+            .arg("my_evidence.md")
             .arg("examples/example.gsn.yaml")
             .arg("-l")
             .arg("layer1")
@@ -365,11 +365,11 @@ mod integrations {
         cmd.assert()
             .success()
             .stdout(predicate::str::is_match(
-                "Writing evidences \"..my_evidences.md\": OK",
+                "Writing evidence \"..my_evidence.md\": OK",
             )?)
             .stderr(predicate::str::is_empty());
         assert!(compare_lines_with_replace(
-            temp.child("my_evidences.md").as_os_str(),
+            temp.child("my_evidence.md").as_os_str(),
             temp.child("example.gsn.test.md").as_os_str(),
             None
         )?);

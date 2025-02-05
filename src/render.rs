@@ -26,7 +26,7 @@ pub struct RenderOptions<'a> {
     pub legend: RenderLegend,
     pub embed_stylesheets: bool,
     pub architecture_filename: Option<&'a str>,
-    pub evidences_filename: Option<&'a str>,
+    pub evidence_filename: Option<&'a str>,
     pub complete_filename: Option<&'a str>,
     pub output_directory: &'a str,
     pub skip_argument: bool,
@@ -70,10 +70,10 @@ impl<'a> RenderOptions<'a> {
                     .get_one::<String>("ARCHITECTURE_VIEW")
                     .and_then(|p| get_filename(p)),
             },
-            evidences_filename: match matches.get_flag("NO_EVIDENCES") {
+            evidence_filename: match matches.get_flag("NO_EVIDENCE") {
                 true => None,
                 false => matches
-                    .get_one::<String>("EVIDENCES")
+                    .get_one::<String>("EVIDENCE")
                     .and_then(|p| get_filename(p)),
             },
             complete_filename: match matches.get_flag("NO_COMPLETE_VIEW") {
@@ -447,18 +447,18 @@ pub fn render_argument(
 }
 
 ///
-/// Output list of evidences.
+/// Output list of evidence.
 ///
 /// No template engine is used in order to keep dependencies to a minimum.
 ///
 ///
-pub(crate) fn render_evidences(
+pub(crate) fn render_evidence(
     output: &mut impl Write,
     nodes: &BTreeMap<String, GsnNode>,
     render_options: &RenderOptions,
 ) -> Result<()> {
     writeln!(output)?;
-    writeln!(output, "List of Evidences")?;
+    writeln!(output, "List of Evidence")?;
     writeln!(output)?;
 
     let mut solutions: Vec<(&String, &GsnNode)> = nodes
@@ -471,8 +471,8 @@ pub(crate) fn render_evidences(
         .collect();
     solutions.sort_by_key(|(k, _)| *k);
     if solutions.is_empty() {
-        writeln!(output, "No evidences found.")?;
-        println!("No evidences found.");
+        writeln!(output, "No evidence found.")?;
+        println!("No evidence found.");
     } else {
         let width = (solutions.len() as f32).log10().ceil() as usize;
         for (i, (id, node)) in solutions.into_iter().enumerate() {

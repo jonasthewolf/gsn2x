@@ -210,22 +210,22 @@ fn build_command_options() -> Command {
                 .help_heading("OUTPUT"),
         )
         .arg(
-            Arg::new("EVIDENCES")
-                .help("Output list of all evidences to file with name <EVIDENCES>.")
+            Arg::new("EVIDENCE")
+                .help("Output list of all evidence to file with name <EVIDENCE>.")
                 .short('e')
-                .long("evidences")
+                .long("evidence")
                 .action(ArgAction::Set)
-                .default_value("evidences.md")
-                .conflicts_with_all(["CHECK_ONLY", "NO_EVIDENCES"])
+                .default_value("evidence.md")
+                .conflicts_with_all(["CHECK_ONLY", "NO_EVIDENCE"])
                 .help_heading("OUTPUT"),
         )
         .arg(
-            Arg::new("NO_EVIDENCES")
-                .help("Do not output list of all evidences.")
+            Arg::new("NO_EVIDENCE")
+                .help("Do not output list of all evidence.")
                 .short('E')
-                .long("no-evidences")
+                .long("no-evidence")
                 .action(ArgAction::SetTrue)
-                .conflicts_with("EVIDENCES")
+                .conflicts_with("EVIDENCE")
                 .help_heading("OUTPUT"),
         )
         .arg(
@@ -644,12 +644,12 @@ fn print_outputs(
             render::render_complete(&mut output_file, &nodes, render_options)?;
         }
     }
-    if let Some(evidences_filename) = &render_options.evidences_filename {
-        let output_path = translate_to_output_path(&output_path, evidences_filename, None)?;
+    if let Some(evidence_filename) = &render_options.evidence_filename {
+        let output_path = translate_to_output_path(&output_path, evidence_filename, None)?;
         let mut output_file = File::create(&output_path)
             .context(format!("Failed to open output file {output_path}"))?;
-        print!("Writing evidences \"{output_path}\": ");
-        render::render_evidences(&mut output_file, &nodes, render_options)?;
+        print!("Writing evidence \"{output_path}\": ");
+        render::render_evidence(&mut output_file, &nodes, render_options)?;
     }
     Ok(())
 }
