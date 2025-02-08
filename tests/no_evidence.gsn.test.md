@@ -1,4 +1,4 @@
 
-List of Evidences
+List of Evidence
 
-No evidences found.
+No evidence found.

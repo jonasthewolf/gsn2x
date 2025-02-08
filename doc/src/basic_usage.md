@@ -36,8 +36,8 @@ The output is an argument view in SVG format and automatically written to `<your
       -F, --no-full                        Do not output the complete view.
       -a, --arch <ARCHITECTURE_VIEW>       Output the architecture view to file with name <ARCHITECTURE_VIEW>. [default: architecture.svg]
       -A, --no-arch                        Do not output the architecture view.
-      -e, --evidences <EVIDENCES>          Output list of all evidences to file with name <EVIDENCES>. [default: evidences.md]
-      -E, --no-evidences                   Do not output list of all evidences.
+      -e, --evidence <EVIDENCE>          Output list of all evidence to file with name <EVIDENCE>. [default: evidence.md]
+      -E, --no-evidence                   Do not output list of all evidence.
       -o, --output-dir <OUTPUT_DIRECTORY>  Emit all output files to directory <OUTPUT_DIRECTORY>.      [default: .]
 
     OUTPUT MODIFICATION:

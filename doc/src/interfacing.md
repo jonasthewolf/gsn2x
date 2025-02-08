@@ -5,7 +5,7 @@ Here is some guidance on interfacing with external sources.
 
 I currently see two use-cases: 
 
-1) Use-case: Check if all configuration management items of a project exist that are mandated by the argumentation (as solutions/evidences).
+1) Use-case: Check if all configuration management items of a project exist that are mandated by the argumentation (as solutions/evidence).
 
    The reference list may comprise more items that are required for argumentation, i.e. the list items must be attributed.
 
@@ -20,7 +20,7 @@ I currently see two use-cases:
 For the example scripts below, [`yq`](https://github.com/mikefarah/yq) is required.
 
 
-## Checking evidences
+## Checking evidence
 
 This command lists all Solutions that are in `example.gsn.yaml` but are not in `reference.yaml`:
 

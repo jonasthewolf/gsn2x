@@ -1,5 +1,5 @@
 
-List of Evidences
+List of Evidence
 
 1. Sn1: Solution 1
 

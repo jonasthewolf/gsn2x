@@ -11,7 +11,7 @@
     - [Layout](./adv_layout.md)
     - [Layers](./adv_layers.md)
     - [Stylesheets](./adv_stylesheets.md)
-    - [Evidences](./adv_evidences.md)
+    - [Evidence](./adv_evidence.md)
 - [Modular Extension](./mod_extension.md)
     - [Distributed Development](./mod_distdev.md)
     - [Module Info](./mod_info.md)
