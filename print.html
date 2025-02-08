@@ -182,8 +182,8 @@ OUTPUT:
   -F, --no-full                        Do not output the complete view.
   -a, --arch &lt;ARCHITECTURE_VIEW&gt;       Output the architecture view to file with name &lt;ARCHITECTURE_VIEW&gt;. [default: architecture.svg]
   -A, --no-arch                        Do not output the architecture view.
-  -e, --evidences &lt;EVIDENCES&gt;          Output list of all evidences to file with name &lt;EVIDENCES&gt;. [default: evidences.md]
-  -E, --no-evidences                   Do not output list of all evidences.
+  -e, --evidence &lt;EVIDENCE&gt;          Output list of all evidence to file with name &lt;EVIDENCE&gt;. [default: evidence.md]
+  -E, --no-evidence                   Do not output list of all evidence.
   -o, --output-dir &lt;OUTPUT_DIRECTORY&gt;  Emit all output files to directory &lt;OUTPUT_DIRECTORY&gt;.      [default: .]
 
 OUTPUT MODIFICATION:
@@ -297,7 +297,7 @@ The checks for references (Cxx) can be skipped for individual files by using the
 <li><a href="./adv_layout.html">Layout</a></li>
 <li><a href="./adv_layers.html">Layers</a></li>
 <li><a href="./adv_stylesheets.html">Stylesheets</a></li>
-<li><a href="./adv_evidences.html">Evidences</a></li>
+<li><a href="./adv_evidence.html">Evidence</a></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="formatting"><a class="header" href="#formatting">Formatting</a></h1>
 <p>gsn2x allows for different ways to formatting text.
@@ -532,15 +532,38 @@ G1:
     fill-opacity: 1;
 }
 </code></pre>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="list-of-evidences"><a class="header" href="#list-of-evidences">List of evidences</a></h1>
-<p>An additional file that lists all the evidences in the input file is output by default in <code>evidences.md</code>.</p>
-<p>See <a href="examples/evidences.html">examples/evidences.md</a> for an example.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="list-of-evidence"><a class="header" href="#list-of-evidence">List of evidence</a></h1>
+<p>An additional file that lists all the evidence in the input file is output by default in <code>evidence.md</code>.</p>
+<p>See <a href="examples/evidence.html">examples/evidence.md</a> for an example.</p>
 <p>The format can be used in Markdown and reStructuredText files.</p>
-<p>If the list of evidences should not be output, use the <code>-E</code> option.</p>
-<p>You can use the <code>-e</code> option to rename the standard <code>evidences.md</code> to another file name, but not subdirectory.
-The <code>-o</code> option also applies to the evidences file.</p>
-<h2 id="markdown-from-examplesevidencesmd"><a class="header" href="#markdown-from-examplesevidencesmd">Markdown from <code>examples/evidences.md</code></a></h2>
-<p>{{#include examples/evidences.md}}</p>
+<p>If the list of evidence should not be output, use the <code>-E</code> option.</p>
+<p>You can use the <code>-e</code> option to rename the standard <code>evidence.md</code> to another file name, but not subdirectory.
+The <code>-o</code> option also applies to the evidence file.</p>
+<h2 id="markdown-from-examplesevidencemd"><a class="header" href="#markdown-from-examplesevidencemd">Markdown from <code>examples/evidence.md</code></a></h2>
+<p>List of Evidence</p>
+<ol>
+<li>
+<p>Sn1: Solution 1</p>
+<p>examples_example_gsn_yaml</p>
+<p>https://github.com/jonasthewolf/gsn2x</p>
+</li>
+<li>
+<p>Sn2: Solution 2</p>
+<p>examples_example_gsn_yaml</p>
+</li>
+<li>
+<p>Sn3: Solution 3</p>
+<p>examples_example_gsn_yaml</p>
+</li>
+<li>
+<p>Sn4: Solution 4</p>
+<p>examples_example_gsn_yaml</p>
+</li>
+<li>
+<p>Sn5: Solution 5</p>
+<p>examples_example_gsn_yaml</p>
+</li>
+</ol>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="modular-extension"><a class="header" href="#modular-extension">Modular extension</a></h1>
 <p>gsn2x partially supports the Modular Extension of the GSN standard (see <a href="./standard_support.html">Standard support</a>).</p>
 <p>Each module is a separate file. The name of the module is the file name (incl. the path provided to the gsn2x command line).</p>
@@ -701,7 +724,7 @@ The name of the ACP is followed by:</p>
 <p>I currently see two use-cases:</p>
 <ol>
 <li>
-<p>Use-case: Check if all configuration management items of a project exist that are mandated by the argumentation (as solutions/evidences).</p>
+<p>Use-case: Check if all configuration management items of a project exist that are mandated by the argumentation (as solutions/evidence).</p>
 <p>The reference list may comprise more items that are required for argumentation, i.e. the list items must be attributed.</p>
 <p>The reference list may be distributed across multiple files.</p>
 </li>
@@ -712,7 +735,7 @@ The name of the ACP is followed by:</p>
 </li>
 </ol>
 <p>For the example scripts below, <a href="https://github.com/mikefarah/yq"><code>yq</code></a> is required.</p>
-<h2 id="checking-evidences"><a class="header" href="#checking-evidences">Checking evidences</a></h2>
+<h2 id="checking-evidence"><a class="header" href="#checking-evidence">Checking evidence</a></h2>
 <p>This command lists all Solutions that are in <code>example.gsn.yaml</code> but are not in <code>reference.yaml</code>:</p>
 <pre><code>yq ea '[select(file_index == 0)|.Sn*.text] - [select(file_index == 1)|.[]]' examples/example.gsn.yaml reference.yaml   
 </code></pre>
