@@ -42,7 +42,7 @@ jobs:
     - name: Check for correct formatting
       run: cargo fmt --check
     - name: Cargo deny
-      uses: EmbarkStudios/cargo-deny-action@v1
+      uses: EmbarkStudios/cargo-deny-action@v2
       with:
         command: check all
         rust-version: "1.83.0"
