@@ -120,7 +120,10 @@ fn main() -> Result<()> {
                     // Add missing nodes that may not exist because references checks have been excluded
                     add_missing_nodes_and_modules(&mut nodes, &mut modules, &mut render_options);
                     // Output views
-                    print_outputs(nodes, &modules, &render_options)?;
+                    print_outputs(&nodes, &modules, &render_options)?;
+                }
+                if matches.get_flag("STATISTICS") {
+                    print_statistics(&nodes, &modules);
                 }
                 Ok(())
             }
@@ -243,6 +246,13 @@ fn build_command_options() -> Command {
                 .action(ArgAction::Set)
                 .conflicts_with("CHECK_ONLY")
                 .default_value(".")
+                .help_heading("OUTPUT"),
+        )
+        .arg(
+            Arg::new("STATISTICS")
+                .help("Output statistics on inputs.")
+                .long("statistics")
+                .action(ArgAction::SetTrue)
                 .help_heading("OUTPUT"),
         )
         .arg(
@@ -593,7 +603,7 @@ fn validate_and_check(
 ///
 ///
 fn print_outputs(
-    nodes: BTreeMap<String, GsnNode>,
+    nodes: &BTreeMap<String, GsnNode>,
     modules: &BTreeMap<String, Module>,
     render_options: &RenderOptions,
 ) -> Result<()> {
@@ -658,7 +668,61 @@ fn print_outputs(
         print!("Writing evidence \"{output_path}\": ");
         render::render_evidence(&mut output_file, &nodes, render_options)?;
     }
+
     Ok(())
+}
+
+///
+/// Print statistics
+///
+///
+fn print_statistics(nodes: &BTreeMap<String, GsnNode>, modules: &BTreeMap<String, Module>) {
+    println!("Statistics");
+    println!("==========");
+    println!("Number of modules: {}", modules.len());
+    println!("Number of nodes:   {}", nodes.len());
+    println!(
+        "  Goals:           {}",
+        nodes
+            .iter()
+            .filter(|n| n.1.node_type == Some(gsn::GsnNodeType::Goal))
+            .count()
+    );
+    println!(
+        "  Strategies:      {}",
+        nodes
+            .iter()
+            .filter(|n| n.1.node_type == Some(gsn::GsnNodeType::Strategy))
+            .count()
+    );
+    println!(
+        "  Solutions:       {}",
+        nodes
+            .iter()
+            .filter(|n| n.1.node_type == Some(gsn::GsnNodeType::Solution))
+            .count()
+    );
+    println!(
+        "  Assumptions:     {}",
+        nodes
+            .iter()
+            .filter(|n| n.1.node_type == Some(gsn::GsnNodeType::Assumption))
+            .count()
+    );
+    println!(
+        "  Justifications:  {}",
+        nodes
+            .iter()
+            .filter(|n| n.1.node_type == Some(gsn::GsnNodeType::Justification))
+            .count()
+    );
+    println!(
+        "  Contexts:        {}",
+        nodes
+            .iter()
+            .filter(|n| n.1.node_type == Some(gsn::GsnNodeType::Context))
+            .count()
+    );
 }
 
 ///

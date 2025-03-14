@@ -719,4 +719,25 @@ mod integrations {
         ));
         Ok(())
     }
+
+    #[test]
+    fn statistics() -> Result<()> {
+        let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
+        cmd.arg("-c")
+            .arg("--statistics")
+            .arg("examples/modular/index.gsn.yaml");
+        cmd.assert().success().stdout(predicate::str::contains(
+            r#"Statistics
+==========
+Number of modules: 3
+Number of nodes:   8
+  Goals:           3
+  Strategies:      1
+  Solutions:       1
+  Assumptions:     1
+  Justifications:  1
+  Contexts:        1"#,
+        ));
+        Ok(())
+    }
 }
