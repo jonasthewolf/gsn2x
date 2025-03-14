@@ -45,7 +45,7 @@ jobs:
       uses: EmbarkStudios/cargo-deny-action@v2
       with:
         command: check all
-        rust-version: "1.83.0"
+        rust-version: "1.85.0"
   
   build_docs:
       runs-on: ubuntu-latest
