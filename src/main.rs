@@ -631,7 +631,7 @@ fn print_outputs(
                 &mut output_file,
                 &module.meta.name,
                 modules,
-                &nodes,
+                nodes,
                 render_options,
             )?;
         }
@@ -643,7 +643,7 @@ fn print_outputs(
                 translate_to_output_path(&output_path, architecture_filename, None)?;
             let mut output_file = File::create(&arch_output_path)
                 .context(format!("Failed to open output file {arch_output_path}"))?;
-            let dependencies = crate::gsn::calculate_module_dependencies(&nodes);
+            let dependencies = crate::gsn::calculate_module_dependencies(nodes);
             print!("Rendering \"{arch_output_path}\": ");
             render::render_architecture(
                 &mut output_file,
@@ -658,7 +658,7 @@ fn print_outputs(
             let mut output_file = File::create(&output_path)
                 .context(format!("Failed to open output file {output_path}"))?;
             print!("Rendering \"{output_path}\": ");
-            render::render_complete(&mut output_file, &nodes, render_options)?;
+            render::render_complete(&mut output_file, nodes, render_options)?;
         }
     }
     if let Some(evidence_filename) = &render_options.evidence_filename {
@@ -666,7 +666,7 @@ fn print_outputs(
         let mut output_file = File::create(&output_path)
             .context(format!("Failed to open output file {output_path}"))?;
         print!("Writing evidence \"{output_path}\": ");
-        render::render_evidence(&mut output_file, &nodes, render_options)?;
+        render::render_evidence(&mut output_file, nodes, render_options)?;
     }
 
     Ok(())
