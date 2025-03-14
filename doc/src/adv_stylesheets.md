@@ -12,6 +12,14 @@ If an absolute path is used, the stylesheet will be copied to the root of the ou
 
 If a URL (see above for definition) is provided for a stylesheet, it is neither embedded nor copied to an output directory.
 
+## Example
+
+To embed a CSS stylesheet that is in the same directory as your YAML file:
+
+```console
+gsn2x -t -s stylesheet_in_same_directory_as_my_gsn_yaml.css my.gsn.yaml
+```
+
 ## Classes and styles
 
 Every element will also be addressable by `id`. The `id` is the same as the YAML id.
