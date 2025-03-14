@@ -7,7 +7,7 @@ If you encounter an error message like this,
 please use a YAML editor or online validator to check for the well-formedness 
 of the input file:
 
-```
+```console
 Error: Failed to parse YAML from file <filename>
 
 Caused by:
@@ -33,7 +33,7 @@ You can sanitize your files from your intellectual property using, e.g. [https:/
 
 This statement replaces all text with `x`es while keeping the number of characters:
 
-```
+```console
  yq "(.[] | select(. | has(\"text\"))) .text |=sub(\"[a-zA-Z0-9]\",\"x\"), ... comments=\"\""  inputfile.yaml > outputfile.yaml
 ```
 
