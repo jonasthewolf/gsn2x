@@ -1,11 +1,11 @@
-use svg::node::element::{path::Data, Anchor, Element, Path, Title, Use};
+use svg::node::element::{Anchor, Element, Path, Title, Use, path::Data};
 
 use crate::dirgraphsvg::{
     nodes::OFFSET_IDENTIFIER,
-    render::{create_text, PADDING_HORIZONTAL, PADDING_VERTICAL},
+    render::{PADDING_HORIZONTAL, PADDING_VERTICAL, create_text},
     util::{
         escape_url,
-        font::{str_line_bounding_box, text_line_bounding_box, FontInfo},
+        font::{FontInfo, str_line_bounding_box, text_line_bounding_box},
     },
 };
 

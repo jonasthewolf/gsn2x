@@ -1,8 +1,8 @@
-use anyhow::{anyhow, Error, Result};
+use anyhow::{Error, Result, anyhow};
 use font_loader::system_fonts;
 use glyph_brush_layout::{
-    ab_glyph::{FontVec, PxScale},
     FontId, GlyphPositioner, Layout, SectionGeometry, SectionText,
+    ab_glyph::{FontVec, PxScale},
 };
 
 use super::markdown::Text;

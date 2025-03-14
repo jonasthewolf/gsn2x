@@ -1,6 +1,6 @@
 use anyhow::Result;
 
-use super::{get_node_type_from_text, GsnNode, GsnNodeType, Module};
+use super::{GsnNode, GsnNodeType, Module, get_node_type_from_text};
 use crate::diagnostics::Diagnostics;
 use std::collections::{BTreeMap, HashSet};
 
@@ -46,7 +46,9 @@ fn validate_type(diag: &mut Diagnostics, module: &str, id: &str, node: &GsnNode)
     if node.node_type.is_none() {
         diag.add_error(
             Some(module),
-            format!("V01: Element {id} is of unknown type. Please see documentation for supported types"),
+            format!(
+                "V01: Element {id} is of unknown type. Please see documentation for supported types"
+            ),
         );
         Err(())
     } else {
@@ -457,19 +459,21 @@ mod test {
                 ..Default::default()
             },
         );
-        assert!(validate_module(
-            &mut d,
-            "",
-            &Module {
-                orig_file_name: "".to_owned(),
-                meta: ModuleInformation::default(),
-                origin: crate::gsn::Origin::CommandLine,
-                canonical_path: None,
-                output_path: None,
-            },
-            &nodes,
-        )
-        .is_err());
+        assert!(
+            validate_module(
+                &mut d,
+                "",
+                &Module {
+                    orig_file_name: "".to_owned(),
+                    meta: ModuleInformation::default(),
+                    origin: crate::gsn::Origin::CommandLine,
+                    canonical_path: None,
+                    output_path: None,
+                },
+                &nodes,
+            )
+            .is_err()
+        );
         assert_eq!(d.messages.len(), 1);
         assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
@@ -848,31 +852,33 @@ mod test {
         let nodes = BTreeMap::<String, GsnNode>::new();
         let mut develops = BTreeMap::new();
         develops.insert("G1".to_owned(), vec!["G2".to_owned()]);
-        assert!(validate_module(
-            &mut d,
-            "mod",
-            &Module {
-                orig_file_name: "mod".to_owned(),
-                meta: ModuleInformation {
-                    name: "mod".to_owned(),
-                    brief: Some("brief".to_owned()),
-                    extends: vec![ExtendsModule {
-                        module: "mod2".to_owned(),
-                        develops,
-                    }],
-                    uses: vec![],
-                    horizontal_index: None,
-                    rank_increment: None,
-                    char_wrap: None,
-                    additional: BTreeMap::new(),
+        assert!(
+            validate_module(
+                &mut d,
+                "mod",
+                &Module {
+                    orig_file_name: "mod".to_owned(),
+                    meta: ModuleInformation {
+                        name: "mod".to_owned(),
+                        brief: Some("brief".to_owned()),
+                        extends: vec![ExtendsModule {
+                            module: "mod2".to_owned(),
+                            develops,
+                        }],
+                        uses: vec![],
+                        horizontal_index: None,
+                        rank_increment: None,
+                        char_wrap: None,
+                        additional: BTreeMap::new(),
+                    },
+                    origin: crate::gsn::Origin::CommandLine,
+                    canonical_path: None,
+                    output_path: None,
                 },
-                origin: crate::gsn::Origin::CommandLine,
-                canonical_path: None,
-                output_path: None,
-            },
-            &nodes,
-        )
-        .is_err());
+                &nodes,
+            )
+            .is_err()
+        );
         assert_eq!(d.messages.len(), 1);
         assert_eq!(d.messages[0].module, Some("mod".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
@@ -890,31 +896,33 @@ mod test {
         let nodes = BTreeMap::<String, GsnNode>::new();
         let mut develops = BTreeMap::new();
         develops.insert("G1".to_owned(), vec!["X2".to_owned()]);
-        assert!(validate_module(
-            &mut d,
-            "",
-            &Module {
-                orig_file_name: "".to_owned(),
-                meta: ModuleInformation {
-                    name: "mod".to_owned(),
-                    brief: Some("brief".to_owned()),
-                    extends: vec![ExtendsModule {
-                        module: "mod2".to_owned(),
-                        develops,
-                    }],
-                    uses: vec![],
-                    horizontal_index: None,
-                    rank_increment: None,
-                    char_wrap: None,
-                    additional: BTreeMap::new(),
+        assert!(
+            validate_module(
+                &mut d,
+                "",
+                &Module {
+                    orig_file_name: "".to_owned(),
+                    meta: ModuleInformation {
+                        name: "mod".to_owned(),
+                        brief: Some("brief".to_owned()),
+                        extends: vec![ExtendsModule {
+                            module: "mod2".to_owned(),
+                            develops,
+                        }],
+                        uses: vec![],
+                        horizontal_index: None,
+                        rank_increment: None,
+                        char_wrap: None,
+                        additional: BTreeMap::new(),
+                    },
+                    origin: crate::gsn::Origin::CommandLine,
+                    canonical_path: None,
+                    output_path: None,
                 },
-                origin: crate::gsn::Origin::CommandLine,
-                canonical_path: None,
-                output_path: None,
-            },
-            &nodes,
-        )
-        .is_err());
+                &nodes,
+            )
+            .is_err()
+        );
         assert_eq!(d.messages.len(), 1);
         assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Error);

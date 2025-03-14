@@ -1,8 +1,8 @@
 use std::{cell::RefCell, ops::BitOr};
 
 use svg::{
-    node::element::{path::Data, Element, Group, Path, Use},
     Node,
+    node::element::{Element, Group, Path, Use, path::Data},
 };
 
 use crate::{
@@ -16,11 +16,11 @@ use crate::{
 };
 
 use super::{
+    DirGraph,
     layout::Margin,
     nodes::{Port, SvgNode},
-    render::{create_text, ACP_BOX_SIZE, BOTTOM_LEFT_CORNER, TOP_RIGHT_CORNER},
+    render::{ACP_BOX_SIZE, BOTTOM_LEFT_CORNER, TOP_RIGHT_CORNER, create_text},
     util::{font::str_line_bounding_box, point2d::Point2D},
-    DirGraph,
 };
 
 ///

@@ -93,6 +93,12 @@ fn check_node_references(
                             Some(&node.module),
                             format!("C03: Element {} has unresolved {}: {}", id, "context", wref),
                         );
+                        if wref.contains(',') {
+                            diag.add_warning(
+                                Some(&node.module),
+                                format!("C0XXX: Unresolved \"{}\" of element {} may be actually a list: {}", "context", id, wref),
+                            );
+                        }
                         Err(())
                     })
                     .collect::<Vec<Result<(), ()>>>(),

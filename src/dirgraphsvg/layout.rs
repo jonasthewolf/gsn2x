@@ -191,7 +191,9 @@ pub(super) fn layout_nodes(
             break;
         }
         if changed && run == limit {
-            println!("Diagram took too many iterations ({run}). See documentation (https://jonasthewolf.github.io/gsn2x/) for hints how to solve this situation.");
+            println!(
+                "Diagram took too many iterations ({run}). See documentation (https://jonasthewolf.github.io/gsn2x/) for hints how to solve this situation."
+            );
             if let Some(max_value) = unstable_nodes.values().max() {
                 let nodes_to_report = unstable_nodes
                     .iter()
@@ -311,11 +313,7 @@ fn has_node_to_be_moved<'b>(
                 .collect::<Vec<_>>();
             let parent_center = get_center(nodes, &all_parent_cells);
             let move_x = std::cmp::min(child_x - parent_center + cell_x, child_x);
-            if move_x > cell_x {
-                Some(move_x)
-            } else {
-                None
-            }
+            if move_x > cell_x { Some(move_x) } else { None }
         } else {
             // Only center over the children that have no other parents...
             let center_children = children

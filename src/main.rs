@@ -1,6 +1,6 @@
-use anyhow::{anyhow, Context, Result};
+use anyhow::{Context, Result, anyhow};
 use clap::parser::ValueSource;
-use clap::{value_parser, Arg, ArgAction, Command};
+use clap::{Arg, ArgAction, Command, value_parser};
 use file_utils::translate_to_output_path;
 use render::RenderOptions;
 use std::collections::BTreeMap;
