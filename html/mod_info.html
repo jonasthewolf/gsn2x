@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Confidence Argument Extension - gsn2x User Manual</title>
+        <title>Module Info - gsn2x User Manual</title>
 
 
         <!-- Custom HTML head -->
@@ -24,9 +24,9 @@
         <link rel="stylesheet" href="fonts/fonts.css">
 
         <!-- Highlight.js Stylesheets -->
-        <link rel="stylesheet" href="highlight.css">
-        <link rel="stylesheet" href="tomorrow-night.css">
-        <link rel="stylesheet" href="ayu-highlight.css">
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
 
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="svg.css">
@@ -153,69 +153,53 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="confidence-argument-extension"><a class="header" href="#confidence-argument-extension">Confidence Argument Extension</a></h1>
-<p>The Confidence Argument Extension is supported. It defines so called Assurance Claim Points (ACPs).</p>
-<p>They can be defined either for an element or for the relation between elements.</p>
-<p>The following YAML shows an example of their usage:</p>
-<pre><code class="language-yaml">G1:
-  text: System is acceptably safe to operate
-  supportedBy: [S1]
-  acp:
-    ACP1: S1
+                        <h1 id="optional-module-information"><a class="header" href="#optional-module-information">Optional module information</a></h1>
+<p>It is possible to add additional <code>module</code> information in the source YAML.
+This allows describing the module`s name and an optional brief description.
+Even arbitrary information can be added.</p>
+<p><code>name</code> and <code>brief</code> are mandatory if a <code>module</code> is added.</p>
+<pre><code class="language-yaml">
+module: 
+   name: MainModule
+   brief: This is a short description of the module
+   additionalInformation: 
+    v1: Changed line 2
+    v2: Added line 4
 
-S1:
-  text: Argument over all hazards
-  supportedBy: [G2, G3]
-  inContextOf: [C1]
-  acp:
-    ACP4: C1
-
-C1:
-  text: Hazard list
-  acp:
-    ACP6: C1
-
-G2:
-  text: Hazard 1 mitigated
-  supportedBy: [Sn1]
-  acp:
-    ACP2: Sn1
-
-Sn1:
-  text: Evidence for Hazard 1
-
-G3:
-  text: Hazard 2 mitigated
-  supportedBy: [Sn2a, Sn2b]
-  acp:
-    ACP3: [Sn2a, Sn2b]
-
-Sn2a:
-  text: Evidence for Hazard 2
-
-Sn2b:
-  text: More evidence for Hazard 2
-  acp:
-    ACP5: Sn2b
 </code></pre>
-<p>Assurance Claim Points (ACP) are defined with the <code>acp</code> attribute.
-The name of the ACP is followed by:</p>
-<ul>
-<li>either a reference to the element itself, or</li>
-<li>a reference or a list of references to elements that are directly related (<code>supportedBy</code> or <code>inContextOf</code>).</li>
-</ul>
-<p>There can be multiple ACPs per element.</p>
-<p><img src="examples/confidence.gsn.svg" alt="Rendered Example" /></p>
+<p>The module information is printed as part of a legend for the argument view.</p>
+<p>To influence the position in the architecture view, you can use the <code>horizontalIndex</code> and <code>rankIncrement</code> as you would for elements in the Argument view (see <a href="adv_layout.html#placement-of-elements">Layout of elements</a> ).</p>
+<p>You can use the <code>-G</code> option to suppress the legend completely,
+or the <code>-g</code> option to limit it to <code>name</code>, <code>brief</code> and the time and date of generation of the SVG.</p>
+<h2 id="including-other-modules"><a class="header" href="#including-other-modules">Including other modules</a></h2>
+<p>Multiple modules, i.e. files, can be provided at the command line:</p>
+<pre><code>gsn2x index.gsn.yaml required_module1.gsn.yaml required_module2.gsn.yaml required_module3.gsn.yaml
+</code></pre>
+<p>However, this might requires long and complex calls at the command line for reasonably large arguments.</p>
+<p>Another way to use multiple modules is to "use" them from others. You can do so by adding a <code>uses</code> attribute to a module:</p>
+<pre><code class="language-yaml">module:
+   name: MainModule
+   brief: This is the index.gsn.yaml file
+   uses: [required_module1.yaml, required_module2.gsn.yaml, required_module3.gsn.yaml]
+</code></pre>
+<p>The command line is now simplified to:</p>
+<pre><code>gsn2x index.gsn.yaml
+</code></pre>
+<p>Or even (if you name the entry point file: <code>index.gsn.yaml</code>):</p>
+<pre><code>gsn2x
+</code></pre>
+<p>Of course, "used" modules can also include other modules on their own.
+There is a check implemented to prevent circular includes.</p>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="mod_info.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="mod_distdev.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
-                            <a rel="next prefetch" href="interfacing.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="confidence.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
 
@@ -225,11 +209,11 @@ The name of the ACP is followed by:</p>
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="mod_info.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="mod_distdev.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
 
-                    <a rel="next prefetch" href="interfacing.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="confidence.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>

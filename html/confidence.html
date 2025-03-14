@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Layers - gsn2x User Manual</title>
+        <title>Confidence Argument Extension - gsn2x User Manual</title>
 
 
         <!-- Custom HTML head -->
@@ -24,9 +24,9 @@
         <link rel="stylesheet" href="fonts/fonts.css">
 
         <!-- Highlight.js Stylesheets -->
-        <link rel="stylesheet" href="highlight.css">
-        <link rel="stylesheet" href="tomorrow-night.css">
-        <link rel="stylesheet" href="ayu-highlight.css">
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
 
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="svg.css">
@@ -153,41 +153,69 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="additional-layers"><a class="header" href="#additional-layers">Additional layers</a></h1>
-<p>Additional attributes of an element are not output into the rendered diagram.</p>
-<p>With the command line option <code>-l</code> or <code>--layers</code> you can enable the output of those additional attributes.
-By using this feature different views on the GSN can be generated.</p>
-<h2 id="example"><a class="header" href="#example">Example</a></h2>
+                        <h1 id="confidence-argument-extension"><a class="header" href="#confidence-argument-extension">Confidence Argument Extension</a></h1>
+<p>The Confidence Argument Extension is supported. It defines so called Assurance Claim Points (ACPs).</p>
+<p>They can be defined either for an element or for the relation between elements.</p>
+<p>The following YAML shows an example of their usage:</p>
 <pre><code class="language-yaml">G1:
-  text: This is a Goal
+  text: System is acceptably safe to operate
   supportedBy: [S1]
-  inContextOf: [C1]
-  layer1: This is additional information for G1.
+  acp:
+    ACP1: S1
 
 S1:
-  text: This is a Strategy
-  layer1: This is additional information for S1.
+  text: Argument over all hazards
+  supportedBy: [G2, G3]
+  inContextOf: [C1]
+  acp:
+    ACP4: C1
 
-C1: 
-  text: This is a Context
-  layer1: This is additional information for C1.
+C1:
+  text: Hazard list
+  acp:
+    ACP6: C1
+
+G2:
+  text: Hazard 1 mitigated
+  supportedBy: [Sn1]
+  acp:
+    ACP2: Sn1
+
+Sn1:
+  text: Evidence for Hazard 1
+
+G3:
+  text: Hazard 2 mitigated
+  supportedBy: [Sn2a, Sn2b]
+  acp:
+    ACP3: [Sn2a, Sn2b]
+
+Sn2a:
+  text: Evidence for Hazard 2
+
+Sn2b:
+  text: More evidence for Hazard 2
+  acp:
+    ACP5: Sn2b
 </code></pre>
-<p>In this example, a call to <code>gsn2x -l layer1</code> will show the additional information to each element prefixed with <em><code>LAYER1: </code></em>.</p>
-<p>Of course, using <code>text</code>, <code>inContextOf</code>, <code>supportedBy</code>, <code>url</code>, <code>undeveloped</code>,
-<code>horizontalRank</code>, <code>rankIncrement</code>, <code>acp</code> or <code>classes</code> are not sensible parameters to pass for the <code>-l</code> option.</p>
-<p>Please note that using <code>module</code> and passing it as a layer option will also not work.</p>
-<p>It is intentional that information is only added for a view, but not hidden to ensure consistency of the GSN in all variants.</p>
-<p>Only additional associative arrays with a string key can be used as additional layers.</p>
+<p>Assurance Claim Points (ACP) are defined with the <code>acp</code> attribute.
+The name of the ACP is followed by:</p>
+<ul>
+<li>either a reference to the element itself, or</li>
+<li>a reference or a list of references to elements that are directly related (<code>supportedBy</code> or <code>inContextOf</code>).</li>
+</ul>
+<p>There can be multiple ACPs per element.</p>
+<p><img src="examples/confidence.gsn.svg" alt="Rendered Example" /></p>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="adv_layout.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="mod_info.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
-                            <a rel="next prefetch" href="adv_stylesheets.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="interfacing.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
 
@@ -197,11 +225,11 @@ C1:
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="adv_layout.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="mod_info.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
 
-                    <a rel="next prefetch" href="adv_stylesheets.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="interfacing.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>

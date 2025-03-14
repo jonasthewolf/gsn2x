@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Module Info - gsn2x User Manual</title>
+        <title>Basic Usage - gsn2x User Manual</title>
 
 
         <!-- Custom HTML head -->
@@ -24,9 +24,9 @@
         <link rel="stylesheet" href="fonts/fonts.css">
 
         <!-- Highlight.js Stylesheets -->
-        <link rel="stylesheet" href="highlight.css">
-        <link rel="stylesheet" href="tomorrow-night.css">
-        <link rel="stylesheet" href="ayu-highlight.css">
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
 
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="svg.css">
@@ -153,53 +153,53 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="optional-module-information"><a class="header" href="#optional-module-information">Optional module information</a></h1>
-<p>It is possible to add additional <code>module</code> information in the source YAML.
-This allows describing the module`s name and an optional brief description.
-Even arbitrary information can be added.</p>
-<p><code>name</code> and <code>brief</code> are mandatory if a <code>module</code> is added.</p>
-<pre><code class="language-yaml">
-module: 
-   name: MainModule
-   brief: This is a short description of the module
-   additionalInformation: 
-    v1: Changed line 2
-    v2: Added line 4
+                        <h1 id="basic-usage"><a class="header" href="#basic-usage">Basic usage</a></h1>
+<p>This little program renders <a href="https://scsc.uk/gsn">Goal Structuring Notation</a> in a YAML format to a scalable vector graphics (SVG) image.</p>
+<p><img src="examples/example.gsn.svg" alt="example" /></p>
+<h2 id="usage"><a class="header" href="#usage">Usage</a></h2>
+<p>You can create an SVG like this:</p>
+<pre><code>gsn2x &lt;yourgsnfile.yaml&gt; 
+</code></pre>
+<p>The output is an argument view in SVG format and automatically written to <code>&lt;yourgsnfile.svg&gt;</code>. If more than one input file is provided, they are treated as <a href="./mod_extension.html">modules</a>.</p>
+<h2 id="options"><a class="header" href="#options">Options</a></h2>
+<pre><code>Usage: gsn2x [OPTIONS] &lt;INPUT&gt;...
 
-</code></pre>
-<p>The module information is printed as part of a legend for the argument view.</p>
-<p>To influence the position in the architecture view, you can use the <code>horizontalIndex</code> and <code>rankIncrement</code> as you would for elements in the Argument view (see <a href="adv_layout.html#placement-of-elements">Layout of elements</a> ).</p>
-<p>You can use the <code>-G</code> option to suppress the legend completely,
-or the <code>-g</code> option to limit it to <code>name</code>, <code>brief</code> and the time and date of generation of the SVG.</p>
-<h2 id="including-other-modules"><a class="header" href="#including-other-modules">Including other modules</a></h2>
-<p>Multiple modules, i.e. files, can be provided at the command line:</p>
-<pre><code>gsn2x index.gsn.yaml required_module1.gsn.yaml required_module2.gsn.yaml required_module3.gsn.yaml
-</code></pre>
-<p>However, this might requires long and complex calls at the command line for reasonably large arguments.</p>
-<p>Another way to use multiple modules is to "use" them from others. You can do so by adding a <code>uses</code> attribute to a module:</p>
-<pre><code class="language-yaml">module:
-   name: MainModule
-   brief: This is the index.gsn.yaml file
-   uses: [required_module1.yaml, required_module2.gsn.yaml, required_module3.gsn.yaml]
-</code></pre>
-<p>The command line is now simplified to:</p>
-<pre><code>gsn2x index.gsn.yaml
-</code></pre>
-<p>Or even (if you name the entry point file: <code>index.gsn.yaml</code>):</p>
-<pre><code>gsn2x
-</code></pre>
-<p>Of course, "used" modules can also include other modules on their own.
-There is a check implemented to prevent circular includes.</p>
+Arguments:
+  &lt;INPUT&gt;...  Sets the input file(s) to use.
+
+Options:
+  -h, --help     Print help
+  -V, --version  Print version
+
+CHECKS:
+  -c, --check                      Only check the input file(s), but do not output graphs.
+  -x, --exclude &lt;EXCLUDED_MODULE&gt;  Exclude this module from reference checks.
+
+OUTPUT:
+  -N, --no-arg                         Do not output of argument view for provided input files.
+  -f, --full &lt;COMPLETE_VIEW&gt;           Output the complete view to file with name &lt;COMPLETE_VIEW&gt;.    [default: complete.svg]
+  -F, --no-full                        Do not output the complete view.
+  -a, --arch &lt;ARCHITECTURE_VIEW&gt;       Output the architecture view to file with name &lt;ARCHITECTURE_VIEW&gt;. [default: architecture.svg]
+  -A, --no-arch                        Do not output the architecture view.
+  -e, --evidence &lt;EVIDENCE&gt;          Output list of all evidence to file with name &lt;EVIDENCE&gt;. [default: evidence.md]
+  -E, --no-evidence                   Do not output list of all evidence.
+  -o, --output-dir &lt;OUTPUT_DIRECTORY&gt;  Emit all output files to directory &lt;OUTPUT_DIRECTORY&gt;.      [default: .]
+
+OUTPUT MODIFICATION:
+  -l, --layer &lt;LAYERS&gt;            Output additional layer. Can be used multiple times.
+  -s, --stylesheet &lt;STYLESHEETS&gt;  Links a stylesheet in SVG output. Can be used multiple times.
+  -t, --embed-css                 Embed stylesheets instead of linking them.
+  -m, --mask &lt;MASKED_MODULE&gt;      Do not show this module in views.
+  -G, --no-legend                 Do not output a legend based on module information.
+  -g, --full-legend               Output a legend based on all module information.
+  -w, --wrap &lt;CHAR_WRAP&gt;          Define the number of characters after which a line of text is wrapped.</code></pre>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="mod_distdev.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
-                                <i class="fa fa-angle-left"></i>
-                            </a>
 
-                            <a rel="next prefetch" href="confidence.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="yaml_syntax.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
 
@@ -209,11 +209,8 @@ There is a check implemented to prevent circular includes.</p>
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="mod_distdev.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
-                        <i class="fa fa-angle-left"></i>
-                    </a>
 
-                    <a rel="next prefetch" href="confidence.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="yaml_syntax.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>

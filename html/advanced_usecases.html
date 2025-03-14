@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Stylesheets - gsn2x User Manual</title>
+        <title>Advanced Use-cases - gsn2x User Manual</title>
 
 
         <!-- Custom HTML head -->
@@ -24,9 +24,9 @@
         <link rel="stylesheet" href="fonts/fonts.css">
 
         <!-- Highlight.js Stylesheets -->
-        <link rel="stylesheet" href="highlight.css">
-        <link rel="stylesheet" href="tomorrow-night.css">
-        <link rel="stylesheet" href="ayu-highlight.css">
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
 
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="svg.css">
@@ -153,78 +153,24 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="stylesheets-for-svg-rendering"><a class="header" href="#stylesheets-for-svg-rendering">Stylesheets for SVG rendering</a></h1>
-<p>You can provide (multiple) custom CSS stylesheets for SVG via the <code>-s</code> or <code>--stylesheet</code> options.</p>
-<p>The path may be relative to the current working directory, absolute, or an URL (i.e. starting with <code>http://</code>, <code>https://</code> or <code>file://</code>).</p>
-<p>When adding <code>-t</code> or <code>--embed-css</code> on the command line, the CSS stylesheets will be embedded in the SVG.</p>
-<p>If an output path is provided (see <a href="./basic_usage.html">Basic usage</a>), the stylesheet(s) will be copied there.
-If a relative path is used, the relative path to the current working directory is preserved.
-If an absolute path is used, the stylesheet will be copied to the root of the output path.</p>
-<p>If a URL (see above for definition) is provided for a stylesheet, it is neither embedded nor copied to an output directory.</p>
-<h2 id="classes-and-styles"><a class="header" href="#classes-and-styles">Classes and styles</a></h2>
-<p>Every element will also be addressable by <code>id</code>. The <code>id</code> is the same as the YAML id.</p>
-<p>This table shows the CSS classes assigned to a certain element:</p>
-<div class="table-wrapper"><table><thead><tr><th>Class</th><th>Assigned to</th><th>SVG Element</th></tr></thead><tbody>
-<tr><td>gsndiagram</td><td>The complete diagram</td><td>svg</td></tr>
-<tr><td>gsnelem</td><td>All elements</td><td>g</td></tr>
-<tr><td>gsngoal</td><td>Goal</td><td>g</td></tr>
-<tr><td>gsn_undeveloped</td><td>Undeveloped</td><td>g</td></tr>
-<tr><td>gsnsltn</td><td>Solution</td><td>g</td></tr>
-<tr><td>gsnawaysltn</td><td>Away Solution</td><td>g</td></tr>
-<tr><td>gsnstgy</td><td>Strategy</td><td>g</td></tr>
-<tr><td>gsnasmp</td><td>Assumption</td><td>g</td></tr>
-<tr><td>gsnawayasmp</td><td>Away Assumption</td><td>g</td></tr>
-<tr><td>gsnjust</td><td>Justification</td><td>g</td></tr>
-<tr><td>gsnawayjust</td><td>Away Justification</td><td>g</td></tr>
-<tr><td>gsnctxt</td><td>Context</td><td>g</td></tr>
-<tr><td>gsnawayctxt</td><td>Away Context</td><td>g</td></tr>
-<tr><td>gsnmodule</td><td>Module</td><td>g</td></tr>
-<tr><td>gsn_module_<code>module</code></td><td>Module name</td><td>g</td></tr>
-<tr><td>gsnedge</td><td>All edges</td><td>path</td></tr>
-<tr><td>gsnlay_<code>&lt;layer&gt;</code></td><td>Layer <code>&lt;layer&gt;</code></td><td>path</td></tr>
-<tr><td>gsninctxt</td><td>In Context Of</td><td>path</td></tr>
-<tr><td>gsnspby</td><td>Supported By</td><td>path</td></tr>
-<tr><td>gsncomposite</td><td>Composite (In Context Of AND Supported By)</td><td>path</td></tr>
-<tr><td>gsn_masked</td><td>Masked elements</td><td>g  </td></tr>
-<tr><td>acp_<code>acp_name</code></td><td>Elements or edges with an ACP</td><td>g or path</td></tr>
-</tbody></table>
-</div>
-<p>You can assign additional classes by adding the <code>classes:</code> attribute. It must be a list of classes you want to assign.
-Additional layers will be added as CSS classes, too. A <code>layer1</code> will e.g. be added as <code>gsnlay_layer1</code>.</p>
-<p>For more information on how to use CSS with SVGs, see <a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/SVG_and_CSS">here</a>.</p>
-<h2 id="example"><a class="header" href="#example">Example</a></h2>
-<p>The GSN YAML:</p>
-<pre><code class="language-yaml">
-G1:
-  text: This is a Goal
-  classes: [additionalclass1, additionalclass2]
-  undeveloped: true
-</code></pre>
-<p>The corresponding CSS:</p>
-<pre><code class="language-css">
-.additionalclass1 path { fill: red; fill-opacity: 1;}
-.additionalclass1 text,a { fill: white; }
-</code></pre>
-<p>The result looks like this:</p>
-<p><img src="examples/minimalcss/min.gsn.svg" alt="Styled Example" /></p>
-<h1 id="highlighting-elements-when-navigating"><a class="header" href="#highlighting-elements-when-navigating">Highlighting elements when navigating</a></h1>
-<p>The CSS <code>:target</code> pseudo class can be used to highlight the element you clicked on in the previous image.</p>
-<p>An example could look like this:</p>
-<pre><code class="language-css">g:target path {
-    fill: lightsteelblue;
-    fill-opacity: 1;
-}
-</code></pre>
+                        <h1 id="advance-use-cases"><a class="header" href="#advance-use-cases">Advance Use-cases</a></h1>
+<p>There are a few extra, advanced use-cases:</p>
+<ul>
+<li><a href="./adv_layout.html">Layout</a></li>
+<li><a href="./adv_layers.html">Layers</a></li>
+<li><a href="./adv_stylesheets.html">Stylesheets</a></li>
+<li><a href="./adv_evidence.html">Evidence</a></li>
+</ul>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="adv_layers.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="checks.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
-                            <a rel="next prefetch" href="adv_evidence.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="adv_formatting.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
 
@@ -234,11 +180,11 @@ G1:
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="adv_layers.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="checks.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
 
-                    <a rel="next prefetch" href="adv_evidence.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="adv_formatting.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>

@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Basic Usage - gsn2x User Manual</title>
+        <title>Troubleshooting - gsn2x User Manual</title>
 
 
         <!-- Custom HTML head -->
@@ -24,9 +24,9 @@
         <link rel="stylesheet" href="fonts/fonts.css">
 
         <!-- Highlight.js Stylesheets -->
-        <link rel="stylesheet" href="highlight.css">
-        <link rel="stylesheet" href="tomorrow-night.css">
-        <link rel="stylesheet" href="ayu-highlight.css">
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
 
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="svg.css">
@@ -153,53 +153,41 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="basic-usage"><a class="header" href="#basic-usage">Basic usage</a></h1>
-<p>This little program renders <a href="https://scsc.uk/gsn">Goal Structuring Notation</a> in a YAML format to a scalable vector graphics (SVG) image.</p>
-<p><img src="examples/example.gsn.svg" alt="example" /></p>
-<h2 id="usage"><a class="header" href="#usage">Usage</a></h2>
-<p>You can create an SVG like this:</p>
-<pre><code>gsn2x &lt;yourgsnfile.yaml&gt; 
+                        <h1 id="troubleshooting"><a class="header" href="#troubleshooting">Troubleshooting</a></h1>
+<h2 id="yaml-error-messages"><a class="header" href="#yaml-error-messages">YAML error messages</a></h2>
+<p>If you encounter an error message like this,
+please use a YAML editor or online validator to check for the well-formedness
+of the input file:</p>
+<pre><code class="language-console">Error: Failed to parse YAML from file &lt;filename&gt;
+
+Caused by:
+    No valid GSN element can be found starting from line &lt;n&gt;.
+    This typically means that the YAML is completely invalid, or 
+    the `text:` attribute is missing for an element,
+    or `supportedBy` or `inContextOf` are not followed by a list ([]).
+    Please see the documentation for details (https://jonasthewolf.github.io/gsn2x/troubleshooting.html).
+    Original error message: data did not match any variant of untagged enum GsnDocument.
 </code></pre>
-<p>The output is an argument view in SVG format and automatically written to <code>&lt;yourgsnfile.svg&gt;</code>. If more than one input file is provided, they are treated as <a href="./modular_extension.html">modules</a>.</p>
-<h2 id="options"><a class="header" href="#options">Options</a></h2>
-<pre><code>Usage: gsn2x [OPTIONS] &lt;INPUT&gt;...
-
-Arguments:
-  &lt;INPUT&gt;...  Sets the input file(s) to use.
-
-Options:
-  -h, --help     Print help
-  -V, --version  Print version
-
-CHECKS:
-  -c, --check                      Only check the input file(s), but do not output graphs.
-  -x, --exclude &lt;EXCLUDED_MODULE&gt;  Exclude this module from reference checks.
-
-OUTPUT:
-  -N, --no-arg                         Do not output of argument view for provided input files.
-  -f, --full &lt;COMPLETE_VIEW&gt;           Output the complete view to file with name &lt;COMPLETE_VIEW&gt;.    [default: complete.svg]
-  -F, --no-full                        Do not output the complete view.
-  -a, --arch &lt;ARCHITECTURE_VIEW&gt;       Output the architecture view to file with name &lt;ARCHITECTURE_VIEW&gt;. [default: architecture.svg]
-  -A, --no-arch                        Do not output the architecture view.
-  -e, --evidence &lt;EVIDENCE&gt;          Output list of all evidence to file with name &lt;EVIDENCE&gt;. [default: evidence.md]
-  -E, --no-evidence                   Do not output list of all evidence.
-  -o, --output-dir &lt;OUTPUT_DIRECTORY&gt;  Emit all output files to directory &lt;OUTPUT_DIRECTORY&gt;.      [default: .]
-
-OUTPUT MODIFICATION:
-  -l, --layer &lt;LAYERS&gt;            Output additional layer. Can be used multiple times.
-  -s, --stylesheet &lt;STYLESHEETS&gt;  Links a stylesheet in SVG output. Can be used multiple times.
-  -t, --embed-css                 Embed stylesheets instead of linking them.
-  -m, --mask &lt;MASKED_MODULE&gt;      Do not show this module in views.
-  -G, --no-legend                 Do not output a legend based on module information.
-  -g, --full-legend               Output a legend based on all module information.
-  -w, --wrap &lt;CHAR_WRAP&gt;          Define the number of characters after which a line of text is wrapped.</code></pre>
+<p>Please see the <a href="./yaml_syntax.html">YAML Syntax</a> what is expected by the programs.</p>
+<p>A good strategy to find out which element is causing the problem is to remove all but the first element from the input YAML file.
+Then running gsn2x again and incrementally adding the elements one by one again, until you hit the error message again.</p>
+<p>Unfortunately, it is currently not possible to improve on the location of the error messages in this case.</p>
+<h2 id="sanitizing-files-for-eg-support-requests"><a class="header" href="#sanitizing-files-for-eg-support-requests">Sanitizing files for e.g. support requests</a></h2>
+<p>You can sanitize your files from your intellectual property using, e.g. <a href="https://mikefarah.gitbook.io/yq/">https://mikefarah.gitbook.io/yq/</a>.</p>
+<p>This statement replaces all text with <code>x</code>es while keeping the number of characters:</p>
+<pre><code class="language-console"> yq "(.[] | select(. | has(\"text\"))) .text |=sub(\"[a-zA-Z0-9]\",\"x\"), ... comments=\"\""  inputfile.yaml &gt; outputfile.yaml
+</code></pre>
+<p><strong>Please note that element identifiers and <a href="./adv_layers.html">additional layers</a> are not sanitizied.</strong></p>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="standard_support.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
 
-                            <a rel="next prefetch" href="yaml_syntax.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="design_goals.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
 
@@ -209,8 +197,11 @@ OUTPUT MODIFICATION:
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="standard_support.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
 
-                    <a rel="next prefetch" href="yaml_syntax.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="design_goals.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>

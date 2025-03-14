@@ -25,9 +25,9 @@
         <link rel="stylesheet" href="fonts/fonts.css">
 
         <!-- Highlight.js Stylesheets -->
-        <link rel="stylesheet" href="highlight.css">
-        <link rel="stylesheet" href="tomorrow-night.css">
-        <link rel="stylesheet" href="ayu-highlight.css">
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
 
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="svg.css">
@@ -161,7 +161,7 @@
 <p>You can create an SVG like this:</p>
 <pre><code>gsn2x &lt;yourgsnfile.yaml&gt; 
 </code></pre>
-<p>The output is an argument view in SVG format and automatically written to <code>&lt;yourgsnfile.svg&gt;</code>. If more than one input file is provided, they are treated as <a href="./modular_extension.html">modules</a>.</p>
+<p>The output is an argument view in SVG format and automatically written to <code>&lt;yourgsnfile.svg&gt;</code>. If more than one input file is provided, they are treated as <a href="./mod_extension.html">modules</a>.</p>
 <h2 id="options"><a class="header" href="#options">Options</a></h2>
 <pre><code>Usage: gsn2x [OPTIONS] &lt;INPUT&gt;...
 
@@ -246,7 +246,7 @@ C1:
 <tr><td>nodeType</td><td>yes</td><td>See footnote<sup class="footnote-reference"><a href="#nt">1</a></sup></td></tr>
 <tr><td>rankIncrement</td><td>yes</td><td>See <a href="./adv_layout.html">Layout</a>.</td></tr>
 <tr><td>horizontalIndex</td><td>yes</td><td>See <a href="./adv_layout.html">Layout</a>.</td></tr>
-<tr><td>charWrap</td><td>yes</td><td>See <a href="./adv_linebreaks.html">Line Breaks</a>.</td></tr>
+<tr><td>charWrap</td><td>yes</td><td>See <a href="./adv_formatting.html">Line Breaks</a>.</td></tr>
 <tr><td>acp</td><td>yes</td><td>See <a href="./confidence.html">Confidence Argument Extension</a>.</td></tr>
 </tbody></table>
 </div>
@@ -402,7 +402,7 @@ to the very right of the graph.</p>
 You would typically use an absolute index with either <code>0</code> or <code>last</code> to place them
 either left or right of the element they are referenced from.</p>
 <p><code>horizontalIndex</code> and <code>rankIncrement</code> can also be used for <code>module</code> elements.
-They will be used for the Architecture View then (see <a href="modular_extension.html#architecture-view">Modular extension</a>).</p>
+They will be used for the Architecture View then (see <a href="mod_extension.html#architecture-view">Modular extension</a>).</p>
 <h3 id="troubleshooting"><a class="header" href="#troubleshooting">Troubleshooting</a></h3>
 <p>There can be situations (e.g. a n:m relation between goals and solutions)
 that lead to weird looking graphs.
@@ -478,6 +478,10 @@ C1:
 If a relative path is used, the relative path to the current working directory is preserved.
 If an absolute path is used, the stylesheet will be copied to the root of the output path.</p>
 <p>If a URL (see above for definition) is provided for a stylesheet, it is neither embedded nor copied to an output directory.</p>
+<h2 id="example-5"><a class="header" href="#example-5">Example</a></h2>
+<p>To embed a CSS stylesheet that is in the same directory as your YAML file:</p>
+<pre><code class="language-console">gsn2x -t -s stylesheet_in_same_directory_as_my_gsn_yaml.css my.gsn.yaml
+</code></pre>
 <h2 id="classes-and-styles"><a class="header" href="#classes-and-styles">Classes and styles</a></h2>
 <p>Every element will also be addressable by <code>id</code>. The <code>id</code> is the same as the YAML id.</p>
 <p>This table shows the CSS classes assigned to a certain element:</p>
@@ -509,7 +513,7 @@ If an absolute path is used, the stylesheet will be copied to the root of the ou
 <p>You can assign additional classes by adding the <code>classes:</code> attribute. It must be a list of classes you want to assign.
 Additional layers will be added as CSS classes, too. A <code>layer1</code> will e.g. be added as <code>gsnlay_layer1</code>.</p>
 <p>For more information on how to use CSS with SVGs, see <a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/SVG_and_CSS">here</a>.</p>
-<h2 id="example-5"><a class="header" href="#example-5">Example</a></h2>
+<h2 id="example-6"><a class="header" href="#example-6">Example</a></h2>
 <p>The GSN YAML:</p>
 <pre><code class="language-yaml">
 G1:
@@ -597,7 +601,7 @@ THe architecture view is navigable to the module argument view.</p>
 <p>The architecture view only contains the links to the individual module files, if they actually exist when generating the architecture view.</p>
 <p><img src="examples/modular/architecture.svg" alt="example architecture" /></p>
 <p>See <a href="examples/modular/architecture.svg">example</a> here.</p>
-<h2 id="example-6"><a class="header" href="#example-6">Example:</a></h2>
+<h2 id="example-7"><a class="header" href="#example-7">Example:</a></h2>
 <pre><code>gsn2x -f full.svg -a arch.svg main.yml sub1.yml sub3.yml
 </code></pre>
 <p>This will generate the argument view for each module, the complete view (<code>-f full.svg</code>) of all modules and the architecture view (<code>-a arch.svg</code>). <!-- In the complete view, the elements of the `sub1` module will be represented by a module. --></p>
@@ -754,7 +758,7 @@ with the part after.</p>
 <div class="table-wrapper"><table><thead><tr><th>Standard</th><th>Support</th></tr></thead><tbody>
 <tr><td>Core GSN</td><td>✅ full</td></tr>
 <tr><td>Argument Pattern Extension</td><td>❌ not planned</td></tr>
-<tr><td>Modular Extension</td><td>🟡 partially, see <a href="./modular_extension.html">Modular Extension</a>; Module Interfaces (Section 1:4.6) and Inter-Module Contracts (Section 1:4.7) are not supported (this includes public decorators and module interface connectors).</td></tr>
+<tr><td>Modular Extension</td><td>🟡 partially, see <a href="./mod_extension.html">Modular Extension</a>; Module Interfaces (Section 1:4.6) and Inter-Module Contracts (Section 1:4.7) are not supported (this includes public decorators and module interface connectors).</td></tr>
 <tr><td>Confidence Argument Extension</td><td>✅ full, see <a href="./confidence.html">Confidence Argument Extension</a></td></tr>
 <tr><td>Dialectic Extension</td><td>❌ not planned</td></tr>
 </tbody></table>
@@ -763,7 +767,7 @@ with the part after.</p>
 <p>If you encounter an error message like this,
 please use a YAML editor or online validator to check for the well-formedness
 of the input file:</p>
-<pre><code>Error: Failed to parse YAML from file &lt;filename&gt;
+<pre><code class="language-console">Error: Failed to parse YAML from file &lt;filename&gt;
 
 Caused by:
     No valid GSN element can be found starting from line &lt;n&gt;.
@@ -780,7 +784,7 @@ Then running gsn2x again and incrementally adding the elements one by one again,
 <h2 id="sanitizing-files-for-eg-support-requests"><a class="header" href="#sanitizing-files-for-eg-support-requests">Sanitizing files for e.g. support requests</a></h2>
 <p>You can sanitize your files from your intellectual property using, e.g. <a href="https://mikefarah.gitbook.io/yq/">https://mikefarah.gitbook.io/yq/</a>.</p>
 <p>This statement replaces all text with <code>x</code>es while keeping the number of characters:</p>
-<pre><code> yq "(.[] | select(. | has(\"text\"))) .text |=sub(\"[a-zA-Z0-9]\",\"x\"), ... comments=\"\""  inputfile.yaml &gt; outputfile.yaml
+<pre><code class="language-console"> yq "(.[] | select(. | has(\"text\"))) .text |=sub(\"[a-zA-Z0-9]\",\"x\"), ... comments=\"\""  inputfile.yaml &gt; outputfile.yaml
 </code></pre>
 <p><strong>Please note that element identifiers and <a href="./adv_layers.html">additional layers</a> are not sanitizied.</strong></p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="design-goals"><a class="header" href="#design-goals">Design goals</a></h1>

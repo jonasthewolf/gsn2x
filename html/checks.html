@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Interfacing - gsn2x User Manual</title>
+        <title>Checks - gsn2x User Manual</title>
 
 
         <!-- Custom HTML head -->
@@ -24,9 +24,9 @@
         <link rel="stylesheet" href="fonts/fonts.css">
 
         <!-- Highlight.js Stylesheets -->
-        <link rel="stylesheet" href="highlight.css">
-        <link rel="stylesheet" href="tomorrow-night.css">
-        <link rel="stylesheet" href="ayu-highlight.css">
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
 
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="svg.css">
@@ -153,45 +153,53 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="interfacing"><a class="header" href="#interfacing">Interfacing</a></h1>
-<p>Here is some guidance on interfacing with external sources.</p>
-<p>I currently see two use-cases:</p>
-<ol>
-<li>
-<p>Use-case: Check if all configuration management items of a project exist that are mandated by the argumentation (as solutions/evidence).</p>
-<p>The reference list may comprise more items that are required for argumentation, i.e. the list items must be attributed.</p>
-<p>The reference list may be distributed across multiple files.</p>
-</li>
-<li>
-<p>Use-case: Check if all normative/external requirements are fulfilled.</p>
-<p>The reference list is a list of all normative requirements.</p>
-<p>This use-case is actually the other way around than the first one.</p>
-</li>
-</ol>
-<p>For the example scripts below, <a href="https://github.com/mikefarah/yq"><code>yq</code></a> is required.</p>
-<h2 id="checking-evidence"><a class="header" href="#checking-evidence">Checking evidence</a></h2>
-<p>This command lists all Solutions that are in <code>example.gsn.yaml</code> but are not in <code>reference.yaml</code>:</p>
-<pre><code>yq ea '[select(file_index == 0)|.Sn*.text] - [select(file_index == 1)|.[]]' examples/example.gsn.yaml reference.yaml   
+                        <h1 id="checks"><a class="header" href="#checks">Checks</a></h1>
+<h2 id="validation-checks"><a class="header" href="#validation-checks">Validation checks</a></h2>
+<p>The tool automatically performs the following validation checks on the input YAML.</p>
+<p>Validations can be performed on individual input files.</p>
+<div class="table-wrapper"><table><thead><tr><th>ID</th><th>Meaning</th></tr></thead><tbody>
+<tr><td>V01</td><td>All IDs must either start with a known prefix or a <code>node_type</code> must explicitly set.</td></tr>
+<tr><td>V02</td><td>All Goals and Strategies must be either marked with <code>undeveloped: true</code> or have supporting Goals, Strategies or Solutions.</td></tr>
+<tr><td>V03</td><td>Goals and Strategies marked as undeveloped, must have no supporting arguments.</td></tr>
+<tr><td>V04</td><td>All elements listed under <code>supportedBy</code> and <code>inContextOf</code> must be known elements types and semantically sensible (e.g. a Justification cannot be listed under <code>supportedBy</code>).</td></tr>
+<tr><td>V05</td><td>All referenced elements in <code>supportedBy</code> and <code>inContextOf</code> must be unique i.e., no duplicates in the list.</td></tr>
+<tr><td>V06</td><td>All referenced elements in <code>supportedBy</code> and <code>inContextOf</code> must not refer to the element itself.</td></tr>
+<tr><td>V07</td><td>All elements listed as extending other elements must be known elements of the current module and semantically sensible (see V04).</td></tr>
+<tr><td>V08</td><td> The IDs start contradicts the type of the element set with <code>node_type</code>.</td></tr>
+<tr><td>V09</td><td>Element has an assurance claim point that references another element, that this is neither its own ID nor any of the connected elements.</td></tr>
+</tbody></table>
+</div>
+<p>The following checks apply to the complete set of input files.</p>
+<div class="table-wrapper"><table><thead><tr><th>ID</th><th>Meaning</th></tr></thead><tbody>
+<tr><td>C01</td><td>There should be only one but must be at least one top-level element (G,S,C,J,A,Sn) unreferenced.</td></tr>
+<tr><td>C02</td><td>The top-level element must be a Goal. A top-level element is an element that is not referenced by any other element.</td></tr>
+<tr><td>C03</td><td>All referenced elements in <code>supportedBy</code> and <code>inContextOf</code> must exist.</td></tr>
+<tr><td>C04</td><td>There must be no circular <code>supportedBy</code> references.</td></tr>
+<tr><td>C06</td><td>All module names must be unique.</td></tr>
+<tr><td>C07</td><td>All IDs must be unique across all modules.</td></tr>
+<tr><td>C08</td><td>All elements must be reachable from the root elements. This message can e.g. happen if there are multiple independent graphs where one contains circular references only.</td></tr>
+<tr><td>C09</td><td>All extended modules must exist.</td></tr>
+<tr><td>C10</td><td>All extended elements must exist in the named module and must be undeveloped.</td></tr>
+</tbody></table>
+</div>
+<p>Uniqueness of keys (i.e. element IDs) is automatically enforced by the YAML format.</p>
+<p>If called with option <code>-c</code> or <code>--check</code> the input file is only checked for validity, but the resulting graph is not written.
+The checks for references (Cxx) can be skipped for individual files by using the <code>-x</code> option.</p>
+<h2 id="format-of-messages"><a class="header" href="#format-of-messages">Format of messages</a></h2>
+<p>Error messages and warnings are printed to stderr.</p>
+<p>The following format is used:</p>
+<pre><code>(Warning|Error): \((?&lt;module&gt;.+)\) \((?&lt;num&gt;[CV][0-9][0-9])\): (?&lt;msg&gt;.+) 
 </code></pre>
-<p><code>reference.yaml</code> could look like this:</p>
-<pre><code># Configuration Management Items
-- Solution 1
-- Solution 2
-</code></pre>
-<h2 id="checking-references"><a class="header" href="#checking-references">Checking references</a></h2>
-<p>Depending on how the external format is defined, you can swap the part before the <code>-</code>,
-with the part after.</p>
-<!-- ## MDG XML -->
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="confidence.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="yaml_syntax.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
-                            <a rel="next prefetch" href="standard_support.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="advanced_usecases.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
 
@@ -201,11 +209,11 @@ with the part after.</p>
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="confidence.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="yaml_syntax.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
 
-                    <a rel="next prefetch" href="standard_support.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="advanced_usecases.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>
