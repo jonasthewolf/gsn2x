@@ -1,16 +1,16 @@
 use std::cell::RefCell;
 
 use svg::{
-    node::element::{Anchor, Element, Use},
     Node,
+    node::element::{Anchor, Element, Use},
 };
 
 use crate::{
     dirgraph::DirectedGraphNodeType,
     dirgraphsvg::{
-        render::{create_text, ACP_BOX_SIZE},
-        util::point2d::Point2D,
         FontInfo,
+        render::{ACP_BOX_SIZE, create_text},
+        util::point2d::Point2D,
     },
     gsn::{GsnNode, HorizontalIndex},
 };
@@ -23,7 +23,7 @@ use self::{
 
 use super::{
     escape_text,
-    render::{create_group, PADDING_HORIZONTAL},
+    render::{PADDING_HORIZONTAL, create_group},
     util::{
         escape_url,
         font::{str_line_bounding_box, text_line_bounding_box},

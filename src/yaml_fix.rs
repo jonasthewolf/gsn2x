@@ -1,6 +1,6 @@
 use serde::de::{Deserialize, Deserializer, MapAccess, Visitor};
-use std::collections::btree_map::Entry;
 use std::collections::BTreeMap;
+use std::collections::btree_map::Entry;
 use std::marker::PhantomData;
 
 // Copied and adapted from https://serde.rs/deserialize-map.html

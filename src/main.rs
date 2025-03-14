@@ -1,6 +1,6 @@
-use anyhow::{anyhow, Context, Result};
+use anyhow::{Context, Result, anyhow};
 use clap::parser::ValueSource;
-use clap::{value_parser, Arg, ArgAction, Command};
+use clap::{Arg, ArgAction, Command, value_parser};
 use file_utils::translate_to_output_path;
 use render::RenderOptions;
 use std::collections::BTreeMap;
@@ -96,8 +96,15 @@ fn main() -> Result<()> {
                         .get_many::<String>("STYLESHEETS")
                         .into_iter()
                         .flatten()
-                        .map(|css| css.to_owned())
+                        .cloned()
                         .collect::<Vec<_>>();
+                    // Append stylesheets from modules
+                    stylesheets.append(
+                        &mut modules
+                            .iter()
+                            .flat_map(|m| m.1.meta.stylesheets.to_owned())
+                            .collect::<Vec<_>>(),
+                    );
                     // Copy stylesheets if necessary and prepare paths
                     copy_and_prepare_stylesheets(
                         &mut stylesheets,
@@ -113,7 +120,10 @@ fn main() -> Result<()> {
                     // Add missing nodes that may not exist because references checks have been excluded
                     add_missing_nodes_and_modules(&mut nodes, &mut modules, &mut render_options);
                     // Output views
-                    print_outputs(nodes, &modules, &render_options)?;
+                    print_outputs(&nodes, &modules, &render_options)?;
+                }
+                if matches.get_flag("STATISTICS") {
+                    print_statistics(&nodes, &modules);
                 }
                 Ok(())
             }
@@ -236,6 +246,13 @@ fn build_command_options() -> Command {
                 .action(ArgAction::Set)
                 .conflicts_with("CHECK_ONLY")
                 .default_value(".")
+                .help_heading("OUTPUT"),
+        )
+        .arg(
+            Arg::new("STATISTICS")
+                .help("Output statistics on inputs.")
+                .long("statistics")
+                .action(ArgAction::SetTrue)
                 .help_heading("OUTPUT"),
         )
         .arg(
@@ -586,7 +603,7 @@ fn validate_and_check(
 ///
 ///
 fn print_outputs(
-    nodes: BTreeMap<String, GsnNode>,
+    nodes: &BTreeMap<String, GsnNode>,
     modules: &BTreeMap<String, Module>,
     render_options: &RenderOptions,
 ) -> Result<()> {
@@ -614,7 +631,7 @@ fn print_outputs(
                 &mut output_file,
                 &module.meta.name,
                 modules,
-                &nodes,
+                nodes,
                 render_options,
             )?;
         }
@@ -626,7 +643,7 @@ fn print_outputs(
                 translate_to_output_path(&output_path, architecture_filename, None)?;
             let mut output_file = File::create(&arch_output_path)
                 .context(format!("Failed to open output file {arch_output_path}"))?;
-            let dependencies = crate::gsn::calculate_module_dependencies(&nodes);
+            let dependencies = crate::gsn::calculate_module_dependencies(nodes);
             print!("Rendering \"{arch_output_path}\": ");
             render::render_architecture(
                 &mut output_file,
@@ -641,7 +658,7 @@ fn print_outputs(
             let mut output_file = File::create(&output_path)
                 .context(format!("Failed to open output file {output_path}"))?;
             print!("Rendering \"{output_path}\": ");
-            render::render_complete(&mut output_file, &nodes, render_options)?;
+            render::render_complete(&mut output_file, nodes, render_options)?;
         }
     }
     if let Some(evidence_filename) = &render_options.evidence_filename {
@@ -649,9 +666,63 @@ fn print_outputs(
         let mut output_file = File::create(&output_path)
             .context(format!("Failed to open output file {output_path}"))?;
         print!("Writing evidence \"{output_path}\": ");
-        render::render_evidence(&mut output_file, &nodes, render_options)?;
+        render::render_evidence(&mut output_file, nodes, render_options)?;
     }
+
     Ok(())
+}
+
+///
+/// Print statistics
+///
+///
+fn print_statistics(nodes: &BTreeMap<String, GsnNode>, modules: &BTreeMap<String, Module>) {
+    println!("Statistics");
+    println!("==========");
+    println!("Number of modules: {}", modules.len());
+    println!("Number of nodes:   {}", nodes.len());
+    println!(
+        "  Goals:           {}",
+        nodes
+            .iter()
+            .filter(|n| n.1.node_type == Some(gsn::GsnNodeType::Goal))
+            .count()
+    );
+    println!(
+        "  Strategies:      {}",
+        nodes
+            .iter()
+            .filter(|n| n.1.node_type == Some(gsn::GsnNodeType::Strategy))
+            .count()
+    );
+    println!(
+        "  Solutions:       {}",
+        nodes
+            .iter()
+            .filter(|n| n.1.node_type == Some(gsn::GsnNodeType::Solution))
+            .count()
+    );
+    println!(
+        "  Assumptions:     {}",
+        nodes
+            .iter()
+            .filter(|n| n.1.node_type == Some(gsn::GsnNodeType::Assumption))
+            .count()
+    );
+    println!(
+        "  Justifications:  {}",
+        nodes
+            .iter()
+            .filter(|n| n.1.node_type == Some(gsn::GsnNodeType::Justification))
+            .count()
+    );
+    println!(
+        "  Contexts:        {}",
+        nodes
+            .iter()
+            .filter(|n| n.1.node_type == Some(gsn::GsnNodeType::Context))
+            .count()
+    );
 }
 
 ///

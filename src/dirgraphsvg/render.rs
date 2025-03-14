@@ -2,16 +2,17 @@ use std::{cell::RefCell, collections::BTreeMap};
 
 use anyhow::Context;
 use svg::{
+    Document, Node,
     node::element::{
         Anchor, Element, Group, Marker, Polyline, Rectangle, Style, Symbol, TSpan, Text, Title,
     },
-    Document, Node,
 };
 
 use crate::dirgraph::DirectedGraph;
 
 use super::{
-    edges::{render_edge, EdgeType},
+    DirGraph,
+    edges::{EdgeType, render_edge},
     escape_node_id,
     layout::{Cell, Margin},
     nodes::SvgNode,
@@ -21,7 +22,6 @@ use super::{
         markdown::{self, MarkdownText, TextType},
         point2d::Point2D,
     },
-    DirGraph,
 };
 
 pub const ACP_BOX_SIZE: i32 = 5;

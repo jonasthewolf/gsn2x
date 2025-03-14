@@ -4,8 +4,8 @@ use crate::file_utils::{get_filename, get_relative_path};
 use crate::gsn::{GsnNode, GsnNodeType, Module};
 use anyhow::Result;
 use clap::ArgMatches;
-use time::format_description::well_known::Iso8601;
 use time::OffsetDateTime;
+use time::format_description::well_known::Iso8601;
 
 use std::collections::BTreeMap;
 use std::io::Write;

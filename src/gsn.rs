@@ -3,15 +3,16 @@ use crate::{
     dirgraph::{DirectedGraphEdgeType, DirectedGraphNodeType},
     dirgraphsvg::edges::{EdgeType, SingleEdge},
 };
-use anyhow::{anyhow, Error};
+use anyhow::{Error, anyhow};
 use serde::{
-    de::{self},
     Deserialize, Deserializer,
+    de::{self},
 };
 use serde_yml::Value;
 use std::{
     collections::{BTreeMap, BTreeSet},
-    fmt::Display,
+    fmt::{self, Display},
+    marker::PhantomData,
     path::{Path, PathBuf},
 };
 
@@ -80,10 +81,11 @@ impl TryFrom<Value> for AbsoluteIndex {
 #[serde(rename_all = "camelCase")]
 pub struct GsnNode {
     pub(crate) text: String,
-    #[serde(default)]
+    #[serde(default, deserialize_with = "string_or_seq_string")]
     pub(crate) in_context_of: Vec<String>,
-    #[serde(default)]
+    #[serde(default, deserialize_with = "string_or_seq_string")]
     pub(crate) supported_by: Vec<String>,
+    // pub(crate) links: Vec<String>,
     pub(crate) undeveloped: Option<bool>,
     #[serde(default)]
     pub(crate) classes: Vec<String>,
@@ -166,6 +168,40 @@ where
             &"map of string to string or list of strings",
         ))
     }
+}
+
+///
+/// Deserialize from a single string or a sequence of strings.
+///
+fn string_or_seq_string<'de, D>(deserializer: D) -> Result<Vec<String>, D::Error>
+where
+    D: Deserializer<'de>,
+{
+    struct StringOrVec(PhantomData<Vec<String>>);
+
+    impl<'de> de::Visitor<'de> for StringOrVec {
+        type Value = Vec<String>;
+
+        fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+            formatter.write_str("string or list of strings")
+        }
+
+        fn visit_str<E>(self, value: &str) -> Result<Self::Value, E>
+        where
+            E: de::Error,
+        {
+            Ok(vec![value.to_owned()])
+        }
+
+        fn visit_seq<S>(self, visitor: S) -> Result<Self::Value, S::Error>
+        where
+            S: de::SeqAccess<'de>,
+        {
+            Deserialize::deserialize(de::value::SeqAccessDeserializer::new(visitor))
+        }
+    }
+
+    deserializer.deserialize_any(StringOrVec(PhantomData))
 }
 
 impl GsnNode {
@@ -268,6 +304,8 @@ pub struct ModuleInformation {
     pub(crate) rank_increment: Option<usize>,
     pub(crate) char_wrap: Option<u32>,
     #[serde(default)]
+    pub(crate) stylesheets: Vec<String>,
+    #[serde(default)]
     pub(crate) uses: Vec<String>,
     #[serde(flatten, deserialize_with = "deser_additional")]
     pub(crate) additional: BTreeMap<String, String>,
@@ -281,6 +319,7 @@ impl ModuleInformation {
             extends: vec![],
             uses: vec![],
             char_wrap: None,
+            stylesheets: vec![],
             horizontal_index: None,
             rank_increment: None,
             additional: BTreeMap::new(),
@@ -392,11 +431,7 @@ pub fn extend_modules(
             }
         }
     }
-    if errors == 0 {
-        Ok(())
-    } else {
-        Err(())
-    }
+    if errors == 0 { Ok(()) } else { Err(()) }
 }
 
 ///
@@ -515,7 +550,7 @@ fn add_dependencies(
 #[cfg(test)]
 mod test {
     use super::*;
-    use anyhow::{anyhow, Result};
+    use anyhow::{Result, anyhow};
     #[test]
     fn serde_hor_index() -> Result<()> {
         let res: HorizontalIndex = serde_yml::from_str("!relative 5")?;

@@ -1,9 +1,9 @@
-use svg::node::element::{path::Data, Element, Path, Title};
+use svg::node::element::{Element, Path, Title, path::Data};
 
 use crate::dirgraphsvg::{
     nodes::OFFSET_IDENTIFIER,
-    render::{create_text, PADDING_HORIZONTAL},
-    util::font::{text_line_bounding_box, FontInfo},
+    render::{PADDING_HORIZONTAL, create_text},
+    util::font::{FontInfo, text_line_bounding_box},
 };
 
 use super::{SizeContext, SvgNode};

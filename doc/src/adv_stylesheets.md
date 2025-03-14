@@ -12,13 +12,26 @@ If an absolute path is used, the stylesheet will be copied to the root of the ou
 
 If a URL (see above for definition) is provided for a stylesheet, it is neither embedded nor copied to an output directory.
 
-## Example
+You can also add stylesheets as part of the module information (see [Module Information](./mod_info.md)). 
+Please note that stylesheets are always applied to all modules even if just included into one module.
+If you need to apply styles only to selected modules, see [below](#classes-and-styles) for how to do this. 
+
+## Example command line
 
 To embed a CSS stylesheet that is in the same directory as your YAML file:
 
 ```console
 gsn2x -t -s stylesheet_in_same_directory_as_my_gsn_yaml.css my.gsn.yaml
 ```
+
+## Example module information
+
+```yaml
+module:
+    name: Main Module
+    stylesheets: ["stylesheet.css"]
+```
+
 
 ## Classes and styles
 
