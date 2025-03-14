@@ -13,3 +13,6 @@ extra-watch-dirs = ["../examples"]
 
 [output.html]
 additional-css = ["svg.css"]
+
+[output.linkcheck]
+traverse-parent-directories = true

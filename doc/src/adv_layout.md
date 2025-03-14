@@ -78,7 +78,7 @@ You would typically use an absolute index with either `0` or `last` to place the
 either left or right of the element they are referenced from.
 
 `horizontalIndex` and `rankIncrement` can also be used for `module` elements. 
-They will be used for the Architecture View then (see [Modular extension](modular_extension.md#architecture-view)).
+They will be used for the Architecture View then (see [Modular extension](mod_extension.md#architecture-view)).
 
 ### Troubleshooting
 

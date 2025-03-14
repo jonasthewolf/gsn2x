@@ -71,7 +71,7 @@ Please see [examples/example.gsn.yaml](examples/example.gsn.yaml) for an example
 | nodeType        |    yes   | See footnote[^nt]                                      |
 | rankIncrement   |    yes   | See [Layout](./adv_layout.md).                         |
 | horizontalIndex |    yes   | See [Layout](./adv_layout.md).                         |
-| charWrap        |    yes   | See [Line Breaks](./adv_linebreaks.md).                |
+| charWrap        |    yes   | See [Line Breaks](./adv_formatting.md).                |
 | acp             |    yes   | See [Confidence Argument Extension](./confidence.md).  |
 
 [^nt]: When providing a `nodeType` you do not need to follow the standard prefix scheme above.
