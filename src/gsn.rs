@@ -304,6 +304,8 @@ pub struct ModuleInformation {
     pub(crate) rank_increment: Option<usize>,
     pub(crate) char_wrap: Option<u32>,
     #[serde(default)]
+    pub(crate) stylesheets: Vec<String>,
+    #[serde(default)]
     pub(crate) uses: Vec<String>,
     #[serde(flatten, deserialize_with = "deser_additional")]
     pub(crate) additional: BTreeMap<String, String>,
@@ -317,6 +319,7 @@ impl ModuleInformation {
             extends: vec![],
             uses: vec![],
             char_wrap: None,
+            stylesheets: vec![],
             horizontal_index: None,
             rank_increment: None,
             additional: BTreeMap::new(),

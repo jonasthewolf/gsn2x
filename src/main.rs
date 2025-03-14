@@ -96,8 +96,15 @@ fn main() -> Result<()> {
                         .get_many::<String>("STYLESHEETS")
                         .into_iter()
                         .flatten()
-                        .map(|css| css.to_owned())
+                        .cloned()
                         .collect::<Vec<_>>();
+                    // Append stylesheets from modules
+                    stylesheets.append(
+                        &mut modules
+                            .iter()
+                            .flat_map(|m| m.1.meta.stylesheets.to_owned())
+                            .collect::<Vec<_>>(),
+                    );
                     // Copy stylesheets if necessary and prepare paths
                     copy_and_prepare_stylesheets(
                         &mut stylesheets,
