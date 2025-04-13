@@ -33,10 +33,11 @@
         <link rel="stylesheet" href="svg.css">
 
 
-        <!-- Provide site root to javascript -->
+        <!-- Provide site root and default themes to javascript -->
         <script>
-            var path_to_root = "";
-            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc.js"></script>
@@ -46,8 +47,8 @@
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
         <script>
             try {
-                var theme = localStorage.getItem('mdbook-theme');
-                var sidebar = localStorage.getItem('mdbook-sidebar');
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
 
                 if (theme.startsWith('"') && theme.endsWith('"')) {
                     localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
@@ -61,7 +62,8 @@
 
         <!-- Set the theme before any content is loaded, prevents flash -->
         <script>
-            var theme;
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
             try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
             if (theme === null || theme === undefined) { theme = default_theme; }
             const html = document.documentElement;
@@ -74,8 +76,8 @@
 
         <!-- Hide / unhide sidebar before it is displayed -->
         <script>
-            var sidebar = null;
-            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
             if (document.body.clientWidth >= 1080) {
                 try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
                 sidebar = sidebar || 'visible';
@@ -111,6 +113,7 @@
                             <i class="fa fa-paint-brush"></i>
                         </button>
                         <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
@@ -243,18 +246,18 @@ C1:
 <tr><td>undeveloped</td><td>yes</td><td>Mutually exclusive to <code>supportedBy</code>.</td></tr>
 <tr><td>url</td><td>yes</td><td></td></tr>
 <tr><td>classes</td><td>yes</td><td>See <a href="./adv_stylesheets.html">Stylesheets</a>.</td></tr>
-<tr><td>nodeType</td><td>yes</td><td>See footnote<sup class="footnote-reference"><a href="#nt">1</a></sup></td></tr>
+<tr><td>nodeType</td><td>yes</td><td>See footnote<sup class="footnote-reference" id="fr-nt-1"><a href="#footnote-nt">1</a></sup></td></tr>
 <tr><td>rankIncrement</td><td>yes</td><td>See <a href="./adv_layout.html">Layout</a>.</td></tr>
 <tr><td>horizontalIndex</td><td>yes</td><td>See <a href="./adv_layout.html">Layout</a>.</td></tr>
 <tr><td>charWrap</td><td>yes</td><td>See <a href="./adv_formatting.html">Line Breaks</a>.</td></tr>
 <tr><td>acp</td><td>yes</td><td>See <a href="./confidence.html">Confidence Argument Extension</a>.</td></tr>
 </tbody></table>
-</div>
-<div class="footnote-definition" id="nt"><sup class="footnote-definition-label">1</sup>
+</div><hr>
+<ol class="footnote-definition"><li id="footnote-nt">
 <p>When providing a <code>nodeType</code> you do not need to follow the standard prefix scheme above.
-Just give <code>Goal</code>, <code>Assumption</code>, <code>Justification</code>, <code>Solution</code>, <code>Context</code> and <code>Strategy</code> to give the type of the element.</p>
-</div>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="checks"><a class="header" href="#checks">Checks</a></h1>
+Just give <code>Goal</code>, <code>Assumption</code>, <code>Justification</code>, <code>Solution</code>, <code>Context</code> and <code>Strategy</code> to give the type of the element. <a href="#fr-nt-1">↩</a></p>
+</li>
+</ol><div style="break-before: page; page-break-before: always;"></div><h1 id="checks"><a class="header" href="#checks">Checks</a></h1>
 <h2 id="validation-checks"><a class="header" href="#validation-checks">Validation checks</a></h2>
 <p>The tool automatically performs the following validation checks on the input YAML.</p>
 <p>Validations can be performed on individual input files.</p>
@@ -478,9 +481,17 @@ C1:
 If a relative path is used, the relative path to the current working directory is preserved.
 If an absolute path is used, the stylesheet will be copied to the root of the output path.</p>
 <p>If a URL (see above for definition) is provided for a stylesheet, it is neither embedded nor copied to an output directory.</p>
-<h2 id="example-5"><a class="header" href="#example-5">Example</a></h2>
+<p>You can also add stylesheets as part of the module information (see <a href="./mod_info.html">Module Information</a>).
+Please note that stylesheets are always applied to all modules even if just included into one module.
+If you need to apply styles only to selected modules, see <a href="adv_stylesheets.html#classes-and-styles">below</a> for how to do this.</p>
+<h2 id="example-command-line"><a class="header" href="#example-command-line">Example command line</a></h2>
 <p>To embed a CSS stylesheet that is in the same directory as your YAML file:</p>
 <pre><code class="language-console">gsn2x -t -s stylesheet_in_same_directory_as_my_gsn_yaml.css my.gsn.yaml
+</code></pre>
+<h2 id="example-module-information"><a class="header" href="#example-module-information">Example module information</a></h2>
+<pre><code class="language-yaml">module:
+    name: Main Module
+    stylesheets: ["stylesheet.css"]
 </code></pre>
 <h2 id="classes-and-styles"><a class="header" href="#classes-and-styles">Classes and styles</a></h2>
 <p>Every element will also be addressable by <code>id</code>. The <code>id</code> is the same as the YAML id.</p>
@@ -513,7 +524,7 @@ If an absolute path is used, the stylesheet will be copied to the root of the ou
 <p>You can assign additional classes by adding the <code>classes:</code> attribute. It must be a list of classes you want to assign.
 Additional layers will be added as CSS classes, too. A <code>layer1</code> will e.g. be added as <code>gsnlay_layer1</code>.</p>
 <p>For more information on how to use CSS with SVGs, see <a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/SVG_and_CSS">here</a>.</p>
-<h2 id="example-6"><a class="header" href="#example-6">Example</a></h2>
+<h2 id="example-5"><a class="header" href="#example-5">Example</a></h2>
 <p>The GSN YAML:</p>
 <pre><code class="language-yaml">
 G1:
@@ -601,7 +612,7 @@ THe architecture view is navigable to the module argument view.</p>
 <p>The architecture view only contains the links to the individual module files, if they actually exist when generating the architecture view.</p>
 <p><img src="examples/modular/architecture.svg" alt="example architecture" /></p>
 <p>See <a href="examples/modular/architecture.svg">example</a> here.</p>
-<h2 id="example-7"><a class="header" href="#example-7">Example:</a></h2>
+<h2 id="example-6"><a class="header" href="#example-6">Example:</a></h2>
 <pre><code>gsn2x -f full.svg -a arch.svg main.yml sub1.yml sub3.yml
 </code></pre>
 <p>This will generate the argument view for each module, the complete view (<code>-f full.svg</code>) of all modules and the architecture view (<code>-a arch.svg</code>). <!-- In the complete view, the elements of the `sub1` module will be represented by a module. --></p>
@@ -757,10 +768,10 @@ with the part after.</p>
 <p>This table shows the support of <code>gsn2x</code> for the different parts of the standard.</p>
 <div class="table-wrapper"><table><thead><tr><th>Standard</th><th>Support</th></tr></thead><tbody>
 <tr><td>Core GSN</td><td>✅ full</td></tr>
-<tr><td>Argument Pattern Extension</td><td>❌ not planned</td></tr>
+<tr><td>Argument Pattern Extension</td><td>❌ see <a href="https://github.com/jonasthewolf/gsn2x/issues/493">#493</a></td></tr>
 <tr><td>Modular Extension</td><td>🟡 partially, see <a href="./mod_extension.html">Modular Extension</a>; Module Interfaces (Section 1:4.6) and Inter-Module Contracts (Section 1:4.7) are not supported (this includes public decorators and module interface connectors).</td></tr>
 <tr><td>Confidence Argument Extension</td><td>✅ full, see <a href="./confidence.html">Confidence Argument Extension</a></td></tr>
-<tr><td>Dialectic Extension</td><td>❌ not planned</td></tr>
+<tr><td>Dialectic Extension</td><td>❌ see <a href="https://github.com/jonasthewolf/gsn2x/issues/494">#494</a></td></tr>
 </tbody></table>
 </div><div style="break-before: page; page-break-before: always;"></div><h1 id="troubleshooting-1"><a class="header" href="#troubleshooting-1">Troubleshooting</a></h1>
 <h2 id="yaml-error-messages"><a class="header" href="#yaml-error-messages">YAML error messages</a></h2>

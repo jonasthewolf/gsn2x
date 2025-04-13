@@ -32,10 +32,11 @@
         <link rel="stylesheet" href="svg.css">
 
 
-        <!-- Provide site root to javascript -->
+        <!-- Provide site root and default themes to javascript -->
         <script>
-            var path_to_root = "";
-            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc.js"></script>
@@ -45,8 +46,8 @@
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
         <script>
             try {
-                var theme = localStorage.getItem('mdbook-theme');
-                var sidebar = localStorage.getItem('mdbook-sidebar');
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
 
                 if (theme.startsWith('"') && theme.endsWith('"')) {
                     localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
@@ -60,7 +61,8 @@
 
         <!-- Set the theme before any content is loaded, prevents flash -->
         <script>
-            var theme;
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
             try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
             if (theme === null || theme === undefined) { theme = default_theme; }
             const html = document.documentElement;
@@ -73,8 +75,8 @@
 
         <!-- Hide / unhide sidebar before it is displayed -->
         <script>
-            var sidebar = null;
-            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
             if (document.body.clientWidth >= 1080) {
                 try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
                 sidebar = sidebar || 'visible';
@@ -110,6 +112,7 @@
                             <i class="fa fa-paint-brush"></i>
                         </button>
                         <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
@@ -161,9 +164,17 @@
 If a relative path is used, the relative path to the current working directory is preserved.
 If an absolute path is used, the stylesheet will be copied to the root of the output path.</p>
 <p>If a URL (see above for definition) is provided for a stylesheet, it is neither embedded nor copied to an output directory.</p>
-<h2 id="example"><a class="header" href="#example">Example</a></h2>
+<p>You can also add stylesheets as part of the module information (see <a href="./mod_info.html">Module Information</a>).
+Please note that stylesheets are always applied to all modules even if just included into one module.
+If you need to apply styles only to selected modules, see <a href="#classes-and-styles">below</a> for how to do this.</p>
+<h2 id="example-command-line"><a class="header" href="#example-command-line">Example command line</a></h2>
 <p>To embed a CSS stylesheet that is in the same directory as your YAML file:</p>
 <pre><code class="language-console">gsn2x -t -s stylesheet_in_same_directory_as_my_gsn_yaml.css my.gsn.yaml
+</code></pre>
+<h2 id="example-module-information"><a class="header" href="#example-module-information">Example module information</a></h2>
+<pre><code class="language-yaml">module:
+    name: Main Module
+    stylesheets: ["stylesheet.css"]
 </code></pre>
 <h2 id="classes-and-styles"><a class="header" href="#classes-and-styles">Classes and styles</a></h2>
 <p>Every element will also be addressable by <code>id</code>. The <code>id</code> is the same as the YAML id.</p>
@@ -196,7 +207,7 @@ If an absolute path is used, the stylesheet will be copied to the root of the ou
 <p>You can assign additional classes by adding the <code>classes:</code> attribute. It must be a list of classes you want to assign.
 Additional layers will be added as CSS classes, too. A <code>layer1</code> will e.g. be added as <code>gsnlay_layer1</code>.</p>
 <p>For more information on how to use CSS with SVGs, see <a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/SVG_and_CSS">here</a>.</p>
-<h2 id="example-1"><a class="header" href="#example-1">Example</a></h2>
+<h2 id="example"><a class="header" href="#example">Example</a></h2>
 <p>The GSN YAML:</p>
 <pre><code class="language-yaml">
 G1:
