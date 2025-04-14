@@ -2,7 +2,7 @@ use std::cell::RefCell;
 
 use svg::{
     Node,
-    node::element::{Anchor, Element, Use},
+    node::element::{Anchor, Element, Line, Use},
 };
 
 use crate::{
@@ -63,6 +63,7 @@ pub struct SvgNode {
     identifier: String,
     text: MarkdownText,
     masked: bool,
+    defeated: bool,
     url: Option<String>,
     classes: Vec<String>,
     rank_increment: Option<usize>,
@@ -95,6 +96,7 @@ struct SizeContext {
     text_height: i32,
 }
 
+const DEFEATED_OFFSET: i32 = 5;
 const OFFSET_IDENTIFIER: i32 = 5;
 const MODULE_TAB_HEIGHT: i32 = 10;
 
@@ -217,6 +219,11 @@ impl SvgNode {
 
         render_acp_box(self, font, &mut g);
 
+        // Render cross if defeated.
+        if self.defeated {
+            render_defeated(self, &mut g);
+        }
+
         // Add link to self.url for complete node
         if let Some(url) = &self.url {
             let link = Anchor::new().set("href", escape_url(url.as_str())).add(g);
@@ -233,6 +240,7 @@ impl SvgNode {
         identifier: &str,
         gsn_node: &GsnNode,
         masked: bool,
+        defeated: bool,
         layers: &[String],
         module_url: Option<String>,
         add_classes: &[&str],
@@ -270,6 +278,7 @@ impl SvgNode {
             width: 0,
             height: 0,
             masked,
+            defeated,
             identifier: identifier.to_owned(),
             text: node_text.into(),
             url: module_url,
@@ -288,6 +297,7 @@ impl SvgNode {
         identifier: &str,
         gsn_node: &GsnNode,
         masked: bool,
+        defeated: bool,
         layers: &[String],
         char_wrap: Option<u32>,
     ) -> Self {
@@ -295,6 +305,7 @@ impl SvgNode {
             identifier,
             gsn_node,
             masked,
+            defeated,
             layers,
             gsn_node.url.to_owned(),
             &["gsnasmp"],
@@ -316,6 +327,7 @@ impl SvgNode {
         identifier: &str,
         gsn_node: &GsnNode,
         masked: bool,
+        defeated: bool,
         layers: &[String],
         char_wrap: Option<u32>,
     ) -> Self {
@@ -323,6 +335,7 @@ impl SvgNode {
             identifier,
             gsn_node,
             masked,
+            defeated,
             layers,
             gsn_node.url.to_owned(),
             &["gsnctxt"],
@@ -337,6 +350,7 @@ impl SvgNode {
         identifier: &str,
         gsn_node: &GsnNode,
         masked: bool,
+        defeated: bool,
         layers: &[String],
         char_wrap: Option<u32>,
     ) -> Self {
@@ -344,6 +358,7 @@ impl SvgNode {
             identifier,
             gsn_node,
             masked,
+            defeated,
             layers,
             gsn_node.url.to_owned(),
             &["gsnjust"],
@@ -365,6 +380,7 @@ impl SvgNode {
         identifier: &str,
         gsn_node: &GsnNode,
         masked: bool,
+        defeated: bool,
         layers: &[String],
         char_wrap: Option<u32>,
     ) -> Self {
@@ -372,6 +388,7 @@ impl SvgNode {
             identifier,
             gsn_node,
             masked,
+            defeated,
             layers,
             gsn_node.url.to_owned(),
             &["gsnsltn"],
@@ -393,6 +410,7 @@ impl SvgNode {
         identifier: &str,
         gsn_node: &GsnNode,
         masked: bool,
+        defeated: bool,
         layers: &[String],
         char_wrap: Option<u32>,
     ) -> Self {
@@ -400,12 +418,13 @@ impl SvgNode {
             identifier,
             gsn_node,
             masked,
+            defeated,
             layers,
             gsn_node.url.to_owned(),
             &["gsnstgy"],
             char_wrap,
         );
-        if gsn_node.undeveloped.unwrap_or(false) {
+        if gsn_node.undeveloped {
             n.node_type = NodeType::Box(BoxType::Undeveloped(15));
         } else {
             n.node_type = NodeType::Box(BoxType::Normal(15));
@@ -420,10 +439,11 @@ impl SvgNode {
         identifier: &str,
         gsn_node: &GsnNode,
         masked: bool,
+        defeated: bool,
         layers: &[String],
         char_wrap: Option<u32>,
     ) -> Self {
-        let undeveloped = gsn_node.undeveloped.unwrap_or(false);
+        let undeveloped = gsn_node.undeveloped;
         let mut classes = vec!["gsngoal"];
         if undeveloped {
             classes.push("gsn_undeveloped");
@@ -432,6 +452,7 @@ impl SvgNode {
             identifier,
             gsn_node,
             masked,
+            defeated,
             layers,
             gsn_node.url.to_owned(),
             &classes,
@@ -452,6 +473,7 @@ impl SvgNode {
         identifier: &str,
         gsn_node: &GsnNode,
         masked: bool,
+        defeated: bool,
         layers: &[String],
         module_url: Option<String>,
         char_wrap: Option<u32>,
@@ -460,6 +482,7 @@ impl SvgNode {
             identifier,
             gsn_node,
             masked,
+            defeated,
             layers,
             module_url.to_owned(),
             &["gsnawayasmp"],
@@ -481,6 +504,7 @@ impl SvgNode {
         identifier: &str,
         gsn_node: &GsnNode,
         masked: bool,
+        defeated: bool,
         layers: &[String],
         module_url: Option<String>,
         char_wrap: Option<u32>,
@@ -489,6 +513,7 @@ impl SvgNode {
             identifier,
             gsn_node,
             masked,
+            defeated,
             layers,
             module_url.to_owned(),
             &["gsnawaygoal"],
@@ -510,13 +535,21 @@ impl SvgNode {
         identifier: &str,
         gsn_node: &GsnNode,
         masked: bool,
+        defeated: bool,
         layers: &[String],
         module_url: Option<String>,
         char_wrap: Option<u32>,
     ) -> Self {
         let mut cloned_strategy = gsn_node.clone();
         cloned_strategy.url = module_url;
-        SvgNode::new_strategy(identifier, &cloned_strategy, masked, layers, char_wrap)
+        SvgNode::new_strategy(
+            identifier,
+            &cloned_strategy,
+            masked,
+            defeated,
+            layers,
+            char_wrap,
+        )
     }
 
     ///
@@ -526,6 +559,7 @@ impl SvgNode {
         identifier: &str,
         gsn_node: &GsnNode,
         masked: bool,
+        defeated: bool,
         layers: &[String],
         module_url: Option<String>,
         char_wrap: Option<u32>,
@@ -534,6 +568,7 @@ impl SvgNode {
             identifier,
             gsn_node,
             masked,
+            defeated,
             layers,
             module_url.to_owned(),
             &["gsnawayjust"],
@@ -555,6 +590,7 @@ impl SvgNode {
         identifier: &str,
         gsn_node: &GsnNode,
         masked: bool,
+        defeated: bool,
         layers: &[String],
         module_url: Option<String>,
         char_wrap: Option<u32>,
@@ -563,6 +599,7 @@ impl SvgNode {
             identifier,
             gsn_node,
             masked,
+            defeated,
             layers,
             module_url.to_owned(),
             &["gsnawayctxt"],
@@ -584,6 +621,7 @@ impl SvgNode {
         identifier: &str,
         gsn_node: &GsnNode,
         masked: bool,
+        defeated: bool,
         layers: &[String],
         module_url: Option<String>,
         char_wrap: Option<u32>,
@@ -592,6 +630,7 @@ impl SvgNode {
             identifier,
             gsn_node,
             masked,
+            defeated,
             layers,
             module_url.to_owned(),
             &["gsnawaysltn"],
@@ -613,6 +652,7 @@ impl SvgNode {
         identifier: &str,
         gsn_node: &GsnNode,
         masked: bool,
+        defeated: bool,
         layers: &[String],
         module_url: Option<String>,
         char_wrap: Option<u32>,
@@ -621,6 +661,7 @@ impl SvgNode {
             identifier,
             gsn_node,
             masked,
+            defeated,
             layers,
             module_url,
             &["gsnmodule"],
@@ -653,6 +694,26 @@ fn render_acp_box(node: &SvgNode, font: &FontInfo, context: &mut Element) {
             false,
         ));
     }
+}
+
+///
+/// Render cross over defeated element.
+///
+fn render_defeated(node: &SvgNode, context: &mut Element) {
+    let l1 = Line::new()
+        .set("x1", node.x - node.width / 2 - DEFEATED_OFFSET)
+        .set("y1", node.y - node.height / 2 - DEFEATED_OFFSET)
+        .set("x2", node.x + node.width / 2 + DEFEATED_OFFSET)
+        .set("y2", node.y + node.height / 2 + DEFEATED_OFFSET)
+        .set("stroke", "black");
+    context.append(l1);
+    let l2 = Line::new()
+        .set("x1", node.x + node.width / 2 + DEFEATED_OFFSET)
+        .set("y1", node.y - node.height / 2 - DEFEATED_OFFSET)
+        .set("x2", node.x - node.width / 2 - DEFEATED_OFFSET)
+        .set("y2", node.y + node.height / 2 + DEFEATED_OFFSET)
+        .set("stroke", "black");
+    context.append(l2);
 }
 
 ///
@@ -760,7 +821,7 @@ mod test {
     fn node_text_layers() {
         let n1 = GsnNode {
             text: "test text".to_owned(),
-            undeveloped: Some(true),
+            undeveloped: true,
             node_type: Some(crate::gsn::GsnNodeType::Goal),
             additional: BTreeMap::from([("layer1".to_owned(), "text for layer1".to_owned())]),
             ..Default::default()

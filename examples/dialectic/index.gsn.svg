@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg class="gsndiagram" viewBox="0 0 338 213" xmlns="http://www.w3.org/2000/svg">
+<symbol id="module_icon">
+<rect fill="lightgrey" height="5" stroke="black" stroke-width="1" width="10" x="0" y="0"/>
+<rect fill="lightgrey" height="10" stroke="black" stroke-width="1" width="20" x="0" y="5"/>
+</symbol>
+<symbol id="acp">
+<rect fill="black" height="10" stroke="black" stroke-width="1" width="10" x="0" y="0"/>
+</symbol>
+<marker id="composite_arrow" markerHeight="9" markerUnits="userSpaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
+<polyline fill-opacity="0" points="0 0, 6 4.5, 0 9" stroke="black" stroke-width="1"/>
+<polyline fill-opacity="0" points="4 0, 10 4.5, 4 9" stroke="black" stroke-width="1"/>
+<polyline fill-opacity="0" points="0 4.5, 10 4.5" stroke="black" stroke-width="1"/>
+</marker>
+<marker id="supportedby_arrow" markerHeight="9" markerUnits="userSpaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
+<polyline fill="black" points="0 0, 10 4.5, 0 9"/>
+</marker>
+<marker id="incontextof_arrow" markerHeight="9" markerUnits="userSpaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
+<polyline fill-opacity="0" points="0 0, 10 4.5, 0 9, 0 0" stroke="black" stroke-width="1"/>
+</marker>
+<marker id="challenges_arrow" markerHeight="9" markerUnits="userSpaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
+<polyline fill-opacity="0" points="0 0, 10 4.5, 0 4.5, 10 4.5, 0 9" stroke="black" stroke-width="1"/>
+</marker>
+<g class="gsn_module_examples_dialectic_index_gsn_yaml gsnelem gsngoal" id="node_cg1">
+<title>CG1</title>
+<path class="border" d="M20,20 L142,20 L142,66 L20,66 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="27" y="39">CG1</text>
+<text font-family="Arial" font-size="12" x="27" y="58">A counter argument</text>
+</g>
+<g class="gsn_module_examples_dialectic_index_gsn_yaml gsnelem gsngoal" id="node_g1">
+<title>G1</title>
+<path class="border" d="M182,20 L286,20 L286,66 L182,66 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="189" y="39">G1</text>
+<text font-family="Arial" font-size="12" x="189" y="58">A defeated goal</text>
+<line stroke="black" x1="177" x2="291" y1="15" y2="71"/>
+<line stroke="black" x1="291" x2="177" y1="15" y2="71"/>
+</g>
+<g class="gsn_module_examples_dialectic_index_gsn_yaml gsnelem gsnsltn" id="node_sn1">
+<title>Sn1</title>
+<path class="border" d="M191,149 a43,43,0,1,0,86,0 a43,43,0,1,0,-86,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="209" y="140">Sn1</text>
+<text font-family="Arial" font-size="12" x="209" y="159">A solution</text>
+</g>
+<path class="gsnedge gsnchllngs" d="M142,43 C172,43,152,43,172,43" fill-opacity="0" marker-end="url(#challenges_arrow)" stroke="black" stroke-dasharray="30 10" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M234,66 C234,96,234,76,234,96" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+</svg>

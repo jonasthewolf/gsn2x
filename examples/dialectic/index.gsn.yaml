@@ -1,0 +1,12 @@
+
+G1:
+  text: A defeated goal
+  supportedBy: Sn1
+  defeated: true
+
+Sn1:
+  text: A solution
+
+CG1:
+  text: A counter argument
+  challenges: G1

@@ -142,10 +142,14 @@ where
         // Copy IDs
         let mut n_ids: BTreeSet<&String> = self.nodes.keys().collect();
         // Find root nodes
-        for t_edges in self.edges.values() {
-            for (target, _) in t_edges {
-                n_ids.remove(target);
-            }
+        for target in self
+            .edges
+            .values()
+            .flatten()
+            .filter(|(_, edge_type)| edge_type.is_primary_child_edge())
+            .map(|(t, _)| t)
+        {
+            n_ids.remove(target);
         }
         self.root_nodes = if n_ids.is_empty() {
             // No root nodes are found.

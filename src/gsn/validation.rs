@@ -138,7 +138,7 @@ fn validate_references(
             "supported by element",
             &valid_ref_types,
         );
-        let devundev = if Some(true) == node.undeveloped {
+        let devundev = if node.undeveloped {
             diag.add_error(
                 Some(module),
                 format!("V03: Undeveloped element {id} has supporting arguments."),
@@ -149,7 +149,7 @@ fn validate_references(
         };
         valid_refs.and(devundev)
     } else if (id.starts_with('S') && !id.starts_with("Sn") || id.starts_with('G'))
-        && (Some(false) == node.undeveloped || node.undeveloped.is_none())
+        && !node.undeveloped
     {
         // No "supported by" entries, but Strategy and Goal => undeveloped
         diag.add_warning(Some(module), format!("V02: Element {id} is undeveloped."));
@@ -401,7 +401,7 @@ mod test {
             "G2".to_owned(),
             GsnNode {
                 node_type: Some(GsnNodeType::Goal),
-                undeveloped: Some(true),
+                undeveloped: true,
                 ..Default::default()
             },
         );
@@ -523,7 +523,7 @@ mod test {
             "G1".to_owned(),
             GsnNode {
                 in_context_of: vec!["G1".to_owned()],
-                undeveloped: Some(true),
+                undeveloped: true,
                 node_type: Some(GsnNodeType::Goal),
                 ..Default::default()
             },
@@ -600,7 +600,7 @@ mod test {
         nodes.insert(
             "G2".to_owned(),
             GsnNode {
-                undeveloped: Some(true),
+                undeveloped: true,
                 node_type: Some(GsnNodeType::Goal),
                 ..Default::default()
             },
@@ -625,7 +625,7 @@ mod test {
             "G1".to_owned(),
             GsnNode {
                 in_context_of: vec!["G2".to_owned(), "S1".to_owned(), "Sn1".to_owned()],
-                undeveloped: Some(true),
+                undeveloped: true,
                 node_type: Some(GsnNodeType::Goal),
                 ..Default::default()
             },
@@ -633,7 +633,7 @@ mod test {
         nodes.insert(
             "G2".to_owned(),
             GsnNode {
-                undeveloped: Some(true),
+                undeveloped: true,
                 node_type: Some(GsnNodeType::Goal),
                 ..Default::default()
             },
@@ -641,7 +641,7 @@ mod test {
         nodes.insert(
             "S1".to_owned(),
             GsnNode {
-                undeveloped: Some(true),
+                undeveloped: true,
                 node_type: Some(GsnNodeType::Strategy),
                 ..Default::default()
             },
@@ -766,7 +766,7 @@ mod test {
         nodes.insert(
             "G2".to_owned(),
             GsnNode {
-                undeveloped: Some(false),
+                undeveloped: false,
                 node_type: Some(GsnNodeType::Goal),
                 ..Default::default()
             },
@@ -797,7 +797,7 @@ mod test {
         nodes.insert(
             "S2".to_owned(),
             GsnNode {
-                undeveloped: Some(false),
+                undeveloped: false,
                 node_type: Some(GsnNodeType::Strategy),
                 ..Default::default()
             },
@@ -822,7 +822,7 @@ mod test {
             "G1".to_owned(),
             GsnNode {
                 supported_by: vec!["Sn2".to_owned()],
-                undeveloped: Some(true),
+                undeveloped: true,
                 node_type: Some(GsnNodeType::Goal),
                 ..Default::default()
             },
@@ -952,7 +952,7 @@ mod test {
         nodes.insert(
             "G2".to_owned(),
             GsnNode {
-                undeveloped: Some(true),
+                undeveloped: true,
                 node_type: Some(GsnNodeType::Goal),
                 ..Default::default()
             },
