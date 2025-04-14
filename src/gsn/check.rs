@@ -247,7 +247,7 @@ mod test {
             "G1".to_owned(),
             GsnNode {
                 in_context_of: vec!["C1".to_owned()],
-                undeveloped: Some(true),
+                undeveloped: true,
                 node_type: Some(GsnNodeType::Goal),
                 ..Default::default()
             },
@@ -295,7 +295,7 @@ mod test {
         nodes.insert(
             "G1".to_owned(),
             GsnNode {
-                undeveloped: Some(true),
+                undeveloped: true,
                 ..Default::default()
             },
         );
@@ -414,7 +414,7 @@ mod test {
         nodes.insert(
             "G2".to_owned(),
             GsnNode {
-                undeveloped: Some(true),
+                undeveloped: true,
                 node_type: Some(GsnNodeType::Goal),
                 ..Default::default()
             },
@@ -480,7 +480,7 @@ mod test {
         nodes.insert(
             "G4".to_owned(),
             GsnNode {
-                undeveloped: Some(true),
+                undeveloped: true,
                 in_context_of: vec!["J1".to_owned()],
                 node_type: Some(GsnNodeType::Goal),
                 ..Default::default()

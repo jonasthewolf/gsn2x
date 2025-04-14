@@ -31,6 +31,7 @@ pub enum SingleEdge {
     InContextOf,
     SupportedBy,
     Composite,
+    Challenges,
 }
 
 impl BitOr for SingleEdge {
@@ -53,6 +54,7 @@ impl BitOr for SingleEdge {
                 }
             }
             SingleEdge::Composite => SingleEdge::Composite,
+            _ => self, // Ignore others
         }
     }
 }
@@ -92,6 +94,7 @@ impl From<&GsnEdgeType> for EdgeType {
         match value {
             GsnEdgeType::SupportedBy => Self::OneWay(SingleEdge::SupportedBy),
             GsnEdgeType::InContextOf => Self::OneWay(SingleEdge::InContextOf),
+            GsnEdgeType::Challenges => Self::OneWay(SingleEdge::Challenges),
         }
     }
 }
@@ -162,6 +165,8 @@ pub(super) fn render_edge(
         EdgeType::OneWay(SingleEdge::Composite) | EdgeType::TwoWay((_, SingleEdge::Composite)) => {
             Some("url(#composite_arrow)")
         }
+        EdgeType::OneWay(SingleEdge::Challenges) => Some("url(#challenges_arrow)"),
+        _ => unreachable!(),
     };
     let arrow_start_id = match &target.1 {
         EdgeType::TwoWay((SingleEdge::InContextOf, _)) => Some("url(#incontextof_arrow)"),
@@ -182,6 +187,8 @@ pub(super) fn render_edge(
             //| EdgeType::TwoWay((SingleEdge::Composite, _))
             classes.push_str(" gsncomposite")
         }
+        EdgeType::OneWay(SingleEdge::Challenges) => classes.push_str(" gsnchllngs"),
+        _ => unreachable!(),
     };
     let mut e = Path::new()
         .set("d", data)
@@ -193,6 +200,9 @@ pub(super) fn render_edge(
     }
     if let Some(arrow_id) = arrow_start_id {
         e = e.set("marker-start", arrow_id);
+    }
+    if target.1 == EdgeType::OneWay(SingleEdge::Challenges) {
+        e = e.set("stroke-dasharray", "30 10");
     }
     e = e.set("class", classes);
     let mut result: Vec<Element> = vec![e.into()];

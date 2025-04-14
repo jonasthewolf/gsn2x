@@ -111,27 +111,36 @@ pub fn svg_from_gsn_node(
     identifier: &str,
     gsn_node: &GsnNode,
     masked: bool,
+    defeated: bool,
     layers: &[String],
     char_wrap: Option<u32>,
 ) -> SvgNode {
     // Create node
     match gsn_node.node_type.unwrap() {
         // unwrap ok, since checked during validation
-        GsnNodeType::Goal => SvgNode::new_goal(identifier, gsn_node, masked, layers, char_wrap),
+        GsnNodeType::Goal => {
+            SvgNode::new_goal(identifier, gsn_node, masked, defeated, layers, char_wrap)
+        }
         GsnNodeType::Solution => {
-            SvgNode::new_solution(identifier, gsn_node, masked, layers, char_wrap)
+            SvgNode::new_solution(identifier, gsn_node, masked, defeated, layers, char_wrap)
         }
         GsnNodeType::Strategy => {
-            SvgNode::new_strategy(identifier, gsn_node, masked, layers, char_wrap)
+            SvgNode::new_strategy(identifier, gsn_node, masked, defeated, layers, char_wrap)
         }
         GsnNodeType::Context => {
-            SvgNode::new_context(identifier, gsn_node, masked, layers, char_wrap)
+            SvgNode::new_context(identifier, gsn_node, masked, defeated, layers, char_wrap)
         }
         GsnNodeType::Assumption => {
-            SvgNode::new_assumption(identifier, gsn_node, masked, layers, char_wrap)
+            SvgNode::new_assumption(identifier, gsn_node, masked, defeated, layers, char_wrap)
         }
         GsnNodeType::Justification => {
-            SvgNode::new_justification(identifier, gsn_node, masked, layers, char_wrap)
+            SvgNode::new_justification(identifier, gsn_node, masked, defeated, layers, char_wrap)
+        }
+        GsnNodeType::CounterGoal => {
+            SvgNode::new_goal(identifier, gsn_node, masked, defeated, layers, char_wrap)
+        }
+        GsnNodeType::CounterSolution => {
+            SvgNode::new_solution(identifier, gsn_node, masked, defeated, layers, char_wrap)
         }
     }
 }
@@ -145,6 +154,7 @@ pub fn away_svg_from_gsn_node(
     identifier: &str,
     gsn_node: &GsnNode,
     masked: bool,
+    defeated: bool,
     module: &Module,
     source_module: &Module,
     layers: &[String],
@@ -164,24 +174,25 @@ pub fn away_svg_from_gsn_node(
     // Create node
     Ok(match gsn_node.node_type.unwrap() {
         // unwrap ok, since checked during validation
-        GsnNodeType::Goal => {
-            SvgNode::new_away_goal(identifier, gsn_node, masked, layers, module_url, char_wrap)
-        }
-        GsnNodeType::Solution => {
-            SvgNode::new_away_solution(identifier, gsn_node, masked, layers, module_url, char_wrap)
-        }
-        GsnNodeType::Strategy => {
-            SvgNode::new_away_strategy(identifier, gsn_node, masked, layers, module_url, char_wrap)
-        }
-        GsnNodeType::Context => {
-            SvgNode::new_away_context(identifier, gsn_node, masked, layers, module_url, char_wrap)
-        }
+        GsnNodeType::Goal => SvgNode::new_away_goal(
+            identifier, gsn_node, masked, defeated, layers, module_url, char_wrap,
+        ),
+        GsnNodeType::Solution => SvgNode::new_away_solution(
+            identifier, gsn_node, masked, defeated, layers, module_url, char_wrap,
+        ),
+        GsnNodeType::Strategy => SvgNode::new_away_strategy(
+            identifier, gsn_node, masked, defeated, layers, module_url, char_wrap,
+        ),
+        GsnNodeType::Context => SvgNode::new_away_context(
+            identifier, gsn_node, masked, defeated, layers, module_url, char_wrap,
+        ),
         GsnNodeType::Assumption => SvgNode::new_away_assumption(
-            identifier, gsn_node, masked, layers, module_url, char_wrap,
+            identifier, gsn_node, masked, defeated, layers, module_url, char_wrap,
         ),
         GsnNodeType::Justification => SvgNode::new_away_justification(
-            identifier, gsn_node, masked, layers, module_url, char_wrap,
+            identifier, gsn_node, masked, defeated, layers, module_url, char_wrap,
         ),
+        _ => unreachable!(),
     })
 }
 
@@ -221,6 +232,7 @@ pub fn render_architecture(
                     k,
                     &module_node,
                     render_options.masked_elements.contains(&module.meta.name),
+                    false,
                     &[],
                     module_url,
                     module.meta.char_wrap.or(render_options.char_wrap),
@@ -289,6 +301,7 @@ pub fn render_complete(
                     id,
                     node,
                     render_options.masked_elements.contains(id),
+                    false,
                     &render_options.layers,
                     render_options.char_wrap,
                 ),
@@ -336,6 +349,7 @@ pub fn render_argument(
                     id,
                     node,
                     render_options.masked_elements.contains(id),
+                    node.defeated,
                     &render_options.layers,
                     modules
                         .get(module_name)
@@ -357,6 +371,7 @@ pub fn render_argument(
                         id,
                         node,
                         render_options.masked_elements.contains(id),
+                        node.defeated,
                         // unwraps are ok, since node.module and modules are consistently created
                         modules.get(&node.module).unwrap(),
                         modules.get(module_name).unwrap(),
@@ -529,7 +544,7 @@ mod test {
     #[should_panic]
     fn cover_unreachable() {
         let gsn_node = GsnNode::default();
-        svg_from_gsn_node("X2", &gsn_node, false, &[], None);
+        svg_from_gsn_node("X2", &gsn_node, false, false, &[], None);
     }
 
     #[test]

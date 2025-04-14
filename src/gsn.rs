@@ -27,6 +27,8 @@ pub enum GsnNodeType {
     Justification,
     Context,
     Assumption,
+    CounterGoal,
+    CounterSolution,
 }
 
 impl Display for GsnNodeType {
@@ -39,6 +41,7 @@ impl Display for GsnNodeType {
 pub enum GsnEdgeType {
     SupportedBy,
     InContextOf,
+    Challenges,
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Deserialize)]
@@ -85,8 +88,14 @@ pub struct GsnNode {
     pub(crate) in_context_of: Vec<String>,
     #[serde(default, deserialize_with = "string_or_seq_string")]
     pub(crate) supported_by: Vec<String>,
+    #[serde(default, deserialize_with = "string_or_seq_string")]
+    pub(crate) challenges: Vec<String>,
+    // TODO
     // pub(crate) links: Vec<String>,
-    pub(crate) undeveloped: Option<bool>,
+    #[serde(default)]
+    pub(crate) undeveloped: bool,
+    #[serde(default)]
+    pub(crate) defeated: bool,
     #[serde(default)]
     pub(crate) classes: Vec<String>,
     pub(crate) url: Option<String>,
@@ -223,6 +232,12 @@ impl GsnNode {
             .map(|target| (target.to_owned(), GsnEdgeType::SupportedBy))
             .collect();
         edges.append(&mut es);
+        let mut es: Vec<(String, GsnEdgeType)> = self
+            .challenges
+            .iter()
+            .map(|target| (target.to_owned(), GsnEdgeType::Challenges))
+            .collect();
+        edges.append(&mut es);
         edges
     }
 
@@ -265,6 +280,7 @@ impl DirectedGraphEdgeType<'_> for GsnEdgeType {
         match self {
             GsnEdgeType::SupportedBy => true,
             GsnEdgeType::InContextOf => false,
+            GsnEdgeType::Challenges => false,
         }
     }
 
@@ -272,6 +288,7 @@ impl DirectedGraphEdgeType<'_> for GsnEdgeType {
         match self {
             GsnEdgeType::SupportedBy => false,
             GsnEdgeType::InContextOf => true,
+            GsnEdgeType::Challenges => true,
         }
     }
 }
@@ -283,7 +300,9 @@ impl DirectedGraphEdgeType<'_> for GsnEdgeType {
 fn get_node_type_from_text(text: &str) -> Option<GsnNodeType> {
     // Order is important due to Sn and S
     match text {
+        id if id.starts_with("CG") => Some(GsnNodeType::CounterGoal),
         id if id.starts_with('G') => Some(GsnNodeType::Goal),
+        id if id.starts_with("CSn") => Some(GsnNodeType::CounterSolution),
         id if id.starts_with("Sn") => Some(GsnNodeType::Solution),
         id if id.starts_with('S') => Some(GsnNodeType::Strategy),
         id if id.starts_with('C') => Some(GsnNodeType::Context),
@@ -407,7 +426,7 @@ pub fn extend_modules(
                                     format!("C10: Element {} does not exist in module {}, but is supposed to be extended by {}.", foreign_id, ext.module, local_ids.join(",")),
                                 );
                         errors += 1;
-                    } else if foreign_node.undeveloped != Some(true) {
+                    } else if !foreign_node.undeveloped {
                         diags.add_error(
                                     Some(module_name),
                                     format!("C10: Element {} is not undeveloped, but is supposed to be extended by {}.", foreign_id, local_ids.join(",")),
@@ -415,7 +434,7 @@ pub fn extend_modules(
                         errors += 1;
                     } else {
                         foreign_node.supported_by = local_ids.to_vec();
-                        foreign_node.undeveloped = Some(false);
+                        foreign_node.undeveloped = false;
                     }
                 } else {
                     diags.add_error(
