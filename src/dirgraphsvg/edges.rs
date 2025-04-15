@@ -202,7 +202,7 @@ pub(super) fn render_edge(
         e = e.set("marker-start", arrow_id);
     }
     if target.1 == EdgeType::OneWay(SingleEdge::Challenges) {
-        e = e.set("stroke-dasharray", "30 10");
+        e = e.set("stroke-dasharray", "5 5");
     }
     e = e.set("class", classes);
     let mut result: Vec<Element> = vec![e.into()];

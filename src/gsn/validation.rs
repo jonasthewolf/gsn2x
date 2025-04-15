@@ -121,10 +121,13 @@ fn validate_references(
         // Only goals and strategies can have other goals, strategies and solutions
         if node.node_type == Some(GsnNodeType::Strategy)
             || node.node_type == Some(GsnNodeType::Goal)
+            || node.node_type == Some(GsnNodeType::CounterGoal)
         {
             valid_ref_types.append(&mut vec![
                 GsnNodeType::Goal,
+                GsnNodeType::CounterGoal,
                 GsnNodeType::Solution,
+                GsnNodeType::CounterSolution,
                 GsnNodeType::Strategy,
             ]);
         }

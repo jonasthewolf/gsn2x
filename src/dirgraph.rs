@@ -146,7 +146,9 @@ where
             .edges
             .values()
             .flatten()
-            .filter(|(_, edge_type)| edge_type.is_primary_child_edge())
+            .filter(|(_, edge_type)| {
+                edge_type.is_primary_child_edge() || edge_type.is_secondary_child_edge()
+            })
             .map(|(t, _)| t)
         {
             n_ids.remove(target);

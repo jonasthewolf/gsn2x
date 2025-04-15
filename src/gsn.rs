@@ -83,6 +83,7 @@ impl TryFrom<Value> for AbsoluteIndex {
 #[derive(Clone, Debug, Default, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct GsnNode {
+    #[serde(default)]
     pub(crate) text: String,
     #[serde(default, deserialize_with = "string_or_seq_string")]
     pub(crate) in_context_of: Vec<String>,
@@ -288,7 +289,7 @@ impl DirectedGraphEdgeType<'_> for GsnEdgeType {
         match self {
             GsnEdgeType::SupportedBy => false,
             GsnEdgeType::InContextOf => true,
-            GsnEdgeType::Challenges => true,
+            GsnEdgeType::Challenges => false,
         }
     }
 }
@@ -460,13 +461,17 @@ pub fn extend_modules(
 fn get_root_nodes(nodes: &BTreeMap<String, GsnNode>) -> Vec<String> {
     // Usage of BTreeSet, since root nodes might be used in output and that should be deterministic
     let mut root_nodes: BTreeSet<String> = nodes.keys().cloned().collect();
-    for node in nodes.values() {
+    for (id, node) in nodes {
         // Remove all keys if they are referenced; used to see if there is more than one top level node
         for cnode in &node.in_context_of {
             root_nodes.remove(cnode);
         }
         for snode in &node.supported_by {
             root_nodes.remove(snode);
+        }
+        // Challenging nodes cannot be root nodes.
+        if !node.challenges.is_empty() {
+            root_nodes.remove(id);
         }
     }
     Vec::from_iter(root_nodes)
