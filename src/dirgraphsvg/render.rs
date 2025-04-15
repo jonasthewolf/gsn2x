@@ -239,6 +239,7 @@ fn setup_basics(mut document: Document) -> Document {
         .set("points", "0 0, 10 4.5, 0 4.5, 10 4.5, 0 9")
         .set("stroke", "black")
         .set("stroke-width", 1u32)
+        .set("stroke-dasharray", 100u32)
         .set("fill-opacity", "0");
     let challenges_arrow = Marker::new()
         .set("id", "challenges_arrow")

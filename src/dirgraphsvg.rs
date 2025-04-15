@@ -87,7 +87,7 @@ mod test {
             text: "Test".to_owned(),
             ..Default::default()
         };
-        let b1 = SvgNode::new_goal("id", &n, false, false, &[], None);
+        let b1 = SvgNode::new_goal("id", &n, false, &[], None);
         let mut nodes = BTreeMap::new();
         nodes.insert("G1".to_owned(), b1);
         d = d.add_meta_information(&mut vec!["A1".to_owned(), "B2".to_owned()]);

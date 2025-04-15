@@ -18,6 +18,9 @@
 <marker id="incontextof_arrow" markerHeight="9" markerUnits="userSpaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
 <polyline fill-opacity="0" points="0 0, 10 4.5, 0 9, 0 0" stroke="black" stroke-width="1"/>
 </marker>
+<marker id="challenges_arrow" markerHeight="9" markerUnits="userSpaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
+<polyline fill-opacity="0" points="0 0, 10 4.5, 0 4.5, 10 4.5, 0 9" stroke="black" stroke-dasharray="100" stroke-width="1"/>
+</marker>
 <g class="gsn_module_tests_issue467_yaml gsnelem gsngoal" id="node_ga">
 <title>GA</title>
 <path class="border" d="M1344,20 L1448,20 L1448,66 L1344,66 z" fill-opacity="0" stroke="black" stroke-width="1"/>
