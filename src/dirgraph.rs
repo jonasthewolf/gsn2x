@@ -142,16 +142,10 @@ where
         // Copy IDs
         let mut n_ids: BTreeSet<&String> = self.nodes.keys().collect();
         // Find root nodes
-        for target in self
-            .edges
-            .values()
-            .flatten()
-            .filter(|(_, edge_type)| {
-                edge_type.is_primary_child_edge() || edge_type.is_secondary_child_edge()
-            })
-            .map(|(t, _)| t)
-        {
-            n_ids.remove(target);
+        for t_edges in self.edges.values() {
+            for (target, _) in t_edges {
+                n_ids.remove(target);
+            }
         }
         self.root_nodes = if n_ids.is_empty() {
             // No root nodes are found.
@@ -160,7 +154,7 @@ where
             // Unwrap is ok, since there is at least one node
             vec![self.nodes.iter().next().unwrap().0]
         } else {
-            n_ids.iter().map(|rn| rn.as_str()).collect()
+            n_ids.iter().map(|t| t.as_str()).collect()
         };
     }
 
