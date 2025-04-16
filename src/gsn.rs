@@ -350,8 +350,10 @@ impl ModuleInformation {
 #[derive(Debug, Deserialize)]
 #[serde(untagged)]
 pub enum GsnDocument {
-    GsnNode(GsnNode),
+    // Order of the variants is **very** important.
+    // If GsnNode was first, everything would be one, since there is no longer any required field.
     ModuleInformation(ModuleInformation),
+    GsnNode(GsnNode),
 }
 
 #[derive(Clone, Default)]

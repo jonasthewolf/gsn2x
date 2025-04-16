@@ -32,7 +32,6 @@ CG1:
 CG2:
   text: A counter argument
   supportedBy: CSn1
-  rankIncrement: 1
 
 CSn1:
   text: A counter evidence
@@ -73,7 +72,7 @@ CG3:
 
 CSn3:
   text: text
-  
+
 G4:
   text: text
   supportedBy: [S2]
