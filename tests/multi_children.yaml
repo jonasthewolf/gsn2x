@@ -1,17 +1,21 @@
+module:
+  name: xxx
+  brief: xxxxx xxx xx xxxxx x xxxx
+  charWrap: 15
 GVec-AsdfjioiqwjeSdjfkaSdkwefksdklfsldkfjsk:
   text: xxxxxxxxxxxxxx xx xxxxxxxxx xxxx xx xxxxxxxxxx xx xxxxxxxx xxxx xxx xxxxxxxxxxxx xxxx xxxx xxxxxxxxxx xxxxxx.
   supportedBy: [SVec-AkjlglgDLHKDSdjfksld]
   inContextOf: [AVec-FFIMemoryOther, AVec-FFITimingOther, AVec-HIZIDksjflksjfldfjlsdf, AVec-CompletenessDocDependencies]
 AVec-FFIMemoryOther:
   text: "xx xx xxxxxxx xxxx xxxxx xxxxxxxx xxxx xx xxx xxxxxxxxx xx xxxxxxxxx xxxxx xxxx xxx xxxxxxxx xxxxxxxxx (x.x. xxx xxxxxx xxxxxxxxxx xxxx xx xxxxxx xxxxxxxxxx xxxx) \nxxxxxxxx xx xxxxxxxx xxx xxxxxxxxxxx xxxxxxxxxx xxx xxxxxxx xxxx xxxxxxxxxxxx xxxx xxxxxxx xx xxxxxx.\nxxxxxxxx xxxx xxxx xxx xxxxxxxxx xxxxxxxxxx (xxxx xxxxxxxxx (xxxxxxxx) xxxx xxxxxxx) xx xxxxxxxx xxxx xxxxxx xx xxxxx xxxxxxxx.\n"
-  wordWrap: 45
+  charWrap: 45
 AVec-FFITimingOther:
   text: xxxx
 AVec-HIZIDksjflksjfldfjlsdf:
   text: |
     xx xx xxxxxxx xxxx xxxxxx xx xxxxxxxxxxx xxx xx xxxxxxxxx xx xxx xxxxxxxx xxx xxxxxxxx xxxxxxxxxxxxx xx xxx xxxxxxxxx xxxxxx.
     xxx xxxxxxxxxxxxx xx xx xxx xxxxxxxxxxxxxx xx xxx xxxx.
-  wordWrap: 45
+  charWrap: 45
 AVec-CompletenessDocDependencies:
   text: "xx xx xxxxxxx xxxx xxxxxxxxx xxxxxxxxx xxxxxxxx xx xxxxxx xxx xxxxxxxx xxx xxxxxxx. \nxxxxxxxx xxx xxxx xxxxxxxxx xxxxxxxxx xxx xxxxxxxx xxxx xxx xxxxxx xxxxxxx, xxxxxxxxx xxxxxx xxx xxxxxxxxxxxxx,\nx xxxxxxxx xxxxxxx xxxxxxxxxxxxx xxx x++ xxxxxxxx xxxxxxx xxxxxxxxxxxxx.\n"
 SVec-AkjlglgDLHKDSdjfksld:
@@ -39,12 +43,15 @@ GVec-SystematicDerivationOfVariants:
   supportedBy: [SnVec-ComponentTestSpec, SnVec-VariantCodeCoverageReport]
 CVec-Variants:
   text: "xxxxxxxx xxx xxxxx xx xxxxxxxxx xxxxxx:\n - xxxxxxxxx xxxxxxxxxxxx xxxxxxxx\n - xxxxxxxxx xxxxxxxxx xxxx xxxxxxxx\n - xxxxxxxxx xxxxxxxxxxxxxx xx x++ xxxxxxxxx \nxxxxxxx xxxxxxxx xx xxxxxxx xxx xxxxxxxxxxx xxxxxxx xxx xxxxxxxxxx xxx xxxx xxxx xxxxxxxxxxxxx.\n"
+  charWrap: 45
 GVec-CompletenessCorrectnessTestExec:
   text: xx xx xxxxxxx xxxx xxx xxxxxxxx xxxx xxxxx xxx xxxxxxxx xxx xxxx xxxx xxxx.
   supportedBy: [SnVec-ComponentTestReport, SnVec-ComponentTestReportReview]
 GVec-1-StructuralCoverage:
   text: xxx xxx xxxx xxxxxx xxx xxxxxxxx x xxxxxxxxxx xxxxxxxxxx xxxxxxxx xx xxxxxxxx.
   supportedBy: [SnVec-ComponentTestReport, SnVec-ComponentCoverageReport, SnVec-VariantCodeCoverageReport, SnVec-GeneratorCodeCoverageReport, SnVec-ComponentTestReportReview]
+  horizontalIndex:
+    relative: +1
 GVec-CompletenessTestSpec:
   text: xxxxxxxxxxxx xx xxxx xxxxx xx xxxxxxx xx xxxxxx.
   supportedBy: [SnVec-ComponentTestSpecReviewReport]
@@ -52,25 +59,15 @@ GVec-CompletenessTestSpec:
     relative: 2
 SnVec-ComponentTestReportReview:
   text: xxxx
-  horizontalIndex:
-    absolute: 1
 SnVec-VariantCodeCoverageReport:
   text: xxxxxxxx xxxxxxxx xxxxxxxx xxxxxx xxxx
-  horizontalIndex:
-    relative: -1
 SnVec-GeneratorCodeCoverageReport:
   text: xxxxxxxxx xxxx xxxxxxxx xxxxxx (xxx. xxx xxx xxxxxxxxx). xxxx
-  horizontalIndex:
-    absolute: 1
 SnVec-ComponentTestSpec:
   text: xxxxxxxxx xxxx xxxxxxxxxxxxx (xxx) (xxxx. xxxxxxxxxxxxx xxxxxxxxxx (x.x. xxx xxxx) xxx xxxx xxxxx xxxxxxxxxxxxx)
 SnVec-ComponentTestReport:
   text: xxxxxxxxx xxxx xxxxxx
-  horizontalIndex:
-    absolute: 2
 SnVec-ComponentCoverageReport:
   text: xxxxxxxxx xxxxxxxx xxxxxx
 SnVec-ComponentTestSpecReviewReport:
   text: xxxxxxxxx xxxx xxxxxxxxxxxxx xxxxxx xxxxxx
-  horizontalIndex:
-    absolute: last 

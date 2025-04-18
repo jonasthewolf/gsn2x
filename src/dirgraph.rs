@@ -1,5 +1,5 @@
 use std::cmp::min;
-use std::collections::{BTreeMap, BTreeSet};
+use std::collections::{BTreeMap, BTreeSet, HashMap};
 use std::fmt::Debug;
 
 ///
@@ -211,51 +211,6 @@ where
     }
 
     ///
-    /// Get a list of unreachable nodes in the graph.
-    ///
-    pub fn get_unreachable_nodes(&'a self) -> Vec<&'a str> {
-        let mut ranks = Vec::new();
-        // Using BTreeSet here to ensure that reporting is always in the same order.
-        let mut visited = BTreeSet::new();
-
-        let mut current_rank_nodes = self.root_nodes.to_vec();
-
-        loop {
-            // For each rank
-            let mut next_rank_nodes: Vec<&str> = Vec::new();
-            // Visit current nodes
-            current_rank_nodes.iter().for_each(|n| {
-                visited.insert(*n);
-            });
-            // Find children for next rank
-            for parent_node in current_rank_nodes.iter() {
-                // Get children of current parent
-                let (mut children, mut child_carried_nodes) =
-                    self.get_next_rank_children_of_parent(parent_node, &visited);
-                // Append all children to next rank
-                next_rank_nodes.append(&mut children);
-                next_rank_nodes.append(&mut child_carried_nodes);
-            }
-
-            if current_rank_nodes.is_empty() {
-                break;
-            } else {
-                let current_rank = self.add_same_rank_nodes(current_rank_nodes, &mut visited);
-                ranks.push(current_rank);
-                current_rank_nodes = next_rank_nodes
-                    .into_iter()
-                    .collect::<BTreeSet<_>>()
-                    .into_iter()
-                    .collect::<Vec<_>>();
-            }
-        }
-
-        let node_keys: BTreeSet<&str> = BTreeSet::from_iter(self.nodes.keys().map(|k| k.as_str()));
-        let unvisited: BTreeSet<&str> = node_keys.difference(&visited).copied().collect();
-        unvisited.into_iter().collect()
-    }
-
-    ///
     /// Get children of `node` that are typically placed on the *same* rank.
     ///
     ///
@@ -341,65 +296,73 @@ where
         let mut ranks = Vec::new();
         let mut visited = BTreeSet::new();
 
-        let mut carried_nodes;
         let mut forced_levels = self.get_forced_levels();
 
-        let mut current_rank_nodes = self.root_nodes.to_vec();
+        let mut current_rank_nodes = self
+            .root_nodes
+            .iter()
+            .map(|n| (*n, false))
+            .collect::<Vec<_>>();
 
         loop {
-            // For each rank
-            let mut next_rank_nodes: Vec<&str> = Vec::new();
+            let current_clones = current_rank_nodes.to_vec();
             // Postpone ranking of forced nodes
-            (current_rank_nodes, carried_nodes) =
-                current_rank_nodes
-                    .iter()
-                    .partition(|&n| match forced_levels.get_mut(n) {
-                        Some(forced_level) if *forced_level > 0 => {
-                            // Reduce forced level
-                            *forced_level -= 1;
-                            false
-                        }
-                        // See if parents are not the same rank
-                        _ => self
+            current_rank_nodes
+                .iter_mut()
+                .for_each(|(n, rank)| match forced_levels.get_mut(n) {
+                    Some(forced_level) if *forced_level > 0 => {
+                        // Reduce forced level
+                        *forced_level -= 1;
+                        *rank = false;
+                    }
+                    // See if parents are not the same rank
+                    _ => {
+                        *rank = self
                             .parent_edges
                             .get(n)
                             .into_iter()
                             .flatten()
                             .filter(|(_, et)| et.is_primary_child_edge())
-                            .all(|(p, _)| !current_rank_nodes.contains(p)),
-                    });
+                            .all(|(p, _)| !current_clones.iter().any(|(x, _)| x == p))
+                    }
+                });
             // Visit current nodes
-            current_rank_nodes.iter().for_each(|n| {
-                visited.insert(*n);
-            });
-            // Sort nodes lexicographically
-            current_rank_nodes.sort();
+            current_rank_nodes
+                .iter()
+                .filter(|(_, rank)| *rank)
+                .for_each(|(n, _)| {
+                    visited.insert(*n);
+                });
             // Apply horizontal index movement
             self.reorder_horizontally(&mut current_rank_nodes);
-            // Find children for next rank
-            for parent_node in current_rank_nodes.iter() {
-                // Get children of current parent
-                let (mut children, mut child_carried_nodes) =
-                    self.get_next_rank_children_of_parent(parent_node, &visited);
-                // Append all children to next rank
-                next_rank_nodes.append(&mut children);
-                carried_nodes.append(&mut child_carried_nodes);
+            // Insert nodes of the same rank
+            let cur_rank_with_all = self.add_same_rank_nodes(&mut current_rank_nodes, &mut visited);
+            if !cur_rank_with_all.is_empty() {
+                // Copy all nodes that are to be ranked to `rank`
+                ranks.push(cur_rank_with_all);
+            }
+            // Exit if we are done
+            if current_rank_nodes.is_empty() {
+                break;
             }
 
-            if current_rank_nodes.is_empty() && carried_nodes.is_empty() {
-                break;
-            } else {
-                let current_rank = self.add_same_rank_nodes(current_rank_nodes, &mut visited);
-                if !current_rank.is_empty() {
-                    ranks.push(current_rank);
-                }
-                current_rank_nodes = next_rank_nodes
-                    .into_iter()
-                    .chain(carried_nodes)
-                    .collect::<BTreeSet<_>>()
-                    .into_iter()
-                    .collect::<Vec<_>>();
-            }
+            // Find children for next rank
+            current_rank_nodes = current_rank_nodes
+                .iter()
+                .flat_map(|(node, rank)| {
+                    if *rank {
+                        // Get children of current parent
+                        self.get_next_rank_children_of_parent(node, &visited)
+                    } else {
+                        vec![(*node, false)]
+                    }
+                    // carried_nodes.append(&mut child_carried_nodes);
+                })
+                .collect::<Vec<_>>();
+
+            // Remove duplicates and keep order
+            let mut seen: HashMap<&str, bool> = HashMap::new();
+            current_rank_nodes.retain(|(x, _)| seen.insert(*x, true).is_none());
         }
         ranks
     }
@@ -408,12 +371,13 @@ where
     /// Reorder nodes horizontally based on forced re-indexation: `horizontalIndex`
     /// This can be done relative to the current position or absolute.
     ///
-    fn reorder_horizontally(&self, current_rank_nodes: &mut Vec<&str>) {
+    fn reorder_horizontally(&self, current_rank_nodes: &mut Vec<(&str, bool)>) {
         let current_rank_nodes_len = current_rank_nodes.len();
         let reordered_nodes = current_rank_nodes
             .iter()
             .enumerate()
-            .filter_map(|(idx, node)| {
+            .filter(|(_, (_, rank))| *rank)
+            .filter_map(|(idx, (node, _))| {
                 self.nodes
                     .get(*node)
                     .and_then(|n| n.get_horizontal_index(idx))
@@ -423,7 +387,7 @@ where
         for next_reorder in reordered_nodes {
             let cur_pos = current_rank_nodes
                 .iter()
-                .position(|n| *n == next_reorder)
+                .position(|(n, _)| *n == next_reorder)
                 .unwrap(); // unwrap ok, since nodes exist.
             if let Some(new_pos) = self
                 .nodes
@@ -447,53 +411,58 @@ where
     ///
     fn add_same_rank_nodes<'b>(
         &'b self,
-        current_rank_nodes: Vec<&'b str>,
+        current_rank_nodes: &mut Vec<(&'b str, bool)>,
         visited: &mut BTreeSet<&'b str>,
     ) -> Vec<Vec<&'b str>> {
-        let mut current_rank: Vec<Vec<&str>> =
-            current_rank_nodes.iter().map(|&n| vec![n]).collect();
+        let mut current_rank: Vec<Vec<&str>> = current_rank_nodes
+            .iter()
+            .filter(|(_, rank)| *rank)
+            .map(|(n, _)| vec![*n])
+            .collect();
         // Add inContext nodes
         for index in 0..current_rank_nodes.len() {
-            let same_rank_parent = current_rank_nodes.get(index).unwrap().to_owned(); // unwrap ok, since nodes exist.
-            let (left, right): (Vec<_>, Vec<_>) = self
-                .get_same_rank_children(same_rank_parent)
-                .into_iter()
-                .filter(|n| !visited.contains(n))
-                .enumerate()
-                .partition(|(idx, same_rank_child)| {
-                    if let Some(forced_index) = self
-                        .get_nodes()
-                        .get(same_rank_child.to_owned())
-                        .unwrap() // unwrap ok, since nodes exist.
-                        .get_horizontal_index(*idx)
-                    {
-                        0 == forced_index
-                    } else {
-                        // If a parent is already in the rank, put the same_rank_child to the left
-                        self.get_same_ranks_parents(same_rank_child)
-                            .iter()
-                            .any(|p| current_rank_nodes[0..index].contains(p))
-                            || idx % 2 != 0
-                    }
-                });
-            let mut parent_index = current_rank
-                .iter()
-                .position(|x| x.contains(&same_rank_parent))
-                .unwrap(); // unwrap ok, since nodes exist.
-            if !left.is_empty() {
-                let left_vec = left.iter().map(|(_, x)| *x).collect::<Vec<_>>();
-                left_vec.iter().for_each(|n| {
-                    visited.insert(n);
-                });
-                current_rank.insert(parent_index, left_vec);
-                parent_index += 1;
-            }
-            if !right.is_empty() {
-                let right_vec = right.iter().map(|(_, x)| *x).collect::<Vec<_>>();
-                right_vec.iter().for_each(|n| {
-                    visited.insert(n);
-                });
-                current_rank.insert(min(parent_index + 1, current_rank.len()), right_vec);
+            let (same_rank_parent, rank) = current_rank_nodes.get(index).unwrap().to_owned(); // unwrap ok, since nodes exist.
+            if rank {
+                let (left, right): (Vec<_>, Vec<_>) = self
+                    .get_same_rank_children(same_rank_parent)
+                    .into_iter()
+                    .filter(|n| !visited.contains(n))
+                    .enumerate()
+                    .partition(|(idx, same_rank_child)| {
+                        if let Some(forced_index) = self
+                            .get_nodes()
+                            .get(same_rank_child.to_owned())
+                            .unwrap() // unwrap ok, since nodes exist.
+                            .get_horizontal_index(*idx)
+                        {
+                            0 == forced_index
+                        } else {
+                            // If a parent is already in the rank, put the same_rank_child to the left
+                            self.get_same_ranks_parents(same_rank_child)
+                                .iter()
+                                .any(|p| current_rank_nodes[0..index].iter().any(|(x, _)| p == x))
+                                || idx % 2 != 0
+                        }
+                    });
+                let mut parent_index = current_rank
+                    .iter()
+                    .position(|x| x.contains(&same_rank_parent))
+                    .unwrap(); // unwrap ok, since nodes exist.
+                if !left.is_empty() {
+                    let left_vec = left.iter().map(|(_, x)| *x).collect::<Vec<_>>();
+                    left_vec.iter().for_each(|n| {
+                        visited.insert(n);
+                    });
+                    current_rank.insert(parent_index, left_vec);
+                    parent_index += 1;
+                }
+                if !right.is_empty() {
+                    let right_vec = right.iter().map(|(_, x)| *x).collect::<Vec<_>>();
+                    right_vec.iter().for_each(|n| {
+                        visited.insert(n);
+                    });
+                    current_rank.insert(min(parent_index + 1, current_rank.len()), right_vec);
+                }
             }
         }
         current_rank
@@ -507,7 +476,7 @@ where
         &self,
         parent_node: &str,
         visited: &BTreeSet<&str>,
-    ) -> (Vec<&str>, Vec<&str>) {
+    ) -> Vec<(&str, bool)> {
         self.edges
             .get(parent_node)
             .iter()
@@ -521,14 +490,18 @@ where
                 }
             })
             .filter(|n| !visited.contains(n)) // Remove already visited nodes again
-            .partition(|n| {
-                self.parent_edges
-                    .get(n)
-                    .unwrap() // unwrap ok, since nodes exist.
-                    .iter()
-                    .filter(|(_, et)| et.is_primary_child_edge())
-                    .all(|(p, _)| visited.contains(p))
+            .map(|n| {
+                (
+                    n,
+                    self.parent_edges
+                        .get(n)
+                        .unwrap() // unwrap ok, since nodes exist.
+                        .iter()
+                        .filter(|(_, et)| et.is_primary_child_edge())
+                        .all(|(p, _)| visited.contains(p)),
+                )
             })
+            .collect::<Vec<_>>()
     }
 
     ///

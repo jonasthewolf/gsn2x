@@ -704,8 +704,8 @@ mod integrations {
     fn issue467() -> Result<()> {
         let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
         cmd.arg("-G").arg("-E").arg("tests/issue467.yaml");
-        cmd.assert().success().stdout(predicate::str::contains(
-            "The following nodes might cause the problem: GA, SnA",
+        cmd.assert().success().stderr(predicate::str::contains(
+            "Warning: C01: There is more than one unreferenced element: GA, GB.",
         ));
         Ok(())
     }

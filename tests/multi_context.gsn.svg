@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg class="gsndiagram" viewBox="0 0 988 514" xmlns="http://www.w3.org/2000/svg">
+<svg class="gsndiagram" viewBox="0 0 985 514" xmlns="http://www.w3.org/2000/svg">
 <symbol id="module_icon">
 <rect fill="lightgrey" height="5" stroke="black" stroke-width="1" width="10" x="0" y="0"/>
 <rect fill="lightgrey" height="10" stroke="black" stroke-width="1" width="20" x="0" y="5"/>
@@ -45,12 +45,12 @@
 <text font-family="Arial" font-size="12" font-weight="bold" x="562" y="126">C3</text>
 <text font-family="Arial" font-size="12" x="562" y="145">Context 3</text>
 </g>
-<g class="gsn_module_tests_multi_context_gsn_yaml gsnelem gsnasmp" id="node_a2">
-<title>A2</title>
-<path class="border" d="M304,227 a85,33,0,1,0,170,0 a85,33,0,1,0,-170,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="336" y="218">A2</text>
-<text font-family="Arial" font-size="12" x="336" y="237">Another assumption</text>
-<text font-family="Arial" font-size="12" font-weight="bold" x="469" y="255">A</text>
+<g class="gsn_module_tests_multi_context_gsn_yaml gsnelem gsnjust" id="node_j2">
+<title>J2</title>
+<path class="border" d="M302,227 a86,33,0,1,0,172,0 a86,33,0,1,0,-172,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="334" y="218">J2</text>
+<text font-family="Arial" font-size="12" x="334" y="237">Another justification</text>
+<text font-family="Arial" font-size="12" font-weight="bold" x="469" y="255">J</text>
 </g>
 <g class="gsn_module_tests_multi_context_gsn_yaml gsnelem gsngoal" id="node_g3">
 <title>G3</title>
@@ -58,12 +58,12 @@
 <text font-family="Arial" font-size="12" font-weight="bold" x="521" y="223">G3</text>
 <text font-family="Arial" font-size="12" x="521" y="242">Yet another goal with context</text>
 </g>
-<g class="gsn_module_tests_multi_context_gsn_yaml gsnelem gsnjust" id="node_j2">
-<title>J2</title>
-<path class="border" d="M730,227 a86,33,0,1,0,172,0 a86,33,0,1,0,-172,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="762" y="218">J2</text>
-<text font-family="Arial" font-size="12" x="762" y="237">Another justification</text>
-<text font-family="Arial" font-size="12" font-weight="bold" x="897" y="255">J</text>
+<g class="gsn_module_tests_multi_context_gsn_yaml gsnelem gsnasmp" id="node_a2">
+<title>A2</title>
+<path class="border" d="M730,227 a85,33,0,1,0,170,0 a85,33,0,1,0,-170,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="762" y="218">A2</text>
+<text font-family="Arial" font-size="12" x="762" y="237">Another assumption</text>
+<text font-family="Arial" font-size="12" font-weight="bold" x="895" y="255">A</text>
 </g>
 <g class="gsn_module_tests_multi_context_gsn_yaml gsnelem gsnjust" id="node_j1">
 <title>J1</title>

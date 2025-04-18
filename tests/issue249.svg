@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg class="gsndiagram" viewBox="0 0 704 320" xmlns="http://www.w3.org/2000/svg">
+<svg class="gsndiagram" viewBox="0 0 703 320" xmlns="http://www.w3.org/2000/svg">
 <symbol id="module_icon">
 <rect fill="lightgrey" height="5" stroke="black" stroke-width="1" width="10" x="0" y="0"/>
 <rect fill="lightgrey" height="10" stroke="black" stroke-width="1" width="20" x="0" y="5"/>
@@ -21,40 +21,40 @@
 <marker id="challenges_arrow" markerHeight="9" markerUnits="userSpaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
 <polyline fill-opacity="0" points="0 0, 10 4.5, 0 4.5, 10 4.5, 0 9" stroke="black" stroke-dasharray="100" stroke-width="1"/>
 </marker>
-<g class="gsn_module_tests_issue249_yaml gsnelem gsnasmp" id="node_a2">
-<title>A2</title>
-<path class="border" d="M20,53 a85,33,0,1,0,170,0 a85,33,0,1,0,-170,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="52" y="44">A2</text>
-<text font-family="Arial" font-size="12" x="52" y="63">Another assumption</text>
-<text font-family="Arial" font-size="12" font-weight="bold" x="185" y="81">A</text>
+<g class="gsn_module_tests_issue249_yaml gsnelem gsnjust" id="node_j2">
+<title>J2</title>
+<path class="border" d="M20,53 a86,33,0,1,0,172,0 a86,33,0,1,0,-172,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="52" y="44">J2</text>
+<text font-family="Arial" font-size="12" x="52" y="63">Another justification</text>
+<text font-family="Arial" font-size="12" font-weight="bold" x="187" y="81">J</text>
 </g>
 <g class="gsn_module_tests_issue249_yaml gsnelem gsngoal" id="node_g3">
 <title>G3</title>
-<path class="border" d="M230,30 L406,30 L406,76 L230,76 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="237" y="49">G3</text>
-<text font-family="Arial" font-size="12" x="237" y="68">Yet another goal with context</text>
+<path class="border" d="M232,30 L408,30 L408,76 L232,76 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="239" y="49">G3</text>
+<text font-family="Arial" font-size="12" x="239" y="68">Yet another goal with context</text>
 </g>
-<g class="gsn_module_tests_issue249_yaml gsnelem gsnjust" id="node_j2">
-<title>J2</title>
-<path class="border" d="M446,53 a86,33,0,1,0,172,0 a86,33,0,1,0,-172,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="478" y="44">J2</text>
-<text font-family="Arial" font-size="12" x="478" y="63">Another justification</text>
-<text font-family="Arial" font-size="12" font-weight="bold" x="613" y="81">J</text>
+<g class="gsn_module_tests_issue249_yaml gsnelem gsnasmp" id="node_a2">
+<title>A2</title>
+<path class="border" d="M448,53 a85,33,0,1,0,170,0 a85,33,0,1,0,-170,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="480" y="44">A2</text>
+<text font-family="Arial" font-size="12" x="480" y="63">Another assumption</text>
+<text font-family="Arial" font-size="12" font-weight="bold" x="613" y="81">A</text>
 </g>
 <g class="gsn_module_tests_issue249_yaml gsnelem gsngoal" id="node_g4">
 <title>G4</title>
-<path class="border" d="M266,126 L370,126 L370,172 L266,172 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="273" y="145">G4</text>
-<text font-family="Arial" font-size="12" x="273" y="164">Simple goal</text>
+<path class="border" d="M268,126 L372,126 L372,172 L268,172 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="275" y="145">G4</text>
+<text font-family="Arial" font-size="12" x="275" y="164">Simple goal</text>
 </g>
 <g class="gsn_module_tests_issue249_yaml gsnelem gsnsltn" id="node_sn1">
 <title>Sn1</title>
-<path class="border" d="M275,255 a43,43,0,1,0,86,0 a43,43,0,1,0,-86,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="293" y="246">Sn1</text>
-<text font-family="Arial" font-size="12" x="293" y="265">A solution</text>
+<path class="border" d="M277,255 a43,43,0,1,0,86,0 a43,43,0,1,0,-86,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="295" y="246">Sn1</text>
+<text font-family="Arial" font-size="12" x="295" y="265">A solution</text>
 </g>
-<path class="gsnedge gsninctxt" d="M406,53 C436,53,416,53,436,53" fill-opacity="0" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninctxt" d="M230,53 C200,53,220,53,200,53" fill-opacity="0" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M318,76 C318,106,318,96,318,116" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M318,172 C318,202,318,182,318,202" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M408,53 C438,53,418,53,438,53" fill-opacity="0" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M232,53 C202,53,222,53,202,53" fill-opacity="0" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M320,76 C320,106,320,96,320,116" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M320,172 C320,202,320,182,320,202" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 </svg>

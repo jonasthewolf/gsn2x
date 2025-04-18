@@ -18,16 +18,16 @@ G2:
 
 Sn1:
   text: A solution
-  horizontalIndex: 
-    relative: -3
+  # horizontalIndex: 
+  #   relative: -3
 
 CG1:
   text: A counter argument
   supportedBy: CG2
   challenges: G2
-  rankIncrement: 2
-  horizontalIndex:
-    absolute: 0
+  rankIncrement: 3
+  # horizontalIndex:
+  #   absolute: 0
 
 CG2:
   text: A counter argument
@@ -52,14 +52,13 @@ G5:
 
 Sn2:
   text: text
-  horizontalIndex:
-    relative: -1
 
 G6:
   text: text
   supportedBy: Sn3
 
 Sn3:
+  text: text
   defeated: true
 
 CG3:
@@ -85,25 +84,19 @@ S2:
 G7:
   text: text
   supportedBy: G9
-  horizontalIndex:
-    relative: +3
 
 G9:
   text: text
   supportedBy: Sn4
 
-Sn4:
+Sn4: 
   text: text
 
 G8:
   text: text
   supportedBy: Sn5
-  horizontalIndex:
-    relative: +3
 
-
-Sn5:
-  text: text
+Sn5: {}
 
 CG4:
   text: text

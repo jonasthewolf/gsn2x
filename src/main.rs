@@ -389,9 +389,8 @@ fn read_inputs(
             .map_err(|e| {
                 anyhow!(format!(
                     "No valid GSN element can be found starting from line {}.\n\
-                     This typically means that the YAML is completely invalid, or \n\
-                     the `text:` attribute is missing for an element, 
-                     or `supportedBy` or `inContextOf` are not followed by a list ([]).\n\
+                     This typically means that the YAML is completely invalid or \n\
+                     the `text:` attribute is missing for an element.\n\
                      Please see the documentation for details (https://jonasthewolf.github.io/gsn2x/troubleshooting.html).\n\
                      Original error message: {}.",
                     e.location()
@@ -517,6 +516,10 @@ fn check_and_add_nodes(
                         // Remember module for node
                         module.clone_into(&mut x.module);
                         x.fix_node_type(&k);
+                        // Sort all edges lexicographically
+                        x.supported_by.sort();
+                        x.in_context_of.sort();
+                        x.challenges.sort();
                         if x.char_wrap.is_none() {
                             x.char_wrap = char_wrap;
                         }

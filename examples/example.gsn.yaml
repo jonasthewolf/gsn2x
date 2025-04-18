@@ -11,8 +11,6 @@ G4:
  text: Goal 4
  inContextOf: [J2]
  supportedBy: [Sn2]
- horizontalIndex:
-  relative: 2
 
 G3: 
  text: Goal 3
@@ -52,8 +50,6 @@ Sn2:
  text: Solution 2
  layer1: Additional information on layer 1
  layer2: Additional information on layer 2
- horizontalIndex:
-  absolute: last
 
 Sn3: 
  text: Solution 3
@@ -62,7 +58,7 @@ Sn3:
 Sn4: 
  text: Solution 4
  horizontalIndex:
-  absolute: 0
+  relative: -1
 
 Sn5: 
  text: Solution 5
@@ -81,6 +77,8 @@ S2:
  text: Strategy 2
  supportedBy: [G4, G7]
  rankIncrement: 1
+ horizontalIndex:
+  relative: -1
 
 G7:
  text: Undeveloped Goal
