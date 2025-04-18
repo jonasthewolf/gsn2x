@@ -31,6 +31,9 @@ cp examples/example.gsn.svg examples/example.gsn_dark.svg
 # confidence example
 ./target/release/gsn2x -G -E examples/confidence.gsn.yaml
 
+# dialectic example
+./target/release/gsn2x -G -E examples/dialectic/index.gsn.yaml
+
 # issue regressions
 ./target/release/gsn2x -G -E tests/issue84_1.yaml
 ./target/release/gsn2x -G -E tests/issue84_2.yaml

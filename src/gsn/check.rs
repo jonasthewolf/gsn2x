@@ -159,8 +159,21 @@ fn check_unreachable(
     diag: &mut Diagnostics,
     graph: &DirectedGraph<GsnNode, GsnEdgeType>,
 ) -> Result<(), ()> {
-    let unvisited = graph.get_unreachable_nodes();
-    let root_nodes = graph.get_root_nodes();
+    let visited: Vec<&str> = graph
+        .rank_nodes()
+        .iter()
+        .flatten()
+        .flatten()
+        .copied()
+        .collect();
+    let root_nodes: Vec<&str> = graph.get_root_nodes().to_vec();
+
+    let unvisited: Vec<&str> = graph
+        .get_nodes()
+        .keys()
+        .filter(|x| !visited.contains(&x.as_str()))
+        .map(|s| s.as_str())
+        .collect();
 
     if unvisited.is_empty() {
         Ok(())
@@ -191,6 +204,8 @@ pub fn check_layers(
         "text",
         "inContextOf",
         "supportedBy",
+        "challenges",
+        "defeated",
         "classes",
         "url",
         "undeveloped",

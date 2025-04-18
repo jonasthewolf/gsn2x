@@ -1,5 +1,5 @@
 use std::cell::RefCell;
-use std::collections::{BTreeMap, BTreeSet, HashSet};
+use std::collections::{BTreeMap, HashMap, HashSet};
 
 use crate::dirgraph::DirectedGraph;
 
@@ -170,7 +170,7 @@ pub(super) fn layout_nodes(
                         if new_x > x {
                             x = std::cmp::max(x, new_x);
                             // Often needed for debugging.
-                            // eprintln!("Changed {:?} {} {} {}", &cell, x, old_x, new_x);
+                            // eprintln!("Run {}: Changed {:?} {} {} {}", run, &cell, x, old_x, new_x);
                             unstable_nodes
                                 .entry(cell)
                                 .and_modify(|e| *e += 1)
@@ -287,12 +287,12 @@ fn has_node_to_be_moved<'b>(
         .collect();
     // Collect in a set first, since cell can have more than one entry pointing to the same parent.
     // Here, we are only interested in the unique set of parents.
-    let same_rank_parents: Vec<_> = cell
+    let mut seen: HashMap<&str, bool> = HashMap::new();
+    let mut same_rank_parents: Vec<_> = cell
         .iter()
         .flat_map(|n| graph.get_same_ranks_parents(n))
-        .collect::<BTreeSet<_>>()
-        .into_iter()
         .collect();
+    same_rank_parents.retain(|x| seen.insert(*x, true).is_none());
     let nodes = graph.get_nodes();
     let cell_x = cell.get_x(nodes);
     let child_len = children.len();
@@ -319,7 +319,7 @@ fn has_node_to_be_moved<'b>(
             let center_children = children
                 .iter()
                 .filter(|&c| graph.get_real_parents(c).len() == 1)
-                .cloned()
+                .copied()
                 .collect::<Vec<_>>();
             // ... and remember them. We don't move them later if they are already more to the right.
             if center_children.len() > 1 && cell_x <= get_center(nodes, &center_children) {
@@ -355,21 +355,34 @@ fn has_node_to_be_moved<'b>(
             None
         } else {
             let parent_center = get_center(nodes, &parents);
+            // If there is just one parent, save some space if
+            // there are other children of that parent (with again only one parent, so it will center over it)
+            // by just moving as far as necessary to the right
+            let center_children = parents
+                .iter()
+                .flat_map(|c| graph.get_real_children(c))
+                .filter(|&c| !moved_nodes.contains(c))
+                .filter(|&c| graph.get_real_parents(c).len() == 1)
+                .collect::<Vec<_>>();
             if parents.len() == 1 {
-                // If there is just one parent, save some space if
-                // there are other children of that parent (with again only one parent, so it will center over it)
-                // by just moving as far as necessary to the right
-                let center_children = parents
-                    .into_iter()
-                    .flat_map(|c| graph.get_real_children(c))
-                    .filter(|&c| !moved_nodes.contains(c))
-                    .filter(|&c| graph.get_real_parents(c).len() == 1)
-                    .collect::<Vec<_>>();
                 Some(std::cmp::min(
                     parent_center,
                     cell_x + parent_center - get_center(nodes, &center_children),
                 ))
+            } else if parents
+                .iter()
+                .flat_map(|c| graph.get_real_children(c))
+                .filter(|c| !cell.contains(c))
+                .map(|c| graph.get_real_parents(c))
+                .any(|c| parents == c)
+            {
+                // More than one parent, but other parents share the same child nodes
+                // We do not distribute them evenly beneath parents, because last parent could have
+                // another independent child again.
+                // We move the first one at least as far to the right as the left most parent.
+                parents.iter().map(|&p| vec![p].get_x(nodes)).min()
             } else {
+                // Single child beneath multiple parents => center it
                 Some(parent_center)
             }
         }

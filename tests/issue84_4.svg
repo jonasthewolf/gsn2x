@@ -51,8 +51,8 @@
 <text font-family="Arial" font-size="12" font-weight="bold" x="27" y="315">G4</text>
 <text font-family="Arial" font-size="12" x="27" y="334">G4</text>
 </g>
-<path class="gsnedge gsninspby" d="M72,66 C72,96,196,76,196,96" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsninspby" d="M72,66 C72,96,72,85,72,105" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M72,66 C72,96,196,76,196,96" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsninspby" d="M72,161 C72,191,72,180,72,200" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsninspby" d="M72,256 C72,286,72,266,72,286" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsninspby" d="M72,296 C72,266,196,273,196,233 S196,200,196,180" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>

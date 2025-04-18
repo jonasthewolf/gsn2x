@@ -94,14 +94,14 @@
 <text font-family="Arial" font-size="12" font-weight="bold" x="333" y="436">Sn1-XXXXxxxxxxxxxxx</text>
 <text font-family="Arial" font-size="12" x="333" y="455">xxx xxxxxxxxxxxxx</text>
 </g>
-<path class="gsnedge gsninspby" d="M755,66 C755,96,1111,76,1111,96" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsninspby" d="M755,66 C755,96,400,76,400,96" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M755,66 C755,96,1111,76,1111,96" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsninspby" d="M133,322 C133,352,400,332,400,352" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsninspby" d="M400,315 C400,345,400,332,400,352" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsninspby" d="M668,308 C668,338,400,332,400,352" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M400,180 C400,210,668,204,668,224" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsninspby" d="M400,180 C400,210,133,190,133,210" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsninspby" d="M400,180 C400,210,400,197,400,217" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M1111,180 C1111,210,1269,201,1269,221" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M400,180 C400,210,668,204,668,224" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsninspby" d="M1111,180 C1111,210,954,201,954,221" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M1111,180 C1111,210,1269,201,1269,221" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 </svg>
