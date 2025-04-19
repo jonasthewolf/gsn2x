@@ -1,14 +1,11 @@
 
 G1:
-  text: Top-level
   supportedBy: S1
   inContextOf: C1
 
-C1: 
-  text: Con 1
+C1: {}
 
 S1:
-  text: Strategy 1
   supportedBy: [G2, G3, G4]
 
 G2:
@@ -16,90 +13,71 @@ G2:
   supportedBy: Sn1
   defeated: true
 
-Sn1:
-  text: A solution
-  # horizontalIndex: 
-  #   relative: -3
+Sn1: {}
 
 CG1:
   text: A counter argument
   supportedBy: CG2
   challenges: G2
   rankIncrement: 3
-  # horizontalIndex:
-  #   absolute: 0
 
 CG2:
-  text: A counter argument
+  text: Another counter argument
   supportedBy: CSn1
 
 CSn1:
   text: A counter evidence
 
 G3:
-  text: Another goal
   supportedBy: [G5, G6]
 
 CSn2:
-  text: Counter evidence
+  text: Another counter evidence
   challenges: G5
   rankIncrement: 4
 
 G5:
-  text: text
   supportedBy: Sn2
   defeated: true
 
-Sn2:
-  text: text
+Sn2: {}
 
 G6:
-  text: text
   supportedBy: Sn3
 
 Sn3:
-  text: text
   defeated: true
 
 CG3:
-  text: text
   challenges: Sn3
   supportedBy: CSn3
   rankIncrement: 4
   horizontalIndex:
     relative: +2
 
-CSn3:
-  text: text
+CSn3: {}
 
 G4:
-  text: text
   supportedBy: [S2]
 
 S2:
-  text: text
   supportedBy: [G7, G8]
   defeated: true
 
 G7:
-  text: text
   supportedBy: G9
 
 G9:
-  text: text
   supportedBy: Sn4
 
-Sn4: 
-  text: text
+Sn4: {}
 
 G8:
-  text: text
   supportedBy: Sn5
 
 Sn5: {}
 
 CG4:
-  text: text
   challenges: S2
   supportedBy: CSn4
   rankIncrement: 3
@@ -107,6 +85,5 @@ CG4:
     absolute: last
 
 CSn4:
-  text: text
   horizontalIndex:
     absolute: last

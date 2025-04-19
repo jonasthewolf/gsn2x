@@ -5,14 +5,16 @@
 
 The following Goal Structuring Notation (GSN) core elements are supported:
 
-| Element Type   | Prefix |
-|----------------|--------|
-| Goal           |   G    | 
-| Assumption     |   A    |
-| Justification  |   J    | 
-| Solution       |   Sn   |   
-| Context        |   C    |
-| Strategy       |   S    |
+| Element Type     | Prefix |
+|------------------|--------|
+| Goal             |   G    | 
+| Assumption       |   A    |
+| Justification    |   J    | 
+| Solution         |   Sn   |   
+| Context          |   C    |
+| Strategy         |   S    |
+| Counter Goal     |   CG   |
+| Counter Solution |   CSn  |
 
 Every element is defined by a prefix (as shown in the table above) and an arbitrary identifier then.
 
@@ -72,7 +74,9 @@ Please see [examples/example.gsn.yaml](examples/example.gsn.yaml) for an example
 | rankIncrement   |    yes   | See [Layout](./adv_layout.md).                         |
 | horizontalIndex |    yes   | See [Layout](./adv_layout.md).                         |
 | charWrap        |    yes   | See [Line Breaks](./adv_formatting.md).                |
-| acp             |    yes   | See [Confidence Argument Extension](./confidence.md).  |
+| acp             |    yes   | See [Confidence Argument Extension](./ext_confidence.md).  |
+| challenges      |    yes   | See [Dialectic Extension](./ext_dialectic.md).             |
+| defeated        |    yes   | See [Dialectic Extension](./ext_dialectic.md).             |
 
 [^nt]: When providing a `nodeType` you do not need to follow the standard prefix scheme above.
-       Just give `Goal`, `Assumption`, `Justification`, `Solution`, `Context` and `Strategy` to give the type of the element.
+       Just set `nodeType` to `Goal`, `Assumption`, `Justification`, `Solution`, `Context`, `Strategy`, `CounterGoal` and  `CounterSolution` to give the type of the element.
