@@ -4,19 +4,23 @@
 - [Syntax](./yaml_syntax.md)
 - [Checks](./checks.md)
 
----
+# Advanced Use-cases
 
-- [Advanced Use-cases](./advanced_usecases.md)
-    - [Formatting](./adv_formatting.md)
-    - [Layout](./adv_layout.md)
-    - [Layers](./adv_layers.md)
-    - [Stylesheets](./adv_stylesheets.md)
-    - [Evidence](./adv_evidence.md)
-- [Modular Extension](./mod_extension.md)
-    - [Distributed Development](./mod_distdev.md)
-    - [Module Info](./mod_info.md)
-- [Confidence Argument Extension](./confidence.md)
-- [Interfacing](./interfacing.md)
+- [Formatting](./adv_formatting.md)
+- [Layout](./adv_layout.md)
+- [Layers](./adv_layers.md)
+- [Stylesheets](./adv_stylesheets.md)
+- [Evidence](./adv_evidence.md)
+- [Statistics](./adv_statistics.md)
+- [Interfacing](./adv_interfacing.md)
+
+# Extensions 
+
+- [Modular Extension](./ext_mod.md)
+    - [Distributed Development](./ext_mod_distdev.md)
+    - [Module Info](./ext_mod_info.md)
+- [Confidence Argument Extension](./ext_confidence.md)
+- [Dialectic Extension](./ext_dialectic.md)
 
 ---
 
@@ -27,4 +31,4 @@
 
 - [Design Goals](./design_goals.md)
 - [History](./history.md)
-- [Migration from v2.x](./migration_v2x.md)
+- [Migration between Different Versions](./migration.md)

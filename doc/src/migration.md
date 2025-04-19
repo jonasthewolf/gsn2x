@@ -5,14 +5,26 @@ Version 3 intentionally changed this approach.
 
 To get similar or even better renderings, please follow the guidelines below.
 
-## Replace `level` with `rankIncrement`
+**Replace `level` with `rankIncrement`**
 
 `level` was deprecated. Instead, increment the rank of the elements that should be pushed further down.
 
 Please see [Layout](./adv_layout.md) for more information on how to use `rankIncrement`.
 
-## Use strict lexicographical sorting and horizontal reordering to optimize the graph
+**Use strict lexicographical sorting and horizontal reordering to optimize the graph**
 
 If you find situations that are not rendered correctly by default, 
 please check if your IDs are sensibly defined (i.e. lexicographically increasing).
 Use `horizontalIndex` as described [here](./adv_layout.md) to fix e.g., crossing edges.
+
+# Migration from Version 3.x to Version 4.x
+
+Remove all `horizontalIndex` again and try to render the diagrams. The ranking algorithm was improved.
+Thus, problems should be minimized. Introduce the `horizontalIndex` again, where necessary to achieve the desired diagram.
+
+When drafting a new assurance case you can now have "empty" nodes with just an identifier.
+To do so, use the empty dictionary syntax of YAML:
+
+```yaml
+G1: {}
+```
