@@ -743,8 +743,8 @@ mod integrations {
     fn statistics() -> Result<()> {
         let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
         cmd.arg("-c")
-            .arg("--statistics")
-            .arg("examples/modular/index.gsn.yaml");
+            .arg("examples/modular/index.gsn.yaml")
+            .arg("--statistics");
         cmd.assert().success().stdout(predicate::str::contains(
             r#"Statistics
 ==========

@@ -1,4 +1,4 @@
-use std::{collections::BTreeMap, fs::File, io::Write, path::Path};
+use std::{collections::BTreeMap, io::Write};
 
 use crate::{
     dirgraph::DirectedGraph,
@@ -6,7 +6,7 @@ use crate::{
     render::RenderOptions,
 };
 
-use anyhow::{Context, Result};
+use anyhow::Result;
 
 ///
 /// Output list of evidence.
@@ -83,82 +83,93 @@ pub(crate) fn render_evidence(
 ///
 ///
 pub(crate) fn render_statistics(
+    output: &mut impl Write,
     nodes: &BTreeMap<String, GsnNode>,
     modules: &BTreeMap<String, Module>,
-) {
-    println!("Statistics");
-    println!("==========");
-    println!("Number of modules:   {}", modules.len());
-    println!("Number of nodes:     {}", nodes.len());
-    println!(
+) -> Result<()> {
+    writeln!(output, "Statistics")?;
+    writeln!(output, "==========")?;
+    writeln!(output, "Number of modules:   {}", modules.len())?;
+    writeln!(output, "Number of nodes:     {}", nodes.len())?;
+    writeln!(
+        output,
         "  Goals:             {}",
         nodes
             .iter()
             .filter(|n| n.1.node_type == Some(gsn::GsnNodeType::Goal))
             .count()
-    );
-    println!(
+    )?;
+    writeln!(
+        output,
         "  Strategies:        {}",
         nodes
             .iter()
             .filter(|n| n.1.node_type == Some(gsn::GsnNodeType::Strategy))
             .count()
-    );
-    println!(
+    )?;
+    writeln!(
+        output,
         "  Solutions:         {}",
         nodes
             .iter()
             .filter(|n| n.1.node_type == Some(gsn::GsnNodeType::Solution))
             .count()
-    );
-    println!(
+    )?;
+    writeln!(
+        output,
         "  Assumptions:       {}",
         nodes
             .iter()
             .filter(|n| n.1.node_type == Some(gsn::GsnNodeType::Assumption))
             .count()
-    );
-    println!(
+    )?;
+    writeln!(
+        output,
         "  Justifications:    {}",
         nodes
             .iter()
             .filter(|n| n.1.node_type == Some(gsn::GsnNodeType::Justification))
             .count()
-    );
-    println!(
+    )?;
+    writeln!(
+        output,
         "  Contexts:          {}",
         nodes
             .iter()
             .filter(|n| n.1.node_type == Some(gsn::GsnNodeType::Context))
             .count()
-    );
-    println!(
+    )?;
+    writeln!(
+        output,
         "  Counter Goals:     {}",
         nodes
             .iter()
             .filter(|n| n.1.node_type == Some(gsn::GsnNodeType::CounterGoal))
             .count()
-    );
-    println!(
+    )?;
+    writeln!(
+        output,
         "  Counter Solutions: {}",
         nodes
             .iter()
             .filter(|n| n.1.node_type == Some(gsn::GsnNodeType::CounterSolution))
             .count()
-    );
-    println!(
+    )?;
+    writeln!(
+        output,
         "  Defeated Elements: {}",
         nodes.iter().filter(|n| n.1.defeated).count()
-    );
+    )?;
+    Ok(())
 }
 
 ///
 /// Render dump of complete graph into single YAML file that is ordered according to rank.
 ///
 pub(crate) fn render_yaml_docs(
+    mut output: &mut impl Write,
     nodes: &BTreeMap<String, GsnNode>,
     modules: &BTreeMap<String, Module>,
-    output_file: &str,
 ) -> Result<()> {
     let edges: BTreeMap<String, Vec<(String, GsnEdgeType)>> = nodes
         .iter()
@@ -167,25 +178,9 @@ pub(crate) fn render_yaml_docs(
     let graph = DirectedGraph::new(nodes, &edges);
     let ranks = graph.rank_nodes();
 
-    let output_path = Path::new(output_file);
-    if !&output_path.parent().unwrap().exists() {
-        // Create output directory; unwraps are ok, since file always have a parent
-        std::fs::create_dir_all(output_path.parent().unwrap()).with_context(|| {
-            format!(
-                "Could not create directory {} for {}",
-                output_path.display(),
-                output_file
-            )
-        })?;
-    }
-    let mut output_file = Box::new(File::create(output_path).context(format!(
-        "Failed to open output file {}",
-        output_path.display()
-    ))?) as Box<dyn std::io::Write>;
-
     for (m_id, m) in modules {
-        writeln!(output_file, "--- # {} in {}\n", m_id, m.orig_file_name)?;
-        serde_yml::to_writer(&mut output_file, &m.meta)?;
+        writeln!(&mut output, "--- # {} in {}\n", m_id, m.orig_file_name)?;
+        serde_yml::to_writer(&mut output, &m.meta)?;
         for rank in ranks.iter().flatten() {
             let rank_map = rank
                 .iter()
@@ -193,10 +188,10 @@ pub(crate) fn render_yaml_docs(
                 .filter(|(_, n)| &n.module == m_id)
                 .collect::<BTreeMap<&str, &GsnNode>>();
             if !rank_map.is_empty() {
-                serde_yml::to_writer(&mut output_file, &rank_map)?;
+                serde_yml::to_writer(&mut output, &rank_map)?;
             }
         }
-        writeln!(output_file, "... # {}\n", m_id)?;
+        writeln!(&mut output, "... # {}\n", m_id)?;
     }
 
     // serde_yml::to_string(value)
