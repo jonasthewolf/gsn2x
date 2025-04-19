@@ -83,6 +83,7 @@ fn validate_id(diag: &mut Diagnostics, module: &str, id: &str, node: &GsnNode) -
 ///
 /// - Check in_context references for well-formedness
 /// - Check supported_by references for well-formedness
+/// - Check challenges references for well-formedness
 /// - Check if undeveloped is correctly set
 ///
 fn validate_references(
@@ -160,7 +161,33 @@ fn validate_references(
     } else {
         Ok(())
     };
-    incontext_res.and(supportedby_res)
+    let challenges_res = if node.challenges.is_empty() {
+        Ok(())
+    } else {
+        let mut valid_ref_types = vec![];
+        // Only goals and strategies can have contexts, assumptions and justifications
+        if node.node_type == Some(GsnNodeType::CounterGoal)
+            || node.node_type == Some(GsnNodeType::CounterSolution)
+        {
+            valid_ref_types.append(&mut vec![
+                GsnNodeType::Goal,
+                GsnNodeType::CounterGoal,
+                GsnNodeType::Strategy,
+                GsnNodeType::Solution,
+                GsnNodeType::CounterSolution,
+            ]);
+        }
+        validate_reference(
+            diag,
+            module,
+            nodes,
+            id,
+            &node.in_context_of,
+            "challenges",
+            &valid_ref_types,
+        )
+    };
+    incontext_res.and(supportedby_res).and(challenges_res)
 }
 
 ///
@@ -168,7 +195,7 @@ fn validate_references(
 ///
 /// - Check if node does not reference itself.
 /// - Check if a list of references only contains unique values.
-/// - Check if a reference in the correct list i.e., inContextOf or supportedBy
+/// - Check if a reference in the correct list i.e., inContextOf, challenges or supportedBy
 ///
 fn validate_reference(
     diag: &mut Diagnostics,

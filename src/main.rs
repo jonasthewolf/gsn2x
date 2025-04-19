@@ -685,46 +685,64 @@ fn print_statistics(nodes: &BTreeMap<String, GsnNode>, modules: &BTreeMap<String
     println!("Number of modules: {}", modules.len());
     println!("Number of nodes:   {}", nodes.len());
     println!(
-        "  Goals:           {}",
+        "  Goals:             {}",
         nodes
             .iter()
             .filter(|n| n.1.node_type == Some(gsn::GsnNodeType::Goal))
             .count()
     );
     println!(
-        "  Strategies:      {}",
+        "  Strategies:        {}",
         nodes
             .iter()
             .filter(|n| n.1.node_type == Some(gsn::GsnNodeType::Strategy))
             .count()
     );
     println!(
-        "  Solutions:       {}",
+        "  Solutions:         {}",
         nodes
             .iter()
             .filter(|n| n.1.node_type == Some(gsn::GsnNodeType::Solution))
             .count()
     );
     println!(
-        "  Assumptions:     {}",
+        "  Assumptions:       {}",
         nodes
             .iter()
             .filter(|n| n.1.node_type == Some(gsn::GsnNodeType::Assumption))
             .count()
     );
     println!(
-        "  Justifications:  {}",
+        "  Justifications:    {}",
         nodes
             .iter()
             .filter(|n| n.1.node_type == Some(gsn::GsnNodeType::Justification))
             .count()
     );
     println!(
-        "  Contexts:        {}",
+        "  Contexts:          {}",
         nodes
             .iter()
             .filter(|n| n.1.node_type == Some(gsn::GsnNodeType::Context))
             .count()
+    );
+    println!(
+        "  Counter Goals:     {}",
+        nodes
+            .iter()
+            .filter(|n| n.1.node_type == Some(gsn::GsnNodeType::CounterGoal))
+            .count()
+    );
+    println!(
+        "  Counter Solutions: {}",
+        nodes
+            .iter()
+            .filter(|n| n.1.node_type == Some(gsn::GsnNodeType::CounterSolution))
+            .count()
+    );
+    println!(
+        "  Defeated Elements: {}",
+        nodes.iter().filter(|n| n.1.defeated).count()
     );
 }
 
