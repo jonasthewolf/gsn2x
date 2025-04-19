@@ -25,13 +25,14 @@ The following checks apply to the complete set of input files.
 |-----|--------------------------------------------------------------------------------------------------------|
 | C01 | There should be only one but must be at least one top-level element (G,S,C,J,A,Sn) unreferenced.       |
 | C02 | The top-level element must be a Goal. A top-level element is an element that is not referenced by any other element.|
-| C03 | All referenced elements in `supportedBy` and `inContextOf` must exist.                                 |
+| C03 | All referenced elements in `supportedBy`, `inContextOf`, `challenges` must exist.                      |
 | C04 | There must be no circular `supportedBy` references.                                                    |
 | C06 | All module names must be unique.                                                                       |
 | C07 | All IDs must be unique across all modules.                                                             |
 | C08 | All elements must be reachable from the root elements. This message can e.g. happen if there are multiple independent graphs where one contains circular references only.|
 | C09 | All extended modules must exist.                                                                       |
 | C10 | All extended elements must exist in the named module and must be undeveloped.                          |
+| C11 | The reference that is not found (see C03), could actually be a list, but a YAML string was used. Use [] around your comma separated references. |
 
 
 Uniqueness of keys (i.e. element IDs) is automatically enforced by the YAML format.
