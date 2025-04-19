@@ -1,12 +1,12 @@
 use anyhow::{Context, Result, anyhow};
 use clap::parser::ValueSource;
 use clap::{Arg, ArgAction, Command, value_parser};
-use file_utils::translate_to_output_path;
+use file_utils::{create_file_incl_parent, translate_to_output_path};
 use render::RenderOptions;
 use std::collections::BTreeMap;
 use std::error::Error;
 use std::fmt::Display;
-use std::io::BufReader;
+use std::io::{BufReader, stdout};
 use std::path::{Path, PathBuf};
 use std::{collections::btree_map::Entry, fs::File};
 
@@ -123,11 +123,20 @@ fn main() -> Result<()> {
                     // Output views
                     print_outputs(&nodes, &modules, &render_options)?;
                 }
-                if matches.get_flag("STATISTICS") {
-                    outputs::render_statistics(&nodes, &modules);
+                if let Some(ValueSource::CommandLine) = matches.value_source("STATISTICS") {
+                    let mut output = match matches.get_one::<String>("STATISTICS") {
+                        Some(path) => Box::new(File::create(path)?) as Box<dyn std::io::Write>,
+                        None => Box::new(stdout().lock()) as Box<dyn std::io::Write>,
+                    };
+                    outputs::render_statistics(&mut output, &nodes, &modules)?;
                 }
-                if let Some(yaml_dir) = matches.get_one::<String>("YAMLDUMP") {
-                    outputs::render_yaml_docs(&nodes, &modules, yaml_dir)?;
+
+                if let Some(ValueSource::CommandLine) = matches.value_source("YAMLDUMP") {
+                    let mut output = match matches.get_one::<String>("YAMLDUMP") {
+                        Some(path) => create_file_incl_parent(Path::new(path))?,
+                        None => Box::new(stdout().lock()) as Box<dyn std::io::Write>,
+                    };
+                    outputs::render_yaml_docs(&mut output, &nodes, &modules)?;
                 }
                 Ok(())
             }
@@ -254,17 +263,18 @@ fn build_command_options() -> Command {
         )
         .arg(
             Arg::new("STATISTICS")
-                .help("Output statistics on inputs.")
+                .help("Output statistics on inputs to <STATISTICS> file or standard output.")
                 .long("statistics")
-                .action(ArgAction::SetTrue)
+                .action(ArgAction::Set)
+                .num_args(0..=1)
                 .help_heading("OUTPUT"),
         )
         .arg(
             Arg::new("YAMLDUMP")
-                .help("Output parsed YAML files to single file <YAMLFILE>.")
+                .help("Output parsed YAML files to single <YAMLDUMP> file or standard output.")
                 .long("restructure-yaml")
                 .action(ArgAction::Set)
-                .default_value("gsn2x_restructured.yaml")
+                .num_args(0..=1)
                 .help_heading("OUTPUT"),
         )
         .arg(
@@ -626,20 +636,7 @@ fn print_outputs(
     if !render_options.skip_argument {
         for (_, module) in modules.iter().filter(|(m, _)| *m != "Unknown") {
             let output_path = Path::new(module.output_path.as_ref().unwrap()); // unwrap ok, since we set it for each module.
-            if !&output_path.parent().unwrap().exists() {
-                // Create output directory; unwraps are ok, since file always have a parent
-                std::fs::create_dir_all(output_path.parent().unwrap()).with_context(|| {
-                    format!(
-                        "Could not create directory {} for {}",
-                        output_path.display(),
-                        module.orig_file_name
-                    )
-                })?;
-            }
-            let mut output_file = Box::new(File::create(output_path).context(format!(
-                "Failed to open output file {}",
-                output_path.display()
-            ))?) as Box<dyn std::io::Write>;
+            let mut output_file = create_file_incl_parent(output_path)?;
 
             print!("Rendering \"{}\": ", output_path.display());
             render::render_argument(
