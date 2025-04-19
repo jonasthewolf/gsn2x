@@ -134,10 +134,10 @@ pub fn svg_from_gsn_node(
             SvgNode::new_justification(identifier, gsn_node, masked, layers, char_wrap)
         }
         GsnNodeType::CounterGoal => {
-            SvgNode::new_goal(identifier, gsn_node, masked, layers, char_wrap)
+            SvgNode::new_counter_goal(identifier, gsn_node, masked, layers, char_wrap)
         }
         GsnNodeType::CounterSolution => {
-            SvgNode::new_solution(identifier, gsn_node, masked, layers, char_wrap)
+            SvgNode::new_counter_solution(identifier, gsn_node, masked, layers, char_wrap)
         }
     }
 }
