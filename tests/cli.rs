@@ -539,6 +539,18 @@ mod integrations {
     }
 
     #[test]
+    fn multi_children_min() -> Result<()> {
+        regression_renderings(&["tests/multi_children_min.yaml"], &[], None)?;
+        Ok(())
+    }
+
+    #[test]
+    fn dialectic() -> Result<()> {
+        regression_renderings(&["examples/dialectic/index.gsn.yaml"], &[], None)?;
+        Ok(())
+    }
+
+    #[test]
     fn min_doc() -> Result<()> {
         regression_renderings(
             &["examples/minimalcss/min.gsn.yaml"],
