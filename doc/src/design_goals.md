@@ -17,6 +17,10 @@ I noticed that it might make sense to add some information about the goals I hav
   YAML (input file format) might not be the best format, but it serves as a good tradeoff for my purposes.
   Moreover, it can be parsed by other programs easily, too.
 
+  To a certain extend this includes that the generated SVG files are not the smallest possible files.
+  Readability and understandability to the user is higher rated, since the amount of memory required for the SVGs
+  is still negligible to, e.g. a compiler installation.
+
 - Standard conformance
 
   I would like the program output to be very close to the GSN standard.
@@ -24,6 +28,8 @@ I noticed that it might make sense to add some information about the goals I hav
   I don't want to redefine the semantics or add additional ones. 
   The standard was created so that as many people as possible have some common grounds.
   If I added new fancy stuff, everyone might have a different interpretation of that again.
+
+  Standards conformance is also a goal for the generated SVG files and Markdown files.
 
 - As few dependencies as possible
 
@@ -33,7 +39,7 @@ I noticed that it might make sense to add some information about the goals I hav
 
   I used a very relaxed license and try to take care that it is compatible with those of the dependencies.
   
-- Full control by the user how the diagram is layed out
+- Full control by the user how the diagram is laid out
 
   Creating an optimal rendering for all different use-cases is incredibly difficult.
   I failed in creating an algorithm that would allow for that. 
