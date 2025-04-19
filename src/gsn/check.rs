@@ -85,37 +85,30 @@ fn check_node_references(
         .filter(|(_, n)| !excluded_modules.contains(&n.module.as_str()))
         .flat_map(|(id, node)| {
             [
-                node.in_context_of
-                    .iter()
-                    .filter(|&n| !nodes.contains_key(n))
-                    .map(|wref| {
-                        diag.add_error(
-                            Some(&node.module),
-                            format!("C03: Element {} has unresolved {}: {}", id, "context", wref),
-                        );
-                        if wref.contains(',') {
-                            diag.add_warning(
-                                Some(&node.module),
-                                format!("C0XXX: Unresolved \"{}\" of element {} may be actually a list: {}", "context", id, wref),
-                            );
-                        }
-                        Err(())
-                    })
-                    .collect::<Vec<Result<(), ()>>>(),
-                node.supported_by
-                    .iter()
-                    .filter(|&n| !nodes.contains_key(n))
-                    .map(|wref| {
-                        diag.add_error(
-                            Some(&node.module),
-                            format!(
-                                "C03: Element {} has unresolved {}: {}",
-                                id, "supported by element", wref
-                            ),
-                        );
-                        Err(())
-                    })
-                    .collect::<Vec<_>>(),
+                check_unresolved_references(
+                    diag,
+                    nodes,
+                    &node.in_context_of,
+                    id,
+                    &node.module,
+                    "context",
+                ),
+                check_unresolved_references(
+                    diag,
+                    nodes,
+                    &node.supported_by,
+                    id,
+                    &node.module,
+                    "supported by element",
+                ),
+                check_unresolved_references(
+                    diag,
+                    nodes,
+                    &node.challenges,
+                    id,
+                    &node.module,
+                    "challenging element",
+                ),
             ]
             .into_iter()
             .flatten()
@@ -125,6 +118,40 @@ fn check_node_references(
         .into_iter()
         .collect::<Result<Vec<_>, ()>>()
         .map(|_| ())
+}
+
+///
+/// Check for unresolved references for `in_refs` (e.g. inContextOf, supportedBy, challenges)
+///
+///
+fn check_unresolved_references(
+    diag: &mut Diagnostics,
+    nodes: &BTreeMap<String, GsnNode>,
+    in_refs: &[String],
+    id: &str,
+    module: &str,
+    error_str: &str,
+) -> Vec<Result<(), ()>> {
+    in_refs
+        .iter()
+        .filter(|&n| !nodes.contains_key(n))
+        .map(|wref| {
+            diag.add_error(
+                Some(module),
+                format!("C03: Element {} has unresolved {}: {}", id, error_str, wref),
+            );
+            if wref.contains(',') {
+                diag.add_warning(
+                    Some(module),
+                    format!(
+                        "C11: Unresolved \"{}\" of element {} may be actually a list: {}",
+                        "context", id, wref
+                    ),
+                );
+            }
+            Err(())
+        })
+        .collect::<Vec<Result<(), ()>>>()
 }
 
 ///
@@ -159,8 +186,21 @@ fn check_unreachable(
     diag: &mut Diagnostics,
     graph: &DirectedGraph<GsnNode, GsnEdgeType>,
 ) -> Result<(), ()> {
-    let unvisited = graph.get_unreachable_nodes();
-    let root_nodes = graph.get_root_nodes();
+    let visited: Vec<&str> = graph
+        .rank_nodes()
+        .iter()
+        .flatten()
+        .flatten()
+        .copied()
+        .collect();
+    let root_nodes: Vec<&str> = graph.get_root_nodes().to_vec();
+
+    let unvisited: Vec<&str> = graph
+        .get_nodes()
+        .keys()
+        .filter(|x| !visited.contains(&x.as_str()))
+        .map(|s| s.as_str())
+        .collect();
 
     if unvisited.is_empty() {
         Ok(())
@@ -191,6 +231,8 @@ pub fn check_layers(
         "text",
         "inContextOf",
         "supportedBy",
+        "challenges",
+        "defeated",
         "classes",
         "url",
         "undeveloped",
@@ -247,7 +289,7 @@ mod test {
             "G1".to_owned(),
             GsnNode {
                 in_context_of: vec!["C1".to_owned()],
-                undeveloped: Some(true),
+                undeveloped: true,
                 node_type: Some(GsnNodeType::Goal),
                 ..Default::default()
             },
@@ -295,7 +337,7 @@ mod test {
         nodes.insert(
             "G1".to_owned(),
             GsnNode {
-                undeveloped: Some(true),
+                undeveloped: true,
                 ..Default::default()
             },
         );
@@ -414,7 +456,7 @@ mod test {
         nodes.insert(
             "G2".to_owned(),
             GsnNode {
-                undeveloped: Some(true),
+                undeveloped: true,
                 node_type: Some(GsnNodeType::Goal),
                 ..Default::default()
             },
@@ -480,7 +522,7 @@ mod test {
         nodes.insert(
             "G4".to_owned(),
             GsnNode {
-                undeveloped: Some(true),
+                undeveloped: true,
                 in_context_of: vec!["J1".to_owned()],
                 node_type: Some(GsnNodeType::Goal),
                 ..Default::default()

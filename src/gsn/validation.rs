@@ -83,6 +83,7 @@ fn validate_id(diag: &mut Diagnostics, module: &str, id: &str, node: &GsnNode) -
 ///
 /// - Check in_context references for well-formedness
 /// - Check supported_by references for well-formedness
+/// - Check challenges references for well-formedness
 /// - Check if undeveloped is correctly set
 ///
 fn validate_references(
@@ -121,10 +122,13 @@ fn validate_references(
         // Only goals and strategies can have other goals, strategies and solutions
         if node.node_type == Some(GsnNodeType::Strategy)
             || node.node_type == Some(GsnNodeType::Goal)
+            || node.node_type == Some(GsnNodeType::CounterGoal)
         {
             valid_ref_types.append(&mut vec![
                 GsnNodeType::Goal,
+                GsnNodeType::CounterGoal,
                 GsnNodeType::Solution,
+                GsnNodeType::CounterSolution,
                 GsnNodeType::Strategy,
             ]);
         }
@@ -138,7 +142,7 @@ fn validate_references(
             "supported by element",
             &valid_ref_types,
         );
-        let devundev = if Some(true) == node.undeveloped {
+        let devundev = if node.undeveloped {
             diag.add_error(
                 Some(module),
                 format!("V03: Undeveloped element {id} has supporting arguments."),
@@ -149,7 +153,7 @@ fn validate_references(
         };
         valid_refs.and(devundev)
     } else if (id.starts_with('S') && !id.starts_with("Sn") || id.starts_with('G'))
-        && (Some(false) == node.undeveloped || node.undeveloped.is_none())
+        && !node.undeveloped
     {
         // No "supported by" entries, but Strategy and Goal => undeveloped
         diag.add_warning(Some(module), format!("V02: Element {id} is undeveloped."));
@@ -157,7 +161,33 @@ fn validate_references(
     } else {
         Ok(())
     };
-    incontext_res.and(supportedby_res)
+    let challenges_res = if node.challenges.is_empty() {
+        Ok(())
+    } else {
+        let mut valid_ref_types = vec![];
+        // Only goals and strategies can have contexts, assumptions and justifications
+        if node.node_type == Some(GsnNodeType::CounterGoal)
+            || node.node_type == Some(GsnNodeType::CounterSolution)
+        {
+            valid_ref_types.append(&mut vec![
+                GsnNodeType::Goal,
+                GsnNodeType::CounterGoal,
+                GsnNodeType::Strategy,
+                GsnNodeType::Solution,
+                GsnNodeType::CounterSolution,
+            ]);
+        }
+        validate_reference(
+            diag,
+            module,
+            nodes,
+            id,
+            &node.in_context_of,
+            "challenges",
+            &valid_ref_types,
+        )
+    };
+    incontext_res.and(supportedby_res).and(challenges_res)
 }
 
 ///
@@ -165,7 +195,7 @@ fn validate_references(
 ///
 /// - Check if node does not reference itself.
 /// - Check if a list of references only contains unique values.
-/// - Check if a reference in the correct list i.e., inContextOf or supportedBy
+/// - Check if a reference in the correct list i.e., inContextOf, challenges or supportedBy
 ///
 fn validate_reference(
     diag: &mut Diagnostics,
@@ -401,7 +431,7 @@ mod test {
             "G2".to_owned(),
             GsnNode {
                 node_type: Some(GsnNodeType::Goal),
-                undeveloped: Some(true),
+                undeveloped: true,
                 ..Default::default()
             },
         );
@@ -523,7 +553,7 @@ mod test {
             "G1".to_owned(),
             GsnNode {
                 in_context_of: vec!["G1".to_owned()],
-                undeveloped: Some(true),
+                undeveloped: true,
                 node_type: Some(GsnNodeType::Goal),
                 ..Default::default()
             },
@@ -600,7 +630,7 @@ mod test {
         nodes.insert(
             "G2".to_owned(),
             GsnNode {
-                undeveloped: Some(true),
+                undeveloped: true,
                 node_type: Some(GsnNodeType::Goal),
                 ..Default::default()
             },
@@ -625,7 +655,7 @@ mod test {
             "G1".to_owned(),
             GsnNode {
                 in_context_of: vec!["G2".to_owned(), "S1".to_owned(), "Sn1".to_owned()],
-                undeveloped: Some(true),
+                undeveloped: true,
                 node_type: Some(GsnNodeType::Goal),
                 ..Default::default()
             },
@@ -633,7 +663,7 @@ mod test {
         nodes.insert(
             "G2".to_owned(),
             GsnNode {
-                undeveloped: Some(true),
+                undeveloped: true,
                 node_type: Some(GsnNodeType::Goal),
                 ..Default::default()
             },
@@ -641,7 +671,7 @@ mod test {
         nodes.insert(
             "S1".to_owned(),
             GsnNode {
-                undeveloped: Some(true),
+                undeveloped: true,
                 node_type: Some(GsnNodeType::Strategy),
                 ..Default::default()
             },
@@ -766,7 +796,7 @@ mod test {
         nodes.insert(
             "G2".to_owned(),
             GsnNode {
-                undeveloped: Some(false),
+                undeveloped: false,
                 node_type: Some(GsnNodeType::Goal),
                 ..Default::default()
             },
@@ -797,7 +827,7 @@ mod test {
         nodes.insert(
             "S2".to_owned(),
             GsnNode {
-                undeveloped: Some(false),
+                undeveloped: false,
                 node_type: Some(GsnNodeType::Strategy),
                 ..Default::default()
             },
@@ -822,7 +852,7 @@ mod test {
             "G1".to_owned(),
             GsnNode {
                 supported_by: vec!["Sn2".to_owned()],
-                undeveloped: Some(true),
+                undeveloped: true,
                 node_type: Some(GsnNodeType::Goal),
                 ..Default::default()
             },
@@ -952,7 +982,7 @@ mod test {
         nodes.insert(
             "G2".to_owned(),
             GsnNode {
-                undeveloped: Some(true),
+                undeveloped: true,
                 node_type: Some(GsnNodeType::Goal),
                 ..Default::default()
             },

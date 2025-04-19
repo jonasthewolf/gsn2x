@@ -12,7 +12,7 @@ If an absolute path is used, the stylesheet will be copied to the root of the ou
 
 If a URL (see above for definition) is provided for a stylesheet, it is neither embedded nor copied to an output directory.
 
-You can also add stylesheets as part of the module information (see [Module Information](./mod_info.md)). 
+You can also add stylesheets as part of the module information (see [Module Information](./ext_mod_info.md)). 
 Please note that stylesheets are always applied to all modules even if just included into one module.
 If you need to apply styles only to selected modules, see [below](#classes-and-styles) for how to do this. 
 
@@ -54,15 +54,19 @@ This table shows the CSS classes assigned to a certain element:
 | gsnawayjust         | Away Justification                         | g            |
 | gsnctxt             | Context                                    | g            |
 | gsnawayctxt         | Away Context                               | g            |
+| gsncountergoal      | Counter Goal                               | g            |
+| gsncountersltn      | Counter Solution                           | g            |
 | gsnmodule           | Module                                     | g            |
 | gsn_module_`module` | Module name                                | g            |
 | gsnedge             | All edges                                  | path         |
 | gsnlay_`<layer>`    | Layer `<layer>`                            | path         |
 | gsninctxt           | In Context Of                              | path         |
 | gsnspby             | Supported By                               | path         | 
+| gsnchllngs          | Challenges                                 | path         | 
 | gsncomposite        | Composite (In Context Of AND Supported By) | path         |
 | gsn_masked          | Masked elements                            | g            |
 | acp_`acp_name`      | Elements or edges with an ACP              | g or path    |      
+| gsndefeated         | Elements or edges that are defeated        | g or path    |      
 
 You can assign additional classes by adding the `classes:` attribute. It must be a list of classes you want to assign. 
 Additional layers will be added as CSS classes, too. A `layer1` will e.g. be added as `gsnlay_layer1`.

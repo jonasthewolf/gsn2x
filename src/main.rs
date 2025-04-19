@@ -1,12 +1,12 @@
 use anyhow::{Context, Result, anyhow};
 use clap::parser::ValueSource;
 use clap::{Arg, ArgAction, Command, value_parser};
-use file_utils::translate_to_output_path;
+use file_utils::{create_file_incl_parent, translate_to_output_path};
 use render::RenderOptions;
 use std::collections::BTreeMap;
 use std::error::Error;
 use std::fmt::Display;
-use std::io::BufReader;
+use std::io::{BufReader, stdout};
 use std::path::{Path, PathBuf};
 use std::{collections::btree_map::Entry, fs::File};
 
@@ -15,6 +15,7 @@ mod dirgraph;
 mod dirgraphsvg;
 mod file_utils;
 mod gsn;
+mod outputs;
 mod render;
 mod yaml_fix;
 
@@ -122,8 +123,20 @@ fn main() -> Result<()> {
                     // Output views
                     print_outputs(&nodes, &modules, &render_options)?;
                 }
-                if matches.get_flag("STATISTICS") {
-                    print_statistics(&nodes, &modules);
+                if let Some(ValueSource::CommandLine) = matches.value_source("STATISTICS") {
+                    let mut output = match matches.get_one::<String>("STATISTICS") {
+                        Some(path) => Box::new(File::create(path)?) as Box<dyn std::io::Write>,
+                        None => Box::new(stdout().lock()) as Box<dyn std::io::Write>,
+                    };
+                    outputs::render_statistics(&mut output, &nodes, &modules)?;
+                }
+
+                if let Some(ValueSource::CommandLine) = matches.value_source("YAMLDUMP") {
+                    let mut output = match matches.get_one::<String>("YAMLDUMP") {
+                        Some(path) => create_file_incl_parent(Path::new(path))?,
+                        None => Box::new(stdout().lock()) as Box<dyn std::io::Write>,
+                    };
+                    outputs::render_yaml_docs(&mut output, &nodes, &modules)?;
                 }
                 Ok(())
             }
@@ -250,9 +263,18 @@ fn build_command_options() -> Command {
         )
         .arg(
             Arg::new("STATISTICS")
-                .help("Output statistics on inputs.")
+                .help("Output statistics on inputs to <STATISTICS> file or standard output.")
                 .long("statistics")
-                .action(ArgAction::SetTrue)
+                .action(ArgAction::Set)
+                .num_args(0..=1)
+                .help_heading("OUTPUT"),
+        )
+        .arg(
+            Arg::new("YAMLDUMP")
+                .help("Output parsed YAML files to single <YAMLDUMP> file or standard output.")
+                .long("restructure-yaml")
+                .action(ArgAction::Set)
+                .num_args(0..=1)
                 .help_heading("OUTPUT"),
         )
         .arg(
@@ -389,9 +411,8 @@ fn read_inputs(
             .map_err(|e| {
                 anyhow!(format!(
                     "No valid GSN element can be found starting from line {}.\n\
-                     This typically means that the YAML is completely invalid, or \n\
-                     the `text:` attribute is missing for an element, 
-                     or `supportedBy` or `inContextOf` are not followed by a list ([]).\n\
+                     This typically means that the YAML is completely invalid or \n\
+                     the `text:` attribute is missing for an element.\n\
                      Please see the documentation for details (https://jonasthewolf.github.io/gsn2x/troubleshooting.html).\n\
                      Original error message: {}.",
                     e.location()
@@ -517,6 +538,10 @@ fn check_and_add_nodes(
                         // Remember module for node
                         module.clone_into(&mut x.module);
                         x.fix_node_type(&k);
+                        // Sort all edges lexicographically
+                        x.supported_by.sort();
+                        x.in_context_of.sort();
+                        x.challenges.sort();
                         if x.char_wrap.is_none() {
                             x.char_wrap = char_wrap;
                         }
@@ -611,20 +636,7 @@ fn print_outputs(
     if !render_options.skip_argument {
         for (_, module) in modules.iter().filter(|(m, _)| *m != "Unknown") {
             let output_path = Path::new(module.output_path.as_ref().unwrap()); // unwrap ok, since we set it for each module.
-            if !&output_path.parent().unwrap().exists() {
-                // Create output directory; unwraps are ok, since file always have a parent
-                std::fs::create_dir_all(output_path.parent().unwrap()).with_context(|| {
-                    format!(
-                        "Could not create directory {} for {}",
-                        output_path.display(),
-                        module.orig_file_name
-                    )
-                })?;
-            }
-            let mut output_file = Box::new(File::create(output_path).context(format!(
-                "Failed to open output file {}",
-                output_path.display()
-            ))?) as Box<dyn std::io::Write>;
+            let mut output_file = create_file_incl_parent(output_path)?;
 
             print!("Rendering \"{}\": ", output_path.display());
             render::render_argument(
@@ -666,63 +678,10 @@ fn print_outputs(
         let mut output_file = File::create(&output_path)
             .context(format!("Failed to open output file {output_path}"))?;
         print!("Writing evidence \"{output_path}\": ");
-        render::render_evidence(&mut output_file, nodes, render_options)?;
+        outputs::render_evidence(&mut output_file, nodes, render_options)?;
     }
 
     Ok(())
-}
-
-///
-/// Print statistics
-///
-///
-fn print_statistics(nodes: &BTreeMap<String, GsnNode>, modules: &BTreeMap<String, Module>) {
-    println!("Statistics");
-    println!("==========");
-    println!("Number of modules: {}", modules.len());
-    println!("Number of nodes:   {}", nodes.len());
-    println!(
-        "  Goals:           {}",
-        nodes
-            .iter()
-            .filter(|n| n.1.node_type == Some(gsn::GsnNodeType::Goal))
-            .count()
-    );
-    println!(
-        "  Strategies:      {}",
-        nodes
-            .iter()
-            .filter(|n| n.1.node_type == Some(gsn::GsnNodeType::Strategy))
-            .count()
-    );
-    println!(
-        "  Solutions:       {}",
-        nodes
-            .iter()
-            .filter(|n| n.1.node_type == Some(gsn::GsnNodeType::Solution))
-            .count()
-    );
-    println!(
-        "  Assumptions:     {}",
-        nodes
-            .iter()
-            .filter(|n| n.1.node_type == Some(gsn::GsnNodeType::Assumption))
-            .count()
-    );
-    println!(
-        "  Justifications:  {}",
-        nodes
-            .iter()
-            .filter(|n| n.1.node_type == Some(gsn::GsnNodeType::Justification))
-            .count()
-    );
-    println!(
-        "  Contexts:        {}",
-        nodes
-            .iter()
-            .filter(|n| n.1.node_type == Some(gsn::GsnNodeType::Context))
-            .count()
-    );
 }
 
 ///

@@ -1,6 +1,7 @@
 #[cfg(test)]
 mod integrations {
     use anyhow::{Context, Result};
+    use assert_cmd::assert::Assert;
     use assert_cmd::prelude::*;
     use assert_fs::fixture::PathCopy;
     use assert_fs::prelude::*;
@@ -150,7 +151,7 @@ mod integrations {
         sub_dir: &str,
         input: &str,
         expected_output: &str,
-    ) -> Result<()> {
+    ) -> Result<Assert> {
         let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
         let temp = assert_fs::TempDir::new()?;
 
@@ -166,13 +167,13 @@ mod integrations {
         // Start cargo from temporary directory
         cmd.current_dir(&temp);
         cmd.arg(format!("{sub_dir}/{input}")).arg("-G");
-        cmd.assert().success();
+        let result = cmd.assert().success();
         assert!(are_struct_similar_svgs(
             output_file.as_os_str(),
             temp.child(expected_output).as_os_str(),
         )?);
         temp.close()?;
-        Ok(())
+        Ok(result)
     }
 
     #[test]
@@ -207,7 +208,8 @@ mod integrations {
         const SUB_DIR: &str = "examples";
         const INPUT_YAML: &str = "example.gsn.yaml";
         const OUTPUT_SVG: &str = "example.gsn.svg";
-        check_if_outputs_are_similar(SUB_DIR, INPUT_YAML, OUTPUT_SVG)
+        let _ = check_if_outputs_are_similar(SUB_DIR, INPUT_YAML, OUTPUT_SVG)?;
+        Ok(())
     }
 
     #[test]
@@ -216,7 +218,8 @@ mod integrations {
         const INPUT_YAML: &str = "multi_context.gsn.yaml";
         const OUTPUT_SVG: &str = "multi_context.gsn.svg";
 
-        check_if_outputs_are_similar(SUB_DIR, INPUT_YAML, OUTPUT_SVG)
+        let _ = check_if_outputs_are_similar(SUB_DIR, INPUT_YAML, OUTPUT_SVG)?;
+        Ok(())
     }
 
     #[test]
@@ -225,7 +228,11 @@ mod integrations {
         const INPUT_YAML: &str = "entangled.gsn.yaml";
         const OUTPUT_SVG: &str = "entangled.gsn.svg";
 
-        check_if_outputs_are_similar(SUB_DIR, INPUT_YAML, OUTPUT_SVG)
+        let res = check_if_outputs_are_similar(SUB_DIR, INPUT_YAML, OUTPUT_SVG)?;
+        res.stdout(predicate::str::contains(
+            "Diagram took too many iterations (6).",
+        ));
+        Ok(())
     }
 
     #[test]
@@ -539,6 +546,18 @@ mod integrations {
     }
 
     #[test]
+    fn multi_children_min() -> Result<()> {
+        regression_renderings(&["tests/multi_children_min.yaml"], &[], None)?;
+        Ok(())
+    }
+
+    #[test]
+    fn dialectic() -> Result<()> {
+        regression_renderings(&["examples/dialectic/index.gsn.yaml"], &[], None)?;
+        Ok(())
+    }
+
+    #[test]
     fn min_doc() -> Result<()> {
         regression_renderings(
             &["examples/minimalcss/min.gsn.yaml"],
@@ -704,8 +723,8 @@ mod integrations {
     fn issue467() -> Result<()> {
         let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
         cmd.arg("-G").arg("-E").arg("tests/issue467.yaml");
-        cmd.assert().success().stdout(predicate::str::contains(
-            "The following nodes might cause the problem: GA, SnA",
+        cmd.assert().success().stderr(predicate::str::contains(
+            "Warning: C01: There is more than one unreferenced element: GA, GB.",
         ));
         Ok(())
     }
@@ -724,19 +743,22 @@ mod integrations {
     fn statistics() -> Result<()> {
         let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
         cmd.arg("-c")
-            .arg("--statistics")
-            .arg("examples/modular/index.gsn.yaml");
+            .arg("examples/modular/index.gsn.yaml")
+            .arg("--statistics");
         cmd.assert().success().stdout(predicate::str::contains(
             r#"Statistics
 ==========
-Number of modules: 3
-Number of nodes:   8
-  Goals:           3
-  Strategies:      1
-  Solutions:       1
-  Assumptions:     1
-  Justifications:  1
-  Contexts:        1"#,
+Number of modules:   3
+Number of nodes:     8
+  Goals:             3
+  Strategies:        1
+  Solutions:         1
+  Assumptions:       1
+  Justifications:    1
+  Contexts:          1
+  Counter Goals:     0
+  Counter Solutions: 0
+  Defeated Elements: 0"#,
         ));
         Ok(())
     }

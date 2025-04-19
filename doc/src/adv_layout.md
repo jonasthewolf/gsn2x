@@ -7,8 +7,7 @@ At first, the root elements are identified. Root elements are elements
 that are not referenced as `supportedBy` or `inContextOf`. 
 
 Each level in the rendered graph is called rank. 
-The elements on each rank are sorted lexicographically before being placed on that rank. 
-Then, starting with the first element on the current rank, the elements of the next rank are identified.
+Starting from the root nodes, all of their children referenced by `supportedBy` and `challenges` are identified. The list of children is sorted in lexicographical order, before ranking.
 An element is only ranked if all elements referencing it are already placed.
 Finally, the `inContextOf` elements are placed on that rank.
 
@@ -78,7 +77,7 @@ You would typically use an absolute index with either `0` or `last` to place the
 either left or right of the element they are referenced from.
 
 `horizontalIndex` and `rankIncrement` can also be used for `module` elements. 
-They will be used for the Architecture View then (see [Modular extension](mod_extension.md#architecture-view)).
+They will be used for the Architecture View then (see [Modular extension](ext_mod.md#architecture-view)).
 
 ### Troubleshooting
 
@@ -108,10 +107,11 @@ The created SVG is hardly readable:
 
 ![entangled example](examples/entangled.gsn.svg)
 
-The reason for this is, that `G1` is lexicographically ordered before `G2`, but `Sn2` after `Sn1`.
-`Sn1` thus "pushes" `Sn2` to the right in each iteration of the layout algorithm.
 
-The problem is easily solvable in different ways:
+**Please note that this example is artificial, until I come a across a simple example that my new algorithm cannot handle.**
+If the `horizontalIndex` is remove from the example, the diagram is rendered as intended.
+
+Such problems can usually easily be solved in different ways:
 
 1. Rename `G1` and/or `G2` to change their lexicographical order.
 2. Rename `Sn1` and/or `Sn2` to change their lexicographical order.

@@ -5,21 +5,21 @@ use crate::{
 };
 use anyhow::{Error, anyhow};
 use serde::{
-    Deserialize, Deserializer,
+    Deserialize, Deserializer, Serialize,
     de::{self},
 };
 use serde_yml::Value;
+use std::ops::Not;
 use std::{
     collections::{BTreeMap, BTreeSet},
     fmt::{self, Display},
     marker::PhantomData,
     path::{Path, PathBuf},
 };
-
 pub mod check;
 pub mod validation;
 
-#[derive(Clone, Copy, Debug, Deserialize, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Deserialize, Serialize, PartialEq, Eq)]
 pub enum GsnNodeType {
     Goal,
     Strategy,
@@ -27,6 +27,8 @@ pub enum GsnNodeType {
     Justification,
     Context,
     Assumption,
+    CounterGoal,
+    CounterSolution,
 }
 
 impl Display for GsnNodeType {
@@ -39,17 +41,18 @@ impl Display for GsnNodeType {
 pub enum GsnEdgeType {
     SupportedBy,
     InContextOf,
+    Challenges,
 }
 
-#[derive(Clone, Copy, Debug, PartialEq, Deserialize)]
+#[derive(Clone, Copy, Debug, PartialEq, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub enum HorizontalIndex {
     Relative(i32),
     Absolute(AbsoluteIndex),
 }
 
-#[derive(Clone, Copy, Debug, PartialEq, Deserialize)]
-#[serde(untagged, rename_all = "camelCase", try_from = "Value")]
+#[derive(Clone, Copy, Debug, PartialEq, Deserialize, Serialize)]
+#[serde(untagged, rename_all = "camelCase", try_from = "Value", into = "Value")]
 pub enum AbsoluteIndex {
     Number(u32),
     Last,
@@ -73,32 +76,60 @@ impl TryFrom<Value> for AbsoluteIndex {
     }
 }
 
+impl From<AbsoluteIndex> for Value {
+    fn from(val: AbsoluteIndex) -> Self {
+        match val {
+            AbsoluteIndex::Number(x) => Value::Number(x.into()),
+            AbsoluteIndex::Last => Value::String("last".to_string()),
+        }
+    }
+}
+
 ///
 /// The main struct of this program
 /// It describes a GSN element
 ///
-#[derive(Clone, Debug, Default, Deserialize)]
+#[derive(Clone, Debug, Default, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct GsnNode {
+    #[serde(default)]
+    #[serde(skip_serializing_if = "String::is_empty")]
     pub(crate) text: String,
     #[serde(default, deserialize_with = "string_or_seq_string")]
+    #[serde(skip_serializing_if = "Vec::is_empty")]
     pub(crate) in_context_of: Vec<String>,
     #[serde(default, deserialize_with = "string_or_seq_string")]
+    #[serde(skip_serializing_if = "Vec::is_empty")]
     pub(crate) supported_by: Vec<String>,
-    // pub(crate) links: Vec<String>,
-    pub(crate) undeveloped: Option<bool>,
+    #[serde(default, deserialize_with = "string_or_seq_string")]
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    pub(crate) challenges: Vec<String>,
     #[serde(default)]
+    #[serde(skip_serializing_if = "<&bool>::not")]
+    pub(crate) undeveloped: bool,
+    #[serde(default)]
+    #[serde(skip_serializing_if = "<&bool>::not")]
+    pub(crate) defeated: bool,
+    #[serde(default)]
+    #[serde(skip_serializing_if = "Vec::is_empty")]
     pub(crate) classes: Vec<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub(crate) url: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub(crate) rank_increment: Option<usize>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub(crate) horizontal_index: Option<HorizontalIndex>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub(crate) node_type: Option<GsnNodeType>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub(crate) char_wrap: Option<u32>,
     #[serde(default, deserialize_with = "deser_acp")]
+    #[serde(skip_serializing_if = "BTreeMap::is_empty")]
     pub(crate) acp: BTreeMap<String, Vec<String>>,
     #[serde(flatten, deserialize_with = "deser_additional")]
+    #[serde(skip_serializing_if = "BTreeMap::is_empty")]
     pub(crate) additional: BTreeMap<String, String>,
-    #[serde(skip_deserializing)]
+    #[serde(skip_deserializing, skip_serializing)]
     pub(crate) module: String,
 }
 
@@ -223,6 +254,12 @@ impl GsnNode {
             .map(|target| (target.to_owned(), GsnEdgeType::SupportedBy))
             .collect();
         edges.append(&mut es);
+        let mut es: Vec<(String, GsnEdgeType)> = self
+            .challenges
+            .iter()
+            .map(|target| (target.to_owned(), GsnEdgeType::Challenges))
+            .collect();
+        edges.append(&mut es);
         edges
     }
 
@@ -265,6 +302,7 @@ impl DirectedGraphEdgeType<'_> for GsnEdgeType {
         match self {
             GsnEdgeType::SupportedBy => true,
             GsnEdgeType::InContextOf => false,
+            GsnEdgeType::Challenges => false,
         }
     }
 
@@ -272,6 +310,7 @@ impl DirectedGraphEdgeType<'_> for GsnEdgeType {
         match self {
             GsnEdgeType::SupportedBy => false,
             GsnEdgeType::InContextOf => true,
+            GsnEdgeType::Challenges => false,
         }
     }
 }
@@ -283,7 +322,9 @@ impl DirectedGraphEdgeType<'_> for GsnEdgeType {
 fn get_node_type_from_text(text: &str) -> Option<GsnNodeType> {
     // Order is important due to Sn and S
     match text {
+        id if id.starts_with("CG") => Some(GsnNodeType::CounterGoal),
         id if id.starts_with('G') => Some(GsnNodeType::Goal),
+        id if id.starts_with("CSn") => Some(GsnNodeType::CounterSolution),
         id if id.starts_with("Sn") => Some(GsnNodeType::Solution),
         id if id.starts_with('S') => Some(GsnNodeType::Strategy),
         id if id.starts_with('C') => Some(GsnNodeType::Context),
@@ -293,21 +334,29 @@ fn get_node_type_from_text(text: &str) -> Option<GsnNodeType> {
     }
 }
 
-#[derive(Clone, Debug, Default, Deserialize)]
+#[derive(Clone, Debug, Default, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct ModuleInformation {
     pub(crate) name: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub(crate) brief: Option<String>,
     #[serde(default)]
+    #[serde(skip_serializing_if = "Vec::is_empty")]
     pub(crate) extends: Vec<ExtendsModule>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub(crate) horizontal_index: Option<HorizontalIndex>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub(crate) rank_increment: Option<usize>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub(crate) char_wrap: Option<u32>,
     #[serde(default)]
+    #[serde(skip_serializing_if = "Vec::is_empty")]
     pub(crate) stylesheets: Vec<String>,
     #[serde(default)]
+    #[serde(skip_serializing_if = "Vec::is_empty")]
     pub(crate) uses: Vec<String>,
     #[serde(flatten, deserialize_with = "deser_additional")]
+    #[serde(skip_serializing_if = "BTreeMap::is_empty")]
     pub(crate) additional: BTreeMap<String, String>,
 }
 
@@ -330,8 +379,10 @@ impl ModuleInformation {
 #[derive(Debug, Deserialize)]
 #[serde(untagged)]
 pub enum GsnDocument {
-    GsnNode(GsnNode),
+    // Order of the variants is **very** important.
+    // If GsnNode was first, everything would be one, since there is no longer any required field.
     ModuleInformation(ModuleInformation),
+    GsnNode(GsnNode),
 }
 
 #[derive(Clone, Default)]
@@ -372,7 +423,7 @@ impl FindModuleByPath for BTreeMap<String, Module> {
     }
 }
 
-#[derive(Clone, Debug, Deserialize)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct ExtendsModule {
     pub module: String,
     pub develops: BTreeMap<String, Vec<String>>,
@@ -407,7 +458,7 @@ pub fn extend_modules(
                                     format!("C10: Element {} does not exist in module {}, but is supposed to be extended by {}.", foreign_id, ext.module, local_ids.join(",")),
                                 );
                         errors += 1;
-                    } else if foreign_node.undeveloped != Some(true) {
+                    } else if !foreign_node.undeveloped {
                         diags.add_error(
                                     Some(module_name),
                                     format!("C10: Element {} is not undeveloped, but is supposed to be extended by {}.", foreign_id, local_ids.join(",")),
@@ -415,7 +466,7 @@ pub fn extend_modules(
                         errors += 1;
                     } else {
                         foreign_node.supported_by = local_ids.to_vec();
-                        foreign_node.undeveloped = Some(false);
+                        foreign_node.undeveloped = false;
                     }
                 } else {
                     diags.add_error(
@@ -441,13 +492,17 @@ pub fn extend_modules(
 fn get_root_nodes(nodes: &BTreeMap<String, GsnNode>) -> Vec<String> {
     // Usage of BTreeSet, since root nodes might be used in output and that should be deterministic
     let mut root_nodes: BTreeSet<String> = nodes.keys().cloned().collect();
-    for node in nodes.values() {
+    for (id, node) in nodes {
         // Remove all keys if they are referenced; used to see if there is more than one top level node
         for cnode in &node.in_context_of {
             root_nodes.remove(cnode);
         }
         for snode in &node.supported_by {
             root_nodes.remove(snode);
+        }
+        // Challenging nodes cannot be root nodes.
+        if !node.challenges.is_empty() {
+            root_nodes.remove(id);
         }
     }
     Vec::from_iter(root_nodes)

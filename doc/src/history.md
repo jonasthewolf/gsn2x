@@ -30,5 +30,9 @@ I also noticed that (also for myself) it is good to note down some history of th
   And now also to the implementation of the Confidence Argument Extension of the GSN standard as 
   part of version 3.1.
 
+- After attending the SCSC 2025 in York, I got plenty of feedback, including the request to implement 
+  Dialectic and Argument Pattern Extensions. Moreover, I learned about Bayesian Networks and how to use them with
+  Assurance Cases. THis lead to a new major version 4.0.
+
 Any feedback, especially the use-case in your company is very much appreciated.
 

@@ -2,7 +2,7 @@ use std::cell::RefCell;
 
 use svg::{
     Node,
-    node::element::{Anchor, Element, Use},
+    node::element::{Anchor, Element, Line, Use},
 };
 
 use crate::{
@@ -63,6 +63,7 @@ pub struct SvgNode {
     identifier: String,
     text: MarkdownText,
     masked: bool,
+    defeated: bool,
     url: Option<String>,
     classes: Vec<String>,
     rank_increment: Option<usize>,
@@ -95,6 +96,7 @@ struct SizeContext {
     text_height: i32,
 }
 
+const DEFEATED_OFFSET: i32 = 5;
 const OFFSET_IDENTIFIER: i32 = 5;
 const MODULE_TAB_HEIGHT: i32 = 10;
 
@@ -217,6 +219,11 @@ impl SvgNode {
 
         render_acp_box(self, font, &mut g);
 
+        // Render cross if defeated.
+        if self.defeated {
+            render_defeated(self, &mut g);
+        }
+
         // Add link to self.url for complete node
         if let Some(url) = &self.url {
             let link = Anchor::new().set("href", escape_url(url.as_str())).add(g);
@@ -243,6 +250,9 @@ impl SvgNode {
         // Setup CSS classes
         let mut classes = node_classes_from_node(identifier, gsn_node, masked);
         classes.push("gsnelem".to_owned());
+        if gsn_node.defeated {
+            classes.push("gsndefeated".to_owned());
+        }
         classes.append(
             &mut add_classes
                 .iter()
@@ -270,6 +280,7 @@ impl SvgNode {
             width: 0,
             height: 0,
             masked,
+            defeated: gsn_node.defeated,
             identifier: identifier.to_owned(),
             text: node_text.into(),
             url: module_url,
@@ -387,6 +398,34 @@ impl SvgNode {
     }
 
     ///
+    /// New Counter Solution.
+    ///
+    pub fn new_counter_solution(
+        identifier: &str,
+        gsn_node: &GsnNode,
+        masked: bool,
+        layers: &[String],
+        char_wrap: Option<u32>,
+    ) -> Self {
+        let mut n = SvgNode::new(
+            identifier,
+            gsn_node,
+            masked,
+            layers,
+            gsn_node.url.to_owned(),
+            &["gsncountersltn"],
+            char_wrap,
+        );
+        n.node_type = NodeType::Ellipsis(EllipticalType {
+            admonition: None,
+            circle: true,
+            text_width: 0,
+            text_height: 0,
+        });
+        n
+    }
+
+    ///
     /// New Strategy.
     ///
     pub fn new_strategy(
@@ -405,7 +444,7 @@ impl SvgNode {
             &["gsnstgy"],
             char_wrap,
         );
-        if gsn_node.undeveloped.unwrap_or(false) {
+        if gsn_node.undeveloped {
             n.node_type = NodeType::Box(BoxType::Undeveloped(15));
         } else {
             n.node_type = NodeType::Box(BoxType::Normal(15));
@@ -423,8 +462,40 @@ impl SvgNode {
         layers: &[String],
         char_wrap: Option<u32>,
     ) -> Self {
-        let undeveloped = gsn_node.undeveloped.unwrap_or(false);
+        let undeveloped = gsn_node.undeveloped;
         let mut classes = vec!["gsngoal"];
+        if undeveloped {
+            classes.push("gsn_undeveloped");
+        }
+        let mut n = SvgNode::new(
+            identifier,
+            gsn_node,
+            masked,
+            layers,
+            gsn_node.url.to_owned(),
+            &classes,
+            char_wrap,
+        );
+        if undeveloped {
+            n.node_type = NodeType::Box(BoxType::Undeveloped(0));
+        } else {
+            n.node_type = NodeType::Box(BoxType::Normal(0));
+        }
+        n
+    }
+
+    ///
+    /// New Counter Goal.
+    ///
+    pub fn new_counter_goal(
+        identifier: &str,
+        gsn_node: &GsnNode,
+        masked: bool,
+        layers: &[String],
+        char_wrap: Option<u32>,
+    ) -> Self {
+        let undeveloped = gsn_node.undeveloped;
+        let mut classes = vec!["gsncountergoal"];
         if undeveloped {
             classes.push("gsn_undeveloped");
         }
@@ -656,6 +727,26 @@ fn render_acp_box(node: &SvgNode, font: &FontInfo, context: &mut Element) {
 }
 
 ///
+/// Render cross over defeated element.
+///
+fn render_defeated(node: &SvgNode, context: &mut Element) {
+    let l1 = Line::new()
+        .set("x1", node.x - node.width / 2 - DEFEATED_OFFSET)
+        .set("y1", node.y - node.height / 2 - DEFEATED_OFFSET)
+        .set("x2", node.x + node.width / 2 + DEFEATED_OFFSET)
+        .set("y2", node.y + node.height / 2 + DEFEATED_OFFSET)
+        .set("stroke", "black");
+    context.append(l1);
+    let l2 = Line::new()
+        .set("x1", node.x + node.width / 2 + DEFEATED_OFFSET)
+        .set("y1", node.y - node.height / 2 - DEFEATED_OFFSET)
+        .set("x2", node.x - node.width / 2 - DEFEATED_OFFSET)
+        .set("y2", node.y + node.height / 2 + DEFEATED_OFFSET)
+        .set("stroke", "black");
+    context.append(l2);
+}
+
+///
 /// Add CSS classes for node.
 /// What is added as class?
 ///  - All additional layers (the name of the layer)
@@ -760,7 +851,7 @@ mod test {
     fn node_text_layers() {
         let n1 = GsnNode {
             text: "test text".to_owned(),
-            undeveloped: Some(true),
+            undeveloped: true,
             node_type: Some(crate::gsn::GsnNodeType::Goal),
             additional: BTreeMap::from([("layer1".to_owned(), "text for layer1".to_owned())]),
             ..Default::default()

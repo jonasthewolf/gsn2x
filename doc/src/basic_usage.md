@@ -12,7 +12,7 @@ You can create an SVG like this:
 
     gsn2x <yourgsnfile.yaml> 
 
-The output is an argument view in SVG format and automatically written to `<yourgsnfile.svg>`. If more than one input file is provided, they are treated as [modules](./mod_extension.md).
+The output is an argument view in SVG format and automatically written to `<yourgsnfile.svg>`. If more than one input file is provided, they are treated as [modules](./ext_mod.md).
 
 
 ## Options
@@ -36,9 +36,11 @@ The output is an argument view in SVG format and automatically written to `<your
       -F, --no-full                        Do not output the complete view.
       -a, --arch <ARCHITECTURE_VIEW>       Output the architecture view to file with name <ARCHITECTURE_VIEW>. [default: architecture.svg]
       -A, --no-arch                        Do not output the architecture view.
-      -e, --evidence <EVIDENCE>          Output list of all evidence to file with name <EVIDENCE>. [default: evidence.md]
-      -E, --no-evidence                   Do not output list of all evidence.
+      -e, --evidence <EVIDENCE>            Output list of all evidence to file with name <EVIDENCE>. [default: evidence.md]
+      -E, --no-evidence                    Do not output list of all evidence.
       -o, --output-dir <OUTPUT_DIRECTORY>  Emit all output files to directory <OUTPUT_DIRECTORY>.      [default: .]
+      --statistics [<STATISTICS>]      Output statistics on inputs to <STATISTICS> file or standard output.
+      --restructure-yaml [<YAMLDUMP>]  Output parsed YAML files to single <YAMLDUMP> file or standard output.
 
     OUTPUT MODIFICATION:
       -l, --layer <LAYERS>            Output additional layer. Can be used multiple times.

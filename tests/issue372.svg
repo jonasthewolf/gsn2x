@@ -18,6 +18,9 @@
 <marker id="incontextof_arrow" markerHeight="9" markerUnits="userSpaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
 <polyline fill-opacity="0" points="0 0, 10 4.5, 0 9, 0 0" stroke="black" stroke-width="1"/>
 </marker>
+<marker id="challenges_arrow" markerHeight="9" markerUnits="userSpaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
+<polyline fill-opacity="0" points="0 0, 10 4.5, 0 4.5, 10 4.5, 0 9" stroke="black" stroke-dasharray="100" stroke-width="1"/>
+</marker>
 <g class="gsn_module_txxx_2_xxxxxxxxxxxxx_xxxxxxxxxx gsnelem gsngoal" id="node_gxxxxxxx_xxxxxxxxxxxx">
 <title>GXxxxxxx-XXXxxxxxxxxx</title>
 <path class="border" d="M144,27 L374,27 L374,87 L144,87 z" fill-opacity="0" stroke="black" stroke-width="1"/>

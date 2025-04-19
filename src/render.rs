@@ -133,6 +133,12 @@ pub fn svg_from_gsn_node(
         GsnNodeType::Justification => {
             SvgNode::new_justification(identifier, gsn_node, masked, layers, char_wrap)
         }
+        GsnNodeType::CounterGoal => {
+            SvgNode::new_counter_goal(identifier, gsn_node, masked, layers, char_wrap)
+        }
+        GsnNodeType::CounterSolution => {
+            SvgNode::new_counter_solution(identifier, gsn_node, masked, layers, char_wrap)
+        }
     }
 }
 
@@ -182,6 +188,7 @@ pub fn away_svg_from_gsn_node(
         GsnNodeType::Justification => SvgNode::new_away_justification(
             identifier, gsn_node, masked, layers, module_url, char_wrap,
         ),
+        _ => unreachable!(),
     })
 }
 
@@ -442,76 +449,6 @@ pub fn render_argument(
     acps.retain(|_, v| !v.is_empty());
 
     dg.write(svg_nodes, edges, output, acps)?;
-
-    Ok(())
-}
-
-///
-/// Output list of evidence.
-///
-/// No template engine is used in order to keep dependencies to a minimum.
-///
-///
-pub(crate) fn render_evidence(
-    output: &mut impl Write,
-    nodes: &BTreeMap<String, GsnNode>,
-    render_options: &RenderOptions,
-) -> Result<()> {
-    writeln!(output)?;
-    writeln!(output, "List of Evidence")?;
-    writeln!(output)?;
-
-    let mut solutions: Vec<(&String, &GsnNode)> = nodes
-        .iter()
-        .filter(|(_, node)| node.node_type == Some(GsnNodeType::Solution))
-        .filter(|(id, node)| {
-            !(render_options.masked_elements.contains(id)
-                || render_options.masked_elements.contains(&node.module))
-        })
-        .collect();
-    solutions.sort_by_key(|(k, _)| *k);
-    if solutions.is_empty() {
-        writeln!(output, "No evidence found.")?;
-        println!("No evidence found.");
-    } else {
-        let width = (solutions.len() as f32).log10().ceil() as usize;
-        for (i, (id, node)) in solutions.into_iter().enumerate() {
-            writeln!(
-                output,
-                "{:>width$}. {}: {}",
-                i + 1,
-                id,
-                node.text
-                    .replace('\n', &format!("\n{: >w$}", ' ', w = width + 4 + id.len()))
-            )?;
-            let width = width + 2;
-            writeln!(output)?;
-            writeln!(output, "{: >width$}{}", ' ', node.module)?;
-            writeln!(output)?;
-            if let Some(url) = &node.url {
-                writeln!(output, "{: >width$}{}", ' ', url)?;
-                writeln!(output)?;
-            }
-            for (layer, text) in node
-                .additional
-                .iter()
-                .filter(|(l, _)| render_options.layers.iter().any(|x| &x == l))
-            {
-                writeln!(
-                    output,
-                    "{: >width$}{}: {}",
-                    ' ',
-                    layer.to_ascii_uppercase(),
-                    text.replace(
-                        '\n',
-                        &format!("\n{: >w$}", ' ', w = width + 2 + layer.len())
-                    )
-                )?;
-                writeln!(output)?;
-            }
-        }
-        println!("OK")
-    }
 
     Ok(())
 }

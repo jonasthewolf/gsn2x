@@ -1,5 +1,10 @@
-use anyhow::Result;
-use std::path::{Component, Path, PathBuf};
+use anyhow::{Context, Result};
+use std::{
+    fs::File,
+    io::Write,
+    path::{Component, Path, PathBuf},
+    str,
+};
 
 ///
 /// Get a relative path from `source` file to `target` file.
@@ -129,6 +134,22 @@ pub fn is_url(input: &str) -> bool {
     get_url_identifiers()
         .iter()
         .any(|start| input.starts_with(start))
+}
+
+///
+/// Create file and all necessary parent directories.
+///
+///
+pub fn create_file_incl_parent(path: &Path) -> Result<Box<dyn Write>> {
+    if !&path.parent().unwrap().exists() {
+        // Create output directory; unwraps are ok, since file always have a parent
+        std::fs::create_dir_all(path.parent().unwrap())
+            .with_context(|| format!("Could not create directory {}", path.display(),))?;
+    }
+    let output_file = Box::new(
+        File::create(path).context(format!("Failed to open output file {}", path.display()))?,
+    ) as Box<dyn std::io::Write>;
+    Ok(output_file)
 }
 
 #[cfg(test)]
