@@ -184,7 +184,7 @@ pub(crate) fn render_yaml_docs(
     ))?) as Box<dyn std::io::Write>;
 
     for (m_id, m) in modules {
-        output_file.write_fmt(format_args!("--- # {} in {}\n", m_id, m.orig_file_name))?;
+        writeln!(output_file, "--- # {} in {}\n", m_id, m.orig_file_name)?;
         serde_yml::to_writer(&mut output_file, &m.meta)?;
         for rank in ranks.iter().flatten() {
             let rank_map = rank
@@ -196,7 +196,7 @@ pub(crate) fn render_yaml_docs(
                 serde_yml::to_writer(&mut output_file, &rank_map)?;
             }
         }
-        output_file.write_fmt(format_args!("... # {}\n", m_id))?;
+        writeln!(output_file, "... # {}\n", m_id)?;
     }
 
     // serde_yml::to_string(value)
