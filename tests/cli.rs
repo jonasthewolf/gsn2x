@@ -748,14 +748,17 @@ mod integrations {
         cmd.assert().success().stdout(predicate::str::contains(
             r#"Statistics
 ==========
-Number of modules: 3
-Number of nodes:   8
-  Goals:           3
-  Strategies:      1
-  Solutions:       1
-  Assumptions:     1
-  Justifications:  1
-  Contexts:        1"#,
+Number of modules:   3
+Number of nodes:     8
+  Goals:             3
+  Strategies:        1
+  Solutions:         1
+  Assumptions:       1
+  Justifications:    1
+  Contexts:          1
+  Counter Goals:     0
+  Counter Solutions: 0
+  Defeated Elements: 0"#,
         ));
         Ok(())
     }
