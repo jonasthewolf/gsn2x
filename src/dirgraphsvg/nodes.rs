@@ -250,6 +250,9 @@ impl SvgNode {
         // Setup CSS classes
         let mut classes = node_classes_from_node(identifier, gsn_node, masked);
         classes.push("gsnelem".to_owned());
+        if gsn_node.defeated {
+            classes.push("gsndefeated".to_owned());
+        }
         classes.append(
             &mut add_classes
                 .iter()
@@ -395,6 +398,34 @@ impl SvgNode {
     }
 
     ///
+    /// New Counter Solution.
+    ///
+    pub fn new_counter_solution(
+        identifier: &str,
+        gsn_node: &GsnNode,
+        masked: bool,
+        layers: &[String],
+        char_wrap: Option<u32>,
+    ) -> Self {
+        let mut n = SvgNode::new(
+            identifier,
+            gsn_node,
+            masked,
+            layers,
+            gsn_node.url.to_owned(),
+            &["gsncountersltn"],
+            char_wrap,
+        );
+        n.node_type = NodeType::Ellipsis(EllipticalType {
+            admonition: None,
+            circle: true,
+            text_width: 0,
+            text_height: 0,
+        });
+        n
+    }
+
+    ///
     /// New Strategy.
     ///
     pub fn new_strategy(
@@ -433,6 +464,38 @@ impl SvgNode {
     ) -> Self {
         let undeveloped = gsn_node.undeveloped;
         let mut classes = vec!["gsngoal"];
+        if undeveloped {
+            classes.push("gsn_undeveloped");
+        }
+        let mut n = SvgNode::new(
+            identifier,
+            gsn_node,
+            masked,
+            layers,
+            gsn_node.url.to_owned(),
+            &classes,
+            char_wrap,
+        );
+        if undeveloped {
+            n.node_type = NodeType::Box(BoxType::Undeveloped(0));
+        } else {
+            n.node_type = NodeType::Box(BoxType::Normal(0));
+        }
+        n
+    }
+
+    ///
+    /// New Counter Goal.
+    ///
+    pub fn new_counter_goal(
+        identifier: &str,
+        gsn_node: &GsnNode,
+        masked: bool,
+        layers: &[String],
+        char_wrap: Option<u32>,
+    ) -> Self {
+        let undeveloped = gsn_node.undeveloped;
+        let mut classes = vec!["gsncountergoal"];
         if undeveloped {
             classes.push("gsn_undeveloped");
         }

@@ -39,7 +39,7 @@
 <text font-family="Arial" font-size="12" font-weight="bold" x="479" y="125">S1</text>
 <text font-family="Arial" font-size="12" x="475" y="144">Strategy 1</text>
 </g>
-<g class="gsn_module_examples_dialectic_index_gsn_yaml gsnelem gsngoal" id="node_g2">
+<g class="gsn_module_examples_dialectic_index_gsn_yaml gsnelem gsndefeated gsngoal" id="node_g2">
 <title>G2</title>
 <path class="border" d="M180,192 L284,192 L284,238 L180,238 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="187" y="211">G2</text>
@@ -59,7 +59,7 @@
 <text font-family="Arial" font-size="12" font-weight="bold" x="786" y="211">G4</text>
 <text font-family="Arial" font-size="12" x="786" y="230">text</text>
 </g>
-<g class="gsn_module_examples_dialectic_index_gsn_yaml gsnelem gsngoal" id="node_cg1">
+<g class="gsn_module_examples_dialectic_index_gsn_yaml gsnelem gsncountergoal" id="node_cg1">
 <title>CG1</title>
 <path class="border" d="M27,298 L149,298 L149,344 L27,344 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="34" y="317">CG1</text>
@@ -71,7 +71,7 @@
 <text font-family="Arial" font-size="12" font-weight="bold" x="207" y="312">Sn1</text>
 <text font-family="Arial" font-size="12" x="207" y="331">A solution</text>
 </g>
-<g class="gsn_module_examples_dialectic_index_gsn_yaml gsnelem gsngoal" id="node_g5">
+<g class="gsn_module_examples_dialectic_index_gsn_yaml gsnelem gsndefeated gsngoal" id="node_g5">
 <title>G5</title>
 <path class="border" d="M335,298 L439,298 L439,344 L335,344 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="342" y="317">G5</text>
@@ -85,7 +85,7 @@
 <text font-family="Arial" font-size="12" font-weight="bold" x="590" y="317">G6</text>
 <text font-family="Arial" font-size="12" x="590" y="336">text</text>
 </g>
-<g class="gsn_module_examples_dialectic_index_gsn_yaml gsnelem gsnstgy" id="node_s2">
+<g class="gsn_module_examples_dialectic_index_gsn_yaml gsnelem gsndefeated gsnstgy" id="node_s2">
 <title>S2</title>
 <path class="border" d="M771,298 L905,298 L891,344 L757,344 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="779" y="317">S2</text>
@@ -93,19 +93,19 @@
 <line stroke="black" x1="759" x2="903" y1="293" y2="349"/>
 <line stroke="black" x1="903" x2="759" y1="293" y2="349"/>
 </g>
-<g class="gsn_module_examples_dialectic_index_gsn_yaml gsnelem gsngoal" id="node_cg4">
+<g class="gsn_module_examples_dialectic_index_gsn_yaml gsnelem gsncountergoal" id="node_cg4">
 <title>CG4</title>
 <path class="border" d="M978,298 L1082,298 L1082,344 L978,344 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="985" y="317">CG4</text>
 <text font-family="Arial" font-size="12" x="985" y="336">text</text>
 </g>
-<g class="gsn_module_examples_dialectic_index_gsn_yaml gsnelem gsngoal" id="node_cg2">
+<g class="gsn_module_examples_dialectic_index_gsn_yaml gsnelem gsncountergoal" id="node_cg2">
 <title>CG2</title>
 <path class="border" d="M27,444 L149,444 L149,490 L27,490 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="34" y="463">CG2</text>
 <text font-family="Arial" font-size="12" x="34" y="482">A counter argument</text>
 </g>
-<g class="gsn_module_examples_dialectic_index_gsn_yaml gsnelem gsnsltn" id="node_csn2">
+<g class="gsn_module_examples_dialectic_index_gsn_yaml gsnelem gsncountersltn" id="node_csn2">
 <title>CSn2</title>
 <path class="border" d="M189,467 a63,63,0,1,0,126,0 a63,63,0,1,0,-126,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="205" y="458">CSn2</text>
@@ -117,13 +117,13 @@
 <text font-family="Arial" font-size="12" font-weight="bold" x="378" y="458">Sn2</text>
 <text font-family="Arial" font-size="12" x="378" y="477">text</text>
 </g>
-<g class="gsn_module_examples_dialectic_index_gsn_yaml gsnelem gsngoal" id="node_cg3">
+<g class="gsn_module_examples_dialectic_index_gsn_yaml gsnelem gsncountergoal" id="node_cg3">
 <title>CG3</title>
 <path class="border" d="M459,444 L563,444 L563,490 L459,490 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="466" y="463">CG3</text>
 <text font-family="Arial" font-size="12" x="466" y="482">text</text>
 </g>
-<g class="gsn_module_examples_dialectic_index_gsn_yaml gsnelem gsnsltn" id="node_sn3">
+<g class="gsn_module_examples_dialectic_index_gsn_yaml gsnelem gsndefeated gsnsltn" id="node_sn3">
 <title>Sn3</title>
 <path class="border" d="M603,467 a32,32,0,1,0,64,0 a32,32,0,1,0,-64,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="626" y="458">Sn3</text>
@@ -143,19 +143,19 @@
 <text font-family="Arial" font-size="12" font-weight="bold" x="858" y="463">G8</text>
 <text font-family="Arial" font-size="12" x="858" y="482">text</text>
 </g>
-<g class="gsn_module_examples_dialectic_index_gsn_yaml gsnelem gsnsltn" id="node_csn4">
+<g class="gsn_module_examples_dialectic_index_gsn_yaml gsnelem gsncountersltn" id="node_csn4">
 <title>CSn4</title>
 <path class="border" d="M995,467 a35,35,0,1,0,70,0 a35,35,0,1,0,-70,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="1017" y="458">CSn4</text>
 <text font-family="Arial" font-size="12" x="1017" y="477">text</text>
 </g>
-<g class="gsn_module_examples_dialectic_index_gsn_yaml gsnelem gsnsltn" id="node_csn1">
+<g class="gsn_module_examples_dialectic_index_gsn_yaml gsnelem gsncountersltn" id="node_csn1">
 <title>CSn1</title>
 <path class="border" d="M20,638 a68,68,0,1,0,136,0 a68,68,0,1,0,-136,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="37" y="629">CSn1</text>
 <text font-family="Arial" font-size="12" x="37" y="648">A counter evidence</text>
 </g>
-<g class="gsn_module_examples_dialectic_index_gsn_yaml gsnelem gsnsltn" id="node_csn3">
+<g class="gsn_module_examples_dialectic_index_gsn_yaml gsnelem gsncountersltn" id="node_csn3">
 <title>CSn3</title>
 <path class="border" d="M476,638 a35,35,0,1,0,70,0 a35,35,0,1,0,-70,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="498" y="629">CSn3</text>
