@@ -682,8 +682,8 @@ fn print_outputs(
 fn print_statistics(nodes: &BTreeMap<String, GsnNode>, modules: &BTreeMap<String, Module>) {
     println!("Statistics");
     println!("==========");
-    println!("Number of modules: {}", modules.len());
-    println!("Number of nodes:   {}", nodes.len());
+    println!("Number of modules:   {}", modules.len());
+    println!("Number of nodes:     {}", nodes.len());
     println!(
         "  Goals:             {}",
         nodes
