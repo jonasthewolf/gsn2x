@@ -15,6 +15,7 @@ mod dirgraph;
 mod dirgraphsvg;
 mod file_utils;
 mod gsn;
+mod outputs;
 mod render;
 mod yaml_fix;
 
@@ -123,7 +124,10 @@ fn main() -> Result<()> {
                     print_outputs(&nodes, &modules, &render_options)?;
                 }
                 if matches.get_flag("STATISTICS") {
-                    print_statistics(&nodes, &modules);
+                    outputs::render_statistics(&nodes, &modules);
+                }
+                if let Some(yaml_dir) = matches.get_one::<String>("YAMLDUMP") {
+                    outputs::render_yaml_docs(&nodes, &modules, yaml_dir)?;
                 }
                 Ok(())
             }
@@ -253,6 +257,14 @@ fn build_command_options() -> Command {
                 .help("Output statistics on inputs.")
                 .long("statistics")
                 .action(ArgAction::SetTrue)
+                .help_heading("OUTPUT"),
+        )
+        .arg(
+            Arg::new("YAMLDUMP")
+                .help("Output parsed YAML files to single file <YAMLFILE>.")
+                .long("restructure-yaml")
+                .action(ArgAction::Set)
+                .default_value("gsn2x_restructured.yaml")
                 .help_heading("OUTPUT"),
         )
         .arg(
@@ -669,81 +681,10 @@ fn print_outputs(
         let mut output_file = File::create(&output_path)
             .context(format!("Failed to open output file {output_path}"))?;
         print!("Writing evidence \"{output_path}\": ");
-        render::render_evidence(&mut output_file, nodes, render_options)?;
+        outputs::render_evidence(&mut output_file, nodes, render_options)?;
     }
 
     Ok(())
-}
-
-///
-/// Print statistics
-///
-///
-fn print_statistics(nodes: &BTreeMap<String, GsnNode>, modules: &BTreeMap<String, Module>) {
-    println!("Statistics");
-    println!("==========");
-    println!("Number of modules:   {}", modules.len());
-    println!("Number of nodes:     {}", nodes.len());
-    println!(
-        "  Goals:             {}",
-        nodes
-            .iter()
-            .filter(|n| n.1.node_type == Some(gsn::GsnNodeType::Goal))
-            .count()
-    );
-    println!(
-        "  Strategies:        {}",
-        nodes
-            .iter()
-            .filter(|n| n.1.node_type == Some(gsn::GsnNodeType::Strategy))
-            .count()
-    );
-    println!(
-        "  Solutions:         {}",
-        nodes
-            .iter()
-            .filter(|n| n.1.node_type == Some(gsn::GsnNodeType::Solution))
-            .count()
-    );
-    println!(
-        "  Assumptions:       {}",
-        nodes
-            .iter()
-            .filter(|n| n.1.node_type == Some(gsn::GsnNodeType::Assumption))
-            .count()
-    );
-    println!(
-        "  Justifications:    {}",
-        nodes
-            .iter()
-            .filter(|n| n.1.node_type == Some(gsn::GsnNodeType::Justification))
-            .count()
-    );
-    println!(
-        "  Contexts:          {}",
-        nodes
-            .iter()
-            .filter(|n| n.1.node_type == Some(gsn::GsnNodeType::Context))
-            .count()
-    );
-    println!(
-        "  Counter Goals:     {}",
-        nodes
-            .iter()
-            .filter(|n| n.1.node_type == Some(gsn::GsnNodeType::CounterGoal))
-            .count()
-    );
-    println!(
-        "  Counter Solutions: {}",
-        nodes
-            .iter()
-            .filter(|n| n.1.node_type == Some(gsn::GsnNodeType::CounterSolution))
-            .count()
-    );
-    println!(
-        "  Defeated Elements: {}",
-        nodes.iter().filter(|n| n.1.defeated).count()
-    );
 }
 
 ///
