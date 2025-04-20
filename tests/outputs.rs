@@ -20,11 +20,13 @@ fn no_evidence() -> Result<()> {
         )?)
         .stderr(predicate::str::is_empty());
 
-    temp.child("my_evidence.md").assert(
-        predicate::path::eq_file(temp.child("no_evidence.gsn.test.md").path())
+    temp.child("no_evidence.gsn.test.md").assert(
+        predicate::path::eq_file(temp.child("my_evidence.md").path())
             .utf8()
             .unwrap()
-            .normalize(),
+            .normalize()
+            .from_utf8()
+            .from_file_path(),
     );
 
     temp.close()?;
@@ -51,24 +53,15 @@ fn some_evidence() -> Result<()> {
             "Writing evidence \"..my_evidence.md\": OK",
         )?)
         .stderr(predicate::str::is_empty());
-    dbg!(
-        predicate::path::eq_file(temp.child("example.gsn.test.md").path())
+
+    temp.child("example.gsn.test.md").assert(
+        predicate::path::eq_file(temp.child("my_evidence.md").path())
             .utf8()
             .unwrap()
             .normalize()
             .from_utf8()
-            .from_file_path()
+            .from_file_path(),
     );
-    let pred = predicate::path::eq_file(temp.child("example.gsn.test.md").path())
-        .utf8()
-        .unwrap()
-        .normalize()
-        .from_utf8()
-        .from_file_path();
-    // temp.child("my_evidence.md").assert(pred
-    //     ,
-    // );
-    assert!(pred.eval(&temp.child("my_evidence.md")));
 
     temp.close()?;
     Ok(())
