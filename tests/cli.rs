@@ -1,7 +1,6 @@
 mod basics;
 
 use anyhow::Result;
-use assert_cmd::assert::Assert;
 use assert_cmd::prelude::*;
 use assert_fs::fixture::PathCopy;
 use assert_fs::prelude::*;
@@ -47,56 +46,15 @@ fn legend_is_different() -> Result<()> {
     Ok(())
 }
 
-///
-/// This tricky setup is needed since the relative path is used for the module name.
-/// The module name is used as SVG class.
-/// The reference output is locally generated with the same setup.
-///
-pub fn check_if_outputs_are_similar(
-    sub_dir: &str,
-    input: &str,
-    expected_output: &str,
-) -> Result<Assert> {
-    let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
-    let temp = assert_fs::TempDir::new()?;
-
-    // Copy input into subdirectory and name output file
-    let sub = temp.child(sub_dir);
-    sub.create_dir_all()?;
-    sub.copy_from(sub_dir, &[input])?;
-    let output_file = sub.child(expected_output);
-
-    // Copy expected output into temp dir (without subdirectory!)
-    temp.copy_from(sub_dir, &[expected_output])?;
-
-    // Start cargo from temporary directory
-    cmd.current_dir(&temp);
-    cmd.arg(format!("{sub_dir}/{input}")).arg("-G");
-    let result = cmd.assert().success();
-    assert!(are_struct_similar_svgs(
-        output_file.as_os_str(),
-        temp.child(expected_output).as_os_str(),
-    )?);
-    temp.close()?;
-    Ok(result)
-}
-
 #[test]
 fn argument_view() -> Result<()> {
-    const SUB_DIR: &str = "examples";
-    const INPUT_YAML: &str = "example.gsn.yaml";
-    const OUTPUT_SVG: &str = "example.gsn.svg";
-    let _ = check_if_outputs_are_similar(SUB_DIR, INPUT_YAML, OUTPUT_SVG)?;
+    regression_renderings(&["examples/example.gsn.yaml"], &[], None)?;
     Ok(())
 }
 
 #[test]
 fn multi_contexts() -> Result<()> {
-    const SUB_DIR: &str = "tests";
-    const INPUT_YAML: &str = "multi_context.gsn.yaml";
-    const OUTPUT_SVG: &str = "multi_context.gsn.svg";
-
-    let _ = check_if_outputs_are_similar(SUB_DIR, INPUT_YAML, OUTPUT_SVG)?;
+    regression_renderings(&["tests/multi_context.gsn.yaml"], &[], None)?;
     Ok(())
 }
 
@@ -106,10 +64,29 @@ fn entangled() -> Result<()> {
     const INPUT_YAML: &str = "entangled.gsn.yaml";
     const OUTPUT_SVG: &str = "entangled.gsn.svg";
 
-    let res = check_if_outputs_are_similar(SUB_DIR, INPUT_YAML, OUTPUT_SVG)?;
-    res.stdout(predicate::str::contains(
+    let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
+    let temp = assert_fs::TempDir::new()?;
+
+    // Copy input into subdirectory and name output file
+    let sub = temp.child(SUB_DIR);
+    sub.create_dir_all()?;
+    sub.copy_from(SUB_DIR, &[INPUT_YAML])?;
+    let output_file = sub.child(OUTPUT_SVG);
+
+    // Copy expected output into temp dir (without subdirectory!)
+    temp.copy_from(SUB_DIR, &[OUTPUT_SVG])?;
+
+    // Start cargo from temporary directory
+    cmd.current_dir(&temp);
+    cmd.arg(format!("{SUB_DIR}/{INPUT_YAML}")).arg("-G");
+    cmd.assert().success().stdout(predicate::str::contains(
         "Diagram took too many iterations (6).",
     ));
+    assert!(are_struct_similar_svgs(
+        output_file.as_os_str(),
+        temp.child(OUTPUT_SVG).as_os_str(),
+    )?);
+    temp.close()?;
     Ok(())
 }
 

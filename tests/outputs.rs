@@ -1,9 +1,7 @@
 use anyhow::Result;
 use assert_cmd::Command;
 use assert_fs::prelude::*;
-use basics::*;
 use predicates::prelude::*;
-mod basics;
 
 #[test]
 fn no_evidence() -> Result<()> {
@@ -21,11 +19,10 @@ fn no_evidence() -> Result<()> {
             "Writing evidence \"..my_evidence.md\": No evidence found.",
         )?)
         .stderr(predicate::str::is_empty());
-    assert!(compare_lines_with_replace(
-        temp.child("my_evidence.md").as_os_str(),
-        temp.child("no_evidence.gsn.test.md").as_os_str(),
-        None
-    )?);
+
+    temp.child("my_evidence.md")
+        .assert(predicate::path::eq_file("tests/no_evidence.gsn.test.md"));
+
     temp.close()?;
     Ok(())
 }
@@ -50,11 +47,9 @@ fn some_evidence() -> Result<()> {
             "Writing evidence \"..my_evidence.md\": OK",
         )?)
         .stderr(predicate::str::is_empty());
-    assert!(compare_lines_with_replace(
-        temp.child("my_evidence.md").as_os_str(),
-        temp.child("example.gsn.test.md").as_os_str(),
-        None
-    )?);
+    temp.child("my_evidence.md")
+        .assert(predicate::path::eq_file("tests/example.gsn.test.md"));
+
     temp.close()?;
     Ok(())
 }
@@ -97,13 +92,14 @@ fn statistics_file() -> Result<()> {
         .current_dir(&temp);
     cmd.assert().success();
 
-    temp.child("statistics.md")
-        .assert( predicate::eq(STATISTICS_OUTPUT).from_utf8().from_file_path());
+    temp.child("statistics.md").assert(
+        predicate::eq(STATISTICS_OUTPUT)
+            .from_utf8()
+            .from_file_path(),
+    );
 
     Ok(())
 }
-
-
 
 #[test]
 fn yaml_dump() -> Result<()> {
@@ -126,7 +122,7 @@ fn yaml_dump() -> Result<()> {
     cmd.assert().success();
 
     temp.child("out.yaml")
-        .assert( predicate::eq(output).from_file_path());
+        .assert(predicate::eq(output).from_file_path());
 
     Ok(())
 }
