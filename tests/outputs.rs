@@ -20,8 +20,12 @@ fn no_evidence() -> Result<()> {
         )?)
         .stderr(predicate::str::is_empty());
 
-    temp.child("my_evidence.md")
-        .assert(predicate::path::eq_file("tests/no_evidence.gsn.test.md"));
+    temp.child("my_evidence.md").assert(
+        predicate::path::eq_file(temp.child("no_evidence.gsn.test.md").path())
+            .utf8()
+            .unwrap()
+            .normalize(),
+    );
 
     temp.close()?;
     Ok(())
@@ -47,10 +51,12 @@ fn some_evidence() -> Result<()> {
             "Writing evidence \"..my_evidence.md\": OK",
         )?)
         .stderr(predicate::str::is_empty());
-    temp.child("my_evidence.md")
-        .assert(predicate::path::eq_file(
-            temp.child("example.gsn.test.md").path(),
-        ));
+    temp.child("my_evidence.md").assert(
+        predicate::path::eq_file(temp.child("example.gsn.test.md").path())
+            .utf8()
+            .unwrap()
+            .normalize(),
+    );
 
     temp.close()?;
     Ok(())
