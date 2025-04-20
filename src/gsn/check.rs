@@ -91,7 +91,7 @@ fn check_node_references(
                     &node.in_context_of,
                     id,
                     &node.module,
-                    "context",
+                    "in context of",
                 ),
                 check_unresolved_references(
                     diag,
@@ -99,7 +99,7 @@ fn check_node_references(
                     &node.supported_by,
                     id,
                     &node.module,
-                    "supported by element",
+                    "supported by",
                 ),
                 check_unresolved_references(
                     diag,
@@ -107,7 +107,7 @@ fn check_node_references(
                     &node.challenges,
                     id,
                     &node.module,
-                    "challenging element",
+                    "challenging",
                 ),
             ]
             .into_iter()
@@ -138,14 +138,14 @@ fn check_unresolved_references(
         .map(|wref| {
             diag.add_error(
                 Some(module),
-                format!("C03: Element {} has unresolved {}: {}", id, error_str, wref),
+                format!("C03: Element {} has unresolved \"{}\" element: {}", id, error_str, wref),
             );
             if wref.contains(',') {
                 diag.add_warning(
                     Some(module),
                     format!(
-                        "C11: Unresolved \"{}\" of element {} may be actually a list: {}",
-                        "context", id, wref
+                        "C11: Unresolved \"{}\" element of {} may be actually a list: {}. Try writing [{}] instead.",
+                        error_str, id, wref, wref
                     ),
                 );
             }
@@ -300,7 +300,7 @@ mod test {
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
         assert_eq!(
             d.messages[0].msg,
-            "C03: Element G1 has unresolved context: C1"
+            "C03: Element G1 has unresolved \"in context of\" element: C1"
         );
         assert_eq!(d.errors, 1);
         assert_eq!(d.warnings, 0);
@@ -324,10 +324,64 @@ mod test {
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
         assert_eq!(
             d.messages[0].msg,
-            "C03: Element G1 has unresolved supported by element: G2"
+            "C03: Element G1 has unresolved \"supported by\" element: G2"
         );
         assert_eq!(d.errors, 1);
         assert_eq!(d.warnings, 0);
+    }
+
+    #[test]
+    fn unresolved_challenging() {
+        let mut d = Diagnostics::default();
+        let mut nodes = BTreeMap::<String, GsnNode>::new();
+        nodes.insert(
+            "CG1".to_owned(),
+            GsnNode {
+                challenges: vec!["G2".to_owned()],
+                node_type: Some(GsnNodeType::CounterGoal),
+                ..Default::default()
+            },
+        );
+        assert!(check_nodes(&mut d, &nodes, &[]).is_err());
+        assert_eq!(d.messages.len(), 1);
+        assert_eq!(d.messages[0].module, Some("".to_owned()));
+        assert_eq!(d.messages[0].diag_type, DiagType::Error);
+        assert_eq!(
+            d.messages[0].msg,
+            "C03: Element CG1 has unresolved \"challenging\" element: G2"
+        );
+        assert_eq!(d.errors, 1);
+        assert_eq!(d.warnings, 0);
+    }
+
+    #[test]
+    fn unresolved_list() {
+        let mut d = Diagnostics::default();
+        let mut nodes = BTreeMap::<String, GsnNode>::new();
+        nodes.insert(
+            "G1".to_owned(),
+            GsnNode {
+                supported_by: vec!["G2, G3".to_owned()],
+                node_type: Some(GsnNodeType::Goal),
+                ..Default::default()
+            },
+        );
+        assert!(check_nodes(&mut d, &nodes, &[]).is_err());
+        assert_eq!(d.messages.len(), 2);
+        assert_eq!(d.messages[0].module, Some("".to_owned()));
+        assert_eq!(d.messages[0].diag_type, DiagType::Error);
+        assert_eq!(
+            d.messages[0].msg,
+            "C03: Element G1 has unresolved \"supported by\" element: G2, G3"
+        );
+        assert_eq!(d.messages[1].module, Some("".to_owned()));
+        assert_eq!(d.messages[1].diag_type, DiagType::Warning);
+        assert_eq!(
+            d.messages[1].msg,
+            "C11: Unresolved \"supported by\" element of G1 may be actually a list: G2, G3. Try writing [G2, G3] instead."
+        );
+        assert_eq!(d.errors, 1);
+        assert_eq!(d.warnings, 1);
     }
 
     #[test]
