@@ -272,7 +272,7 @@ fn build_command_options() -> Command {
         .arg(
             Arg::new("YAMLDUMP")
                 .help("Output parsed YAML files to single <YAMLDUMP> file or standard output.")
-                .long("restructure-yaml")
+                .long("dump-yaml")
                 .action(ArgAction::Set)
                 .num_args(0..=1)
                 .help_heading("OUTPUT"),
