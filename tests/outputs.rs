@@ -48,7 +48,9 @@ fn some_evidence() -> Result<()> {
         )?)
         .stderr(predicate::str::is_empty());
     temp.child("my_evidence.md")
-        .assert(predicate::path::eq_file("tests/example.gsn.test.md"));
+        .assert(predicate::path::eq_file(
+            temp.child("example.gsn.test.md").path(),
+        ));
 
     temp.close()?;
     Ok(())
