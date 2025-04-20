@@ -68,7 +68,7 @@ fn some_evidence() -> Result<()> {
     // temp.child("my_evidence.md").assert(pred
     //     ,
     // );
-    assert_eq!(true, pred.eval(&temp.child("my_evidence.md")));
+    assert!(pred.eval(&temp.child("my_evidence.md")));
 
     temp.close()?;
     Ok(())
