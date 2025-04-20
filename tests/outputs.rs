@@ -51,12 +51,24 @@ fn some_evidence() -> Result<()> {
             "Writing evidence \"..my_evidence.md\": OK",
         )?)
         .stderr(predicate::str::is_empty());
-    temp.child("my_evidence.md").assert(
+    dbg!(
         predicate::path::eq_file(temp.child("example.gsn.test.md").path())
             .utf8()
             .unwrap()
-            .normalize(),
+            .normalize()
+            .from_utf8()
+            .from_file_path()
     );
+    let pred = predicate::path::eq_file(temp.child("example.gsn.test.md").path())
+        .utf8()
+        .unwrap()
+        .normalize()
+        .from_utf8()
+        .from_file_path();
+    // temp.child("my_evidence.md").assert(pred
+    //     ,
+    // );
+    assert_eq!(true, pred.eval(&temp.child("my_evidence.md")));
 
     temp.close()?;
     Ok(())
