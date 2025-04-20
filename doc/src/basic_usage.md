@@ -40,7 +40,7 @@ The output is an argument view in SVG format and automatically written to `<your
       -E, --no-evidence                    Do not output list of all evidence.
       -o, --output-dir <OUTPUT_DIRECTORY>  Emit all output files to directory <OUTPUT_DIRECTORY>.      [default: .]
       --statistics [<STATISTICS>]      Output statistics on inputs to <STATISTICS> file or standard output.
-      --restructure-yaml [<YAMLDUMP>]  Output parsed YAML files to single <YAMLDUMP> file or standard output.
+      --dump-yaml [<YAMLDUMP>]  Output parsed YAML files to single <YAMLDUMP> file or standard output.
 
     OUTPUT MODIFICATION:
       -l, --layer <LAYERS>            Output additional layer. Can be used multiple times.
