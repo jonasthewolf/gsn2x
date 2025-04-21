@@ -20,6 +20,17 @@ fn file_does_not_exist() -> Result<()> {
 }
 
 #[test]
+fn index_gsn_does_not_exist() -> Result<()> {
+    let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
+    let temp = assert_fs::TempDir::new()?;
+    cmd.current_dir(&temp);
+    cmd.assert()
+        .failure()
+        .stderr(predicate::str::contains("Error: index.gsn.yaml not found."));
+    Ok(())
+}
+
+#[test]
 fn legend_is_different() -> Result<()> {
     const SUB_DIR: &str = "examples";
     const INPUT_YAML: &str = "example.gsn.yaml";
@@ -337,6 +348,24 @@ fn min_doc() -> Result<()> {
         &["-s", "examples/minimalcss/min.css", "-t"],
         Some(&["examples/minimalcss/min.css"]),
     )?;
+    Ok(())
+}
+
+#[test]
+fn min_doc_copy_css() -> Result<()> {
+    let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
+    let temp = assert_fs::TempDir::new()?;
+    temp.copy_from("examples/minimalcss", &["min*"])?;
+    cmd.current_dir(&temp)
+        .arg("-s")
+        .arg("min.css")
+        .arg("-o")
+        .arg("output")
+        .arg("min.gsn.yaml");
+    cmd.assert().success();
+    temp.child("output")
+        .child("min.css")
+        .assert(predicate::path::exists());
     Ok(())
 }
 
