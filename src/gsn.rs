@@ -724,6 +724,16 @@ G1:
     }
 
     #[test]
+    fn no_string_or_seq() {
+        let gsn = r#"
+G1:
+  text: Goal1
+  inContextOf: -1
+"#;
+        assert!(serde_yml::from_str::<BTreeMap<String, GsnDocument>>(gsn).is_err());
+    }
+
+    #[test]
     fn edge_type_copy_clone() {
         let edge = GsnEdgeType::SupportedBy;
         let edge_copy = edge;

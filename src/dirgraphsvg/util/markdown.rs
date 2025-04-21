@@ -518,4 +518,11 @@ mod test {
         );
         assert_eq!(iter.next(), None);
     }
+
+    #[test]
+    fn new_line() {
+        let m = MarkdownText::from("\n\n");
+        let s = String::from(&m.into_iter().next().unwrap());
+        assert_eq!(s, "\n");
+    }
 }
