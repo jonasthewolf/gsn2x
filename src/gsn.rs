@@ -92,26 +92,31 @@ impl From<AbsoluteIndex> for Value {
 #[derive(Clone, Debug, Default, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct GsnNode {
-    #[serde(default)]
-    #[serde(skip_serializing_if = "String::is_empty")]
+    #[serde(default, skip_serializing_if = "String::is_empty")]
     pub(crate) text: String,
-    #[serde(default, deserialize_with = "string_or_seq_string")]
-    #[serde(skip_serializing_if = "Vec::is_empty")]
+    #[serde(
+        default,
+        deserialize_with = "string_or_seq_string",
+        skip_serializing_if = "Vec::is_empty"
+    )]
     pub(crate) in_context_of: Vec<String>,
-    #[serde(default, deserialize_with = "string_or_seq_string")]
-    #[serde(skip_serializing_if = "Vec::is_empty")]
+    #[serde(
+        default,
+        deserialize_with = "string_or_seq_string",
+        skip_serializing_if = "Vec::is_empty"
+    )]
     pub(crate) supported_by: Vec<String>,
-    #[serde(default, deserialize_with = "string_or_seq_string")]
-    #[serde(skip_serializing_if = "Vec::is_empty")]
+    #[serde(
+        default,
+        deserialize_with = "string_or_seq_string",
+        skip_serializing_if = "Vec::is_empty"
+    )]
     pub(crate) challenges: Vec<String>,
-    #[serde(default)]
-    #[serde(skip_serializing_if = "<&bool>::not")]
+    #[serde(default, skip_serializing_if = "<&bool>::not")]
     pub(crate) undeveloped: bool,
-    #[serde(default)]
-    #[serde(skip_serializing_if = "<&bool>::not")]
+    #[serde(default, skip_serializing_if = "<&bool>::not")]
     pub(crate) defeated: bool,
-    #[serde(default)]
-    #[serde(skip_serializing_if = "Vec::is_empty")]
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub(crate) classes: Vec<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub(crate) url: Option<String>,
@@ -123,11 +128,17 @@ pub struct GsnNode {
     pub(crate) node_type: Option<GsnNodeType>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub(crate) char_wrap: Option<u32>,
-    #[serde(default, deserialize_with = "deser_acp")]
-    #[serde(skip_serializing_if = "BTreeMap::is_empty")]
+    #[serde(
+        default,
+        deserialize_with = "deser_acp",
+        skip_serializing_if = "BTreeMap::is_empty"
+    )]
     pub(crate) acp: BTreeMap<String, Vec<String>>,
-    #[serde(flatten, deserialize_with = "deser_additional")]
-    #[serde(skip_serializing_if = "BTreeMap::is_empty")]
+    #[serde(
+        flatten,
+        deserialize_with = "deser_additional",
+        skip_serializing_if = "BTreeMap::is_empty"
+    )]
     pub(crate) additional: BTreeMap<String, String>,
     #[serde(skip_deserializing, skip_serializing)]
     pub(crate) module: String,
@@ -340,8 +351,7 @@ pub struct ModuleInformation {
     pub(crate) name: String,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub(crate) brief: Option<String>,
-    #[serde(default)]
-    #[serde(skip_serializing_if = "Vec::is_empty")]
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub(crate) extends: Vec<ExtendsModule>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub(crate) horizontal_index: Option<HorizontalIndex>,
@@ -349,14 +359,15 @@ pub struct ModuleInformation {
     pub(crate) rank_increment: Option<usize>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub(crate) char_wrap: Option<u32>,
-    #[serde(default)]
-    #[serde(skip_serializing_if = "Vec::is_empty")]
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub(crate) stylesheets: Vec<String>,
-    #[serde(default)]
-    #[serde(skip_serializing_if = "Vec::is_empty")]
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub(crate) uses: Vec<String>,
-    #[serde(flatten, deserialize_with = "deser_additional")]
-    #[serde(skip_serializing_if = "BTreeMap::is_empty")]
+    #[serde(
+        flatten,
+        deserialize_with = "deser_additional",
+        skip_serializing_if = "BTreeMap::is_empty"
+    )]
     pub(crate) additional: BTreeMap<String, String>,
 }
 
