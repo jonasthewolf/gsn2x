@@ -322,6 +322,7 @@ where
                         *rank = false;
                     }
                     // See if parents are not the same rank
+                    // TODO unless they are challenging nodes.
                     _ => {
                         *rank = self
                             .parent_edges

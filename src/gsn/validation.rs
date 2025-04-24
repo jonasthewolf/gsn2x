@@ -27,6 +27,8 @@ pub fn validate_module(
                 validate_references(diag, module_name, nodes, id, node),
                 // Validate all assurance claim points
                 validate_assurance_claim_point(diag, module_name, nodes, id, node),
+                // Validate if defeated is correctly set
+                validate_defeated(diag, module_name, nodes, id, node),
             ]
         })
         .collect::<Vec<Result<(), ()>>>();
@@ -304,8 +306,6 @@ fn validate_assurance_claim_point(
 ///
 /// Validate module extensions
 ///
-///
-///
 fn validate_module_extensions(
     module_info: &Module,
     nodes: &BTreeMap<String, GsnNode>,
@@ -353,6 +353,31 @@ fn validate_module_extensions(
         .into_iter()
         .collect::<Result<Vec<_>, ()>>()
         .map(|_| ())
+}
+
+///
+/// Validate defeated property
+///
+fn validate_defeated(
+    diag: &mut Diagnostics,
+    module: &str,
+    nodes: &BTreeMap<String, GsnNode>,
+    id: &str,
+    node: &GsnNode,
+) -> Result<(), ()> {
+    if node.defeated
+        && !nodes
+            .iter()
+            .any(|(_, n)| n.challenges.contains(&id.to_owned()))
+    {
+        diag.add_warning(
+            Some(module),
+            format!("V10: Element {id} is marked as defeated, but no other element challenges it."),
+        );
+        Err(())
+    } else {
+        Ok(())
+    }
 }
 
 #[cfg(test)]
