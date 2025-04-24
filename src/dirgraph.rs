@@ -37,6 +37,8 @@ pub trait DirectedGraphEdgeType<'a> {
     /// Otherwise false.
     ///
     fn is_secondary_child_edge(&self) -> bool;
+
+    fn is_inverted_child_ege(&self) -> bool;
 }
 
 ///
@@ -142,9 +144,13 @@ where
         // Copy IDs
         let mut n_ids: BTreeSet<&String> = self.nodes.keys().collect();
         // Find root nodes
-        for t_edges in self.edges.values() {
-            for (target, _) in t_edges {
-                n_ids.remove(target);
+        for (source, t_edges) in self.edges {
+            for (target, edge_type) in t_edges {
+                if edge_type.is_inverted_child_ege() {
+                    n_ids.remove(source);
+                } else {
+                    n_ids.remove(target);
+                }
             }
         }
         self.root_nodes = if n_ids.is_empty() {
@@ -356,7 +362,6 @@ where
                     } else {
                         vec![(*node, false)]
                     }
-                    // carried_nodes.append(&mut child_carried_nodes);
                 })
                 .collect::<Vec<_>>();
 
@@ -477,10 +482,11 @@ where
         parent_node: &str,
         visited: &BTreeSet<&str>,
     ) -> Vec<(&str, bool)> {
-        self.edges
+        let mut childs = self
+            .edges
             .get(parent_node)
-            .iter()
-            .flat_map(|&x| x)
+            .into_iter()
+            .flatten()
             .filter_map(|(target, edge_type)| {
                 // Find next rank children
                 if edge_type.is_primary_child_edge() {
@@ -493,6 +499,7 @@ where
             .map(|n| {
                 (
                     n,
+                    // true if all parents are already ranked
                     self.parent_edges
                         .get(n)
                         .unwrap() // unwrap ok, since nodes exist.
@@ -501,7 +508,28 @@ where
                         .all(|(p, _)| visited.contains(p)),
                 )
             })
-            .collect::<Vec<_>>()
+            .collect::<Vec<_>>();
+        let mut inverted_childs = self
+            .parent_edges
+            .get(parent_node)
+            .into_iter()
+            .flatten()
+            .filter_map(|(child, edge_type)| {
+                if edge_type.is_inverted_child_ege() {
+                    Some(child)
+                } else {
+                    None
+                }
+            })
+            .filter(|&n| !visited.contains(n))
+            .map(|&n| {
+                (
+                    n, true, // Always true, since counter arguments may be on the same level
+                )
+            })
+            .collect::<Vec<_>>();
+        childs.append(&mut inverted_childs);
+        childs
     }
 
     ///
@@ -572,6 +600,9 @@ mod test {
             true
         }
         fn is_secondary_child_edge(&self) -> bool {
+            false
+        }
+        fn is_inverted_child_ege(&self) -> bool {
             false
         }
     }

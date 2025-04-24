@@ -271,6 +271,8 @@ fn get_center(nodes: &BTreeMap<String, RefCell<SvgNode>>, set: &[&str]) -> i32 {
 ///
 /// Decides if a node has to be moved.
 ///
+/// TODO Move single challenging parents, under single challenged nodes
+///
 fn has_node_to_be_moved<'b>(
     graph: &'b DirectedGraph<'b, RefCell<SvgNode>, EdgeType>,
     cell: &Vec<&str>,
