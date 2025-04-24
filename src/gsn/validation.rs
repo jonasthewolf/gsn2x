@@ -122,7 +122,6 @@ fn validate_references(
         // Only goals and strategies can have other goals, strategies and solutions
         if node.node_type == Some(GsnNodeType::Strategy)
             || node.node_type == Some(GsnNodeType::Goal)
-            || node.node_type == Some(GsnNodeType::CounterGoal)
         {
             valid_ref_types.append(&mut vec![
                 GsnNodeType::Goal,
@@ -130,6 +129,12 @@ fn validate_references(
                 GsnNodeType::Solution,
                 GsnNodeType::CounterSolution,
                 GsnNodeType::Strategy,
+            ]);
+        }
+        if node.node_type == Some(GsnNodeType::CounterGoal) {
+            valid_ref_types.append(&mut vec![
+                GsnNodeType::CounterGoal,
+                GsnNodeType::CounterSolution,
             ]);
         }
 
@@ -152,7 +157,8 @@ fn validate_references(
             Ok(())
         };
         valid_refs.and(devundev)
-    } else if (id.starts_with('S') && !id.starts_with("Sn") || id.starts_with('G'))
+    } else if (node.node_type == Some(GsnNodeType::Strategy)
+        || node.node_type == Some(GsnNodeType::Goal))
         && !node.undeveloped
     {
         // No "supported by" entries, but Strategy and Goal => undeveloped
@@ -165,7 +171,6 @@ fn validate_references(
         Ok(())
     } else {
         let mut valid_ref_types = vec![];
-        // Only goals and strategies can have contexts, assumptions and justifications
         if node.node_type == Some(GsnNodeType::CounterGoal)
             || node.node_type == Some(GsnNodeType::CounterSolution)
         {
@@ -233,6 +238,8 @@ fn validate_reference(
                             .iter()
                             .any(|&r| ref_node.node_type.unwrap() == r)
                         {
+                            // dbg!(nodes.get(n).and_then(|n| n.node_type));
+                            // dbg!(&valid_ref_types);
                             diag.add_error(
                     Some(module),
                     format!("V04: Element {node} has invalid type of reference {n} in {diag_str}."),
@@ -703,6 +710,7 @@ mod test {
             d.messages[2].msg,
             "V04: Element G1 has invalid type of reference Sn1 in context."
         );
+
         assert_eq!(d.errors, 3);
         assert_eq!(d.warnings, 0);
     }

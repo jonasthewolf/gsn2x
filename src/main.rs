@@ -542,6 +542,8 @@ fn check_and_add_nodes(
                         x.supported_by.sort();
                         x.in_context_of.sort();
                         x.challenges.sort();
+                        // Invert direction of challenges edge
+
                         if x.char_wrap.is_none() {
                             x.char_wrap = char_wrap;
                         }
@@ -579,7 +581,6 @@ fn validate_and_check(
     excluded_modules: &[&str],
     layers: &[&str],
 ) -> Result<()> {
-    // Compiler complains if this is not a closure, but a simple block
     if nodes.is_empty() {
         diags.add_error(None, "No input elements are found.".to_owned());
         Err(ValidationOrCheckError {}.into())

@@ -336,8 +336,14 @@ fn multi_children_min() -> Result<()> {
 }
 
 #[test]
-fn dialectic() -> Result<()> {
-    regression_renderings(&["examples/dialectic/index.gsn.yaml"], &[], None)?;
+fn dialectic_first() -> Result<()> {
+    regression_renderings(&["examples/dialectic/first.gsn.yaml"], &[], None)?;
+    Ok(())
+}
+
+#[test]
+fn dialectic_second() -> Result<()> {
+    regression_renderings(&["examples/dialectic/second.gsn.yaml"], &[], None)?;
     Ok(())
 }
 
