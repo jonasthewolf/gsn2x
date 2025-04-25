@@ -45,8 +45,6 @@ CSn2:
     evidence
   challenges: G5
   defeated: true
-  horizontalIndex:
-    relative: -1
 
 CCG1:
   nodeType: CounterGoal
@@ -98,6 +96,8 @@ Sn5: {}
 CG4:
   challenges: S2
   supportedBy: CSn4
+  horizontalIndex:
+    absolute: last
 
 CSn4: {}
 

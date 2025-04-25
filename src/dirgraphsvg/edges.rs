@@ -85,7 +85,7 @@ impl DirectedGraphEdgeType<'_> for EdgeType {
         matches!(*self, EdgeType::OneWay(SingleEdge::InContextOf))
     }
 
-    fn is_inverted_child_ege(&self) -> bool {
+    fn is_inverted_child_edge(&self) -> bool {
         matches!(*self, EdgeType::OneWay(SingleEdge::Challenges))
     }
 }

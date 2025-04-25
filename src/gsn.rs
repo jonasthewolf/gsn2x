@@ -324,7 +324,7 @@ impl DirectedGraphEdgeType<'_> for GsnEdgeType {
             GsnEdgeType::Challenges => false,
         }
     }
-    fn is_inverted_child_ege(&self) -> bool {
+    fn is_inverted_child_edge(&self) -> bool {
         match self {
             GsnEdgeType::SupportedBy => false,
             GsnEdgeType::InContextOf => false,
