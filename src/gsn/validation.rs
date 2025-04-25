@@ -14,6 +14,7 @@ pub fn validate_module(
     module_info: &Module,
     nodes: &BTreeMap<String, GsnNode>,
     extended_check: bool,
+    warn_dialectic: bool,
 ) -> Result<(), ()> {
     let all_results = nodes
         .iter()
@@ -36,7 +37,8 @@ pub fn validate_module(
     all_results
         .into_iter()
         .collect::<Result<Vec<_>, ()>>()
-        .and_then(|_| validate_module_extensions(module_info, nodes, module_name, diag))
+        .and_then(|_| validate_module_extensions(diag, module_name, nodes, module_info))
+        .and_then(|_| validate_dialectic_extension(diag, module_name, nodes, warn_dialectic))
 }
 
 ///
@@ -198,7 +200,7 @@ fn validate_references(
             module,
             nodes,
             id,
-            &node.in_context_of,
+            &node.challenges,
             "challenges",
             &valid_ref_types,
         )
@@ -244,21 +246,15 @@ fn validate_reference(
                             format!("V05: Element {node} has duplicate entry {n} in {diag_str}."),
                         );
                     }
-                    if let Some(ref_node) = nodes.get(n) {
-                        if !valid_ref_types
-                            .iter()
-                            .any(|&r| ref_node.node_type.unwrap() == r)
-                        {
-                            // dbg!(nodes.get(n).and_then(|n| n.node_type));
-                            // dbg!(&valid_ref_types);
-                            diag.add_error(
+                    if !valid_ref_types
+                        .iter()
+                        .any(|&r| nodes.get(n).map(|x| x.node_type == Some(r)).unwrap_or(true))
+                    {
+                        diag.add_error(
                     Some(module),
                     format!("V04: Element {node} has invalid type of reference {n} in {diag_str}."),
                 );
-                            Err(())
-                        } else {
-                            Ok(())
-                        }
+                        Err(())
                     } else {
                         Ok(()) // Ok is correct, since not all references must exist yet. Checked by C03.
                     }
@@ -316,10 +312,10 @@ fn validate_assurance_claim_point(
 /// Validate module extensions
 ///
 fn validate_module_extensions(
-    module_info: &Module,
-    nodes: &BTreeMap<String, GsnNode>,
-    module_name: &str,
     diag: &mut Diagnostics,
+    module_name: &str,
+    nodes: &BTreeMap<String, GsnNode>,
+    module_info: &Module,
 ) -> Result<(), ()> {
     let results = module_info.meta.extends.iter().flat_map(|ext| {
         ext.develops.iter().flat_map(|(foreign_id, local_ids)| {
@@ -379,11 +375,50 @@ fn validate_defeated(
             .iter()
             .any(|(_, n)| n.challenges.contains(&id.to_owned()))
     {
-        diag.add_warning(
+        diag.add_error(
             Some(module),
             format!("V10: Element {id} is marked as defeated, but no other element challenges it."),
         );
         Err(())
+    } else {
+        Ok(())
+    }
+}
+
+///
+/// Perform check if dialectic extension is used.
+///
+fn validate_dialectic_extension(
+    diag: &mut Diagnostics,
+    module: &str,
+    nodes: &BTreeMap<String, GsnNode>,
+    warn_dialectic: bool,
+) -> Result<(), ()> {
+    if warn_dialectic {
+        let dialectic_nodes = nodes
+            .iter()
+            .filter_map(|(id, node)| {
+                if node.node_type == Some(GsnNodeType::CounterGoal)
+                    || node.node_type == Some(GsnNodeType::CounterSolution)
+                {
+                    Some(id.to_owned())
+                } else {
+                    None
+                }
+            })
+            .collect::<Vec<_>>();
+        if dialectic_nodes.is_empty() {
+            Ok(())
+        } else {
+            diag.add_warning(
+                Some(module),
+                format!(
+                    "V11: Dialectic extension is used. See elements: {}",
+                    dialectic_nodes.join(", ")
+                ),
+            );
+            Ok(())
+        }
     } else {
         Ok(())
     }
@@ -476,7 +511,7 @@ mod test {
                 ..Default::default()
             },
         );
-        assert!(validate_module(&mut d, "", &Module::default(), &nodes, false).is_err());
+        assert!(validate_module(&mut d, "", &Module::default(), &nodes, false, false).is_err());
         assert_eq!(d.messages.len(), 1);
         assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
@@ -500,7 +535,7 @@ mod test {
                 ..Default::default()
             },
         );
-        assert!(validate_module(&mut d, "", &Module::default(), &nodes, true).is_err());
+        assert!(validate_module(&mut d, "", &Module::default(), &nodes, true, true).is_err());
         assert_eq!(d.messages.len(), 2);
         assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
@@ -543,6 +578,7 @@ mod test {
                 },
                 &nodes,
                 true,
+                true,
             )
             .is_err()
         );
@@ -569,7 +605,7 @@ mod test {
                 ..Default::default()
             },
         );
-        assert!(validate_module(&mut d, "", &Module::default(), &nodes, true).is_err());
+        assert!(validate_module(&mut d, "", &Module::default(), &nodes, true, true).is_err());
         assert_eq!(d.messages.len(), 2);
         assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
@@ -600,7 +636,7 @@ mod test {
                 ..Default::default()
             },
         );
-        assert!(validate_module(&mut d, "", &Module::default(), &nodes, true).is_err());
+        assert!(validate_module(&mut d, "", &Module::default(), &nodes, true, true).is_err());
         assert_eq!(d.messages.len(), 2);
         assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
@@ -645,7 +681,7 @@ mod test {
                 ..Default::default()
             },
         );
-        assert!(validate_module(&mut d, "", &Module::default(), &nodes, true).is_ok());
+        assert!(validate_module(&mut d, "", &Module::default(), &nodes, true, true).is_ok());
         assert_eq!(d.messages.len(), 1);
         assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Warning);
@@ -677,7 +713,7 @@ mod test {
                 ..Default::default()
             },
         );
-        assert!(validate_module(&mut d, "", &Module::default(), &nodes, true).is_ok());
+        assert!(validate_module(&mut d, "", &Module::default(), &nodes, true, true).is_ok());
         assert_eq!(d.messages.len(), 1);
         assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Warning);
@@ -725,7 +761,7 @@ mod test {
                 ..Default::default()
             },
         );
-        assert!(validate_module(&mut d, "", &Module::default(), &nodes, true).is_err());
+        assert!(validate_module(&mut d, "", &Module::default(), &nodes, true, true).is_err());
         assert_eq!(d.messages.len(), 3);
         assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
@@ -783,7 +819,7 @@ mod test {
                 ..Default::default()
             },
         );
-        assert!(validate_module(&mut d, "", &Module::default(), &nodes, true).is_err());
+        assert!(validate_module(&mut d, "", &Module::default(), &nodes, true, true).is_err());
         assert_eq!(d.messages.len(), 3);
         assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
@@ -808,6 +844,39 @@ mod test {
     }
 
     #[test]
+    fn wrong_challenging() {
+        let mut d = Diagnostics::default();
+        let mut nodes = BTreeMap::<String, GsnNode>::new();
+        nodes.insert(
+            "G1".to_owned(),
+            GsnNode {
+                in_context_of: vec!["C1".to_owned()],
+                node_type: Some(GsnNodeType::Goal),
+                undeveloped: true,
+                ..Default::default()
+            },
+        );
+        nodes.insert(
+            "C1".to_owned(),
+            GsnNode {
+                node_type: Some(GsnNodeType::Context),
+                challenges: vec!["Sn1".to_owned()],
+                ..Default::default()
+            },
+        );
+        assert!(validate_module(&mut d, "", &Module::default(), &nodes, true, true).is_err());
+        assert_eq!(d.messages.len(), 1);
+        assert_eq!(d.messages[0].module, Some("".to_owned()));
+        assert_eq!(d.messages[0].diag_type, DiagType::Error);
+        assert_eq!(
+            d.messages[0].msg,
+            "V04: Element C1 has invalid type of reference Sn1 in challenges."
+        );
+        assert_eq!(d.errors, 1);
+        assert_eq!(d.warnings, 0);
+    }
+
+    #[test]
     fn unknown_ref() {
         let mut d = Diagnostics::default();
         let mut nodes = BTreeMap::<String, GsnNode>::new();
@@ -819,7 +888,7 @@ mod test {
                 ..Default::default()
             },
         );
-        assert!(validate_module(&mut d, "", &Module::default(), &nodes, true).is_ok());
+        assert!(validate_module(&mut d, "", &Module::default(), &nodes, true, true).is_ok());
         assert_eq!(d.messages.len(), 0);
         assert_eq!(d.errors, 0);
         assert_eq!(d.warnings, 0);
@@ -844,7 +913,7 @@ mod test {
                 ..Default::default()
             },
         );
-        assert!(validate_module(&mut d, "", &Module::default(), &nodes, true).is_ok());
+        assert!(validate_module(&mut d, "", &Module::default(), &nodes, true, true).is_ok());
         assert_eq!(d.messages.len(), 2);
         assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Warning);
@@ -875,7 +944,7 @@ mod test {
                 ..Default::default()
             },
         );
-        assert!(validate_module(&mut d, "", &Module::default(), &nodes, true).is_ok());
+        assert!(validate_module(&mut d, "", &Module::default(), &nodes, true, true).is_ok());
         assert_eq!(d.messages.len(), 2);
         assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Warning);
@@ -907,7 +976,7 @@ mod test {
                 ..Default::default()
             },
         );
-        assert!(validate_module(&mut d, "", &Module::default(), &nodes, true).is_err());
+        assert!(validate_module(&mut d, "", &Module::default(), &nodes, true, true).is_err());
         assert_eq!(d.messages.len(), 1);
         assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
@@ -950,6 +1019,7 @@ mod test {
                     output_path: None,
                 },
                 &nodes,
+                true,
                 true,
             )
             .is_err()
@@ -997,6 +1067,7 @@ mod test {
                 },
                 &nodes,
                 true,
+                true,
             )
             .is_err()
         );
@@ -1032,7 +1103,7 @@ mod test {
                 ..Default::default()
             },
         );
-        assert!(validate_module(&mut d, "", &Module::default(), &nodes, true).is_err());
+        assert!(validate_module(&mut d, "", &Module::default(), &nodes, true, true).is_err());
         assert_eq!(d.messages.len(), 1);
         assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Error);

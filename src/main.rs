@@ -85,6 +85,7 @@ fn main() -> Result<()> {
                 &excluded_modules,
                 &layers,
                 matches.get_flag("EXTENDED_CHECK"),
+                matches.get_flag("WARN_DIALECTIC"),
             )
         }();
         // Ignore error, if errors are found, this is handled in output_messages
@@ -613,6 +614,7 @@ fn validate_and_check(
     excluded_modules: &[&str],
     layers: &[&str],
     extended_check: bool,
+    warn_dialectic: bool,
 ) -> Result<()> {
     if nodes.is_empty() {
         diags.add_error(None, "No input elements are found.".to_owned());
@@ -646,6 +648,7 @@ fn validate_and_check(
                     module_info,
                     nodes,
                     extended_check,
+                    warn_dialectic,
                 )?;
             }
             gsn::extend_modules(diags, nodes, modules)?;
