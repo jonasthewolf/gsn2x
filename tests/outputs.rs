@@ -9,8 +9,7 @@ fn no_evidence() -> Result<()> {
     let temp = assert_fs::TempDir::new()?;
     temp.copy_from("tests", &["no_evidence.gsn.test.*"])?;
     cmd.arg("-N")
-        .arg("-e")
-        .arg("my_evidence.md")
+        .arg("-e=my_evidence.md")
         .arg("no_evidence.gsn.test.yaml")
         .current_dir(&temp);
     cmd.assert()
@@ -40,11 +39,9 @@ fn some_evidence() -> Result<()> {
     temp.copy_from("tests", &["example.gsn.test.md"])?;
     temp.copy_from(".", &["examples/example.gsn.yaml"])?;
 
-    cmd.arg("-e")
-        .arg("my_evidence.md")
+    cmd.arg("-e=my_evidence.md")
         .arg("examples/example.gsn.yaml")
-        .arg("-l")
-        .arg("layer1")
+        .arg("-l=layer1")
         .arg("-N")
         .current_dir(&temp);
     cmd.assert()

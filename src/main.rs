@@ -78,7 +78,14 @@ fn main() -> Result<()> {
                 output_directory,
             )?;
             // Validate
-            validate_and_check(&mut nodes, &modules, &mut diags, &excluded_modules, &layers)
+            validate_and_check(
+                &mut nodes,
+                &modules,
+                &mut diags,
+                &excluded_modules,
+                &layers,
+                matches.get_flag("EXTENDED_CHECK"),
+            )
         }();
         // Ignore error, if errors are found, this is handled in output_messages
         match read_and_check {
@@ -184,6 +191,21 @@ fn build_command_options() -> Command {
                 .short('x')
                 .long("exclude")
                 .action(ArgAction::Append)
+                .require_equals(true)
+                .help_heading("CHECKS"),
+        )
+        .arg(
+            Arg::new("WARN_DIALECTIC")
+                .help("Emit a warning if Dialectic Extension is used.")
+                .long("warn-dialectic")
+                .action(ArgAction::SetTrue)
+                .help_heading("CHECKS"),
+        )
+        .arg(
+            Arg::new("EXTENDED_CHECK")
+                .help("Perform additional checks.")
+                .long("extended-check")
+                .action(ArgAction::SetTrue)
                 .help_heading("CHECKS"),
         )
         .arg(
@@ -200,6 +222,7 @@ fn build_command_options() -> Command {
                 .short('f')
                 .long("full")
                 .action(ArgAction::Set)
+                .require_equals(true)
                 .default_value("complete.svg")
                 .conflicts_with_all(["CHECK_ONLY", "NO_COMPLETE_VIEW"])
                 .help_heading("OUTPUT"),
@@ -219,6 +242,7 @@ fn build_command_options() -> Command {
                 .short('a')
                 .long("arch")
                 .action(ArgAction::Set)
+                .require_equals(true)
                 .default_value("architecture.svg")
                 .conflicts_with_all(["CHECK_ONLY", "NO_ARCHITECTURE_VIEW"])
                 .help_heading("OUTPUT"),
@@ -238,6 +262,7 @@ fn build_command_options() -> Command {
                 .short('e')
                 .long("evidence")
                 .action(ArgAction::Set)
+                .require_equals(true)
                 .default_value("evidence.md")
                 .conflicts_with_all(["CHECK_ONLY", "NO_EVIDENCE"])
                 .help_heading("OUTPUT"),
@@ -257,6 +282,7 @@ fn build_command_options() -> Command {
                 .short('o')
                 .long("output-dir")
                 .action(ArgAction::Set)
+                .require_equals(true)
                 .conflicts_with("CHECK_ONLY")
                 .default_value(".")
                 .help_heading("OUTPUT"),
@@ -266,6 +292,7 @@ fn build_command_options() -> Command {
                 .help("Output statistics on inputs to <STATISTICS> file or standard output.")
                 .long("statistics")
                 .action(ArgAction::Set)
+                .require_equals(true)
                 .num_args(0..=1)
                 .help_heading("OUTPUT"),
         )
@@ -274,6 +301,7 @@ fn build_command_options() -> Command {
                 .help("Output parsed YAML files to single <YAMLDUMP> file or standard output.")
                 .long("dump-yaml")
                 .action(ArgAction::Set)
+                .require_equals(true)
                 .num_args(0..=1)
                 .help_heading("OUTPUT"),
         )
@@ -284,6 +312,7 @@ fn build_command_options() -> Command {
                 .long("layer")
                 .action(ArgAction::Append)
                 .use_value_delimiter(true)
+                .require_equals(true)
                 .conflicts_with("CHECK_ONLY")
                 .help_heading("OUTPUT MODIFICATION"),
         )
@@ -293,6 +322,7 @@ fn build_command_options() -> Command {
                 .short('s')
                 .long("stylesheet")
                 .action(ArgAction::Append)
+                .require_equals(true)
                 .conflicts_with("CHECK_ONLY")
                 .help_heading("OUTPUT MODIFICATION"),
         )
@@ -311,6 +341,7 @@ fn build_command_options() -> Command {
                 .short('m')
                 .long("mask")
                 .action(ArgAction::Append)
+                .require_equals(true)
                 .conflicts_with("CHECK_ONLY")
                 .help_heading("OUTPUT MODIFICATION"),
         )
@@ -338,6 +369,7 @@ fn build_command_options() -> Command {
                 .short('w')
                 .long("wrap")
                 .action(ArgAction::Set)
+                .require_equals(true)
                 .value_parser(value_parser!(u32))
                 .conflicts_with("CHECK_ONLY")
                 .help_heading("OUTPUT MODIFICATION"),
@@ -580,6 +612,7 @@ fn validate_and_check(
     diags: &mut Diagnostics,
     excluded_modules: &[&str],
     layers: &[&str],
+    extended_check: bool,
 ) -> Result<()> {
     if nodes.is_empty() {
         diags.add_error(None, "No input elements are found.".to_owned());
@@ -612,6 +645,7 @@ fn validate_and_check(
                     &module_info.meta.name,
                     module_info,
                     nodes,
+                    extended_check,
                 )?;
             }
             gsn::extend_modules(diags, nodes, modules)?;

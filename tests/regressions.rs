@@ -40,17 +40,13 @@ fn issue84() -> Result<()> {
 
 #[test]
 fn issue358() -> Result<()> {
-    regression_renderings(
-        &["tests/issue358.yaml"],
-        &["-l", "layer1", "-l", "layer2"],
-        None,
-    )?;
+    regression_renderings(&["tests/issue358.yaml"], &["-l=layer1", "-l=layer2"], None)?;
     Ok(())
 }
 
 #[test]
 fn issue365() -> Result<()> {
-    regression_renderings(&["tests/issue365.yaml"], &["-w", "35"], None)?;
+    regression_renderings(&["tests/issue365.yaml"], &["-w=35"], None)?;
     Ok(())
 }
 
@@ -62,19 +58,19 @@ fn issue371() -> Result<()> {
 
 #[test]
 fn issue372() -> Result<()> {
-    regression_renderings(&["tests/issue372.yaml"], &["-w", "35"], None)?;
+    regression_renderings(&["tests/issue372.yaml"], &["-w=35"], None)?;
     Ok(())
 }
 
 #[test]
 fn issue377() -> Result<()> {
-    regression_renderings(&["tests/issue377.yaml"], &["-w", "35"], None)?;
+    regression_renderings(&["tests/issue377.yaml"], &["-w=35"], None)?;
     Ok(())
 }
 
 #[test]
 fn issue389() -> Result<()> {
-    regression_renderings(&["tests/issue389.yaml"], &["-w", "20"], None)?;
+    regression_renderings(&["tests/issue389.yaml"], &["-w=20"], None)?;
     Ok(())
 }
 
@@ -92,7 +88,7 @@ fn issue391() -> Result<()> {
 fn issue433() -> Result<()> {
     regression_renderings(
         &["tests/issue433_1.yaml"],
-        &["-w", "20", "-F", "-A"],
+        &["-w=20", "-F", "-A"],
         Some(&["tests/issue433_2.yaml"]),
     )?;
     Ok(())
@@ -100,34 +96,26 @@ fn issue433() -> Result<()> {
 
 #[test]
 fn issue393() -> Result<()> {
-    regression_renderings(&["tests/issue393_1.yaml"], &["-w", "20"], None)?;
-    regression_renderings(&["tests/issue393_2.yaml"], &["-w", "20"], None)?;
+    regression_renderings(&["tests/issue393_1.yaml"], &["-w=20"], None)?;
+    regression_renderings(&["tests/issue393_2.yaml"], &["-w=20"], None)?;
     Ok(())
 }
 
 #[test]
 fn issue396() -> Result<()> {
-    regression_renderings(
-        &["tests/issue396.yaml"],
-        &["-w", "20", "-l", "layer1"],
-        None,
-    )?;
+    regression_renderings(&["tests/issue396.yaml"], &["-w=20", "-l=layer1"], None)?;
     Ok(())
 }
 
 #[test]
 fn issue407() -> Result<()> {
-    regression_renderings(
-        &["tests/issue407.yaml"],
-        &["-w", "20", "-l", "layer2"],
-        None,
-    )?;
+    regression_renderings(&["tests/issue407.yaml"], &["-w=20", "-l=layer2"], None)?;
     Ok(())
 }
 
 #[test]
 fn issue453() -> Result<()> {
-    regression_renderings(&["tests/issue453.yaml"], &["-l", "layer2"], None)?;
+    regression_renderings(&["tests/issue453.yaml"], &["-l=layer2"], None)?;
     Ok(())
 }
 
