@@ -16,8 +16,10 @@ Validations can be performed on individual input files.
 | V05 | All referenced elements in `supportedBy` and `inContextOf` must be unique i.e., no duplicates in the list.  |
 | V06 | All referenced elements in `supportedBy` and `inContextOf` must not refer to the element itself.            |
 | V07 | All elements listed as extending other elements must be known elements of the current module and semantically sensible (see V04). |
-| V08 | The IDs start contradicts the type of the element set with `node_type`. |
+| V08 | The ID's start contradicts the type of the element set with `node_type`. **Note: only reported with `--extended-check` option.** |
 | V09 | Element has an assurance claim point that references another element, that this is neither its own ID nor any of the connected elements.|
+| V10 | An element is marked as defeated, but has no other elements challenging it. |
+| V11 | A CounterGoal or CounterSolution is used in input files. **Note: only reported with `--warn-dialectic` option.** |
 
 The following checks apply to the complete set of input files.
 
@@ -34,9 +36,7 @@ The following checks apply to the complete set of input files.
 | C10 | All extended elements must exist in the named module and must be undeveloped.                          |
 | C11 | The reference that is not found (see C03), could actually be a list, but a YAML string was used. Use [] around your comma separated references. |
 
-
 Uniqueness of keys (i.e. element IDs) is automatically enforced by the YAML format.
-
 
 If called with option `-c` or `--check` the input file is only checked for validity, but the resulting graph is not written.
 The checks for references (Cxx) can be skipped for individual files by using the `-x` option.
@@ -48,4 +48,3 @@ Error messages and warnings are printed to stderr.
 The following format is used:
 
     (Warning|Error): \((?<module>.+)\) \((?<num>[CV][0-9][0-9])\): (?<msg>.+) 
-
