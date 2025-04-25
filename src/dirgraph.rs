@@ -38,7 +38,7 @@ pub trait DirectedGraphEdgeType<'a> {
     ///
     fn is_secondary_child_edge(&self) -> bool;
 
-    fn is_inverted_child_ege(&self) -> bool;
+    fn is_inverted_child_edge(&self) -> bool;
 }
 
 ///
@@ -146,7 +146,7 @@ where
         // Find root nodes
         for (source, t_edges) in self.edges {
             for (target, edge_type) in t_edges {
-                if edge_type.is_inverted_child_ege() {
+                if edge_type.is_inverted_child_edge() {
                     n_ids.remove(source);
                 } else {
                     n_ids.remove(target);
@@ -311,6 +311,7 @@ where
             .collect::<Vec<_>>();
 
         loop {
+            self.add_inverted_edge_children(&mut current_rank_nodes, &mut visited);
             let current_clones = current_rank_nodes.to_vec();
             // Postpone ranking of forced nodes
             current_rank_nodes
@@ -321,8 +322,7 @@ where
                         *forced_level -= 1;
                         *rank = false;
                     }
-                    // See if parents are not the same rank
-                    // TODO unless they are challenging nodes.
+                    // Rank if all parents are not the same rank
                     _ => {
                         *rank = self
                             .parent_edges
@@ -475,6 +475,47 @@ where
     }
 
     ///
+    /// Add inverted edges on the same rank.
+    ///
+    fn add_inverted_edge_children<'b>(
+        &'b self,
+        current_rank_nodes: &mut Vec<(&'b str, bool)>,
+        visited: &mut BTreeSet<&'b str>,
+    ) {
+        let mut nodes = vec![];
+        for (index, (node, _)) in current_rank_nodes.iter().enumerate() {
+            nodes.append(
+                &mut self
+                    .parent_edges
+                    .get(node)
+                    .into_iter()
+                    .flatten()
+                    .filter_map(|(child, edge_type)| {
+                        if edge_type.is_inverted_child_edge() {
+                            Some(child)
+                        } else {
+                            None
+                        }
+                    })
+                    .filter(|&n| !visited.contains(n))
+                    .map(|&n| {
+                        (
+                            index,
+                            (
+                                n,
+                                true, // Always true, since counter arguments may be on the same level
+                            ),
+                        )
+                    })
+                    .collect::<Vec<_>>(),
+            );
+        }
+        for (inserted, (index, n)) in nodes.into_iter().enumerate() {
+            current_rank_nodes.insert(index + inserted, n);
+        }
+    }
+
+    ///
     /// Get the children on the next rank of the given parent.
     /// This is used during ranking.
     ///
@@ -489,7 +530,6 @@ where
             .into_iter()
             .flatten()
             .filter_map(|(target, edge_type)| {
-                // Find next rank children
                 if edge_type.is_primary_child_edge() {
                     Some(target.as_str())
                 } else {
@@ -501,12 +541,13 @@ where
                 (
                     n,
                     // true if all parents are already ranked
-                    self.parent_edges
-                        .get(n)
-                        .unwrap() // unwrap ok, since nodes exist.
-                        .iter()
-                        .filter(|(_, et)| et.is_primary_child_edge())
-                        .all(|(p, _)| visited.contains(p)),
+                    // self.parent_edges
+                    //     .get(n)
+                    //     .unwrap() // unwrap ok, since nodes exist.
+                    //     .iter()
+                    //     .filter(|(_, et)| et.is_primary_child_edge())
+                    //     .all(|(p, _)| visited.contains(p)),
+                    false,
                 )
             })
             .collect::<Vec<_>>();
@@ -516,7 +557,7 @@ where
             .into_iter()
             .flatten()
             .filter_map(|(child, edge_type)| {
-                if edge_type.is_inverted_child_ege() {
+                if edge_type.is_inverted_child_edge() {
                     Some(child)
                 } else {
                     None
@@ -603,7 +644,7 @@ mod test {
         fn is_secondary_child_edge(&self) -> bool {
             false
         }
-        fn is_inverted_child_ege(&self) -> bool {
+        fn is_inverted_child_edge(&self) -> bool {
             false
         }
     }

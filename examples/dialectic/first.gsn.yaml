@@ -40,8 +40,6 @@ CSn2:
     counter 
     evidence
   challenges: G5
-  horizontalIndex: 
-    relative: -1
 
 G5:
   supportedBy: Sn2
@@ -84,5 +82,7 @@ Sn5: {}
 CG4:
   challenges: S2
   supportedBy: CSn4
+  horizontalIndex:
+    absolute: last
 
 CSn4: {}
