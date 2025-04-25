@@ -13,6 +13,7 @@ pub fn validate_module(
     module_name: &str,
     module_info: &Module,
     nodes: &BTreeMap<String, GsnNode>,
+    extended_check: bool,
 ) -> Result<(), ()> {
     let all_results = nodes
         .iter()
@@ -22,7 +23,7 @@ pub fn validate_module(
                 // Validate that type of node is known
                 validate_type(diag, module_name, id, node),
                 // Validate if id and type do not contradict
-                validate_id(diag, module_name, id, node),
+                validate_id(diag, module_name, id, node, extended_check),
                 // Validate all references of node
                 validate_references(diag, module_name, nodes, id, node),
                 // Validate all assurance claim points
@@ -63,17 +64,25 @@ fn validate_type(diag: &mut Diagnostics, module: &str, id: &str, node: &GsnNode)
 ///
 /// Check if node id starts with a know prefix
 ///
-fn validate_id(diag: &mut Diagnostics, module: &str, id: &str, node: &GsnNode) -> Result<(), ()> {
-    if let Some(type_from_id) = get_node_type_from_text(id) {
-        if let Some(type_from_node) = node.node_type {
-            if type_from_node != type_from_id {
-                diag.add_warning(
-                    Some(module),
-                    format!(
-                        "V08: Element {} has type {}, but ID indicates type {}",
-                        id, type_from_node, type_from_id
-                    ),
-                );
+fn validate_id(
+    diag: &mut Diagnostics,
+    module: &str,
+    id: &str,
+    node: &GsnNode,
+    extended_check: bool,
+) -> Result<(), ()> {
+    if extended_check {
+        if let Some(type_from_id) = get_node_type_from_text(id) {
+            if let Some(type_from_node) = node.node_type {
+                if type_from_node != type_from_id {
+                    diag.add_warning(
+                        Some(module),
+                        format!(
+                            "V08: Element {} has type {}, but ID indicates type {}",
+                            id, type_from_node, type_from_id
+                        ),
+                    );
+                }
             }
         }
     }
@@ -410,7 +419,7 @@ mod test {
         // validate_id is not supposed to detect that situation
         let mut d = Diagnostics::default();
         let node = GsnNode::default();
-        assert!(validate_id(&mut d, "", "X1", &node).is_ok());
+        assert!(validate_id(&mut d, "", "X1", &node, false).is_ok());
         assert_eq!(d.messages.len(), 0);
         assert_eq!(d.errors, 0);
         assert_eq!(d.warnings, 0);
@@ -424,7 +433,7 @@ mod test {
             ..Default::default()
         };
         node.fix_node_type("Sn1");
-        assert!(validate_id(&mut d, "", "Sn1", &node).is_ok());
+        assert!(validate_id(&mut d, "", "Sn1", &node, true).is_ok());
         assert_eq!(d.messages.len(), 1);
         assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Warning);
@@ -440,7 +449,7 @@ mod test {
     fn known_id() {
         let mut d = Diagnostics::default();
         let node = GsnNode::default();
-        assert!(validate_id(&mut d, "", "Sn1", &node).is_ok());
+        assert!(validate_id(&mut d, "", "Sn1", &node, true).is_ok());
         assert_eq!(d.messages.len(), 0);
         assert_eq!(d.errors, 0);
         assert_eq!(d.warnings, 0);
@@ -467,7 +476,7 @@ mod test {
                 ..Default::default()
             },
         );
-        assert!(validate_module(&mut d, "", &Module::default(), &nodes).is_err());
+        assert!(validate_module(&mut d, "", &Module::default(), &nodes, false).is_err());
         assert_eq!(d.messages.len(), 1);
         assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
@@ -491,7 +500,7 @@ mod test {
                 ..Default::default()
             },
         );
-        assert!(validate_module(&mut d, "", &Module::default(), &nodes).is_err());
+        assert!(validate_module(&mut d, "", &Module::default(), &nodes, true).is_err());
         assert_eq!(d.messages.len(), 2);
         assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
@@ -533,6 +542,7 @@ mod test {
                     output_path: None,
                 },
                 &nodes,
+                true,
             )
             .is_err()
         );
@@ -559,7 +569,7 @@ mod test {
                 ..Default::default()
             },
         );
-        assert!(validate_module(&mut d, "", &Module::default(), &nodes).is_err());
+        assert!(validate_module(&mut d, "", &Module::default(), &nodes, true).is_err());
         assert_eq!(d.messages.len(), 2);
         assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
@@ -590,7 +600,7 @@ mod test {
                 ..Default::default()
             },
         );
-        assert!(validate_module(&mut d, "", &Module::default(), &nodes).is_err());
+        assert!(validate_module(&mut d, "", &Module::default(), &nodes, true).is_err());
         assert_eq!(d.messages.len(), 2);
         assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
@@ -635,7 +645,7 @@ mod test {
                 ..Default::default()
             },
         );
-        assert!(validate_module(&mut d, "", &Module::default(), &nodes).is_ok());
+        assert!(validate_module(&mut d, "", &Module::default(), &nodes, true).is_ok());
         assert_eq!(d.messages.len(), 1);
         assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Warning);
@@ -667,7 +677,7 @@ mod test {
                 ..Default::default()
             },
         );
-        assert!(validate_module(&mut d, "", &Module::default(), &nodes).is_ok());
+        assert!(validate_module(&mut d, "", &Module::default(), &nodes, true).is_ok());
         assert_eq!(d.messages.len(), 1);
         assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Warning);
@@ -715,7 +725,7 @@ mod test {
                 ..Default::default()
             },
         );
-        assert!(validate_module(&mut d, "", &Module::default(), &nodes).is_err());
+        assert!(validate_module(&mut d, "", &Module::default(), &nodes, true).is_err());
         assert_eq!(d.messages.len(), 3);
         assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
@@ -773,7 +783,7 @@ mod test {
                 ..Default::default()
             },
         );
-        assert!(validate_module(&mut d, "", &Module::default(), &nodes).is_err());
+        assert!(validate_module(&mut d, "", &Module::default(), &nodes, true).is_err());
         assert_eq!(d.messages.len(), 3);
         assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
@@ -809,7 +819,7 @@ mod test {
                 ..Default::default()
             },
         );
-        assert!(validate_module(&mut d, "", &Module::default(), &nodes).is_ok());
+        assert!(validate_module(&mut d, "", &Module::default(), &nodes, true).is_ok());
         assert_eq!(d.messages.len(), 0);
         assert_eq!(d.errors, 0);
         assert_eq!(d.warnings, 0);
@@ -834,7 +844,7 @@ mod test {
                 ..Default::default()
             },
         );
-        assert!(validate_module(&mut d, "", &Module::default(), &nodes).is_ok());
+        assert!(validate_module(&mut d, "", &Module::default(), &nodes, true).is_ok());
         assert_eq!(d.messages.len(), 2);
         assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Warning);
@@ -865,7 +875,7 @@ mod test {
                 ..Default::default()
             },
         );
-        assert!(validate_module(&mut d, "", &Module::default(), &nodes).is_ok());
+        assert!(validate_module(&mut d, "", &Module::default(), &nodes, true).is_ok());
         assert_eq!(d.messages.len(), 2);
         assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Warning);
@@ -897,7 +907,7 @@ mod test {
                 ..Default::default()
             },
         );
-        assert!(validate_module(&mut d, "", &Module::default(), &nodes).is_err());
+        assert!(validate_module(&mut d, "", &Module::default(), &nodes, true).is_err());
         assert_eq!(d.messages.len(), 1);
         assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
@@ -940,6 +950,7 @@ mod test {
                     output_path: None,
                 },
                 &nodes,
+                true,
             )
             .is_err()
         );
@@ -985,6 +996,7 @@ mod test {
                     output_path: None,
                 },
                 &nodes,
+                true,
             )
             .is_err()
         );
@@ -1020,7 +1032,7 @@ mod test {
                 ..Default::default()
             },
         );
-        assert!(validate_module(&mut d, "", &Module::default(), &nodes).is_err());
+        assert!(validate_module(&mut d, "", &Module::default(), &nodes, true).is_err());
         assert_eq!(d.messages.len(), 1);
         assert_eq!(d.messages[0].module, Some("".to_owned()));
         assert_eq!(d.messages[0].diag_type, DiagType::Error);

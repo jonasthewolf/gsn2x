@@ -130,8 +130,7 @@ fn validate_multiple_only_error_exclude() -> Result<()> {
     cmd.arg("-c")
         .arg("examples/modular/index.gsn.yaml")
         .arg("examples/modular/sub2.gsn.yaml")
-        .arg("-x")
-        .arg("examples/modular/sub2.gsn.yaml");
+        .arg("-x=examples/modular/sub2.gsn.yaml");
     cmd.assert().failure().stderr(predicate::str::contains(
         "Error: 2 errors and 0 warnings detected.",
     ));
@@ -203,8 +202,7 @@ fn arch_view() -> Result<()> {
     temp.copy_from(".", &["examples/modular/*.yaml"])?;
     let output_file = temp.child("examples/modular/architecture.svg");
     cmd.arg("examples/modular/index.gsn.yaml")
-        .arg("-o")
-        .arg("examples/modular")
+        .arg("-o=examples/modular")
         .arg("-E")
         .arg("-F")
         .arg("-G")
@@ -238,8 +236,7 @@ fn multiple_view() -> Result<()> {
             .arg("-E")
             .arg("-F")
             .arg("-G")
-            .arg("-s")
-            .arg("https://github.com/jonasthewolf/gsn2x/blob/3439402d093ba54af4771b295e78f2488bd1b978/examples/modular/modular.css")
+            .arg("-s=https://github.com/jonasthewolf/gsn2x/blob/3439402d093ba54af4771b295e78f2488bd1b978/examples/modular/modular.css")
             .current_dir(&temp);
     cmd.assert()
         .success()
@@ -351,7 +348,7 @@ fn dialectic_second() -> Result<()> {
 fn min_doc() -> Result<()> {
     regression_renderings(
         &["examples/minimalcss/min.gsn.yaml"],
-        &["-s", "examples/minimalcss/min.css", "-t"],
+        &["-s=examples/minimalcss/min.css", "-t"],
         Some(&["examples/minimalcss/min.css"]),
     )?;
     Ok(())
@@ -363,10 +360,8 @@ fn min_doc_copy_css() -> Result<()> {
     let temp = assert_fs::TempDir::new()?;
     temp.copy_from("examples/minimalcss", &["min*"])?;
     cmd.current_dir(&temp)
-        .arg("-s")
-        .arg("min.css")
-        .arg("-o")
-        .arg("output")
+        .arg("-s=min.css")
+        .arg("-o=output")
         .arg("min.gsn.yaml");
     cmd.assert().success();
     temp.child("output")
@@ -379,7 +374,7 @@ fn min_doc_copy_css() -> Result<()> {
 fn additionals() -> Result<()> {
     regression_renderings(
         &["tests/additionals.yaml"],
-        &["-E", "-l", "add1", "-l", "unsupported", "-l", "additional"],
+        &["-E", "-l=add1", "-l=unsupported", "-l=additional"],
         None,
     )?;
     Ok(())
