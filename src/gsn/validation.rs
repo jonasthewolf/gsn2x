@@ -877,6 +877,65 @@ mod test {
     }
 
     #[test]
+    fn defeated_unchallenged() {
+        let mut d = Diagnostics::default();
+        let mut nodes = BTreeMap::<String, GsnNode>::new();
+        nodes.insert(
+            "G1".to_owned(),
+            GsnNode {
+                node_type: Some(GsnNodeType::Goal),
+                undeveloped: true,
+                defeated: true,
+                ..Default::default()
+            },
+        );
+        assert!(validate_module(&mut d, "", &Module::default(), &nodes, true, true).is_err());
+        assert_eq!(d.messages.len(), 1);
+        assert_eq!(d.messages[0].module, Some("".to_owned()));
+        assert_eq!(d.messages[0].diag_type, DiagType::Error);
+        assert_eq!(
+            d.messages[0].msg,
+            "V10: Element G1 is marked as defeated, but no other element challenges it."
+        );
+        assert_eq!(d.errors, 1);
+        assert_eq!(d.warnings, 0);
+    }
+
+    #[test]
+    fn warn_dialectic() {
+        let mut d = Diagnostics::default();
+        let mut nodes = BTreeMap::<String, GsnNode>::new();
+        nodes.insert(
+            "G1".to_owned(),
+            GsnNode {
+                node_type: Some(GsnNodeType::Goal),
+                undeveloped: true,
+                defeated: true,
+                ..Default::default()
+            },
+        );
+        nodes.insert(
+            "CG1".to_owned(),
+            GsnNode {
+                node_type: Some(GsnNodeType::CounterGoal),
+                undeveloped: true,
+                challenges: vec!["G1".to_owned()],
+                ..Default::default()
+            },
+        );
+        assert!(validate_module(&mut d, "", &Module::default(), &nodes, true, true).is_ok());
+        assert_eq!(d.messages.len(), 1);
+        assert_eq!(d.messages[0].module, Some("".to_owned()));
+        assert_eq!(d.messages[0].diag_type, DiagType::Warning);
+        assert_eq!(
+            d.messages[0].msg,
+            "V11: Dialectic extension is used. See elements: CG1"
+        );
+        assert_eq!(d.errors, 0);
+        assert_eq!(d.warnings, 1);
+    }
+
+    #[test]
     fn unknown_ref() {
         let mut d = Diagnostics::default();
         let mut nodes = BTreeMap::<String, GsnNode>::new();
