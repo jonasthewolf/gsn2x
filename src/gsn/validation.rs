@@ -450,6 +450,19 @@ mod test {
     }
 
     #[test]
+    fn unknown_id_validation() {
+        let mut d = Diagnostics::default();
+        let node = GsnNode {
+            node_type: Some(GsnNodeType::Goal),
+            ..Default::default()
+        };
+        assert!(validate_id(&mut d, "", "X1", &node, true).is_ok());
+        assert_eq!(d.messages.len(), 0);
+        assert_eq!(d.errors, 0);
+        assert_eq!(d.warnings, 0);
+    }
+
+    #[test]
     fn unknown_id_no_type() {
         // validate_id is not supposed to detect that situation
         let mut d = Diagnostics::default();

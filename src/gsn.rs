@@ -623,7 +623,40 @@ fn add_dependencies(
 #[cfg(test)]
 mod test {
     use super::*;
-    use anyhow::{Result, anyhow};
+    use anyhow::Result;
+
+    impl<'a> TryFrom<&'a GsnDocument> for &'a GsnNode {
+        type Error = ();
+
+        fn try_from(value: &'a GsnDocument) -> std::result::Result<Self, Self::Error> {
+            match value {
+                GsnDocument::ModuleInformation(_) => Err(()),
+                GsnDocument::GsnNode(gsn_node) => Ok(gsn_node),
+            }
+        }
+    }
+
+    #[test]
+    fn dummy_tryinto() {
+        let g = GsnDocument::ModuleInformation(ModuleInformation {
+            ..Default::default()
+        });
+        let n: Result<&GsnNode, ()> = (&g).try_into();
+        assert!(n.is_err());
+    }
+
+    #[test]
+    fn format_origin() {
+        assert_eq!(
+            format!("{}", Origin::File("my".to_owned())),
+            "file my".to_owned()
+        );
+        assert_eq!(
+            format!("{}", Origin::Excluded),
+            "automatic extension by gsn2x".to_owned()
+        );
+    }
+
     #[test]
     fn serde_hor_index() -> Result<()> {
         let res: HorizontalIndex = serde_yml::from_str("!relative 5")?;
@@ -676,12 +709,9 @@ horizontalIndex:
   relative: -23
 "#;
         let res: GsnDocument = serde_yml::from_str(goal)?;
-        if let GsnDocument::GsnNode(node) = res {
-            assert_eq!(node.horizontal_index, Some(HorizontalIndex::Relative(-23)));
-            Ok(())
-        } else {
-            Err(anyhow!("no GsnNode deserialized"))
-        }
+        let node: &GsnNode = (&res).try_into().unwrap();
+        assert_eq!(node.horizontal_index, Some(HorizontalIndex::Relative(-23)));
+        Ok(())
     }
 
     #[test]
@@ -699,12 +729,9 @@ C1:
   nodeType: Solution
 "#;
         let res: BTreeMap<String, GsnDocument> = serde_yml::from_str(gsn)?;
-        if let Some(GsnDocument::GsnNode(n)) = res.get("C1") {
-            assert_eq!(n.node_type, Some(GsnNodeType::Solution));
-            Ok(())
-        } else {
-            Err(anyhow!("Serialization did not work"))
-        }
+        let n: &GsnNode = res.get("C1").unwrap().try_into().unwrap();
+        assert_eq!(n.node_type, Some(GsnNodeType::Solution));
+        Ok(())
     }
 
     #[test]
