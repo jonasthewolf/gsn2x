@@ -654,6 +654,7 @@ mod test {
         let et = ET {};
         assert!(et.is_primary_child_edge());
         assert!(!et.is_secondary_child_edge());
+        assert!(!et.is_inverted_child_edge());
     }
 
     #[test]
