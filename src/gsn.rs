@@ -595,7 +595,7 @@ fn get_root_nodes(nodes: &BTreeMap<String, GsnNode>) -> Vec<String> {
             root_nodes.remove(snode);
         }
         // Challenging nodes cannot be root nodes.
-        if !node.challenges.is_some() {
+        if node.challenges.is_some() {
             root_nodes.remove(id);
         }
     }
