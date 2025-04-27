@@ -11,7 +11,7 @@ pub use util::{escape_node_id, escape_text};
 use edges::EdgeType;
 use nodes::{Port, SvgNode};
 
-use crate::dirgraph::DirectedGraph;
+use crate::dirgraph::{DirectedGraph, EdgeDecorator};
 use crate::dirgraphsvg::layout::layout_nodes;
 use crate::dirgraphsvg::render::render_graph;
 
@@ -48,7 +48,7 @@ impl<'a> DirGraph<'a> {
         mut nodes: BTreeMap<String, SvgNode>,
         edges: BTreeMap<String, Vec<(String, EdgeType)>>,
         mut output: impl std::io::Write,
-        edge_decorators: BTreeMap<(String, String), Vec<String>>,
+        edge_decorators: BTreeMap<(String, String), EdgeDecorator>,
     ) -> Result<(), std::io::Error> {
         // Calculate node sizes
         nodes

@@ -19,12 +19,14 @@ CG1:
   text: A counter argument
   supportedBy: CG2
   challenges: G2
+  defeatedRelation: G2
   horizontalIndex:  
     relative: -1
+  rankIncrement: 1
 
-# CCSn1:
-#   type: CounterGoal
-#   challenges: [CG1, G2]
+CCSn1:
+  nodeType: CounterSolution
+  challenges: G2 -> CG1
 
 CG2:
   text: Another counter argument
@@ -45,11 +47,14 @@ CSn2:
     evidence
   challenges: G5
   defeated: true
+  defeatedRelation: G5
+  rankIncrement: 1
 
 CCG1:
   nodeType: CounterGoal
   supportedBy: CCSn2
   challenges: CSn2
+  rankIncrement: 1
 
 CCSn2:
   nodeType: CounterSolution
@@ -63,13 +68,14 @@ Sn2: {}
 G6:
   supportedBy: Sn3
 
-Sn3:
-  defeated: true
+Sn3: {}
 
 CG3:
   challenges: Sn3
   supportedBy: CSn3
   defeated: true
+  defeatedRelation: Sn3
+  rankIncrement: 1
 
 CSn3: {}
 
@@ -104,3 +110,5 @@ CSn4: {}
 CCSn3:
   nodeType: CounterSolution
   challenges: CG3
+  horizontalIndex:
+    relative: +1

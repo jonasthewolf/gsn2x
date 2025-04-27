@@ -6,7 +6,7 @@ use svg::{
 };
 
 use crate::{
-    dirgraph::{DirectedGraph, DirectedGraphEdgeType},
+    dirgraph::{DirectedGraph, DirectedGraphEdgeType, EdgeDecorator},
     dirgraphsvg::{
         escape_text,
         render::{BOTTOM_RIGHT_CORNER, PADDING_HORIZONTAL, PADDING_VERTICAL, TOP_LEFT_CORNER},
@@ -27,15 +27,16 @@ use super::{
 /// The EdgeType in one direction
 ///
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
-pub enum SingleEdge {
+pub enum SingleEdge<'a> {
     InContextOf,
     SupportedBy,
     Composite,
-    Challenges,
+    ChallengesNode,
+    ChallengesRelation(&'a str),
 }
 
-impl BitOr for SingleEdge {
-    type Output = SingleEdge;
+impl<'a> BitOr for SingleEdge<'a> {
+    type Output = SingleEdge<'a>;
 
     fn bitor(self, rhs: Self) -> Self::Output {
         match self {
@@ -63,12 +64,12 @@ impl BitOr for SingleEdge {
 /// The edge type used for rendering
 ///
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
-pub enum EdgeType {
-    OneWay(SingleEdge),
-    TwoWay((SingleEdge, SingleEdge)),
+pub enum EdgeType<'a> {
+    OneWay(SingleEdge<'a>),
+    TwoWay((SingleEdge<'a>, SingleEdge<'a>)),
 }
 
-impl DirectedGraphEdgeType<'_> for EdgeType {
+impl<'a> DirectedGraphEdgeType<'_> for EdgeType<'a> {
     fn is_primary_child_edge(&self) -> bool {
         matches!(
             *self,
@@ -86,19 +87,21 @@ impl DirectedGraphEdgeType<'_> for EdgeType {
     }
 
     fn is_inverted_child_edge(&self) -> bool {
-        matches!(*self, EdgeType::OneWay(SingleEdge::Challenges))
+        matches!(*self, EdgeType::OneWay(SingleEdge::ChallengesNode))
+            || matches!(*self, EdgeType::OneWay(SingleEdge::ChallengesRelation(_)))
     }
 }
 
 ///
 /// Convert from GsnEdgeType to EdgeType
 ///
-impl From<&GsnEdgeType> for EdgeType {
-    fn from(value: &GsnEdgeType) -> Self {
+impl<'a> From<GsnEdgeType<'a>> for EdgeType<'a> {
+    fn from(value: GsnEdgeType<'a>) -> Self {
         match value {
             GsnEdgeType::SupportedBy => Self::OneWay(SingleEdge::SupportedBy),
             GsnEdgeType::InContextOf => Self::OneWay(SingleEdge::InContextOf),
-            GsnEdgeType::Challenges => Self::OneWay(SingleEdge::Challenges),
+            GsnEdgeType::ChallengesNode => Self::OneWay(SingleEdge::ChallengesNode),
+            GsnEdgeType::ChallengesRelation(r) => Self::OneWay(SingleEdge::ChallengesRelation(r)),
         }
     }
 }
@@ -120,20 +123,190 @@ pub(super) fn render_edge(
     target: &(String, EdgeType),
     width: i32,
 ) -> Vec<Element> {
-    let s = graph.get_nodes().get(source).unwrap().borrow();
+    let curve_points = match target.1 {
+        EdgeType::OneWay(SingleEdge::ChallengesRelation(relation_target)) => {
+            // Render edge from source to mid point of target.0 and relation_target edge
+            let source_id = &target.0;
+            let target_id = relation_target;
+            let other_edge = get_edge_points(
+                graph,
+                render_graph,
+                ranks,
+                bounding_boxes,
+                source_id,
+                target_id,
+                target.1,
+                width,
+            );
+            let p = get_mid_point(&other_edge);
+            let dummy_target = RefCell::new(SvgNode::new_dummy(p.x, p.y));
+            let real_edge = create_curve_points(
+                render_graph,
+                bounding_boxes,
+                EdgeType::OneWay(SingleEdge::ChallengesRelation(target_id)),
+                width,
+                graph.get_nodes().get(source).unwrap().borrow(),
+                dummy_target.borrow(),
+                ranks
+                    .iter()
+                    .position(|x| x.iter().flatten().any(|&v| v == source_id))
+                    .unwrap(),
+                ranks
+                    .iter()
+                    .position(|x| x.iter().flatten().any(|&v| v == relation_target))
+                    .unwrap(),
+            );
+            real_edge
+        }
+        _ => {
+            // Render edge between source and target.0 nodes
+            let source_id = source;
+            let target_id = &target.0;
+            get_edge_points(
+                graph,
+                render_graph,
+                ranks,
+                bounding_boxes,
+                source_id,
+                target_id,
+                target.1,
+                width,
+            )
+        }
+    };
+
+    let data = create_path_data_for_points(&curve_points);
+    let arrow_end_id = match &target.1 {
+        EdgeType::OneWay(SingleEdge::InContextOf)
+        | EdgeType::TwoWay((_, SingleEdge::InContextOf)) => Some("url(#incontextof_arrow)"),
+        EdgeType::OneWay(SingleEdge::SupportedBy)
+        | EdgeType::TwoWay((_, SingleEdge::SupportedBy)) => Some("url(#supportedby_arrow)"),
+        EdgeType::OneWay(SingleEdge::Composite) | EdgeType::TwoWay((_, SingleEdge::Composite)) => {
+            Some("url(#composite_arrow)")
+        }
+        EdgeType::OneWay(SingleEdge::ChallengesNode) => Some("url(#challenges_arrow)"),
+        EdgeType::OneWay(SingleEdge::ChallengesRelation(_)) => Some("url(#challenges_arrow)"),
+        _ => unreachable!(),
+    };
+    let arrow_start_id = match &target.1 {
+        EdgeType::TwoWay((SingleEdge::InContextOf, _)) => Some("url(#incontextof_arrow)"),
+        EdgeType::TwoWay((SingleEdge::SupportedBy, _)) => Some("url(#supportedby_arrow)"),
+        EdgeType::TwoWay((SingleEdge::Composite, _)) => Some("url(#composite_arrow)"),
+        _ => None,
+    };
+    let mut classes = "gsnedge".to_string();
+    match target.1 {
+        EdgeType::OneWay(SingleEdge::InContextOf)
+        | EdgeType::TwoWay((_, SingleEdge::InContextOf))
+        | EdgeType::TwoWay((SingleEdge::InContextOf, _)) => classes.push_str(" gsninctxt"),
+        EdgeType::OneWay(SingleEdge::SupportedBy)
+        | EdgeType::TwoWay((_, SingleEdge::SupportedBy))
+        | EdgeType::TwoWay((SingleEdge::SupportedBy, _)) => classes.push_str(" gsninspby"),
+        EdgeType::OneWay(SingleEdge::Composite) | EdgeType::TwoWay((_, SingleEdge::Composite)) => {
+            // Already covered by all other matches
+            //| EdgeType::TwoWay((SingleEdge::Composite, _))
+            classes.push_str(" gsncomposite")
+        }
+        EdgeType::OneWay(SingleEdge::ChallengesNode)
+        | EdgeType::OneWay(SingleEdge::ChallengesRelation(_)) => classes.push_str(" gsnchllngs"),
+        _ => unreachable!(),
+    };
+    let mut e = Path::new()
+        .set("d", data)
+        .set("fill-opacity", "0")
+        .set("stroke", "black")
+        .set("stroke-width", 1u32);
+    if let Some(arrow_id) = arrow_end_id {
+        e = e.set("marker-end", arrow_id);
+    }
+    if let Some(arrow_id) = arrow_start_id {
+        e = e.set("marker-start", arrow_id);
+    }
+    if matches!(target.1, EdgeType::OneWay(SingleEdge::ChallengesNode))
+        || matches!(
+            target.1,
+            EdgeType::OneWay(SingleEdge::ChallengesRelation(_))
+        )
+    {
+        e = e.set("stroke-dasharray", "5 5");
+    }
+    e = e.set("class", classes);
+    let mut result: Vec<Element> = vec![e.into()];
+    if let Some(EdgeDecorator::Defeated) = graph.get_edge_decorator(source, &target.0) {
+        let p = get_mid_point(&curve_points);
+        result.push(
+            Use::new()
+                .set("href", "#defeated_cross")
+                .set("x", p.x - 10)
+                .set("y", p.y - 10)
+                .into(),
+        );
+    }
+    result.extend(render_acps(
+        graph,
+        render_graph,
+        source,
+        target,
+        curve_points,
+    ));
+    result
+}
+
+///
+/// Get points of the edge.
+///
+///
+fn get_edge_points(
+    graph: &DirectedGraph<'_, RefCell<SvgNode>, EdgeType>,
+    render_graph: &DirGraph<'_>,
+    ranks: &[Vec<Vec<&str>>],
+    bounding_boxes: &[Vec<[Point2D<i32>; 4]>],
+    source_id: &str,
+    target_id: &str,
+    edge_type: EdgeType,
+    width: i32,
+) -> Vec<(Point2D<i32>, Point2D<i32>)> {
+    let s = graph.get_nodes().get(source_id).unwrap().borrow();
+    let t = graph.get_nodes().get(target_id).unwrap().borrow();
     let s_rank = ranks
         .iter()
-        .position(|x| x.iter().flatten().any(|&v| v == source))
+        .position(|x| x.iter().flatten().any(|&v| v == source_id))
         .unwrap();
-    let t = graph.get_nodes().get(&target.0).unwrap().borrow();
     let t_rank = ranks
         .iter()
-        .position(|x| x.iter().flatten().any(|&v| v == target.0))
+        .position(|x| x.iter().flatten().any(|&v| v == target_id))
         .unwrap();
+
+    create_curve_points(
+        render_graph,
+        bounding_boxes,
+        edge_type,
+        width,
+        s,
+        t,
+        s_rank,
+        t_rank,
+    )
+}
+
+///
+/// Create curve points between two nodes
+///
+///
+fn create_curve_points(
+    render_graph: &DirGraph<'_>,
+    bounding_boxes: &[Vec<[Point2D<i32>; 4]>],
+    edge_type: EdgeType<'_>,
+    width: i32,
+    s: std::cell::Ref<'_, SvgNode>,
+    t: std::cell::Ref<'_, SvgNode>,
+    s_rank: usize,
+    t_rank: usize,
+) -> Vec<(Point2D<i32>, Point2D<i32>)> {
     let s_pos = s.get_position();
     let t_pos = t.get_position();
 
-    let (marker_start_height, marker_end_height, support_distance) = match target.1 {
+    let (marker_start_height, marker_end_height, support_distance) = match edge_type {
         EdgeType::OneWay(_) => (0i32, MARKER_HEIGHT as i32, 3i32 * MARKER_HEIGHT as i32),
         EdgeType::TwoWay(_) => (
             MARKER_HEIGHT as i32,
@@ -159,65 +332,7 @@ pub(super) fn render_edge(
         &render_graph.margin,
     );
     curve_points.push((end, end_sup));
-
-    let data = create_path_data_for_points(&curve_points);
-    let arrow_end_id = match &target.1 {
-        EdgeType::OneWay(SingleEdge::InContextOf)
-        | EdgeType::TwoWay((_, SingleEdge::InContextOf)) => Some("url(#incontextof_arrow)"),
-        EdgeType::OneWay(SingleEdge::SupportedBy)
-        | EdgeType::TwoWay((_, SingleEdge::SupportedBy)) => Some("url(#supportedby_arrow)"),
-        EdgeType::OneWay(SingleEdge::Composite) | EdgeType::TwoWay((_, SingleEdge::Composite)) => {
-            Some("url(#composite_arrow)")
-        }
-        EdgeType::OneWay(SingleEdge::Challenges) => Some("url(#challenges_arrow)"),
-        _ => unreachable!(),
-    };
-    let arrow_start_id = match &target.1 {
-        EdgeType::TwoWay((SingleEdge::InContextOf, _)) => Some("url(#incontextof_arrow)"),
-        EdgeType::TwoWay((SingleEdge::SupportedBy, _)) => Some("url(#supportedby_arrow)"),
-        EdgeType::TwoWay((SingleEdge::Composite, _)) => Some("url(#composite_arrow)"),
-        _ => None,
-    };
-    let mut classes = "gsnedge".to_string();
-    match target.1 {
-        EdgeType::OneWay(SingleEdge::InContextOf)
-        | EdgeType::TwoWay((_, SingleEdge::InContextOf))
-        | EdgeType::TwoWay((SingleEdge::InContextOf, _)) => classes.push_str(" gsninctxt"),
-        EdgeType::OneWay(SingleEdge::SupportedBy)
-        | EdgeType::TwoWay((_, SingleEdge::SupportedBy))
-        | EdgeType::TwoWay((SingleEdge::SupportedBy, _)) => classes.push_str(" gsninspby"),
-        EdgeType::OneWay(SingleEdge::Composite) | EdgeType::TwoWay((_, SingleEdge::Composite)) => {
-            // Already covered by all other matches
-            //| EdgeType::TwoWay((SingleEdge::Composite, _))
-            classes.push_str(" gsncomposite")
-        }
-        EdgeType::OneWay(SingleEdge::Challenges) => classes.push_str(" gsnchllngs"),
-        _ => unreachable!(),
-    };
-    let mut e = Path::new()
-        .set("d", data)
-        .set("fill-opacity", "0")
-        .set("stroke", "black")
-        .set("stroke-width", 1u32);
-    if let Some(arrow_id) = arrow_end_id {
-        e = e.set("marker-end", arrow_id);
-    }
-    if let Some(arrow_id) = arrow_start_id {
-        e = e.set("marker-start", arrow_id);
-    }
-    if target.1 == EdgeType::OneWay(SingleEdge::Challenges) {
-        e = e.set("stroke-dasharray", "5 5");
-    }
-    e = e.set("class", classes);
-    let mut result: Vec<Element> = vec![e.into()];
-    result.extend(render_acps(
-        graph,
-        render_graph,
-        source,
-        target,
-        curve_points,
-    ));
-    result
+    curve_points
 }
 
 ///
@@ -231,7 +346,7 @@ fn render_acps(
     target: &(String, EdgeType),
     curve_points: Vec<(Point2D<i32>, Point2D<i32>)>,
 ) -> Option<Element> {
-    if let Some(acps) = graph.get_edge_decorator(source.to_owned(), target.0.to_owned()) {
+    if let Some(EdgeDecorator::Acps(acps)) = graph.get_edge_decorator(source, &target.0) {
         let mut svg_acp = Group::new()
             .set(
                 "id",
@@ -486,6 +601,21 @@ fn get_start_and_end_points(
             )
         };
     (start, start_sup, end, end_sup)
+}
+
+///
+/// Get center point of edge
+///
+fn get_mid_point(curve_points: &[(Point2D<i32>, Point2D<i32>)]) -> Point2D<i32> {
+    let center_segment = (curve_points.len() - 1) / 2;
+    let curve = CubicBezierCurve::new(
+        curve_points[center_segment].0,
+        curve_points[center_segment].1,
+        curve_points[center_segment + 1].1,
+        curve_points[center_segment + 1].0,
+    );
+    let coords = curve.get_coordinates_for_t(0.5);
+    coords
 }
 
 ///

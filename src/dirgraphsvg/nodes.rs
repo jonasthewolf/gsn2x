@@ -293,6 +293,29 @@ impl SvgNode {
     }
 
     ///
+    /// Create dummy node for targeting other edges.
+    ///
+    ///
+    pub fn new_dummy(x: i32, y: i32) -> Self {
+        SvgNode {
+            x,
+            y,
+            width: 0,
+            height: 0,
+            identifier: "".to_owned(),
+            text: MarkdownText::from(""),
+            masked: false,
+            defeated: false,
+            url: None,
+            classes: vec![],
+            rank_increment: None,
+            horizontal_index: None,
+            node_type: NodeType::Box(BoxType::Normal(0)),
+            acp: vec![],
+        }
+    }
+
+    ///
     /// New Assumption.
     ///
     pub fn new_assumption(

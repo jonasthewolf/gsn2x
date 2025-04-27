@@ -574,9 +574,7 @@ fn check_and_add_nodes(
                         // Sort all edges lexicographically
                         x.supported_by.sort();
                         x.in_context_of.sort();
-                        x.challenges.sort();
-                        // Invert direction of challenges edge
-
+                        // Inherit char_wrap
                         if x.char_wrap.is_none() {
                             x.char_wrap = char_wrap;
                         }

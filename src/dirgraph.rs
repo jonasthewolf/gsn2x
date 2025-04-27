@@ -2,6 +2,12 @@ use std::cmp::min;
 use std::collections::{BTreeMap, BTreeSet, HashMap};
 use std::fmt::Debug;
 
+#[derive(Debug)]
+pub enum EdgeDecorator {
+    Acps(Vec<String>),
+    Defeated,
+}
+
 ///
 /// Trait to be implemented for nodes of `DirectedGraph`.
 ///
@@ -55,7 +61,7 @@ where
     edges: &'a BTreeMap<String, Vec<(String, EdgeType)>>,
     root_nodes: Vec<&'a str>,
     parent_edges: BTreeMap<&'a str, Vec<(&'a str, EdgeType)>>,
-    edge_decorators: BTreeMap<(String, String), Vec<String>>,
+    edge_decorators: BTreeMap<(String, String), EdgeDecorator>,
 }
 
 impl<'a, NodeType, EdgeType> DirectedGraph<'a, NodeType, EdgeType>
@@ -92,7 +98,7 @@ where
     ///
     pub fn add_edge_decorators(
         &mut self,
-        edge_decorators: BTreeMap<(String, String), Vec<String>>,
+        edge_decorators: BTreeMap<(String, String), EdgeDecorator>,
     ) {
         self.edge_decorators = edge_decorators;
     }
@@ -101,8 +107,9 @@ where
     /// Get the edge decorators.
     ///
     ///
-    pub fn get_edge_decorator(&self, source: String, target: String) -> Option<&Vec<String>> {
-        self.edge_decorators.get(&(source, target))
+    pub fn get_edge_decorator(&self, source: &str, target: &str) -> Option<&EdgeDecorator> {
+        self.edge_decorators
+            .get(&(source.to_owned(), target.to_owned()))
     }
 
     ///

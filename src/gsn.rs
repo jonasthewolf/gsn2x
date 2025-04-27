@@ -5,8 +5,9 @@ use crate::{
 };
 use anyhow::{Error, anyhow};
 use serde::{
-    Deserialize, Deserializer, Serialize,
+    Deserialize, Deserializer, Serialize, Serializer,
     de::{self},
+    ser,
 };
 use serde_yml::Value;
 use std::ops::Not;
@@ -38,10 +39,11 @@ impl Display for GsnNodeType {
 }
 
 #[derive(Clone, Copy, Debug, PartialEq)]
-pub enum GsnEdgeType {
+pub enum GsnEdgeType<'a> {
     SupportedBy,
     InContextOf,
-    Challenges,
+    ChallengesNode,
+    ChallengesRelation(&'a str),
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Deserialize, Serialize)]
@@ -85,6 +87,12 @@ impl From<AbsoluteIndex> for Value {
     }
 }
 
+#[derive(Clone, Debug)]
+pub enum Challenge {
+    Node(String),
+    Relation((String, String)),
+}
+
 ///
 /// The main struct of this program
 /// It describes a GSN element
@@ -96,26 +104,33 @@ pub struct GsnNode {
     pub(crate) text: String,
     #[serde(
         default,
-        deserialize_with = "string_or_seq_string",
+        deserialize_with = "deser_string_or_seq_string",
         skip_serializing_if = "Vec::is_empty"
     )]
     pub(crate) in_context_of: Vec<String>,
     #[serde(
         default,
-        deserialize_with = "string_or_seq_string",
+        deserialize_with = "deser_string_or_seq_string",
         skip_serializing_if = "Vec::is_empty"
     )]
     pub(crate) supported_by: Vec<String>,
     #[serde(
         default,
-        deserialize_with = "string_or_seq_string",
-        skip_serializing_if = "Vec::is_empty"
+        deserialize_with = "deser_challenges",
+        serialize_with = "ser_challenges",
+        skip_serializing_if = "Option::is_none"
     )]
-    pub(crate) challenges: Vec<String>,
+    pub(crate) challenges: Option<Challenge>,
     #[serde(default, skip_serializing_if = "<&bool>::not")]
     pub(crate) undeveloped: bool,
     #[serde(default, skip_serializing_if = "<&bool>::not")]
     pub(crate) defeated: bool,
+    #[serde(
+        default,
+        deserialize_with = "deser_string_or_seq_string",
+        skip_serializing_if = "Vec::is_empty"
+    )]
+    pub(crate) defeated_relation: Vec<String>,
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub(crate) classes: Vec<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -213,9 +228,64 @@ where
 }
 
 ///
+/// Deserialize a challenges relation.
+/// Either a node, or a relation described by two nodes
+///
+fn deser_challenges<'de, D>(deserializer: D) -> Result<Option<Challenge>, D::Error>
+where
+    D: Deserializer<'de>,
+{
+    struct ChallengeStr(PhantomData<String>);
+
+    impl<'de> de::Visitor<'de> for ChallengeStr {
+        type Value = Option<Challenge>;
+
+        fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+            formatter
+                .write_str("a string (reference to a node, or two nodes in the form of X -> Y)")
+        }
+
+        fn visit_str<E>(self, value: &str) -> Result<Self::Value, E>
+        where
+            E: de::Error,
+        {
+            if let Some((left, right)) = value.split_once("->") {
+                Ok(Some(Challenge::Relation((
+                    left.trim().to_owned(),
+                    right.trim().to_owned(),
+                ))))
+            } else {
+                Ok(Some(Challenge::Node(value.to_owned())))
+            }
+        }
+    }
+
+    deserializer.deserialize_any(ChallengeStr(PhantomData))
+}
+
+///
+/// Deserialize a challenges relation.
+/// Either a node, or a relation described by two nodes
+///
+fn ser_challenges<S>(challenge: &Option<Challenge>, serializer: S) -> Result<S::Ok, S::Error>
+where
+    S: Serializer,
+{
+    if let Some(c) = challenge {
+        let v = match c {
+            Challenge::Node(n) => n,
+            Challenge::Relation((left, right)) => &format!("{left} -> {right}"),
+        };
+        serializer.serialize_str(&v)
+    } else {
+        Err(ser::Error::custom("Cannot serialize None"))
+    }
+}
+
+///
 /// Deserialize from a single string or a sequence of strings.
 ///
-fn string_or_seq_string<'de, D>(deserializer: D) -> Result<Vec<String>, D::Error>
+fn deser_string_or_seq_string<'de, D>(deserializer: D) -> Result<Vec<String>, D::Error>
 where
     D: Deserializer<'de>,
 {
@@ -251,25 +321,28 @@ impl GsnNode {
     /// Get edges of node.
     /// Edge is tuple of target node id and edge type.
     ///
-    pub fn get_edges(&self) -> Vec<(String, GsnEdgeType)> {
+    pub fn get_edges<'a>(&'a self) -> Vec<(String, GsnEdgeType<'a>)> {
         let mut edges = Vec::new();
-        let mut es: Vec<(String, GsnEdgeType)> = self
+        let mut es: Vec<(String, GsnEdgeType<'a>)> = self
             .in_context_of
             .iter()
             .map(|target| (target.to_owned(), GsnEdgeType::InContextOf))
             .collect();
         edges.append(&mut es);
-        let mut es: Vec<(String, GsnEdgeType)> = self
+        let mut es: Vec<(String, GsnEdgeType<'a>)> = self
             .supported_by
             .iter()
             .map(|target| (target.to_owned(), GsnEdgeType::SupportedBy))
             .collect();
         edges.append(&mut es);
-        let mut es: Vec<(String, GsnEdgeType)> = self
+        let mut es: Vec<(String, GsnEdgeType<'a>)> = self
             .challenges
             .iter()
-            .map(|target| (target.to_owned(), GsnEdgeType::Challenges))
-            .collect();
+            .map(|c| match c {
+                Challenge::Node(n) => (n.to_owned(), GsnEdgeType::ChallengesNode),
+                Challenge::Relation((l, r)) => (l.to_owned(), GsnEdgeType::ChallengesRelation(r)),
+            })
+            .collect::<Vec<_>>();
         edges.append(&mut es);
         edges
     }
@@ -308,12 +381,13 @@ impl DirectedGraphNodeType<'_> for GsnNode {
 /// Primary childs are SupportedBy edges
 /// Secondary childs (=same rank) are InContextOf edges
 ///
-impl DirectedGraphEdgeType<'_> for GsnEdgeType {
+impl<'a> DirectedGraphEdgeType<'a> for GsnEdgeType<'a> {
     fn is_primary_child_edge(&self) -> bool {
         match self {
             GsnEdgeType::SupportedBy => true,
             GsnEdgeType::InContextOf => false,
-            GsnEdgeType::Challenges => false,
+            GsnEdgeType::ChallengesNode => false,
+            GsnEdgeType::ChallengesRelation(_) => false,
         }
     }
 
@@ -321,14 +395,16 @@ impl DirectedGraphEdgeType<'_> for GsnEdgeType {
         match self {
             GsnEdgeType::SupportedBy => false,
             GsnEdgeType::InContextOf => true,
-            GsnEdgeType::Challenges => false,
+            GsnEdgeType::ChallengesNode => false,
+            GsnEdgeType::ChallengesRelation(_) => false,
         }
     }
     fn is_inverted_child_edge(&self) -> bool {
         match self {
             GsnEdgeType::SupportedBy => false,
             GsnEdgeType::InContextOf => false,
-            GsnEdgeType::Challenges => true,
+            GsnEdgeType::ChallengesNode => true,
+            GsnEdgeType::ChallengesRelation(_) => true,
         }
     }
 }
@@ -519,7 +595,7 @@ fn get_root_nodes(nodes: &BTreeMap<String, GsnNode>) -> Vec<String> {
             root_nodes.remove(snode);
         }
         // Challenging nodes cannot be root nodes.
-        if !node.challenges.is_empty() {
+        if !node.challenges.is_some() {
             root_nodes.remove(id);
         }
     }
@@ -563,12 +639,12 @@ pub fn calculate_module_dependencies(
 ///
 /// Add dependencies of nodes.
 ///
-fn add_dependencies(
+fn add_dependencies<'a>(
     children: &Vec<String>,
-    nodes: &BTreeMap<String, GsnNode>,
+    nodes: &'a BTreeMap<String, GsnNode>,
     cur_node: &GsnNode,
-    dependencies: &mut BTreeMap<String, BTreeMap<String, EdgeType>>,
-    dep_type: SingleEdge,
+    dependencies: &mut BTreeMap<String, BTreeMap<String, EdgeType<'a>>>,
+    dep_type: SingleEdge<'a>,
 ) {
     for child in children {
         // Unwrap is ok, since node names in `nodes` always exist
