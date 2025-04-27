@@ -4,7 +4,8 @@ use anyhow::Context;
 use svg::{
     Document, Node,
     node::element::{
-        Anchor, Element, Group, Marker, Polyline, Rectangle, Style, Symbol, TSpan, Text, Title,
+        Anchor, Definitions, Element, Group, Marker, Path, Polyline, Rectangle, Style, Symbol,
+        TSpan, Text, Title, path::Data,
     },
 };
 
@@ -207,6 +208,7 @@ fn render_legend(
 /// Setup the basic ingredients of the SVG
 ///
 fn setup_basics(mut document: Document) -> Document {
+    let mut defs = Definitions::new();
     let supportedby_polyline = Polyline::new()
         .set("points", "0 0, 10 4.5, 0 9")
         .set("fill", "black");
@@ -219,6 +221,7 @@ fn setup_basics(mut document: Document) -> Document {
         .set("orient", "auto-start-reverse")
         .set("markerUnits", "userSpaceOnUse")
         .add(supportedby_polyline);
+    defs.append(supportedby_arrow);
 
     let incontext_polyline = Polyline::new()
         .set("points", "0 0, 10 4.5, 0 9, 0 0")
@@ -234,6 +237,7 @@ fn setup_basics(mut document: Document) -> Document {
         .set("orient", "auto-start-reverse")
         .set("markerUnits", "userSpaceOnUse")
         .add(incontext_polyline);
+    defs.append(incontext_arrow);
 
     let challenges_polyline = Polyline::new()
         .set("points", "0 0, 10 4.5, 0 4.5, 10 4.5, 0 9")
@@ -250,6 +254,7 @@ fn setup_basics(mut document: Document) -> Document {
         .set("orient", "auto-start-reverse")
         .set("markerUnits", "userSpaceOnUse")
         .add(challenges_polyline);
+    defs.append(challenges_arrow);
 
     let composite_polyline1 = Polyline::new()
         .set("points", "0 0, 6 4.5, 0 9")
@@ -277,6 +282,7 @@ fn setup_basics(mut document: Document) -> Document {
         .add(composite_polyline1)
         .add(composite_polyline2)
         .add(composite_polyline3);
+    defs.append(composite_arrow);
 
     let mi_r1 = Rectangle::new()
         .set("x", 0u32)
@@ -295,7 +301,7 @@ fn setup_basics(mut document: Document) -> Document {
         .set("stroke-width", 1u32)
         .set("fill", "lightgrey");
     let module_image = Symbol::new().set("id", "module_icon").add(mi_r1).add(mi_r2);
-    document.append(module_image);
+    defs.append(module_image);
 
     let acp_black_box = Rectangle::new()
         .set("x", 0u32)
@@ -306,14 +312,25 @@ fn setup_basics(mut document: Document) -> Document {
         .set("stroke-width", 1u32)
         .set("fill", "black");
     let acp_image = Symbol::new().set("id", "acp").add(acp_black_box);
-    document.append(acp_image);
+    defs.append(acp_image);
 
-    document = document
-        .add(composite_arrow)
-        .add(supportedby_arrow)
-        .add(incontext_arrow)
-        .add(challenges_arrow)
-        .set("class", "gsndiagram");
+    let defeated_cross_data = Data::new()
+        .move_to((0, 0))
+        .line_to((20, 20))
+        .move_to((0, 20))
+        .line_to((20, 0));
+    let defeated_cross = Path::new()
+        .set("d", defeated_cross_data)
+        .set("stroke-width", 1)
+        .set("stroke", "black");
+    let defeated_cross_marker = Symbol::new()
+        .set("id", "defeated_cross")
+        .set("height", 20)
+        .set("width", 20)
+        .add(defeated_cross);
+    defs.append(defeated_cross_marker);
+
+    document = document.add(defs).set("class", "gsndiagram");
     document
 }
 

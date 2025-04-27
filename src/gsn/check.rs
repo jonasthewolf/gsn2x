@@ -101,14 +101,15 @@ fn check_node_references(
                     &node.module,
                     "supported by",
                 ),
-                check_unresolved_references(
-                    diag,
-                    nodes,
-                    &node.challenges,
-                    id,
-                    &node.module,
-                    "challenging",
-                ),
+                // TODO Replace check
+                // check_unresolved_references(
+                //     diag,
+                //     nodes,
+                //     &node.challenges,
+                //     id,
+                //     &node.module,
+                //     "challenging",
+                // ),
             ]
             .into_iter()
             .flatten()
@@ -159,9 +160,9 @@ fn check_unresolved_references(
 /// It also detects if there is a cycle in an independent graph.
 ///
 ///
-fn check_cycles(
+fn check_cycles<'a>(
     diag: &mut Diagnostics,
-    graph: &DirectedGraph<GsnNode, GsnEdgeType>,
+    graph: &'a DirectedGraph<GsnNode, GsnEdgeType<'a>>,
 ) -> Result<(), ()> {
     let cycle = graph.get_first_cycle();
     if let Some((found, ring)) = cycle {
@@ -182,9 +183,9 @@ fn check_cycles(
 ///
 /// Check if nodes are unreachable from the root nodes.
 ///
-fn check_unreachable(
+fn check_unreachable<'a>(
     diag: &mut Diagnostics,
-    graph: &DirectedGraph<GsnNode, GsnEdgeType>,
+    graph: &'a DirectedGraph<GsnNode, GsnEdgeType<'a>>,
 ) -> Result<(), ()> {
     let visited: Vec<&str> = graph
         .rank_nodes()
@@ -337,7 +338,7 @@ mod test {
         nodes.insert(
             "CG1".to_owned(),
             GsnNode {
-                challenges: vec!["G2".to_owned()],
+                challenges: Some(crate::gsn::Challenge::Node("G2".to_owned())),
                 node_type: Some(GsnNodeType::CounterGoal),
                 ..Default::default()
             },

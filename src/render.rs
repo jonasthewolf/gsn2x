@@ -1,3 +1,4 @@
+use crate::dirgraph::EdgeDecorator;
 use crate::dirgraphsvg::edges::EdgeType;
 use crate::dirgraphsvg::{escape_node_id, nodes::SvgNode};
 use crate::file_utils::{get_filename, get_relative_path};
@@ -263,9 +264,9 @@ pub fn render_architecture(
 /// FIXME: Problem horizontal index only applies to argument view
 ///        potential solution: puzzle individual argument views together...
 ///
-pub fn render_complete(
+pub fn render_complete<'a>(
     output: &mut impl Write,
-    nodes: &BTreeMap<String, GsnNode>,
+    nodes: &'a BTreeMap<String, GsnNode>,
     render_options: &RenderOptions,
 ) -> Result<()> {
     // let masked_modules_opt = matches
@@ -273,7 +274,7 @@ pub fn render_complete(
     //     .map(|x| x.map(|y| y.to_owned()).collect::<Vec<String>>());
     // let masked_modules = masked_modules_opt.iter().flatten().collect::<Vec<_>>();
     let mut dg = crate::dirgraphsvg::DirGraph::default();
-    let edges: BTreeMap<String, Vec<(String, EdgeType)>> = nodes
+    let edges: BTreeMap<String, Vec<(String, EdgeType<'a>)>> = nodes
         .iter()
         // .filter(|(_, node)| !masked_modules.contains(&&node.module))
         // TODO continue masking here
@@ -281,7 +282,7 @@ pub fn render_complete(
             (
                 id.to_owned(),
                 node.get_edges()
-                    .iter()
+                    .into_iter()
                     .map(|(s, t)| (s.to_owned(), EdgeType::from(t)))
                     .collect(),
             )
@@ -325,11 +326,11 @@ pub fn render_complete(
 ///  2) Replace the edges with the right ones
 ///  3) filter all foreign modules that have no edge to this module
 ///
-pub fn render_argument(
+pub fn render_argument<'a>(
     output: &mut impl Write,
     module_name: &str,
-    modules: &BTreeMap<String, Module>,
-    nodes: &BTreeMap<String, GsnNode>,
+    modules: &'a BTreeMap<String, Module>,
+    nodes: &'a BTreeMap<String, GsnNode>,
     render_options: &RenderOptions,
 ) -> Result<()> {
     let mut dg = crate::dirgraphsvg::DirGraph::default();
@@ -378,7 +379,7 @@ pub fn render_argument(
             .collect::<Result<BTreeMap<_, _>>>()?,
     );
 
-    let edges: BTreeMap<String, Vec<(String, EdgeType)>> = nodes
+    let edges: BTreeMap<String, Vec<(String, EdgeType<'a>)>> = nodes
         .iter()
         .map(|(id, node)| {
             (
@@ -390,8 +391,8 @@ pub fn render_argument(
                             // unwrap is ok, since all references are checked at the beginning
                             && nodes.get(target).unwrap().module != module_name)
                     })
-                    .map(|(s, t)| (s.to_owned(), EdgeType::from(&t)))
-                    .collect::<Vec<(String, EdgeType)>>(),
+                    .map(|(s, t)| (s.to_owned(), EdgeType::from(t)))
+                    .collect::<Vec<(String, EdgeType<'a>)>>(),
             )
         })
         .filter(|(_, targets)| !targets.is_empty())
@@ -432,21 +433,32 @@ pub fn render_argument(
     }
 
     // Create ACPs as edge decorators from node information.
-    let mut acps: BTreeMap<(String, String), Vec<String>> = BTreeMap::new();
+    let mut acps: BTreeMap<(String, String), EdgeDecorator> = BTreeMap::new();
     nodes.iter().for_each(|(s, n)| {
         n.acp.iter().for_each(|(acp, ts)| {
             ts.iter().filter(|&t| s != t).for_each(|t| {
                 acps.entry((s.to_owned(), t.to_owned()))
-                    .and_modify(|a: &mut Vec<String>| {
-                        if !a.contains(acp) {
-                            a.push(acp.to_owned());
+                    .and_modify(|a: &mut EdgeDecorator| match a {
+                        EdgeDecorator::Acps(items) => {
+                            if !items.contains(acp) {
+                                items.push(acp.to_owned());
+                            }
                         }
+                        EdgeDecorator::Defeated => unreachable!(),
                     })
-                    .or_insert_with(|| vec![acp.to_owned()]);
+                    .or_insert_with(|| EdgeDecorator::Acps(vec![acp.to_owned()]));
             });
         })
     });
-    acps.retain(|_, v| !v.is_empty());
+    let mut defeated_relations: BTreeMap<(String, String), EdgeDecorator> = nodes
+        .iter()
+        .flat_map(|(s, n)| {
+            n.defeated_relation
+                .iter()
+                .map(|t| ((s.to_owned(), t.to_owned()), EdgeDecorator::Defeated))
+        })
+        .collect();
+    acps.append(&mut defeated_relations);
 
     dg.write(svg_nodes, edges, output, acps)?;
 

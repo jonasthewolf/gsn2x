@@ -1,17 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg class="gsndiagram" viewBox="0 0 276 295" xmlns="http://www.w3.org/2000/svg">
-<symbol id="module_icon">
-<rect fill="lightgrey" height="5" stroke="black" stroke-width="1" width="10" x="0" y="0"/>
-<rect fill="lightgrey" height="10" stroke="black" stroke-width="1" width="20" x="0" y="5"/>
-</symbol>
-<symbol id="acp">
-<rect fill="black" height="10" stroke="black" stroke-width="1" width="10" x="0" y="0"/>
-</symbol>
-<marker id="composite_arrow" markerHeight="9" markerUnits="userSpaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
-<polyline fill-opacity="0" points="0 0, 6 4.5, 0 9" stroke="black" stroke-width="1"/>
-<polyline fill-opacity="0" points="4 0, 10 4.5, 4 9" stroke="black" stroke-width="1"/>
-<polyline fill-opacity="0" points="0 4.5, 10 4.5" stroke="black" stroke-width="1"/>
-</marker>
+<defs>
 <marker id="supportedby_arrow" markerHeight="9" markerUnits="userSpaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
 <polyline fill="black" points="0 0, 10 4.5, 0 9"/>
 </marker>
@@ -21,6 +10,22 @@
 <marker id="challenges_arrow" markerHeight="9" markerUnits="userSpaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
 <polyline fill-opacity="0" points="0 0, 10 4.5, 0 4.5, 10 4.5, 0 9" stroke="black" stroke-dasharray="100" stroke-width="1"/>
 </marker>
+<marker id="composite_arrow" markerHeight="9" markerUnits="userSpaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
+<polyline fill-opacity="0" points="0 0, 6 4.5, 0 9" stroke="black" stroke-width="1"/>
+<polyline fill-opacity="0" points="4 0, 10 4.5, 4 9" stroke="black" stroke-width="1"/>
+<polyline fill-opacity="0" points="0 4.5, 10 4.5" stroke="black" stroke-width="1"/>
+</marker>
+<symbol id="module_icon">
+<rect fill="lightgrey" height="5" stroke="black" stroke-width="1" width="10" x="0" y="0"/>
+<rect fill="lightgrey" height="10" stroke="black" stroke-width="1" width="20" x="0" y="5"/>
+</symbol>
+<symbol id="acp">
+<rect fill="black" height="10" stroke="black" stroke-width="1" width="10" x="0" y="0"/>
+</symbol>
+<symbol id="defeated_cross">
+<path d="M0,0 L10,10 M0,10 L10,0"/>
+</symbol>
+</defs>
 <g class="gsn_module_tests_issue391_1_yaml gsnelem gsngoal" id="node_g0">
 <title>G0</title>
 <path class="border" d="M53,20 L157,20 L157,66 L53,66 z" fill-opacity="0" stroke="black" stroke-width="1"/>
