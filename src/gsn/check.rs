@@ -219,6 +219,7 @@ pub fn check_layers(
         "supportedBy",
         "challenges",
         "defeated",
+        "defeatedRelation",
         "classes",
         "url",
         "undeveloped",
@@ -295,6 +296,12 @@ fn check_challenges(
             Challenge::Node(n) => {
                 if n == id {
                     diag.add_error(Some(module), format!("CXX: Node {id} challenges itself."));
+                    Err(())
+                } else if !nodes.contains_key(n) {
+                    diag.add_error(
+                        Some(module),
+                        format!("CXX: Node {id} challenges element {n}, but it does not exist."),
+                    );
                     Err(())
                 } else {
                     Ok(())
@@ -400,7 +407,30 @@ mod test {
         let mut d = Diagnostics::default();
         let mut nodes = BTreeMap::<String, GsnNode>::new();
         nodes.insert(
+            "G1".to_owned(),
+            GsnNode {
+                node_type: Some(GsnNodeType::Goal),
+                supported_by: vec!["G3".to_owned()],
+                ..Default::default()
+            },
+        );
+        nodes.insert(
+            "G3".to_owned(),
+            GsnNode {
+                node_type: Some(GsnNodeType::Goal),
+                ..Default::default()
+            },
+        );
+        nodes.insert(
             "CG1".to_owned(),
+            GsnNode {
+                supported_by: vec!["CG2".to_owned()],
+                node_type: Some(GsnNodeType::CounterGoal),
+                ..Default::default()
+            },
+        );
+        nodes.insert(
+            "CG2".to_owned(),
             GsnNode {
                 challenges: Some(crate::gsn::Challenge::Node("G2".to_owned())),
                 node_type: Some(GsnNodeType::CounterGoal),
@@ -413,7 +443,7 @@ mod test {
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
         assert_eq!(
             d.messages[0].msg,
-            "C03: Element CG1 has unresolved \"challenging\" element: G2"
+            "CXX: Node CG2 challenges element G2, but it does not exist."
         );
         assert_eq!(d.errors, 1);
         assert_eq!(d.warnings, 0);
