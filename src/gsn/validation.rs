@@ -1,5 +1,3 @@
-use anyhow::Result;
-
 use super::{Challenge, GsnNode, GsnNodeType, Module, get_node_type_from_text};
 use crate::diagnostics::Diagnostics;
 use std::collections::{BTreeMap, HashSet};
@@ -182,23 +180,19 @@ fn validate_references(
     };
     let challenges_res = if node.challenges.is_none() {
         Ok(())
+    } else if !(node.node_type == Some(GsnNodeType::CounterGoal)
+        || node.node_type == Some(GsnNodeType::CounterSolution))
+        && node.challenges.is_some()
+    {
+        diag.add_error(
+            Some(module),
+            format!(
+                "Vxx: {id} is not a CounterGoal nor CounterSolution but challenges another element."
+            ),
+        );
+        Err(())
     } else {
-        let mut valid_ref_types = vec![];
-        if node.node_type == Some(GsnNodeType::CounterGoal)
-            || node.node_type == Some(GsnNodeType::CounterSolution)
-        {
-            valid_ref_types.append(&mut vec![
-                GsnNodeType::Goal,
-                GsnNodeType::CounterGoal,
-                GsnNodeType::Strategy,
-                GsnNodeType::Solution,
-                GsnNodeType::CounterSolution,
-            ]);
-        }
         Ok(())
-        // TODO Challenge::Node cannot be self
-
-        // TODO This goes in check.rs: One of the references of a defeatedRelation must be "self"
     };
     incontext_res.and(supportedby_res).and(challenges_res)
 }
@@ -387,7 +381,7 @@ fn validate_defeated(
         Ok(())
     } else {
         node.defeated_relation.iter().try_for_each(|rel| {
-            if node.supported_by.contains(rel) || node.in_context_of.contains(rel) {
+            if node.supported_by.contains(rel) || node.in_context_of.contains(rel) || node.challenges == Some(Challenge::Node(rel.to_owned())) {
                 Ok(())
             } else {
                 diag.add_error(
@@ -900,7 +894,7 @@ mod test {
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
         assert_eq!(
             d.messages[0].msg,
-            "V04: Element C1 has invalid type of reference Sn1 in challenges."
+            "Vxx: C1 is not a CounterGoal nor CounterSolution but challenges another element."
         );
         assert_eq!(d.errors, 1);
         assert_eq!(d.warnings, 0);
