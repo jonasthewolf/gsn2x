@@ -325,8 +325,8 @@ fn setup_basics(mut document: Document) -> Document {
         .set("stroke", "black");
     let defeated_cross_marker = Symbol::new()
         .set("id", "defeated_cross")
-        .set("height", 20)
         .set("width", 20)
+        .set("height", 20)
         .add(defeated_cross);
     defs.append(defeated_cross_marker);
 
