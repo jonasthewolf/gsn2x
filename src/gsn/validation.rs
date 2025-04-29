@@ -1,6 +1,6 @@
 use anyhow::Result;
 
-use super::{GsnNode, GsnNodeType, Module, get_node_type_from_text};
+use super::{Challenge, GsnNode, GsnNodeType, Module, get_node_type_from_text};
 use crate::diagnostics::Diagnostics;
 use std::collections::{BTreeMap, HashSet};
 
@@ -196,17 +196,9 @@ fn validate_references(
             ]);
         }
         Ok(())
-        // TODO replace check
-        // validate_reference(
-        //     diag,
-        //     module,
-        //     nodes,
-        //     id,
-        //     &node.challenges,
-        //     "challenges",
-        //     &valid_ref_types,
-        // )
-        // TODO challenges can only be 0, 1, or 2 references.
+        // TODO Challenge::Node cannot be self
+
+        // TODO This goes in check.rs: One of the references of a defeatedRelation must be "self"
     };
     incontext_res.and(supportedby_res).and(challenges_res)
 }
@@ -366,6 +358,9 @@ fn validate_module_extensions(
 ///
 /// Validate defeated property
 ///
+/// A node can be defeated if there is a challenging node, or a defeated relation.
+/// A defeated relation do not need to be challenged, thus, no need to check.
+///
 fn validate_defeated(
     diag: &mut Diagnostics,
     module: &str,
@@ -373,22 +368,38 @@ fn validate_defeated(
     id: &str,
     node: &GsnNode,
 ) -> Result<(), ()> {
-    // TODO Replace check
-    // A node can be defeated if there is a challenging node, or a defeated relation
-    // if node.defeated
-    //     && !nodes
-    //         .iter()
-    //         .any(|(_, n)| n.challenges.contains(&id.to_owned()))
-    // {
-    //     diag.add_error(
-    //         Some(module),
-    //         format!("V10: Element {id} is marked as defeated, but no other element challenges it."),
-    //     );
-    //     Err(())
-    // } else {
-    //     Ok(())
-    // }
-    Ok(())
+    let node_defeated = if node.defeated
+        && !nodes
+            .iter()
+            .any(|(_, n)| matches!(&n.challenges, Some(Challenge::Node(n)) if n == id))
+    {
+        // TODO Amend check: an incoming defeated relation would be good, too????
+        diag.add_error(
+            Some(module),
+            format!("V10: Element {id} is marked as defeated, but no other element challenges it."),
+        );
+        Err(())
+    } else {
+        Ok(())
+    };
+
+    let rel_defeated = if node.defeated_relation.is_empty() {
+        Ok(())
+    } else {
+        node.defeated_relation.iter().try_for_each(|rel| {
+            if node.supported_by.contains(rel) || node.in_context_of.contains(rel) {
+                Ok(())
+            } else {
+                diag.add_error(
+                    Some(module),
+                    format!("V12: Relation from {id} to {rel} is marked as defeated, but {id} has no relation to {rel}."),
+                );
+                Err(())
+            }
+        } )
+    };
+
+    node_defeated.and(rel_defeated)
 }
 
 ///
@@ -434,7 +445,7 @@ fn validate_dialectic_extension(
 mod test {
     use crate::{
         diagnostics::DiagType,
-        gsn::{ExtendsModule, GsnEdgeType, ModuleInformation},
+        gsn::{ExtendsModule, ModuleInformation},
     };
 
     use super::*;
@@ -862,38 +873,38 @@ mod test {
         assert_eq!(d.warnings, 0);
     }
 
-    // #[test]
-    // fn wrong_challenging() {
-    //     let mut d = Diagnostics::default();
-    //     let mut nodes = BTreeMap::<String, GsnNode>::new();
-    //     nodes.insert(
-    //         "G1".to_owned(),
-    //         GsnNode {
-    //             in_context_of: vec!["C1".to_owned()],
-    //             node_type: Some(GsnNodeType::Goal),
-    //             undeveloped: true,
-    //             ..Default::default()
-    //         },
-    //     );
-    //     nodes.insert(
-    //         "C1".to_owned(),
-    //         GsnNode {
-    //             node_type: Some(GsnNodeType::Context),
-    //             challenges: vec!["Sn1".to_owned()],
-    //             ..Default::default()
-    //         },
-    //     );
-    //     assert!(validate_module(&mut d, "", &Module::default(), &nodes, true, true).is_err());
-    //     assert_eq!(d.messages.len(), 1);
-    //     assert_eq!(d.messages[0].module, Some("".to_owned()));
-    //     assert_eq!(d.messages[0].diag_type, DiagType::Error);
-    //     assert_eq!(
-    //         d.messages[0].msg,
-    //         "V04: Element C1 has invalid type of reference Sn1 in challenges."
-    //     );
-    //     assert_eq!(d.errors, 1);
-    //     assert_eq!(d.warnings, 0);
-    // }
+    #[test]
+    fn wrong_challenging() {
+        let mut d = Diagnostics::default();
+        let mut nodes = BTreeMap::<String, GsnNode>::new();
+        nodes.insert(
+            "G1".to_owned(),
+            GsnNode {
+                in_context_of: vec!["C1".to_owned()],
+                node_type: Some(GsnNodeType::Goal),
+                undeveloped: true,
+                ..Default::default()
+            },
+        );
+        nodes.insert(
+            "C1".to_owned(),
+            GsnNode {
+                node_type: Some(GsnNodeType::Context),
+                challenges: Some(Challenge::Node("Sn1".to_owned())),
+                ..Default::default()
+            },
+        );
+        assert!(validate_module(&mut d, "", &Module::default(), &nodes, true, true).is_err());
+        assert_eq!(d.messages.len(), 1);
+        assert_eq!(d.messages[0].module, Some("".to_owned()));
+        assert_eq!(d.messages[0].diag_type, DiagType::Error);
+        assert_eq!(
+            d.messages[0].msg,
+            "V04: Element C1 has invalid type of reference Sn1 in challenges."
+        );
+        assert_eq!(d.errors, 1);
+        assert_eq!(d.warnings, 0);
+    }
 
     #[test]
     fn defeated_unchallenged() {

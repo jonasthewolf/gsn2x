@@ -237,7 +237,7 @@ where
 {
     struct ChallengeStr(PhantomData<String>);
 
-    impl<'de> de::Visitor<'de> for ChallengeStr {
+    impl de::Visitor<'_> for ChallengeStr {
         type Value = Option<Challenge>;
 
         fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
@@ -276,7 +276,7 @@ where
             Challenge::Node(n) => n,
             Challenge::Relation((left, right)) => &format!("{left} -> {right}"),
         };
-        serializer.serialize_str(&v)
+        serializer.serialize_str(v)
     } else {
         Err(ser::Error::custom("Cannot serialize None"))
     }

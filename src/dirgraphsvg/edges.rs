@@ -69,7 +69,7 @@ pub enum EdgeType<'a> {
     TwoWay((SingleEdge<'a>, SingleEdge<'a>)),
 }
 
-impl<'a> DirectedGraphEdgeType<'_> for EdgeType<'a> {
+impl DirectedGraphEdgeType<'_> for EdgeType<'_> {
     fn is_primary_child_edge(&self) -> bool {
         matches!(
             *self,
@@ -134,8 +134,7 @@ pub(super) fn render_edge(
                 ranks,
                 bounding_boxes,
                 source_id,
-                target_id,
-                target.1,
+                (target_id, target.1),
                 width,
             );
             let p = get_mid_point(&other_edge);
@@ -145,31 +144,33 @@ pub(super) fn render_edge(
                 bounding_boxes,
                 EdgeType::OneWay(SingleEdge::ChallengesRelation(target_id)),
                 width,
-                graph.get_nodes().get(source).unwrap().borrow(),
-                dummy_target.borrow(),
-                ranks
-                    .iter()
-                    .position(|x| x.iter().flatten().any(|&v| v == source_id))
-                    .unwrap(),
-                ranks
-                    .iter()
-                    .position(|x| x.iter().flatten().any(|&v| v == relation_target))
-                    .unwrap(),
+                (
+                    graph.get_nodes().get(source).unwrap().borrow(),
+                    ranks
+                        .iter()
+                        .position(|x| x.iter().flatten().any(|&v| v == source_id))
+                        .unwrap(),
+                ),
+                (
+                    dummy_target.borrow(),
+                    ranks
+                        .iter()
+                        .position(|x| x.iter().flatten().any(|&v| v == relation_target))
+                        .unwrap(),
+                ),
             );
             real_edge
         }
         _ => {
             // Render edge between source and target.0 nodes
             let source_id = source;
-            let target_id = &target.0;
             get_edge_points(
                 graph,
                 render_graph,
                 ranks,
                 bounding_boxes,
                 source_id,
-                target_id,
-                target.1,
+                (&target.0, target.1),
                 width,
             )
         }
@@ -262,30 +263,27 @@ fn get_edge_points(
     ranks: &[Vec<Vec<&str>>],
     bounding_boxes: &[Vec<[Point2D<i32>; 4]>],
     source_id: &str,
-    target_id: &str,
-    edge_type: EdgeType,
+    target: (&str, EdgeType),
     width: i32,
 ) -> Vec<(Point2D<i32>, Point2D<i32>)> {
     let s = graph.get_nodes().get(source_id).unwrap().borrow();
-    let t = graph.get_nodes().get(target_id).unwrap().borrow();
+    let t = graph.get_nodes().get(target.0).unwrap().borrow();
     let s_rank = ranks
         .iter()
         .position(|x| x.iter().flatten().any(|&v| v == source_id))
         .unwrap();
     let t_rank = ranks
         .iter()
-        .position(|x| x.iter().flatten().any(|&v| v == target_id))
+        .position(|x| x.iter().flatten().any(|&v| v == target.0))
         .unwrap();
 
     create_curve_points(
         render_graph,
         bounding_boxes,
-        edge_type,
+        target.1,
         width,
-        s,
-        t,
-        s_rank,
-        t_rank,
+        (s, s_rank),
+        (t, t_rank),
     )
 }
 
@@ -298,13 +296,11 @@ fn create_curve_points(
     bounding_boxes: &[Vec<[Point2D<i32>; 4]>],
     edge_type: EdgeType<'_>,
     width: i32,
-    s: std::cell::Ref<'_, SvgNode>,
-    t: std::cell::Ref<'_, SvgNode>,
-    s_rank: usize,
-    t_rank: usize,
+    source: (std::cell::Ref<'_, SvgNode>, usize), /* Node, rank */
+    target: (std::cell::Ref<'_, SvgNode>, usize),
 ) -> Vec<(Point2D<i32>, Point2D<i32>)> {
-    let s_pos = s.get_position();
-    let t_pos = t.get_position();
+    let s_pos = source.0.get_position();
+    let t_pos = target.0.get_position();
 
     let (marker_start_height, marker_end_height, support_distance) = match edge_type {
         EdgeType::OneWay(_) => (0i32, MARKER_HEIGHT as i32, 3i32 * MARKER_HEIGHT as i32),
@@ -316,8 +312,8 @@ fn create_curve_points(
     };
 
     let (start, start_sup, end, end_sup) = get_start_and_end_points(
-        s,
-        t,
+        source.0,
+        target.0,
         marker_start_height,
         support_distance,
         marker_end_height,
@@ -326,8 +322,8 @@ fn create_curve_points(
     add_supporting_points(
         &mut curve_points,
         bounding_boxes,
-        &(t_rank, t_pos),
-        &(s_rank, s_pos),
+        &(target.1, t_pos),
+        &(source.1, s_pos),
         width,
         &render_graph.margin,
     );
@@ -614,8 +610,7 @@ fn get_mid_point(curve_points: &[(Point2D<i32>, Point2D<i32>)]) -> Point2D<i32> 
         curve_points[center_segment + 1].1,
         curve_points[center_segment + 1].0,
     );
-    let coords = curve.get_coordinates_for_t(0.5);
-    coords
+    curve.get_coordinates_for_t(0.5)
 }
 
 ///

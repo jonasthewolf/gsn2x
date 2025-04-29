@@ -1,4 +1,4 @@
-use super::{GsnEdgeType, GsnNode, GsnNodeType};
+use super::{Challenge, GsnEdgeType, GsnNode, GsnNodeType};
 use crate::{diagnostics::Diagnostics, dirgraph::DirectedGraph};
 use std::collections::BTreeMap;
 
@@ -80,7 +80,7 @@ fn check_node_references(
     nodes: &BTreeMap<String, GsnNode>,
     excluded_modules: &[&str],
 ) -> Result<(), ()> {
-    let results = nodes
+    nodes
         .iter()
         .filter(|(_, n)| !excluded_modules.contains(&n.module.as_str()))
         .flat_map(|(id, node)| {
@@ -101,24 +101,10 @@ fn check_node_references(
                     &node.module,
                     "supported by",
                 ),
-                // TODO Replace check
-                // check_unresolved_references(
-                //     diag,
-                //     nodes,
-                //     &node.challenges,
-                //     id,
-                //     &node.module,
-                //     "challenging",
-                // ),
+                check_challenges(diag, nodes, &node.challenges, id, &node.module),
             ]
-            .into_iter()
-            .flatten()
         })
-        .collect::<Vec<_>>();
-    results
-        .into_iter()
-        .collect::<Result<Vec<_>, ()>>()
-        .map(|_| ())
+        .collect::<Result<(), ()>>()
 }
 
 ///
@@ -132,11 +118,11 @@ fn check_unresolved_references(
     id: &str,
     module: &str,
     error_str: &str,
-) -> Vec<Result<(), ()>> {
+) -> Result<(), ()> {
     in_refs
         .iter()
         .filter(|&n| !nodes.contains_key(n))
-        .map(|wref| {
+        .try_for_each(|wref| {
             diag.add_error(
                 Some(module),
                 format!("C03: Element {} has unresolved \"{}\" element: {}", id, error_str, wref),
@@ -152,7 +138,6 @@ fn check_unresolved_references(
             }
             Err(())
         })
-        .collect::<Vec<Result<(), ()>>>()
 }
 
 ///
@@ -273,6 +258,85 @@ pub fn check_layers(
         .into_iter()
         .collect::<Result<Vec<_>, ()>>()
         .map(|_| ())
+}
+
+///
+/// Check challenges
+///
+///
+fn check_challenges(
+    diag: &mut Diagnostics,
+    nodes: &BTreeMap<String, GsnNode>,
+    challenges: &Option<Challenge>,
+    id: &str,
+    module: &str,
+) -> Result<(), ()> {
+    fn get_relations<'a>(nodes: &'a BTreeMap<String, GsnNode>, node: &str) -> Vec<&'a String> {
+        let mut rels = nodes
+            .get(node)
+            .iter()
+            .flat_map(|n| n.supported_by.iter().chain(n.in_context_of.iter()))
+            .collect::<Vec<_>>();
+        if let Some(n) = nodes.get(node) {
+            match &n.challenges {
+                Some(Challenge::Node(target)) => rels.push(target),
+                Some(Challenge::Relation((l, r))) => {
+                    rels.push(l);
+                    rels.push(r);
+                }
+                _ => (),
+            }
+        }
+        rels
+    }
+
+    if let Some(c) = challenges {
+        match c {
+            Challenge::Node(n) => {
+                if n == id {
+                    diag.add_error(Some(module), format!("CXX: Node {id} challenges itself."));
+                    Err(())
+                } else {
+                    Ok(())
+                }
+            }
+            Challenge::Relation((l, r)) => {
+                if l == r {
+                    diag.add_error(
+                        Some(module),
+                        format!(
+                            "CXX: Node {id} challenges a relation with both ends pointing to {l}."
+                        ),
+                    );
+                    Err(())
+                } else if !nodes.contains_key(l) {
+                    diag.add_error(
+                        Some(module),
+                        format!("CXX: Node {id} challenges a relation, but element {l} of the relation does not exist."),
+                    );
+                    Err(())
+                } else if !nodes.contains_key(r) {
+                    diag.add_error(
+                        Some(module),
+                        format!("CXX: Node {id} challenges a relation, but element {r} of the relation does not exist."),
+                    );
+                    Err(())
+                } else if !(get_relations(nodes, r).contains(&l)
+                    || get_relations(nodes, l).contains(&r))
+                {
+                    diag.add_error(
+                        Some(module),
+                        format!("CXX: Node {id} challenges a relation, but the referenced elements {r} and {l} do not have a relation."),
+                    );
+                    Err(())
+                } else {
+                    Ok(())
+                }
+            }
+        }
+    } else {
+        Ok(())
+    }
 }
 
 #[cfg(test)]
