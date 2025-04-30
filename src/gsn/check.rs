@@ -295,7 +295,10 @@ fn check_challenges(
         match c {
             Challenge::Node(n) => {
                 if n == id {
-                    diag.add_error(Some(module), format!("C13: Element {id} challenges itself."));
+                    diag.add_error(
+                        Some(module),
+                        format!("C13: Element {id} challenges itself."),
+                    );
                     Err(())
                 } else if !nodes.contains_key(n) {
                     diag.add_error(
