@@ -386,7 +386,7 @@ fn validate_defeated(
             } else {
                 diag.add_error(
                     Some(module),
-                    format!("V12: Relation from {id} to {rel} is marked as defeated, but {id} has no relation to {rel}."),
+                    format!("V13: Relation from {id} to {rel} is marked as defeated, but {id} has no relation to {rel}."),
                 );
                 Err(())
             }
@@ -920,6 +920,39 @@ mod test {
         assert_eq!(
             d.messages[0].msg,
             "V10: Element G1 is marked as defeated, but no other element challenges it."
+        );
+        assert_eq!(d.errors, 1);
+        assert_eq!(d.warnings, 0);
+    }
+
+    #[test]
+    fn defeated_unrelated() {
+        let mut d = Diagnostics::default();
+        let mut nodes = BTreeMap::<String, GsnNode>::new();
+        nodes.insert(
+            "G1".to_owned(),
+            GsnNode {
+                node_type: Some(GsnNodeType::Goal),
+                undeveloped: true,
+                defeated_relation: vec!["G2".to_owned()],
+                ..Default::default()
+            },
+        );
+        nodes.insert(
+            "G2".to_owned(),
+            GsnNode {
+                node_type: Some(GsnNodeType::Goal),
+                undeveloped: true,
+                ..Default::default()
+            },
+        );
+        assert!(validate_module(&mut d, "", &Module::default(), &nodes, true, true).is_err());
+        assert_eq!(d.messages.len(), 1);
+        assert_eq!(d.messages[0].module, Some("".to_owned()));
+        assert_eq!(d.messages[0].diag_type, DiagType::Error);
+        assert_eq!(
+            d.messages[0].msg,
+            "V13: Relation from G1 to G2 is marked as defeated, but G1 has no relation to G2."
         );
         assert_eq!(d.errors, 1);
         assert_eq!(d.warnings, 0);
