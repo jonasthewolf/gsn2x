@@ -20,6 +20,7 @@ Validations can be performed on individual input files.
 | V09 | Element has an assurance claim point that references another element, that this is neither its own ID nor any of the connected elements.|
 | V10 | An element is marked as defeated, but has no other elements challenging it. |
 | V11 | A CounterGoal or CounterSolution is used in input files. **Note: only reported with `--warn-dialectic` option.** |
+| V12 | Element that is not a CounterGoal nor a CounterSolution challenges another element or relation. |
 
 The following checks apply to the complete set of input files.
 
@@ -35,6 +36,11 @@ The following checks apply to the complete set of input files.
 | C09 | All extended modules must exist.                                                                       |
 | C10 | All extended elements must exist in the named module and must be undeveloped.                          |
 | C11 | The reference that is not found (see C03), could actually be a list, but a YAML string was used. Use [] around your comma separated references. |
+| C12 | Element challenges a relation, but an element of the relation does not exist. |
+| C13 | Element challenges itself. |
+| C14 | Element challenges an element, but that element does not exist. | 
+| C15 | Element challenges a relation, but both end are pointing to the same element. |
+| C16 | Element challenges a relation, but the referenced elements do not have a relation. |
 
 Uniqueness of keys (i.e. element IDs) is automatically enforced by the YAML format.
 

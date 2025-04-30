@@ -295,12 +295,12 @@ fn check_challenges(
         match c {
             Challenge::Node(n) => {
                 if n == id {
-                    diag.add_error(Some(module), format!("CXX: Node {id} challenges itself."));
+                    diag.add_error(Some(module), format!("C13: Element {id} challenges itself."));
                     Err(())
                 } else if !nodes.contains_key(n) {
                     diag.add_error(
                         Some(module),
-                        format!("CXX: Node {id} challenges element {n}, but it does not exist."),
+                        format!("C14: Element {id} challenges element {n}, but it does not exist."),
                     );
                     Err(())
                 } else {
@@ -312,20 +312,20 @@ fn check_challenges(
                     diag.add_error(
                         Some(module),
                         format!(
-                            "CXX: Node {id} challenges a relation with both ends pointing to {l}."
+                            "C15: Element {id} challenges a relation with both ends pointing to {l}."
                         ),
                     );
                     Err(())
                 } else if !nodes.contains_key(l) {
                     diag.add_error(
                         Some(module),
-                        format!("CXX: Node {id} challenges a relation, but element {l} of the relation does not exist."),
+                        format!("C12: Element {id} challenges a relation, but element {l} of the relation does not exist."),
                     );
                     Err(())
                 } else if !nodes.contains_key(r) {
                     diag.add_error(
                         Some(module),
-                        format!("CXX: Node {id} challenges a relation, but element {r} of the relation does not exist."),
+                        format!("C12: Element {id} challenges a relation, but element {r} of the relation does not exist."),
                     );
                     Err(())
                 } else if !(get_relations(nodes, r).contains(&l)
@@ -333,7 +333,7 @@ fn check_challenges(
                 {
                     diag.add_error(
                         Some(module),
-                        format!("CXX: Node {id} challenges a relation, but the referenced elements {r} and {l} do not have a relation."),
+                        format!("C16: Element {id} challenges a relation, but the referenced elements {r} and {l} do not have a relation."),
                     );
                     Err(())
                 } else {
@@ -443,7 +443,7 @@ mod test {
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
         assert_eq!(
             d.messages[0].msg,
-            "CXX: Node CG2 challenges element G2, but it does not exist."
+            "C14: Element CG2 challenges element G2, but it does not exist."
         );
         assert_eq!(d.errors, 1);
         assert_eq!(d.warnings, 0);
