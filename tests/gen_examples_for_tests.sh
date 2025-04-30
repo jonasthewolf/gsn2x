@@ -57,6 +57,7 @@ cp examples/example.gsn.svg examples/example.gsn_dark.svg
 ./target/release/gsn2x -G -E -w=20 -F -A tests/issue433_1.yaml
 ./target/release/gsn2x -G -E tests/multi_parents.gsn.yaml
 ./target/release/gsn2x -G -E tests/issue407.yaml -l=layer2
+./target/release/gsn2x -G -E tests/issue467.yaml
 ./target/release/gsn2x -G -E tests/issue453.yaml -l=layer2
 ./target/release/gsn2x -G -E tests/multi_children.yaml
 ./target/release/gsn2x -G -E tests/multi_children_min.yaml

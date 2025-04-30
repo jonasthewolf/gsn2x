@@ -6,6 +6,7 @@ The Dialectic Extension introduces two new elements: the `Counter Goal` and the 
 A Counter Goals or Counter Solutions `challenges` other elements.
 
 If that leads to a defeat, those elements can be marked as `defeated: true`.
+If this also affects a relation, a node can mark one of its relation as defeated using: `defeatedRelation: G1`.
 
 ## Example Source
 

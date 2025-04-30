@@ -187,7 +187,7 @@ fn validate_references(
         diag.add_error(
             Some(module),
             format!(
-                "Vxx: {id} is not a CounterGoal nor CounterSolution but challenges another element."
+                "V12: {id} is not a CounterGoal nor CounterSolution but challenges another element or relation."
             ),
         );
         Err(())
@@ -894,7 +894,7 @@ mod test {
         assert_eq!(d.messages[0].diag_type, DiagType::Error);
         assert_eq!(
             d.messages[0].msg,
-            "Vxx: C1 is not a CounterGoal nor CounterSolution but challenges another element."
+            "V12: C1 is not a CounterGoal nor CounterSolution but challenges another element or relation."
         );
         assert_eq!(d.errors, 1);
         assert_eq!(d.warnings, 0);
