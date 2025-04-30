@@ -21,6 +21,7 @@ Validations can be performed on individual input files.
 | V10 | An element is marked as defeated, but has no other elements challenging it. |
 | V11 | A CounterGoal or CounterSolution is used in input files. **Note: only reported with `--warn-dialectic` option.** |
 | V12 | Element that is not a CounterGoal nor a CounterSolution challenges another element or relation. |
+| V13 | Element marks relation to an element as defeated, but the element has no relation to that element. |
 
 The following checks apply to the complete set of input files.
 
