@@ -168,21 +168,31 @@
 <tr><td>V05</td><td>All referenced elements in <code>supportedBy</code> and <code>inContextOf</code> must be unique i.e., no duplicates in the list.</td></tr>
 <tr><td>V06</td><td>All referenced elements in <code>supportedBy</code> and <code>inContextOf</code> must not refer to the element itself.</td></tr>
 <tr><td>V07</td><td>All elements listed as extending other elements must be known elements of the current module and semantically sensible (see V04).</td></tr>
-<tr><td>V08</td><td> The IDs start contradicts the type of the element set with <code>node_type</code>.</td></tr>
+<tr><td>V08</td><td> The ID's start contradicts the type of the element set with <code>node_type</code>. <strong>Note: only reported with <code>--extended-check</code> option.</strong></td></tr>
 <tr><td>V09</td><td>Element has an assurance claim point that references another element, that this is neither its own ID nor any of the connected elements.</td></tr>
+<tr><td>V10</td><td>An element is marked as defeated, but has no other elements challenging it.</td></tr>
+<tr><td>V11</td><td>A CounterGoal or CounterSolution is used in input files. <strong>Note: only reported with <code>--warn-dialectic</code> option.</strong></td></tr>
+<tr><td>V12</td><td>Element that is not a CounterGoal nor a CounterSolution challenges another element or relation.</td></tr>
+<tr><td>V13</td><td>Element marks relation to an element as defeated, but the element has no relation to that element.</td></tr>
 </tbody></table>
 </div>
 <p>The following checks apply to the complete set of input files.</p>
 <div class="table-wrapper"><table><thead><tr><th>ID</th><th>Meaning</th></tr></thead><tbody>
 <tr><td>C01</td><td>There should be only one but must be at least one top-level element (G,S,C,J,A,Sn) unreferenced.</td></tr>
 <tr><td>C02</td><td>The top-level element must be a Goal. A top-level element is an element that is not referenced by any other element.</td></tr>
-<tr><td>C03</td><td>All referenced elements in <code>supportedBy</code> and <code>inContextOf</code> must exist.</td></tr>
+<tr><td>C03</td><td>All referenced elements in <code>supportedBy</code>, <code>inContextOf</code>, <code>challenges</code> must exist.</td></tr>
 <tr><td>C04</td><td>There must be no circular <code>supportedBy</code> references.</td></tr>
 <tr><td>C06</td><td>All module names must be unique.</td></tr>
 <tr><td>C07</td><td>All IDs must be unique across all modules.</td></tr>
 <tr><td>C08</td><td>All elements must be reachable from the root elements. This message can e.g. happen if there are multiple independent graphs where one contains circular references only.</td></tr>
 <tr><td>C09</td><td>All extended modules must exist.</td></tr>
 <tr><td>C10</td><td>All extended elements must exist in the named module and must be undeveloped.</td></tr>
+<tr><td>C11</td><td>The reference that is not found (see C03), could actually be a list, but a YAML string was used. Use [] around your comma separated references.</td></tr>
+<tr><td>C12</td><td>Element challenges a relation, but an element of the relation does not exist.</td></tr>
+<tr><td>C13</td><td>Element challenges itself.</td></tr>
+<tr><td>C14</td><td>Element challenges an element, but that element does not exist.</td></tr>
+<tr><td>C15</td><td> Element challenges a relation, but both end are pointing to the same element.</td></tr>
+<tr><td>C16</td><td>Element challenges a relation, but the referenced elements do not have a relation.</td></tr>
 </tbody></table>
 </div>
 <p>Uniqueness of keys (i.e. element IDs) is automatically enforced by the YAML format.</p>
@@ -202,7 +212,7 @@ The checks for references (Cxx) can be skipped for individual files by using the
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
-                            <a rel="next prefetch" href="advanced_usecases.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="adv_formatting.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
 
@@ -216,7 +226,7 @@ The checks for references (Cxx) can be skipped for individual files by using the
                         <i class="fa fa-angle-left"></i>
                     </a>
 
-                    <a rel="next prefetch" href="advanced_usecases.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="adv_formatting.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>

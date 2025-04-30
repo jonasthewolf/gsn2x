@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Advanced Use-cases - gsn2x User Manual</title>
+        <title>Dialectic Extension - gsn2x User Manual</title>
 
 
         <!-- Custom HTML head -->
@@ -156,24 +156,231 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="advance-use-cases"><a class="header" href="#advance-use-cases">Advance Use-cases</a></h1>
-<p>There are a few extra, advanced use-cases:</p>
-<ul>
-<li><a href="./adv_layout.html">Layout</a></li>
-<li><a href="./adv_layers.html">Layers</a></li>
-<li><a href="./adv_stylesheets.html">Stylesheets</a></li>
-<li><a href="./adv_evidence.html">Evidence</a></li>
-</ul>
+                        <h1 id="dialectic-extension"><a class="header" href="#dialectic-extension">Dialectic Extension</a></h1>
+<p>The Dialectic Extension introduces two new elements: the <code>Counter Goal</code> and the <code>Counter Solution</code>.</p>
+<p>A Counter Goals or Counter Solutions <code>challenges</code> other elements.</p>
+<p>If that leads to a defeat, those elements can be marked as <code>defeated: true</code>.
+If this also affects a relation, a node can mark one of its relation as defeated using: <code>defeatedRelation: G1</code>.</p>
+<h2 id="example-source"><a class="header" href="#example-source">Example Source</a></h2>
+<p>The following YAML shows an example of their usage from the GSN standard:</p>
+<pre><code class="language-yaml">
+G1:
+  supportedBy: S1
+  inContextOf: C1
+
+C1: {}
+
+S1:
+  supportedBy: [G2, G3, G4]
+
+G2:
+  text: A defeated goal
+  supportedBy: Sn1
+  defeated: true
+
+Sn1: {}
+
+CG1:
+  text: A counter argument
+  supportedBy: CG2
+  challenges: G2
+  horizontalIndex:
+    relative: -1
+
+CG2:
+  text: Another counter argument
+  supportedBy: CSn1
+
+CSn1:
+  text: | 
+    A counter 
+    evidence
+
+G3:
+  supportedBy: [G5, G6]
+
+CSn2:
+  text: | 
+    Another 
+    counter 
+    evidence
+  challenges: G5
+
+G5:
+  supportedBy: Sn2
+  defeated: true
+
+Sn2: {}
+
+G6:
+  supportedBy: Sn3
+
+Sn3:
+  defeated: true
+
+CG3:
+  challenges: Sn3
+  supportedBy: CSn3
+
+CSn3: {}
+
+G4:
+  supportedBy: [S2]
+
+S2:
+  supportedBy: [G7, G8]
+  defeated: true
+
+G7:
+  supportedBy: G9
+
+G9:
+  supportedBy: Sn4
+
+Sn4: {}
+
+G8:
+  supportedBy: Sn5
+
+Sn5: {}
+
+CG4:
+  challenges: S2
+  supportedBy: CSn4
+  horizontalIndex:
+    absolute: last
+
+CSn4: {}
+</code></pre>
+<h2 id="rendered-example"><a class="header" href="#rendered-example">Rendered Example</a></h2>
+<p><img src="examples/dialectic/first.gsn.svg" alt="Rendered Example" /></p>
+<pre><code class="language-yaml">
+G1:
+  supportedBy: S1
+  inContextOf: C1
+
+C1: {}
+
+S1:
+  supportedBy: [G2, G3, G4]
+
+G2:
+  text: A defeated goal
+  supportedBy: Sn1
+  defeated: true
+
+Sn1: {}
+
+CG1:
+  text: A counter argument
+  supportedBy: CG2
+  challenges: G2
+  defeatedRelation: G2
+  horizontalIndex:  
+    relative: -1
+  rankIncrement: 1
+
+CCSn1:
+  nodeType: CounterSolution
+  challenges: G2 -&gt; CG1
+
+CG2:
+  text: Another counter argument
+  supportedBy: CSn1
+
+CSn1:
+  text: | 
+    A counter 
+    evidence
+
+G3:
+  supportedBy: [G5, G6]
+
+CSn2:
+  text: | 
+    Another 
+    counter 
+    evidence
+  challenges: G5
+  defeated: true
+  defeatedRelation: G5
+  rankIncrement: 1
+
+CCG1:
+  nodeType: CounterGoal
+  supportedBy: CCSn2
+  challenges: CSn2
+  rankIncrement: 1
+
+CCSn2:
+  nodeType: CounterSolution
+
+G5:
+  supportedBy: Sn2
+  defeated: true
+
+Sn2: {}
+
+G6:
+  supportedBy: Sn3
+
+Sn3: {}
+
+CG3:
+  challenges: Sn3
+  supportedBy: CSn3
+  defeated: true
+  defeatedRelation: Sn3
+  rankIncrement: 1
+
+CSn3: {}
+
+G4:
+  supportedBy: [S2]
+
+S2:
+  supportedBy: [G7, G8]
+  defeated: true
+
+G7:
+  supportedBy: G9
+
+G9:
+  supportedBy: Sn4
+
+Sn4: {}
+
+G8:
+  supportedBy: Sn5
+
+Sn5: {}
+
+CG4:
+  challenges: S2
+  supportedBy: CSn4
+  horizontalIndex:
+    absolute: last
+
+CSn4: {}
+
+CCSn3:
+  nodeType: CounterSolution
+  challenges: CG3
+  horizontalIndex:
+    relative: +1
+</code></pre>
+<h2 id="rendered-example-1"><a class="header" href="#rendered-example-1">Rendered Example</a></h2>
+<p><img src="examples/dialectic/second.gsn.svg" alt="Rendered Example" /></p>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="checks.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="ext_confidence.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
-                            <a rel="next prefetch" href="adv_formatting.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="standard_support.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
 
@@ -183,11 +390,11 @@
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="checks.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="ext_confidence.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
 
-                    <a rel="next prefetch" href="adv_formatting.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="standard_support.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>

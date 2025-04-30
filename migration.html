@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Stylesheets - gsn2x User Manual</title>
+        <title>Migration between Different Versions - gsn2x User Manual</title>
 
 
         <!-- Custom HTML head -->
@@ -156,96 +156,34 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="stylesheets-for-svg-rendering"><a class="header" href="#stylesheets-for-svg-rendering">Stylesheets for SVG rendering</a></h1>
-<p>You can provide (multiple) custom CSS stylesheets for SVG via the <code>-s</code> or <code>--stylesheet</code> options.</p>
-<p>The path may be relative to the current working directory, absolute, or an URL (i.e. starting with <code>http://</code>, <code>https://</code> or <code>file://</code>).</p>
-<p>When adding <code>-t</code> or <code>--embed-css</code> on the command line, the CSS stylesheets will be embedded in the SVG.</p>
-<p>If an output path is provided (see <a href="./basic_usage.html">Basic usage</a>), the stylesheet(s) will be copied there.
-If a relative path is used, the relative path to the current working directory is preserved.
-If an absolute path is used, the stylesheet will be copied to the root of the output path.</p>
-<p>If a URL (see above for definition) is provided for a stylesheet, it is neither embedded nor copied to an output directory.</p>
-<p>You can also add stylesheets as part of the module information (see <a href="./ext_mod_info.html">Module Information</a>).
-Please note that stylesheets are always applied to all modules even if just included into one module.
-If you need to apply styles only to selected modules, see <a href="#classes-and-styles">below</a> for how to do this.</p>
-<h2 id="example-command-line"><a class="header" href="#example-command-line">Example command line</a></h2>
-<p>To embed a CSS stylesheet that is in the same directory as your YAML file:</p>
-<pre><code class="language-console">gsn2x -t -s stylesheet_in_same_directory_as_my_gsn_yaml.css my.gsn.yaml
-</code></pre>
-<h2 id="example-module-information"><a class="header" href="#example-module-information">Example module information</a></h2>
-<pre><code class="language-yaml">module:
-    name: Main Module
-    stylesheets: ["stylesheet.css"]
-</code></pre>
-<h2 id="classes-and-styles"><a class="header" href="#classes-and-styles">Classes and styles</a></h2>
-<p>Every element will also be addressable by <code>id</code>. The <code>id</code> is the same as the YAML id.</p>
-<p>This table shows the CSS classes assigned to a certain element:</p>
-<div class="table-wrapper"><table><thead><tr><th>Class</th><th>Assigned to</th><th>SVG Element</th></tr></thead><tbody>
-<tr><td>gsndiagram</td><td>The complete diagram</td><td>svg</td></tr>
-<tr><td>gsnelem</td><td>All elements</td><td>g</td></tr>
-<tr><td>gsngoal</td><td>Goal</td><td>g</td></tr>
-<tr><td>gsn_undeveloped</td><td>Undeveloped</td><td>g</td></tr>
-<tr><td>gsnsltn</td><td>Solution</td><td>g</td></tr>
-<tr><td>gsnawaysltn</td><td>Away Solution</td><td>g</td></tr>
-<tr><td>gsnstgy</td><td>Strategy</td><td>g</td></tr>
-<tr><td>gsnasmp</td><td>Assumption</td><td>g</td></tr>
-<tr><td>gsnawayasmp</td><td>Away Assumption</td><td>g</td></tr>
-<tr><td>gsnjust</td><td>Justification</td><td>g</td></tr>
-<tr><td>gsnawayjust</td><td>Away Justification</td><td>g</td></tr>
-<tr><td>gsnctxt</td><td>Context</td><td>g</td></tr>
-<tr><td>gsnawayctxt</td><td>Away Context</td><td>g</td></tr>
-<tr><td>gsncountergoal</td><td>Counter Goal</td><td>g</td></tr>
-<tr><td>gsncountersltn</td><td>Counter Solution</td><td>g</td></tr>
-<tr><td>gsnmodule</td><td>Module</td><td>g</td></tr>
-<tr><td>gsn_module_<code>module</code></td><td>Module name</td><td>g</td></tr>
-<tr><td>gsnedge</td><td>All edges</td><td>path</td></tr>
-<tr><td>gsnlay_<code>&lt;layer&gt;</code></td><td>Layer <code>&lt;layer&gt;</code></td><td>path</td></tr>
-<tr><td>gsninctxt</td><td>In Context Of</td><td>path</td></tr>
-<tr><td>gsnspby</td><td>Supported By</td><td>path</td></tr>
-<tr><td>gsnchllngs</td><td>Challenges</td><td>path</td></tr>
-<tr><td>gsncomposite</td><td>Composite (In Context Of AND Supported By)</td><td>path</td></tr>
-<tr><td>gsn_masked</td><td>Masked elements</td><td>g  </td></tr>
-<tr><td>acp_<code>acp_name</code></td><td>Elements or edges with an ACP</td><td>g or path</td></tr>
-<tr><td>gsndefeated</td><td>Elements or edges that are defeated</td><td>g or path</td></tr>
-</tbody></table>
-</div>
-<p>You can assign additional classes by adding the <code>classes:</code> attribute. It must be a list of classes you want to assign.
-Additional layers will be added as CSS classes, too. A <code>layer1</code> will e.g. be added as <code>gsnlay_layer1</code>.</p>
-<p>For more information on how to use CSS with SVGs, see <a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/SVG_and_CSS">here</a>.</p>
-<h2 id="example"><a class="header" href="#example">Example</a></h2>
-<p>The GSN YAML:</p>
-<pre><code class="language-yaml">
-G1:
-  text: This is a Goal
-  classes: [additionalclass1, additionalclass2]
-  undeveloped: true
-</code></pre>
-<p>The corresponding CSS:</p>
-<pre><code class="language-css">
-.additionalclass1 path { fill: red; fill-opacity: 1;}
-.additionalclass1 text,a { fill: white; }
-</code></pre>
-<p>The result looks like this:</p>
-<p><img src="examples/minimalcss/min.gsn.svg" alt="Styled Example" /></p>
-<h1 id="highlighting-elements-when-navigating"><a class="header" href="#highlighting-elements-when-navigating">Highlighting elements when navigating</a></h1>
-<p>The CSS <code>:target</code> pseudo class can be used to highlight the element you clicked on in the previous image.</p>
-<p>An example could look like this:</p>
-<pre><code class="language-css">g:target path {
-    fill: lightsteelblue;
-    fill-opacity: 1;
-}
+                        <h1 id="migrating-from-version-2x-to-version-3x"><a class="header" href="#migrating-from-version-2x-to-version-3x">Migrating from Version 2.x to Version 3.x</a></h1>
+<p>Version 2 of gsn2x tried to fully automate the layout of diagrams.
+Version 3 intentionally changed this approach.</p>
+<p>To get similar or even better renderings, please follow the guidelines below.</p>
+<p><strong>Replace <code>level</code> with <code>rankIncrement</code></strong></p>
+<p><code>level</code> was deprecated. Instead, increment the rank of the elements that should be pushed further down.</p>
+<p>Please see <a href="./adv_layout.html">Layout</a> for more information on how to use <code>rankIncrement</code>.</p>
+<p><strong>Use strict lexicographical sorting and horizontal reordering to optimize the graph</strong></p>
+<p>If you find situations that are not rendered correctly by default,
+please check if your IDs are sensibly defined (i.e. lexicographically increasing).
+Use <code>horizontalIndex</code> as described <a href="./adv_layout.html">here</a> to fix e.g., crossing edges.</p>
+<h1 id="migration-from-version-3x-to-version-4x"><a class="header" href="#migration-from-version-3x-to-version-4x">Migration from Version 3.x to Version 4.x</a></h1>
+<p>Remove all <code>horizontalIndex</code> again and try to render the diagrams. The ranking algorithm was improved.
+Thus, problems should be minimized. Introduce the <code>horizontalIndex</code> again, where necessary to achieve the desired diagram.</p>
+<p>I change the options are parsed. Since the input files are handed over using positional arguments, all options now require a <code>=</code> to assign the values.</p>
+<p>When drafting a new assurance case you can now have "empty" nodes with just an identifier.
+To do so, use the empty dictionary syntax of YAML:</p>
+<pre><code class="language-yaml">G1: {}
 </code></pre>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="adv_layers.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="history.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
-                            <a rel="next prefetch" href="adv_evidence.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                                <i class="fa fa-angle-right"></i>
-                            </a>
 
                         <div style="clear: both"></div>
                     </nav>
@@ -253,13 +191,10 @@ G1:
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="adv_layers.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="history.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
 
-                    <a rel="next prefetch" href="adv_evidence.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                        <i class="fa fa-angle-right"></i>
-                    </a>
             </nav>
 
         </div>

@@ -163,12 +163,12 @@
 <p>You can create an SVG like this:</p>
 <pre><code>gsn2x &lt;yourgsnfile.yaml&gt; 
 </code></pre>
-<p>The output is an argument view in SVG format and automatically written to <code>&lt;yourgsnfile.svg&gt;</code>. If more than one input file is provided, they are treated as <a href="./mod_extension.html">modules</a>.</p>
+<p>The output is an argument view in SVG format and automatically written to <code>&lt;yourgsnfile.svg&gt;</code>. If more than one input file is provided, they are treated as <a href="./ext_mod.html">modules</a>.</p>
 <h2 id="options"><a class="header" href="#options">Options</a></h2>
-<pre><code>Usage: gsn2x [OPTIONS] &lt;INPUT&gt;...
+<pre><code>Usage: gsn2x [OPTIONS] [INPUT]...
 
 Arguments:
-  &lt;INPUT&gt;...  Sets the input file(s) to use.
+  [INPUT]...  Sets the input file(s) to use. [default: index.gsn.yaml]
 
 Options:
   -h, --help     Print help
@@ -176,26 +176,30 @@ Options:
 
 CHECKS:
   -c, --check                      Only check the input file(s), but do not output graphs.
-  -x, --exclude &lt;EXCLUDED_MODULE&gt;  Exclude this module from reference checks.
+  -x, --exclude=&lt;EXCLUDED_MODULE&gt;  Exclude this module from reference checks.
+      --warn-dialectic             Emit a warning if Dialectic Extension is used.
+      --extended-check             Perform additional checks.
 
 OUTPUT:
   -N, --no-arg                         Do not output of argument view for provided input files.
-  -f, --full &lt;COMPLETE_VIEW&gt;           Output the complete view to file with name &lt;COMPLETE_VIEW&gt;.    [default: complete.svg]
+  -f, --full=&lt;COMPLETE_VIEW&gt;           Output the complete view to file with name &lt;COMPLETE_VIEW&gt;.     [default: complete.svg]
   -F, --no-full                        Do not output the complete view.
-  -a, --arch &lt;ARCHITECTURE_VIEW&gt;       Output the architecture view to file with name &lt;ARCHITECTURE_VIEW&gt;. [default: architecture.svg]
+  -a, --arch=&lt;ARCHITECTURE_VIEW&gt;       Output the architecture view to file with name     &lt;ARCHITECTURE_VIEW&gt;. [default: architecture.svg]
   -A, --no-arch                        Do not output the architecture view.
-  -e, --evidence &lt;EVIDENCE&gt;          Output list of all evidence to file with name &lt;EVIDENCE&gt;. [default: evidence.md]
-  -E, --no-evidence                   Do not output list of all evidence.
-  -o, --output-dir &lt;OUTPUT_DIRECTORY&gt;  Emit all output files to directory &lt;OUTPUT_DIRECTORY&gt;.      [default: .]
+  -e, --evidence=&lt;EVIDENCE&gt;            Output list of all evidence to file with name &lt;EVIDENCE&gt;.     [default: evidence.md]
+  -E, --no-evidence                    Do not output list of all evidence.
+  -o, --output-dir=&lt;OUTPUT_DIRECTORY&gt;  Emit all output files to directory &lt;OUTPUT_DIRECTORY&gt;.     [default: .]
+      --statistics[=&lt;STATISTICS&gt;]      Output statistics on inputs to &lt;STATISTICS&gt; file or standard     output.
+      --dump-yaml[=&lt;YAMLDUMP&gt;]         Output parsed YAML files to single &lt;YAMLDUMP&gt; file or standard     output.
 
 OUTPUT MODIFICATION:
-  -l, --layer &lt;LAYERS&gt;            Output additional layer. Can be used multiple times.
-  -s, --stylesheet &lt;STYLESHEETS&gt;  Links a stylesheet in SVG output. Can be used multiple times.
+  -l, --layer=&lt;LAYERS&gt;            Output additional layer. Can be used multiple times.
+  -s, --stylesheet=&lt;STYLESHEETS&gt;  Links a stylesheet in SVG output. Can be used multiple times.
   -t, --embed-css                 Embed stylesheets instead of linking them.
-  -m, --mask &lt;MASKED_MODULE&gt;      Do not show this module in views.
+  -m, --mask=&lt;MASKED_MODULE&gt;      Do not show this module in views.
   -G, --no-legend                 Do not output a legend based on module information.
   -g, --full-legend               Output a legend based on all module information.
-  -w, --wrap &lt;CHAR_WRAP&gt;          Define the number of characters after which a line of text is wrapped.</code></pre>
+  -w, --wrap=&lt;CHAR_WRAP&gt;          Define the number of characters after which a line of text is wrapped.</code></pre>
 
                     </main>
 

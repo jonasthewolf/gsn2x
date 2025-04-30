@@ -164,12 +164,12 @@
 <p>You can create an SVG like this:</p>
 <pre><code>gsn2x &lt;yourgsnfile.yaml&gt; 
 </code></pre>
-<p>The output is an argument view in SVG format and automatically written to <code>&lt;yourgsnfile.svg&gt;</code>. If more than one input file is provided, they are treated as <a href="./mod_extension.html">modules</a>.</p>
+<p>The output is an argument view in SVG format and automatically written to <code>&lt;yourgsnfile.svg&gt;</code>. If more than one input file is provided, they are treated as <a href="./ext_mod.html">modules</a>.</p>
 <h2 id="options"><a class="header" href="#options">Options</a></h2>
-<pre><code>Usage: gsn2x [OPTIONS] &lt;INPUT&gt;...
+<pre><code>Usage: gsn2x [OPTIONS] [INPUT]...
 
 Arguments:
-  &lt;INPUT&gt;...  Sets the input file(s) to use.
+  [INPUT]...  Sets the input file(s) to use. [default: index.gsn.yaml]
 
 Options:
   -h, --help     Print help
@@ -177,26 +177,30 @@ Options:
 
 CHECKS:
   -c, --check                      Only check the input file(s), but do not output graphs.
-  -x, --exclude &lt;EXCLUDED_MODULE&gt;  Exclude this module from reference checks.
+  -x, --exclude=&lt;EXCLUDED_MODULE&gt;  Exclude this module from reference checks.
+      --warn-dialectic             Emit a warning if Dialectic Extension is used.
+      --extended-check             Perform additional checks.
 
 OUTPUT:
   -N, --no-arg                         Do not output of argument view for provided input files.
-  -f, --full &lt;COMPLETE_VIEW&gt;           Output the complete view to file with name &lt;COMPLETE_VIEW&gt;.    [default: complete.svg]
+  -f, --full=&lt;COMPLETE_VIEW&gt;           Output the complete view to file with name &lt;COMPLETE_VIEW&gt;.     [default: complete.svg]
   -F, --no-full                        Do not output the complete view.
-  -a, --arch &lt;ARCHITECTURE_VIEW&gt;       Output the architecture view to file with name &lt;ARCHITECTURE_VIEW&gt;. [default: architecture.svg]
+  -a, --arch=&lt;ARCHITECTURE_VIEW&gt;       Output the architecture view to file with name     &lt;ARCHITECTURE_VIEW&gt;. [default: architecture.svg]
   -A, --no-arch                        Do not output the architecture view.
-  -e, --evidence &lt;EVIDENCE&gt;          Output list of all evidence to file with name &lt;EVIDENCE&gt;. [default: evidence.md]
-  -E, --no-evidence                   Do not output list of all evidence.
-  -o, --output-dir &lt;OUTPUT_DIRECTORY&gt;  Emit all output files to directory &lt;OUTPUT_DIRECTORY&gt;.      [default: .]
+  -e, --evidence=&lt;EVIDENCE&gt;            Output list of all evidence to file with name &lt;EVIDENCE&gt;.     [default: evidence.md]
+  -E, --no-evidence                    Do not output list of all evidence.
+  -o, --output-dir=&lt;OUTPUT_DIRECTORY&gt;  Emit all output files to directory &lt;OUTPUT_DIRECTORY&gt;.     [default: .]
+      --statistics[=&lt;STATISTICS&gt;]      Output statistics on inputs to &lt;STATISTICS&gt; file or standard     output.
+      --dump-yaml[=&lt;YAMLDUMP&gt;]         Output parsed YAML files to single &lt;YAMLDUMP&gt; file or standard     output.
 
 OUTPUT MODIFICATION:
-  -l, --layer &lt;LAYERS&gt;            Output additional layer. Can be used multiple times.
-  -s, --stylesheet &lt;STYLESHEETS&gt;  Links a stylesheet in SVG output. Can be used multiple times.
+  -l, --layer=&lt;LAYERS&gt;            Output additional layer. Can be used multiple times.
+  -s, --stylesheet=&lt;STYLESHEETS&gt;  Links a stylesheet in SVG output. Can be used multiple times.
   -t, --embed-css                 Embed stylesheets instead of linking them.
-  -m, --mask &lt;MASKED_MODULE&gt;      Do not show this module in views.
+  -m, --mask=&lt;MASKED_MODULE&gt;      Do not show this module in views.
   -G, --no-legend                 Do not output a legend based on module information.
   -g, --full-legend               Output a legend based on all module information.
-  -w, --wrap &lt;CHAR_WRAP&gt;          Define the number of characters after which a line of text is wrapped.</code></pre>
+  -w, --wrap=&lt;CHAR_WRAP&gt;          Define the number of characters after which a line of text is wrapped.</code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="syntax-in-yaml"><a class="header" href="#syntax-in-yaml">Syntax in YAML</a></h1>
 <h2 id="elements"><a class="header" href="#elements">Elements</a></h2>
 <p>The following Goal Structuring Notation (GSN) core elements are supported:</p>
@@ -207,6 +211,8 @@ OUTPUT MODIFICATION:
 <tr><td>Solution</td><td>Sn</td></tr>
 <tr><td>Context</td><td>C</td></tr>
 <tr><td>Strategy</td><td>S</td></tr>
+<tr><td>Counter Goal</td><td>CG</td></tr>
+<tr><td>Counter Solution</td><td>CSn</td></tr>
 </tbody></table>
 </div>
 <p>Every element is defined by a prefix (as shown in the table above) and an arbitrary identifier then.</p>
@@ -250,12 +256,14 @@ C1:
 <tr><td>rankIncrement</td><td>yes</td><td>See <a href="./adv_layout.html">Layout</a>.</td></tr>
 <tr><td>horizontalIndex</td><td>yes</td><td>See <a href="./adv_layout.html">Layout</a>.</td></tr>
 <tr><td>charWrap</td><td>yes</td><td>See <a href="./adv_formatting.html">Line Breaks</a>.</td></tr>
-<tr><td>acp</td><td>yes</td><td>See <a href="./confidence.html">Confidence Argument Extension</a>.</td></tr>
+<tr><td>acp</td><td>yes</td><td>See <a href="./ext_confidence.html">Confidence Argument Extension</a>.</td></tr>
+<tr><td>challenges</td><td>yes</td><td>See <a href="./ext_dialectic.html">Dialectic Extension</a>.</td></tr>
+<tr><td>defeated</td><td>yes</td><td>See <a href="./ext_dialectic.html">Dialectic Extension</a>.</td></tr>
 </tbody></table>
 </div><hr>
 <ol class="footnote-definition"><li id="footnote-nt">
 <p>When providing a <code>nodeType</code> you do not need to follow the standard prefix scheme above.
-Just give <code>Goal</code>, <code>Assumption</code>, <code>Justification</code>, <code>Solution</code>, <code>Context</code> and <code>Strategy</code> to give the type of the element. <a href="#fr-nt-1">↩</a></p>
+Just set <code>nodeType</code> to <code>Goal</code>, <code>Assumption</code>, <code>Justification</code>, <code>Solution</code>, <code>Context</code>, <code>Strategy</code>, <code>CounterGoal</code> and  <code>CounterSolution</code> to give the type of the element. <a href="#fr-nt-1">↩</a></p>
 </li>
 </ol><div style="break-before: page; page-break-before: always;"></div><h1 id="checks"><a class="header" href="#checks">Checks</a></h1>
 <h2 id="validation-checks"><a class="header" href="#validation-checks">Validation checks</a></h2>
@@ -269,21 +277,31 @@ Just give <code>Goal</code>, <code>Assumption</code>, <code>Justification</code>
 <tr><td>V05</td><td>All referenced elements in <code>supportedBy</code> and <code>inContextOf</code> must be unique i.e., no duplicates in the list.</td></tr>
 <tr><td>V06</td><td>All referenced elements in <code>supportedBy</code> and <code>inContextOf</code> must not refer to the element itself.</td></tr>
 <tr><td>V07</td><td>All elements listed as extending other elements must be known elements of the current module and semantically sensible (see V04).</td></tr>
-<tr><td>V08</td><td> The IDs start contradicts the type of the element set with <code>node_type</code>.</td></tr>
+<tr><td>V08</td><td> The ID's start contradicts the type of the element set with <code>node_type</code>. <strong>Note: only reported with <code>--extended-check</code> option.</strong></td></tr>
 <tr><td>V09</td><td>Element has an assurance claim point that references another element, that this is neither its own ID nor any of the connected elements.</td></tr>
+<tr><td>V10</td><td>An element is marked as defeated, but has no other elements challenging it.</td></tr>
+<tr><td>V11</td><td>A CounterGoal or CounterSolution is used in input files. <strong>Note: only reported with <code>--warn-dialectic</code> option.</strong></td></tr>
+<tr><td>V12</td><td>Element that is not a CounterGoal nor a CounterSolution challenges another element or relation.</td></tr>
+<tr><td>V13</td><td>Element marks relation to an element as defeated, but the element has no relation to that element.</td></tr>
 </tbody></table>
 </div>
 <p>The following checks apply to the complete set of input files.</p>
 <div class="table-wrapper"><table><thead><tr><th>ID</th><th>Meaning</th></tr></thead><tbody>
 <tr><td>C01</td><td>There should be only one but must be at least one top-level element (G,S,C,J,A,Sn) unreferenced.</td></tr>
 <tr><td>C02</td><td>The top-level element must be a Goal. A top-level element is an element that is not referenced by any other element.</td></tr>
-<tr><td>C03</td><td>All referenced elements in <code>supportedBy</code> and <code>inContextOf</code> must exist.</td></tr>
+<tr><td>C03</td><td>All referenced elements in <code>supportedBy</code>, <code>inContextOf</code>, <code>challenges</code> must exist.</td></tr>
 <tr><td>C04</td><td>There must be no circular <code>supportedBy</code> references.</td></tr>
 <tr><td>C06</td><td>All module names must be unique.</td></tr>
 <tr><td>C07</td><td>All IDs must be unique across all modules.</td></tr>
 <tr><td>C08</td><td>All elements must be reachable from the root elements. This message can e.g. happen if there are multiple independent graphs where one contains circular references only.</td></tr>
 <tr><td>C09</td><td>All extended modules must exist.</td></tr>
 <tr><td>C10</td><td>All extended elements must exist in the named module and must be undeveloped.</td></tr>
+<tr><td>C11</td><td>The reference that is not found (see C03), could actually be a list, but a YAML string was used. Use [] around your comma separated references.</td></tr>
+<tr><td>C12</td><td>Element challenges a relation, but an element of the relation does not exist.</td></tr>
+<tr><td>C13</td><td>Element challenges itself.</td></tr>
+<tr><td>C14</td><td>Element challenges an element, but that element does not exist.</td></tr>
+<tr><td>C15</td><td> Element challenges a relation, but both end are pointing to the same element.</td></tr>
+<tr><td>C16</td><td>Element challenges a relation, but the referenced elements do not have a relation.</td></tr>
 </tbody></table>
 </div>
 <p>Uniqueness of keys (i.e. element IDs) is automatically enforced by the YAML format.</p>
@@ -294,14 +312,6 @@ The checks for references (Cxx) can be skipped for individual files by using the
 <p>The following format is used:</p>
 <pre><code>(Warning|Error): \((?&lt;module&gt;.+)\) \((?&lt;num&gt;[CV][0-9][0-9])\): (?&lt;msg&gt;.+) 
 </code></pre>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="advance-use-cases"><a class="header" href="#advance-use-cases">Advance Use-cases</a></h1>
-<p>There are a few extra, advanced use-cases:</p>
-<ul>
-<li><a href="./adv_layout.html">Layout</a></li>
-<li><a href="./adv_layers.html">Layers</a></li>
-<li><a href="./adv_stylesheets.html">Stylesheets</a></li>
-<li><a href="./adv_evidence.html">Evidence</a></li>
-</ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="formatting"><a class="header" href="#formatting">Formatting</a></h1>
 <p>gsn2x allows for different ways to formatting text.
 Formatting loosely follows Markdown syntax, even though not the full specification is supported.</p>
@@ -346,15 +356,14 @@ URLs may not contain whitespace characters. If you URL has one, just replace wit
     lines
 </code></pre>
 <p>Alternatively, you can use the <code>-w</code> option and provide a global number of characters after which lines are wrapped.</p>
-<p>You can also use the optional <code>charWrap</code> attribute for an element to individually define the number of characters after which line is wrapped. The same attribute can be applied for a complete module at the <code>module</code> <a href="./mod_info.html">section</a>.</p>
+<p>You can also use the optional <code>charWrap</code> attribute for an element to individually define the number of characters after which line is wrapped. The same attribute can be applied for a complete module at the <code>module</code> <a href="./ext_mod_info.html">section</a>.</p>
 <p><strong>Please note that wrapping is done if a whitespace is detected after the given number of characters.</strong></p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="layout-of-elements"><a class="header" href="#layout-of-elements">Layout of elements</a></h1>
 <h2 id="how-does-the-default-layout-of-the-graph-work"><a class="header" href="#how-does-the-default-layout-of-the-graph-work">How does the default layout of the graph work?</a></h2>
 <p>At first, the root elements are identified. Root elements are elements
 that are not referenced as <code>supportedBy</code> or <code>inContextOf</code>.</p>
 <p>Each level in the rendered graph is called rank.
-The elements on each rank are sorted lexicographically before being placed on that rank.
-Then, starting with the first element on the current rank, the elements of the next rank are identified.
+Starting from the root nodes, all of their children referenced by <code>supportedBy</code> and <code>challenges</code> are identified. The list of children is sorted in lexicographical order, before ranking.
 An element is only ranked if all elements referencing it are already placed.
 Finally, the <code>inContextOf</code> elements are placed on that rank.</p>
 <h2 id="placement-of-elements"><a class="header" href="#placement-of-elements">Placement of elements</a></h2>
@@ -405,7 +414,7 @@ to the very right of the graph.</p>
 You would typically use an absolute index with either <code>0</code> or <code>last</code> to place them
 either left or right of the element they are referenced from.</p>
 <p><code>horizontalIndex</code> and <code>rankIncrement</code> can also be used for <code>module</code> elements.
-They will be used for the Architecture View then (see <a href="mod_extension.html#architecture-view">Modular extension</a>).</p>
+They will be used for the Architecture View then (see <a href="ext_mod.html#architecture-view">Modular extension</a>).</p>
 <h3 id="troubleshooting"><a class="header" href="#troubleshooting">Troubleshooting</a></h3>
 <p>There can be situations (e.g. a n:m relation between goals and solutions)
 that lead to weird looking graphs.
@@ -433,12 +442,15 @@ Sn1:
 
 Sn2: 
   text: Solution to First
+  # This is artificial to show potential entanglement
+  horizontalIndex:
+    absolute: last
 </code></pre>
 <p>The created SVG is hardly readable:</p>
 <p><img src="examples/entangled.gsn.svg" alt="entangled example" /></p>
-<p>The reason for this is, that <code>G1</code> is lexicographically ordered before <code>G2</code>, but <code>Sn2</code> after <code>Sn1</code>.
-<code>Sn1</code> thus "pushes" <code>Sn2</code> to the right in each iteration of the layout algorithm.</p>
-<p>The problem is easily solvable in different ways:</p>
+<p><strong>Please note that this example is artificial, until I come a across a simple example that my new algorithm cannot handle.</strong>
+If the <code>horizontalIndex</code> is remove from the example, the diagram is rendered as intended.</p>
+<p>Such problems can usually easily be solved in different ways:</p>
 <ol>
 <li>Rename <code>G1</code> and/or <code>G2</code> to change their lexicographical order.</li>
 <li>Rename <code>Sn1</code> and/or <code>Sn2</code> to change their lexicographical order.</li>
@@ -469,7 +481,7 @@ C1:
 </code></pre>
 <p>In this example, a call to <code>gsn2x -l layer1</code> will show the additional information to each element prefixed with <em><code>LAYER1: </code></em>.</p>
 <p>Of course, using <code>text</code>, <code>inContextOf</code>, <code>supportedBy</code>, <code>url</code>, <code>undeveloped</code>,
-<code>horizontalRank</code>, <code>rankIncrement</code>, <code>acp</code> or <code>classes</code> are not sensible parameters to pass for the <code>-l</code> option.</p>
+<code>horizontalRank</code>, <code>rankIncrement</code>, <code>acp</code>, <code>defeated</code>, <code>challenges</code> or <code>classes</code> are not sensible parameters to pass for the <code>-l</code> option.</p>
 <p>Please note that using <code>module</code> and passing it as a layer option will also not work.</p>
 <p>It is intentional that information is only added for a view, but not hidden to ensure consistency of the GSN in all variants.</p>
 <p>Only additional associative arrays with a string key can be used as additional layers.</p>
@@ -481,7 +493,7 @@ C1:
 If a relative path is used, the relative path to the current working directory is preserved.
 If an absolute path is used, the stylesheet will be copied to the root of the output path.</p>
 <p>If a URL (see above for definition) is provided for a stylesheet, it is neither embedded nor copied to an output directory.</p>
-<p>You can also add stylesheets as part of the module information (see <a href="./mod_info.html">Module Information</a>).
+<p>You can also add stylesheets as part of the module information (see <a href="./ext_mod_info.html">Module Information</a>).
 Please note that stylesheets are always applied to all modules even if just included into one module.
 If you need to apply styles only to selected modules, see <a href="adv_stylesheets.html#classes-and-styles">below</a> for how to do this.</p>
 <h2 id="example-command-line"><a class="header" href="#example-command-line">Example command line</a></h2>
@@ -510,15 +522,19 @@ If you need to apply styles only to selected modules, see <a href="adv_styleshee
 <tr><td>gsnawayjust</td><td>Away Justification</td><td>g</td></tr>
 <tr><td>gsnctxt</td><td>Context</td><td>g</td></tr>
 <tr><td>gsnawayctxt</td><td>Away Context</td><td>g</td></tr>
+<tr><td>gsncountergoal</td><td>Counter Goal</td><td>g</td></tr>
+<tr><td>gsncountersltn</td><td>Counter Solution</td><td>g</td></tr>
 <tr><td>gsnmodule</td><td>Module</td><td>g</td></tr>
 <tr><td>gsn_module_<code>module</code></td><td>Module name</td><td>g</td></tr>
 <tr><td>gsnedge</td><td>All edges</td><td>path</td></tr>
 <tr><td>gsnlay_<code>&lt;layer&gt;</code></td><td>Layer <code>&lt;layer&gt;</code></td><td>path</td></tr>
 <tr><td>gsninctxt</td><td>In Context Of</td><td>path</td></tr>
 <tr><td>gsnspby</td><td>Supported By</td><td>path</td></tr>
+<tr><td>gsnchllngs</td><td>Challenges</td><td>path</td></tr>
 <tr><td>gsncomposite</td><td>Composite (In Context Of AND Supported By)</td><td>path</td></tr>
 <tr><td>gsn_masked</td><td>Masked elements</td><td>g  </td></tr>
 <tr><td>acp_<code>acp_name</code></td><td>Elements or edges with an ACP</td><td>g or path</td></tr>
+<tr><td>gsndefeated</td><td>Elements or edges that are defeated</td><td>g or path</td></tr>
 </tbody></table>
 </div>
 <p>You can assign additional classes by adding the <code>classes:</code> attribute. It must be a list of classes you want to assign.
@@ -579,6 +595,55 @@ The <code>-o</code> option also applies to the evidence file.</p>
 <p>examples_example_gsn_yaml</p>
 </li>
 </ol>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="statistics"><a class="header" href="#statistics">Statistics</a></h1>
+<p>To print out statistics of the assurance case, use the <code>--statistics</code> command line option.</p>
+<p>The <code>--statistics</code> option can be combined with the <code>-c</code> option to only check the input files,
+and not generate diagrams, but just the statistics.</p>
+<p>If you run, e.g. <code>gsn2x -c --statistics examples/example.gsn.yaml</code>, you get the following output on standard output:</p>
+<pre><code>Statistics
+==========
+Number of modules:   1
+Number of nodes:     20
+  Goals:             7
+  Strategies:        2
+  Solutions:         5
+  Assumptions:       2
+  Justifications:    2
+  Contexts:          2
+  Counter Goals:     0
+  Counter Solutions: 0
+  Defeated Elements: 0
+</code></pre>
+<p>The output is valid Markdown.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="interfacing"><a class="header" href="#interfacing">Interfacing</a></h1>
+<p>Here is some guidance on interfacing with external sources.</p>
+<p>I currently see two use-cases:</p>
+<ol>
+<li>
+<p>Use-case: Check if all configuration management items of a project exist that are mandated by the argumentation (as solutions/evidence).</p>
+<p>The reference list may comprise more items that are required for argumentation, i.e. the list items must be attributed.</p>
+<p>The reference list may be distributed across multiple files.</p>
+</li>
+<li>
+<p>Use-case: Check if all normative/external requirements are fulfilled.</p>
+<p>The reference list is a list of all normative requirements.</p>
+<p>This use-case is actually the other way around than the first one.</p>
+</li>
+</ol>
+<p>For the example scripts below, <a href="https://github.com/mikefarah/yq"><code>yq</code></a> is required.</p>
+<h2 id="checking-evidence"><a class="header" href="#checking-evidence">Checking evidence</a></h2>
+<p>This command lists all Solutions that are in <code>example.gsn.yaml</code> but are not in <code>reference.yaml</code>:</p>
+<pre><code>yq ea '[select(file_index == 0)|.Sn*.text] - [select(file_index == 1)|.[]]' examples/example.gsn.yaml reference.yaml   
+</code></pre>
+<p><code>reference.yaml</code> could look like this:</p>
+<pre><code># Configuration Management Items
+- Solution 1
+- Solution 2
+</code></pre>
+<h2 id="checking-references"><a class="header" href="#checking-references">Checking references</a></h2>
+<p>Depending on how the external format is defined, you can swap the part before the <code>-</code>,
+with the part after.</p>
+<!-- ## MDG XML -->
 <div style="break-before: page; page-break-before: always;"></div><h1 id="modular-extension"><a class="header" href="#modular-extension">Modular extension</a></h1>
 <p>gsn2x partially supports the Modular Extension of the GSN standard (see <a href="./standard_support.html">Standard support</a>).</p>
 <p>Each module is a separate file. The name of the module is the file name (incl. the path provided to the gsn2x command line).</p>
@@ -734,44 +799,230 @@ The name of the ACP is followed by:</p>
 </ul>
 <p>There can be multiple ACPs per element.</p>
 <p><img src="examples/confidence.gsn.svg" alt="Rendered Example" /></p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="interfacing"><a class="header" href="#interfacing">Interfacing</a></h1>
-<p>Here is some guidance on interfacing with external sources.</p>
-<p>I currently see two use-cases:</p>
-<ol>
-<li>
-<p>Use-case: Check if all configuration management items of a project exist that are mandated by the argumentation (as solutions/evidence).</p>
-<p>The reference list may comprise more items that are required for argumentation, i.e. the list items must be attributed.</p>
-<p>The reference list may be distributed across multiple files.</p>
-</li>
-<li>
-<p>Use-case: Check if all normative/external requirements are fulfilled.</p>
-<p>The reference list is a list of all normative requirements.</p>
-<p>This use-case is actually the other way around than the first one.</p>
-</li>
-</ol>
-<p>For the example scripts below, <a href="https://github.com/mikefarah/yq"><code>yq</code></a> is required.</p>
-<h2 id="checking-evidence"><a class="header" href="#checking-evidence">Checking evidence</a></h2>
-<p>This command lists all Solutions that are in <code>example.gsn.yaml</code> but are not in <code>reference.yaml</code>:</p>
-<pre><code>yq ea '[select(file_index == 0)|.Sn*.text] - [select(file_index == 1)|.[]]' examples/example.gsn.yaml reference.yaml   
+<div style="break-before: page; page-break-before: always;"></div><h1 id="dialectic-extension"><a class="header" href="#dialectic-extension">Dialectic Extension</a></h1>
+<p>The Dialectic Extension introduces two new elements: the <code>Counter Goal</code> and the <code>Counter Solution</code>.</p>
+<p>A Counter Goals or Counter Solutions <code>challenges</code> other elements.</p>
+<p>If that leads to a defeat, those elements can be marked as <code>defeated: true</code>.
+If this also affects a relation, a node can mark one of its relation as defeated using: <code>defeatedRelation: G1</code>.</p>
+<h2 id="example-source"><a class="header" href="#example-source">Example Source</a></h2>
+<p>The following YAML shows an example of their usage from the GSN standard:</p>
+<pre><code class="language-yaml">
+G1:
+  supportedBy: S1
+  inContextOf: C1
+
+C1: {}
+
+S1:
+  supportedBy: [G2, G3, G4]
+
+G2:
+  text: A defeated goal
+  supportedBy: Sn1
+  defeated: true
+
+Sn1: {}
+
+CG1:
+  text: A counter argument
+  supportedBy: CG2
+  challenges: G2
+  horizontalIndex:
+    relative: -1
+
+CG2:
+  text: Another counter argument
+  supportedBy: CSn1
+
+CSn1:
+  text: | 
+    A counter 
+    evidence
+
+G3:
+  supportedBy: [G5, G6]
+
+CSn2:
+  text: | 
+    Another 
+    counter 
+    evidence
+  challenges: G5
+
+G5:
+  supportedBy: Sn2
+  defeated: true
+
+Sn2: {}
+
+G6:
+  supportedBy: Sn3
+
+Sn3:
+  defeated: true
+
+CG3:
+  challenges: Sn3
+  supportedBy: CSn3
+
+CSn3: {}
+
+G4:
+  supportedBy: [S2]
+
+S2:
+  supportedBy: [G7, G8]
+  defeated: true
+
+G7:
+  supportedBy: G9
+
+G9:
+  supportedBy: Sn4
+
+Sn4: {}
+
+G8:
+  supportedBy: Sn5
+
+Sn5: {}
+
+CG4:
+  challenges: S2
+  supportedBy: CSn4
+  horizontalIndex:
+    absolute: last
+
+CSn4: {}
 </code></pre>
-<p><code>reference.yaml</code> could look like this:</p>
-<pre><code># Configuration Management Items
-- Solution 1
-- Solution 2
+<h2 id="rendered-example"><a class="header" href="#rendered-example">Rendered Example</a></h2>
+<p><img src="examples/dialectic/first.gsn.svg" alt="Rendered Example" /></p>
+<pre><code class="language-yaml">
+G1:
+  supportedBy: S1
+  inContextOf: C1
+
+C1: {}
+
+S1:
+  supportedBy: [G2, G3, G4]
+
+G2:
+  text: A defeated goal
+  supportedBy: Sn1
+  defeated: true
+
+Sn1: {}
+
+CG1:
+  text: A counter argument
+  supportedBy: CG2
+  challenges: G2
+  defeatedRelation: G2
+  horizontalIndex:  
+    relative: -1
+  rankIncrement: 1
+
+CCSn1:
+  nodeType: CounterSolution
+  challenges: G2 -&gt; CG1
+
+CG2:
+  text: Another counter argument
+  supportedBy: CSn1
+
+CSn1:
+  text: | 
+    A counter 
+    evidence
+
+G3:
+  supportedBy: [G5, G6]
+
+CSn2:
+  text: | 
+    Another 
+    counter 
+    evidence
+  challenges: G5
+  defeated: true
+  defeatedRelation: G5
+  rankIncrement: 1
+
+CCG1:
+  nodeType: CounterGoal
+  supportedBy: CCSn2
+  challenges: CSn2
+  rankIncrement: 1
+
+CCSn2:
+  nodeType: CounterSolution
+
+G5:
+  supportedBy: Sn2
+  defeated: true
+
+Sn2: {}
+
+G6:
+  supportedBy: Sn3
+
+Sn3: {}
+
+CG3:
+  challenges: Sn3
+  supportedBy: CSn3
+  defeated: true
+  defeatedRelation: Sn3
+  rankIncrement: 1
+
+CSn3: {}
+
+G4:
+  supportedBy: [S2]
+
+S2:
+  supportedBy: [G7, G8]
+  defeated: true
+
+G7:
+  supportedBy: G9
+
+G9:
+  supportedBy: Sn4
+
+Sn4: {}
+
+G8:
+  supportedBy: Sn5
+
+Sn5: {}
+
+CG4:
+  challenges: S2
+  supportedBy: CSn4
+  horizontalIndex:
+    absolute: last
+
+CSn4: {}
+
+CCSn3:
+  nodeType: CounterSolution
+  challenges: CG3
+  horizontalIndex:
+    relative: +1
 </code></pre>
-<h2 id="checking-references"><a class="header" href="#checking-references">Checking references</a></h2>
-<p>Depending on how the external format is defined, you can swap the part before the <code>-</code>,
-with the part after.</p>
-<!-- ## MDG XML -->
+<h2 id="rendered-example-1"><a class="header" href="#rendered-example-1">Rendered Example</a></h2>
+<p><img src="examples/dialectic/second.gsn.svg" alt="Rendered Example" /></p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="standard-support"><a class="header" href="#standard-support">Standard support</a></h1>
 <p>This tool is based on the <a href="https://scsc.uk/r141C:1">Goal Structuring Notation Community Standard Version 3</a>.</p>
 <p>This table shows the support of <code>gsn2x</code> for the different parts of the standard.</p>
 <div class="table-wrapper"><table><thead><tr><th>Standard</th><th>Support</th></tr></thead><tbody>
 <tr><td>Core GSN</td><td>✅ full</td></tr>
 <tr><td>Argument Pattern Extension</td><td>❌ see <a href="https://github.com/jonasthewolf/gsn2x/issues/493">#493</a></td></tr>
-<tr><td>Modular Extension</td><td>🟡 partially, see <a href="./mod_extension.html">Modular Extension</a>; Module Interfaces (Section 1:4.6) and Inter-Module Contracts (Section 1:4.7) are not supported (this includes public decorators and module interface connectors).</td></tr>
-<tr><td>Confidence Argument Extension</td><td>✅ full, see <a href="./confidence.html">Confidence Argument Extension</a></td></tr>
-<tr><td>Dialectic Extension</td><td>❌ see <a href="https://github.com/jonasthewolf/gsn2x/issues/494">#494</a></td></tr>
+<tr><td>Modular Extension</td><td>🟡 partially, see <a href="./ext_mod.html">Modular Extension</a>; Module Interfaces (Section 1:4.6) and Inter-Module Contracts (Section 1:4.7) are not supported (this includes public decorators and module interface connectors).</td></tr>
+<tr><td>Confidence Argument Extension</td><td>✅ full, see <a href="./ext_confidence.html">Confidence Argument Extension</a></td></tr>
+<tr><td>Dialectic Extension</td><td>🟡 partially, see <a href="./ext_dialectic.html">Dialectic Extension</a></td></tr>
 </tbody></table>
 </div><div style="break-before: page; page-break-before: always;"></div><h1 id="troubleshooting-1"><a class="header" href="#troubleshooting-1">Troubleshooting</a></h1>
 <h2 id="yaml-error-messages"><a class="header" href="#yaml-error-messages">YAML error messages</a></h2>
@@ -783,8 +1034,7 @@ of the input file:</p>
 Caused by:
     No valid GSN element can be found starting from line &lt;n&gt;.
     This typically means that the YAML is completely invalid, or 
-    the `text:` attribute is missing for an element,
-    or `supportedBy` or `inContextOf` are not followed by a list ([]).
+    the `text:` attribute is missing for an element.
     Please see the documentation for details (https://jonasthewolf.github.io/gsn2x/troubleshooting.html).
     Original error message: data did not match any variant of untagged enum GsnDocument.
 </code></pre>
@@ -813,6 +1063,9 @@ The input format should be diff-able to support common git workflows with pull/m
 I also did not want invent a new DSL (domain-specific language) for that purpose.
 YAML (input file format) might not be the best format, but it serves as a good tradeoff for my purposes.
 Moreover, it can be parsed by other programs easily, too.</p>
+<p>To a certain extend this includes that the generated SVG files are not the smallest possible files.
+Readability and understandability to the user is higher rated, since the amount of memory required for the SVGs
+is still negligible to, e.g. a compiler installation.</p>
 </li>
 <li>
 <p>Standard conformance</p>
@@ -820,6 +1073,7 @@ Moreover, it can be parsed by other programs easily, too.</p>
 <p>I don't want to redefine the semantics or add additional ones.
 The standard was created so that as many people as possible have some common grounds.
 If I added new fancy stuff, everyone might have a different interpretation of that again.</p>
+<p>Standards conformance is also a goal for the generated SVG files and Markdown files.</p>
 </li>
 <li>
 <p>As few dependencies as possible</p>
@@ -829,7 +1083,7 @@ as few as possible.</p>
 <p>I used a very relaxed license and try to take care that it is compatible with those of the dependencies.</p>
 </li>
 <li>
-<p>Full control by the user how the diagram is layed out</p>
+<p>Full control by the user how the diagram is laid out</p>
 <p>Creating an optimal rendering for all different use-cases is incredibly difficult.
 I failed in creating an algorithm that would allow for that.
 When trying I recognized that it is anyhow preferable to give the user full control over how the diagram should look like.</p>
@@ -867,19 +1121,32 @@ Thus, I decided to redesign the layout algorithm and create version 3. A new maj
 And now also to the implementation of the Confidence Argument Extension of the GSN standard as
 part of version 3.1.</p>
 </li>
+<li>
+<p>After attending the SCSC 2025 in York, I got plenty of feedback, including the request to implement
+Dialectic and Argument Pattern Extensions. Moreover, I learned about Bayesian Networks and how to use them with
+Assurance Cases. THis lead to a new major version 4.0.</p>
+</li>
 </ul>
 <p>Any feedback, especially the use-case in your company is very much appreciated.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="migrating-from-version-2x-to-version-3x"><a class="header" href="#migrating-from-version-2x-to-version-3x">Migrating from Version 2.x to Version 3.x</a></h1>
 <p>Version 2 of gsn2x tried to fully automate the layout of diagrams.
 Version 3 intentionally changed this approach.</p>
 <p>To get similar or even better renderings, please follow the guidelines below.</p>
-<h2 id="replace-level-with-rankincrement"><a class="header" href="#replace-level-with-rankincrement">Replace <code>level</code> with <code>rankIncrement</code></a></h2>
+<p><strong>Replace <code>level</code> with <code>rankIncrement</code></strong></p>
 <p><code>level</code> was deprecated. Instead, increment the rank of the elements that should be pushed further down.</p>
 <p>Please see <a href="./adv_layout.html">Layout</a> for more information on how to use <code>rankIncrement</code>.</p>
-<h2 id="use-strict-lexicographical-sorting-and-horizontal-reordering-to-optimize-the-graph"><a class="header" href="#use-strict-lexicographical-sorting-and-horizontal-reordering-to-optimize-the-graph">Use strict lexicographical sorting and horizontal reordering to optimize the graph</a></h2>
+<p><strong>Use strict lexicographical sorting and horizontal reordering to optimize the graph</strong></p>
 <p>If you find situations that are not rendered correctly by default,
 please check if your IDs are sensibly defined (i.e. lexicographically increasing).
 Use <code>horizontalIndex</code> as described <a href="./adv_layout.html">here</a> to fix e.g., crossing edges.</p>
+<h1 id="migration-from-version-3x-to-version-4x"><a class="header" href="#migration-from-version-3x-to-version-4x">Migration from Version 3.x to Version 4.x</a></h1>
+<p>Remove all <code>horizontalIndex</code> again and try to render the diagrams. The ranking algorithm was improved.
+Thus, problems should be minimized. Introduce the <code>horizontalIndex</code> again, where necessary to achieve the desired diagram.</p>
+<p>I change the options are parsed. Since the input files are handed over using positional arguments, all options now require a <code>=</code> to assign the values.</p>
+<p>When drafting a new assurance case you can now have "empty" nodes with just an identifier.
+To do so, use the empty dictionary syntax of YAML:</p>
+<pre><code class="language-yaml">G1: {}
+</code></pre>
 
                     </main>
 

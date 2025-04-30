@@ -1,0 +1,114 @@
+
+G1:
+  supportedBy: S1
+  inContextOf: C1
+
+C1: {}
+
+S1:
+  supportedBy: [G2, G3, G4]
+
+G2:
+  text: A defeated goal
+  supportedBy: Sn1
+  defeated: true
+
+Sn1: {}
+
+CG1:
+  text: A counter argument
+  supportedBy: CG2
+  challenges: G2
+  defeatedRelation: G2
+  horizontalIndex:  
+    relative: -1
+  rankIncrement: 1
+
+CCSn1:
+  nodeType: CounterSolution
+  challenges: G2 -> CG1
+
+CG2:
+  text: Another counter argument
+  supportedBy: CSn1
+
+CSn1:
+  text: | 
+    A counter 
+    evidence
+
+G3:
+  supportedBy: [G5, G6]
+
+CSn2:
+  text: | 
+    Another 
+    counter 
+    evidence
+  challenges: G5
+  defeated: true
+  defeatedRelation: G5
+  rankIncrement: 1
+
+CCG1:
+  nodeType: CounterGoal
+  supportedBy: CCSn2
+  challenges: CSn2
+  rankIncrement: 1
+
+CCSn2:
+  nodeType: CounterSolution
+
+G5:
+  supportedBy: Sn2
+  defeated: true
+
+Sn2: {}
+
+G6:
+  supportedBy: Sn3
+
+Sn3: {}
+
+CG3:
+  challenges: Sn3
+  supportedBy: CSn3
+  defeated: true
+  defeatedRelation: Sn3
+  rankIncrement: 1
+
+CSn3: {}
+
+G4:
+  supportedBy: [S2]
+
+S2:
+  supportedBy: [G7, G8]
+  defeated: true
+
+G7:
+  supportedBy: G9
+
+G9:
+  supportedBy: Sn4
+
+Sn4: {}
+
+G8:
+  supportedBy: Sn5
+
+Sn5: {}
+
+CG4:
+  challenges: S2
+  supportedBy: CSn4
+  horizontalIndex:
+    absolute: last
+
+CSn4: {}
+
+CCSn3:
+  nodeType: CounterSolution
+  challenges: CG3
+  horizontalIndex:
+    relative: +1

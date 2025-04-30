@@ -161,8 +161,7 @@
 <p>At first, the root elements are identified. Root elements are elements
 that are not referenced as <code>supportedBy</code> or <code>inContextOf</code>.</p>
 <p>Each level in the rendered graph is called rank.
-The elements on each rank are sorted lexicographically before being placed on that rank.
-Then, starting with the first element on the current rank, the elements of the next rank are identified.
+Starting from the root nodes, all of their children referenced by <code>supportedBy</code> and <code>challenges</code> are identified. The list of children is sorted in lexicographical order, before ranking.
 An element is only ranked if all elements referencing it are already placed.
 Finally, the <code>inContextOf</code> elements are placed on that rank.</p>
 <h2 id="placement-of-elements"><a class="header" href="#placement-of-elements">Placement of elements</a></h2>
@@ -213,7 +212,7 @@ to the very right of the graph.</p>
 You would typically use an absolute index with either <code>0</code> or <code>last</code> to place them
 either left or right of the element they are referenced from.</p>
 <p><code>horizontalIndex</code> and <code>rankIncrement</code> can also be used for <code>module</code> elements.
-They will be used for the Architecture View then (see <a href="mod_extension.html#architecture-view">Modular extension</a>).</p>
+They will be used for the Architecture View then (see <a href="ext_mod.html#architecture-view">Modular extension</a>).</p>
 <h3 id="troubleshooting"><a class="header" href="#troubleshooting">Troubleshooting</a></h3>
 <p>There can be situations (e.g. a n:m relation between goals and solutions)
 that lead to weird looking graphs.
@@ -241,12 +240,15 @@ Sn1:
 
 Sn2: 
   text: Solution to First
+  # This is artificial to show potential entanglement
+  horizontalIndex:
+    absolute: last
 </code></pre>
 <p>The created SVG is hardly readable:</p>
 <p><img src="examples/entangled.gsn.svg" alt="entangled example" /></p>
-<p>The reason for this is, that <code>G1</code> is lexicographically ordered before <code>G2</code>, but <code>Sn2</code> after <code>Sn1</code>.
-<code>Sn1</code> thus "pushes" <code>Sn2</code> to the right in each iteration of the layout algorithm.</p>
-<p>The problem is easily solvable in different ways:</p>
+<p><strong>Please note that this example is artificial, until I come a across a simple example that my new algorithm cannot handle.</strong>
+If the <code>horizontalIndex</code> is remove from the example, the diagram is rendered as intended.</p>
+<p>Such problems can usually easily be solved in different ways:</p>
 <ol>
 <li>Rename <code>G1</code> and/or <code>G2</code> to change their lexicographical order.</li>
 <li>Rename <code>Sn1</code> and/or <code>Sn2</code> to change their lexicographical order.</li>
