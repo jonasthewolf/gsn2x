@@ -507,6 +507,210 @@ mod test {
     }
 
     #[test]
+    fn challenges_self() {
+        let mut d = Diagnostics::default();
+        let mut nodes = BTreeMap::<String, GsnNode>::new();
+        nodes.insert(
+            "CG1".to_owned(),
+            GsnNode {
+                challenges: Some(Challenge::Node("CG1".to_owned())),
+                ..Default::default()
+            },
+        );
+        assert!(check_nodes(&mut d, &nodes, &[]).is_err());
+        assert_eq!(d.messages.len(), 1);
+        assert_eq!(d.messages[0].module, Some("".to_owned()));
+        assert_eq!(d.messages[0].diag_type, DiagType::Error);
+        assert_eq!(d.messages[0].msg, "C13: Element CG1 challenges itself.");
+        assert_eq!(d.errors, 1);
+        assert_eq!(d.warnings, 0);
+    }
+
+    #[test]
+    fn challenges_unrelated() {
+        let mut d = Diagnostics::default();
+        let mut nodes = BTreeMap::<String, GsnNode>::new();
+        nodes.insert(
+            "G1".to_owned(),
+            GsnNode {
+                challenges: Some(Challenge::Node("CG1".to_owned())),
+                ..Default::default()
+            },
+        );
+        nodes.insert(
+            "G2".to_owned(),
+            GsnNode {
+                challenges: Some(Challenge::Node("CG1".to_owned())),
+                ..Default::default()
+            },
+        );
+        nodes.insert(
+            "G3".to_owned(),
+            GsnNode {
+                challenges: Some(Challenge::Node("CG1".to_owned())),
+                ..Default::default()
+            },
+        );
+        nodes.insert(
+            "CG1".to_owned(),
+            GsnNode {
+                challenges: Some(Challenge::Relation(("G2".to_owned(), "G3".to_owned()))),
+                ..Default::default()
+            },
+        );
+        assert!(check_nodes(&mut d, &nodes, &[]).is_err());
+        assert_eq!(d.messages.len(), 1);
+        assert_eq!(d.messages[0].module, Some("".to_owned()));
+        assert_eq!(d.messages[0].diag_type, DiagType::Error);
+        assert_eq!(
+            d.messages[0].msg,
+            "C16: Element CG1 challenges a relation, but the referenced elements G3 and G2 do not have a relation."
+        );
+        assert_eq!(d.errors, 1);
+        assert_eq!(d.warnings, 0);
+    }
+
+    #[test]
+    fn challenges_relation_left() {
+        let mut d = Diagnostics::default();
+        let mut nodes = BTreeMap::<String, GsnNode>::new();
+        nodes.insert(
+            "G1".to_owned(),
+            GsnNode {
+                challenges: Some(Challenge::Node("CG1".to_owned())),
+                ..Default::default()
+            },
+        );
+        nodes.insert(
+            "CG1".to_owned(),
+            GsnNode {
+                challenges: Some(Challenge::Relation(("G1".to_owned(), "G3".to_owned()))),
+                ..Default::default()
+            },
+        );
+        assert!(check_nodes(&mut d, &nodes, &[]).is_err());
+        assert_eq!(d.messages.len(), 1);
+        assert_eq!(d.messages[0].module, Some("".to_owned()));
+        assert_eq!(d.messages[0].diag_type, DiagType::Error);
+        assert_eq!(
+            d.messages[0].msg,
+            "C12: Element CG1 challenges a relation, but element G3 of the relation does not exist."
+        );
+        assert_eq!(d.errors, 1);
+        assert_eq!(d.warnings, 0);
+    }
+
+    #[test]
+    fn challenges_relation_right() {
+        let mut d = Diagnostics::default();
+        let mut nodes = BTreeMap::<String, GsnNode>::new();
+        nodes.insert(
+            "G1".to_owned(),
+            GsnNode {
+                challenges: Some(Challenge::Node("CG1".to_owned())),
+                ..Default::default()
+            },
+        );
+        nodes.insert(
+            "CG1".to_owned(),
+            GsnNode {
+                challenges: Some(Challenge::Relation(("G3".to_owned(), "G1".to_owned()))),
+                ..Default::default()
+            },
+        );
+        assert!(check_nodes(&mut d, &nodes, &[]).is_err());
+        assert_eq!(d.messages.len(), 1);
+        assert_eq!(d.messages[0].module, Some("".to_owned()));
+        assert_eq!(d.messages[0].diag_type, DiagType::Error);
+        assert_eq!(
+            d.messages[0].msg,
+            "C12: Element CG1 challenges a relation, but element G3 of the relation does not exist."
+        );
+        assert_eq!(d.errors, 1);
+        assert_eq!(d.warnings, 0);
+    }
+
+    #[test]
+    fn challenges_relation_relation() {
+        let mut d = Diagnostics::default();
+        let mut nodes = BTreeMap::<String, GsnNode>::new();
+        nodes.insert(
+            "G1".to_owned(),
+            GsnNode {
+                supported_by: vec!["G2".to_owned()],
+                ..Default::default()
+            },
+        );
+        nodes.insert(
+            "G2".to_owned(),
+            GsnNode {
+                ..Default::default()
+            },
+        );
+        nodes.insert(
+            "CG1".to_owned(),
+            GsnNode {
+                challenges: Some(Challenge::Relation(("G1".to_owned(), "G2".to_owned()))),
+                ..Default::default()
+            },
+        );
+        nodes.insert(
+            "CG2".to_owned(),
+            GsnNode {
+                challenges: Some(Challenge::Relation(("CG1".to_owned(), "G1".to_owned()))),
+                ..Default::default()
+            },
+        );
+        assert!(check_nodes(&mut d, &nodes, &[]).is_err());
+        assert_eq!(d.messages.len(), 1);
+        // assert_eq!(d.messages[0].module, None);
+        // assert_eq!(d.messages[0].diag_type, DiagType::Error);
+        // assert_eq!(
+        //     d.messages[0].msg,
+        //     "C12: Element CG1 challenges a relation, but element G3 of the relation does not exist."
+        // );
+        // assert_eq!(d.errors, 1);
+        // assert_eq!(d.warnings, 0);
+    }
+
+    #[test]
+    fn challenges_same() {
+        let mut d = Diagnostics::default();
+        let mut nodes = BTreeMap::<String, GsnNode>::new();
+        nodes.insert(
+            "G1".to_owned(),
+            GsnNode {
+                challenges: Some(Challenge::Node("CG1".to_owned())),
+                ..Default::default()
+            },
+        );
+        nodes.insert(
+            "G2".to_owned(),
+            GsnNode {
+                challenges: Some(Challenge::Node("CG1".to_owned())),
+                ..Default::default()
+            },
+        );
+        nodes.insert(
+            "CG1".to_owned(),
+            GsnNode {
+                challenges: Some(Challenge::Relation(("G2".to_owned(), "G2".to_owned()))),
+                ..Default::default()
+            },
+        );
+        assert!(check_nodes(&mut d, &nodes, &[]).is_err());
+        assert_eq!(d.messages.len(), 1);
+        assert_eq!(d.messages[0].module, Some("".to_owned()));
+        assert_eq!(d.messages[0].diag_type, DiagType::Error);
+        assert_eq!(
+            d.messages[0].msg,
+            "C15: Element CG1 challenges a relation with both ends pointing to G2."
+        );
+        assert_eq!(d.errors, 1);
+        assert_eq!(d.warnings, 0);
+    }
+
+    #[test]
     fn simple_cycle() {
         let mut d = Diagnostics::default();
         let mut nodes = BTreeMap::<String, GsnNode>::new();
