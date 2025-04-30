@@ -4,27 +4,6 @@
 <marker id="supportedby_arrow" markerHeight="9" markerUnits="userSpaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
 <polyline fill="black" points="0 0, 10 4.5, 0 9"/>
 </marker>
-<marker id="incontextof_arrow" markerHeight="9" markerUnits="userSpaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
-<polyline fill-opacity="0" points="0 0, 10 4.5, 0 9, 0 0" stroke="black" stroke-width="1"/>
-</marker>
-<marker id="challenges_arrow" markerHeight="9" markerUnits="userSpaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
-<polyline fill-opacity="0" points="0 0, 10 4.5, 0 4.5, 10 4.5, 0 9" stroke="black" stroke-dasharray="100" stroke-width="1"/>
-</marker>
-<marker id="composite_arrow" markerHeight="9" markerUnits="userSpaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
-<polyline fill-opacity="0" points="0 0, 6 4.5, 0 9" stroke="black" stroke-width="1"/>
-<polyline fill-opacity="0" points="4 0, 10 4.5, 4 9" stroke="black" stroke-width="1"/>
-<polyline fill-opacity="0" points="0 4.5, 10 4.5" stroke="black" stroke-width="1"/>
-</marker>
-<symbol id="module_icon">
-<rect fill="lightgrey" height="5" stroke="black" stroke-width="1" width="10" x="0" y="0"/>
-<rect fill="lightgrey" height="10" stroke="black" stroke-width="1" width="20" x="0" y="5"/>
-</symbol>
-<symbol id="acp">
-<rect fill="black" height="10" stroke="black" stroke-width="1" width="10" x="0" y="0"/>
-</symbol>
-<symbol height="20" id="defeated_cross" width="20">
-<path d="M0,0 L20,20 M0,20 L20,0" stroke="black" stroke-width="1"/>
-</symbol>
 </defs>
 <g class="gsn_module_tests_issue84_1_yaml gsnelem gsngoal" id="node_g1">
 <title>G1</title>
