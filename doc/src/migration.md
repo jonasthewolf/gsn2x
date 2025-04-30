@@ -22,6 +22,8 @@ Use `horizontalIndex` as described [here](./adv_layout.md) to fix e.g., crossing
 Remove all `horizontalIndex` again and try to render the diagrams. The ranking algorithm was improved.
 Thus, problems should be minimized. Introduce the `horizontalIndex` again, where necessary to achieve the desired diagram.
 
+I change the options are parsed. Since the input files are handed over using positional arguments, all options now require a `=` to assign the values.
+
 When drafting a new assurance case you can now have "empty" nodes with just an identifier.
 To do so, use the empty dictionary syntax of YAML:
 
