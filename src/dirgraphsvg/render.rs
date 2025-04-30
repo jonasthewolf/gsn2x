@@ -1,6 +1,7 @@
 use std::{cell::RefCell, collections::BTreeMap};
 
 use anyhow::Context;
+
 use svg::{
     Document, Node,
     node::element::{
@@ -13,7 +14,7 @@ use crate::dirgraph::DirectedGraph;
 
 use super::{
     DirGraph,
-    edges::{EdgeType, render_edge},
+    edges::{EdgeType, SingleEdge, render_edge},
     escape_node_id,
     layout::{Cell, Margin},
     nodes::SvgNode,
@@ -42,7 +43,42 @@ pub(super) fn render_graph(
     let mut width = width;
     let mut height = height;
     let mut document = Document::new();
-    document = setup_basics(document);
+
+    let mut ms = MarkersSymbols::default();
+    for edge in graph.get_edges().values() {
+        for (_, et) in edge {
+            match et {
+                EdgeType::OneWay(SingleEdge::SupportedBy)
+                | EdgeType::TwoWay((SingleEdge::SupportedBy, _))
+                | EdgeType::TwoWay((_, SingleEdge::SupportedBy)) => ms.supported_by = true,
+                EdgeType::OneWay(SingleEdge::InContextOf)
+                | EdgeType::TwoWay((SingleEdge::InContextOf, _))
+                | EdgeType::TwoWay((_, SingleEdge::InContextOf)) => ms.in_context_of = true,
+                EdgeType::OneWay(SingleEdge::Composite)
+                | EdgeType::TwoWay((SingleEdge::Composite, _))
+                | EdgeType::TwoWay((_, SingleEdge::Composite)) => ms.composite = true,
+                EdgeType::OneWay(SingleEdge::ChallengesNode)
+                | EdgeType::OneWay(SingleEdge::ChallengesRelation(_))
+                | EdgeType::TwoWay((SingleEdge::ChallengesNode, _))
+                | EdgeType::TwoWay((_, SingleEdge::ChallengesNode))
+                | EdgeType::TwoWay((SingleEdge::ChallengesRelation(_), _)) => ms.challenges = true,
+            }
+        }
+    }
+    for node in graph.get_nodes().values() {
+        let n = node.borrow();
+        if n.is_defeated() {
+            ms.defeated = true;
+        }
+        if n.has_acp() {
+            ms.acp = true;
+        }
+        if n.is_away_node() {
+            ms.module = true;
+        }
+    }
+
+    document = setup_basics(document, ms);
     document = setup_stylesheets(
         document,
         &render_graph.css_stylesheets,
@@ -204,131 +240,150 @@ fn render_legend(
     }
 }
 
+#[derive(Default)]
+pub struct MarkersSymbols {
+    pub supported_by: bool,
+    pub in_context_of: bool,
+    pub composite: bool,
+    pub challenges: bool,
+    pub module: bool,
+    pub acp: bool,
+    pub defeated: bool,
+}
+
 ///
 /// Setup the basic ingredients of the SVG
 ///
-fn setup_basics(mut document: Document) -> Document {
+fn setup_basics(mut document: Document, ms: MarkersSymbols) -> Document {
     let mut defs = Definitions::new();
-    let supportedby_polyline = Polyline::new()
-        .set("points", "0 0, 10 4.5, 0 9")
-        .set("fill", "black");
-    let supportedby_arrow = Marker::new()
-        .set("id", "supportedby_arrow")
-        .set("markerWidth", 10u32)
-        .set("markerHeight", 9u32)
-        .set("refX", 0f32)
-        .set("refY", 4.5f32)
-        .set("orient", "auto-start-reverse")
-        .set("markerUnits", "userSpaceOnUse")
-        .add(supportedby_polyline);
-    defs.append(supportedby_arrow);
-
-    let incontext_polyline = Polyline::new()
-        .set("points", "0 0, 10 4.5, 0 9, 0 0")
-        .set("stroke", "black")
-        .set("stroke-width", 1u32)
-        .set("fill-opacity", "0");
-    let incontext_arrow = Marker::new()
-        .set("id", "incontextof_arrow")
-        .set("markerWidth", 10u32)
-        .set("markerHeight", 9u32)
-        .set("refX", 0f32)
-        .set("refY", 4.5f32)
-        .set("orient", "auto-start-reverse")
-        .set("markerUnits", "userSpaceOnUse")
-        .add(incontext_polyline);
-    defs.append(incontext_arrow);
-
-    let challenges_polyline = Polyline::new()
-        .set("points", "0 0, 10 4.5, 0 4.5, 10 4.5, 0 9")
-        .set("stroke", "black")
-        .set("stroke-width", 1u32)
-        .set("stroke-dasharray", 100u32)
-        .set("fill-opacity", "0");
-    let challenges_arrow = Marker::new()
-        .set("id", "challenges_arrow")
-        .set("markerWidth", 10u32)
-        .set("markerHeight", 9u32)
-        .set("refX", 0f32)
-        .set("refY", 4.5f32)
-        .set("orient", "auto-start-reverse")
-        .set("markerUnits", "userSpaceOnUse")
-        .add(challenges_polyline);
-    defs.append(challenges_arrow);
-
-    let composite_polyline1 = Polyline::new()
-        .set("points", "0 0, 6 4.5, 0 9")
-        .set("stroke", "black")
-        .set("stroke-width", 1u32)
-        .set("fill-opacity", "0");
-    let composite_polyline2 = Polyline::new()
-        .set("points", "4 0, 10 4.5, 4 9")
-        .set("stroke", "black")
-        .set("stroke-width", 1u32)
-        .set("fill-opacity", "0");
-    let composite_polyline3 = Polyline::new()
-        .set("points", "0 4.5, 10 4.5")
-        .set("stroke", "black")
-        .set("stroke-width", 1u32)
-        .set("fill-opacity", "0");
-    let composite_arrow = Marker::new()
-        .set("id", "composite_arrow")
-        .set("markerWidth", 10u32)
-        .set("markerHeight", 9u32)
-        .set("refX", 0f32)
-        .set("refY", 4.5f32)
-        .set("orient", "auto-start-reverse")
-        .set("markerUnits", "userSpaceOnUse")
-        .add(composite_polyline1)
-        .add(composite_polyline2)
-        .add(composite_polyline3);
-    defs.append(composite_arrow);
-
-    let mi_r1 = Rectangle::new()
-        .set("x", 0u32)
-        .set("y", 0u32)
-        .set("width", 10u32)
-        .set("height", 5u32)
-        .set("stroke", "black")
-        .set("stroke-width", 1u32)
-        .set("fill", "lightgrey");
-    let mi_r2 = Rectangle::new()
-        .set("x", 0u32)
-        .set("y", 5u32)
-        .set("width", 20u32)
-        .set("height", 10u32)
-        .set("stroke", "black")
-        .set("stroke-width", 1u32)
-        .set("fill", "lightgrey");
-    let module_image = Symbol::new().set("id", "module_icon").add(mi_r1).add(mi_r2);
-    defs.append(module_image);
-
-    let acp_black_box = Rectangle::new()
-        .set("x", 0u32)
-        .set("y", 0u32)
-        .set("width", ACP_BOX_SIZE * 2)
-        .set("height", ACP_BOX_SIZE * 2)
-        .set("stroke", "black")
-        .set("stroke-width", 1u32)
-        .set("fill", "black");
-    let acp_image = Symbol::new().set("id", "acp").add(acp_black_box);
-    defs.append(acp_image);
-
-    let defeated_cross_data = Data::new()
-        .move_to((0, 0))
-        .line_to((20, 20))
-        .move_to((0, 20))
-        .line_to((20, 0));
-    let defeated_cross = Path::new()
-        .set("d", defeated_cross_data)
-        .set("stroke-width", 1)
-        .set("stroke", "black");
-    let defeated_cross_marker = Symbol::new()
-        .set("id", "defeated_cross")
-        .set("width", 20)
-        .set("height", 20)
-        .add(defeated_cross);
-    defs.append(defeated_cross_marker);
+    if ms.supported_by {
+        let supportedby_polyline = Polyline::new()
+            .set("points", "0 0, 10 4.5, 0 9")
+            .set("fill", "black");
+        let supportedby_arrow = Marker::new()
+            .set("id", "supportedby_arrow")
+            .set("markerWidth", 10u32)
+            .set("markerHeight", 9u32)
+            .set("refX", 0f32)
+            .set("refY", 4.5f32)
+            .set("orient", "auto-start-reverse")
+            .set("markerUnits", "userSpaceOnUse")
+            .add(supportedby_polyline);
+        defs.append(supportedby_arrow);
+    }
+    if ms.in_context_of {
+        let incontext_polyline = Polyline::new()
+            .set("points", "0 0, 10 4.5, 0 9, 0 0")
+            .set("stroke", "black")
+            .set("stroke-width", 1u32)
+            .set("fill-opacity", "0");
+        let incontext_arrow = Marker::new()
+            .set("id", "incontextof_arrow")
+            .set("markerWidth", 10u32)
+            .set("markerHeight", 9u32)
+            .set("refX", 0f32)
+            .set("refY", 4.5f32)
+            .set("orient", "auto-start-reverse")
+            .set("markerUnits", "userSpaceOnUse")
+            .add(incontext_polyline);
+        defs.append(incontext_arrow);
+    }
+    if ms.challenges {
+        let challenges_polyline = Polyline::new()
+            .set("points", "0 0, 10 4.5, 0 4.5, 10 4.5, 0 9")
+            .set("stroke", "black")
+            .set("stroke-width", 1u32)
+            .set("stroke-dasharray", 100u32)
+            .set("fill-opacity", "0");
+        let challenges_arrow = Marker::new()
+            .set("id", "challenges_arrow")
+            .set("markerWidth", 10u32)
+            .set("markerHeight", 9u32)
+            .set("refX", 0f32)
+            .set("refY", 4.5f32)
+            .set("orient", "auto-start-reverse")
+            .set("markerUnits", "userSpaceOnUse")
+            .add(challenges_polyline);
+        defs.append(challenges_arrow);
+    }
+    if ms.composite {
+        let composite_polyline1 = Polyline::new()
+            .set("points", "0 0, 6 4.5, 0 9")
+            .set("stroke", "black")
+            .set("stroke-width", 1u32)
+            .set("fill-opacity", "0");
+        let composite_polyline2 = Polyline::new()
+            .set("points", "4 0, 10 4.5, 4 9")
+            .set("stroke", "black")
+            .set("stroke-width", 1u32)
+            .set("fill-opacity", "0");
+        let composite_polyline3 = Polyline::new()
+            .set("points", "0 4.5, 10 4.5")
+            .set("stroke", "black")
+            .set("stroke-width", 1u32)
+            .set("fill-opacity", "0");
+        let composite_arrow = Marker::new()
+            .set("id", "composite_arrow")
+            .set("markerWidth", 10u32)
+            .set("markerHeight", 9u32)
+            .set("refX", 0f32)
+            .set("refY", 4.5f32)
+            .set("orient", "auto-start-reverse")
+            .set("markerUnits", "userSpaceOnUse")
+            .add(composite_polyline1)
+            .add(composite_polyline2)
+            .add(composite_polyline3);
+        defs.append(composite_arrow);
+    }
+    if ms.module {
+        let mi_r1 = Rectangle::new()
+            .set("x", 0u32)
+            .set("y", 0u32)
+            .set("width", 10u32)
+            .set("height", 5u32)
+            .set("stroke", "black")
+            .set("stroke-width", 1u32)
+            .set("fill", "lightgrey");
+        let mi_r2 = Rectangle::new()
+            .set("x", 0u32)
+            .set("y", 5u32)
+            .set("width", 20u32)
+            .set("height", 10u32)
+            .set("stroke", "black")
+            .set("stroke-width", 1u32)
+            .set("fill", "lightgrey");
+        let module_image = Symbol::new().set("id", "module_icon").add(mi_r1).add(mi_r2);
+        defs.append(module_image);
+    }
+    if ms.acp {
+        let acp_black_box = Rectangle::new()
+            .set("x", 0u32)
+            .set("y", 0u32)
+            .set("width", ACP_BOX_SIZE * 2)
+            .set("height", ACP_BOX_SIZE * 2)
+            .set("stroke", "black")
+            .set("stroke-width", 1u32)
+            .set("fill", "black");
+        let acp_image = Symbol::new().set("id", "acp").add(acp_black_box);
+        defs.append(acp_image);
+    }
+    if ms.defeated {
+        let defeated_cross_data = Data::new()
+            .move_to((0, 0))
+            .line_to((20, 20))
+            .move_to((0, 20))
+            .line_to((20, 0));
+        let defeated_cross = Path::new()
+            .set("d", defeated_cross_data)
+            .set("stroke-width", 1)
+            .set("stroke", "black");
+        let defeated_cross_marker = Symbol::new()
+            .set("id", "defeated_cross")
+            .set("width", 20)
+            .set("height", 20)
+            .add(defeated_cross);
+        defs.append(defeated_cross_marker);
+    }
 
     document = document.add(defs).set("class", "gsndiagram");
     document

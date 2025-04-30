@@ -101,6 +101,18 @@ const OFFSET_IDENTIFIER: i32 = 5;
 const MODULE_TAB_HEIGHT: i32 = 10;
 
 impl SvgNode {
+    pub fn is_defeated(&self) -> bool {
+        self.defeated
+    }
+
+    pub fn has_acp(&self) -> bool {
+        !self.acp.is_empty()
+    }
+
+    pub fn is_away_node(&self) -> bool {
+        matches!(&self.node_type, NodeType::Away(_))
+    }
+
     pub fn get_width(&self) -> i32 {
         self.width
     }
@@ -866,7 +878,7 @@ fn node_text_from_node_and_layers(
 mod test {
     use std::collections::BTreeMap;
 
-    use crate::gsn::GsnNode;
+    use crate::gsn::{GsnNode, GsnNodeType};
 
     use super::node_text_from_node_and_layers;
 
@@ -881,5 +893,21 @@ mod test {
         };
         let res = node_text_from_node_and_layers("id", &n1, &["layer1".to_owned()], None);
         assert_eq!(res, "test text\n\nLAYER1:\ntext for layer1");
+    }
+
+    #[test]
+    fn undeveloped_counter_goal() {
+        // No assertion. Code is the same as for goal, thus, works.
+        let _ = super::SvgNode::new_counter_goal(
+            "test",
+            &GsnNode {
+                node_type: Some(GsnNodeType::CounterGoal),
+                undeveloped: true,
+                ..Default::default()
+            },
+            false,
+            &[],
+            None,
+        );
     }
 }
