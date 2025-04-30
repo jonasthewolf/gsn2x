@@ -507,6 +507,35 @@ mod test {
     }
 
     #[test]
+    fn in_context_comma() {
+        let mut d = Diagnostics::default();
+        let mut nodes = BTreeMap::<String, GsnNode>::new();
+        nodes.insert(
+            "G1".to_owned(),
+            GsnNode {
+                in_context_of: vec!["C1, C2".to_owned()],
+                ..Default::default()
+            },
+        );
+        assert!(check_nodes(&mut d, &nodes, &[]).is_err());
+        assert_eq!(d.messages.len(), 2);
+        assert_eq!(d.messages[0].module, Some("".to_owned()));
+        assert_eq!(d.messages[0].diag_type, DiagType::Error);
+        assert_eq!(
+            d.messages[0].msg,
+            "C03: Element G1 has unresolved \"in context of\" element: C1, C2"
+        );
+        assert_eq!(d.messages[1].module, Some("".to_owned()));
+        assert_eq!(d.messages[1].diag_type, DiagType::Warning);
+        assert_eq!(
+            d.messages[1].msg,
+            "C11: Unresolved \"in context of\" element of G1 may be actually a list: C1, C2. Try writing [C1, C2] instead."
+        );
+        assert_eq!(d.errors, 1);
+        assert_eq!(d.warnings, 1);
+    }
+
+    #[test]
     fn challenges_self() {
         let mut d = Diagnostics::default();
         let mut nodes = BTreeMap::<String, GsnNode>::new();
