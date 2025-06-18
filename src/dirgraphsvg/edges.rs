@@ -139,7 +139,7 @@ pub(super) fn render_edge(
             );
             let p = get_mid_point(&other_edge);
             let dummy_target = RefCell::new(SvgNode::new_dummy(p.x, p.y));
-            let real_edge = create_curve_points(
+            create_curve_points(
                 render_graph,
                 bounding_boxes,
                 EdgeType::OneWay(SingleEdge::ChallengesRelation(target_id)),
@@ -158,8 +158,7 @@ pub(super) fn render_edge(
                         .position(|x| x.iter().flatten().any(|&v| v == relation_target))
                         .unwrap(),
                 ),
-            );
-            real_edge
+            )
         }
         _ => {
             // Render edge between source and target.0 nodes

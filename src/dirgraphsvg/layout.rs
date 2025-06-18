@@ -229,7 +229,7 @@ fn calculate_size_of_document(
         .iter()
         .map(|rank| {
             let n = rank.last().unwrap(); // unwrap ok, since there is at least one rank.
-            n.get_x(nodes) + n.get_max_width(nodes)
+            n.get_x(nodes) + n.get_max_width(nodes) / 2 // /2 because x is the center coordinate
         })
         .max()
         .unwrap_or(0);

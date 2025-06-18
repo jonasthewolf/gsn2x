@@ -820,7 +820,7 @@ fn node_classes_from_node(identifier: &str, gsn_node: &GsnNode, masked: bool) ->
             }
         })
         .collect();
-    let classes = gsn_node
+    gsn_node
         .classes
         .iter()
         .chain(layer_classes.iter())
@@ -828,8 +828,7 @@ fn node_classes_from_node(identifier: &str, gsn_node: &GsnNode, masked: bool) ->
         .chain(masked_class.iter())
         .chain(acp_classes.iter())
         .cloned()
-        .collect();
-    classes
+        .collect()
 }
 
 ///
