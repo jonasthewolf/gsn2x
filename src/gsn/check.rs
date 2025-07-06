@@ -125,14 +125,13 @@ fn check_unresolved_references(
         .try_for_each(|wref| {
             diag.add_error(
                 Some(module),
-                format!("C03: Element {} has unresolved \"{}\" element: {}", id, error_str, wref),
+                format!("C03: Element {id} has unresolved \"{error_str}\" element: {wref}"),
             );
             if wref.contains(',') {
                 diag.add_warning(
                     Some(module),
                     format!(
-                        "C11: Unresolved \"{}\" element of {} may be actually a list: {}. Try writing [{}] instead.",
-                        error_str, id, wref, wref
+                        "C11: Unresolved \"{error_str}\" element of {id} may be actually a list: {wref}. Try writing [{wref}] instead."
                     ),
                 );
             }

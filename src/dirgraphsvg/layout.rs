@@ -206,10 +206,7 @@ pub(super) fn layout_nodes(
                     })
                     .collect::<Vec<_>>()
                     .join(", ");
-                println!(
-                    "The following nodes might cause the problem: {}",
-                    nodes_to_report
-                );
+                println!("The following nodes might cause the problem: {nodes_to_report}");
             }
         }
     }

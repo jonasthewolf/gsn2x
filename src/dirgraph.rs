@@ -675,7 +675,7 @@ mod test {
             )],
         )]);
         let dg = DirectedGraph::new(&nodes, &edges);
-        let dbg = format!("{:?}", dg);
+        let dbg = format!("{dg:?}");
         assert_eq!(dbg, "a\nb\n");
     }
 
@@ -699,7 +699,7 @@ mod test {
             ),
         ]);
         let dg = DirectedGraph::new(&nodes, &edges);
-        let dbg = format!("{:?}", dg);
+        let dbg = format!("{dg:?}");
         assert_eq!(dbg, "a\nb\n");
     }
 }

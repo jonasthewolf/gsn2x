@@ -799,10 +799,7 @@ mod test {
         };
         let res = crate::output_messages(&d);
         assert!(res.is_err());
-        assert_eq!(
-            format!("{:?}", res),
-            "Err(3 errors and 2 warnings detected.)"
-        );
+        assert_eq!(format!("{res:?}"), "Err(3 errors and 2 warnings detected.)");
     }
 
     #[test]
@@ -814,7 +811,7 @@ mod test {
         };
         let res = crate::output_messages(&d);
         assert!(res.is_ok());
-        assert_eq!(format!("{:?}", res), "Ok(())");
+        assert_eq!(format!("{res:?}"), "Ok(())");
     }
 
     #[test]
@@ -826,6 +823,6 @@ mod test {
         };
         let res = crate::output_messages(&d);
         assert!(res.is_ok());
-        assert_eq!(format!("{:?}", res), "Ok(())");
+        assert_eq!(format!("{res:?}"), "Ok(())");
     }
 }

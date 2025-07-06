@@ -78,8 +78,7 @@ fn validate_id(
                     diag.add_warning(
                         Some(module),
                         format!(
-                            "V08: Element {} has type {}, but ID indicates type {}",
-                            id, type_from_node, type_from_id
+                            "V08: Element {id} has type {type_from_node}, but ID indicates type {type_from_id}"
                         ),
                     );
                 }

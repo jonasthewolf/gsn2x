@@ -191,7 +191,7 @@ pub(crate) fn render_yaml_docs(
                 serde_yml::to_writer(&mut output, &rank_map)?;
             }
         }
-        writeln!(&mut output, "... # {}\n", m_id)?;
+        writeln!(&mut output, "... # {m_id}\n")?;
     }
 
     // serde_yml::to_string(value)

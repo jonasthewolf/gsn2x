@@ -243,7 +243,7 @@ mod test {
     #[test]
     fn debug_display() {
         let p = Point2D::<i32> { x: 2, y: 3 };
-        assert_eq!(format!("{}", p), "2,3");
-        assert_eq!(format!("{:?}", p), "2,3");
+        assert_eq!(format!("{p}"), "2,3");
+        assert_eq!(format!("{p:?}"), "2,3");
     }
 }

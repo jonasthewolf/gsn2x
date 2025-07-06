@@ -101,7 +101,7 @@ mod test {
     fn format() {
         let btm = BTreeMap::<String, String>::new();
         let mm = YamlFixMap(btm.clone()).into_inner();
-        assert_eq!(format!("{:?}", mm), format!("{:?}", btm));
+        assert_eq!(format!("{mm:?}"), format!("{:?}", btm));
     }
     #[test]
     fn debug() {
@@ -112,7 +112,7 @@ mod test {
         let m = serde_yml::from_str::<YamlFixMap<String, String>>("x:\n\nx:");
         assert!(m.is_err());
         assert_eq!(
-            format!("{:?}", m),
+            format!("{m:?}"),
             "Err(Error(\"Element x already exists\", line: 1, column: 1))"
         );
     }
@@ -122,7 +122,7 @@ mod test {
         let res = serde_yml::from_str::<YamlFixMap<String, String>>(input);
         assert!(res.is_err());
         assert_eq!(
-            format!("{:?}", res),
+            format!("{res:?}"),
             "Err(Error(\"invalid type: sequence, expected a map with unique keys\", line: 1, column: 1))"
         );
     }

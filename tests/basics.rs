@@ -46,9 +46,8 @@ pub fn compare_lines_with_replace(
 ) -> Result<bool> {
     let left: &std::path::Path = left.as_ref();
     let right: &std::path::Path = right.as_ref();
-    let left_c = std::fs::read_to_string(left).with_context(|| format!("Filename {:?}", left))?;
-    let right_c =
-        std::fs::read_to_string(right).with_context(|| format!("Filename {:?}", right))?;
+    let left_c = std::fs::read_to_string(left).with_context(|| format!("Filename {left:?}"))?;
+    let right_c = std::fs::read_to_string(right).with_context(|| format!("Filename {right:?}"))?;
     let mut same = true;
 
     let num_regex = Regex::new(r"-?\d+").unwrap(); // unwrap ok, since static regex
@@ -88,7 +87,7 @@ pub fn compare_lines_with_replace(
                     }
                 }
             } else {
-                println!("Splitted Line: {:?} {:?}", l_split, r_split);
+                println!("Splitted Line: {l_split:?} {r_split:?}");
                 same = false;
                 break;
             }
