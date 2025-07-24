@@ -122,8 +122,8 @@ mod test {
         let res = serde_yml::from_str::<YamlFixMap<String, String>>(input);
         assert!(res.is_err());
         assert_eq!(
-            format!("{res:?}"),
-            "Err(Error(\"invalid type: sequence, expected a map with unique keys\", line: 1, column: 1))"
+            res.unwrap_err().to_string(),
+            "invalid type: sequence, expected a map with unique keys"
         );
     }
 }

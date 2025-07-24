@@ -799,7 +799,10 @@ mod test {
         };
         let res = crate::output_messages(&d);
         assert!(res.is_err());
-        assert_eq!(format!("{res:?}"), "Err(3 errors and 2 warnings detected.)");
+        assert_eq!(
+            res.err().unwrap().to_string(),
+            "3 errors and 2 warnings detected."
+        );
     }
 
     #[test]
