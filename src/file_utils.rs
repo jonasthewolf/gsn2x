@@ -68,7 +68,7 @@ pub fn get_relative_path(target: &str, source: &str) -> String {
 /// Removes filename and CurDir if there is one.
 /// `path` must point to a file. Thus, there is a parent.
 ///
-fn get_stripped_components(path: &Path) -> Vec<Component> {
+fn get_stripped_components(path: &Path) -> Vec<Component<'_>> {
     path.parent()
         .unwrap() // unwrap ok, since function contract
         .components()

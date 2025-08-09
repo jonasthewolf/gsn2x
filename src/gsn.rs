@@ -609,7 +609,7 @@ fn get_root_nodes(nodes: &BTreeMap<String, GsnNode>) -> Vec<String> {
 ///
 pub fn calculate_module_dependencies(
     nodes: &BTreeMap<String, GsnNode>,
-) -> BTreeMap<String, BTreeMap<String, EdgeType>> {
+) -> BTreeMap<String, BTreeMap<String, EdgeType<'_>>> {
     let mut res = BTreeMap::<String, BTreeMap<String, EdgeType>>::new();
 
     for v in nodes.values() {
