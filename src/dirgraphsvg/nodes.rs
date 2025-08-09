@@ -136,10 +136,10 @@ impl SvgNode {
                 Port::West => self.y,
             },
         };
-        if let NodeType::Box(BoxType::Module) = &self.node_type {
-            if port == super::Port::North {
-                coords.y += MODULE_TAB_HEIGHT;
-            }
+        if let NodeType::Box(BoxType::Module) = &self.node_type
+            && port == super::Port::North
+        {
+            coords.y += MODULE_TAB_HEIGHT;
         }
 
         coords

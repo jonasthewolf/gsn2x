@@ -163,21 +163,19 @@ pub(super) fn layout_nodes(
                 let old_x = cell.get_x(nodes);
                 x = std::cmp::max(x + w / 2, old_x);
                 // Not at the first run
-                if run > 0 {
-                    if let Some(new_x) =
+                if run > 0
+                    && let Some(new_x) =
                         has_node_to_be_moved(graph, cell, margin, &mut cells_with_centered_parents)
-                    {
-                        if new_x > x {
-                            x = std::cmp::max(x, new_x);
-                            // Often needed for debugging.
-                            // eprintln!("Run {}: Changed {:?} {} {} {}", run, &cell, x, old_x, new_x);
-                            unstable_nodes
-                                .entry(cell)
-                                .and_modify(|e| *e += 1)
-                                .or_insert(1);
-                            changed = true;
-                        }
-                    }
+                    && new_x > x
+                {
+                    x = std::cmp::max(x, new_x);
+                    // Often needed for debugging.
+                    // eprintln!("Run {}: Changed {:?} {} {} {}", run, &cell, x, old_x, new_x);
+                    unstable_nodes
+                        .entry(cell)
+                        .and_modify(|e| *e += 1)
+                        .or_insert(1);
+                    changed = true;
                 }
                 cell.set_position(nodes, margin, Point2D { x, y });
                 x += w / 2 + margin.left + margin.right;

@@ -71,19 +71,17 @@ fn validate_id(
     node: &GsnNode,
     extended_check: bool,
 ) -> Result<(), ()> {
-    if extended_check {
-        if let Some(type_from_id) = get_node_type_from_text(id) {
-            if let Some(type_from_node) = node.node_type {
-                if type_from_node != type_from_id {
-                    diag.add_warning(
-                        Some(module),
-                        format!(
-                            "V08: Element {id} has type {type_from_node}, but ID indicates type {type_from_id}"
-                        ),
-                    );
-                }
-            }
-        }
+    if extended_check
+        && let Some(type_from_id) = get_node_type_from_text(id)
+        && let Some(type_from_node) = node.node_type
+        && type_from_node != type_from_id
+    {
+        diag.add_warning(
+            Some(module),
+            format!(
+                "V08: Element {id} has type {type_from_node}, but ID indicates type {type_from_id}"
+            ),
+        );
     }
     Ok(())
 }

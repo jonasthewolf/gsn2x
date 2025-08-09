@@ -132,18 +132,20 @@ pub fn parse_markdown_line(input: &str) -> Vec<Text> {
             .unwrap_or(input.len() - index)
             + index;
         let mut skip_bracket = 0;
-        if index > 0 && &input[index - 1..index] == "(" {
-            if let Some(end_link_p) = input[index..].find(')') {
-                end_link = end_link_p + index;
-                if index > 1 && &input[index - 2..index - 1] == "]" {
-                    if let Some(start_text) = input[..index - 2].rfind('[') {
-                        // Link with separate text
-                        let end_text = index - 2;
-                        link_text = Some(&input[start_text + 1..end_text]);
-                        next_index = start_text;
-                        skip_bracket = 1;
-                    }
-                }
+        if index > 0
+            && &input[index - 1..index] == "("
+            && let Some(end_link_p) = input[index..].find(')')
+        {
+            end_link = end_link_p + index;
+            if index > 1
+                && &input[index - 2..index - 1] == "]"
+                && let Some(start_text) = input[..index - 2].rfind('[')
+            {
+                // Link with separate text
+                let end_text = index - 2;
+                link_text = Some(&input[start_text + 1..end_text]);
+                next_index = start_text;
+                skip_bracket = 1;
             }
         }
         // Add text before the current link (and after the last one) as text
