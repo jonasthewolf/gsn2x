@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg class="gsndiagram" viewBox="0 0 202 266" xmlns="http://www.w3.org/2000/svg">
+<svg class="gsndiagram" viewBox="0 0 206 259" xmlns="http://www.w3.org/2000/svg">
 <defs/>
 <g class="gsn_layer1 gsn_layer2 gsn_module_tests_issue358_yaml gsnelem gsngoal gsn_undeveloped" id="node_g1">
 <title>G1</title>
-<path class="border" d="M20,20 L182,20 L182,246 L20,246 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<path class="border" d="M20,20 L186,20 L186,238 L20,238 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="27" y="39">G1</text>
-<text font-family="Arial" font-size="12" x="27" y="58">askjfaklsjf</text>
+<text font-family="Arial" font-size="12" x="27" y="57">askjfaklsjf</text>
 <text font-family="Arial" font-size="12" x="27" y="70"></text>
-<text font-family="Arial" font-size="12" x="27" y="84">LAYER1:</text>
-<text font-family="Arial" font-size="12" x="27" y="98">asodfjalksdfasf</text>
-<text font-family="Arial" font-size="12" x="27" y="112">asfdasdfasdfasdf</text>
-<text font-family="Arial" font-size="12" x="27" y="126">asdfasdfasdfsasdf</text>
-<text font-family="Arial" font-size="12" x="27" y="140">asdfasdfasdfasdfasdf</text>
-<text font-family="Arial" font-size="12" x="27" y="154">asdfasdfasdfasdfasdfddasf</text>
-<text font-family="Arial" font-size="12" x="27" y="166"></text>
-<text font-family="Arial" font-size="12" x="27" y="180">asfdasdfasdfds</text>
-<text font-family="Arial" font-size="12" x="27" y="192"></text>
-<text font-family="Arial" font-size="12" x="27" y="204"></text>
-<text font-family="Arial" font-size="12" x="27" y="218">LAYER2:</text>
-<text font-family="Arial" font-size="12" x="27" y="232">another liine</text>
-<path d="M101,246 l5,5 l-5,5 l-5,-5 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" x="27" y="83">LAYER1:</text>
+<text font-family="Arial" font-size="12" x="27" y="96">asodfjalksdfasf</text>
+<text font-family="Arial" font-size="12" x="27" y="109">asfdasdfasdfasdf</text>
+<text font-family="Arial" font-size="12" x="27" y="122">asdfasdfasdfsasdf</text>
+<text font-family="Arial" font-size="12" x="27" y="135">asdfasdfasdfasdfasdf</text>
+<text font-family="Arial" font-size="12" x="27" y="148">asdfasdfasdfasdfasdfddasf</text>
+<text font-family="Arial" font-size="12" x="27" y="161"></text>
+<text font-family="Arial" font-size="12" x="27" y="174">asfdasdfasdfds</text>
+<text font-family="Arial" font-size="12" x="27" y="187"></text>
+<text font-family="Arial" font-size="12" x="27" y="200"></text>
+<text font-family="Arial" font-size="12" x="27" y="213">LAYER2:</text>
+<text font-family="Arial" font-size="12" x="27" y="226">another liine</text>
+<path d="M103,238 l5,5 l-5,5 l-5,-5 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 </g>
 </svg>

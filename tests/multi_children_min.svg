@@ -23,12 +23,12 @@
 <g class="gsn_module_tests_multi_children_min_yaml gsnelem gsnsltn" id="node_sn1">
 <title>Sn1</title>
 <path class="border" d="M45,215 a27,27,0,1,0,54,0 a27,27,0,1,0,-54,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="64" y="213">Sn1</text>
+<text font-family="Arial" font-size="12" font-weight="bold" x="62" y="213">Sn1</text>
 </g>
 <g class="gsn_module_tests_multi_children_min_yaml gsnelem gsnsltn" id="node_sn2">
 <title>Sn2</title>
 <path class="border" d="M139,215 a27,27,0,1,0,54,0 a27,27,0,1,0,-54,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="158" y="213">Sn2</text>
+<text font-family="Arial" font-size="12" font-weight="bold" x="156" y="213">Sn2</text>
 </g>
 <path class="gsnedge gsninspby" d="M144,64 C144,94,72,74,72,94" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsninspby" d="M144,64 C144,94,216,74,216,94" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>

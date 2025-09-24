@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg class="gsndiagram" viewBox="0 0 666 429" xmlns="http://www.w3.org/2000/svg">
+<svg class="gsndiagram" viewBox="0 0 668 431" xmlns="http://www.w3.org/2000/svg">
 <defs>
 <marker id="supportedby_arrow" markerHeight="9" markerUnits="userSpaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
 <polyline fill="black" points="0 0, 10 4.5, 0 9"/>
@@ -10,61 +10,61 @@
 </defs>
 <g class="gsn_module_sub1 gsnelem gsnasmp" id="node_a1">
 <title>A1</title>
-<path class="border" d="M69,53 a39,33,0,1,0,78,0 a39,33,0,1,0,-78,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="88" y="44">A1</text>
-<text font-family="Arial" font-size="12" x="88" y="63">TestABC</text>
-<text font-family="Arial" font-size="12" font-weight="bold" x="142" y="81">A</text>
+<path class="border" d="M56,52 a46,32,0,1,0,93,0 a46,32,0,1,0,-93,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="76" y="44">A1</text>
+<text font-family="Arial" font-size="12" x="76" y="62">TestABC</text>
+<text font-family="Arial" font-size="12" font-weight="bold" x="143" y="79">A</text>
 </g>
 <g class="gsn_module_main gsnelem gsngoal" id="node_g1">
 <title>G1</title>
-<path class="border" d="M187,30 L291,30 L291,76 L187,76 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="194" y="49">G1</text>
-<text font-family="Arial" font-size="12" x="194" y="68">Main Goal</text>
+<path class="border" d="M188,30 L292,30 L292,74 L188,74 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="195" y="49">G1</text>
+<text font-family="Arial" font-size="12" x="195" y="67">Main Goal</text>
 </g>
 <g class="gsn_module_main gsnelem gsnstgy" id="node_s1">
 <title>S1</title>
-<path class="border" d="M179,126 L313,126 L299,172 L165,172 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="187" y="145">S1</text>
-<text font-family="Arial" font-size="12" x="183" y="164">Divide and Conquer</text>
+<path class="border" d="M180,124 L314,124 L300,168 L166,168 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="188" y="143">S1</text>
+<text font-family="Arial" font-size="12" x="184" y="161">Divide and Conquer</text>
 </g>
 <g class="gsn_module_main gsnelem gsngoal gsn_undeveloped" id="node_g2">
 <title>G2</title>
-<path class="border" d="M20,219 L124,219 L124,271 L20,271 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="27" y="238">G2</text>
-<text font-family="Arial" font-size="12" x="27" y="257">Divide</text>
-<path d="M72,271 l5,5 l-5,5 l-5,-5 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<path class="border" d="M20,215 L124,215 L124,265 L20,265 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="27" y="234">G2</text>
+<text font-family="Arial" font-size="12" x="27" y="252">Divide</text>
+<path d="M72,265 l5,5 l-5,5 l-5,-5 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 </g>
 <g class="gsn_module_main gsnelem gsnjust" id="node_j1">
 <title>J1</title>
-<path class="border" d="M164,245 a64,33,0,1,0,128,0 a64,33,0,1,0,-128,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="190" y="236">J1</text>
-<text font-family="Arial" font-size="12" x="190" y="255">Some Context</text>
-<text font-family="Arial" font-size="12" font-weight="bold" x="287" y="273">J</text>
+<path class="border" d="M164,240 a65,32,0,1,0,130,0 a65,32,0,1,0,-130,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="190" y="232">J1</text>
+<text font-family="Arial" font-size="12" x="190" y="250">Some Context</text>
+<text font-family="Arial" font-size="12" font-weight="bold" x="289" y="267">J</text>
 </g>
 <g class="gsn_module_sub1 gsnelem gsngoal" id="node_g3">
 <title>G3</title>
-<path class="border" d="M332,222 L482,222 L482,268 L332,268 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="339" y="241">G3</text>
-<text font-family="Arial" font-size="12" x="339" y="260">Conquer the submodules</text>
+<path class="border" d="M334,218 L484,218 L484,262 L334,262 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="341" y="237">G3</text>
+<text font-family="Arial" font-size="12" x="341" y="255">Conquer the submodules</text>
 </g>
 <g class="gsn_module_sub3 gsnelem gsnctxt" id="node_c2">
 <title>C2</title>
-<path class="border" d="M532,222 L636,222 C646,222,646,268,636,268 L532,268 C522,268,522,222,532,222" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="539" y="241">C2</text>
-<text font-family="Arial" font-size="12" x="539" y="260">Context 2</text>
+<path class="border" d="M534,218 L638,218 C648,218,648,262,638,262 L534,262 C524,262,524,218,534,218" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="541" y="237">C2</text>
+<text font-family="Arial" font-size="12" x="541" y="255">Context 2</text>
 </g>
 <g class="gsn_module_sub3 gsnelem gsnsltn" id="node_sn1">
 <title>Sn1</title>
-<path class="border" d="M363,362 a44,44,0,1,0,88,0 a44,44,0,1,0,-88,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="382" y="353">Sn1</text>
-<text font-family="Arial" font-size="12" x="382" y="372">Solution 1</text>
+<path class="border" d="M360,361 a49,49,0,1,0,98,0 a49,49,0,1,0,-98,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="378" y="353">Sn1</text>
+<text font-family="Arial" font-size="12" x="378" y="371">Solution 1</text>
 </g>
-<path class="gsnedge gsninctxt" d="M187,53 C157,53,177,53,157,53" fill-opacity="0" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M239,76 C239,106,239,96,239,116" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninctxt" d="M124,245 C154,245,134,245,154,245" fill-opacity="0" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninctxt" d="M482,245 C512,245,492,245,512,245" fill-opacity="0" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninctxt" d="M332,245 C302,245,322,245,302,245" fill-opacity="0" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M407,268 C407,298,407,288,407,308" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M239,172 C239,202,72,189,72,209" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M239,172 C239,202,407,192,407,212" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M188,52 C158,52,178,52,158,52" fill-opacity="0" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M240,74 C240,104,240,94,240,114" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M124,240 C154,240,134,240,154,240" fill-opacity="0" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M484,240 C514,240,494,240,514,240" fill-opacity="0" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M334,240 C304,240,324,240,304,240" fill-opacity="0" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M409,262 C409,292,409,282,409,302" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M240,168 C240,198,72,185,72,205" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M240,168 C240,198,409,188,409,208" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 </svg>

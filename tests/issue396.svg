@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg class="gsndiagram" viewBox="0 0 166 188" xmlns="http://www.w3.org/2000/svg">
+<svg class="gsndiagram" viewBox="0 0 164 181" xmlns="http://www.w3.org/2000/svg">
 <defs/>
 <g class="gsn_layer1 gsn_module_tests_issue396_yaml gsnelem gsngoal gsn_undeveloped" id="node_g1">
 <title>G1</title>
-<path class="border" d="M20,20 L146,20 L146,168 L20,168 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<path class="border" d="M20,20 L144,20 L144,160 L20,160 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="27" y="39">G1</text>
-<text font-family="Arial" font-size="12" x="27" y="58">G1</text>
+<text font-family="Arial" font-size="12" x="27" y="57">G1</text>
 <text font-family="Arial" font-size="12" x="27" y="70"></text>
-<text font-family="Arial" font-size="12" x="27" y="84">LAYER1:</text>
-<text font-family="Arial" font-size="12" x="27" y="98">testa askjdfnw jnf</text>
-<text font-family="Arial" font-size="12" x="27" y="112">kndsfn jknwer wnkd</text>
-<text font-family="Arial" font-size="12" x="27" y="126">wn23no pan nsfn</text>
-<text font-family="Arial" font-size="12" x="27" y="140">nwekjn naa nnswenr</text>
-<text font-family="Arial" font-size="12" x="27" y="154">naksdk anknskn</text>
-<path d="M83,168 l5,5 l-5,5 l-5,-5 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" x="27" y="83">LAYER1:</text>
+<text font-family="Arial" font-size="12" x="27" y="96">testa askjdfnw jnf</text>
+<text font-family="Arial" font-size="12" x="27" y="109">kndsfn jknwer wnkd</text>
+<text font-family="Arial" font-size="12" x="27" y="122">wn23no pan nsfn</text>
+<text font-family="Arial" font-size="12" x="27" y="135">nwekjn naa nnswenr</text>
+<text font-family="Arial" font-size="12" x="27" y="148">naksdk anknskn</text>
+<path d="M82,160 l5,5 l-5,5 l-5,-5 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 </g>
 </svg>

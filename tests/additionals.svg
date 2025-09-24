@@ -1,34 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg class="gsndiagram" viewBox="0 0 436 141" xmlns="http://www.w3.org/2000/svg">
+<svg class="gsndiagram" viewBox="0 0 442 137" xmlns="http://www.w3.org/2000/svg">
 <defs/>
 <g class="gsn_underminded gsn_unsupported gsn_module_tests_additionals_yaml gsnelem gsngoal gsn_undeveloped" id="node_g1">
 <title>G1</title>
-<path class="border" d="M20,24 L128,24 L128,116 L20,116 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<path class="border" d="M20,24 L134,24 L134,112 L20,112 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="27" y="43">G1</text>
-<text font-family="Arial" font-size="12" x="27" y="62">asdfkjaslkdfj</text>
+<text font-family="Arial" font-size="12" x="27" y="61">asdfkjaslkdfj</text>
 <text font-family="Arial" font-size="12" x="27" y="74"></text>
-<text font-family="Arial" font-size="12" x="27" y="88">UNSUPPORTED:</text>
-<text font-family="Arial" font-size="12" x="27" y="102">false</text>
-<path d="M74,116 l5,5 l-5,5 l-5,-5 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" x="27" y="87">UNSUPPORTED:</text>
+<text font-family="Arial" font-size="12" x="27" y="100">false</text>
+<path d="M77,112 l5,5 l-5,5 l-5,-5 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 </g>
 <g class="gsn_additional gsn_module_tests_additionals_yaml gsnelem gsngoal" id="node_g2">
 <title>G2</title>
-<path class="border" d="M168,20 L272,20 L272,120 L168,120 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="175" y="39">G2</text>
-<text font-family="Arial" font-size="12" x="175" y="58">ASDFasdfjkp</text>
-<text font-family="Arial" font-size="12" x="175" y="70"></text>
-<text font-family="Arial" font-size="12" x="175" y="84">ADDITIONAL:</text>
-<text font-family="Arial" font-size="12" x="175" y="98">- asdfkjaslkdfj</text>
-<text font-family="Arial" font-size="12" x="175" y="112">- asdfasdf</text>
+<path class="border" d="M174,20 L278,20 L278,116 L174,116 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="181" y="39">G2</text>
+<text font-family="Arial" font-size="12" x="181" y="57">ASDFasdfjkp</text>
+<text font-family="Arial" font-size="12" x="181" y="70"></text>
+<text font-family="Arial" font-size="12" x="181" y="83">ADDITIONAL:</text>
+<text font-family="Arial" font-size="12" x="181" y="96">- asdfkjaslkdfj</text>
+<text font-family="Arial" font-size="12" x="181" y="109">- asdfasdf</text>
 </g>
 <g class="gsn_add1 gsn_module_tests_additionals_yaml gsnelem gsngoal" id="node_g3">
 <title>G3</title>
-<path class="border" d="M312,20 L416,20 L416,120 L312,120 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="319" y="39">G3</text>
-<text font-family="Arial" font-size="12" x="319" y="58">asdfasdf</text>
-<text font-family="Arial" font-size="12" x="319" y="70"></text>
-<text font-family="Arial" font-size="12" x="319" y="84">ADD1:</text>
-<text font-family="Arial" font-size="12" x="319" y="98">a: b</text>
-<text font-family="Arial" font-size="12" x="319" y="112">c: d</text>
+<path class="border" d="M318,20 L422,20 L422,116 L318,116 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="325" y="39">G3</text>
+<text font-family="Arial" font-size="12" x="325" y="57">asdfasdf</text>
+<text font-family="Arial" font-size="12" x="325" y="70"></text>
+<text font-family="Arial" font-size="12" x="325" y="83">ADD1:</text>
+<text font-family="Arial" font-size="12" x="325" y="96">a: b</text>
+<text font-family="Arial" font-size="12" x="325" y="109">c: d</text>
 </g>
 </svg>
