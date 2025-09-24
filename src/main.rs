@@ -431,7 +431,7 @@ fn read_inputs(
     diags: &mut Diagnostics,
     output_directory: &str,
 ) -> Result<()> {
-    let mut copied_inputs: Vec<String> = inputs.iter().map(|i| (i.replace('\\', "/"))).collect();
+    let mut copied_inputs: Vec<String> = inputs.iter().map(|i| i.replace('\\', "/")).collect();
     let mut first_run = true;
     'outer: loop {
         let mut additional_inputs = vec![];
