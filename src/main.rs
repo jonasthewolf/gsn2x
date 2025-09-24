@@ -439,7 +439,7 @@ fn read_inputs(
             let reader =
                 BufReader::new(File::open(input).context(format!("Failed to open file {input}"))?);
 
-            let mut n: BTreeMap<String, GsnDocument> = serde_yml::from_reader(reader)
+            let mut n: BTreeMap<String, GsnDocument> = serde_yaml_ng::from_reader(reader)
             .map(|n: yaml_fix::YamlFixMap<String, GsnDocument>| n.into_inner())
             .map_err(|e| {
                 anyhow!(format!(

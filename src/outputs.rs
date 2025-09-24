@@ -180,7 +180,7 @@ pub(crate) fn render_yaml_docs(
 
     for (m_id, m) in modules {
         writeln!(&mut output, "--- # {} in {}\n", m_id, m.orig_file_name)?;
-        serde_yml::to_writer(&mut output, &m.meta)?;
+        serde_yaml_ng::to_writer(&mut output, &m.meta)?;
         for rank in ranks.iter().flatten() {
             let rank_map = rank
                 .iter()
@@ -188,12 +188,12 @@ pub(crate) fn render_yaml_docs(
                 .filter(|(_, n)| &n.module == m_id)
                 .collect::<BTreeMap<&str, &GsnNode>>();
             if !rank_map.is_empty() {
-                serde_yml::to_writer(&mut output, &rank_map)?;
+                serde_yaml_ng::to_writer(&mut output, &rank_map)?;
             }
         }
         writeln!(&mut output, "... # {m_id}\n")?;
     }
 
-    // serde_yml::to_string(value)
+    // serde_yaml_ng::to_string(value)
     Ok(())
 }
