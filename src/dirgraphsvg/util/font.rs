@@ -1,29 +1,34 @@
-use anyhow::{Error, Result, anyhow};
-use font_loader::system_fonts;
-use glyph_brush_layout::{
-    FontId, GlyphPositioner, Layout, SectionGeometry, SectionText,
-    ab_glyph::{FontVec, PxScale},
-};
-
 use super::markdown::Text;
 
 ///
-/// Default font family names on different operating systems
+/// Default font family names and parameters on different operating systems
 ///
 #[cfg(any(target_os = "windows", target_os = "macos"))]
-pub static DEFAULT_FONT_FAMILY_NAME: &str = "Arial";
+mod font_constants {
+    pub const FONT_FAMILY_NAME: &str = "Arial";
+    pub const FONT_AVERAGE_ADVANCE_NORMAL_UPPER: f64 = 1459.655172413793 / 2048.0;
+    pub const FONT_AVERAGE_ADVANCE_NORMAL_LOWER: f64 = 1043.8398791540785 / 2048.0;
+    pub const FONT_AVERAGE_ADVANCE_BOLD_UPPER: f64 = 1490.2364532019703 / 2048.0;
+    pub const FONT_AVERAGE_ADVANCE_BOLD_LOWER: f64 = 1133.2326283987916 / 2048.0;
+    pub const FONT_HEIGHT: f64 = 1.14990234;
+}
+
 #[cfg(not(any(target_os = "windows", target_os = "macos")))]
-pub static DEFAULT_FONT_FAMILY_NAME: &str = "DejaVuSans";
+mod font_constants {
+    pub const FONT_FAMILY_NAME: &str = "DejaVuSans";
+    pub const FONT_AVERAGE_ADVANCE_NORMAL_UPPER: f64 = 1499.2061611374409 / 2048.0;
+    pub const FONT_AVERAGE_ADVANCE_NORMAL_LOWER: f64 = 1213.687651331719 / 2048.0;
+    pub const FONT_AVERAGE_ADVANCE_BOLD_UPPER: f64 = 1660.7261219792865 / 2048.0;
+    pub const FONT_AVERAGE_ADVANCE_BOLD_LOWER: f64 = 1352.9566929133857 / 2048.0;
+    pub const FONT_HEIGHT: f64 = 1.1640625;
+}
 
 ///
 /// All we need to know about a font
 ///
 pub struct FontInfo {
-    font: FontVec,
-    font_bold: FontVec,
-    font_italic: FontVec,
     pub name: String,
-    pub size: f32,
+    pub size: f64,
 }
 
 ///
@@ -32,40 +37,16 @@ pub struct FontInfo {
 impl Default for FontInfo {
     fn default() -> Self {
         FontInfo {
-            font: get_default_font(false, false).unwrap(),
-            font_bold: get_default_font(true, false).unwrap(),
-            font_italic: get_default_font(false, true).unwrap(),
-            name: DEFAULT_FONT_FAMILY_NAME.to_owned(),
+            name: font_constants::FONT_FAMILY_NAME.to_owned(),
             size: 12.0,
         }
     }
 }
 
 ///
-/// Get the default font as a byte vector
+/// Get a bounding box for a line of text with the given font info and bold setting.
+/// Returns (width, height) of the bounding box.
 ///
-pub fn get_default_font(bold: bool, italic: bool) -> Result<FontVec> {
-    get_font(DEFAULT_FONT_FAMILY_NAME, bold, italic)
-}
-
-///
-/// Get a font as a byte vector
-///
-fn get_font(font_name: &str, bold: bool, italic: bool) -> Result<FontVec> {
-    let mut props = system_fonts::FontPropertyBuilder::new();
-    props = props.family(font_name);
-    if bold {
-        props = props.bold();
-    }
-    if italic {
-        props = props.italic();
-    }
-    let prop = props.build();
-    let (fd, _) =
-        system_fonts::get(&prop).ok_or_else(|| anyhow!("Font {font_name} is not found."))?;
-    FontVec::try_from_vec(fd.to_vec()).map_err(Error::from)
-}
-
 pub fn text_line_bounding_box(font_info: &FontInfo, text: &[Text], bold: bool) -> (i32, i32) {
     let text = text
         .iter()
@@ -81,53 +62,35 @@ pub fn text_line_bounding_box(font_info: &FontInfo, text: &[Text], bold: bool) -
 /// If the line is empty, font_info.size is returned as height
 ///
 pub fn str_line_bounding_box(font_info: &FontInfo, text: &str, bold: bool) -> (i32, i32) {
-    if text.chars().filter(|c| !c.is_whitespace()).count() == 0 {
-        (0, font_info.size as i32)
-    } else {
-        let kern = if bold {
-            text.chars().count() as f64 * 1.2
+    let uppercase_chars = text.chars().filter(|c| c.is_uppercase()).count() as i32;
+    let other_chars = std::cmp::max(text.chars().count() as i32 - uppercase_chars, 0);
+    let lower_advance = font_info.size
+        * if bold {
+            font_constants::FONT_AVERAGE_ADVANCE_BOLD_LOWER
         } else {
-            text.chars().count() as f64 * 1.0
+            font_constants::FONT_AVERAGE_ADVANCE_NORMAL_LOWER
         };
-        let line_gap = 5.0;
-        let font_id = usize::from(bold);
-        Layout::default_single_line()
-            .calculate_glyphs(
-                &[
-                    &font_info.font,
-                    &font_info.font_bold,
-                    &font_info.font_italic,
-                ],
-                &SectionGeometry::default(),
-                &[SectionText {
-                    text,
-                    scale: PxScale::from(font_info.size),
-                    font_id: FontId(font_id),
-                }],
-            )
-            .last()
-            .map(|g| {
-                (
-                    g.glyph.position.x as f64 + kern,
-                    g.glyph.position.y as f64 + line_gap,
-                )
-            })
-            .map(|(x, y)| (x as i32, y as i32))
-            .unwrap_or((0, font_info.size as i32))
-    }
+    let upper_advance = font_info.size
+        * if bold {
+            font_constants::FONT_AVERAGE_ADVANCE_BOLD_UPPER
+        } else {
+            font_constants::FONT_AVERAGE_ADVANCE_NORMAL_UPPER
+        };
+    (
+        if text.chars().all(|c| c.is_whitespace()) {
+            0
+        } else {
+            (lower_advance * other_chars as f64) as i32
+                + (upper_advance * uppercase_chars as f64) as i32
+        },
+        (font_info.size * font_constants::FONT_HEIGHT) as i32,
+    )
 }
 
 #[cfg(test)]
 mod test {
 
     use super::*;
-
-    #[test]
-    fn default_font_exists() {
-        assert!(get_default_font(false, false).is_ok());
-    }
-
-    // We cannot test for non-existing fonts, since Linux will use a default font anyway.
 
     #[test]
     fn bounding_box() {

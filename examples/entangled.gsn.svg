@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg class="gsndiagram" viewBox="0 0 2200 261" xmlns="http://www.w3.org/2000/svg">
+<svg class="gsndiagram" viewBox="0 0 2328 271" xmlns="http://www.w3.org/2000/svg">
 <defs>
 <marker id="supportedby_arrow" markerHeight="9" markerUnits="userSpaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
 <polyline fill="black" points="0 0, 10 4.5, 0 9"/>
@@ -7,28 +7,28 @@
 </defs>
 <g class="gsn_module_examples_entangled_gsn_yaml gsnelem gsngoal" id="node_g1">
 <title>G1</title>
-<path class="border" d="M1757,20 L1861,20 L1861,66 L1757,66 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="1764" y="39">G1</text>
-<text font-family="Arial" font-size="12" x="1764" y="58">First</text>
+<path class="border" d="M1859,20 L1963,20 L1963,64 L1859,64 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="1866" y="39">G1</text>
+<text font-family="Arial" font-size="12" x="1866" y="57">First</text>
 </g>
 <g class="gsn_module_examples_entangled_gsn_yaml gsnelem gsngoal" id="node_g2">
 <title>G2</title>
-<path class="border" d="M1901,20 L2005,20 L2005,66 L1901,66 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="1908" y="39">G2</text>
-<text font-family="Arial" font-size="12" x="1908" y="58">Second</text>
+<path class="border" d="M2003,20 L2107,20 L2107,64 L2003,64 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="2010" y="39">G2</text>
+<text font-family="Arial" font-size="12" x="2010" y="57">Second</text>
 </g>
 <g class="gsn_module_examples_entangled_gsn_yaml gsnelem gsnsltn" id="node_sn1">
 <title>Sn1</title>
-<path class="border" d="M1886,173 a67,67,0,1,0,134,0 a67,67,0,1,0,-134,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="1902" y="164">Sn1</text>
-<text font-family="Arial" font-size="12" x="1902" y="183">Solution to Second</text>
+<path class="border" d="M1982,177 a73,73,0,1,0,146,0 a73,73,0,1,0,-146,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="1998" y="169">Sn1</text>
+<text font-family="Arial" font-size="12" x="1998" y="187">Solution to Second</text>
 </g>
 <g class="gsn_module_examples_entangled_gsn_yaml gsnelem gsnsltn" id="node_sn2">
 <title>Sn2</title>
-<path class="border" d="M2060,173 a60,60,0,1,0,120,0 a60,60,0,1,0,-120,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="2076" y="164">Sn2</text>
-<text font-family="Arial" font-size="12" x="2076" y="183">Solution to First</text>
+<path class="border" d="M2168,177 a70,70,0,1,0,140,0 a70,70,0,1,0,-140,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="2184" y="169">Sn2</text>
+<text font-family="Arial" font-size="12" x="2184" y="187">Solution to First</text>
 </g>
-<path class="gsnedge gsninspby" d="M1809,66 C1809,96,2120,83,2120,103" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M1953,66 C1953,96,1953,76,1953,96" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M1911,64 C1911,94,2238,77,2238,97" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M2055,64 C2055,94,2055,74,2055,94" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 </svg>

@@ -7,28 +7,28 @@
 </defs>
 <g class="gsn_module_tests_issue467_yaml gsnelem gsngoal" id="node_ga">
 <title>GA</title>
-<path class="border" d="M20,20 L124,20 L124,66 L20,66 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<path class="border" d="M20,20 L124,20 L124,64 L20,64 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="27" y="39">GA</text>
-<text font-family="Arial" font-size="12" x="27" y="58">A</text>
+<text font-family="Arial" font-size="12" x="27" y="57">A</text>
 </g>
 <g class="gsn_module_tests_issue467_yaml gsnelem gsngoal" id="node_gb">
 <title>GB</title>
-<path class="border" d="M164,20 L268,20 L268,66 L164,66 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<path class="border" d="M164,20 L268,20 L268,64 L164,64 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="171" y="39">GB</text>
-<text font-family="Arial" font-size="12" x="171" y="58">B</text>
+<text font-family="Arial" font-size="12" x="171" y="57">B</text>
 </g>
 <g class="gsn_module_tests_issue467_yaml gsnelem gsnsltn" id="node_snb">
 <title>SnB</title>
-<path class="border" d="M40,138 a32,32,0,1,0,64,0 a32,32,0,1,0,-64,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="64" y="129">SnB</text>
-<text font-family="Arial" font-size="12" x="64" y="148">B</text>
+<path class="border" d="M39,137 a33,33,0,1,0,66,0 a33,33,0,1,0,-66,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="61" y="129">SnB</text>
+<text font-family="Arial" font-size="12" x="61" y="147">B</text>
 </g>
 <g class="gsn_module_tests_issue467_yaml gsnelem gsnsltn" id="node_sna">
 <title>SnA</title>
-<path class="border" d="M184,138 a32,32,0,1,0,64,0 a32,32,0,1,0,-64,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="208" y="129">SnA</text>
-<text font-family="Arial" font-size="12" x="208" y="148">A</text>
+<path class="border" d="M183,137 a33,33,0,1,0,66,0 a33,33,0,1,0,-66,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="205" y="129">SnA</text>
+<text font-family="Arial" font-size="12" x="205" y="147">A</text>
 </g>
-<path class="gsnedge gsninspby" d="M72,66 C72,96,72,76,72,96" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M216,66 C216,96,216,76,216,96" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M72,64 C72,94,72,74,72,94" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M216,64 C216,94,216,74,216,94" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 </svg>
