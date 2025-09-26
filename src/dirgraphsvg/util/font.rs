@@ -20,10 +20,10 @@ pub trait Font {
 type NormalFont = arial::Arial;
 #[cfg(any(target_os = "windows", target_os = "macos"))]
 type BoldFont = arial_bold::Arial;
-// #[cfg(not(any(target_os = "windows", target_os = "macos")))]
-// type NormalFont = dejavusans::DejavuSans;
-// #[cfg(any(target_os = "windows", target_os = "macos"))]
-// type BoldFont = dejavusans_bold::DejavuSans;
+#[cfg(not(any(target_os = "windows", target_os = "macos")))]
+type NormalFont = dejavusans::DejavuSans;
+#[cfg(not(any(target_os = "windows", target_os = "macos")))]
+type BoldFont = dejavusans_bold::DejavuSans;
 
 ///
 /// All we need to know about a font
