@@ -1,8 +1,12 @@
 use super::markdown::Text;
 
+#[cfg(any(target_os = "windows", target_os = "macos"))]
 mod arial;
+#[cfg(any(target_os = "windows", target_os = "macos"))]
 mod arial_bold;
+#[cfg(not(any(target_os = "windows", target_os = "macos")))]
 mod dejavusans;
+#[cfg(not(any(target_os = "windows", target_os = "macos")))]
 mod dejavusans_bold;
 
 pub trait Font {
