@@ -2,6 +2,8 @@ use super::markdown::Text;
 
 mod arial;
 mod arial_bold;
+mod dejavusans;
+mod dejavusans_bold;
 
 pub trait Font {
     fn get_advance(c: char) -> f64;
