@@ -21,9 +21,9 @@ type NormalFont = arial::Arial;
 #[cfg(any(target_os = "windows", target_os = "macos"))]
 type BoldFont = arial_bold::Arial;
 #[cfg(not(any(target_os = "windows", target_os = "macos")))]
-type NormalFont = dejavusans::DejavuSans;
+type NormalFont = dejavusans::DejaVuSans;
 #[cfg(not(any(target_os = "windows", target_os = "macos")))]
-type BoldFont = dejavusans_bold::DejavuSans;
+type BoldFont = dejavusans_bold::DejaVuSans;
 
 ///
 /// All we need to know about a font
