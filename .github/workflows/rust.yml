@@ -85,6 +85,9 @@ jobs:
       shell: bash
       run: |
         echo "GSN2X_VERSION=${GITHUB_SHA::6}" >> $GITHUB_OUTPUT
+    - name: Update reference renderings for Linux
+      if: ${{ matrix.os == 'ubuntu-latest' }}
+      run: ./tests/gen_examples_for_tests.sh
     - name: Test
       run: cargo test --verbose
     - name: Release build
