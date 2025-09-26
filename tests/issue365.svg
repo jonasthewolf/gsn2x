@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg class="gsndiagram" viewBox="0 0 1438 539" xmlns="http://www.w3.org/2000/svg">
+<svg class="gsndiagram" viewBox="0 0 1384 535" xmlns="http://www.w3.org/2000/svg">
 <defs>
 <marker id="supportedby_arrow" markerHeight="9" markerUnits="userSpaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
 <polyline fill="black" points="0 0, 10 4.5, 0 9"/>
@@ -7,29 +7,29 @@
 </defs>
 <g class="gsn_module_tests_issue365_yaml gsnelem gsngoal" id="node_g1_xxxxxxxxxxxxxxxxxxxx">
 <title>G1-XxxxxxxXxxxxxXxxxxxx</title>
-<path class="border" d="M664,20 L872,20 L872,64 L664,64 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="671" y="39">G1-XxxxxxxXxxxxxXxxxxxx</text>
-<text font-family="Arial" font-size="12" x="671" y="57">xxxxxxx xxxxxxxx xxxxx xx xx xxx</text>
+<path class="border" d="M635,20 L827,20 L827,64 L635,64 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="642" y="39">G1-XxxxxxxXxxxxxXxxxxxx</text>
+<text font-family="Arial" font-size="12" x="642" y="57">xxxxxxx xxxxxxxx xxxxx xx xx xxx</text>
 </g>
 <g class="gsn_module_tests_issue365_yaml gsnelem gsnstgy" id="node_s2_xxxxxxxxxxxxxxx">
 <title>S2-XxxxxXxXxxxxxxx</title>
-<path class="border" d="M301,104 L535,104 L521,174 L287,174 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="309" y="123">S2-XxxxxXxXxxxxxxx</text>
-<text font-family="Arial" font-size="12" x="307" y="141">xxxxx xxxxxxxxxx xxxxxx xx xxx</text>
-<text font-family="Arial" font-size="12" x="305" y="154">xxxxxxxx xxxx xxxxx xxxx xx xxxxxxxx</text>
-<text font-family="Arial" font-size="12" x="303" y="167">xxxxx.</text>
+<path class="border" d="M279,104 L509,104 L495,174 L265,174 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="286" y="123">S2-XxxxxXxXxxxxxxx</text>
+<text font-family="Arial" font-size="12" x="284" y="141">xxxxx xxxxxxxxxx xxxxxx xx xxx</text>
+<text font-family="Arial" font-size="12" x="282" y="154">xxxxxxxx xxxx xxxxx xxxx xx xxxxxxxx</text>
+<text font-family="Arial" font-size="12" x="280" y="167">xxxxx.</text>
 </g>
 <g class="gsn_module_tests_issue365_yaml gsnelem gsnstgy" id="node_s2_xxxxxxxxxxxxxxxxxxxxxx">
 <title>S2-XxxxxXxxxxxxXxXxxxxxxx</title>
-<path class="border" d="M1015,104 L1249,104 L1235,174 L1001,174 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="1023" y="123">S2-XxxxxXxxxxxxXxXxxxxxxx</text>
-<text font-family="Arial" font-size="12" x="1021" y="141">xxxxx xx xxxxxxx xxxxxxxxxx xxx</text>
-<text font-family="Arial" font-size="12" x="1019" y="154">xxxxxx xxxxxx xx xxxxxxxx xxxx xxxxx</text>
-<text font-family="Arial" font-size="12" x="1017" y="167">xxxx xx xxxxxxxx xxxxx.</text>
+<path class="border" d="M967,104 L1197,104 L1183,174 L953,174 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="974" y="123">S2-XxxxxXxxxxxxXxXxxxxxxx</text>
+<text font-family="Arial" font-size="12" x="972" y="141">xxxxx xx xxxxxxx xxxxxxxxxx xxx</text>
+<text font-family="Arial" font-size="12" x="970" y="154">xxxxxx xxxxxx xx xxxxxxxx xxxx xxxxx</text>
+<text font-family="Arial" font-size="12" x="968" y="167">xxxx xx xxxxxxxx xxxxx.</text>
 </g>
 <g class="gsn_module_tests_issue365_yaml gsnelem gsngoal" id="node_g3_xxxxxxxxxxxxxxxxxxxxxxxx">
 <title>G3-XxxXxxxXxxxxxxxXxxxxxxxx</title>
-<path class="border" d="M20,214 L254,214 L254,310 L20,310 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<path class="border" d="M20,214 L236,214 L236,310 L20,310 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="27" y="233">G3-XxxXxxxXxxxxxxxXxxxxxxxx</text>
 <text font-family="Arial" font-size="12" x="27" y="251">xxx_xxxxxxxxxxxx xx xxxxxxxxx xxx</text>
 <text font-family="Arial" font-size="12" x="27" y="264">xxxxxxxxxx. xxxx xxxxxxxx xx xxxxxxx</text>
@@ -39,53 +39,53 @@
 </g>
 <g class="gsn_module_tests_issue365_yaml gsnelem gsngoal" id="node_g3_xxxxxxxxxxxxx">
 <title>G3-XxxXxxxxxXxxx</title>
-<path class="border" d="M294,220 L528,220 L528,304 L294,304 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="301" y="239">G3-XxxXxxxxxXxxx</text>
-<text font-family="Arial" font-size="12" x="301" y="257">xxxxx xxxx xx xxx xxxxxx xxx xxx</text>
-<text font-family="Arial" font-size="12" x="301" y="270">xxxxxx xxxx xxx xx xxxx xx xxx</text>
-<text font-family="Arial" font-size="12" x="301" y="283">xxx_xxxxxxxxxxxx xxxxx xx xxxxxxx xx</text>
-<text font-family="Arial" font-size="12" x="301" y="296">xxxxxx xxxxxxxxxxxxx.</text>
+<path class="border" d="M276,220 L496,220 L496,304 L276,304 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="283" y="239">G3-XxxXxxxxxXxxx</text>
+<text font-family="Arial" font-size="12" x="283" y="257">xxxxx xxxx xx xxx xxxxxx xxx xxx</text>
+<text font-family="Arial" font-size="12" x="283" y="270">xxxxxx xxxx xxx xx xxxx xx xxx</text>
+<text font-family="Arial" font-size="12" x="283" y="283">xxx_xxxxxxxxxxxx xxxxx xx xxxxxxx xx</text>
+<text font-family="Arial" font-size="12" x="283" y="296">xxxxxx xxxxxxxxxxxxx.</text>
 </g>
 <g class="gsn_module_tests_issue365_yaml gsnelem gsngoal" id="node_g3_xxxxxxxxxxxxxxxxxxxxxxxxxxx">
 <title>G3-XxxXxxxxxxxXxxxXxxxxxxxXxxx</title>
-<path class="border" d="M568,227 L802,227 L802,297 L568,297 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="575" y="246">G3-XxxXxxxxxxxXxxxXxxxxxxxXxxx</text>
-<text font-family="Arial" font-size="12" x="575" y="264">xxx xxxxxx xx xxxxxxxxxx xx x xxx</text>
-<text font-family="Arial" font-size="12" x="575" y="277">xxxx xx xxxx xxxxxxxxx xxx xxxxxx xx</text>
-<text font-family="Arial" font-size="12" x="575" y="290">xxx_xxxxxxxxxxxx.</text>
+<path class="border" d="M536,227 L756,227 L756,297 L536,297 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="543" y="246">G3-XxxXxxxxxxxXxxxXxxxxxxxXxxx</text>
+<text font-family="Arial" font-size="12" x="543" y="264">xxx xxxxxx xx xxxxxxxxxx xx x xxx</text>
+<text font-family="Arial" font-size="12" x="543" y="277">xxxx xx xxxx xxxxxxxxx xxx xxxxxx xx</text>
+<text font-family="Arial" font-size="12" x="543" y="290">xxx_xxxxxxxxxxxx.</text>
 </g>
 <g class="gsn_module_tests_issue365_yaml gsnelem gsngoal gsn_undeveloped" id="node_g3_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx">
 <title>G3-XxxxxXxxxxxxXxxxxxXxxxxxxxXxxxxx</title>
-<path class="border" d="M842,224 L1100,224 L1100,300 L842,300 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="849" y="243">G3-XxxxxXxxxxxxXxxxxxXxxxxxxxXxxxxx</text>
-<text font-family="Arial" font-size="12" x="849" y="261">xxxxx xx xxxxxxx xxxxxx xxxxxx xx</text>
-<text font-family="Arial" font-size="12" x="849" y="274">xxxxxxxx xxxx xxxxx xxxx xx xxxxxxxx</text>
-<text font-family="Arial" font-size="12" x="849" y="287">xxxxx.</text>
-<path d="M971,300 l5,5 l-5,5 l-5,-5 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<path class="border" d="M796,224 L1050,224 L1050,300 L796,300 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="803" y="243">G3-XxxxxXxxxxxxXxxxxxXxxxxxxxXxxxxx</text>
+<text font-family="Arial" font-size="12" x="803" y="261">xxxxx xx xxxxxxx xxxxxx xxxxxx xx</text>
+<text font-family="Arial" font-size="12" x="803" y="274">xxxxxxxx xxxx xxxxx xxxx xx xxxxxxxx</text>
+<text font-family="Arial" font-size="12" x="803" y="287">xxxxx.</text>
+<path d="M923,300 l5,5 l-5,5 l-5,-5 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 </g>
 <g class="gsn_module_tests_issue365_yaml gsnelem gsngoal gsn_undeveloped" id="node_g3_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx">
 <title>G3-XxxxxXxxxxxxXxxxxxxxxXxxxxxxxXxxxxx</title>
-<path class="border" d="M1140,224 L1418,224 L1418,300 L1140,300 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="1147" y="243">G3-XxxxxXxxxxxxXxxxxxxxxXxxxxxxxXxxxxx</text>
-<text font-family="Arial" font-size="12" x="1147" y="261">xxxxx xx xxxxxxx xxxxxxxxxx xxxxxx xx</text>
-<text font-family="Arial" font-size="12" x="1147" y="274">xxxxxxxx xxxx xxxxx xxxx xx xxxxxxxx</text>
-<text font-family="Arial" font-size="12" x="1147" y="287">xxxxx.</text>
-<path d="M1279,300 l5,5 l-5,5 l-5,-5 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<path class="border" d="M1090,224 L1364,224 L1364,300 L1090,300 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="1097" y="243">G3-XxxxxXxxxxxxXxxxxxxxxXxxxxxxxXxxxxx</text>
+<text font-family="Arial" font-size="12" x="1097" y="261">xxxxx xx xxxxxxx xxxxxxxxxx xxxxxx xx</text>
+<text font-family="Arial" font-size="12" x="1097" y="274">xxxxxxxx xxxx xxxxx xxxx xx xxxxxxxx</text>
+<text font-family="Arial" font-size="12" x="1097" y="287">xxxxx.</text>
+<path d="M1227,300 l5,5 l-5,5 l-5,-5 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 </g>
 <g class="gsn_module_tests_issue365_yaml gsnelem gsnsltn" id="node_sn1_xxxxxxxxxxxxxxx">
 <title>Sn1-XXXXxxxxxxxxxxx</title>
-<path class="border" d="M328,433 a83,83,0,1,0,166,0 a83,83,0,1,0,-166,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="344" y="425">Sn1-XXXXxxxxxxxxxxx</text>
-<text font-family="Arial" font-size="12" x="344" y="443">xxx xxxxxxxxxxxxx</text>
+<path class="border" d="M306,431 a81,81,0,1,0,162,0 a81,81,0,1,0,-162,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="322" y="423">Sn1-XXXXxxxxxxxxxxx</text>
+<text font-family="Arial" font-size="12" x="322" y="441">xxx xxxxxxxxxxxxx</text>
 </g>
-<path class="gsnedge gsninspby" d="M768,64 C768,94,411,74,411,94" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M768,64 C768,94,1125,74,1125,94" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M137,310 C137,340,411,320,411,340" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M411,304 C411,334,411,320,411,340" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M685,297 C685,327,411,320,411,340" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M411,174 C411,204,137,184,137,204" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M411,174 C411,204,411,190,411,210" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M411,174 C411,204,685,197,685,217" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M1125,174 C1125,204,971,194,971,214" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M1125,174 C1125,204,1279,194,1279,214" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M731,64 C731,94,387,74,387,94" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M731,64 C731,94,1075,74,1075,94" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M128,310 C128,340,387,320,387,340" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M386,304 C386,334,387,320,387,340" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M646,297 C646,327,387,320,387,340" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M387,174 C387,204,128,184,128,204" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M387,174 C387,204,386,190,386,210" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M387,174 C387,204,646,197,646,217" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M1075,174 C1075,204,923,194,923,214" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M1075,174 C1075,204,1227,194,1227,214" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 </svg>

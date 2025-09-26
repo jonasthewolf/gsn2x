@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg class="gsndiagram" viewBox="0 0 212 129" xmlns="http://www.w3.org/2000/svg">
+<svg class="gsndiagram" viewBox="0 0 208 129" xmlns="http://www.w3.org/2000/svg">
 <defs/>
 <a href="https://www.google.com">
 <g class="gsn_layer2 gsn_module_tests_issue407_yaml gsnelem gsngoal gsn_undeveloped" id="node_g1">
 <title>G1</title>
-<path class="border" d="M20,20 L192,20 L192,108 L20,108 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<path class="border" d="M20,20 L188,20 L188,108 L20,108 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="27" y="39">G1</text>
 <text font-family="Arial" font-size="12" x="27" y="57">Test</text>
 <text font-family="Arial" font-size="12" x="27" y="70"></text>
@@ -12,7 +12,7 @@
 <text font-family="Arial" font-size="12" x="27" y="96">
 <a href="https://www.duckduckgo.com">https://www.duckduckgo.com</a>
 </text>
-<path d="M106,108 l5,5 l-5,5 l-5,-5 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<path d="M104,108 l5,5 l-5,5 l-5,-5 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 </g>
 </a>
 </svg>

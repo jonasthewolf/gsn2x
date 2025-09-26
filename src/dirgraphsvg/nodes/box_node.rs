@@ -44,7 +44,9 @@ impl BoxType {
         let mut width = std::cmp::max(min_width, size_context.text_width + 2 * PADDING_HORIZONTAL);
         let mut height = std::cmp::max(min_height, size_context.text_height + 2 * PADDING_VERTICAL);
         match &self {
-            BoxType::Normal(_) => (),
+            BoxType::Normal(skew) => {
+                width += skew;
+            }
             BoxType::Undeveloped(_) => {
                 height += UNDEVELOPED_DIAMOND;
             }
