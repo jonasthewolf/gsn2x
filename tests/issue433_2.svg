@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg class="gsndiagram" viewBox="0 0 650 719" xmlns="http://www.w3.org/2000/svg">
+<svg class="gsndiagram" viewBox="0 0 676 717" xmlns="http://www.w3.org/2000/svg">
 <defs>
 <marker id="supportedby_arrow" markerHeight="9" markerUnits="userSpaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
 <polyline fill="black" points="0 0, 10 4.5, 0 9"/>
@@ -15,21 +15,21 @@
 <a href="issue433_1.svg#node_g00002">
 <g class="gsn_module_mainclaim gsnelem gsnawaygoal" id="node_g00002">
 <title>G00002</title>
-<path class="border" d="M357,71 V20 H457 V71" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="364" y="39">G00002</text>
-<text font-family="Arial" font-size="12" x="364" y="57">Some text</text>
+<path class="border" d="M372,71 V20 H468 V71" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="379" y="39">G00002</text>
+<text font-family="Arial" font-size="12" x="379" y="57">Some text</text>
 <a href="issue433_1.svg#node_g00002">
-<path class="border" d="M357,71 h100 v27 h-100 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="391" y="91">MainClaim</text>
+<path class="border" d="M372,71 h97 v27 h-97 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="406" y="91">MainClaim</text>
 </a>
-<use href="#module_icon" x="364" y="78"/>
+<use href="#module_icon" x="379" y="78"/>
 </g>
 </a>
 <g class="gsn_module_claimhazard gsnelem gsngoal" id="node_g00003">
 <title>G00003</title>
-<path class="border" d="M355,138 L459,138 L459,182 L355,182 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="362" y="157">G00003</text>
-<text font-family="Arial" font-size="12" x="362" y="175">Some text</text>
+<path class="border" d="M368,138 L472,138 L472,182 L368,182 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="375" y="157">G00003</text>
+<text font-family="Arial" font-size="12" x="375" y="175">Some text</text>
 </g>
 <g class="gsn_module_claimhazard gsnelem gsnctxt" id="node_c00003">
 <title>C00003</title>
@@ -39,56 +39,56 @@
 </g>
 <g class="gsn_module_claimhazard gsnelem gsnstgy" id="node_s00003">
 <title>S00003</title>
-<path class="border" d="M191,284 L325,284 L311,328 L177,328 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="199" y="303">S00003</text>
-<text font-family="Arial" font-size="12" x="195" y="321">Some text</text>
+<path class="border" d="M191,284 L339,284 L325,328 L177,328 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="198" y="303">S00003</text>
+<text font-family="Arial" font-size="12" x="194" y="321">Some text</text>
 </g>
 <g class="gsn_module_claimhazard gsnelem gsnasmp" id="node_a00003">
 <title>A00003</title>
-<path class="border" d="M358,254 a49,32,0,1,0,99,0 a49,32,0,1,0,-99,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="379" y="246">A00003</text>
-<text font-family="Arial" font-size="12" x="379" y="264">Some text</text>
-<text font-family="Arial" font-size="12" font-weight="bold" x="451" y="281">A</text>
+<path class="border" d="M372,254 a48,32,0,1,0,96,0 a48,32,0,1,0,-96,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="393" y="246">A00003</text>
+<text font-family="Arial" font-size="12" x="393" y="264">Some text</text>
+<text font-family="Arial" font-size="12" font-weight="bold" x="463" y="281">A</text>
 </g>
 <g class="gsn_module_claimhazard gsnelem gsnjust" id="node_j00003">
 <title>J00003</title>
-<path class="border" d="M358,358 a49,32,0,1,0,99,0 a49,32,0,1,0,-99,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="379" y="350">J00003</text>
-<text font-family="Arial" font-size="12" x="379" y="368">Some text</text>
-<text font-family="Arial" font-size="12" font-weight="bold" x="451" y="385">J</text>
+<path class="border" d="M372,358 a48,32,0,1,0,96,0 a48,32,0,1,0,-96,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="393" y="350">J00003</text>
+<text font-family="Arial" font-size="12" x="393" y="368">Some text</text>
+<text font-family="Arial" font-size="12" font-weight="bold" x="463" y="385">J</text>
 </g>
 <g class="gsn_module_claimhazard gsnelem gsnstgy" id="node_s00004">
 <title>S00004</title>
-<path class="border" d="M503,284 L637,284 L623,328 L489,328 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="511" y="303">S00004</text>
-<text font-family="Arial" font-size="12" x="507" y="321">Some text</text>
+<path class="border" d="M515,284 L663,284 L649,328 L501,328 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="522" y="303">S00004</text>
+<text font-family="Arial" font-size="12" x="518" y="321">Some text</text>
 </g>
 <g class="gsn_module_claimhazard gsnelem gsngoal" id="node_g00004">
 <title>G00004</title>
-<path class="border" d="M511,430 L615,430 L615,474 L511,474 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="518" y="449">G00004</text>
-<text font-family="Arial" font-size="12" x="518" y="467">Some text</text>
+<path class="border" d="M530,430 L634,430 L634,474 L530,474 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="537" y="449">G00004</text>
+<text font-family="Arial" font-size="12" x="537" y="467">Some text</text>
 </g>
 <g class="gsn_module_claimhazard gsnelem gsnstgy" id="node_s00005">
 <title>S00005</title>
-<path class="border" d="M518,514 L622,514 L608,564 L504,564 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="518" y="533">S00005</text>
-<text font-family="Arial" font-size="12" x="518" y="551">Some text</text>
-<path d="M563,564 l5,5 l-5,5 l-5,-5 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<path class="border" d="M537,514 L641,514 L627,564 L523,564 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="537" y="533">S00005</text>
+<text font-family="Arial" font-size="12" x="537" y="551">Some text</text>
+<path d="M582,564 l5,5 l-5,5 l-5,-5 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 </g>
 <g class="gsn_module_claimhazard gsnelem gsnsltn" id="node_sn00002">
 <title>Sn00002</title>
-<path class="border" d="M205,650 a46,46,0,1,0,92,0 a46,46,0,1,0,-92,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="223" y="642">Sn00002</text>
-<text font-family="Arial" font-size="12" x="223" y="660">Some text</text>
+<path class="border" d="M213,649 a45,45,0,1,0,90,0 a45,45,0,1,0,-90,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="231" y="641">Sn00002</text>
+<text font-family="Arial" font-size="12" x="231" y="659">Some text</text>
 </g>
-<path class="gsnedge gsninspby" d="M407,98 C407,128,407,108,407,128" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M407,182 C407,212,251,254,251,274" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M407,182 C407,212,563,254,563,274" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M563,474 C563,504,563,484,563,504" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninctxt" d="M318,306 C348,306,328,254,348,254" fill-opacity="0" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M420,98 C420,128,420,108,420,128" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M420,182 C420,212,258,254,258,274" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M420,182 C420,212,582,254,582,274" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M582,474 C582,504,582,484,582,504" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M332,306 C362,306,342,254,362,254" fill-opacity="0" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsninctxt" d="M184,306 C154,306,174,306,154,306" fill-opacity="0" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninctxt" d="M318,306 C348,306,328,358,348,358" fill-opacity="0" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M251,328 C251,358,251,574,251,594" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M563,328 C563,358,563,400,563,420" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M332,306 C362,306,342,358,362,358" fill-opacity="0" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M258,328 C258,358,258,574,258,594" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M582,328 C582,358,582,400,582,420" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 </svg>

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg class="gsndiagram" viewBox="0 0 206 259" xmlns="http://www.w3.org/2000/svg">
+<svg class="gsndiagram" viewBox="0 0 196 259" xmlns="http://www.w3.org/2000/svg">
 <defs/>
 <g class="gsn_layer1 gsn_layer2 gsn_module_tests_issue358_yaml gsnelem gsngoal gsn_undeveloped" id="node_g1">
 <title>G1</title>
-<path class="border" d="M20,20 L186,20 L186,238 L20,238 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<path class="border" d="M20,20 L176,20 L176,238 L20,238 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="27" y="39">G1</text>
 <text font-family="Arial" font-size="12" x="27" y="57">askjfaklsjf</text>
 <text font-family="Arial" font-size="12" x="27" y="70"></text>
@@ -19,6 +19,6 @@
 <text font-family="Arial" font-size="12" x="27" y="200"></text>
 <text font-family="Arial" font-size="12" x="27" y="213">LAYER2:</text>
 <text font-family="Arial" font-size="12" x="27" y="226">another liine</text>
-<path d="M103,238 l5,5 l-5,5 l-5,-5 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<path d="M98,238 l5,5 l-5,5 l-5,-5 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 </g>
 </svg>

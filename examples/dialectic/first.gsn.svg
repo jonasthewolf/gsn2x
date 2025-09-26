@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg class="gsndiagram" viewBox="0 0 1213 735" xmlns="http://www.w3.org/2000/svg">
+<svg class="gsndiagram" viewBox="0 0 1204 727" xmlns="http://www.w3.org/2000/svg">
 <defs>
 <marker id="supportedby_arrow" markerHeight="9" markerUnits="userSpaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
 <polyline fill="black" points="0 0, 10 4.5, 0 9"/>
@@ -16,167 +16,167 @@
 </defs>
 <g class="gsn_module_examples_dialectic_first_gsn_yaml gsnelem gsngoal" id="node_g1">
 <title>G1</title>
-<path class="border" d="M549,20 L653,20 L653,64 L549,64 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="556" y="39">G1</text>
+<path class="border" d="M540,20 L644,20 L644,64 L540,64 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="547" y="39">G1</text>
 </g>
 <g class="gsn_module_examples_dialectic_first_gsn_yaml gsnelem gsnctxt" id="node_c1">
 <title>C1</title>
-<path class="border" d="M703,20 L807,20 C817,20,817,64,807,64 L703,64 C693,64,693,20,703,20" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="710" y="39">C1</text>
+<path class="border" d="M694,20 L798,20 C808,20,808,64,798,64 L694,64 C684,64,684,20,694,20" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="701" y="39">C1</text>
 </g>
 <g class="gsn_module_examples_dialectic_first_gsn_yaml gsnelem gsnstgy" id="node_s1">
 <title>S1</title>
-<path class="border" d="M541,104 L675,104 L661,148 L527,148 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="549" y="123">S1</text>
+<path class="border" d="M525,104 L673,104 L659,148 L511,148 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="532" y="123">S1</text>
 </g>
 <g class="gsn_module_examples_dialectic_first_gsn_yaml gsnelem gsncountergoal" id="node_cg1">
 <title>CG1</title>
-<path class="border" d="M39,188 L163,188 L163,232 L39,232 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="46" y="207">CG1</text>
-<text font-family="Arial" font-size="12" x="46" y="225">A counter argument</text>
+<path class="border" d="M37,188 L155,188 L155,232 L37,232 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="44" y="207">CG1</text>
+<text font-family="Arial" font-size="12" x="44" y="225">A counter argument</text>
 </g>
 <g class="gsn_module_examples_dialectic_first_gsn_yaml gsnelem gsndefeated gsngoal" id="node_g2">
 <title>G2</title>
-<path class="border" d="M203,188 L309,188 L309,232 L203,232 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="210" y="207">G2</text>
-<text font-family="Arial" font-size="12" x="210" y="225">A defeated goal</text>
-<line stroke="black" x1="198" x2="314" y1="183" y2="237"/>
-<line stroke="black" x1="314" x2="198" y1="183" y2="237"/>
+<path class="border" d="M195,188 L299,188 L299,232 L195,232 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="202" y="207">G2</text>
+<text font-family="Arial" font-size="12" x="202" y="225">A defeated goal</text>
+<line stroke="black" x1="190" x2="304" y1="183" y2="237"/>
+<line stroke="black" x1="304" x2="190" y1="183" y2="237"/>
 </g>
 <g class="gsn_module_examples_dialectic_first_gsn_yaml gsnelem gsngoal" id="node_g3">
 <title>G3</title>
-<path class="border" d="M584,188 L688,188 L688,232 L584,232 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="591" y="207">G3</text>
+<path class="border" d="M575,188 L679,188 L679,232 L575,232 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="582" y="207">G3</text>
 </g>
 <g class="gsn_module_examples_dialectic_first_gsn_yaml gsnelem gsngoal" id="node_g4">
 <title>G4</title>
-<path class="border" d="M894,188 L998,188 L998,232 L894,232 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="901" y="207">G4</text>
+<path class="border" d="M885,188 L989,188 L989,232 L885,232 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="892" y="207">G4</text>
 </g>
 <g class="gsn_module_examples_dialectic_first_gsn_yaml gsnelem gsncountergoal" id="node_cg2">
 <title>CG2</title>
-<path class="border" d="M20,301 L182,301 L182,345 L20,345 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<path class="border" d="M20,301 L172,301 L172,345 L20,345 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 <text font-family="Arial" font-size="12" font-weight="bold" x="27" y="320">CG2</text>
 <text font-family="Arial" font-size="12" x="27" y="338">Another counter argument</text>
 </g>
 <g class="gsn_module_examples_dialectic_first_gsn_yaml gsnelem gsnsltn" id="node_sn1">
 <title>Sn1</title>
-<path class="border" d="M229,323 a27,27,0,1,0,54,0 a27,27,0,1,0,-54,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="246" y="321">Sn1</text>
+<path class="border" d="M220,323 a27,27,0,1,0,54,0 a27,27,0,1,0,-54,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="237" y="321">Sn1</text>
 </g>
 <g class="gsn_module_examples_dialectic_first_gsn_yaml gsnelem gsncountersltn" id="node_csn2">
 <title>CSn2</title>
-<path class="border" d="M323,323 a51,51,0,1,0,102,0 a51,51,0,1,0,-102,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="349" y="302">CSn2</text>
-<text font-family="Arial" font-size="12" x="349" y="320">Another </text>
-<text font-family="Arial" font-size="12" x="349" y="333">counter </text>
-<text font-family="Arial" font-size="12" x="349" y="346">evidence</text>
+<path class="border" d="M314,323 a51,51,0,1,0,102,0 a51,51,0,1,0,-102,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="341" y="302">CSn2</text>
+<text font-family="Arial" font-size="12" x="341" y="320">Another </text>
+<text font-family="Arial" font-size="12" x="341" y="333">counter </text>
+<text font-family="Arial" font-size="12" x="341" y="346">evidence</text>
 </g>
 <g class="gsn_module_examples_dialectic_first_gsn_yaml gsnelem gsndefeated gsngoal" id="node_g5">
 <title>G5</title>
-<path class="border" d="M465,301 L569,301 L569,345 L465,345 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="472" y="320">G5</text>
-<line stroke="black" x1="460" x2="574" y1="296" y2="350"/>
-<line stroke="black" x1="574" x2="460" y1="296" y2="350"/>
+<path class="border" d="M456,301 L560,301 L560,345 L456,345 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="463" y="320">G5</text>
+<line stroke="black" x1="451" x2="565" y1="296" y2="350"/>
+<line stroke="black" x1="565" x2="451" y1="296" y2="350"/>
 </g>
 <g class="gsn_module_examples_dialectic_first_gsn_yaml gsnelem gsngoal" id="node_g6">
 <title>G6</title>
-<path class="border" d="M703,301 L807,301 L807,345 L703,345 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="710" y="320">G6</text>
+<path class="border" d="M694,301 L798,301 L798,345 L694,345 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="701" y="320">G6</text>
 </g>
 <g class="gsn_module_examples_dialectic_first_gsn_yaml gsnelem gsndefeated gsnstgy" id="node_s2">
 <title>S2</title>
-<path class="border" d="M886,301 L1020,301 L1006,345 L872,345 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="894" y="320">S2</text>
-<line stroke="black" x1="874" x2="1018" y1="296" y2="350"/>
-<line stroke="black" x1="1018" x2="874" y1="296" y2="350"/>
+<path class="border" d="M870,301 L1018,301 L1004,345 L856,345 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="877" y="320">S2</text>
+<line stroke="black" x1="858" x2="1016" y1="296" y2="350"/>
+<line stroke="black" x1="1016" x2="858" y1="296" y2="350"/>
 </g>
 <g class="gsn_module_examples_dialectic_first_gsn_yaml gsnelem gsncountergoal" id="node_cg4">
 <title>CG4</title>
-<path class="border" d="M1089,301 L1193,301 L1193,345 L1089,345 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="1096" y="320">CG4</text>
+<path class="border" d="M1080,301 L1184,301 L1184,345 L1080,345 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="1087" y="320">CG4</text>
 </g>
 <g class="gsn_module_examples_dialectic_first_gsn_yaml gsnelem gsncountersltn" id="node_csn1">
 <title>CSn1</title>
-<path class="border" d="M49,466 a52,52,0,1,0,104,0 a52,52,0,1,0,-104,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="70" y="451">CSn1</text>
-<text font-family="Arial" font-size="12" x="70" y="469">A counter </text>
-<text font-family="Arial" font-size="12" x="70" y="482">evidence</text>
+<path class="border" d="M48,462 a48,48,0,1,0,96,0 a48,48,0,1,0,-96,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="69" y="447">CSn1</text>
+<text font-family="Arial" font-size="12" x="69" y="465">A counter </text>
+<text font-family="Arial" font-size="12" x="69" y="478">evidence</text>
 </g>
 <g class="gsn_module_examples_dialectic_first_gsn_yaml gsnelem gsnsltn" id="node_sn2">
 <title>Sn2</title>
-<path class="border" d="M490,466 a27,27,0,1,0,54,0 a27,27,0,1,0,-54,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="507" y="464">Sn2</text>
+<path class="border" d="M481,462 a27,27,0,1,0,54,0 a27,27,0,1,0,-54,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="498" y="460">Sn2</text>
 </g>
 <g class="gsn_module_examples_dialectic_first_gsn_yaml gsnelem gsncountergoal" id="node_cg3">
 <title>CG3</title>
-<path class="border" d="M584,444 L688,444 L688,488 L584,488 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="591" y="463">CG3</text>
+<path class="border" d="M575,440 L679,440 L679,484 L575,484 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="582" y="459">CG3</text>
 </g>
 <g class="gsn_module_examples_dialectic_first_gsn_yaml gsnelem gsndefeated gsnsltn" id="node_sn3">
 <title>Sn3</title>
-<path class="border" d="M728,466 a27,27,0,1,0,54,0 a27,27,0,1,0,-54,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="745" y="464">Sn3</text>
-<line stroke="black" x1="723" x2="787" y1="434" y2="498"/>
-<line stroke="black" x1="787" x2="723" y1="434" y2="498"/>
+<path class="border" d="M719,462 a27,27,0,1,0,54,0 a27,27,0,1,0,-54,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="736" y="460">Sn3</text>
+<line stroke="black" x1="714" x2="778" y1="430" y2="494"/>
+<line stroke="black" x1="778" x2="714" y1="430" y2="494"/>
 </g>
 <g class="gsn_module_examples_dialectic_first_gsn_yaml gsnelem gsngoal" id="node_g7">
 <title>G7</title>
-<path class="border" d="M822,444 L926,444 L926,488 L822,488 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="829" y="463">G7</text>
+<path class="border" d="M813,440 L917,440 L917,484 L813,484 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="820" y="459">G7</text>
 </g>
 <g class="gsn_module_examples_dialectic_first_gsn_yaml gsnelem gsngoal" id="node_g8">
 <title>G8</title>
-<path class="border" d="M966,444 L1070,444 L1070,488 L966,488 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="973" y="463">G8</text>
+<path class="border" d="M957,440 L1061,440 L1061,484 L957,484 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="964" y="459">G8</text>
 </g>
 <g class="gsn_module_examples_dialectic_first_gsn_yaml gsnelem gsncountersltn" id="node_csn4">
 <title>CSn4</title>
-<path class="border" d="M1110,466 a31,31,0,1,0,62,0 a31,31,0,1,0,-62,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="1126" y="464">CSn4</text>
+<path class="border" d="M1101,462 a31,31,0,1,0,62,0 a31,31,0,1,0,-62,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="1117" y="460">CSn4</text>
 </g>
 <g class="gsn_module_examples_dialectic_first_gsn_yaml gsnelem gsncountersltn" id="node_csn3">
 <title>CSn3</title>
-<path class="border" d="M605,589 a31,31,0,1,0,62,0 a31,31,0,1,0,-62,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="621" y="587">CSn3</text>
+<path class="border" d="M596,581 a31,31,0,1,0,62,0 a31,31,0,1,0,-62,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="612" y="579">CSn3</text>
 </g>
 <g class="gsn_module_examples_dialectic_first_gsn_yaml gsnelem gsngoal" id="node_g9">
 <title>G9</title>
-<path class="border" d="M822,567 L926,567 L926,611 L822,611 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="829" y="586">G9</text>
+<path class="border" d="M813,559 L917,559 L917,603 L813,603 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="820" y="578">G9</text>
 </g>
 <g class="gsn_module_examples_dialectic_first_gsn_yaml gsnelem gsnsltn" id="node_sn5">
 <title>Sn5</title>
-<path class="border" d="M991,589 a27,27,0,1,0,54,0 a27,27,0,1,0,-54,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="1008" y="587">Sn5</text>
+<path class="border" d="M982,581 a27,27,0,1,0,54,0 a27,27,0,1,0,-54,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="999" y="579">Sn5</text>
 </g>
 <g class="gsn_module_examples_dialectic_first_gsn_yaml gsnelem gsnsltn" id="node_sn4">
 <title>Sn4</title>
-<path class="border" d="M847,687 a27,27,0,1,0,54,0 a27,27,0,1,0,-54,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="864" y="685">Sn4</text>
+<path class="border" d="M838,679 a27,27,0,1,0,54,0 a27,27,0,1,0,-54,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Arial" font-size="12" font-weight="bold" x="855" y="677">Sn4</text>
 </g>
-<path class="gsnedge gsninspby" d="M101,232 C101,262,101,271,101,291" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsnchllngs" d="M163,210 C193,210,173,210,193,210" fill-opacity="0" marker-end="url(#challenges_arrow)" stroke="black" stroke-dasharray="5 5" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M101,345 C101,375,101,384,101,404" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M636,488 C636,518,636,528,636,548" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsnchllngs" d="M688,466 C718,466,698,466,718,466" fill-opacity="0" marker-end="url(#challenges_arrow)" stroke="black" stroke-dasharray="5 5" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M1141,345 C1141,375,1141,405,1141,425" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsnchllngs" d="M1089,323 C1059,323,1043,323,1023,323" fill-opacity="0" marker-end="url(#challenges_arrow)" stroke="black" stroke-dasharray="5 5" stroke-width="1"/>
-<path class="gsnedge gsnchllngs" d="M425,323 C455,323,435,323,455,323" fill-opacity="0" marker-end="url(#challenges_arrow)" stroke="black" stroke-dasharray="5 5" stroke-width="1"/>
-<path class="gsnedge gsninctxt" d="M653,42 C683,42,663,42,683,42" fill-opacity="0" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M601,64 C601,94,601,74,601,94" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M256,232 C256,262,256,266,256,286" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M636,232 C636,262,517,271,517,291" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M636,232 C636,262,755,271,755,291" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M946,232 C946,262,946,271,946,291" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M517,345 C517,375,517,409,517,429" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M755,345 C755,375,755,409,755,429" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M874,488 C874,518,874,537,874,557" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M1018,488 C1018,518,1018,532,1018,552" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M874,611 C874,641,874,630,874,650" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M601,148 C601,178,256,158,256,178" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M601,148 C601,178,636,158,636,178" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M601,148 C601,178,946,158,946,178" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M946,345 C946,375,874,414,874,434" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M946,345 C946,375,1018,414,1018,434" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M96,232 C96,262,96,271,96,291" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsnchllngs" d="M155,210 C185,210,165,210,185,210" fill-opacity="0" marker-end="url(#challenges_arrow)" stroke="black" stroke-dasharray="5 5" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M96,345 C96,375,96,384,96,404" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M627,484 C627,514,627,520,627,540" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsnchllngs" d="M679,462 C709,462,689,462,709,462" fill-opacity="0" marker-end="url(#challenges_arrow)" stroke="black" stroke-dasharray="5 5" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M1132,345 C1132,375,1132,401,1132,421" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsnchllngs" d="M1080,323 C1050,323,1041,323,1021,323" fill-opacity="0" marker-end="url(#challenges_arrow)" stroke="black" stroke-dasharray="5 5" stroke-width="1"/>
+<path class="gsnedge gsnchllngs" d="M416,323 C446,323,426,323,446,323" fill-opacity="0" marker-end="url(#challenges_arrow)" stroke="black" stroke-dasharray="5 5" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M644,42 C674,42,654,42,674,42" fill-opacity="0" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M592,64 C592,94,592,74,592,94" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M247,232 C247,262,247,266,247,286" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M627,232 C627,262,508,271,508,291" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M627,232 C627,262,746,271,746,291" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M937,232 C937,262,937,271,937,291" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M508,345 C508,375,508,405,508,425" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M746,345 C746,375,746,405,746,425" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M865,484 C865,514,865,529,865,549" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M1009,484 C1009,514,1009,524,1009,544" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M865,603 C865,633,865,622,865,642" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M592,148 C592,178,247,158,247,178" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M592,148 C592,178,627,158,627,178" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M592,148 C592,178,937,158,937,178" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M937,345 C937,375,865,410,865,430" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M937,345 C937,375,1009,410,1009,430" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 </svg>

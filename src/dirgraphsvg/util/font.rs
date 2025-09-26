@@ -1,27 +1,29 @@
 use super::markdown::Text;
 
+mod arial;
+mod arial_bold;
+
+pub trait Font {
+    fn get_advance(c: char) -> f64;
+
+    fn get_line_height() -> f64;
+
+    // fn is_bold() -> bool;
+
+    fn get_name() -> &'static str;
+}
+
 ///
 /// Default font family names and parameters on different operating systems
 ///
 #[cfg(any(target_os = "windows", target_os = "macos"))]
-mod font_constants {
-    pub const FONT_FAMILY_NAME: &str = "Arial";
-    pub const FONT_AVERAGE_ADVANCE_NORMAL_UPPER: f64 = 1459.655172413793 / 2048.0;
-    pub const FONT_AVERAGE_ADVANCE_NORMAL_LOWER: f64 = 1043.8398791540785 / 2048.0;
-    pub const FONT_AVERAGE_ADVANCE_BOLD_UPPER: f64 = 1490.2364532019703 / 2048.0;
-    pub const FONT_AVERAGE_ADVANCE_BOLD_LOWER: f64 = 1133.2326283987916 / 2048.0;
-    pub const FONT_HEIGHT: f64 = 1.14990234;
-}
-
-#[cfg(not(any(target_os = "windows", target_os = "macos")))]
-mod font_constants {
-    pub const FONT_FAMILY_NAME: &str = "DejaVuSans";
-    pub const FONT_AVERAGE_ADVANCE_NORMAL_UPPER: f64 = 1499.2061611374409 / 2048.0;
-    pub const FONT_AVERAGE_ADVANCE_NORMAL_LOWER: f64 = 1213.687651331719 / 2048.0;
-    pub const FONT_AVERAGE_ADVANCE_BOLD_UPPER: f64 = 1660.7261219792865 / 2048.0;
-    pub const FONT_AVERAGE_ADVANCE_BOLD_LOWER: f64 = 1352.9566929133857 / 2048.0;
-    pub const FONT_HEIGHT: f64 = 1.1640625;
-}
+type NormalFont = arial::Arial;
+#[cfg(any(target_os = "windows", target_os = "macos"))]
+type BoldFont = arial_bold::Arial;
+// #[cfg(not(any(target_os = "windows", target_os = "macos")))]
+// type NormalFont = dejavusans::DejavuSans;
+// #[cfg(any(target_os = "windows", target_os = "macos"))]
+// type BoldFont = dejavusans_bold::DejavuSans;
 
 ///
 /// All we need to know about a font
@@ -37,7 +39,7 @@ pub struct FontInfo {
 impl Default for FontInfo {
     fn default() -> Self {
         FontInfo {
-            name: font_constants::FONT_FAMILY_NAME.to_owned(),
+            name: NormalFont::get_name().to_owned(),
             size: 12.0,
         }
     }
@@ -62,28 +64,23 @@ pub fn text_line_bounding_box(font_info: &FontInfo, text: &[Text], bold: bool) -
 /// If the line is empty, font_info.size is returned as height
 ///
 pub fn str_line_bounding_box(font_info: &FontInfo, text: &str, bold: bool) -> (i32, i32) {
-    let uppercase_chars = text.chars().filter(|c| c.is_uppercase()).count() as i32;
-    let other_chars = std::cmp::max(text.chars().count() as i32 - uppercase_chars, 0);
-    let lower_advance = font_info.size
-        * if bold {
-            font_constants::FONT_AVERAGE_ADVANCE_BOLD_LOWER
-        } else {
-            font_constants::FONT_AVERAGE_ADVANCE_NORMAL_LOWER
-        };
-    let upper_advance = font_info.size
-        * if bold {
-            font_constants::FONT_AVERAGE_ADVANCE_BOLD_UPPER
-        } else {
-            font_constants::FONT_AVERAGE_ADVANCE_NORMAL_UPPER
-        };
     (
-        if text.chars().all(|c| c.is_whitespace()) {
-            0
-        } else {
-            (lower_advance * other_chars as f64) as i32
-                + (upper_advance * uppercase_chars as f64) as i32
-        },
-        (font_info.size * font_constants::FONT_HEIGHT) as i32,
+        text.chars()
+            .map(|c| {
+                font_info.size
+                    * if bold {
+                        BoldFont::get_advance(c)
+                    } else {
+                        NormalFont::get_advance(c)
+                    }
+            })
+            .sum::<f64>() as i32,
+        (font_info.size
+            * if bold {
+                BoldFont::get_line_height()
+            } else {
+                NormalFont::get_line_height()
+            }) as i32,
     )
 }
 
