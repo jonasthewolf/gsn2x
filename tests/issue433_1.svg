@@ -15,56 +15,56 @@
 <g class="gsn_module_mainclaim gsnelem gsngoal" id="node_g00001">
 <title>G00001</title>
 <path class="border" d="M368,20 L472,20 L472,64 L368,64 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="375" y="39">G00001</text>
-<text font-family="Arial" font-size="12" x="375" y="57">Some text</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="375" y="40">G00001</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="375" y="58">Some text</text>
 </g>
 <g class="gsn_module_mainclaim gsnelem gsnctxt" id="node_c00001">
 <title>C00001</title>
 <path class="border" d="M30,166 L134,166 C144,166,144,210,134,210 L30,210 C20,210,20,166,30,166" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="37" y="185">C00001</text>
-<text font-family="Arial" font-size="12" x="37" y="203">Some text</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="37" y="186">C00001</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="37" y="204">Some text</text>
 </g>
 <g class="gsn_module_mainclaim gsnelem gsnstgy" id="node_s00001">
 <title>S00001</title>
 <path class="border" d="M191,166 L339,166 L325,210 L177,210 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="198" y="185">S00001</text>
-<text font-family="Arial" font-size="12" x="194" y="203">Some text</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="198" y="186">S00001</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="194" y="204">Some text</text>
 </g>
 <g class="gsn_module_mainclaim gsnelem gsnasmp" id="node_a00001">
 <title>A00001</title>
 <path class="border" d="M372,136 a48,32,0,1,0,96,0 a48,32,0,1,0,-96,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="393" y="128">A00001</text>
-<text font-family="Arial" font-size="12" x="393" y="146">Some text</text>
-<text font-family="Arial" font-size="12" font-weight="bold" x="463" y="163">A</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="393" y="128">A00001</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="393" y="146">Some text</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="463" y="163">A</text>
 </g>
 <g class="gsn_module_mainclaim gsnelem gsnjust" id="node_j00001">
 <title>J00001</title>
 <path class="border" d="M372,240 a48,32,0,1,0,96,0 a48,32,0,1,0,-96,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="393" y="232">J00001</text>
-<text font-family="Arial" font-size="12" x="393" y="250">Some text</text>
-<text font-family="Arial" font-size="12" font-weight="bold" x="463" y="267">J</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="393" y="232">J00001</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="393" y="250">Some text</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="463" y="267">J</text>
 </g>
 <g class="gsn_module_mainclaim gsnelem gsnstgy" id="node_s00002">
 <title>S00002</title>
 <path class="border" d="M515,166 L663,166 L649,210 L501,210 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="522" y="185">S00002</text>
-<text font-family="Arial" font-size="12" x="518" y="203">Some text</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="522" y="186">S00002</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="518" y="204">Some text</text>
 </g>
 <g class="gsn_module_mainclaim gsnelem gsngoal" id="node_g00002">
 <title>G00002</title>
 <path class="border" d="M530,312 L634,312 L634,356 L530,356 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="537" y="331">G00002</text>
-<text font-family="Arial" font-size="12" x="537" y="349">Some text</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="537" y="332">G00002</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="537" y="350">Some text</text>
 </g>
 <a href="issue433_2.svg#node_g00003">
 <g class="gsn_module_claimhazard gsnelem gsnawaygoal" id="node_g00003">
 <title>G00003</title>
 <path class="border" d="M527,447 V396 H637 V447" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="534" y="415">G00003</text>
-<text font-family="Arial" font-size="12" x="534" y="433">Some text</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="534" y="416">G00003</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="534" y="434">Some text</text>
 <a href="issue433_2.svg#node_g00003">
 <path class="border" d="M527,447 h110 v27 h-110 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="561" y="467">ClaimHazard</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="561" y="467">ClaimHazard</text>
 </a>
 <use href="#module_icon" x="534" y="454"/>
 </g>
@@ -72,8 +72,8 @@
 <g class="gsn_module_mainclaim gsnelem gsnsltn" id="node_sn00001">
 <title>Sn00001</title>
 <path class="border" d="M213,559 a45,45,0,1,0,90,0 a45,45,0,1,0,-90,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="231" y="551">Sn00001</text>
-<text font-family="Arial" font-size="12" x="231" y="569">Some text</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="231" y="551">Sn00001</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="231" y="569">Some text</text>
 </g>
 <path class="gsnedge gsninspby" d="M420,64 C420,94,258,136,258,156" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsninspby" d="M420,64 C420,94,582,136,582,156" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>

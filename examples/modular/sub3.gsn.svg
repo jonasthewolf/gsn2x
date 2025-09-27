@@ -19,11 +19,11 @@
 <g class="gsn_module_sub1 gsnelem gsnawaygoal" id="node_g3">
 <title>G3</title>
 <path class="border" d="M20,71 V20 H168 V71" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="27" y="39">G3</text>
-<text font-family="Arial" font-size="12" x="27" y="57">Conquer the submodules</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="27" y="40">G3</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="27" y="58">Conquer the submodules</text>
 <a href="sub1.gsn.svg#node_g3">
 <path class="border" d="M20,71 h148 v27 h-148 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="54" y="91">Sub1</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="54" y="91">Sub1</text>
 </a>
 <use href="#module_icon" x="27" y="78"/>
 </g>
@@ -31,14 +31,14 @@
 <g class="gsn_module_sub3 gsnelem gsnctxt" id="node_c2">
 <title>C2</title>
 <path class="border" d="M218,37 L322,37 C332,37,332,81,322,81 L218,81 C208,81,208,37,218,37" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="225" y="56">C2</text>
-<text font-family="Arial" font-size="12" x="225" y="74">Context 2</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="225" y="57">C2</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="225" y="75">Context 2</text>
 </g>
 <g class="gsn_module_sub3 gsnelem gsnsltn" id="node_sn1">
 <title>Sn1</title>
 <path class="border" d="M50,182 a44,44,0,1,0,88,0 a44,44,0,1,0,-88,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="68" y="174">Sn1</text>
-<text font-family="Arial" font-size="12" x="68" y="192">Solution 1</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="68" y="174">Sn1</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="68" y="192">Solution 1</text>
 </g>
 <path class="gsnedge gsninctxt" d="M168,59 C198,59,178,59,198,59" fill-opacity="0" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsninspby" d="M94,98 C94,128,94,108,94,128" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>

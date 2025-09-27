@@ -101,27 +101,10 @@ pub fn compare_lines_with_replace(
 
 pub fn are_struct_similar_svgs(left: &std::ffi::OsStr, right: &std::ffi::OsStr) -> Result<bool> {
     // Order is important.
-    let replaces = vec![
-        (
-            Regex::new(r" gsn_module_\w+").unwrap(),
-            " gsn_module_replaced",
-        ),
-        // (
-        //     Regex::new(r#" (?P<attr>(([rc]?(x|y))|width|height|textLength|viewbox|viewBox))="[\d\s]+""#)
-        //         .unwrap(),
-        //     " $attr=\"\"",
-        // ),
-        (
-            Regex::new(r#" font-family="([0-9A-Za-z-_]|\\.|\\u[0-9a-fA-F]{1,4})+""#).unwrap(),
-            " font-family=\"\"",
-        ),
-        // (Regex::new(r"(-?\d+,-?\d+[, ]?)+").unwrap(), ""),
-        // (
-        //     Regex::new(r#"d="((?P<cmd>[A-Za-z]+)(:?-?\d+(:?,-?\d+)?)? ?(?P<cmd2>z?))+""#)
-        //         .unwrap(),
-        //     "d=\"$cmd$cmd2\"",
-        // ),
-    ];
+    let replaces = vec![(
+        Regex::new(r" gsn_module_\w+").unwrap(),
+        " gsn_module_replaced",
+    )];
 
     compare_lines_with_replace(left, right, Some(replaces))
 }

@@ -8,7 +8,6 @@ use svg::{
 use crate::{
     dirgraph::DirectedGraphNodeType,
     dirgraphsvg::{
-        FontInfo,
         render::{ACP_BOX_SIZE, create_text},
         util::point2d::Point2D,
     },
@@ -161,19 +160,17 @@ impl SvgNode {
     /// Calculate size of the SVG node based on its type.
     ///
     ///
-    pub fn calculate_size(&mut self, font: &FontInfo) {
+    pub fn calculate_size(&mut self) {
         let (min_width, min_height) = match &self.node_type {
             NodeType::Box(x) => x.get_minimum_size(),
             NodeType::Ellipsis(x) => x.get_minimum_size(),
             NodeType::Away(x) => x.get_minimum_size(),
         };
-        let mut size_context = self.calculate_text_size(font);
+        let mut size_context = self.calculate_text_size();
         (size_context.width, size_context.height) = match &self.node_type {
-            NodeType::Box(x) => x.calculate_size(font, min_width, min_height, &mut size_context),
-            NodeType::Ellipsis(x) => {
-                x.calculate_size(font, min_width, min_height, &mut size_context)
-            }
-            NodeType::Away(x) => x.calculate_size(font, min_width, min_height, &mut size_context),
+            NodeType::Box(x) => x.calculate_size(min_width, min_height, &mut size_context),
+            NodeType::Ellipsis(x) => x.calculate_size(min_width, min_height, &mut size_context),
+            NodeType::Away(x) => x.calculate_size(min_width, min_height, &mut size_context),
         };
         // Set minimum size
         self.width = size_context.width;
@@ -185,7 +182,7 @@ impl SvgNode {
                 x.text_height = size_context.text_height;
             }
             NodeType::Away(x) => {
-                (_, x.mod_height) = str_line_bounding_box(font, &x.module, false);
+                (_, x.mod_height) = str_line_bounding_box(&x.module, false);
             }
         }
     }
@@ -197,13 +194,13 @@ impl SvgNode {
     /// Width: Max of Identifier or longest Text line
     ///
     ///
-    fn calculate_text_size(&self, font: &FontInfo) -> SizeContext {
+    fn calculate_text_size(&self) -> SizeContext {
         // First row is identifier, thus treated differently
-        let (head_width, head_height) = str_line_bounding_box(font, &self.identifier, true);
+        let (head_width, head_height) = str_line_bounding_box(&self.identifier, true);
         let mut text_height = head_height + OFFSET_IDENTIFIER;
         let mut text_width = head_width;
         for text_line in self.text.lines() {
-            let (line_width, line_height) = text_line_bounding_box(font, text_line, false);
+            let (line_width, line_height) = text_line_bounding_box(text_line, false);
             text_height += line_height;
             text_width = std::cmp::max(text_width, line_width);
         }
@@ -218,18 +215,18 @@ impl SvgNode {
     ///
     /// Render the nodes (entry point for rendering all SVG node types)
     ///
-    pub fn render(&self, font: &FontInfo, document: &mut Element) {
+    pub fn render(&self, document: &mut Element) {
         let mut g = create_group(&self.identifier, &self.classes);
 
         let border_color = if self.masked { "lightgrey" } else { "black" };
 
         match &self.node_type {
-            NodeType::Box(x) => x.render(self, font, &mut g, border_color),
-            NodeType::Ellipsis(x) => x.render(self, font, &mut g, border_color),
-            NodeType::Away(x) => x.render(self, font, &mut g, border_color),
+            NodeType::Box(x) => x.render(self, &mut g, border_color),
+            NodeType::Ellipsis(x) => x.render(self, &mut g, border_color),
+            NodeType::Away(x) => x.render(self, &mut g, border_color),
         };
 
-        render_acp_box(self, font, &mut g);
+        render_acp_box(self, &mut g);
 
         // Render cross if defeated.
         if self.defeated {
@@ -741,7 +738,7 @@ impl SvgNode {
 /// Render an element ACP box
 ///
 ///
-fn render_acp_box(node: &SvgNode, font: &FontInfo, context: &mut Element) {
+fn render_acp_box(node: &SvgNode, context: &mut Element) {
     if !node.acp.is_empty() {
         context.append(
             Use::new()
@@ -750,12 +747,11 @@ fn render_acp_box(node: &SvgNode, font: &FontInfo, context: &mut Element) {
                 .set("y", node.y + node.height / 2),
         );
         let acp_text = node.acp.join(", ");
-        let acp_y = node.y + node.height / 2 + str_line_bounding_box(font, &acp_text, false).1;
+        let acp_y = node.y + node.height / 2 + str_line_bounding_box(&acp_text, false).1;
         context.append(create_text(
             &acp_text.into(),
             node.x + ACP_BOX_SIZE + PADDING_HORIZONTAL,
             acp_y,
-            font,
             false,
         ));
     }
