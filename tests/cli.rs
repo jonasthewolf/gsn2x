@@ -93,10 +93,7 @@ fn entangled() -> Result<()> {
     cmd.assert().success().stdout(predicate::str::contains(
         "Diagram took too many iterations (6).",
     ));
-    assert!(are_struct_similar_svgs(
-        output_file.as_os_str(),
-        temp.child(OUTPUT_SVG).as_os_str(),
-    )?);
+    output_file.assert(predicate::path::eq_file(temp.child(OUTPUT_SVG).path()));
     temp.close()?;
     Ok(())
 }
@@ -215,10 +212,9 @@ fn arch_view() -> Result<()> {
             "Rendering \"examples.modular.sub3.gsn.svg\": OK\n",
             "Rendering \"examples.modular.architecture.svg\": OK\n",
         ))?);
-    assert!(are_struct_similar_svgs(
-        std::path::Path::new("examples/modular/architecture.svg").as_os_str(),
-        output_file.as_os_str(),
-    )?);
+    output_file.assert(predicate::path::eq_file(std::path::Path::new(
+        "examples/modular/architecture.svg",
+    )));
     temp.close()?;
     Ok(())
 }
@@ -245,18 +241,16 @@ fn multiple_view() -> Result<()> {
             "Rendering \"..examples.modular.sub1.gsn.svg\": OK\n",
             "Rendering \"..examples.modular.sub3.gsn.svg\": OK\n",
         ))?);
-    assert!(are_struct_similar_svgs(
-        std::path::Path::new("examples/modular/index.gsn.svg").as_os_str(),
-        output_file1.as_os_str(),
-    )?);
-    assert!(are_struct_similar_svgs(
-        std::path::Path::new("examples/modular/sub1.gsn.svg").as_os_str(),
-        output_file2.as_os_str(),
-    )?);
-    assert!(are_struct_similar_svgs(
-        std::path::Path::new("examples/modular/sub3.gsn.svg").as_os_str(),
-        output_file3.as_os_str(),
-    )?);
+
+    output_file1.assert(predicate::path::eq_file(std::path::Path::new(
+        "examples/modular/index.gsn.svg",
+    )));
+    output_file2.assert(predicate::path::eq_file(std::path::Path::new(
+        "examples/modular/sub1.gsn.svg",
+    )));
+    output_file3.assert(predicate::path::eq_file(std::path::Path::new(
+        "examples/modular/sub3.gsn.svg",
+    )));
     temp.close()?;
     Ok(())
 }
@@ -276,10 +270,9 @@ fn complete_view() -> Result<()> {
     cmd.assert().success().stdout(predicate::str::is_match(
         "Rendering \"..complete.svg\": OK\n",
     )?);
-    assert!(are_struct_similar_svgs(
-        std::path::Path::new("examples/modular/complete.svg").as_os_str(),
-        output_file.as_os_str(),
-    )?);
+    output_file.assert(predicate::path::eq_file(std::path::Path::new(
+        "examples/modular/complete.svg",
+    )));
     temp.close()?;
     Ok(())
 }
