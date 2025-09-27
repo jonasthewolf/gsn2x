@@ -79,7 +79,7 @@ impl AwayType {
         size_context: &mut SizeContext,
     ) -> (i32, i32) {
         // no wrapping of module names
-        let (mod_width, _) = str_line_bounding_box(&self.module, false);
+        let (mod_width, _) = str_line_bounding_box(&self.module, true);
 
         let width = *[
             min_width,

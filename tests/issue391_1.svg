@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg class="gsndiagram" viewBox="0 0 206 289" xmlns="http://www.w3.org/2000/svg">
+<svg class="gsndiagram" viewBox="0 0 212 289" xmlns="http://www.w3.org/2000/svg">
 <defs>
 <marker id="supportedby_arrow" markerHeight="9" markerUnits="userSpaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
 <polyline fill="black" points="0 0, 10 4.5, 0 9"/>
@@ -11,29 +11,29 @@
 </defs>
 <g class="gsn_module_tests_issue391_1_yaml gsnelem gsngoal" id="node_g0">
 <title>G0</title>
-<path class="border" d="M51,20 L155,20 L155,64 L51,64 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="58" y="40">G0</text>
-<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="58" y="58">G0</text>
+<path class="border" d="M54,20 L158,20 L158,64 L54,64 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="61" y="40">G0</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="61" y="58">G0</text>
 </g>
 <g class="gsn_module_tests_issue391_1_yaml gsnelem gsnstgy" id="node_s1">
 <title>S1</title>
-<path class="border" d="M36,104 L184,104 L170,148 L22,148 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="43" y="124">S1</text>
-<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="39" y="142">S1</text>
+<path class="border" d="M39,104 L187,104 L173,148 L25,148 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="46" y="124">S1</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="42" y="142">S1</text>
 </g>
 <a href="issue391_2.svg#node_g1">
 <g class="gsn_module_tests_issue391_2_yaml gsnelem gsnawaygoal" id="node_g1">
 <title>G1</title>
-<path class="border" d="M20,239 V188 H186 V239" fill-opacity="0" stroke="black" stroke-width="1"/>
+<path class="border" d="M20,239 V188 H192 V239" fill-opacity="0" stroke="black" stroke-width="1"/>
 <text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="27" y="208">G1</text>
 <text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="27" y="226">G1</text>
 <a href="issue391_2.svg#node_g1">
-<path class="border" d="M20,239 h166 v27 h-166 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<path class="border" d="M20,239 h173 v27 h-173 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 <text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="54" y="259">tests_issue391_2_yaml</text>
 </a>
 <use href="#module_icon" x="27" y="246"/>
 </g>
 </a>
-<path class="gsnedge gsninspby" d="M103,64 C103,94,103,74,103,94" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M103,148 C103,178,103,158,103,178" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M106,64 C106,94,106,74,106,94" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M106,148 C106,178,106,158,106,178" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 </svg>
