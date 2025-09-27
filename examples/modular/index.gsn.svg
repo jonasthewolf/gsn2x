@@ -22,7 +22,7 @@
 <text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="69" y="61">A1</text>
 <text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="69" y="79">TestABC</text>
 <a href="sub1.gsn.svg#node_a1">
-<path class="border" d="M62,93 h84 v27 h-84 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<path class="border" d="M62,93 H146 v27 H62 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 <text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="96" y="113">Sub1</text>
 </a>
 <use href="#module_icon" x="69" y="100"/>
@@ -62,7 +62,7 @@
 <text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="337" y="264">G3</text>
 <text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="337" y="282">Conquer the submodules</text>
 <a href="sub1.gsn.svg#node_g3">
-<path class="border" d="M330,295 h148 v27 h-148 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<path class="border" d="M330,295 H478 v27 H330 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 <text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="364" y="315">Sub1</text>
 </a>
 <use href="#module_icon" x="337" y="302"/>

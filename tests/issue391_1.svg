@@ -28,7 +28,7 @@
 <text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="27" y="208">G1</text>
 <text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="27" y="226">G1</text>
 <a href="issue391_2.svg#node_g1">
-<path class="border" d="M20,239 h173 v27 h-173 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<path class="border" d="M20,239 H192 v27 H20 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 <text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="54" y="259">tests_issue391_2_yaml</text>
 </a>
 <use href="#module_icon" x="27" y="246"/>

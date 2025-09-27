@@ -37,7 +37,7 @@
 <text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="473" y="40">G1</text>
 <text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="473" y="58">Main Goal</text>
 <a href="index.gsn.svg#node_g1">
-<path class="border" d="M466,71 h84 v27 h-84 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<path class="border" d="M466,71 H550 v27 H466 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 <text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="500" y="91">Main</text>
 </a>
 <use href="#module_icon" x="473" y="78"/>
@@ -50,7 +50,7 @@
 <text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="27" y="180">J1</text>
 <text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="27" y="198">Some Context</text>
 <a href="index.gsn.svg#node_j1">
-<path class="border" d="M20,211 h90 v27 h-90 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<path class="border" d="M20,211 H110 v27 H20 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 <text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="54" y="231">Main</text>
 </a>
 <use href="#module_icon" x="27" y="218"/>
@@ -70,7 +70,7 @@
 <text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="345" y="173">C2</text>
 <text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="345" y="191">Context 2</text>
 <a href="sub3.gsn.svg#node_c2">
-<path class="border" d="M338,204 h84 v27 h-84 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<path class="border" d="M338,204 H422 v27 H338 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 <text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="372" y="224">Sub3</text>
 </a>
 <use href="#module_icon" x="345" y="211"/>
@@ -83,7 +83,7 @@
 <text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="189" y="340">Sn1</text>
 <text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="189" y="358">Solution 1</text>
 <a href="sub3.gsn.svg#node_sn1">
-<path class="border" d="M182,371 h84 v27 h-84 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<path class="border" d="M182,371 H266 v27 H182 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 <text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="216" y="391">Sub3</text>
 </a>
 <use href="#module_icon" x="189" y="378"/>
