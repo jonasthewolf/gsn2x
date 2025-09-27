@@ -401,4 +401,3 @@ fn font_metrics() -> Result<()> {
     regression_renderings(&["tests/font_metrics.yaml"], &["-E"], None)?;
     Ok(())
 }
-
