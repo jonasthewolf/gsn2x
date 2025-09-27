@@ -5,6 +5,7 @@ use assert_cmd::prelude::*;
 use assert_fs::fixture::PathCopy;
 use assert_fs::prelude::*;
 use predicates::prelude::*;
+use std::path::Path;
 use std::process::Command;
 
 use crate::basics::*;
@@ -228,7 +229,7 @@ fn arch_view() -> Result<()> {
             "Rendering \"examples.modular.architecture.svg\": OK\n",
         ))?);
     output_file.assert(
-        predicate::path::eq_file(std::path::Path::new("examples/modular/architecture.svg"))
+        predicate::path::eq_file(Path::new("examples/modular/architecture.svg"))
             .utf8()
             .unwrap()
             .normalize()
@@ -263,7 +264,7 @@ fn multiple_view() -> Result<()> {
         ))?);
 
     output_file1.assert(
-        predicate::path::eq_file(std::path::Path::new("examples/modular/index.gsn.svg"))
+        predicate::path::eq_file(Path::new("examples/modular/index.gsn.svg"))
             .utf8()
             .unwrap()
             .normalize()
@@ -271,7 +272,7 @@ fn multiple_view() -> Result<()> {
             .from_file_path(),
     );
     output_file2.assert(
-        predicate::path::eq_file(std::path::Path::new("examples/modular/sub1.gsn.svg"))
+        predicate::path::eq_file(Path::new("examples/modular/sub1.gsn.svg"))
             .utf8()
             .unwrap()
             .normalize()
@@ -279,7 +280,7 @@ fn multiple_view() -> Result<()> {
             .from_file_path(),
     );
     output_file3.assert(
-        predicate::path::eq_file(std::path::Path::new("examples/modular/sub3.gsn.svg"))
+        predicate::path::eq_file(Path::new("examples/modular/sub3.gsn.svg"))
             .utf8()
             .unwrap()
             .normalize()
@@ -306,7 +307,7 @@ fn complete_view() -> Result<()> {
         "Rendering \"..complete.svg\": OK\n",
     )?);
     output_file.assert(
-        predicate::path::eq_file(std::path::Path::new("examples/modular/complete.svg"))
+        predicate::path::eq_file(Path::new("examples/modular/complete.svg"))
             .utf8()
             .unwrap()
             .normalize()

@@ -3,6 +3,7 @@ use assert_cmd::prelude::*;
 use assert_fs::fixture::PathCopy;
 use assert_fs::prelude::*;
 use predicates::prelude::*;
+use std::path::Path;
 use std::process::Command;
 
 pub fn regression_renderings(
@@ -25,7 +26,7 @@ pub fn regression_renderings(
     for output_name in output_names {
         let output_file = temp.child(&output_name);
         output_file.assert(
-            predicates::path::eq_file(std::path::Path::new(&output_name))
+            predicates::path::eq_file(Path::new(&output_name))
                 .utf8()
                 .unwrap()
                 .normalize()
