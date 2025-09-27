@@ -1,7 +1,8 @@
-use anyhow::{Context, Result};
+use anyhow::Result;
 use assert_cmd::prelude::*;
 use assert_fs::fixture::PathCopy;
 use assert_fs::prelude::*;
+use predicates::prelude::*;
 use std::process::Command;
 
 pub fn regression_renderings(
@@ -23,11 +24,14 @@ pub fn regression_renderings(
     cmd.assert().success();
     for output_name in output_names {
         let output_file = temp.child(&output_name);
-        let left_c = std::fs::read_to_string(&output_name)
-            .with_context(|| format!("Filename {output_name:?}"))?;
-        let right_c = std::fs::read_to_string(&output_file)
-            .with_context(|| format!("Filename {:?}", output_file.display()))?;
-        assert_eq!(left_c, right_c);
+        output_file.assert(
+            predicates::path::eq_file(std::path::Path::new(&output_name))
+                .utf8()
+                .unwrap()
+                .normalize()
+                .from_utf8()
+                .from_file_path(),
+        );
     }
     temp.close()?;
     Ok(())
