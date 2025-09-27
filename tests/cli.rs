@@ -395,3 +395,10 @@ fn uses_circle_detection() -> Result<()> {
             .stderr(predicate::str::contains("Error: (A) C06: Module in tests/circle1.yaml was already present in tests/circle1.yaml provided by command line."));
     Ok(())
 }
+
+#[test]
+fn font_metrics() -> Result<()> {
+    regression_renderings(&["tests/font_metrics.yaml"], &["-E"], None)?;
+    Ok(())
+}
+

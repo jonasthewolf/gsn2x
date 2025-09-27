@@ -35,6 +35,9 @@ cp examples/example.gsn.svg examples/example.gsn_dark.svg
 ./target/release/gsn2x -G -E examples/dialectic/first.gsn.yaml
 ./target/release/gsn2x -G -E examples/dialectic/second.gsn.yaml
 
+# font metrics
+./target/release/gsn2x -G -E tests/font_metrics.yaml
+
 # issue regressions
 ./target/release/gsn2x -G -E tests/issue84_1.yaml
 ./target/release/gsn2x -G -E tests/issue84_2.yaml
