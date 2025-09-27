@@ -63,7 +63,7 @@
 <text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="533" y="416">G00003</text>
 <text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="533" y="434">Some text</text>
 <a href="issue433_2.svg#node_g00003">
-<path class="border" d="M526,447 h113 v27 h-113 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<path class="border" d="M526,447 H638 v27 H526 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 <text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="560" y="467">ClaimHazard</text>
 </a>
 <use href="#module_icon" x="533" y="454"/>

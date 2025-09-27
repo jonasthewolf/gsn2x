@@ -201,9 +201,9 @@ impl AwayType {
                 node.x - node.width / 2,
                 node.y + node.height / 2 - (2 * PADDING_VERTICAL + self.mod_height),
             ))
-            .horizontal_line_by(node.width)
+            .horizontal_line_to(node.x + node.width / 2)
             .vertical_line_by(2 * PADDING_VERTICAL + self.mod_height)
-            .horizontal_line_by(-node.width)
+            .horizontal_line_to(node.x - node.width / 2)
             .close();
 
         let module_box = Path::new()

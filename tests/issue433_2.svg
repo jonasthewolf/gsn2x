@@ -19,7 +19,7 @@
 <text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="377" y="40">G00002</text>
 <text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="377" y="58">Some text</text>
 <a href="issue433_1.svg#node_g00002">
-<path class="border" d="M370,71 h100 v27 h-100 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<path class="border" d="M370,71 H470 v27 H370 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 <text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="404" y="91">MainClaim</text>
 </a>
 <use href="#module_icon" x="377" y="78"/>
