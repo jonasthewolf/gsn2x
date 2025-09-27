@@ -15,14 +15,14 @@
 <a href="issue433_1.svg#node_g00002">
 <g class="gsn_module_mainclaim gsnelem gsnawaygoal" id="node_g00002">
 <title>G00002</title>
-<path class="border" d="M372,71 V20 H468 V71" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="379" y="40">G00002</text>
-<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="379" y="58">Some text</text>
+<path class="border" d="M370,71 V20 H470 V71" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="377" y="40">G00002</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="377" y="58">Some text</text>
 <a href="issue433_1.svg#node_g00002">
-<path class="border" d="M372,71 h97 v27 h-97 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="406" y="91">MainClaim</text>
+<path class="border" d="M370,71 h100 v27 h-100 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="404" y="91">MainClaim</text>
 </a>
-<use href="#module_icon" x="379" y="78"/>
+<use href="#module_icon" x="377" y="78"/>
 </g>
 </a>
 <g class="gsn_module_claimhazard gsnelem gsngoal" id="node_g00003">
