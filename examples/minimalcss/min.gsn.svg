@@ -10,8 +10,8 @@
 <g class="additionalclass1 additionalclass2 gsn_module_examples_minimalcss_min_gsn_yaml gsnelem gsngoal gsn_undeveloped" id="node_g1">
 <title>G1</title>
 <path class="border" d="M20,20 L124,20 L124,70 L20,70 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="27" y="39">G1</text>
-<text font-family="Arial" font-size="12" x="27" y="57">This is a Goal</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="27" y="40">G1</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="27" y="58">This is a Goal</text>
 <path d="M72,70 l5,5 l-5,5 l-5,-5 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 </g>
 </svg>

@@ -5,7 +5,7 @@ use crate::dirgraphsvg::{
     render::{PADDING_HORIZONTAL, PADDING_VERTICAL, create_text},
     util::{
         escape_url,
-        font::{FontInfo, str_line_bounding_box, text_line_bounding_box},
+        font::{str_line_bounding_box, text_line_bounding_box},
     },
 };
 
@@ -73,13 +73,13 @@ impl AwayType {
     ///
     pub(super) fn calculate_size(
         &self,
-        font: &FontInfo,
+
         min_width: i32,
         min_height: i32,
         size_context: &mut SizeContext,
     ) -> (i32, i32) {
         // no wrapping of module names
-        let (mod_width, _) = str_line_bounding_box(font, &self.module, false);
+        let (mod_width, _) = str_line_bounding_box(&self.module, false);
 
         let width = *[
             min_width,
@@ -118,13 +118,7 @@ impl AwayType {
     ///
     /// Render the node
     ///
-    pub(super) fn render(
-        &self,
-        node: &SvgNode,
-        font: &FontInfo,
-        context: &mut Element,
-        border_color: &str,
-    ) {
+    pub(super) fn render(&self, node: &SvgNode, context: &mut Element, border_color: &str) {
         let title = Title::new(&node.identifier);
 
         use svg::Node;
@@ -188,16 +182,16 @@ impl AwayType {
         context.append(upper_line);
 
         let x = node.x - node.width / 2 + PADDING_HORIZONTAL;
-        let mut y = y_id + font.size as i32;
+        let mut y = y_id + str_line_bounding_box("", false).1;
         // Identifier
-        context.append(create_text(&(&node.identifier).into(), x, y, font, true));
+        context.append(create_text(&(&node.identifier).into(), x, y, true));
         y += OFFSET_IDENTIFIER;
 
         // Text
         if !node.masked {
             for text in node.text.lines() {
-                y += text_line_bounding_box(font, text, false).1;
-                context.append(create_text(&text.into(), x, y, font, false));
+                y += text_line_bounding_box(text, false).1;
+                context.append(create_text(&text.into(), x, y, false));
             }
         }
 
@@ -227,7 +221,6 @@ impl AwayType {
                 &(&self.module).into(),
                 node.x - node.width / 2 + PADDING_HORIZONTAL + MODULE_IMAGE + PADDING_HORIZONTAL,
                 node.y + node.height / 2 - PADDING_VERTICAL,
-                font,
                 true,
             ))
         };
@@ -267,7 +260,6 @@ impl AwayType {
                 &adm.into(),
                 node.x + node.width / 2 - PADDING_HORIZONTAL,
                 node.y - node.height / 2,
-                font,
                 true,
             ));
         }

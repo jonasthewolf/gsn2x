@@ -8,32 +8,32 @@
 <g class="gsn_module_tests_multi_parents_gsn_yaml gsnelem gsngoal" id="node_g1">
 <title>G1</title>
 <path class="border" d="M20,20 L124,20 L124,64 L20,64 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="27" y="39">G1</text>
-<text font-family="Arial" font-size="12" x="27" y="57">G1</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="27" y="40">G1</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="27" y="58">G1</text>
 </g>
 <g class="gsn_module_tests_multi_parents_gsn_yaml gsnelem gsngoal" id="node_g2">
 <title>G2</title>
 <path class="border" d="M164,20 L268,20 L268,64 L164,64 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="171" y="39">G2</text>
-<text font-family="Arial" font-size="12" x="171" y="57">G2</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="171" y="40">G2</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="171" y="58">G2</text>
 </g>
 <g class="gsn_module_tests_multi_parents_gsn_yaml gsnelem gsngoal" id="node_g3">
 <title>G3</title>
 <path class="border" d="M308,20 L412,20 L412,64 L308,64 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="315" y="39">G3</text>
-<text font-family="Arial" font-size="12" x="315" y="57">G3</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="315" y="40">G3</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="315" y="58">G3</text>
 </g>
 <g class="gsn_module_tests_multi_parents_gsn_yaml gsnelem gsngoal" id="node_g4">
 <title>G4</title>
 <path class="border" d="M452,20 L556,20 L556,64 L452,64 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="459" y="39">G4</text>
-<text font-family="Arial" font-size="12" x="459" y="57">G4</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="459" y="40">G4</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="459" y="58">G4</text>
 </g>
 <g class="gsn_module_tests_multi_parents_gsn_yaml gsnelem gsnsltn" id="node_sn1">
 <title>Sn1</title>
 <path class="border" d="M256,136 a32,32,0,1,0,64,0 a32,32,0,1,0,-64,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="278" y="128">Sn1</text>
-<text font-family="Arial" font-size="12" x="278" y="146">Sn1</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="278" y="128">Sn1</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="278" y="146">Sn1</text>
 </g>
 <path class="gsnedge gsninspby" d="M72,64 C72,94,288,74,288,94" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsninspby" d="M216,64 C216,94,288,74,288,94" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>

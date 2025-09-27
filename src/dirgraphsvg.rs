@@ -16,12 +16,10 @@ use crate::dirgraphsvg::layout::layout_nodes;
 use crate::dirgraphsvg::render::render_graph;
 
 use self::layout::Margin;
-use self::util::font::FontInfo;
 
 #[derive(Default)]
 pub struct DirGraph<'a> {
     margin: Margin,
-    font: FontInfo,
     css_stylesheets: Vec<&'a str>,
     embed_stylesheets: bool,
     meta_information: Option<Vec<String>>,
@@ -51,9 +49,7 @@ impl<'a> DirGraph<'a> {
         edge_decorators: BTreeMap<(String, String), EdgeDecorator>,
     ) -> Result<(), std::io::Error> {
         // Calculate node sizes
-        nodes
-            .values_mut()
-            .for_each(|n| n.calculate_size(&self.font));
+        nodes.values_mut().for_each(|n| n.calculate_size());
         // Translate to RefCell to be usable by DirectedGraph
         let nodes: BTreeMap<String, RefCell<SvgNode>> = nodes
             .into_iter()

@@ -11,129 +11,129 @@
 <g class="gsn_module_tests_issue313_yaml gsnelem gsnctxt" id="node_c2">
 <title>C2</title>
 <path class="border" d="M558,20 L668,20 C678,20,678,64,668,64 L558,64 C548,64,548,20,558,20" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="565" y="39">C2</text>
-<text font-family="Arial" font-size="12" x="565" y="57">System Definition.</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="565" y="40">C2</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="565" y="58">System Definition.</text>
 </g>
 <g class="gsn_module_tests_issue313_yaml gsnelem gsngoal" id="node_g1">
 <title>G1</title>
 <path class="border" d="M718,20 L930,20 L930,64 L718,64 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="725" y="39">G1</text>
-<text font-family="Arial" font-size="12" x="725" y="57">System is acceptably safe to operate.</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="725" y="40">G1</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="725" y="58">System is acceptably safe to operate.</text>
 </g>
 <g class="gsn_module_tests_issue313_yaml gsnelem gsnctxt" id="node_c1">
 <title>C1</title>
 <path class="border" d="M980,20 L1146,20 C1156,20,1156,64,1146,64 L980,64 C970,64,970,20,980,20" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="987" y="39">C1</text>
-<text font-family="Arial" font-size="12" x="987" y="57">Operating Role and Context.</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="987" y="40">C1</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="987" y="58">Operating Role and Context.</text>
 </g>
 <g class="gsn_module_tests_issue313_yaml gsnelem gsnctxt" id="node_c3">
 <title>C3</title>
 <path class="border" d="M35,104 L191,104 C201,104,201,148,191,148 L35,148 C25,148,25,104,35,104" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="42" y="123">C3</text>
-<text font-family="Arial" font-size="12" x="42" y="141">Tolerability targets (Ref Z).</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="42" y="124">C3</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="42" y="142">Tolerability targets (Ref Z).</text>
 </g>
 <g class="gsn_module_tests_issue313_yaml gsnelem gsngoal" id="node_g2">
 <title>G2</title>
 <path class="border" d="M241,104 L611,104 L611,148 L241,148 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="248" y="123">G2</text>
-<text font-family="Arial" font-size="12" x="248" y="141">All identified hazards have been eliminated or sufficiently mitigated.</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="248" y="124">G2</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="248" y="142">All identified hazards have been eliminated or sufficiently mitigated.</text>
 </g>
 <g class="gsn_module_tests_issue313_yaml gsnelem gsnctxt" id="node_c4">
 <title>C4</title>
 <path class="border" d="M661,104 L869,104 C879,104,879,148,869,148 L661,148 C651,148,651,104,661,104" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="668" y="123">C4</text>
-<text font-family="Arial" font-size="12" x="668" y="141">Hazards identified from FHA (Ref Y).</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="668" y="124">C4</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="668" y="142">Hazards identified from FHA (Ref Y).</text>
 </g>
 <g class="gsn_module_tests_issue313_yaml gsnelem gsngoal" id="node_g3">
 <title>G3</title>
 <path class="border" d="M973,104 L1471,104 L1471,148 L973,148 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="980" y="123">G3</text>
-<text font-family="Arial" font-size="12" x="980" y="141">Software in the Control System has been developed to SIL appropriate to hazards involved.</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="980" y="124">G3</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="980" y="142">Software in the Control System has been developed to SIL appropriate to hazards involved.</text>
 </g>
 <g class="gsn_module_tests_issue313_yaml gsnelem gsnctxt" id="node_c5">
 <title>C5</title>
 <path class="border" d="M1521,104 L1699,104 C1709,104,1709,148,1699,148 L1521,148 C1511,148,1511,104,1521,104" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="1528" y="123">C5</text>
-<text font-family="Arial" font-size="12" x="1528" y="141">SIL Guidelines and Processes.</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="1528" y="124">C5</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="1528" y="142">SIL Guidelines and Processes.</text>
 </g>
 <g class="gsn_module_tests_issue313_yaml gsnelem gsnstgy" id="node_s1">
 <title>S1</title>
 <path class="border" d="M318,198 L548,198 L534,242 L304,242 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="325" y="217">S1</text>
-<text font-family="Arial" font-size="12" x="321" y="235">Argument over each identified hazard.</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="325" y="218">S1</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="321" y="236">Argument over each identified hazard.</text>
 </g>
 <g class="gsn_module_tests_issue313_yaml gsnelem gsnjust" id="node_j1">
 <title>J1</title>
 <path class="border" d="M652,220 a170,32,0,1,0,340,0 a170,32,0,1,0,-340,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="708" y="212">J1</text>
-<text font-family="Arial" font-size="12" x="708" y="230">SIL apportionment is correct and complete.</text>
-<text font-family="Arial" font-size="12" font-weight="bold" x="987" y="247">J</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="708" y="212">J1</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="708" y="230">SIL apportionment is correct and complete.</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="987" y="247">J</text>
 </g>
 <g class="gsn_module_tests_issue313_yaml gsnelem gsnstgy" id="node_s2">
 <title>S2</title>
 <path class="border" d="M1039,198 L1419,198 L1405,242 L1025,242 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="1046" y="217">S2</text>
-<text font-family="Arial" font-size="12" x="1042" y="235">Argument over allocated SIL for Primary and Secondary elements.</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="1046" y="218">S2</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="1042" y="236">Argument over allocated SIL for Primary and Secondary elements.</text>
 </g>
 <g class="gsn_module_tests_issue313_yaml gsnelem gsnctxt" id="node_c6">
 <title>C6</title>
 <path class="border" d="M1462,198 L1622,198 C1632,198,1632,242,1622,242 L1462,242 C1452,242,1452,198,1462,198" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="1469" y="217">C6</text>
-<text font-family="Arial" font-size="12" x="1469" y="235">Identified software hazards.</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="1469" y="218">C6</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="1469" y="236">Identified software hazards.</text>
 </g>
 <g class="gsn_module_tests_issue313_yaml gsnelem gsngoal" id="node_g2_1">
 <title>G2.1</title>
 <path class="border" d="M20,292 L204,292 L204,336 L20,336 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="27" y="311">G2.1</text>
-<text font-family="Arial" font-size="12" x="27" y="329">Hazard H1 has been eliminated.</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="27" y="312">G2.1</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="27" y="330">Hazard H1 has been eliminated.</text>
 </g>
 <g class="gsn_module_tests_issue313_yaml gsnelem gsngoal" id="node_g2_2">
 <title>G2.2</title>
 <path class="border" d="M244,292 L548,292 L548,336 L244,336 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="251" y="311">G2.2</text>
-<text font-family="Arial" font-size="12" x="251" y="329">Probability of Hazard H2 occuring &amp;lt; 1x10-6 per year.</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="251" y="312">G2.2</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="251" y="330">Probability of Hazard H2 occuring &amp;lt; 1x10-6 per year.</text>
 </g>
 <g class="gsn_module_tests_issue313_yaml gsnelem gsngoal" id="node_g2_3">
 <title>G2.3</title>
 <path class="border" d="M588,292 L892,292 L892,336 L588,336 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="595" y="311">G2.3</text>
-<text font-family="Arial" font-size="12" x="595" y="329">Probability of Hazard H3 occuring &amp;lt; 1x10-3 per year.</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="595" y="312">G2.3</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="595" y="330">Probability of Hazard H3 occuring &amp;lt; 1x10-3 per year.</text>
 </g>
 <g class="gsn_module_tests_issue313_yaml gsnelem gsngoal" id="node_g3_1">
 <title>G3.1</title>
 <path class="border" d="M932,292 L1196,292 L1196,336 L932,336 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="939" y="311">G3.1</text>
-<text font-family="Arial" font-size="12" x="939" y="329">Primary Protection System Developed to SIL 4.</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="939" y="312">G3.1</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="939" y="330">Primary Protection System Developed to SIL 4.</text>
 </g>
 <g class="gsn_module_tests_issue313_yaml gsnelem gsngoal" id="node_g3_2">
 <title>G3.2</title>
 <path class="border" d="M1236,292 L1526,292 L1526,336 L1236,336 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="1243" y="311">G3.2</text>
-<text font-family="Arial" font-size="12" x="1243" y="329">Secondary Protection System Development to SIL2.</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="1243" y="312">G3.2</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="1243" y="330">Secondary Protection System Development to SIL2.</text>
 </g>
 <g class="gsn_module_tests_issue313_yaml gsnelem gsnsltn" id="node_sn1">
 <title>Sn1</title>
 <path class="border" d="M45,463 a67,67,0,1,0,134,0 a67,67,0,1,0,-134,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="61" y="455">Sn1</text>
-<text font-family="Arial" font-size="12" x="61" y="473">Formal Verification.</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="61" y="455">Sn1</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="61" y="473">Formal Verification.</text>
 </g>
 <g class="gsn_module_tests_issue313_yaml gsnelem gsnsltn" id="node_sn2">
 <title>Sn2</title>
 <path class="border" d="M499,463 a69,69,0,1,0,138,0 a69,69,0,1,0,-138,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="515" y="455">Sn2</text>
-<text font-family="Arial" font-size="12" x="515" y="473">Fault Tree Analysis.</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="515" y="455">Sn2</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="515" y="473">Fault Tree Analysis.</text>
 </g>
 <g class="gsn_module_tests_issue313_yaml gsnelem gsnsltn" id="node_sn3">
 <title>Sn3</title>
 <path class="border" d="M977,463 a87,87,0,1,0,174,0 a87,87,0,1,0,-174,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="992" y="455">Sn3</text>
-<text font-family="Arial" font-size="12" x="992" y="473">Process Evidence for SIL4.</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="992" y="455">Sn3</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="992" y="473">Process Evidence for SIL4.</text>
 </g>
 <g class="gsn_module_tests_issue313_yaml gsnelem gsnsltn" id="node_sn4">
 <title>Sn4</title>
 <path class="border" d="M1294,463 a87,87,0,1,0,174,0 a87,87,0,1,0,-174,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="1309" y="455">Sn4</text>
-<text font-family="Arial" font-size="12" x="1309" y="473">Process Evidence for SIL2.</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="1309" y="455">Sn4</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="1309" y="473">Process Evidence for SIL2.</text>
 </g>
 <path class="gsnedge gsninctxt" d="M930,42 C960,42,940,42,960,42" fill-opacity="0" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsninctxt" d="M718,42 C688,42,708,42,688,42" fill-opacity="0" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>

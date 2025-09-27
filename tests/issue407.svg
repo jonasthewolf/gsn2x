@@ -5,11 +5,11 @@
 <g class="gsn_layer2 gsn_module_tests_issue407_yaml gsnelem gsngoal gsn_undeveloped" id="node_g1">
 <title>G1</title>
 <path class="border" d="M20,20 L188,20 L188,108 L20,108 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="27" y="39">G1</text>
-<text font-family="Arial" font-size="12" x="27" y="57">Test</text>
-<text font-family="Arial" font-size="12" x="27" y="70"></text>
-<text font-family="Arial" font-size="12" x="27" y="83">LAYER2:</text>
-<text font-family="Arial" font-size="12" x="27" y="96">
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="27" y="40">G1</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="27" y="58">Test</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="27" y="71"></text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="27" y="84">LAYER2:</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="27" y="97">
 <a href="https://www.duckduckgo.com">https://www.duckduckgo.com</a>
 </text>
 <path d="M104,108 l5,5 l-5,5 l-5,-5 z" fill-opacity="0" stroke="black" stroke-width="1"/>

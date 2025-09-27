@@ -15,130 +15,130 @@ svg { filter: invert(100%); }
 <g class="gsn_module_examples_example_gsn_yaml gsnelem gsngoal" id="node_g1">
 <title>G1</title>
 <path class="border" d="M640,20 L744,20 L744,64 L640,64 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="647" y="39">G1</text>
-<text font-family="Arial" font-size="12" x="647" y="57">Goal 1</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="647" y="40">G1</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="647" y="58">Goal 1</text>
 </g>
 <g class="gsn_module_examples_example_gsn_yaml gsnelem gsngoal" id="node_g2">
 <title>G2</title>
 <path class="border" d="M336,104 L440,104 L440,148 L336,148 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="343" y="123">G2</text>
-<text font-family="Arial" font-size="12" x="343" y="141">Goal 2</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="343" y="124">G2</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="343" y="142">Goal 2</text>
 </g>
 <g class="gsn_module_examples_example_gsn_yaml gsnelem gsngoal" id="node_g3">
 <title>G3</title>
 <path class="border" d="M944,104 L1048,104 L1048,148 L944,148 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="951" y="123">G3</text>
-<text font-family="Arial" font-size="12" x="951" y="141">Goal 3</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="951" y="124">G3</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="951" y="142">Goal 3</text>
 </g>
 <g class="gsn_module_examples_example_gsn_yaml gsnelem gsnctxt" id="node_c1">
 <title>C1</title>
 <path class="border" d="M1098,104 L1202,104 C1212,104,1212,148,1202,148 L1098,148 C1088,148,1088,104,1098,104" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="1105" y="123">C1</text>
-<text font-family="Arial" font-size="12" x="1105" y="141">Context 1</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="1105" y="124">C1</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="1105" y="142">Context 1</text>
 </g>
 <g class="gsn_module_examples_example_gsn_yaml gsnelem gsnjust" id="node_j1">
 <title>J1</title>
 <path class="border" d="M154,232 a60,32,0,1,0,121,0 a60,32,0,1,0,-121,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="178" y="224">J1</text>
-<text font-family="Arial" font-size="12" x="178" y="242">Justification 1</text>
-<text font-family="Arial" font-size="12" font-weight="bold" x="269" y="259">J</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="178" y="224">J1</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="178" y="242">Justification 1</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="269" y="259">J</text>
 </g>
 <g class="gsn_module_examples_example_gsn_yaml gsnelem gsnstgy" id="node_s1">
 <title>S1</title>
 <path class="border" d="M321,210 L469,210 L455,254 L307,254 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="328" y="229">S1</text>
-<text font-family="Arial" font-size="12" x="324" y="247">Strategy 1</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="328" y="230">S1</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="324" y="248">Strategy 1</text>
 </g>
 <g class="gsn_module_examples_example_gsn_yaml gsnelem gsnasmp" id="node_a1">
 <title>A1</title>
 <path class="border" d="M502,232 a53,32,0,1,0,107,0 a53,32,0,1,0,-107,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="524" y="224">A1</text>
-<text font-family="Arial" font-size="12" x="524" y="242">Argument 1</text>
-<text font-family="Arial" font-size="12" font-weight="bold" x="603" y="259">A</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="524" y="224">A1</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="524" y="242">Argument 1</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="603" y="259">A</text>
 </g>
 <g class="gsn_module_examples_example_gsn_yaml gsnelem gsnstgy" id="node_s2">
 <title>S2</title>
 <path class="border" d="M771,210 L919,210 L905,254 L757,254 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="778" y="229">S2</text>
-<text font-family="Arial" font-size="12" x="774" y="247">Strategy 2</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="778" y="230">S2</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="774" y="248">Strategy 2</text>
 </g>
 <a href="https://github.com/jonasthewolf/gsn2x">
 <g class="gsn_module_examples_example_gsn_yaml gsnelem gsnsltn" id="node_sn1">
 <title>Sn1</title>
 <path class="border" d="M952,232 a44,44,0,1,0,88,0 a44,44,0,1,0,-88,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="970" y="224">Sn1</text>
-<text font-family="Arial" font-size="12" x="970" y="242">Solution 1</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="970" y="224">Sn1</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="970" y="242">Solution 1</text>
 </g>
 </a>
 <g class="gsn_module_examples_example_gsn_yaml gsnelem gsnctxt" id="node_c2">
 <title>C2</title>
 <path class="border" d="M30,319 L134,319 C144,319,144,377,134,377 L30,377 C20,377,20,319,30,319" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="37" y="338">C2</text>
-<text font-family="Arial" font-size="12" x="37" y="356">Context 2</text>
-<text font-family="Arial" font-size="12" x="37" y="369">Multiline</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="37" y="339">C2</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="37" y="357">Context 2</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="37" y="370">Multiline</text>
 </g>
 <g class="gsn_module_examples_example_gsn_yaml gsnelem gsngoal" id="node_g5">
 <title>G5</title>
 <path class="border" d="M184,326 L288,326 L288,370 L184,370 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="191" y="345">G5</text>
-<text font-family="Arial" font-size="12" x="191" y="363">Goal 5</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="191" y="346">G5</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="191" y="364">Goal 5</text>
 </g>
 <g class="mycssclass anotherclass gsn_module_examples_example_gsn_yaml gsnelem gsnasmp" id="node_a2">
 <title>A2</title>
 <path class="border" d="M328,348 a60,32,0,1,0,121,0 a60,32,0,1,0,-121,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="352" y="340">A2</text>
-<text font-family="Arial" font-size="12" x="352" y="358">Assumption 2</text>
-<text font-family="Arial" font-size="12" font-weight="bold" x="443" y="375">A</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="352" y="340">A2</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="352" y="358">Assumption 2</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="443" y="375">A</text>
 </g>
 <g class="gsn_module_examples_example_gsn_yaml gsnelem gsngoal" id="node_g6">
 <title>G6</title>
 <path class="border" d="M488,326 L592,326 L592,370 L488,370 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="495" y="345">G6</text>
-<text font-family="Arial" font-size="12" x="495" y="363">Goal 6</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="495" y="346">G6</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="495" y="364">Goal 6</text>
 </g>
 <g class="gsn_module_examples_example_gsn_yaml gsnelem gsngoal" id="node_g4">
 <title>G4</title>
 <path class="border" d="M632,326 L736,326 L736,370 L632,370 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="639" y="345">G4</text>
-<text font-family="Arial" font-size="12" x="639" y="363">Goal 4</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="639" y="346">G4</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="639" y="364">Goal 4</text>
 </g>
 <g class="gsn_module_examples_example_gsn_yaml gsnelem gsnjust" id="node_j2">
 <title>J2</title>
 <path class="border" d="M776,348 a60,32,0,1,0,121,0 a60,32,0,1,0,-121,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="800" y="340">J2</text>
-<text font-family="Arial" font-size="12" x="800" y="358">Justification 2</text>
-<text font-family="Arial" font-size="12" font-weight="bold" x="891" y="375">J</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="800" y="340">J2</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="800" y="358">Justification 2</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="891" y="375">J</text>
 </g>
 <g class="gsn_module_examples_example_gsn_yaml gsnelem gsngoal gsn_undeveloped" id="node_g7">
 <title>G7</title>
 <path class="border" d="M936,323 L1048,323 L1048,373 L936,373 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="943" y="342">G7</text>
-<text font-family="Arial" font-size="12" x="943" y="360">Undeveloped Goal</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="943" y="343">G7</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="943" y="361">Undeveloped Goal</text>
 <path d="M992,373 l5,5 l-5,5 l-5,-5 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 </g>
 <g class="gsn_module_examples_example_gsn_yaml gsnelem gsnsltn" id="node_sn4">
 <title>Sn4</title>
 <path class="border" d="M192,464 a44,44,0,1,0,88,0 a44,44,0,1,0,-88,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="210" y="456">Sn4</text>
-<text font-family="Arial" font-size="12" x="210" y="474">Solution 4</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="210" y="456">Sn4</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="210" y="474">Solution 4</text>
 </g>
 <g class="gsn_layer2 gsn_module_examples_example_gsn_yaml gsnelem gsnsltn" id="node_sn3">
 <title>Sn3</title>
 <path class="border" d="M344,464 a44,44,0,1,0,88,0 a44,44,0,1,0,-88,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="362" y="456">Sn3</text>
-<text font-family="Arial" font-size="12" x="362" y="474">Solution 3</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="362" y="456">Sn3</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="362" y="474">Solution 3</text>
 </g>
 <g class="gsn_module_examples_example_gsn_yaml gsnelem gsnsltn" id="node_sn5">
 <title>Sn5</title>
 <path class="border" d="M496,464 a44,44,0,1,0,88,0 a44,44,0,1,0,-88,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="514" y="456">Sn5</text>
-<text font-family="Arial" font-size="12" x="514" y="474">Solution 5</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="514" y="456">Sn5</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="514" y="474">Solution 5</text>
 </g>
 <g class="gsn_layer1 gsn_layer2 gsn_module_examples_example_gsn_yaml gsnelem gsnsltn" id="node_sn2">
 <title>Sn2</title>
 <path class="border" d="M640,464 a44,44,0,1,0,88,0 a44,44,0,1,0,-88,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="658" y="456">Sn2</text>
-<text font-family="Arial" font-size="12" x="658" y="474">Solution 2</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="658" y="456">Sn2</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="658" y="474">Solution 2</text>
 </g>
 <path class="gsnedge gsninspby" d="M692,64 C692,94,388,74,388,94" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsninspby" d="M692,64 C692,94,996,74,996,94" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>

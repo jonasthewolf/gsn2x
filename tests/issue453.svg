@@ -5,20 +5,20 @@
 <g class="gsn_layer2 gsn_module_tests_issue453_yaml gsnelem gsngoal gsn_undeveloped" id="node_g1">
 <title>G1</title>
 <path class="border" d="M20,20 L124,20 L124,160 L20,160 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="27" y="39">G1</text>
-<text font-family="Arial" font-size="12" x="27" y="57">Test</text>
-<text font-family="Arial" font-size="12" x="27" y="70">- 
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="27" y="40">G1</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="27" y="58">Test</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="27" y="71">- 
 <a href="https://www.duckduckgo.com">DuckDuckGo</a>
 </text>
-<text font-family="Arial" font-size="12" x="27" y="83">- 
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="27" y="84">- 
 <a href="https://www.yahoo.com">Yahoo</a>
 </text>
-<text font-family="Arial" font-size="12" x="27" y="96"></text>
-<text font-family="Arial" font-size="12" x="27" y="109"></text>
-<text font-family="Arial" font-size="12" x="27" y="122">LAYER2:</text>
-<text font-family="Arial" font-size="12" x="27" y="135">- '
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="27" y="97"></text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="27" y="110"></text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="27" y="123">LAYER2:</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="27" y="136">- '
 <a href="https://www.duckduckgo.com">DuckDuckGo</a>'</text>
-<text font-family="Arial" font-size="12" x="27" y="148">- '
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="27" y="149">- '
 <a href="https://www.yahoo.com">Yahoo</a>'</text>
 <path d="M72,160 l5,5 l-5,5 l-5,-5 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 </g>

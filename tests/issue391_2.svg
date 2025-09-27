@@ -9,15 +9,15 @@
 <g class="gsn_module_tests_issue391_1_yaml gsnelem gsnstgy" id="node_s1">
 <title>S1</title>
 <path class="border" d="M27,20 L175,20 L161,64 L13,64 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="34" y="39">S1</text>
-<text font-family="Arial" font-size="12" x="30" y="57">S1</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="34" y="40">S1</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="30" y="58">S1</text>
 </g>
 </a>
 <g class="gsn_module_tests_issue391_2_yaml gsnelem gsngoal gsn_undeveloped" id="node_g1">
 <title>G1</title>
 <path class="border" d="M42,104 L146,104 L146,154 L42,154 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="49" y="123">G1</text>
-<text font-family="Arial" font-size="12" x="49" y="141">G1</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="49" y="124">G1</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="49" y="142">G1</text>
 <path d="M94,154 l5,5 l-5,5 l-5,-5 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 </g>
 <path class="gsnedge gsninspby" d="M94,64 C94,94,94,74,94,94" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>

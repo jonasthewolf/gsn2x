@@ -17,165 +17,165 @@
 <g class="gsn_module_examples_dialectic_second_gsn_yaml gsnelem gsngoal" id="node_g1">
 <title>G1</title>
 <path class="border" d="M417,20 L521,20 L521,64 L417,64 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="424" y="39">G1</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="424" y="40">G1</text>
 </g>
 <g class="gsn_module_examples_dialectic_second_gsn_yaml gsnelem gsnctxt" id="node_c1">
 <title>C1</title>
 <path class="border" d="M571,20 L675,20 C685,20,685,64,675,64 L571,64 C561,64,561,20,571,20" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="578" y="39">C1</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="578" y="40">C1</text>
 </g>
 <g class="gsn_module_examples_dialectic_second_gsn_yaml gsnelem gsnstgy" id="node_s1">
 <title>S1</title>
 <path class="border" d="M402,104 L550,104 L536,148 L388,148 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="409" y="123">S1</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="409" y="124">S1</text>
 </g>
 <g class="gsn_module_examples_dialectic_second_gsn_yaml gsnelem gsncountersltn" id="node_ccsn1">
 <title>CCSn1</title>
 <path class="border" d="M20,223 a35,35,0,1,0,70,0 a35,35,0,1,0,-70,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="36" y="221">CCSn1</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="36" y="221">CCSn1</text>
 </g>
 <g class="gsn_module_examples_dialectic_second_gsn_yaml gsnelem gsndefeated gsngoal" id="node_g2">
 <title>G2</title>
 <path class="border" d="M170,201 L274,201 L274,245 L170,245 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="177" y="220">G2</text>
-<text font-family="Arial" font-size="12" x="177" y="238">A defeated goal</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="177" y="221">G2</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="177" y="239">A defeated goal</text>
 <line stroke="black" x1="165" x2="279" y1="196" y2="250"/>
 <line stroke="black" x1="279" x2="165" y1="196" y2="250"/>
 </g>
 <g class="gsn_module_examples_dialectic_second_gsn_yaml gsnelem gsngoal" id="node_g3">
 <title>G3</title>
 <path class="border" d="M401,201 L505,201 L505,245 L401,245 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="408" y="220">G3</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="408" y="221">G3</text>
 </g>
 <g class="gsn_module_examples_dialectic_second_gsn_yaml gsnelem gsngoal" id="node_g4">
 <title>G4</title>
 <path class="border" d="M664,201 L768,201 L768,245 L664,245 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="671" y="220">G4</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="671" y="221">G4</text>
 </g>
 <g class="gsn_module_examples_dialectic_second_gsn_yaml gsnelem gsncountergoal" id="node_cg1">
 <title>CG1</title>
 <path class="border" d="M37,303 L155,303 L155,347 L37,347 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="44" y="322">CG1</text>
-<text font-family="Arial" font-size="12" x="44" y="340">A counter argument</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="44" y="323">CG1</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="44" y="341">A counter argument</text>
 </g>
 <g class="gsn_module_examples_dialectic_second_gsn_yaml gsnelem gsnsltn" id="node_sn1">
 <title>Sn1</title>
 <path class="border" d="M195,325 a27,27,0,1,0,54,0 a27,27,0,1,0,-54,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="212" y="323">Sn1</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="212" y="323">Sn1</text>
 </g>
 <g class="gsn_module_examples_dialectic_second_gsn_yaml gsnelem gsndefeated gsngoal" id="node_g5">
 <title>G5</title>
 <path class="border" d="M329,303 L433,303 L433,347 L329,347 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="336" y="322">G5</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="336" y="323">G5</text>
 <line stroke="black" x1="324" x2="438" y1="298" y2="352"/>
 <line stroke="black" x1="438" x2="324" y1="298" y2="352"/>
 </g>
 <g class="gsn_module_examples_dialectic_second_gsn_yaml gsnelem gsngoal" id="node_g6">
 <title>G6</title>
 <path class="border" d="M473,303 L577,303 L577,347 L473,347 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="480" y="322">G6</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="480" y="323">G6</text>
 </g>
 <g class="gsn_module_examples_dialectic_second_gsn_yaml gsnelem gsndefeated gsnstgy" id="node_s2">
 <title>S2</title>
 <path class="border" d="M649,303 L797,303 L783,347 L635,347 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="656" y="322">S2</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="656" y="323">S2</text>
 <line stroke="black" x1="637" x2="795" y1="298" y2="352"/>
 <line stroke="black" x1="795" x2="637" y1="298" y2="352"/>
 </g>
 <g class="gsn_module_examples_dialectic_second_gsn_yaml gsnelem gsncountergoal" id="node_cg4">
 <title>CG4</title>
 <path class="border" d="M859,303 L963,303 L963,347 L859,347 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="866" y="322">CG4</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="866" y="323">CG4</text>
 </g>
 <g class="gsn_module_examples_dialectic_second_gsn_yaml gsnelem gsncountergoal" id="node_cg2">
 <title>CG2</title>
 <path class="border" d="M20,421 L172,421 L172,465 L20,465 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="27" y="440">CG2</text>
-<text font-family="Arial" font-size="12" x="27" y="458">Another counter argument</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="27" y="441">CG2</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="27" y="459">Another counter argument</text>
 </g>
 <g class="gsn_module_examples_dialectic_second_gsn_yaml gsnelem gsndefeated gsncountersltn" id="node_csn2">
 <title>CSn2</title>
 <path class="border" d="M212,443 a51,51,0,1,0,102,0 a51,51,0,1,0,-102,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="239" y="422">CSn2</text>
-<text font-family="Arial" font-size="12" x="239" y="440">Another </text>
-<text font-family="Arial" font-size="12" x="239" y="453">counter </text>
-<text font-family="Arial" font-size="12" x="239" y="466">evidence</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="239" y="422">CSn2</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="239" y="440">Another </text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="239" y="453">counter </text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="239" y="466">evidence</text>
 <line stroke="black" x1="207" x2="319" y1="387" y2="499"/>
 <line stroke="black" x1="319" x2="207" y1="387" y2="499"/>
 </g>
 <g class="gsn_module_examples_dialectic_second_gsn_yaml gsnelem gsnsltn" id="node_sn2">
 <title>Sn2</title>
 <path class="border" d="M354,443 a27,27,0,1,0,54,0 a27,27,0,1,0,-54,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="371" y="441">Sn2</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="371" y="441">Sn2</text>
 </g>
 <g class="gsn_module_examples_dialectic_second_gsn_yaml gsnelem gsnsltn" id="node_sn3">
 <title>Sn3</title>
 <path class="border" d="M498,443 a27,27,0,1,0,54,0 a27,27,0,1,0,-54,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="515" y="441">Sn3</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="515" y="441">Sn3</text>
 </g>
 <g class="gsn_module_examples_dialectic_second_gsn_yaml gsnelem gsngoal" id="node_g7">
 <title>G7</title>
 <path class="border" d="M592,421 L696,421 L696,465 L592,465 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="599" y="440">G7</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="599" y="441">G7</text>
 </g>
 <g class="gsn_module_examples_dialectic_second_gsn_yaml gsnelem gsngoal" id="node_g8">
 <title>G8</title>
 <path class="border" d="M736,421 L840,421 L840,465 L736,465 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="743" y="440">G8</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="743" y="441">G8</text>
 </g>
 <g class="gsn_module_examples_dialectic_second_gsn_yaml gsnelem gsncountersltn" id="node_csn4">
 <title>CSn4</title>
 <path class="border" d="M880,443 a31,31,0,1,0,62,0 a31,31,0,1,0,-62,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="896" y="441">CSn4</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="896" y="441">CSn4</text>
 </g>
 <g class="gsn_module_examples_dialectic_second_gsn_yaml gsnelem gsncountersltn" id="node_csn1">
 <title>CSn1</title>
 <path class="border" d="M48,582 a48,48,0,1,0,96,0 a48,48,0,1,0,-96,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="69" y="567">CSn1</text>
-<text font-family="Arial" font-size="12" x="69" y="585">A counter </text>
-<text font-family="Arial" font-size="12" x="69" y="598">evidence</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="69" y="567">CSn1</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="69" y="585">A counter </text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="69" y="598">evidence</text>
 </g>
 <g class="gsn_module_examples_dialectic_second_gsn_yaml gsnelem gsncountergoal" id="node_ccg1">
 <title>CCG1</title>
 <path class="border" d="M184,560 L288,560 L288,604 L184,604 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="191" y="579">CCG1</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="191" y="580">CCG1</text>
 </g>
 <g class="gsn_module_examples_dialectic_second_gsn_yaml gsnelem gsndefeated gsncountergoal" id="node_cg3">
 <title>CG3</title>
 <path class="border" d="M328,560 L432,560 L432,604 L328,604 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="335" y="579">CG3</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="335" y="580">CG3</text>
 <line stroke="black" x1="323" x2="437" y1="555" y2="609"/>
 <line stroke="black" x1="437" x2="323" y1="555" y2="609"/>
 </g>
 <g class="gsn_module_examples_dialectic_second_gsn_yaml gsnelem gsncountersltn" id="node_ccsn3">
 <title>CCSn3</title>
 <path class="border" d="M472,582 a35,35,0,1,0,70,0 a35,35,0,1,0,-70,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="488" y="580">CCSn3</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="488" y="580">CCSn3</text>
 </g>
 <g class="gsn_module_examples_dialectic_second_gsn_yaml gsnelem gsngoal" id="node_g9">
 <title>G9</title>
 <path class="border" d="M592,560 L696,560 L696,604 L592,604 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="599" y="579">G9</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="599" y="580">G9</text>
 </g>
 <g class="gsn_module_examples_dialectic_second_gsn_yaml gsnelem gsnsltn" id="node_sn5">
 <title>Sn5</title>
 <path class="border" d="M761,582 a27,27,0,1,0,54,0 a27,27,0,1,0,-54,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="778" y="580">Sn5</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="778" y="580">Sn5</text>
 </g>
 <g class="gsn_module_examples_dialectic_second_gsn_yaml gsnelem gsncountersltn" id="node_ccsn2">
 <title>CCSn2</title>
 <path class="border" d="M201,705 a35,35,0,1,0,70,0 a35,35,0,1,0,-70,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="217" y="703">CCSn2</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="217" y="703">CCSn2</text>
 </g>
 <g class="gsn_module_examples_dialectic_second_gsn_yaml gsnelem gsncountersltn" id="node_csn3">
 <title>CSn3</title>
 <path class="border" d="M349,705 a31,31,0,1,0,62,0 a31,31,0,1,0,-62,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="365" y="703">CSn3</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="365" y="703">CSn3</text>
 </g>
 <g class="gsn_module_examples_dialectic_second_gsn_yaml gsnelem gsnsltn" id="node_sn4">
 <title>Sn4</title>
 <path class="border" d="M617,705 a27,27,0,1,0,54,0 a27,27,0,1,0,-54,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="634" y="703">Sn4</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="634" y="703">Sn4</text>
 </g>
 <path class="gsnedge gsninspby" d="M236,604 C236,634,236,640,236,660" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsnchllngs" d="M236,560 C236,530,263,524,263,504" fill-opacity="0" marker-end="url(#challenges_arrow)" stroke="black" stroke-dasharray="5 5" stroke-width="1"/>

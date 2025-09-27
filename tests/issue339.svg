@@ -8,20 +8,20 @@
 <g class="gsn_module_tests_issue339_yaml gsnelem gsngoal" id="node_g1">
 <title>G1</title>
 <path class="border" d="M20,20 L124,20 L124,64 L20,64 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="27" y="39">G1</text>
-<text font-family="Arial" font-size="12" x="27" y="57">Goal 1</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="27" y="40">G1</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="27" y="58">Goal 1</text>
 </g>
 <g class="gsn_module_tests_issue339_yaml gsnelem gsngoal" id="node_g2">
 <title>G2</title>
 <path class="border" d="M20,104 L124,104 L124,148 L20,148 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="27" y="123">G2</text>
-<text font-family="Arial" font-size="12" x="27" y="141">Goal 2</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="27" y="124">G2</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="27" y="142">Goal 2</text>
 </g>
 <g class="gsn_module_tests_issue339_yaml gsnelem gsnsltn" id="node_snx1">
 <title>SnX1</title>
 <path class="border" d="M28,232 a44,44,0,1,0,88,0 a44,44,0,1,0,-88,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="46" y="224">SnX1</text>
-<text font-family="Arial" font-size="12" x="46" y="242">Solution 1</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="46" y="224">SnX1</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="46" y="242">Solution 1</text>
 </g>
 <path class="gsnedge gsninspby" d="M72,64 C72,94,72,74,72,94" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsninspby" d="M72,64 C72,94,0,44,0,126 S72,158,72,178" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>

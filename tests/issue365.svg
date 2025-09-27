@@ -8,75 +8,75 @@
 <g class="gsn_module_tests_issue365_yaml gsnelem gsngoal" id="node_g1_xxxxxxxxxxxxxxxxxxxx">
 <title>G1-XxxxxxxXxxxxxXxxxxxx</title>
 <path class="border" d="M635,20 L827,20 L827,64 L635,64 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="642" y="39">G1-XxxxxxxXxxxxxXxxxxxx</text>
-<text font-family="Arial" font-size="12" x="642" y="57">xxxxxxx xxxxxxxx xxxxx xx xx xxx</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="642" y="40">G1-XxxxxxxXxxxxxXxxxxxx</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="642" y="58">xxxxxxx xxxxxxxx xxxxx xx xx xxx</text>
 </g>
 <g class="gsn_module_tests_issue365_yaml gsnelem gsnstgy" id="node_s2_xxxxxxxxxxxxxxx">
 <title>S2-XxxxxXxXxxxxxxx</title>
 <path class="border" d="M279,104 L509,104 L495,174 L265,174 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="286" y="123">S2-XxxxxXxXxxxxxxx</text>
-<text font-family="Arial" font-size="12" x="284" y="141">xxxxx xxxxxxxxxx xxxxxx xx xxx</text>
-<text font-family="Arial" font-size="12" x="282" y="154">xxxxxxxx xxxx xxxxx xxxx xx xxxxxxxx</text>
-<text font-family="Arial" font-size="12" x="280" y="167">xxxxx.</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="286" y="124">S2-XxxxxXxXxxxxxxx</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="284" y="142">xxxxx xxxxxxxxxx xxxxxx xx xxx</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="282" y="155">xxxxxxxx xxxx xxxxx xxxx xx xxxxxxxx</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="280" y="168">xxxxx.</text>
 </g>
 <g class="gsn_module_tests_issue365_yaml gsnelem gsnstgy" id="node_s2_xxxxxxxxxxxxxxxxxxxxxx">
 <title>S2-XxxxxXxxxxxxXxXxxxxxxx</title>
 <path class="border" d="M967,104 L1197,104 L1183,174 L953,174 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="974" y="123">S2-XxxxxXxxxxxxXxXxxxxxxx</text>
-<text font-family="Arial" font-size="12" x="972" y="141">xxxxx xx xxxxxxx xxxxxxxxxx xxx</text>
-<text font-family="Arial" font-size="12" x="970" y="154">xxxxxx xxxxxx xx xxxxxxxx xxxx xxxxx</text>
-<text font-family="Arial" font-size="12" x="968" y="167">xxxx xx xxxxxxxx xxxxx.</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="974" y="124">S2-XxxxxXxxxxxxXxXxxxxxxx</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="972" y="142">xxxxx xx xxxxxxx xxxxxxxxxx xxx</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="970" y="155">xxxxxx xxxxxx xx xxxxxxxx xxxx xxxxx</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="968" y="168">xxxx xx xxxxxxxx xxxxx.</text>
 </g>
 <g class="gsn_module_tests_issue365_yaml gsnelem gsngoal" id="node_g3_xxxxxxxxxxxxxxxxxxxxxxxx">
 <title>G3-XxxXxxxXxxxxxxxXxxxxxxxx</title>
 <path class="border" d="M20,214 L236,214 L236,310 L20,310 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="27" y="233">G3-XxxXxxxXxxxxxxxXxxxxxxxx</text>
-<text font-family="Arial" font-size="12" x="27" y="251">xxx_xxxxxxxxxxxx xx xxxxxxxxx xxx</text>
-<text font-family="Arial" font-size="12" x="27" y="264">xxxxxxxxxx. xxxx xxxxxxxx xx xxxxxxx</text>
-<text font-family="Arial" font-size="12" x="27" y="277">xxxxxxx xxx xxxxxxxxxxx xxxx xxx</text>
-<text font-family="Arial" font-size="12" x="27" y="290">xxxxxxx xxx xxx xxxxxxxxxx</text>
-<text font-family="Arial" font-size="12" x="27" y="303">xxxxxxxxxx.</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="27" y="234">G3-XxxXxxxXxxxxxxxXxxxxxxxx</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="27" y="252">xxx_xxxxxxxxxxxx xx xxxxxxxxx xxx</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="27" y="265">xxxxxxxxxx. xxxx xxxxxxxx xx xxxxxxx</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="27" y="278">xxxxxxx xxx xxxxxxxxxxx xxxx xxx</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="27" y="291">xxxxxxx xxx xxx xxxxxxxxxx</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="27" y="304">xxxxxxxxxx.</text>
 </g>
 <g class="gsn_module_tests_issue365_yaml gsnelem gsngoal" id="node_g3_xxxxxxxxxxxxx">
 <title>G3-XxxXxxxxxXxxx</title>
 <path class="border" d="M276,220 L496,220 L496,304 L276,304 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="283" y="239">G3-XxxXxxxxxXxxx</text>
-<text font-family="Arial" font-size="12" x="283" y="257">xxxxx xxxx xx xxx xxxxxx xxx xxx</text>
-<text font-family="Arial" font-size="12" x="283" y="270">xxxxxx xxxx xxx xx xxxx xx xxx</text>
-<text font-family="Arial" font-size="12" x="283" y="283">xxx_xxxxxxxxxxxx xxxxx xx xxxxxxx xx</text>
-<text font-family="Arial" font-size="12" x="283" y="296">xxxxxx xxxxxxxxxxxxx.</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="283" y="240">G3-XxxXxxxxxXxxx</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="283" y="258">xxxxx xxxx xx xxx xxxxxx xxx xxx</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="283" y="271">xxxxxx xxxx xxx xx xxxx xx xxx</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="283" y="284">xxx_xxxxxxxxxxxx xxxxx xx xxxxxxx xx</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="283" y="297">xxxxxx xxxxxxxxxxxxx.</text>
 </g>
 <g class="gsn_module_tests_issue365_yaml gsnelem gsngoal" id="node_g3_xxxxxxxxxxxxxxxxxxxxxxxxxxx">
 <title>G3-XxxXxxxxxxxXxxxXxxxxxxxXxxx</title>
 <path class="border" d="M536,227 L756,227 L756,297 L536,297 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="543" y="246">G3-XxxXxxxxxxxXxxxXxxxxxxxXxxx</text>
-<text font-family="Arial" font-size="12" x="543" y="264">xxx xxxxxx xx xxxxxxxxxx xx x xxx</text>
-<text font-family="Arial" font-size="12" x="543" y="277">xxxx xx xxxx xxxxxxxxx xxx xxxxxx xx</text>
-<text font-family="Arial" font-size="12" x="543" y="290">xxx_xxxxxxxxxxxx.</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="543" y="247">G3-XxxXxxxxxxxXxxxXxxxxxxxXxxx</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="543" y="265">xxx xxxxxx xx xxxxxxxxxx xx x xxx</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="543" y="278">xxxx xx xxxx xxxxxxxxx xxx xxxxxx xx</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="543" y="291">xxx_xxxxxxxxxxxx.</text>
 </g>
 <g class="gsn_module_tests_issue365_yaml gsnelem gsngoal gsn_undeveloped" id="node_g3_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx">
 <title>G3-XxxxxXxxxxxxXxxxxxXxxxxxxxXxxxxx</title>
 <path class="border" d="M796,224 L1050,224 L1050,300 L796,300 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="803" y="243">G3-XxxxxXxxxxxxXxxxxxXxxxxxxxXxxxxx</text>
-<text font-family="Arial" font-size="12" x="803" y="261">xxxxx xx xxxxxxx xxxxxx xxxxxx xx</text>
-<text font-family="Arial" font-size="12" x="803" y="274">xxxxxxxx xxxx xxxxx xxxx xx xxxxxxxx</text>
-<text font-family="Arial" font-size="12" x="803" y="287">xxxxx.</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="803" y="244">G3-XxxxxXxxxxxxXxxxxxXxxxxxxxXxxxxx</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="803" y="262">xxxxx xx xxxxxxx xxxxxx xxxxxx xx</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="803" y="275">xxxxxxxx xxxx xxxxx xxxx xx xxxxxxxx</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="803" y="288">xxxxx.</text>
 <path d="M923,300 l5,5 l-5,5 l-5,-5 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 </g>
 <g class="gsn_module_tests_issue365_yaml gsnelem gsngoal gsn_undeveloped" id="node_g3_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx">
 <title>G3-XxxxxXxxxxxxXxxxxxxxxXxxxxxxxXxxxxx</title>
 <path class="border" d="M1090,224 L1364,224 L1364,300 L1090,300 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="1097" y="243">G3-XxxxxXxxxxxxXxxxxxxxxXxxxxxxxXxxxxx</text>
-<text font-family="Arial" font-size="12" x="1097" y="261">xxxxx xx xxxxxxx xxxxxxxxxx xxxxxx xx</text>
-<text font-family="Arial" font-size="12" x="1097" y="274">xxxxxxxx xxxx xxxxx xxxx xx xxxxxxxx</text>
-<text font-family="Arial" font-size="12" x="1097" y="287">xxxxx.</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="1097" y="244">G3-XxxxxXxxxxxxXxxxxxxxxXxxxxxxxXxxxxx</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="1097" y="262">xxxxx xx xxxxxxx xxxxxxxxxx xxxxxx xx</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="1097" y="275">xxxxxxxx xxxx xxxxx xxxx xx xxxxxxxx</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="1097" y="288">xxxxx.</text>
 <path d="M1227,300 l5,5 l-5,5 l-5,-5 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 </g>
 <g class="gsn_module_tests_issue365_yaml gsnelem gsnsltn" id="node_sn1_xxxxxxxxxxxxxxx">
 <title>Sn1-XXXXxxxxxxxxxxx</title>
 <path class="border" d="M306,431 a81,81,0,1,0,162,0 a81,81,0,1,0,-162,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="322" y="423">Sn1-XXXXxxxxxxxxxxx</text>
-<text font-family="Arial" font-size="12" x="322" y="441">xxx xxxxxxxxxxxxx</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="322" y="423">Sn1-XXXXxxxxxxxxxxx</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="322" y="441">xxx xxxxxxxxxxxxx</text>
 </g>
 <path class="gsnedge gsninspby" d="M731,64 C731,94,387,74,387,94" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsninspby" d="M731,64 C731,94,1075,74,1075,94" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
