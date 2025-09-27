@@ -22,10 +22,8 @@ clap = { version = "4.5", default-features = false, features = [
     "suggestions",
     "color",
 ] }
-font-loader = "0.11" # No features
-glyph_brush_layout = "0.2" # No featues
 serde = { version = "1.0", default-features = false, features = ["derive"] }
-serde_yml = "0.0" # No features
+serde_yaml_ng = "0.10" # No features
 svg = "0.18" # No features
 time = { version = "0.3", default-features = false, features = ["formatting"] }
 
@@ -33,7 +31,6 @@ time = { version = "0.3", default-features = false, features = ["formatting"] }
 assert_cmd = "2.0"
 assert_fs = "1.1"
 predicates = { version = "3.1", features = ["normalize-line-endings"] }
-regex = "1.11"
 
 [profile.release]
 codegen-units = 1

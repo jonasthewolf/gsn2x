@@ -242,13 +242,7 @@ pub(super) fn render_edge(
                 .into(),
         );
     }
-    result.extend(render_acps(
-        graph,
-        render_graph,
-        source,
-        target,
-        curve_points,
-    ));
+    result.extend(render_acps(graph, source, target, curve_points));
     result
 }
 
@@ -336,7 +330,6 @@ fn create_curve_points(
 ///
 fn render_acps(
     graph: &DirectedGraph<'_, RefCell<SvgNode>, EdgeType>,
-    render_graph: &DirGraph<'_>,
     source: &str,
     target: &(String, EdgeType),
     curve_points: Vec<(Point2D<i32>, Point2D<i32>)>,
@@ -365,7 +358,7 @@ fn render_acps(
         let acp_text = acps.join(", ");
         let acp_x = coords.x - ACP_BOX_SIZE;
         let acp_y = coords.y - ACP_BOX_SIZE;
-        let acp_text_bb = str_line_bounding_box(&render_graph.font, &acp_text, false);
+        let acp_text_bb = str_line_bounding_box(&acp_text, false);
         let acp_x_text = coords.x
             + ((ACP_BOX_SIZE + PADDING_HORIZONTAL) as f64 * turning_vector.y) as i32
             - ((1.0 - turning_vector.y) * ((acp_text_bb.0) as f64 / 2.0)) as i32;
@@ -378,13 +371,7 @@ fn render_acps(
                 .set("x", acp_x)
                 .set("y", acp_y),
         );
-        svg_acp.append(create_text(
-            &acp_text.into(),
-            acp_x_text,
-            acp_y_text,
-            &render_graph.font,
-            false,
-        ));
+        svg_acp.append(create_text(&acp_text.into(), acp_x_text, acp_y_text, false));
         Some(svg_acp.into())
     } else {
         None

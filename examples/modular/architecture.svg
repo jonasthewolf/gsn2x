@@ -14,21 +14,21 @@
 <g class="gsn_module_ gsnelem gsnmodule" id="node_main">
 <title>Main</title>
 <path class="border" d="M20,20 h30 v10 L124,30 L124,74 L20,74 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="27" y="49">Main</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="27" y="50">Main</text>
 </g>
 </a>
 <a href="sub1.gsn.svg">
 <g class="gsn_module_ gsnelem gsnmodule" id="node_sub1">
 <title>Sub1</title>
 <path class="border" d="M20,114 h30 v10 L124,124 L124,168 L20,168 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="27" y="143">Sub1</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="27" y="144">Sub1</text>
 </g>
 </a>
 <a href="sub3.gsn.svg">
 <g class="gsn_module_ gsnelem gsnmodule" id="node_sub3">
 <title>Sub3</title>
 <path class="border" d="M20,208 h30 v10 L124,218 L124,262 L20,262 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="27" y="237">Sub3</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="27" y="238">Sub3</text>
 </g>
 </a>
 <path class="gsnedge gsninctxt" d="M72,84 C72,104,72,94,72,114" fill-opacity="0" marker-end="url(#composite_arrow)" marker-start="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>

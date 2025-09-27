@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg class="gsndiagram" viewBox="0 0 1821 590" xmlns="http://www.w3.org/2000/svg">
+<svg class="gsndiagram" viewBox="0 0 1729 573" xmlns="http://www.w3.org/2000/svg">
 <defs>
 <marker id="supportedby_arrow" markerHeight="9" markerUnits="userSpaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
 <polyline fill="black" points="0 0, 10 4.5, 0 9"/>
@@ -10,151 +10,151 @@
 </defs>
 <g class="gsn_module_tests_issue313_yaml gsnelem gsnctxt" id="node_c2">
 <title>C2</title>
-<path class="border" d="M591,20 L705,20 C715,20,715,66,705,66 L591,66 C581,66,581,20,591,20" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="598" y="39">C2</text>
-<text font-family="Arial" font-size="12" x="598" y="58">System Definition.</text>
+<path class="border" d="M558,20 L668,20 C678,20,678,64,668,64 L558,64 C548,64,548,20,558,20" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="565" y="40">C2</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="565" y="58">System Definition.</text>
 </g>
 <g class="gsn_module_tests_issue313_yaml gsnelem gsngoal" id="node_g1">
 <title>G1</title>
-<path class="border" d="M755,20 L981,20 L981,66 L755,66 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="762" y="39">G1</text>
-<text font-family="Arial" font-size="12" x="762" y="58">System is acceptably safe to operate.</text>
+<path class="border" d="M718,20 L930,20 L930,64 L718,64 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="725" y="40">G1</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="725" y="58">System is acceptably safe to operate.</text>
 </g>
 <g class="gsn_module_tests_issue313_yaml gsnelem gsnctxt" id="node_c1">
 <title>C1</title>
-<path class="border" d="M1031,20 L1205,20 C1215,20,1215,66,1205,66 L1031,66 C1021,66,1021,20,1031,20" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="1038" y="39">C1</text>
-<text font-family="Arial" font-size="12" x="1038" y="58">Operating Role and Context.</text>
+<path class="border" d="M980,20 L1146,20 C1156,20,1156,64,1146,64 L980,64 C970,64,970,20,980,20" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="987" y="40">C1</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="987" y="58">Operating Role and Context.</text>
 </g>
 <g class="gsn_module_tests_issue313_yaml gsnelem gsnctxt" id="node_c3">
 <title>C3</title>
-<path class="border" d="M34,106 L198,106 C208,106,208,152,198,152 L34,152 C24,152,24,106,34,106" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="41" y="125">C3</text>
-<text font-family="Arial" font-size="12" x="41" y="144">Tolerability targets (Ref Z).</text>
+<path class="border" d="M35,104 L191,104 C201,104,201,148,191,148 L35,148 C25,148,25,104,35,104" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="42" y="124">C3</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="42" y="142">Tolerability targets (Ref Z).</text>
 </g>
 <g class="gsn_module_tests_issue313_yaml gsnelem gsngoal" id="node_g2">
 <title>G2</title>
-<path class="border" d="M248,106 L648,106 L648,152 L248,152 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="255" y="125">G2</text>
-<text font-family="Arial" font-size="12" x="255" y="144">All identified hazards have been eliminated or sufficiently mitigated.</text>
+<path class="border" d="M241,104 L611,104 L611,148 L241,148 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="248" y="124">G2</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="248" y="142">All identified hazards have been eliminated or sufficiently mitigated.</text>
 </g>
 <g class="gsn_module_tests_issue313_yaml gsnelem gsnctxt" id="node_c4">
 <title>C4</title>
-<path class="border" d="M698,106 L918,106 C928,106,928,152,918,152 L698,152 C688,152,688,106,698,106" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="705" y="125">C4</text>
-<text font-family="Arial" font-size="12" x="705" y="144">Hazards identified from FHA (Ref Y).</text>
+<path class="border" d="M661,104 L869,104 C879,104,879,148,869,148 L661,148 C651,148,651,104,661,104" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="668" y="124">C4</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="668" y="142">Hazards identified from FHA (Ref Y).</text>
 </g>
 <g class="gsn_module_tests_issue313_yaml gsnelem gsngoal" id="node_g3">
 <title>G3</title>
-<path class="border" d="M1021,106 L1555,106 L1555,152 L1021,152 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="1028" y="125">G3</text>
-<text font-family="Arial" font-size="12" x="1028" y="144">Software in the Control System has been developed to SIL appropriate to hazards involved.</text>
+<path class="border" d="M973,104 L1471,104 L1471,148 L973,148 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="980" y="124">G3</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="980" y="142">Software in the Control System has been developed to SIL appropriate to hazards involved.</text>
 </g>
 <g class="gsn_module_tests_issue313_yaml gsnelem gsnctxt" id="node_c5">
 <title>C5</title>
-<path class="border" d="M1605,106 L1791,106 C1801,106,1801,152,1791,152 L1605,152 C1595,152,1595,106,1605,106" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="1612" y="125">C5</text>
-<text font-family="Arial" font-size="12" x="1612" y="144">SIL Guidelines and Processes.</text>
+<path class="border" d="M1521,104 L1699,104 C1709,104,1709,148,1699,148 L1521,148 C1511,148,1511,104,1521,104" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="1528" y="124">C5</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="1528" y="142">SIL Guidelines and Processes.</text>
 </g>
 <g class="gsn_module_tests_issue313_yaml gsnelem gsnstgy" id="node_s1">
 <title>S1</title>
-<path class="border" d="M341,202 L569,202 L555,248 L327,248 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="348" y="221">S1</text>
-<text font-family="Arial" font-size="12" x="344" y="240">Argument over each identified hazard.</text>
+<path class="border" d="M318,198 L548,198 L534,242 L304,242 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="325" y="218">S1</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="321" y="236">Argument over each identified hazard.</text>
 </g>
 <g class="gsn_module_tests_issue313_yaml gsnelem gsnjust" id="node_j1">
 <title>J1</title>
-<path class="border" d="M694,225 a180,33,0,1,0,361,0 a180,33,0,1,0,-361,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="753" y="216">J1</text>
-<text font-family="Arial" font-size="12" x="753" y="235">SIL apportionment is correct and complete.</text>
-<text font-family="Arial" font-size="12" font-weight="bold" x="1049" y="253">J</text>
+<path class="border" d="M652,220 a170,32,0,1,0,340,0 a170,32,0,1,0,-340,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="708" y="212">J1</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="708" y="230">SIL apportionment is correct and complete.</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="987" y="247">J</text>
 </g>
 <g class="gsn_module_tests_issue313_yaml gsnelem gsnstgy" id="node_s2">
 <title>S2</title>
-<path class="border" d="M1101,202 L1489,202 L1475,248 L1087,248 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="1108" y="221">S2</text>
-<text font-family="Arial" font-size="12" x="1104" y="240">Argument over allocated SIL for Primary and Secondary elements.</text>
+<path class="border" d="M1039,198 L1419,198 L1405,242 L1025,242 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="1046" y="218">S2</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="1042" y="236">Argument over allocated SIL for Primary and Secondary elements.</text>
 </g>
 <g class="gsn_module_tests_issue313_yaml gsnelem gsnctxt" id="node_c6">
 <title>C6</title>
-<path class="border" d="M1532,202 L1702,202 C1712,202,1712,248,1702,248 L1532,248 C1522,248,1522,202,1532,202" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="1539" y="221">C6</text>
-<text font-family="Arial" font-size="12" x="1539" y="240">Identified software hazards.</text>
+<path class="border" d="M1462,198 L1622,198 C1632,198,1632,242,1622,242 L1462,242 C1452,242,1452,198,1462,198" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="1469" y="218">C6</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="1469" y="236">Identified software hazards.</text>
 </g>
 <g class="gsn_module_tests_issue313_yaml gsnelem gsngoal" id="node_g2_1">
 <title>G2.1</title>
-<path class="border" d="M20,298 L214,298 L214,344 L20,344 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="27" y="317">G2.1</text>
-<text font-family="Arial" font-size="12" x="27" y="336">Hazard H1 has been eliminated.</text>
+<path class="border" d="M20,292 L204,292 L204,336 L20,336 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="27" y="312">G2.1</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="27" y="330">Hazard H1 has been eliminated.</text>
 </g>
 <g class="gsn_module_tests_issue313_yaml gsnelem gsngoal" id="node_g2_2">
 <title>G2.2</title>
-<path class="border" d="M254,298 L578,298 L578,344 L254,344 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="261" y="317">G2.2</text>
-<text font-family="Arial" font-size="12" x="261" y="336">Probability of Hazard H2 occuring &amp;lt; 1x10-6 per year.</text>
+<path class="border" d="M244,292 L548,292 L548,336 L244,336 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="251" y="312">G2.2</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="251" y="330">Probability of Hazard H2 occuring &amp;lt; 1x10-6 per year.</text>
 </g>
 <g class="gsn_module_tests_issue313_yaml gsnelem gsngoal" id="node_g2_3">
 <title>G2.3</title>
-<path class="border" d="M618,298 L942,298 L942,344 L618,344 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="625" y="317">G2.3</text>
-<text font-family="Arial" font-size="12" x="625" y="336">Probability of Hazard H3 occuring &amp;lt; 1x10-3 per year.</text>
+<path class="border" d="M588,292 L892,292 L892,336 L588,336 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="595" y="312">G2.3</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="595" y="330">Probability of Hazard H3 occuring &amp;lt; 1x10-3 per year.</text>
 </g>
 <g class="gsn_module_tests_issue313_yaml gsnelem gsngoal" id="node_g3_1">
 <title>G3.1</title>
-<path class="border" d="M982,298 L1262,298 L1262,344 L982,344 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="989" y="317">G3.1</text>
-<text font-family="Arial" font-size="12" x="989" y="336">Primary Protection System Developed to SIL 4.</text>
+<path class="border" d="M932,292 L1196,292 L1196,336 L932,336 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="939" y="312">G3.1</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="939" y="330">Primary Protection System Developed to SIL 4.</text>
 </g>
 <g class="gsn_module_tests_issue313_yaml gsnelem gsngoal" id="node_g3_2">
 <title>G3.2</title>
-<path class="border" d="M1302,298 L1608,298 L1608,344 L1302,344 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="1309" y="317">G3.2</text>
-<text font-family="Arial" font-size="12" x="1309" y="336">Secondary Protection System Development to SIL2.</text>
+<path class="border" d="M1236,292 L1526,292 L1526,336 L1236,336 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="1243" y="312">G3.2</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="1243" y="330">Secondary Protection System Development to SIL2.</text>
 </g>
 <g class="gsn_module_tests_issue313_yaml gsnelem gsnsltn" id="node_sn1">
 <title>Sn1</title>
-<path class="border" d="M47,475 a70,70,0,1,0,140,0 a70,70,0,1,0,-140,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="63" y="466">Sn1</text>
-<text font-family="Arial" font-size="12" x="63" y="485">Formal Verification.</text>
+<path class="border" d="M45,463 a67,67,0,1,0,134,0 a67,67,0,1,0,-134,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="61" y="455">Sn1</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="61" y="473">Formal Verification.</text>
 </g>
 <g class="gsn_module_tests_issue313_yaml gsnelem gsnsltn" id="node_sn2">
 <title>Sn2</title>
-<path class="border" d="M527,475 a71,71,0,1,0,142,0 a71,71,0,1,0,-142,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="543" y="466">Sn2</text>
-<text font-family="Arial" font-size="12" x="543" y="485">Fault Tree Analysis.</text>
+<path class="border" d="M499,463 a69,69,0,1,0,138,0 a69,69,0,1,0,-138,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="515" y="455">Sn2</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="515" y="473">Fault Tree Analysis.</text>
 </g>
 <g class="gsn_module_tests_issue313_yaml gsnelem gsnsltn" id="node_sn3">
 <title>Sn3</title>
-<path class="border" d="M1031,475 a91,91,0,1,0,182,0 a91,91,0,1,0,-182,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="1046" y="466">Sn3</text>
-<text font-family="Arial" font-size="12" x="1046" y="485">Process Evidence for SIL4.</text>
+<path class="border" d="M977,463 a87,87,0,1,0,174,0 a87,87,0,1,0,-174,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="992" y="455">Sn3</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="992" y="473">Process Evidence for SIL4.</text>
 </g>
 <g class="gsn_module_tests_issue313_yaml gsnelem gsnsltn" id="node_sn4">
 <title>Sn4</title>
-<path class="border" d="M1364,475 a91,91,0,1,0,182,0 a91,91,0,1,0,-182,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="1379" y="466">Sn4</text>
-<text font-family="Arial" font-size="12" x="1379" y="485">Process Evidence for SIL2.</text>
+<path class="border" d="M1294,463 a87,87,0,1,0,174,0 a87,87,0,1,0,-174,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="1309" y="455">Sn4</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="1309" y="473">Process Evidence for SIL2.</text>
 </g>
-<path class="gsnedge gsninctxt" d="M981,43 C1011,43,991,43,1011,43" fill-opacity="0" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninctxt" d="M755,43 C725,43,745,43,725,43" fill-opacity="0" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M868,66 C868,96,448,76,448,96" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M868,66 C868,96,1288,76,1288,96" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninctxt" d="M248,129 C218,129,238,129,218,129" fill-opacity="0" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninctxt" d="M648,129 C678,129,658,129,678,129" fill-opacity="0" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M448,152 C448,182,448,172,448,192" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M117,344 C117,374,117,375,117,395" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M416,344 C416,374,598,374,598,394" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M780,344 C780,374,598,374,598,394" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninctxt" d="M1021,129 C991,129,958,129,938,129" fill-opacity="0" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninctxt" d="M1555,129 C1585,129,1565,129,1585,129" fill-opacity="0" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M1288,152 C1288,182,1288,172,1288,192" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M1122,344 C1122,374,1122,354,1122,374" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M1455,344 C1455,374,1455,354,1455,374" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M448,248 C448,278,117,268,117,288" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M448,248 C448,278,416,268,416,288" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M448,248 C448,278,780,268,780,288" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninctxt" d="M1482,225 C1512,225,1492,225,1512,225" fill-opacity="0" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninctxt" d="M1094,225 C1064,225,1084,225,1064,225" fill-opacity="0" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M1288,248 C1288,278,1122,268,1122,288" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
-<path class="gsnedge gsninspby" d="M1288,248 C1288,278,1455,268,1455,288" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M930,42 C960,42,940,42,960,42" fill-opacity="0" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M718,42 C688,42,708,42,688,42" fill-opacity="0" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M824,64 C824,94,426,74,426,94" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M824,64 C824,94,1222,74,1222,94" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M241,126 C211,126,231,126,211,126" fill-opacity="0" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M611,126 C641,126,621,126,641,126" fill-opacity="0" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M426,148 C426,178,426,168,426,188" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M112,336 C112,366,112,366,112,386" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M396,336 C396,366,568,364,568,384" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M740,336 C740,366,568,364,568,384" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M973,126 C943,126,909,126,889,126" fill-opacity="0" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M1471,126 C1501,126,1481,126,1501,126" fill-opacity="0" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M1222,148 C1222,178,1222,168,1222,188" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M1064,336 C1064,366,1064,346,1064,366" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M1381,336 C1381,366,1381,346,1381,366" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M426,242 C426,272,112,262,112,282" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M426,242 C426,272,396,262,396,282" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M426,242 C426,272,740,262,740,282" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M1412,220 C1442,220,1422,220,1442,220" fill-opacity="0" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninctxt" d="M1032,220 C1002,220,1022,220,1002,220" fill-opacity="0" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M1222,242 C1222,272,1064,262,1064,282" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M1222,242 C1222,272,1381,262,1381,282" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 </svg>

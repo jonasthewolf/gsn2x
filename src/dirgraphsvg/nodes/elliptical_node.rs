@@ -3,7 +3,7 @@ use svg::node::element::{Element, Path, Title, path::Data};
 use crate::dirgraphsvg::{
     nodes::OFFSET_IDENTIFIER,
     render::{PADDING_HORIZONTAL, create_text},
-    util::font::{FontInfo, text_line_bounding_box},
+    util::font::text_line_bounding_box,
 };
 
 use super::{SizeContext, SvgNode};
@@ -28,7 +28,6 @@ impl EllipticalType {
     ///
     pub(super) fn calculate_size(
         &self,
-        _font: &FontInfo,
         min_width: i32,
         min_height: i32,
         size_context: &mut SizeContext,
@@ -60,13 +59,7 @@ impl EllipticalType {
     ///
     /// Render the node
     ///
-    pub(super) fn render(
-        &self,
-        node: &SvgNode,
-        font: &FontInfo,
-        context: &mut Element,
-        border_color: &str,
-    ) {
+    pub(super) fn render(&self, node: &SvgNode, context: &mut Element, border_color: &str) {
         let title = Title::new(&node.identifier);
 
         let data = Data::new()
@@ -104,13 +97,13 @@ impl EllipticalType {
 
         let x = node.x - self.text_width / 2;
         let mut y = node.y - self.text_height / 2 + PADDING_HORIZONTAL;
-        context.append(create_text(&(&node.identifier).into(), x, y, font, true));
+        context.append(create_text(&(&node.identifier).into(), x, y, true));
 
         if !node.masked {
             y += OFFSET_IDENTIFIER;
             for text in node.text.lines() {
-                y += text_line_bounding_box(font, text, false).1;
-                context.append(create_text(&text.into(), x, y, font, false));
+                y += text_line_bounding_box(text, false).1;
+                context.append(create_text(&text.into(), x, y, false));
             }
         }
 
@@ -119,7 +112,6 @@ impl EllipticalType {
                 &adm.into(),
                 node.x + node.width / 2 - 5,
                 node.y + node.height / 2 - 5,
-                font,
                 true,
             ));
         }
