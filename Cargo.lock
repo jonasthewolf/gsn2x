@@ -282,7 +282,6 @@ dependencies = [
  "assert_fs",
  "clap",
  "predicates",
- "regex",
  "serde",
  "serde_yaml_ng",
  "svg",
