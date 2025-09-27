@@ -51,7 +51,15 @@ fn legend_is_different() -> Result<()> {
     cmd.assert().success();
     std::fs::rename(&output_file, &output_file2)?;
 
-    output_file1.assert(predicate::path::eq_file(output_file2.path()).not());
+    output_file1.assert(
+        predicate::path::eq_file(output_file2.path())
+            .utf8()
+            .unwrap()
+            .normalize()
+            .from_utf8()
+            .from_file_path()
+            .not(),
+    );
 
     temp.close()?;
     Ok(())
@@ -93,7 +101,14 @@ fn entangled() -> Result<()> {
     cmd.assert().success().stdout(predicate::str::contains(
         "Diagram took too many iterations (6).",
     ));
-    output_file.assert(predicate::path::eq_file(temp.child(OUTPUT_SVG).path()));
+    output_file.assert(
+        predicate::path::eq_file(temp.child(OUTPUT_SVG).path())
+            .utf8()
+            .unwrap()
+            .normalize()
+            .from_utf8()
+            .from_file_path(),
+    );
     temp.close()?;
     Ok(())
 }
@@ -212,9 +227,14 @@ fn arch_view() -> Result<()> {
             "Rendering \"examples.modular.sub3.gsn.svg\": OK\n",
             "Rendering \"examples.modular.architecture.svg\": OK\n",
         ))?);
-    output_file.assert(predicate::path::eq_file(std::path::Path::new(
-        "examples/modular/architecture.svg",
-    )));
+    output_file.assert(
+        predicate::path::eq_file(std::path::Path::new("examples/modular/architecture.svg"))
+            .utf8()
+            .unwrap()
+            .normalize()
+            .from_utf8()
+            .from_file_path(),
+    );
     temp.close()?;
     Ok(())
 }
@@ -242,15 +262,30 @@ fn multiple_view() -> Result<()> {
             "Rendering \"..examples.modular.sub3.gsn.svg\": OK\n",
         ))?);
 
-    output_file1.assert(predicate::path::eq_file(std::path::Path::new(
-        "examples/modular/index.gsn.svg",
-    )));
-    output_file2.assert(predicate::path::eq_file(std::path::Path::new(
-        "examples/modular/sub1.gsn.svg",
-    )));
-    output_file3.assert(predicate::path::eq_file(std::path::Path::new(
-        "examples/modular/sub3.gsn.svg",
-    )));
+    output_file1.assert(
+        predicate::path::eq_file(std::path::Path::new("examples/modular/index.gsn.svg"))
+            .utf8()
+            .unwrap()
+            .normalize()
+            .from_utf8()
+            .from_file_path(),
+    );
+    output_file2.assert(
+        predicate::path::eq_file(std::path::Path::new("examples/modular/sub1.gsn.svg"))
+            .utf8()
+            .unwrap()
+            .normalize()
+            .from_utf8()
+            .from_file_path(),
+    );
+    output_file3.assert(
+        predicate::path::eq_file(std::path::Path::new("examples/modular/sub3.gsn.svg"))
+            .utf8()
+            .unwrap()
+            .normalize()
+            .from_utf8()
+            .from_file_path(),
+    );
     temp.close()?;
     Ok(())
 }
@@ -270,9 +305,14 @@ fn complete_view() -> Result<()> {
     cmd.assert().success().stdout(predicate::str::is_match(
         "Rendering \"..complete.svg\": OK\n",
     )?);
-    output_file.assert(predicate::path::eq_file(std::path::Path::new(
-        "examples/modular/complete.svg",
-    )));
+    output_file.assert(
+        predicate::path::eq_file(std::path::Path::new("examples/modular/complete.svg"))
+            .utf8()
+            .unwrap()
+            .normalize()
+            .from_utf8()
+            .from_file_path(),
+    );
     temp.close()?;
     Ok(())
 }
