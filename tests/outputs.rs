@@ -3,6 +3,9 @@ use assert_cmd::Command;
 use assert_fs::prelude::*;
 use predicates::prelude::*;
 
+mod basics;
+use basics::assert_files_equal;
+
 #[test]
 fn no_evidence() -> Result<()> {
     let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
@@ -19,14 +22,10 @@ fn no_evidence() -> Result<()> {
         )?)
         .stderr(predicate::str::is_empty());
 
-    temp.child("no_evidence.gsn.test.md").assert(
-        predicate::path::eq_file(temp.child("my_evidence.md").path())
-            .utf8()
-            .unwrap()
-            .normalize()
-            .from_utf8()
-            .from_file_path(),
-    );
+    assert_files_equal(
+        &temp.child("no_evidence.gsn.test.md"),
+        temp.child("my_evidence.md").path(),
+    )?;
 
     temp.close()?;
     Ok(())
@@ -51,15 +50,10 @@ fn some_evidence() -> Result<()> {
         )?)
         .stderr(predicate::str::is_empty());
 
-    temp.child("example.gsn.test.md").assert(
-        predicate::path::eq_file(temp.child("my_evidence.md").path())
-            .utf8()
-            .unwrap()
-            .normalize()
-            .from_utf8()
-            .from_file_path(),
-    );
-
+    assert_files_equal(
+        &temp.child("example.gsn.test.md"),
+        temp.child("my_evidence.md").path(),
+    )?;
     temp.close()?;
     Ok(())
 }
@@ -102,11 +96,8 @@ fn statistics_file() -> Result<()> {
         .current_dir(&temp);
     cmd.assert().success();
 
-    temp.child("statistics.md").assert(
-        predicate::eq(STATISTICS_OUTPUT)
-            .from_utf8()
-            .from_file_path(),
-    );
+    temp.child("statistics.md")
+        .assert(predicate::eq(STATISTICS_OUTPUT));
 
     Ok(())
 }
