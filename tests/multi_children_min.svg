@@ -8,27 +8,27 @@
 <g class="gsn_module_tests_multi_children_min_yaml gsnelem gsngoal" id="node_g1">
 <title>G1</title>
 <path class="border" d="M92,20 L196,20 L196,64 L92,64 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="99" y="39">G1</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="99" y="40">G1</text>
 </g>
 <g class="gsn_module_tests_multi_children_min_yaml gsnelem gsngoal" id="node_g2">
 <title>G2</title>
 <path class="border" d="M20,104 L124,104 L124,148 L20,148 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="27" y="123">G2</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="27" y="124">G2</text>
 </g>
 <g class="gsn_module_tests_multi_children_min_yaml gsnelem gsngoal" id="node_g3">
 <title>G3</title>
 <path class="border" d="M164,104 L268,104 L268,148 L164,148 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="171" y="123">G3</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="171" y="124">G3</text>
 </g>
 <g class="gsn_module_tests_multi_children_min_yaml gsnelem gsnsltn" id="node_sn1">
 <title>Sn1</title>
 <path class="border" d="M45,215 a27,27,0,1,0,54,0 a27,27,0,1,0,-54,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="64" y="213">Sn1</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="62" y="213">Sn1</text>
 </g>
 <g class="gsn_module_tests_multi_children_min_yaml gsnelem gsnsltn" id="node_sn2">
 <title>Sn2</title>
 <path class="border" d="M139,215 a27,27,0,1,0,54,0 a27,27,0,1,0,-54,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="158" y="213">Sn2</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="156" y="213">Sn2</text>
 </g>
 <path class="gsnedge gsninspby" d="M144,64 C144,94,72,74,72,94" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 <path class="gsnedge gsninspby" d="M144,64 C144,94,216,74,216,94" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>

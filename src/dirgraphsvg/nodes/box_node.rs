@@ -3,7 +3,7 @@ use svg::node::element::{Element, Path, Title, path::Data};
 use crate::dirgraphsvg::{
     nodes::OFFSET_IDENTIFIER,
     render::{PADDING_HORIZONTAL, PADDING_VERTICAL, create_text},
-    util::font::{FontInfo, text_line_bounding_box},
+    util::font::{str_line_bounding_box, text_line_bounding_box},
 };
 
 use super::{SizeContext, SvgNode};
@@ -36,7 +36,6 @@ impl BoxType {
     ///
     pub(super) fn calculate_size(
         &self,
-        _font: &FontInfo,
         min_width: i32,
         min_height: i32,
         size_context: &mut SizeContext,
@@ -44,7 +43,9 @@ impl BoxType {
         let mut width = std::cmp::max(min_width, size_context.text_width + 2 * PADDING_HORIZONTAL);
         let mut height = std::cmp::max(min_height, size_context.text_height + 2 * PADDING_VERTICAL);
         match &self {
-            BoxType::Normal(_) => (),
+            BoxType::Normal(skew) => {
+                width += skew;
+            }
             BoxType::Undeveloped(_) => {
                 height += UNDEVELOPED_DIAMOND;
             }
@@ -62,13 +63,7 @@ impl BoxType {
     ///
     /// Render the node
     ///
-    pub(super) fn render(
-        &self,
-        node: &SvgNode,
-        font: &FontInfo,
-        context: &mut Element,
-        border_color: &str,
-    ) {
+    pub(super) fn render(&self, node: &SvgNode, context: &mut Element, border_color: &str) {
         let title = Title::new(&node.identifier);
         use svg::Node;
         context.append(title);
@@ -139,16 +134,16 @@ impl BoxType {
         if let BoxType::Module = self {
             y += MODULE_TAB_HEIGHT;
         }
-        y += font.size as i32;
-        context.append(create_text(&(&node.identifier).into(), x, y, font, true));
+        y += str_line_bounding_box("", false).1;
+        context.append(create_text(&(&node.identifier).into(), x, y, true));
         y += OFFSET_IDENTIFIER;
 
         if !node.masked {
             for text in node.text.lines() {
-                let text_bb = text_line_bounding_box(font, text, false);
+                let text_bb = text_line_bounding_box(text, false);
                 y += text_bb.1;
                 x -= skew * text_bb.1 / node.height;
-                context.append(create_text(&text.into(), x, y, font, false));
+                context.append(create_text(&text.into(), x, y, false));
             }
         }
 

@@ -1,34 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg class="gsndiagram" viewBox="0 0 436 141" xmlns="http://www.w3.org/2000/svg">
+<svg class="gsndiagram" viewBox="0 0 436 137" xmlns="http://www.w3.org/2000/svg">
 <defs/>
 <g class="gsn_underminded gsn_unsupported gsn_module_tests_additionals_yaml gsnelem gsngoal gsn_undeveloped" id="node_g1">
 <title>G1</title>
-<path class="border" d="M20,24 L128,24 L128,116 L20,116 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="27" y="43">G1</text>
-<text font-family="Arial" font-size="12" x="27" y="62">asdfkjaslkdfj</text>
-<text font-family="Arial" font-size="12" x="27" y="74"></text>
-<text font-family="Arial" font-size="12" x="27" y="88">UNSUPPORTED:</text>
-<text font-family="Arial" font-size="12" x="27" y="102">false</text>
-<path d="M74,116 l5,5 l-5,5 l-5,-5 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<path class="border" d="M20,24 L128,24 L128,112 L20,112 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="27" y="44">G1</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="27" y="62">asdfkjaslkdfj</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="27" y="75"></text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="27" y="88">UNSUPPORTED:</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="27" y="101">false</text>
+<path d="M74,112 l5,5 l-5,5 l-5,-5 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 </g>
 <g class="gsn_additional gsn_module_tests_additionals_yaml gsnelem gsngoal" id="node_g2">
 <title>G2</title>
-<path class="border" d="M168,20 L272,20 L272,120 L168,120 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="175" y="39">G2</text>
-<text font-family="Arial" font-size="12" x="175" y="58">ASDFasdfjkp</text>
-<text font-family="Arial" font-size="12" x="175" y="70"></text>
-<text font-family="Arial" font-size="12" x="175" y="84">ADDITIONAL:</text>
-<text font-family="Arial" font-size="12" x="175" y="98">- asdfkjaslkdfj</text>
-<text font-family="Arial" font-size="12" x="175" y="112">- asdfasdf</text>
+<path class="border" d="M168,20 L272,20 L272,116 L168,116 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="175" y="40">G2</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="175" y="58">ASDFasdfjkp</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="175" y="71"></text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="175" y="84">ADDITIONAL:</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="175" y="97">- asdfkjaslkdfj</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="175" y="110">- asdfasdf</text>
 </g>
 <g class="gsn_add1 gsn_module_tests_additionals_yaml gsnelem gsngoal" id="node_g3">
 <title>G3</title>
-<path class="border" d="M312,20 L416,20 L416,120 L312,120 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Arial" font-size="12" font-weight="bold" x="319" y="39">G3</text>
-<text font-family="Arial" font-size="12" x="319" y="58">asdfasdf</text>
-<text font-family="Arial" font-size="12" x="319" y="70"></text>
-<text font-family="Arial" font-size="12" x="319" y="84">ADD1:</text>
-<text font-family="Arial" font-size="12" x="319" y="98">a: b</text>
-<text font-family="Arial" font-size="12" x="319" y="112">c: d</text>
+<path class="border" d="M312,20 L416,20 L416,116 L312,116 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="319" y="40">G3</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="319" y="58">asdfasdf</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="319" y="71"></text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="319" y="84">ADD1:</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="319" y="97">a: b</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="319" y="110">c: d</text>
 </g>
 </svg>

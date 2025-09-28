@@ -5,6 +5,7 @@ use assert_cmd::prelude::*;
 use assert_fs::fixture::PathCopy;
 use assert_fs::prelude::*;
 use predicates::prelude::*;
+use std::path::Path;
 use std::process::Command;
 
 use crate::basics::*;
@@ -41,17 +42,29 @@ fn legend_is_different() -> Result<()> {
 
     temp.copy_from(SUB_DIR, &[INPUT_YAML])?;
     let output_file = temp.child(OUTPUT_SVG);
-    let output_file1 = temp.child("out1.svg");
-    let output_file2 = temp.child("out2.svg");
+    let expected = temp.child("out1.svg");
+    let reference = temp.child("out2.svg");
     // Run program twice with full legend
     cmd.current_dir(&temp);
     cmd.arg(INPUT_YAML);
     cmd.assert().success();
-    std::fs::rename(&output_file, &output_file1)?;
+    std::fs::rename(&output_file, &expected)?;
     cmd.assert().success();
-    std::fs::rename(&output_file, &output_file2)?;
+    std::fs::rename(&output_file, &reference)?;
 
-    output_file1.assert(predicate::path::eq_file(output_file2.path()).not());
+    let expected_contents = std::fs::read_to_string(expected)?;
+    let reference_contents = std::fs::read_to_string(reference)?;
+    let exp_line_count = expected_contents.chars().filter(|&c| c == '\n').count();
+    let ref_line_count = reference_contents.chars().filter(|&c| c == '\n').count();
+
+    assert_eq!(exp_line_count, ref_line_count);
+
+    assert!(
+        expected_contents
+            .lines()
+            .zip(reference_contents.lines())
+            .any(|(l, r)| l != r)
+    );
 
     temp.close()?;
     Ok(())
@@ -93,10 +106,7 @@ fn entangled() -> Result<()> {
     cmd.assert().success().stdout(predicate::str::contains(
         "Diagram took too many iterations (6).",
     ));
-    assert!(are_struct_similar_svgs(
-        output_file.as_os_str(),
-        temp.child(OUTPUT_SVG).as_os_str(),
-    )?);
+    assert_files_equal(&output_file, temp.child(OUTPUT_SVG).path())?;
     temp.close()?;
     Ok(())
 }
@@ -215,10 +225,7 @@ fn arch_view() -> Result<()> {
             "Rendering \"examples.modular.sub3.gsn.svg\": OK\n",
             "Rendering \"examples.modular.architecture.svg\": OK\n",
         ))?);
-    assert!(are_struct_similar_svgs(
-        std::path::Path::new("examples/modular/architecture.svg").as_os_str(),
-        output_file.as_os_str(),
-    )?);
+    assert_files_equal(&output_file, Path::new("examples/modular/architecture.svg"))?;
     temp.close()?;
     Ok(())
 }
@@ -245,18 +252,9 @@ fn multiple_view() -> Result<()> {
             "Rendering \"..examples.modular.sub1.gsn.svg\": OK\n",
             "Rendering \"..examples.modular.sub3.gsn.svg\": OK\n",
         ))?);
-    assert!(are_struct_similar_svgs(
-        std::path::Path::new("examples/modular/index.gsn.svg").as_os_str(),
-        output_file1.as_os_str(),
-    )?);
-    assert!(are_struct_similar_svgs(
-        std::path::Path::new("examples/modular/sub1.gsn.svg").as_os_str(),
-        output_file2.as_os_str(),
-    )?);
-    assert!(are_struct_similar_svgs(
-        std::path::Path::new("examples/modular/sub3.gsn.svg").as_os_str(),
-        output_file3.as_os_str(),
-    )?);
+    assert_files_equal(&output_file1, Path::new("examples/modular/index.gsn.svg"))?;
+    assert_files_equal(&output_file2, Path::new("examples/modular/sub1.gsn.svg"))?;
+    assert_files_equal(&output_file3, Path::new("examples/modular/sub3.gsn.svg"))?;
     temp.close()?;
     Ok(())
 }
@@ -276,10 +274,7 @@ fn complete_view() -> Result<()> {
     cmd.assert().success().stdout(predicate::str::is_match(
         "Rendering \"..complete.svg\": OK\n",
     )?);
-    assert!(are_struct_similar_svgs(
-        std::path::Path::new("examples/modular/complete.svg").as_os_str(),
-        output_file.as_os_str(),
-    )?);
+    assert_files_equal(&output_file, Path::new("examples/modular/complete.svg"))?;
     temp.close()?;
     Ok(())
 }
@@ -393,5 +388,11 @@ fn uses_circle_detection() -> Result<()> {
     cmd.assert()
             .failure()
             .stderr(predicate::str::contains("Error: (A) C06: Module in tests/circle1.yaml was already present in tests/circle1.yaml provided by command line."));
+    Ok(())
+}
+
+#[test]
+fn font_metrics() -> Result<()> {
+    regression_renderings(&["tests/font_metrics.yaml"], &["-E"], None)?;
     Ok(())
 }

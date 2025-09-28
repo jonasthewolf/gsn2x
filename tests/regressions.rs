@@ -1,9 +1,9 @@
 use anyhow::Result;
 use assert_cmd::Command;
-use basics::*;
 use predicates::prelude::*;
 
 mod basics;
+use basics::regression_renderings;
 
 #[test]
 fn issue250() -> Result<()> {

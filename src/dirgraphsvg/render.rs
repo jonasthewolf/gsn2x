@@ -20,7 +20,7 @@ use super::{
     nodes::SvgNode,
     util::{
         escape_url,
-        font::FontInfo,
+        font::{FONT_FAMILY, FONT_SIZE},
         markdown::{self, MarkdownText, TextType},
         point2d::Point2D,
     },
@@ -85,7 +85,7 @@ pub(super) fn render_graph(
         render_graph.embed_stylesheets,
     );
     // Draw nodes
-    render_nodes(&mut document, graph, render_graph, ranks);
+    render_nodes(&mut document, graph, ranks);
     // Draw edges
     render_edges(&mut document, graph, render_graph, ranks, width);
     // Order is important here. render_legend may modify self.width and self.height
@@ -179,7 +179,6 @@ fn get_bounding_boxes_in_rank(
 fn render_nodes(
     document: &mut Document,
     graph: &DirectedGraph<'_, RefCell<SvgNode>, EdgeType>,
-    render_graph: &DirGraph,
     ranks: &Vec<Vec<Vec<&str>>>,
 ) {
     let nodes = graph.get_nodes();
@@ -188,7 +187,7 @@ fn render_nodes(
         for np in rank {
             for &id in np {
                 let n = nodes.get(id).unwrap();
-                n.borrow().render(&render_graph.font, document);
+                n.borrow().render(document);
             }
         }
     }
@@ -212,8 +211,7 @@ fn render_legend(
         let mut text_width = 0;
         let mut lines = Vec::new();
         for t in meta {
-            let (width, height) =
-                crate::dirgraphsvg::util::font::str_line_bounding_box(&render_graph.font, t, false);
+            let (width, height) = crate::dirgraphsvg::util::font::str_line_bounding_box(t, false);
             lines.push((width, height));
             text_height += height;
             text_width = std::cmp::max(text_width, width);
@@ -228,13 +226,7 @@ fn render_legend(
         let mut y_running = 0;
         for (text, (_, h)) in meta.iter().zip(lines) {
             y_running += h;
-            g.append(create_text(
-                &text.into(),
-                x,
-                y_base + y_running,
-                &render_graph.font,
-                false,
-            ));
+            g.append(create_text(&text.into(), x, y_base + y_running, false));
         }
         document.append(g);
     }
@@ -437,18 +429,12 @@ pub(crate) fn create_group(id: &str, classes: &[String]) -> Group {
 /// <text x="" y=""><a>xyz</a></text>
 ///
 ///
-pub(crate) fn create_text(
-    input: &MarkdownText,
-    x: i32,
-    y: i32,
-    font: &FontInfo,
-    bold: bool,
-) -> Element {
+pub(crate) fn create_text(input: &MarkdownText, x: i32, y: i32, bold: bool) -> Element {
     let mut text = Text::new("")
         .set("x", x)
         .set("y", y)
-        .set("font-size", font.size)
-        .set("font-family", font.name.as_str());
+        .set("font-size", format!("{FONT_SIZE}px"))
+        .set("font-family", FONT_FAMILY.to_string());
     if bold {
         text = text.set("font-weight", "bold");
     }
