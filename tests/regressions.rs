@@ -3,7 +3,9 @@ use assert_cmd::Command;
 use predicates::prelude::*;
 
 mod basics;
-use basics::regression_renderings;
+mod reg_render;
+
+use crate::reg_render::regression_renderings;
 
 #[test]
 fn issue250() -> Result<()> {

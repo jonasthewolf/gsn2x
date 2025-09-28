@@ -1,4 +1,5 @@
 mod basics;
+mod reg_render;
 
 use anyhow::Result;
 use assert_cmd::prelude::*;
@@ -9,6 +10,7 @@ use std::path::Path;
 use std::process::Command;
 
 use crate::basics::*;
+use crate::reg_render::regression_renderings;
 
 #[test]
 fn file_does_not_exist() -> Result<()> {
