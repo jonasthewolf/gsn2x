@@ -42,24 +42,28 @@ fn legend_is_different() -> Result<()> {
 
     temp.copy_from(SUB_DIR, &[INPUT_YAML])?;
     let output_file = temp.child(OUTPUT_SVG);
-    let output_file1 = temp.child("out1.svg");
-    let output_file2 = temp.child("out2.svg");
+    let expected = temp.child("out1.svg");
+    let reference = temp.child("out2.svg");
     // Run program twice with full legend
     cmd.current_dir(&temp);
     cmd.arg(INPUT_YAML);
     cmd.assert().success();
-    std::fs::rename(&output_file, &output_file1)?;
+    std::fs::rename(&output_file, &expected)?;
     cmd.assert().success();
-    std::fs::rename(&output_file, &output_file2)?;
+    std::fs::rename(&output_file, &reference)?;
 
-    output_file1.assert(
-        predicate::path::eq_file(output_file2.path())
-            .utf8()
-            .unwrap()
-            .normalize()
-            .from_utf8()
-            .from_file_path()
-            .not(),
+    let expected_contents = std::fs::read_to_string(expected)?;
+    let reference_contents = std::fs::read_to_string(reference)?;
+    let exp_line_count = expected_contents.chars().filter(|&c| c == '\n').count();
+    let ref_line_count = reference_contents.chars().filter(|&c| c == '\n').count();
+
+    assert_eq!(exp_line_count, ref_line_count);
+
+    assert!(
+        expected_contents
+            .lines()
+            .zip(reference_contents.lines())
+            .any(|(l, r)| l != r)
     );
 
     temp.close()?;
@@ -102,14 +106,7 @@ fn entangled() -> Result<()> {
     cmd.assert().success().stdout(predicate::str::contains(
         "Diagram took too many iterations (6).",
     ));
-    output_file.assert(
-        predicate::path::eq_file(temp.child(OUTPUT_SVG).path())
-            .utf8()
-            .unwrap()
-            .normalize()
-            .from_utf8()
-            .from_file_path(),
-    );
+    assert_files_equal(&output_file, temp.child(OUTPUT_SVG).path())?;
     temp.close()?;
     Ok(())
 }
@@ -228,14 +225,7 @@ fn arch_view() -> Result<()> {
             "Rendering \"examples.modular.sub3.gsn.svg\": OK\n",
             "Rendering \"examples.modular.architecture.svg\": OK\n",
         ))?);
-    output_file.assert(
-        predicate::path::eq_file(Path::new("examples/modular/architecture.svg"))
-            .utf8()
-            .unwrap()
-            .normalize()
-            .from_utf8()
-            .from_file_path(),
-    );
+    assert_files_equal(&output_file, Path::new("examples/modular/architecture.svg"))?;
     temp.close()?;
     Ok(())
 }
@@ -262,31 +252,9 @@ fn multiple_view() -> Result<()> {
             "Rendering \"..examples.modular.sub1.gsn.svg\": OK\n",
             "Rendering \"..examples.modular.sub3.gsn.svg\": OK\n",
         ))?);
-
-    output_file1.assert(
-        predicate::path::eq_file(Path::new("examples/modular/index.gsn.svg"))
-            .utf8()
-            .unwrap()
-            .normalize()
-            .from_utf8()
-            .from_file_path(),
-    );
-    output_file2.assert(
-        predicate::path::eq_file(Path::new("examples/modular/sub1.gsn.svg"))
-            .utf8()
-            .unwrap()
-            .normalize()
-            .from_utf8()
-            .from_file_path(),
-    );
-    output_file3.assert(
-        predicate::path::eq_file(Path::new("examples/modular/sub3.gsn.svg"))
-            .utf8()
-            .unwrap()
-            .normalize()
-            .from_utf8()
-            .from_file_path(),
-    );
+    assert_files_equal(&output_file1, Path::new("examples/modular/index.gsn.svg"))?;
+    assert_files_equal(&output_file2, Path::new("examples/modular/sub1.gsn.svg"))?;
+    assert_files_equal(&output_file3, Path::new("examples/modular/sub3.gsn.svg"))?;
     temp.close()?;
     Ok(())
 }
@@ -306,14 +274,7 @@ fn complete_view() -> Result<()> {
     cmd.assert().success().stdout(predicate::str::is_match(
         "Rendering \"..complete.svg\": OK\n",
     )?);
-    output_file.assert(
-        predicate::path::eq_file(Path::new("examples/modular/complete.svg"))
-            .utf8()
-            .unwrap()
-            .normalize()
-            .from_utf8()
-            .from_file_path(),
-    );
+    assert_files_equal(&output_file, Path::new("examples/modular/complete.svg"))?;
     temp.close()?;
     Ok(())
 }
