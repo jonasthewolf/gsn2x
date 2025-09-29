@@ -1,21 +1,11 @@
-// source_path: /System/Library/Fonts/Supplemental/Arial Bold.ttf
-// font name: Arial
-// units_per_em: 2048
-// ascender: 1854
-// descender: -434
-// line_gap: 67
-// lineheight: 2355
-
-use super::Font;
-
 pub struct BoldFont;
 
-impl Font for BoldFont {
-    fn get_line_height() -> f64 {
+impl BoldFont {
+    pub fn get_line_height() -> f64 {
         2355.0 / 2048.0
     }
 
-    fn get_advance(c: char) -> f64 {
+    pub fn get_advance(c: char) -> f64 {
         (match c {
             '\'' => 487.0,
             ' '

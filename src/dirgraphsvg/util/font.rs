@@ -6,12 +6,6 @@ mod metrics_normal;
 use metrics_bold::BoldFont;
 use metrics_normal::NormalFont;
 
-pub trait Font {
-    fn get_advance(c: char) -> f64;
-
-    fn get_line_height() -> f64;
-}
-
 pub const FONT_SIZE: f64 = 12.0;
 pub const FONT_FAMILY: &str = "Liberation Sans, Arial, sans-serif";
 
