@@ -33,11 +33,11 @@ The output is an argument view in SVG format and automatically written to `<your
 
 Build the docker image:
 
-  docker build -t gsn2x .
+    docker build -t gsn2x .
 
 Run the docker image interactively:
 
-docker run --interactive --rm --volume $(pwd):/home --workdir /home gsn2x <yourgsnfile.yaml>
+    docker run --interactive --rm --volume $(pwd):/home --workdir /home gsn2x <yourgsnfile.yaml>
 
 ## Documentation
 
