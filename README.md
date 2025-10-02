@@ -29,6 +29,16 @@ You can create an SVG like this:
 
 The output is an argument view in SVG format and automatically written to `<yourgsnfile.svg>`. If more than one input file is provided, they are treated as modules.
 
+### Docker
+
+Build the docker image:
+
+  docker build -t gsn2x .
+
+Run the docker image interactively:
+
+docker run --interactive --rm --volume $(pwd):/home --workdir /home gsn2x <yourgsnfile.yaml>
+
 ## Documentation
 
 For further information see the [documentation](https://jonasthewolf.github.io/gsn2x).
