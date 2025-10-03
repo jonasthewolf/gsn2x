@@ -25,9 +25,6 @@ pub fn wrap_words(s: &str, width: u32, wrapstr: &str) -> String {
         out.push(cur_line);
         cur_line = String::new();
     }
-    if !cur_line.trim().is_empty() {
-        out.push(cur_line);
-    }
     out.join(wrapstr)
 }
 
@@ -169,6 +166,14 @@ mod test {
         let input = "Devide and conquer";
         let expected = "Devide\nand\nconquer";
         let out = wrap_words(input, 0, "\n");
+        assert_eq!(expected, out);
+    }
+
+    #[test]
+    fn one_some_space() {
+        let input = "Devide and conquer";
+        let expected = "Devide\nand\nconquer";
+        let out = wrap_words(input, 1, "\n");
         assert_eq!(expected, out);
     }
 }
