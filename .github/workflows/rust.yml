@@ -50,6 +50,7 @@ jobs:
       runs-on: ubuntu-latest
       permissions:
         contents: read
+        pages: write
 
       steps:
         - uses: actions/checkout@v5
@@ -118,6 +119,7 @@ jobs:
     if: ${{ github.event_name != 'pull_request' && !startsWith(github.ref, 'refs/tags/') }} 
     permissions:
       contents: read
+      deployments: write
 
     steps:
     - name: Download MacOS artifacts
