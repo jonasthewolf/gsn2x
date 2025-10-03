@@ -25,7 +25,7 @@ pub fn wrap_words(s: &str, width: u32, wrapstr: &str) -> String {
         out.push(cur_line);
         cur_line = String::new();
     }
-    if !cur_line.is_empty() {
+    if !cur_line.trim().is_empty() {
         out.push(cur_line);
     }
     out.join(wrapstr)
