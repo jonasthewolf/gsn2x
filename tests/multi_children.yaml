@@ -24,6 +24,7 @@ SVec-AkjlglgDLHKDSdjfksld:
   inContextOf: [JVec-BNWenkgmSDfglwe]
 JVec-BNWenkgmSDfglwe:
   text: "xxx xxxxxxx xxx xxxxxxx xxxxxxxxxx xx xxxxxxx xxxxxxxxxxxxxx xx xxxxxxxxxx xx xxxxxxxx, xxxxxxx xx xxx xx \nxxxxxxx xxxx xxxx xxx xx xxxxxxxxxxxx xxxxxx xx xxxxx xxx xxxxxxxxx xx xxxxxx xxxxxxxx xxx xxx xxxxxxxxx xxxxxxxxx xxxxx.\n"
+  charWrap: 50
 GVec-LowComplexityAnalysis:
   text: xxxxxxxxxx xx xxxxxxxx xxxx xxxx xxxxxxxxx xxxx xxx xxxxxxxx xxx xxxxx xxx xxxxxxxxxx.
   supportedBy: [SnVec-ComplexityAnalysisReport]

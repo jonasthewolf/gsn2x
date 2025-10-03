@@ -4,17 +4,26 @@
 pub fn wrap_words(s: &str, width: u32, wrapstr: &str) -> String {
     let mut out = Vec::<String>::new();
     let mut cur_line = String::new();
-    for word in s.split_ascii_whitespace() {
-        if cur_line.chars().count() + word.chars().count() > width as usize {
-            if !cur_line.is_empty() {
-                // Relevant if cur_line.len = 0 and word.len > width
-                out.push(cur_line);
+    for line in s.lines() {
+        let bullet_list = line.trim_start().starts_with(['*', '-']);
+        for word in line.split_ascii_whitespace() {
+            if cur_line.chars().count() + word.chars().count() > width as usize {
+                if !cur_line.is_empty() {
+                    // Relevant if cur_line.len = 0 and word.len > width
+                    out.push(cur_line);
+                }
+                cur_line = String::new();
+                if bullet_list {
+                    // Indent wrapped lines in a bullet list
+                    cur_line.push_str("  ");
+                }
+            } else if !cur_line.is_empty() {
+                cur_line.push(' ');
             }
-            cur_line = String::new();
-        } else if !cur_line.is_empty() {
-            cur_line.push(' ');
+            cur_line.push_str(word);
         }
-        cur_line.push_str(word);
+        out.push(cur_line);
+        cur_line = String::new();
     }
     if !cur_line.is_empty() {
         out.push(cur_line);
@@ -80,11 +89,57 @@ mod test {
     fn with_newlines() {
         let input = "Lorem ipsum dolor sit amet,\nconsetetur sadipscing\nelitr, sed diam nonumy eirmod tempor invidunt";
         let expected = concat!(
-            "Lorem ipsum dolor sit amet, consetetur\n",
-            "sadipscing elitr, sed diam nonumy eirmod\n",
-            "tempor invidunt",
+            "Lorem ipsum dolor sit amet,\n",
+            "consetetur sadipscing\n",
+            "elitr, sed diam nonumy eirmod tempor invidunt",
         );
         let out = wrap_words(input, 45, "\n");
+        assert_eq!(out, expected);
+    }
+
+    #[test]
+    fn with_newlines_shorter() {
+        let input = "Lorem ipsum dolor sit amet,\nconsetetur sadipscing\nelitr, sed diam nonumy eirmod tempor invidunt";
+        let expected = concat!(
+            "Lorem ipsum dolor sit\n",
+            "amet,\n",
+            "consetetur sadipscing\n",
+            "elitr, sed diam nonumy\n",
+            "eirmod tempor invidunt",
+        );
+        let out = wrap_words(input, 23, "\n");
+        assert_eq!(out, expected);
+    }
+
+    #[test]
+    fn bullets() {
+        let input = "This is my list:\n - item 1\n - item 2\n - item 3\nelitr, sed diam nonumy eirmod tempor invidunt";
+        let expected = concat!(
+            "This is my list:\n",
+            "- item 1\n",
+            "- item 2\n",
+            "- item 3\n",
+            "elitr, sed diam nonumy\n",
+            "eirmod tempor invidunt",
+        );
+        let out = wrap_words(input, 23, "\n");
+        assert_eq!(out, expected);
+    }
+
+    #[test]
+    fn long_bullets() {
+        let input = "This is my list:\n - item 1 aslkdjhfa ljsdhf sdf sdfawe d asd s\n - item 2\n - item 3\nelitr, sed diam nonumy eirmod tempor invidunt";
+        let expected = concat!(
+            "This is my list:\n",
+            "- item 1 aslkdjhfa\n",
+            "  ljsdhf sdf sdfawe d\n",
+            "  asd s\n",
+            "- item 2\n",
+            "- item 3\n",
+            "elitr, sed diam nonumy\n",
+            "eirmod tempor invidunt",
+        );
+        let out = wrap_words(input, 23, "\n");
         assert_eq!(out, expected);
     }
 
