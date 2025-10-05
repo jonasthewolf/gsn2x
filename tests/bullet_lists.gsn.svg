@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg class="gsndiagram" viewBox="0 0 248 411" xmlns="http://www.w3.org/2000/svg">
+<svg class="gsndiagram" viewBox="0 0 250 413" xmlns="http://www.w3.org/2000/svg">
 <defs>
 <marker id="supportedby_arrow" markerHeight="9" markerUnits="userSpaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
 <polyline fill="black" points="0 0, 10 4.5, 0 9"/>
@@ -7,29 +7,29 @@
 </defs>
 <g class="gsn_module_tests_bullet_lists_gsn_yaml gsnelem gsngoal" id="node_g1">
 <title>G1</title>
-<path class="border" d="M37,20 L211,20 L211,142 L37,142 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="44" y="40">G1</text>
-<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="44" y="58">This is a test for bullet lists:</text>
-<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="44" y="71">- Let's see if this works.</text>
-<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="44" y="84">- Another item.</text>
-<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="44" y="97">- Another item with 
+<path class="border" d="M38,20 L212,20 L212,142 L38,142 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="45" y="40">G1</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="45" y="58">This is a test for bullet lists:</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="45" y="71">- Let's see if this works.</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="45" y="84">- Another item.</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="45" y="97">- Another item with 
 <tspan class="bold" style="font-weight:bold;">bold</tspan> text.</text>
-<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="44" y="110">- Another item with 
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="45" y="110">- Another item with 
 <tspan class="italic" style="font-style:italic;">italic</tspan> text.</text>
-<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="44" y="123"></text>
-<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="44" y="136">Some other text.</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="45" y="123"></text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="45" y="136">Some other text.</text>
 </g>
 <g class="gsn_module_tests_bullet_lists_gsn_yaml gsnelem gsnsltn" id="node_sn1">
 <title>Sn1</title>
-<path class="border" d="M20,286 a104,104,0,1,0,208,0 a104,104,0,1,0,-208,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
-<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="44" y="252">Sn1</text>
-<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="44" y="270">This is a test for bullet lists:</text>
-<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="44" y="283">* Let's see if this works.</text>
-<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="44" y="296">* Another item.</text>
-<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="44" y="309">* Another item with 
+<path class="border" d="M20,287 a105,105,0,1,0,210,0 a105,105,0,1,0,-210,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="44" y="253">Sn1</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="44" y="271">This is a test for bullet lists:</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="44" y="284">• Let's see if this works.</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="44" y="297">• Another item.</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="44" y="310">• Another item with 
 <tspan class="bold" style="font-weight:bold;">bold</tspan> text.</text>
-<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="44" y="322">* Another item with 
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="44" y="323">• Another item with 
 <tspan class="italic" style="font-style:italic;">italic</tspan> text.</text>
 </g>
-<path class="gsnedge gsninspby" d="M124,142 C124,172,124,152,124,172" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
+<path class="gsnedge gsninspby" d="M125,142 C125,172,125,152,125,172" fill-opacity="0" marker-end="url(#supportedby_arrow)" stroke="black" stroke-width="1"/>
 </svg>
