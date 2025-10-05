@@ -1,9 +1,8 @@
 use svg::node::element::{Element, Path, Title, path::Data};
 
 use crate::dirgraphsvg::{
-    nodes::OFFSET_IDENTIFIER,
+    nodes::{OFFSET_IDENTIFIER, render_text},
     render::{PADDING_HORIZONTAL, create_text},
-    util::font::text_line_bounding_box,
 };
 
 use super::{SizeContext, SvgNode};
@@ -101,10 +100,7 @@ impl EllipticalType {
 
         if !node.masked {
             y += OFFSET_IDENTIFIER;
-            for text in node.text.lines() {
-                y += text_line_bounding_box(text, false).1;
-                context.append(create_text(&text.into(), x, y, false));
-            }
+            render_text(&node.text, context, None, x, y);
         }
 
         if let Some(adm) = &self.admonition {

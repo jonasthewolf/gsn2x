@@ -111,6 +111,40 @@ impl MarkdownText {
     }
 }
 
+pub trait MarkdownIndented {
+    fn is_indented(&self) -> bool;
+
+    fn get_bullet_symbol(&self) -> Option<char>;
+}
+
+impl MarkdownIndented for &[Text] {
+    fn is_indented(&self) -> bool {
+        if let Some(t) = self.first() {
+            matches!(
+                t,
+                Text::String(TextType::Normal(s)) if s.starts_with("  ")
+            )
+        } else {
+            false
+        }
+    }
+
+    fn get_bullet_symbol(&self) -> Option<char> {
+        if let Some(Text::String(TextType::Normal(s))) = self.first() {
+            let s = s.trim_start();
+            if s.starts_with('\u{2022}') {
+                Some('\u{2022}')
+            } else if s.starts_with('-') {
+                Some('-')
+            } else {
+                None
+            }
+        } else {
+            None
+        }
+    }
+}
+
 ///
 /// Parse text and search for markdown syntax links
 ///

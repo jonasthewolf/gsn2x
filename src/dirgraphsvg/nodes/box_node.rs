@@ -1,9 +1,9 @@
 use svg::node::element::{Element, Path, Title, path::Data};
 
 use crate::dirgraphsvg::{
-    nodes::OFFSET_IDENTIFIER,
+    nodes::{OFFSET_IDENTIFIER, render_text},
     render::{PADDING_HORIZONTAL, PADDING_VERTICAL, create_text},
-    util::font::{str_line_bounding_box, text_line_bounding_box},
+    util::font::str_line_bounding_box,
 };
 
 use super::{SizeContext, SvgNode};
@@ -139,12 +139,7 @@ impl BoxType {
         y += OFFSET_IDENTIFIER;
 
         if !node.masked {
-            for text in node.text.lines() {
-                let text_bb = text_line_bounding_box(text, false);
-                y += text_bb.1;
-                x -= skew * text_bb.1 / node.height;
-                context.append(create_text(&text.into(), x, y, false));
-            }
+            render_text(&node.text, context, Some((skew, node.height)), x, y);
         }
 
         if let BoxType::Undeveloped(_) = self {

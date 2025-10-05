@@ -1,12 +1,9 @@
 use svg::node::element::{Anchor, Element, Path, Title, Use, path::Data};
 
 use crate::dirgraphsvg::{
-    nodes::OFFSET_IDENTIFIER,
+    nodes::{OFFSET_IDENTIFIER, render_text},
     render::{PADDING_HORIZONTAL, PADDING_VERTICAL, create_text},
-    util::{
-        escape_url,
-        font::{str_line_bounding_box, text_line_bounding_box},
-    },
+    util::{escape_url, font::str_line_bounding_box},
 };
 
 use super::{SizeContext, SvgNode};
@@ -189,10 +186,7 @@ impl AwayType {
 
         // Text
         if !node.masked {
-            for text in node.text.lines() {
-                y += text_line_bounding_box(text, false).1;
-                context.append(create_text(&text.into(), x, y, false));
-            }
+            render_text(&node.text, context, None, x, y);
         }
 
         // It is a box to be able to add a link to it

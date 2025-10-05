@@ -7,7 +7,7 @@ G1:
     - Another item with _italic_ text.
 
     Some other text.
-
+  charWrap: 20
   supportedBy: Sn1
 
 Sn1:
@@ -16,4 +16,5 @@ Sn1:
     * Let's see if this works.
     * Another item.
     * Another item with *bold* text.
+      And this is an indented line.
     * Another item with _italic_ text.

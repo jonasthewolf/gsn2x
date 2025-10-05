@@ -9,7 +9,7 @@ use crate::{
     dirgraph::DirectedGraphNodeType,
     dirgraphsvg::{
         render::{ACP_BOX_SIZE, create_text},
-        util::point2d::Point2D,
+        util::{markdown::MarkdownIndented, point2d::Point2D},
     },
     gsn::{GsnNode, HorizontalIndex},
 };
@@ -33,6 +33,8 @@ use super::{
 mod away_node;
 mod box_node;
 mod elliptical_node;
+
+const BULLET_CHAR: char = '\u{2022}';
 
 ///
 /// The direction of the port where edges dock to nodes.
@@ -828,19 +830,19 @@ fn node_classes_from_node(identifier: &str, gsn_node: &GsnNode, masked: bool) ->
 }
 
 ///
-/// 
-/// 
+/// Replace leading '*' in lines with bullet character.
+///
 fn replace_bullet_symbol(s: String) -> String {
     s.lines()
-    .map(|l| {
-        if let Some(rest) = l.strip_prefix('*') {
-            format!("\u{2022}{}", rest)
-        } else {
-            l.to_owned()
-        }
-    })
-    .collect::<Vec<_>>()
-    .join("\n")
+        .map(|l| {
+            if let Some(rest) = l.strip_prefix('*') {
+                format!("{BULLET_CHAR}{}", rest)
+            } else {
+                l.to_owned()
+            }
+        })
+        .collect::<Vec<_>>()
+        .join("\n")
 }
 
 ///
@@ -855,12 +857,13 @@ fn node_text_from_node_and_layers(
 ) -> String {
     use crate::dirgraphsvg::util::wrap_words::wrap_words;
 
-    let mut node_text = replace_bullet_symbol(if let Some(char_wrap) = gsn_node.char_wrap.or(char_wrap) {
-        let new_wrap = std::cmp::max(char_wrap, identifier.len() as u32);
-        wrap_words(&gsn_node.text, new_wrap, "\n")
-    } else {
-        gsn_node.text.to_owned()
-    });
+    let mut node_text =
+        replace_bullet_symbol(if let Some(char_wrap) = gsn_node.char_wrap.or(char_wrap) {
+            let new_wrap = std::cmp::max(char_wrap, identifier.len() as u32);
+            wrap_words(&gsn_node.text, new_wrap, "\n")
+        } else {
+            gsn_node.text.to_owned()
+        });
     let mut additional_text = vec![];
     for layer in layers {
         if let Some(layer_text) = gsn_node.additional.get(layer) {
@@ -878,6 +881,36 @@ fn node_text_from_node_and_layers(
         node_text.push_str(&replace_bullet_symbol(additional_text.join("\n")));
     }
     node_text
+}
+
+///
+/// Utility function to render multiline text for all nodes.
+///
+///
+pub fn render_text(
+    text: &MarkdownText,
+    context: &mut Element,
+    skew_height: Option<(i32, i32)>,
+    mut x: i32,
+    mut y: i32,
+) {
+    let mut indentation_width = 0;
+    for text in text.lines() {
+        if let Some(bullet_char) = text.get_bullet_symbol() {
+            indentation_width = str_line_bounding_box(&format!("{bullet_char} "), false).0;
+        }
+        let text_bb = text_line_bounding_box(text, false);
+        y += text_bb.1;
+        if let Some((skew, height)) = skew_height {
+            x -= skew * text_bb.1 / height;
+        }
+        let indent = if text.is_indented() {
+            indentation_width
+        } else {
+            0
+        };
+        context.append(create_text(&text.into(), x + indent, y, false));
+    }
 }
 
 #[cfg(test)]
