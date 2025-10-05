@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg class="gsndiagram" viewBox="0 0 144 181" xmlns="http://www.w3.org/2000/svg">
+<svg class="gsndiagram" viewBox="0 0 144 168" xmlns="http://www.w3.org/2000/svg">
 <defs/>
 <a href="https://www.bing.com">
 <g class="gsn_layer2 gsn_module_tests_issue453_yaml gsnelem gsngoal gsn_undeveloped" id="node_g1">
 <title>G1</title>
-<path class="border" d="M20,20 L124,20 L124,160 L20,160 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<path class="border" d="M20,20 L124,20 L124,148 L20,148 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 <text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="27" y="40">G1</text>
 <text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="27" y="58">Test</text>
 <text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="27" y="71">- 
@@ -14,13 +14,12 @@
 <a href="https://www.yahoo.com">Yahoo</a>
 </text>
 <text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="27" y="97"></text>
-<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="27" y="110"></text>
-<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="27" y="123">LAYER2:</text>
-<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="27" y="136">- '
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="27" y="110">LAYER2:</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="27" y="123">- '
 <a href="https://www.duckduckgo.com">DuckDuckGo</a>'</text>
-<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="27" y="149">- '
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="27" y="136">- '
 <a href="https://www.yahoo.com">Yahoo</a>'</text>
-<path d="M72,160 l5,5 l-5,5 l-5,-5 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<path d="M72,148 l5,5 l-5,5 l-5,-5 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 </g>
 </a>
 </svg>

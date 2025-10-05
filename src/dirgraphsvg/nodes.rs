@@ -828,6 +828,22 @@ fn node_classes_from_node(identifier: &str, gsn_node: &GsnNode, masked: bool) ->
 }
 
 ///
+/// 
+/// 
+fn replace_bullet_symbol(s: String) -> String {
+    s.lines()
+    .map(|l| {
+        if let Some(rest) = l.strip_prefix('*') {
+            format!("\u{2022}{}", rest)
+        } else {
+            l.to_owned()
+        }
+    })
+    .collect::<Vec<_>>()
+    .join("\n")
+}
+
+///
 /// Create SVG node text from GsnNode and layer information
 ///
 ///
@@ -839,12 +855,12 @@ fn node_text_from_node_and_layers(
 ) -> String {
     use crate::dirgraphsvg::util::wrap_words::wrap_words;
 
-    let mut node_text = if let Some(char_wrap) = gsn_node.char_wrap.or(char_wrap) {
+    let mut node_text = replace_bullet_symbol(if let Some(char_wrap) = gsn_node.char_wrap.or(char_wrap) {
         let new_wrap = std::cmp::max(char_wrap, identifier.len() as u32);
         wrap_words(&gsn_node.text, new_wrap, "\n")
     } else {
         gsn_node.text.to_owned()
-    };
+    });
     let mut additional_text = vec![];
     for layer in layers {
         if let Some(layer_text) = gsn_node.additional.get(layer) {
@@ -859,7 +875,7 @@ fn node_text_from_node_and_layers(
     }
     if !additional_text.is_empty() {
         node_text.push('\n');
-        node_text.push_str(&additional_text.join("\n"));
+        node_text.push_str(&replace_bullet_symbol(additional_text.join("\n")));
     }
     node_text
 }
