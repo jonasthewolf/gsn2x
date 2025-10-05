@@ -118,8 +118,7 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event_name != 'pull_request' && !startsWith(github.ref, 'refs/tags/') }} 
     permissions:
-      contents: read
-      deployments: write
+      contents: write
 
     steps:
     - name: Download MacOS artifacts
@@ -149,7 +148,7 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ startsWith(github.ref, 'refs/tags/') }}
     permissions:
-      contents: read
+      contents: write
 
     steps:
     - uses: actions/checkout@v5
