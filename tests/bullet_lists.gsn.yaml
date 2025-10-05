@@ -1,0 +1,19 @@
+G1:
+  text: |
+    This is a test for bullet lists:
+    - Let's see if this works.
+    - Another item.
+    - Another item with *bold* text.
+    - Another item with _italic_ text.
+
+    Some other text.
+
+  supportedBy: Sn1
+
+Sn1:
+  text: |
+    This is a test for bullet lists:
+    * Let's see if this works.
+    * Another item.
+    * Another item with *bold* text.
+    * Another item with _italic_ text.
