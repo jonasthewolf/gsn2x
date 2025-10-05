@@ -395,6 +395,12 @@ fn uses_circle_detection() -> Result<()> {
 
 #[test]
 fn font_metrics() -> Result<()> {
-    regression_renderings(&["tests/font_metrics.yaml"], &["-E"], None)?;
+    regression_renderings(&["tests/font_metrics.gsn.yaml"], &["-E"], None)?;
+    Ok(())
+}
+
+#[test]
+fn bullet_lists() -> Result<()> {
+    regression_renderings(&["tests/bullet_lists.gsn.yaml"], &["-E"], None)?;
     Ok(())
 }

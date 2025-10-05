@@ -209,14 +209,12 @@ pub fn parse_markdown_text(input: &str) -> Vec<TextType> {
                             .is_some()))
             {
                 let end_emph = cur_index;
-
                 // Add the non-emphasized part before the current match
                 if start_emph - 1 > last_index {
                     output.push(TextType::Normal(
                         input[last_index..start_emph - 1].to_owned(),
                     ));
                 }
-
                 // Add the emphasized part itself
                 output.push(match emph_char {
                     "*" => TextType::Bold(input[start_emph..end_emph].to_owned()),
@@ -229,7 +227,7 @@ pub fn parse_markdown_text(input: &str) -> Vec<TextType> {
             // else skip, if non-matching character is found
         } else {
             // Looking for an opening emphasis character
-            if cur_index == 0
+            if (cur_index == 0 && input.len() > 1 && input[1..2].find(is_separator).is_none())
                 || (cur_index > 0 && input[cur_index - 1..cur_index].find(is_separator).is_some())
             {
                 start_emph = cur_index + 1;
@@ -526,5 +524,30 @@ mod test {
         let m = MarkdownText::from("\n\n");
         let s = String::from(&m.into_iter().next().unwrap());
         assert_eq!(s, "\n");
+    }
+
+    #[test]
+    fn bullet_list() {
+        let m = MarkdownText::from("* item 1\n* item 2 *bold*\n* item 3");
+        let mut iter = m.lines();
+        assert_eq!(
+            iter.next(),
+            Some([Text::String(TextType::Normal("* item 1".to_owned()))].as_slice())
+        );
+        assert_eq!(
+            iter.next(),
+            Some(
+                [
+                    Text::String(TextType::Normal("* item 2 ".to_owned())),
+                    Text::String(TextType::Bold("bold".to_owned()))
+                ]
+                .as_slice()
+            )
+        );
+        assert_eq!(
+            iter.next(),
+            Some([Text::String(TextType::Normal("* item 3".to_owned()))].as_slice())
+        );
+        assert_eq!(iter.next(), None);
     }
 }
