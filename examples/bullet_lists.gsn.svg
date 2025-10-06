@@ -5,7 +5,7 @@
 <polyline fill="black" points="0 0, 10 4.5, 0 9"/>
 </marker>
 </defs>
-<g class="gsn_module_tests_bullet_lists_gsn_yaml gsnelem gsngoal" id="node_g1">
+<g class="gsn_module_examples_bullet_lists_gsn_yaml gsnelem gsngoal" id="node_g1">
 <title>G1</title>
 <path class="border" d="M71,20 L185,20 L185,194 L71,194 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 <text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="78" y="40">G1</text>
@@ -23,7 +23,7 @@
 <text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="78" y="175"></text>
 <text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="78" y="188">Some other text.</text>
 </g>
-<g class="gsn_module_tests_bullet_lists_gsn_yaml gsnelem gsnsltn" id="node_sn1">
+<g class="gsn_module_examples_bullet_lists_gsn_yaml gsnelem gsnsltn" id="node_sn1">
 <title>Sn1</title>
 <path class="border" d="M20,342 a108,108,0,1,0,216,0 a108,108,0,1,0,-216,0 z" fill-opacity="0" stroke="black" stroke-width="1"/>
 <text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="47" y="301">Sn1</text>

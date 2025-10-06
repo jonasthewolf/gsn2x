@@ -35,11 +35,12 @@ cp examples/example.gsn.svg examples/example.gsn_dark.svg
 ./target/release/gsn2x -G -E examples/dialectic/first.gsn.yaml
 ./target/release/gsn2x -G -E examples/dialectic/second.gsn.yaml
 
+# bullet lists
+./target/release/gsn2x -G -E examples/bullet_lists.gsn.yaml
+
 # font metrics
 ./target/release/gsn2x -G -E tests/font_metrics.gsn.yaml
 
-# bullet lists
-./target/release/gsn2x -G -E tests/bullet_lists.gsn.yaml
 
 # issue regressions
 ./target/release/gsn2x -G -E tests/issue84_1.yaml

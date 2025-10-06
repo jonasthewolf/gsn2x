@@ -7,6 +7,10 @@
 # Advanced Use-cases
 
 - [Formatting](./adv_formatting.md)
+    - [Text emphasis](./adv_fmt_text_emphasis.md)
+    - [Bullet lists](./adv_fmt_bullet_lists.md)
+    - [Hyperlinks](./adv_fmt_hyperlinks.md)
+    - [Text layout within elements](./adv_fmt_text_layout.md)
 - [Layout](./adv_layout.md)
 - [Layers](./adv_layers.md)
 - [Stylesheets](./adv_stylesheets.md)

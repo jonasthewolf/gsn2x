@@ -401,6 +401,6 @@ fn font_metrics() -> Result<()> {
 
 #[test]
 fn bullet_lists() -> Result<()> {
-    regression_renderings(&["tests/bullet_lists.gsn.yaml"], &["-E"], None)?;
+    regression_renderings(&["examples/bullet_lists.gsn.yaml"], &["-E"], None)?;
     Ok(())
 }
