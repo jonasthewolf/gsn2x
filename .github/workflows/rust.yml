@@ -135,6 +135,9 @@ jobs:
         name: gsn2x-Windows
     - name: Login to github.com
       run: echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
+    - name: Remove old release and tag
+      run: |
+        gh release delete latest-build --yes --cleanup-tag || echo "No previous release"
     - name: Deploy release to github.com
       run: |
         gh release create latest-build \
