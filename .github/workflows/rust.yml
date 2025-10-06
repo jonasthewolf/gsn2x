@@ -138,6 +138,8 @@ jobs:
       run: echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
     - name: Tag the commit
       run: git tag latest-build --force
+    - name: Push tag 
+      run: git push origin latest-build --force
     - name: Deploy release to github.com
       run: |
         gh release create 
