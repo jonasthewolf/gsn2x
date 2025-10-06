@@ -891,9 +891,11 @@ pub fn render_text(
     text: &MarkdownText,
     context: &mut Element,
     skew_height: Option<(i32, i32)>,
-    mut x: i32,
-    mut y: i32,
+    x: i32,
+    y: i32,
 ) {
+    let mut y = y;
+    let mut x = x;
     let mut indentation_width = 0;
     for text in text.lines() {
         if let Some(bullet_char) = text.get_bullet_symbol() {
