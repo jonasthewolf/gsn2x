@@ -133,7 +133,7 @@ jobs:
       with:
         name: gsn2x-Windows
     - name: Login to github.com
-      run: echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token -
+      run: echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
     - name: Deploy release to github.com
       run: |
         gh release create 
@@ -179,7 +179,7 @@ jobs:
       with:
         name: gsn2x-Windows
     - name: Login to github.com
-      run: echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token -
+      run: echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
     - name: Deploy release to github.com
       run: |
         gh release create 
