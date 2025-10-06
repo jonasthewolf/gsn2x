@@ -179,50 +179,7 @@
                         <h1 id="formatting"><a class="header" href="#formatting">Formatting</a></h1>
 <p>gsn2x allows for different ways to formatting text.
 Formatting loosely follows Markdown syntax, even though not the full specification is supported.</p>
-<h2 id="text-emphasis"><a class="header" href="#text-emphasis">Text emphasis</a></h2>
-<p>You can use <code>*</code> and <code>_</code> to emphasize text.</p>
-<p>Text enclosed in <code>*</code>'s will be assigned a CSS class "bold".</p>
-<p>Text enclosed in <code>_</code>'s will be assigned a CSS class "italic".</p>
-<p>A default inline style is also assigned.</p>
-<h3 id="example"><a class="header" href="#example">Example</a></h3>
-<p>This text:</p>
-<pre><code>This is a *bold* text. This is an _italic_ text.
-</code></pre>
-<p>will be rendered to:</p>
-<p><code>This is a</code><strong><code>bold</code></strong><code>text. This is an</code><em><code>italic</code></em><code>text.</code></p>
-<h2 id="hyperlinks"><a class="header" href="#hyperlinks">Hyperlinks</a></h2>
-<p>You can add hyperlinks for <code>text:</code> attributes as well as all additional layers.
-Hyperlinks are automatically detected when they start with "http://", "https://", "file://".</p>
-<p>If you like to hide the actual URL, you can assign a text to the link that is rendered instead.
-The syntax for this follows Markdown syntax. However, a title is not supported, only <code>text</code> and <code>href</code> are.
-URLs may not contain whitespace characters. If you URL has one, just replace with <code>%20</code>.</p>
-<p>Please note that the link created by <code>url:</code> cannot have additional text, since it is anyway invisible and applicable to the complete node.</p>
-<h3 id="example-1"><a class="header" href="#example-1">Example</a></h3>
-<p>This link:</p>
-<pre><code>[Link Text](https://github.com/jonasthewolf/gsn2x)
-</code></pre>
-<p>will be rendered to:</p>
-<p><a href="https://github.com/jonasthewolf/gsn2x">Link Text</a></p>
-<p>This link:</p>
-<pre><code>https://github.com/jonasthewolf/gsn2x
-</code></pre>
-<p>will be rendered to:</p>
-<p><a href="https://github.com/jonasthewolf/gsn2x">https://github.com/jonasthewolf/gsn2x</a></p>
-<h1 id="text-layout-within-elements"><a class="header" href="#text-layout-within-elements">Text layout within elements</a></h1>
-<p>You can control line breaks by YAML means, e.g. following this example:</p>
-<pre><code class="language-yaml">G1:
-  text: |
-    This
-    is
-    shown
-    on
-    separate
-    lines
-</code></pre>
-<p>Alternatively, you can use the <code>-w</code> option and provide a global number of characters after which lines are wrapped.</p>
-<p>You can also use the optional <code>charWrap</code> attribute for an element to individually define the number of characters after which line is wrapped. The same attribute can be applied for a complete module at the <code>module</code> <a href="./ext_mod_info.html">section</a>.</p>
-<p>Bullet lists starting with <code>-</code> or <code>*</code> are detected. The <code>*</code> is replaced by a nicer symbol. Line breaks are indented if introduced by e.g. line wraps or defined in the source.</p>
-<p><strong>Please note that wrapping is done if a whitespace is detected after the given number of characters.</strong></p>
+<p>See the following subsections for details.</p>
 
                     </main>
 
@@ -232,7 +189,7 @@ URLs may not contain whitespace characters. If you URL has one, just replace wit
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
-                            <a rel="next prefetch" href="adv_layout.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="adv_fmt_text_emphasis.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
 
@@ -246,7 +203,7 @@ URLs may not contain whitespace characters. If you URL has one, just replace wit
                         <i class="fa fa-angle-left"></i>
                     </a>
 
-                    <a rel="next prefetch" href="adv_layout.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="adv_fmt_text_emphasis.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>
