@@ -40,11 +40,10 @@ jobs:
       run: cargo clippy --all-features --all --all-targets --tests -- -Dwarnings
     - name: Check for correct formatting
       run: cargo fmt --check
+    - name: Install cargo-deny
+      run: cargo install cargo-deny --locked
     - name: Cargo deny
-      uses: EmbarkStudios/cargo-deny-action@v2
-      with:
-        command: check all
-        rust-version: "1.90.0"
+      run: cargo deny check all
   
   build_docs:
       runs-on: ubuntu-latest
