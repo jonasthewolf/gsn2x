@@ -120,8 +120,6 @@ jobs:
       contents: write
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v5
     - name: Download MacOS artifacts
       uses: actions/download-artifact@v4
       with:
@@ -136,13 +134,6 @@ jobs:
         name: gsn2x-Windows
     - name: Login to github.com
       run: echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
-    - name: Remove old release and tag
-      run: |
-        gh release delete latest-build --yes --cleanup-tag || echo "No previous release"
-    - name: Tag the commit
-      run: git tag latest-build --force
-    - name: Push tag 
-      run: git push origin latest-build --force
     - name: Deploy release to github.com
       run: |
         gh release create latest-build \
