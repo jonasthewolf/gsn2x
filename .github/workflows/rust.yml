@@ -132,6 +132,18 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: gsn2x-Windows
+    - name: Login to github.com
+      run: echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token -
+    - name: Deploy release to github.com
+      run: |
+        gh release create 
+            latest-build
+            gsn2x-* 
+            --title "Latest build on commit" 
+            --generate-notes
+            --prerelease
+            --latest=false
+
     - name: Deploy pre-release to github.com
       uses: "marvinpinto/action-automatic-releases@latest"
       with:
@@ -166,15 +178,15 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: gsn2x-Windows
+    - name: Login to github.com
+      run: echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token -
     - name: Deploy release to github.com
-      uses: "marvinpinto/action-automatic-releases@latest"
-      with:
-        repo_token: "${{ secrets.GITHUB_TOKEN }}"
-        automatic_release_tag: ${{ steps.get_version.outputs.VERSION }}
-        prerelease: false
-        title: ${{ steps.get_version.outputs.VERSION }}
-        files: |
-          gsn2x-*
+      run: |
+        gh release create 
+            ${{ steps.get_version.outputs.VERSION }} 
+            gsn2x-* 
+            --title ${{ steps.get_version.outputs.VERSION }} 
+            --generate-notes
 
   coverage:
     needs: [build_test_deploy, check]
