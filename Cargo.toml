@@ -28,7 +28,7 @@ svg = "0.18" # No features
 time = { version = "0.3", default-features = false, features = ["formatting"] }
 
 [dev-dependencies]
-assert_cmd = "2.0"
+assert_cmd = "2.1"
 assert_fs = "1.1"
 predicates = { version = "3.1", features = ["normalize-line-endings"] }
 
