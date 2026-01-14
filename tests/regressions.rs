@@ -1,5 +1,6 @@
 use anyhow::Result;
 use assert_cmd::Command;
+use assert_cmd::cargo;
 use predicates::prelude::*;
 
 mod basics;
@@ -123,7 +124,7 @@ fn issue453() -> Result<()> {
 
 #[test]
 fn issue467() -> Result<()> {
-    let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
+    let mut cmd = Command::new(cargo::cargo_bin!());
     cmd.arg("-G").arg("-E").arg("tests/issue467.yaml");
     cmd.assert().success().stderr(predicate::str::contains(
         "Warning: C01: There is more than one unreferenced element: GA, GB.",
@@ -133,7 +134,7 @@ fn issue467() -> Result<()> {
 
 #[test]
 fn issue472() -> Result<()> {
-    let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
+    let mut cmd = Command::new(cargo::cargo_bin!());
     cmd.arg("tests/issue472.yaml");
     cmd.assert().failure().stderr(predicate::str::contains(
         "Error: (Test) The module does not contain elements.",

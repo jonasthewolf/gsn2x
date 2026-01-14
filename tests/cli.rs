@@ -2,6 +2,7 @@ mod basics;
 mod reg_render;
 
 use anyhow::Result;
+use assert_cmd::cargo;
 use assert_cmd::prelude::*;
 use assert_fs::fixture::PathCopy;
 use assert_fs::prelude::*;
@@ -14,7 +15,7 @@ use crate::reg_render::regression_renderings;
 
 #[test]
 fn file_does_not_exist() -> Result<()> {
-    let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
+    let mut cmd = Command::new(cargo::cargo_bin!());
     cmd.arg("test/file/does/not/exist");
     cmd.assert()
         .failure()
@@ -24,7 +25,7 @@ fn file_does_not_exist() -> Result<()> {
 
 #[test]
 fn index_gsn_does_not_exist() -> Result<()> {
-    let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
+    let mut cmd = Command::new(cargo::cargo_bin!());
     let temp = assert_fs::TempDir::new()?;
     cmd.current_dir(&temp);
     cmd.assert()
@@ -39,7 +40,7 @@ fn legend_is_different() -> Result<()> {
     const INPUT_YAML: &str = "example.gsn.yaml";
     const OUTPUT_SVG: &str = "example.gsn.svg";
 
-    let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
+    let mut cmd = Command::new(cargo::cargo_bin!());
     let temp = assert_fs::TempDir::new()?;
 
     temp.copy_from(SUB_DIR, &[INPUT_YAML])?;
@@ -90,7 +91,7 @@ fn entangled() -> Result<()> {
     const INPUT_YAML: &str = "entangled.gsn.yaml";
     const OUTPUT_SVG: &str = "entangled.gsn.svg";
 
-    let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
+    let mut cmd = Command::new(cargo::cargo_bin!());
     let temp = assert_fs::TempDir::new()?;
 
     // Copy input into subdirectory and name output file
@@ -115,7 +116,7 @@ fn entangled() -> Result<()> {
 
 #[test]
 fn validate_multiple_only() -> Result<()> {
-    let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
+    let mut cmd = Command::new(cargo::cargo_bin!());
     cmd.arg("-c").arg("examples/modular/index.gsn.yaml");
     cmd.assert()
         .success()
@@ -126,7 +127,7 @@ fn validate_multiple_only() -> Result<()> {
 
 #[test]
 fn validate_multiple_only_error() -> Result<()> {
-    let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
+    let mut cmd = Command::new(cargo::cargo_bin!());
     cmd.arg("-c")
         .arg("examples/modular/index.gsn.yaml")
         .arg("examples/modular/sub2.gsn.yaml");
@@ -138,7 +139,7 @@ fn validate_multiple_only_error() -> Result<()> {
 
 #[test]
 fn validate_multiple_only_error_exclude() -> Result<()> {
-    let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
+    let mut cmd = Command::new(cargo::cargo_bin!());
     cmd.arg("-c")
         .arg("examples/modular/index.gsn.yaml")
         .arg("examples/modular/sub2.gsn.yaml")
@@ -151,7 +152,7 @@ fn validate_multiple_only_error_exclude() -> Result<()> {
 
 #[test]
 fn validate_template_instance() -> Result<()> {
-    let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
+    let mut cmd = Command::new(cargo::cargo_bin!());
     cmd.arg("-c")
         .arg("examples/template/template.gsn.yaml")
         .arg("examples/template/instance.gsn.yaml");
@@ -161,7 +162,7 @@ fn validate_template_instance() -> Result<()> {
 
 #[test]
 fn validate_template_invalid_instance1() -> Result<()> {
-    let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
+    let mut cmd = Command::new(cargo::cargo_bin!());
     cmd.arg("-c")
         .arg("examples/template/template.gsn.yaml")
         .arg("tests/inval1_instance.gsn.yaml");
@@ -173,7 +174,7 @@ fn validate_template_invalid_instance1() -> Result<()> {
 
 #[test]
 fn validate_template_invalid_instance2() -> Result<()> {
-    let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
+    let mut cmd = Command::new(cargo::cargo_bin!());
     cmd.arg("-c")
         .arg("examples/template/template.gsn.yaml")
         .arg("tests/inval2_instance.gsn.yaml");
@@ -185,7 +186,7 @@ fn validate_template_invalid_instance2() -> Result<()> {
 
 #[test]
 fn validate_template_invalid_instance3() -> Result<()> {
-    let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
+    let mut cmd = Command::new(cargo::cargo_bin!());
     cmd.arg("-c")
         .arg("examples/template/template.gsn.yaml")
         .arg("tests/inval3_instance.gsn.yaml");
@@ -197,7 +198,7 @@ fn validate_template_invalid_instance3() -> Result<()> {
 
 #[test]
 fn validate_template_invalid_instance4() -> Result<()> {
-    let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
+    let mut cmd = Command::new(cargo::cargo_bin!());
     cmd.arg("-c")
         .arg("examples/template/template.gsn.yaml")
         .arg("tests/inval4_instance.gsn.yaml");
@@ -209,7 +210,7 @@ fn validate_template_invalid_instance4() -> Result<()> {
 
 #[test]
 fn arch_view() -> Result<()> {
-    let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
+    let mut cmd = Command::new(cargo::cargo_bin!());
     let temp = assert_fs::TempDir::new()?;
     temp.copy_from(".", &["examples/modular/*.yaml"])?;
     let output_file = temp.child("examples/modular/architecture.svg");
@@ -234,7 +235,7 @@ fn arch_view() -> Result<()> {
 
 #[test]
 fn multiple_view() -> Result<()> {
-    let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
+    let mut cmd = Command::new(cargo::cargo_bin!());
     let temp = assert_fs::TempDir::new()?;
     temp.copy_from(".", &["examples/modular/*.yaml"])?;
     let output_file1 = temp.child("examples/modular/index.gsn.svg");
@@ -263,7 +264,7 @@ fn multiple_view() -> Result<()> {
 
 #[test]
 fn complete_view() -> Result<()> {
-    let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
+    let mut cmd = Command::new(cargo::cargo_bin!());
     let temp = assert_fs::TempDir::new()?;
     temp.copy_from(".", &["examples/modular/*.yaml"])?;
     let output_file = temp.child("complete.svg");
@@ -283,7 +284,7 @@ fn complete_view() -> Result<()> {
 
 #[test]
 fn empty_input() -> Result<()> {
-    let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
+    let mut cmd = Command::new(cargo::cargo_bin!());
     cmd.arg("tests/empty.yaml");
     cmd.assert().failure().stderr(predicate::str::contains(
         "Error: No input elements are found.",
@@ -293,7 +294,7 @@ fn empty_input() -> Result<()> {
 
 #[test]
 fn invalid_input1() -> Result<()> {
-    let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
+    let mut cmd = Command::new(cargo::cargo_bin!());
     cmd.arg("tests/invalid1.yaml");
     cmd.assert().failure().stderr(predicate::str::contains(
         "Error: Failed to parse YAML from file",
@@ -303,7 +304,7 @@ fn invalid_input1() -> Result<()> {
 
 #[test]
 fn invalid_input2() -> Result<()> {
-    let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
+    let mut cmd = Command::new(cargo::cargo_bin!());
     cmd.arg("tests/invalid2.yaml");
     cmd.assert().failure().stderr(predicate::str::contains(
         "Error: Failed to parse YAML from file",
@@ -353,7 +354,7 @@ fn min_doc() -> Result<()> {
 
 #[test]
 fn min_doc_copy_css() -> Result<()> {
-    let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
+    let mut cmd = Command::new(cargo::cargo_bin!());
     let temp = assert_fs::TempDir::new()?;
     temp.copy_from("examples/minimalcss", &["min*"])?;
     cmd.current_dir(&temp)
@@ -385,7 +386,7 @@ fn confidence_extension() -> Result<()> {
 
 #[test]
 fn uses_circle_detection() -> Result<()> {
-    let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
+    let mut cmd = Command::new(cargo::cargo_bin!());
     cmd.arg("tests/circle1.yaml");
     cmd.assert()
             .failure()

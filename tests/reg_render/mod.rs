@@ -1,4 +1,5 @@
 use anyhow::Result;
+use assert_cmd::cargo;
 use assert_cmd::prelude::*;
 use assert_fs::fixture::PathCopy;
 use assert_fs::prelude::*;
@@ -12,7 +13,7 @@ pub fn regression_renderings(
     options: &[&str],
     additional_files: Option<&[&str]>,
 ) -> Result<()> {
-    let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
+    let mut cmd = Command::new(cargo::cargo_bin!());
     let temp = assert_fs::TempDir::new()?;
     temp.copy_from(".", input)?;
     if let Some(additional_files) = additional_files {

@@ -1,5 +1,6 @@
 use anyhow::Result;
 use assert_cmd::Command;
+use assert_cmd::cargo;
 use assert_fs::prelude::*;
 use predicates::prelude::*;
 
@@ -8,7 +9,7 @@ use basics::assert_files_equal;
 
 #[test]
 fn no_evidence() -> Result<()> {
-    let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
+    let mut cmd = Command::new(cargo::cargo_bin!());
     let temp = assert_fs::TempDir::new()?;
     temp.copy_from("tests", &["no_evidence.gsn.test.*"])?;
     cmd.arg("-N")
@@ -33,7 +34,7 @@ fn no_evidence() -> Result<()> {
 
 #[test]
 fn some_evidence() -> Result<()> {
-    let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
+    let mut cmd = Command::new(cargo::cargo_bin!());
     let temp = assert_fs::TempDir::new()?;
     temp.copy_from("tests", &["example.gsn.test.md"])?;
     temp.copy_from(".", &["examples/example.gsn.yaml"])?;
@@ -75,7 +76,7 @@ Number of nodes:     8
 
 #[test]
 fn statistics() -> Result<()> {
-    let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
+    let mut cmd = Command::new(cargo::cargo_bin!());
     cmd.arg("-c")
         .arg("examples/modular/index.gsn.yaml")
         .arg("--statistics");
@@ -87,7 +88,7 @@ fn statistics() -> Result<()> {
 
 #[test]
 fn statistics_file() -> Result<()> {
-    let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
+    let mut cmd = Command::new(cargo::cargo_bin!());
     let temp = assert_fs::TempDir::new()?;
     temp.copy_from(".", &["examples/modular/*.yaml"])?;
     cmd.arg("-c")
@@ -104,7 +105,7 @@ fn statistics_file() -> Result<()> {
 
 #[test]
 fn yaml_dump() -> Result<()> {
-    let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
+    let mut cmd = Command::new(cargo::cargo_bin!());
     cmd.arg("-c")
         .arg("examples/modular/index.gsn.yaml")
         .arg("--dump-yaml");
@@ -113,7 +114,7 @@ fn yaml_dump() -> Result<()> {
         .stdout(predicate::str::is_empty().not().from_utf8());
     let output = cmd.output()?.stdout;
 
-    let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME"))?;
+    let mut cmd = Command::new(cargo::cargo_bin!());
     let temp = assert_fs::TempDir::new()?;
     temp.copy_from(".", &["examples/modular/*.yaml"])?;
     cmd.arg("-c")
