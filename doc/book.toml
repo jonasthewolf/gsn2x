@@ -12,8 +12,3 @@ extra-watch-dirs = ["../examples"]
 
 [output.html]
 additional-css = ["svg.css"]
-toc = true
-toc_depth = 3
-
-[output.linkcheck]
-traverse-parent-directories = true
