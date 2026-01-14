@@ -3,7 +3,6 @@ title = "gsn2x User Manual"
 description = "gsn2x User Manual"
 authors = ["Jonas Wolf <jonas.wolf@jonaswolf.org>"]
 language = "en"
-multilingual = false
 
 
 [build]
