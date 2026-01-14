@@ -3,8 +3,8 @@
 
 ## YAML error messages
 
-If you encounter an error message like this, 
-please use a YAML editor or online validator to check for the well-formedness 
+If you encounter an error message like this,
+please use a YAML editor or online validator to check for the well-formedness
 of the input file:
 
 ```console
@@ -20,7 +20,8 @@ Caused by:
 
 Please see the [YAML Syntax](./yaml_syntax.md) what is expected by the programs.
 
-A good strategy to find out which element is causing the problem is to remove all but the first element from the input YAML file. 
+A good strategy to find out which element is causing the problem is to remove all
+but the first element from the input YAML file.
 Then running gsn2x again and incrementally adding the elements one by one again, until you hit the error message again.
 
 Unfortunately, it is currently not possible to improve on the location of the error messages in this case.
@@ -28,7 +29,6 @@ Unfortunately, it is currently not possible to improve on the location of the er
 ## Sanitizing files for e.g. support requests
 
 You can sanitize your files from your intellectual property using, e.g. [https://mikefarah.gitbook.io/yq/](https://mikefarah.gitbook.io/yq/).
-
 
 This statement replaces all text with `x`es while keeping the number of characters:
 

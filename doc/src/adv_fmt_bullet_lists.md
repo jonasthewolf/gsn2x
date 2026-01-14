@@ -11,4 +11,4 @@ Bullet lists starting with `-` or `*` are detected. The `*` is replaced by a nic
 
 will be rendered to:
 
-![Rendered Example](examples/bullet_lists.gsn.svg)
+![Rendered Example Bullet List](examples/bullet_lists.gsn.svg)

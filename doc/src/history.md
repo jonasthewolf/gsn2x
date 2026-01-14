@@ -17,7 +17,7 @@ I also noticed that (also for myself) it is good to note down some history of th
   
 - I desperately tried adding the modular extension by convincing Graphviz to draw what I want, but I failed.
   I finally made decided to no longer output DOT, but directly generate SVGs from the program.
-  This required writing a specialized version for rendering the tree on my own which ended up in version 2 
+  This required writing a specialized version for rendering the tree on my own which ended up in version 2
   finally released in April 2022.
 
 - I tried hard improving the layout algorithm over time but I failed to come up with a satisfying solution.
@@ -27,12 +27,11 @@ I also noticed that (also for myself) it is good to note down some history of th
   In addition, I changed the license from CC-BY-4.0 to MIT. MIT is shorter and more applicable to software.
 
 - Own usage and feedback from various people led to improvements of the layout algorithm.
-  And now also to the implementation of the Confidence Argument Extension of the GSN standard as 
+  And now also to the implementation of the Confidence Argument Extension of the GSN standard as
   part of version 3.1.
 
-- After attending the SCSC 2025 in York, I got plenty of feedback, including the request to implement 
+- After attending the SCSC 2025 in York, I got plenty of feedback, including the request to implement
   Dialectic and Argument Pattern Extensions. Moreover, I learned about Bayesian Networks and how to use them with
   Assurance Cases. THis lead to a new major version 4.0.
 
 Any feedback, especially the use-case in your company is very much appreciated.
-

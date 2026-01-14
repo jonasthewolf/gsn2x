@@ -34,4 +34,3 @@ G2:
 Sn1:
   text: A solution
 ```
-

@@ -7,10 +7,10 @@ The following Goal Structuring Notation (GSN) core elements are supported:
 
 | Element Type     | Prefix |
 |------------------|--------|
-| Goal             |   G    | 
+| Goal             |   G    |
 | Assumption       |   A    |
-| Justification    |   J    | 
-| Solution         |   Sn   |   
+| Justification    |   J    |
+| Solution         |   Sn   |
 | Context          |   C    |
 | Strategy         |   S    |
 | Counter Goal     |   CG   |
@@ -19,7 +19,7 @@ The following Goal Structuring Notation (GSN) core elements are supported:
 Every element is defined by a prefix (as shown in the table above) and an arbitrary identifier then.
 
 ### Examples
- 
+
 ```yaml
 G1:
 
@@ -34,7 +34,7 @@ The only mandatory attribute is `text` that is the textual contents of the eleme
 
 An optional `supportedBy` gives a list of the supporting arguments. Thus, Goal, Strategy and Solution can be listed here.
 
-An optional `inContextOf` links Justifications, Contexts or Assumptions. 
+An optional `inContextOf` links Justifications, Contexts or Assumptions.
 
 Every element may have an optional `url` attribute that creates a navigation link in the resulting SVG.
 This should support finding information more easily.
@@ -61,19 +61,18 @@ Please see [examples/example.gsn.yaml](examples/example.gsn.yaml) for an example
 
 ## Summary
 
-
-| Attribute       | Optional | Notes                                                  |
-|-----------------|----------|--------------------------------------------------------|
-| text            |    no    |                                                        | 
-| supportedBy     |    yes   |                                                        |
-| inContextOf     |    yes   |                                                        | 
-| undeveloped     |    yes   | Mutually exclusive to `supportedBy`.                   |
-| url             |    yes   |                                                        |   
-| classes         |    yes   | See [Stylesheets](./adv_stylesheets.md).               |
-| nodeType        |    yes   | See footnote[^nt]                                      |
-| rankIncrement   |    yes   | See [Layout](./adv_layout.md).                         |
-| horizontalIndex |    yes   | See [Layout](./adv_layout.md).                         |
-| charWrap        |    yes   | See [Line Breaks](./adv_formatting.md).                |
+| Attribute       | Optional | Notes                                                      |
+|-----------------|----------|------------------------------------------------------------|
+| text            |    yes   |                                                            |
+| supportedBy     |    yes   |                                                            |
+| inContextOf     |    yes   |                                                            |
+| undeveloped     |    yes   | Mutually exclusive to `supportedBy`.                       |
+| url             |    yes   |                                                            |
+| classes         |    yes   | See [Stylesheets](./adv_stylesheets.md).                   |
+| nodeType        |    yes   | See footnote[^nt]                                          |
+| rankIncrement   |    yes   | See [Layout](./adv_layout.md).                             |
+| horizontalIndex |    yes   | See [Layout](./adv_layout.md).                             |
+| charWrap        |    yes   | See [Line Breaks](./adv_formatting.md).                    |
 | acp             |    yes   | See [Confidence Argument Extension](./ext_confidence.md).  |
 | challenges      |    yes   | See [Dialectic Extension](./ext_dialectic.md).             |
 | defeated        |    yes   | See [Dialectic Extension](./ext_dialectic.md).             |

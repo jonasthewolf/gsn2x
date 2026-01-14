@@ -1,9 +1,9 @@
 
-# Interfacing 
+# Interfacing
 
 Here is some guidance on interfacing with external sources.
 
-I currently see two use-cases: 
+I currently see two use-cases:
 
 1) Use-case: Check if all configuration management items of a project exist that are mandated by the argumentation (as solutions/evidence).
 
@@ -14,11 +14,10 @@ I currently see two use-cases:
 1) Use-case: Check if all normative/external requirements are fulfilled.
 
    The reference list is a list of all normative requirements.
-   
+
    This use-case is actually the other way around than the first one.
 
 For the example scripts below, [`yq`](https://github.com/mikefarah/yq) is required.
-
 
 ## Checking evidence
 
@@ -38,4 +37,3 @@ Depending on how the external format is defined, you can swap the part before th
 with the part after.
 
 <!-- ## MDG XML -->
-

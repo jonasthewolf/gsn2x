@@ -5,7 +5,6 @@ This little program renders [Goal Structuring Notation](https://scsc.uk/gsn) in 
 
 ![example](examples/example.gsn.svg)
 
-
 ## Usage
 
 You can create an SVG like this:
@@ -13,7 +12,6 @@ You can create an SVG like this:
     gsn2x <yourgsnfile.yaml> 
 
 The output is an argument view in SVG format and automatically written to `<yourgsnfile.svg>`. If more than one input file is provided, they are treated as [modules](./ext_mod.md).
-
 
 ## Options
 

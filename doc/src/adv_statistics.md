@@ -3,12 +3,12 @@
 
 To print out statistics of the assurance case, use the `--statistics` command line option.
 
-The `--statistics` option can be combined with the `-c` option to only check the input files, 
+The `--statistics` option can be combined with the `-c` option to only check the input files,
 and not generate diagrams, but just the statistics.
 
 If you run, e.g. `gsn2x -c --statistics examples/example.gsn.yaml`, you get the following output on standard output:
 
-```
+```markdown
 Statistics
 ==========
 Number of modules:   1

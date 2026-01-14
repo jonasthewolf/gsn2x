@@ -13,7 +13,7 @@ A default inline style is also assigned.
 
 This text:
 
-```
+```markdown
 This is a *bold* text. This is an _italic_ text.
 ```
 

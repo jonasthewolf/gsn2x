@@ -12,8 +12,6 @@ If the list of evidence should not be output, use the `-E` option.
 You can use the `-e` option to rename the standard `evidence.md` to another file name, but not subdirectory.
 The `-o` option also applies to the evidence file.
 
-
 ## Markdown from `examples/evidence.md`
 
 {{#include examples/evidence.md}}
-

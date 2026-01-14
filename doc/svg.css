@@ -3,3 +3,15 @@
         filter: invert(100%); 
     }
 } 
+
+img[alt="Rendered Example Bullet List"] {
+    width: 40%; 
+}
+
+img[alt="Styled Example"] {
+    width: 40%; 
+}
+
+img[alt="example architecture"] {
+    width: 40%; 
+}
