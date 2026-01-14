@@ -13,24 +13,23 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff">
 
-        <link rel="icon" href="favicon.svg">
-        <link rel="shortcut icon" href="favicon.png">
-        <link rel="stylesheet" href="css/variables.css">
-        <link rel="stylesheet" href="css/general.css">
-        <link rel="stylesheet" href="css/chrome.css">
-        <link rel="stylesheet" href="css/print.css" media="print">
+        <link rel="icon" href="favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="favicon-8114d1fc.png">
+        <link rel="stylesheet" href="css/variables-8adf115d.css">
+        <link rel="stylesheet" href="css/general-2459343d.css">
+        <link rel="stylesheet" href="css/chrome-ae938929.css">
+        <link rel="stylesheet" href="css/print-9e4910d8.css" media="print">
 
         <!-- Fonts -->
-        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
-        <link rel="stylesheet" href="fonts/fonts.css">
+        <link rel="stylesheet" href="fonts/fonts-9644e21d.css">
 
         <!-- Highlight.js Stylesheets -->
-        <link rel="stylesheet" id="highlight-css" href="highlight.css">
-        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
-        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+        <link rel="stylesheet" id="mdbook-highlight-css" href="highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="ayu-highlight-3fdfc3ac.css">
 
         <!-- Custom theme stylesheets -->
-        <link rel="stylesheet" href="svg.css">
+        <link rel="stylesheet" href="svg-6cdd88ae.css">
 
 
         <!-- Provide site root and default themes to javascript -->
@@ -38,10 +37,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex.js";
+            window.path_to_searchindex_js = "searchindex-a04bde48.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc.js"></script>
+        <script src="toc-52b9f6d3.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -55,7 +54,7 @@
             </div>
         </div>
     </div>
-    <div id="body-container">
+    <div id="mdbook-body-container">
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
         <script>
             try {
@@ -84,12 +83,12 @@
             html.classList.add("js");
         </script>
 
-        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
 
         <!-- Hide / unhide sidebar before it is displayed -->
         <script>
             let sidebar = null;
-            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
             if (document.body.clientWidth >= 1080) {
                 try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
                 sidebar = sidebar || 'visible';
@@ -104,39 +103,39 @@
             }
         </script>
 
-        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
             <!-- populated by js -->
             <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
             <noscript>
                 <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
             </noscript>
-            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
             </div>
         </nav>
 
-        <div id="page-wrapper" class="page-wrapper">
+        <div id="mdbook-page-wrapper" class="page-wrapper">
 
             <div class="page">
-                <div id="menu-bar-hover-placeholder"></div>
-                <div id="menu-bar" class="menu-bar sticky">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
                     <div class="left-buttons">
-                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
-                            <i class="fa fa-bars"></i>
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
                         </label>
-                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
-                            <i class="fa fa-paint-brush"></i>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
                         </button>
-                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
                         </ul>
-                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
-                            <i class="fa fa-search"></i>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
                         </button>
                     </div>
 
@@ -144,47 +143,47 @@
 
                     <div class="right-buttons">
                         <a href="print.html" title="Print this book" aria-label="Print this book">
-                            <i id="print-button" class="fa fa-print"></i>
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
                         </a>
 
                     </div>
                 </div>
 
-                <div id="search-wrapper" class="hidden">
-                    <form id="searchbar-outer" class="searchbar-outer">
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
                         <div class="search-wrapper">
-                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
                             <div class="spinner-wrapper">
-                                <i class="fa fa-spinner fa-spin"></i>
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
                             </div>
                         </div>
                     </form>
-                    <div id="searchresults-outer" class="searchresults-outer hidden">
-                        <div id="searchresults-header" class="searchresults-header"></div>
-                        <ul id="searchresults">
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
                         </ul>
                     </div>
                 </div>
 
                 <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
                 <script>
-                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
-                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
-                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
                         link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
                     });
                 </script>
 
-                <div id="content" class="content">
+                <div id="mdbook-content" class="content">
                     <main>
                         <h1 id="basic-usage"><a class="header" href="#basic-usage">Basic usage</a></h1>
 <p>This little program renders <a href="https://scsc.uk/gsn">Goal Structuring Notation</a> in a YAML format to a scalable vector graphics (SVG) image.</p>
-<p><img src="examples/example.gsn.svg" alt="example" /></p>
+<p><img src="examples/example.gsn.svg" alt="example"></p>
 <h2 id="usage"><a class="header" href="#usage">Usage</a></h2>
 <p>You can create an SVG like this:</p>
 <pre><code>gsn2x &lt;yourgsnfile.yaml&gt; 
 </code></pre>
-<p>The output is an argument view in SVG format and automatically written to <code>&lt;yourgsnfile.svg&gt;</code>. If more than one input file is provided, they are treated as <a href="./ext_mod.html">modules</a>.</p>
+<p>The output is an argument view in SVG format and automatically written to <code>&lt;yourgsnfile.svg&gt;</code>. If more than one input file is provided, they are treated as <a href="#modular-extension">modules</a>.</p>
 <h2 id="options"><a class="header" href="#options">Options</a></h2>
 <pre><code>Usage: gsn2x [OPTIONS] [INPUT]...
 
@@ -220,11 +219,18 @@ OUTPUT MODIFICATION:
   -m, --mask=&lt;MASKED_MODULE&gt;      Do not show this module in views.
   -G, --no-legend                 Do not output a legend based on module information.
   -g, --full-legend               Output a legend based on all module information.
-  -w, --wrap=&lt;CHAR_WRAP&gt;          Define the number of characters after which a line of text is wrapped.</code></pre>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="syntax-in-yaml"><a class="header" href="#syntax-in-yaml">Syntax in YAML</a></h1>
+  -w, --wrap=&lt;CHAR_WRAP&gt;          Define the number of characters after which a line of text is wrapped.
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="syntax-in-yaml"><a class="header" href="#syntax-in-yaml">Syntax in YAML</a></h1>
 <h2 id="elements"><a class="header" href="#elements">Elements</a></h2>
 <p>The following Goal Structuring Notation (GSN) core elements are supported:</p>
-<div class="table-wrapper"><table><thead><tr><th>Element Type</th><th>Prefix</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Element Type</th><th>Prefix</th></tr>
+</thead>
+<tbody>
 <tr><td>Goal</td><td>G</td></tr>
 <tr><td>Assumption</td><td>A</td></tr>
 <tr><td>Justification</td><td>J</td></tr>
@@ -233,7 +239,8 @@ OUTPUT MODIFICATION:
 <tr><td>Strategy</td><td>S</td></tr>
 <tr><td>Counter Goal</td><td>CG</td></tr>
 <tr><td>Counter Solution</td><td>CSn</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <p>Every element is defined by a prefix (as shown in the table above) and an arbitrary identifier then.</p>
 <h3 id="examples"><a class="header" href="#examples">Examples</a></h3>
@@ -265,31 +272,46 @@ C1:
 </code></pre>
 <p>Please see <a href="examples/example.gsn.yaml">examples/example.gsn.yaml</a> for an example of the used syntax.</p>
 <h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
-<div class="table-wrapper"><table><thead><tr><th>Attribute</th><th>Optional</th><th>Notes</th></tr></thead><tbody>
-<tr><td>text</td><td>no</td><td></td></tr>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Attribute</th><th>Optional</th><th>Notes</th></tr>
+</thead>
+<tbody>
+<tr><td>text</td><td>yes</td><td></td></tr>
 <tr><td>supportedBy</td><td>yes</td><td></td></tr>
 <tr><td>inContextOf</td><td>yes</td><td></td></tr>
 <tr><td>undeveloped</td><td>yes</td><td>Mutually exclusive to <code>supportedBy</code>.</td></tr>
 <tr><td>url</td><td>yes</td><td></td></tr>
-<tr><td>classes</td><td>yes</td><td>See <a href="./adv_stylesheets.html">Stylesheets</a>.</td></tr>
+<tr><td>classes</td><td>yes</td><td>See <a href="#stylesheets-for-svg-rendering">Stylesheets</a>.</td></tr>
 <tr><td>nodeType</td><td>yes</td><td>See footnote<sup class="footnote-reference" id="fr-nt-1"><a href="#footnote-nt">1</a></sup></td></tr>
-<tr><td>rankIncrement</td><td>yes</td><td>See <a href="./adv_layout.html">Layout</a>.</td></tr>
-<tr><td>horizontalIndex</td><td>yes</td><td>See <a href="./adv_layout.html">Layout</a>.</td></tr>
-<tr><td>charWrap</td><td>yes</td><td>See <a href="./adv_formatting.html">Line Breaks</a>.</td></tr>
-<tr><td>acp</td><td>yes</td><td>See <a href="./ext_confidence.html">Confidence Argument Extension</a>.</td></tr>
-<tr><td>challenges</td><td>yes</td><td>See <a href="./ext_dialectic.html">Dialectic Extension</a>.</td></tr>
-<tr><td>defeated</td><td>yes</td><td>See <a href="./ext_dialectic.html">Dialectic Extension</a>.</td></tr>
-</tbody></table>
-</div><hr>
-<ol class="footnote-definition"><li id="footnote-nt">
+<tr><td>rankIncrement</td><td>yes</td><td>See <a href="#layout-of-elements">Layout</a>.</td></tr>
+<tr><td>horizontalIndex</td><td>yes</td><td>See <a href="#layout-of-elements">Layout</a>.</td></tr>
+<tr><td>charWrap</td><td>yes</td><td>See <a href="#formatting">Line Breaks</a>.</td></tr>
+<tr><td>acp</td><td>yes</td><td>See <a href="#confidence-argument-extension">Confidence Argument Extension</a>.</td></tr>
+<tr><td>challenges</td><td>yes</td><td>See <a href="#dialectic-extension">Dialectic Extension</a>.</td></tr>
+<tr><td>defeated</td><td>yes</td><td>See <a href="#dialectic-extension">Dialectic Extension</a>.</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<ol class="footnote-definition">
+<li id="footnote-nt">
 <p>When providing a <code>nodeType</code> you do not need to follow the standard prefix scheme above.
 Just set <code>nodeType</code> to <code>Goal</code>, <code>Assumption</code>, <code>Justification</code>, <code>Solution</code>, <code>Context</code>, <code>Strategy</code>, <code>CounterGoal</code> and  <code>CounterSolution</code> to give the type of the element. <a href="#fr-nt-1">↩</a></p>
 </li>
-</ol><div style="break-before: page; page-break-before: always;"></div><h1 id="checks"><a class="header" href="#checks">Checks</a></h1>
+</ol>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="checks"><a class="header" href="#checks">Checks</a></h1>
 <h2 id="validation-checks"><a class="header" href="#validation-checks">Validation checks</a></h2>
 <p>The tool automatically performs the following validation checks on the input YAML.</p>
 <p>Validations can be performed on individual input files.</p>
-<div class="table-wrapper"><table><thead><tr><th>ID</th><th>Meaning</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>ID</th><th>Meaning</th></tr>
+</thead>
+<tbody>
 <tr><td>V01</td><td>All IDs must either start with a known prefix or a <code>node_type</code> must explicitly set.</td></tr>
 <tr><td>V02</td><td>All Goals and Strategies must be either marked with <code>undeveloped: true</code> or have supporting Goals, Strategies or Solutions.</td></tr>
 <tr><td>V03</td><td>Goals and Strategies marked as undeveloped, must have no supporting arguments.</td></tr>
@@ -297,16 +319,22 @@ Just set <code>nodeType</code> to <code>Goal</code>, <code>Assumption</code>, <c
 <tr><td>V05</td><td>All referenced elements in <code>supportedBy</code> and <code>inContextOf</code> must be unique i.e., no duplicates in the list.</td></tr>
 <tr><td>V06</td><td>All referenced elements in <code>supportedBy</code> and <code>inContextOf</code> must not refer to the element itself.</td></tr>
 <tr><td>V07</td><td>All elements listed as extending other elements must be known elements of the current module and semantically sensible (see V04).</td></tr>
-<tr><td>V08</td><td> The ID's start contradicts the type of the element set with <code>node_type</code>. <strong>Note: only reported with <code>--extended-check</code> option.</strong></td></tr>
+<tr><td>V08</td><td> The ID’s start contradicts the type of the element set with <code>node_type</code>. <strong>Note: only reported with <code>--extended-check</code> option.</strong></td></tr>
 <tr><td>V09</td><td>Element has an assurance claim point that references another element, that this is neither its own ID nor any of the connected elements.</td></tr>
 <tr><td>V10</td><td>An element is marked as defeated, but has no other elements challenging it.</td></tr>
 <tr><td>V11</td><td>A CounterGoal or CounterSolution is used in input files. <strong>Note: only reported with <code>--warn-dialectic</code> option.</strong></td></tr>
 <tr><td>V12</td><td>Element that is not a CounterGoal nor a CounterSolution challenges another element or relation.</td></tr>
 <tr><td>V13</td><td>Element marks relation to an element as defeated, but the element has no relation to that element.</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <p>The following checks apply to the complete set of input files.</p>
-<div class="table-wrapper"><table><thead><tr><th>ID</th><th>Meaning</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>ID</th><th>Meaning</th></tr>
+</thead>
+<tbody>
 <tr><td>C01</td><td>There should be only one but must be at least one top-level element (G,S,C,J,A,Sn) unreferenced.</td></tr>
 <tr><td>C02</td><td>The top-level element must be a Goal. A top-level element is an element that is not referenced by any other element.</td></tr>
 <tr><td>C03</td><td>All referenced elements in <code>supportedBy</code>, <code>inContextOf</code>, <code>challenges</code> must exist.</td></tr>
@@ -322,7 +350,8 @@ Just set <code>nodeType</code> to <code>Goal</code>, <code>Assumption</code>, <c
 <tr><td>C14</td><td>Element challenges an element, but that element does not exist.</td></tr>
 <tr><td>C15</td><td> Element challenges a relation, but both end are pointing to the same element.</td></tr>
 <tr><td>C16</td><td>Element challenges a relation, but the referenced elements do not have a relation.</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <p>Uniqueness of keys (i.e. element IDs) is automatically enforced by the YAML format.</p>
 <p>If called with option <code>-c</code> or <code>--check</code> the input file is only checked for validity, but the resulting graph is not written.
@@ -332,22 +361,25 @@ The checks for references (Cxx) can be skipped for individual files by using the
 <p>The following format is used:</p>
 <pre><code>(Warning|Error): \((?&lt;module&gt;.+)\) \((?&lt;num&gt;[CV][0-9][0-9])\): (?&lt;msg&gt;.+) 
 </code></pre>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="formatting"><a class="header" href="#formatting">Formatting</a></h1>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="formatting"><a class="header" href="#formatting">Formatting</a></h1>
 <p>gsn2x allows for different ways to formatting text.
 Formatting loosely follows Markdown syntax, even though not the full specification is supported.</p>
 <p>See the following subsections for details.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="text-emphasis"><a class="header" href="#text-emphasis">Text emphasis</a></h1>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="text-emphasis"><a class="header" href="#text-emphasis">Text emphasis</a></h1>
 <p>You can use <code>*</code> and <code>_</code> to emphasize text.</p>
-<p>Text enclosed in <code>*</code>'s will be assigned a CSS class "bold".</p>
-<p>Text enclosed in <code>_</code>'s will be assigned a CSS class "italic".</p>
+<p>Text enclosed in <code>*</code>’s will be assigned a CSS class “bold”.</p>
+<p>Text enclosed in <code>_</code>’s will be assigned a CSS class “italic”.</p>
 <p>A default inline style is also assigned.</p>
 <h2 id="example-1"><a class="header" href="#example-1">Example</a></h2>
 <p>This text:</p>
-<pre><code>This is a *bold* text. This is an _italic_ text.
+<pre><code class="language-markdown">This is a *bold* text. This is an _italic_ text.
 </code></pre>
 <p>will be rendered to:</p>
 <p><code>This is a</code><strong><code>bold</code></strong><code>text. This is an</code><em><code>italic</code></em><code>text.</code></p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="bullet-lists"><a class="header" href="#bullet-lists">Bullet lists</a></h1>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="bullet-lists"><a class="header" href="#bullet-lists">Bullet lists</a></h1>
 <p>Bullet lists starting with <code>-</code> or <code>*</code> are detected. The <code>*</code> is replaced by a nicer symbol. Line breaks are indented if introduced by e.g. line wraps or defined in the source.</p>
 <h2 id="example-2"><a class="header" href="#example-2">Example</a></h2>
 <pre><code class="language-yaml">G1:
@@ -372,26 +404,28 @@ Sn1:
     * Another item with _italic_ text.
 </code></pre>
 <p>will be rendered to:</p>
-<p><img src="examples/bullet_lists.gsn.svg" alt="Rendered Example" /></p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="hyperlinks"><a class="header" href="#hyperlinks">Hyperlinks</a></h1>
+<p><img src="examples/bullet_lists.gsn.svg" alt="Rendered Example Bullet List"></p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="hyperlinks"><a class="header" href="#hyperlinks">Hyperlinks</a></h1>
 <p>You can add hyperlinks for <code>text:</code> attributes as well as all additional layers.
-Hyperlinks are automatically detected when they start with "http://", "https://", "file://".</p>
+Hyperlinks are automatically detected when they start with “http://”, “https://”, “file://”.</p>
 <p>If you like to hide the actual URL, you can assign a text to the link that is rendered instead.
 The syntax for this follows Markdown syntax. However, a title is not supported, only <code>text</code> and <code>href</code> are.
 URLs may not contain whitespace characters. If you URL has one, just replace with <code>%20</code>.</p>
-<p>Please note that the link created by <code>url:</code> cannot have additional text, since it is anyway invisible and applicable to the complete node.</p>
+<p>Please note that the link created by <code>url:</code> cannot have additional text, since it is anyway invisible and applicable to the complete element.</p>
 <h2 id="example-3"><a class="header" href="#example-3">Example</a></h2>
 <p>This link:</p>
-<pre><code>[Link Text](https://github.com/jonasthewolf/gsn2x)
+<pre><code class="language-markdown">[Link Text](https://github.com/jonasthewolf/gsn2x)
 </code></pre>
 <p>will be rendered to:</p>
 <p><a href="https://github.com/jonasthewolf/gsn2x">Link Text</a></p>
 <p>This link:</p>
-<pre><code>https://github.com/jonasthewolf/gsn2x
+<pre><code class="language-markdown">https://github.com/jonasthewolf/gsn2x
 </code></pre>
 <p>will be rendered to:</p>
 <p><a href="https://github.com/jonasthewolf/gsn2x">https://github.com/jonasthewolf/gsn2x</a></p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="text-layout-within-elements"><a class="header" href="#text-layout-within-elements">Text layout within elements</a></h1>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="text-layout-within-elements"><a class="header" href="#text-layout-within-elements">Text layout within elements</a></h1>
 <p>You can control line breaks by YAML means, e.g. following this example:</p>
 <pre><code class="language-yaml">G1:
   text: |
@@ -403,24 +437,25 @@ URLs may not contain whitespace characters. If you URL has one, just replace wit
     lines
 </code></pre>
 <p>Alternatively, you can use the <code>-w</code> option and provide a global number of characters after which lines are wrapped.</p>
-<p>You can also use the optional <code>charWrap</code> attribute for an element to individually define the number of characters after which line is wrapped. The same attribute can be applied for a complete module at the <code>module</code> <a href="./ext_mod_info.html">section</a>.</p>
+<p>You can also use the optional <code>charWrap</code> attribute for an element to individually define the number of characters after which line is wrapped. The same attribute can be applied for a complete module at the <code>module</code> <a href="#optional-module-information">section</a>.</p>
 <p><strong>Please note that wrapping is done if a whitespace is detected after the given number of characters.</strong></p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="layout-of-elements"><a class="header" href="#layout-of-elements">Layout of elements</a></h1>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="layout-of-elements"><a class="header" href="#layout-of-elements">Layout of elements</a></h1>
 <h2 id="how-does-the-default-layout-of-the-graph-work"><a class="header" href="#how-does-the-default-layout-of-the-graph-work">How does the default layout of the graph work?</a></h2>
 <p>At first, the root elements are identified. Root elements are elements
 that are not referenced as <code>supportedBy</code> or <code>inContextOf</code>.</p>
 <p>Each level in the rendered graph is called rank.
-Starting from the root nodes, all of their children referenced by <code>supportedBy</code> and <code>challenges</code> are identified. The list of children is sorted in lexicographical order, before ranking.
+Starting from the root element, all of their children referenced by <code>supportedBy</code> and <code>challenges</code> are identified. The list of children is sorted in lexicographical order, before ranking.
 An element is only ranked if all elements referencing it are already placed.
 Finally, the <code>inContextOf</code> elements are placed on that rank.</p>
 <h2 id="placement-of-elements"><a class="header" href="#placement-of-elements">Placement of elements</a></h2>
 <h3 id="vertical-placement"><a class="header" href="#vertical-placement">Vertical placement</a></h3>
 <p>To influence the vertical placement i.e., the rank, of an element in the rendered graph,
-you can use <code>rankIncrement</code> for a node.
+you can use <code>rankIncrement</code> for an element.
 A rank increment is a positive number to push an element this amount of ranks downwards.
 It is not possible to decrease the rank that would be assigned by the above algorithm.</p>
 <p>Incrementing the rank is especially useful, if e.g., two goals or strategies are on the same logical level,
-but have a different "depth" in the argumentation (i.e. a different number of goals or strategies in their path to the root goal).</p>
+but have a different “depth” in the argumentation (i.e. a different number of goals or strategies in their path to the root goal).</p>
 <p>See the <a href="examples/example.gsn.yaml">example</a> for usage. The strategy S2 has an incremented rank.</p>
 <h3 id="horizontal-placement"><a class="header" href="#horizontal-placement">Horizontal placement</a></h3>
 <p>The order of the GSN elements on the same rank is in the first place defined by their ID.
@@ -461,7 +496,7 @@ to the very right of the graph.</p>
 You would typically use an absolute index with either <code>0</code> or <code>last</code> to place them
 either left or right of the element they are referenced from.</p>
 <p><code>horizontalIndex</code> and <code>rankIncrement</code> can also be used for <code>module</code> elements.
-They will be used for the Architecture View then (see <a href="ext_mod.html#architecture-view">Modular extension</a>).</p>
+They will be used for the Architecture View then (see <a href="#architecture-view">Modular extension</a>).</p>
 <h3 id="troubleshooting"><a class="header" href="#troubleshooting">Troubleshooting</a></h3>
 <p>There can be situations (e.g. a n:m relation between goals and solutions)
 that lead to weird looking graphs.
@@ -494,7 +529,7 @@ Sn2:
     absolute: last
 </code></pre>
 <p>The created SVG is hardly readable:</p>
-<p><img src="examples/entangled.gsn.svg" alt="entangled example" /></p>
+<p><img src="examples/entangled.gsn.svg" alt="entangled example"></p>
 <p><strong>Please note that this example is artificial, until I come a across a simple example that my new algorithm cannot handle.</strong>
 If the <code>horizontalIndex</code> is remove from the example, the diagram is rendered as intended.</p>
 <p>Such problems can usually easily be solved in different ways:</p>
@@ -507,7 +542,8 @@ If the <code>horizontalIndex</code> is remove from the example, the diagram is r
 <li>Apply <code>horizontalIndex: relative: -1</code> to <code>G2</code> <strong>or</strong> <code>Sn2</code>.</li>
 </ol>
 <p>The order above can be considered - as a general rule of thumb - as a suggested order when trying to resolve layout issues.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="additional-layers"><a class="header" href="#additional-layers">Additional layers</a></h1>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="additional-layers"><a class="header" href="#additional-layers">Additional layers</a></h1>
 <p>Additional attributes of an element are not output into the rendered diagram.</p>
 <p>With the command line option <code>-l</code> or <code>--layers</code> you can enable the output of those additional attributes.
 By using this feature different views on the GSN can be generated.</p>
@@ -526,23 +562,24 @@ C1:
   text: This is a Context
   layer1: This is additional information for C1.
 </code></pre>
-<p>In this example, a call to <code>gsn2x -l layer1</code> will show the additional information to each element prefixed with <em><code>LAYER1: </code></em>.</p>
+<p>In this example, a call to <code>gsn2x -l layer1</code> will show the additional information to each element prefixed with <em><code>LAYER1:</code></em>.</p>
 <p>Of course, using <code>text</code>, <code>inContextOf</code>, <code>supportedBy</code>, <code>url</code>, <code>undeveloped</code>,
 <code>horizontalRank</code>, <code>rankIncrement</code>, <code>acp</code>, <code>defeated</code>, <code>challenges</code> or <code>classes</code> are not sensible parameters to pass for the <code>-l</code> option.</p>
 <p>Please note that using <code>module</code> and passing it as a layer option will also not work.</p>
 <p>It is intentional that information is only added for a view, but not hidden to ensure consistency of the GSN in all variants.</p>
 <p>Only additional associative arrays with a string key can be used as additional layers.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="stylesheets-for-svg-rendering"><a class="header" href="#stylesheets-for-svg-rendering">Stylesheets for SVG rendering</a></h1>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="stylesheets-for-svg-rendering"><a class="header" href="#stylesheets-for-svg-rendering">Stylesheets for SVG rendering</a></h1>
 <p>You can provide (multiple) custom CSS stylesheets for SVG via the <code>-s</code> or <code>--stylesheet</code> options.</p>
 <p>The path may be relative to the current working directory, absolute, or an URL (i.e. starting with <code>http://</code>, <code>https://</code> or <code>file://</code>).</p>
 <p>When adding <code>-t</code> or <code>--embed-css</code> on the command line, the CSS stylesheets will be embedded in the SVG.</p>
-<p>If an output path is provided (see <a href="./basic_usage.html">Basic usage</a>), the stylesheet(s) will be copied there.
+<p>If an output path is provided (see <a href="#basic-usage">Basic usage</a>), the stylesheet(s) will be copied there.
 If a relative path is used, the relative path to the current working directory is preserved.
 If an absolute path is used, the stylesheet will be copied to the root of the output path.</p>
 <p>If a URL (see above for definition) is provided for a stylesheet, it is neither embedded nor copied to an output directory.</p>
-<p>You can also add stylesheets as part of the module information (see <a href="./ext_mod_info.html">Module Information</a>).
+<p>You can also add stylesheets as part of the module information (see <a href="#optional-module-information">Module Information</a>).
 Please note that stylesheets are always applied to all modules even if just included into one module.
-If you need to apply styles only to selected modules, see <a href="adv_stylesheets.html#classes-and-styles">below</a> for how to do this.</p>
+If you need to apply styles only to selected modules, see <a href="#classes-and-styles">below</a> for how to do this.</p>
 <h2 id="example-command-line"><a class="header" href="#example-command-line">Example command line</a></h2>
 <p>To embed a CSS stylesheet that is in the same directory as your YAML file:</p>
 <pre><code class="language-console">gsn2x -t -s stylesheet_in_same_directory_as_my_gsn_yaml.css my.gsn.yaml
@@ -555,7 +592,12 @@ If you need to apply styles only to selected modules, see <a href="adv_styleshee
 <h2 id="classes-and-styles"><a class="header" href="#classes-and-styles">Classes and styles</a></h2>
 <p>Every element will also be addressable by <code>id</code>. The <code>id</code> is the same as the YAML id.</p>
 <p>This table shows the CSS classes assigned to a certain element:</p>
-<div class="table-wrapper"><table><thead><tr><th>Class</th><th>Assigned to</th><th>SVG Element</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Class</th><th>Assigned to</th><th>SVG Element</th></tr>
+</thead>
+<tbody>
 <tr><td>gsndiagram</td><td>The complete diagram</td><td>svg</td></tr>
 <tr><td>gsnelem</td><td>All elements</td><td>g</td></tr>
 <tr><td>gsngoal</td><td>Goal</td><td>g</td></tr>
@@ -582,12 +624,13 @@ If you need to apply styles only to selected modules, see <a href="adv_styleshee
 <tr><td>gsn_masked</td><td>Masked elements</td><td>g  </td></tr>
 <tr><td>acp_<code>acp_name</code></td><td>Elements or edges with an ACP</td><td>g or path</td></tr>
 <tr><td>gsndefeated</td><td>Elements or edges that are defeated</td><td>g or path</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <p>You can assign additional classes by adding the <code>classes:</code> attribute. It must be a list of classes you want to assign.
 Additional layers will be added as CSS classes, too. A <code>layer1</code> will e.g. be added as <code>gsnlay_layer1</code>.</p>
-<p>For more information on how to use CSS with SVGs, see <a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/SVG_and_CSS">here</a>.</p>
-<h2 id="example-6"><a class="header" href="#example-6">Example</a></h2>
+<p>For more information on how to use CSS with SVGs, see <a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/SVG_and_CSS">MDN documentation</a>.</p>
+<h3 id="example-6"><a class="header" href="#example-6">Example</a></h3>
 <p>The GSN YAML:</p>
 <pre><code class="language-yaml">
 G1:
@@ -601,8 +644,8 @@ G1:
 .additionalclass1 text,a { fill: white; }
 </code></pre>
 <p>The result looks like this:</p>
-<p><img src="examples/minimalcss/min.gsn.svg" alt="Styled Example" /></p>
-<h1 id="highlighting-elements-when-navigating"><a class="header" href="#highlighting-elements-when-navigating">Highlighting elements when navigating</a></h1>
+<p><img src="examples/minimalcss/min.gsn.svg" alt="Styled Example"></p>
+<h2 id="highlighting-elements-when-navigating"><a class="header" href="#highlighting-elements-when-navigating">Highlighting elements when navigating</a></h2>
 <p>The CSS <code>:target</code> pseudo class can be used to highlight the element you clicked on in the previous image.</p>
 <p>An example could look like this:</p>
 <pre><code class="language-css">g:target path {
@@ -610,7 +653,8 @@ G1:
     fill-opacity: 1;
 }
 </code></pre>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="list-of-evidence"><a class="header" href="#list-of-evidence">List of evidence</a></h1>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="list-of-evidence"><a class="header" href="#list-of-evidence">List of evidence</a></h1>
 <p>An additional file that lists all the evidence in the input file is output by default in <code>evidence.md</code>.</p>
 <p>See <a href="examples/evidence.html">examples/evidence.md</a> for an example.</p>
 <p>The format can be used in Markdown and reStructuredText files.</p>
@@ -642,12 +686,13 @@ The <code>-o</code> option also applies to the evidence file.</p>
 <p>examples_example_gsn_yaml</p>
 </li>
 </ol>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="statistics"><a class="header" href="#statistics">Statistics</a></h1>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="statistics"><a class="header" href="#statistics">Statistics</a></h1>
 <p>To print out statistics of the assurance case, use the <code>--statistics</code> command line option.</p>
 <p>The <code>--statistics</code> option can be combined with the <code>-c</code> option to only check the input files,
 and not generate diagrams, but just the statistics.</p>
 <p>If you run, e.g. <code>gsn2x -c --statistics examples/example.gsn.yaml</code>, you get the following output on standard output:</p>
-<pre><code>Statistics
+<pre><code class="language-markdown">Statistics
 ==========
 Number of modules:   1
 Number of nodes:     20
@@ -662,7 +707,8 @@ Number of nodes:     20
   Defeated Elements: 0
 </code></pre>
 <p>The output is valid Markdown.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="interfacing"><a class="header" href="#interfacing">Interfacing</a></h1>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="interfacing"><a class="header" href="#interfacing">Interfacing</a></h1>
 <p>Here is some guidance on interfacing with external sources.</p>
 <p>I currently see two use-cases:</p>
 <ol>
@@ -691,15 +737,16 @@ Number of nodes:     20
 <p>Depending on how the external format is defined, you can swap the part before the <code>-</code>,
 with the part after.</p>
 <!-- ## MDG XML -->
-<div style="break-before: page; page-break-before: always;"></div><h1 id="modular-extension"><a class="header" href="#modular-extension">Modular extension</a></h1>
-<p>gsn2x partially supports the Modular Extension of the GSN standard (see <a href="./standard_support.html">Standard support</a>).</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="modular-extension"><a class="header" href="#modular-extension">Modular extension</a></h1>
+<p>gsn2x partially supports the Modular Extension of the GSN standard (see <a href="#standard-support">Standard support</a>).</p>
 <p>Each module is a separate file. The name of the module is the file name (incl. the path provided to the gsn2x command line).</p>
 <p>If modules are used, all related module files must be provided to the command line of gsn2x.
 Element IDs must be unique across all modules. Checks will by default be performed across all modules.
 Check messages for individual modules can be omitted using the <code>-x</code> option.</p>
-<p>The argument view of individual modules will show "away" elements if elements from other modules are referenced.
+<p>The argument view of individual modules will show “away” elements if elements from other modules are referenced.
 All elements are public, meaning they can be referenced from other modules.</p>
-<p>Note: There is no "away strategy" in the standard.</p>
+<p>Note: There is no “away strategy” in the standard.</p>
 <p>In addition to the default argument view for each module, there are two output files generated (if more than one input file is provided):</p>
 <ol>
 <li>Complete View (default to: <code>complete.svg</code>)</li>
@@ -713,22 +760,23 @@ If the complete view should not be output, use the <code>-F</code> option.
 If the architecture view should not be output, use the <code>-A</code> option.</p>
 <h2 id="complete-view"><a class="header" href="#complete-view">Complete view</a></h2>
 <p>The complete view is a similar to an argument view for a single module,
-but showing all modules within the same diagram. The modules are "unrolled".</p>
+but showing all modules within the same diagram. The modules are “unrolled”.</p>
 <!-- Modules can be masked i.e., unrolling is prevented, 
 by additionally adding those modules with the `-m` option. -->
-<p><img src="examples/modular/complete.svg" alt="example complete" /></p>
+<p><img src="examples/modular/complete.svg" alt="example complete"></p>
 <p>See <a href="examples/modular/complete.svg">example</a> here.</p>
 <h2 id="architecture-view"><a class="header" href="#architecture-view">Architecture view</a></h2>
 <p>The architecture view only shows the selected modules and their dependencies.
 THe architecture view is navigable to the module argument view.</p>
 <p>The architecture view only contains the links to the individual module files, if they actually exist when generating the architecture view.</p>
-<p><img src="examples/modular/architecture.svg" alt="example architecture" /></p>
+<p><img src="examples/modular/architecture.svg" alt="example architecture"></p>
 <p>See <a href="examples/modular/architecture.svg">example</a> here.</p>
-<h2 id="example-7"><a class="header" href="#example-7">Example:</a></h2>
+<h2 id="example-7"><a class="header" href="#example-7">Example</a></h2>
 <pre><code>gsn2x -f full.svg -a arch.svg main.yml sub1.yml sub3.yml
 </code></pre>
 <p>This will generate the argument view for each module, the complete view (<code>-f full.svg</code>) of all modules and the architecture view (<code>-a arch.svg</code>). <!-- In the complete view, the elements of the `sub1` module will be represented by a module. --></p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="developing-undeveloped-elements-from-other-modules"><a class="header" href="#developing-undeveloped-elements-from-other-modules">Developing undeveloped elements from other modules</a></h1>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="developing-undeveloped-elements-from-other-modules"><a class="header" href="#developing-undeveloped-elements-from-other-modules">Developing undeveloped elements from other modules</a></h1>
 <p>In a customer supplier relationship it may be helpful to develop otherwise undeveloped elements from other modules.
 This allows creating distributed assurance cases.</p>
 <p>Example for a module with undeveloped elements:</p>
@@ -756,7 +804,8 @@ G2:
 Sn1:
   text: A solution
 </code></pre>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="optional-module-information"><a class="header" href="#optional-module-information">Optional module information</a></h1>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="optional-module-information"><a class="header" href="#optional-module-information">Optional module information</a></h1>
 <p>It is possible to add additional <code>module</code> information in the source YAML.
 This allows describing the module`s name and an optional brief description.
 Even arbitrary information can be added.</p>
@@ -771,29 +820,30 @@ module:
 
 </code></pre>
 <p>The module information is printed as part of a legend for the argument view.</p>
-<p>To influence the position in the architecture view, you can use the <code>horizontalIndex</code> and <code>rankIncrement</code> as you would for elements in the Argument view (see <a href="adv_layout.html#placement-of-elements">Layout of elements</a> ).</p>
+<p>To influence the position in the architecture view, you can use the <code>horizontalIndex</code> and <code>rankIncrement</code> as you would for elements in the Argument view (see <a href="#placement-of-elements">Layout of elements</a> ).</p>
 <p>You can use the <code>-G</code> option to suppress the legend completely,
 or the <code>-g</code> option to limit it to <code>name</code>, <code>brief</code> and the time and date of generation of the SVG.</p>
 <h2 id="including-other-modules"><a class="header" href="#including-other-modules">Including other modules</a></h2>
 <p>Multiple modules, i.e. files, can be provided at the command line:</p>
-<pre><code>gsn2x index.gsn.yaml required_module1.gsn.yaml required_module2.gsn.yaml required_module3.gsn.yaml
+<pre><code class="language-console">    gsn2x index.gsn.yaml required_module1.gsn.yaml required_module2.gsn.yaml required_module3.gsn.yaml
 </code></pre>
 <p>However, this might requires long and complex calls at the command line for reasonably large arguments.</p>
-<p>Another way to use multiple modules is to "use" them from others. You can do so by adding a <code>uses</code> attribute to a module:</p>
+<p>Another way to use multiple modules is to “use” them from others. You can do so by adding a <code>uses</code> attribute to a module:</p>
 <pre><code class="language-yaml">module:
    name: MainModule
    brief: This is the index.gsn.yaml file
    uses: [required_module1.yaml, required_module2.gsn.yaml, required_module3.gsn.yaml]
 </code></pre>
 <p>The command line is now simplified to:</p>
-<pre><code>gsn2x index.gsn.yaml
+<pre><code class="language-console">    gsn2x index.gsn.yaml
 </code></pre>
 <p>Or even (if you name the entry point file: <code>index.gsn.yaml</code>):</p>
-<pre><code>gsn2x
+<pre><code class="language-console">    gsn2x
 </code></pre>
-<p>Of course, "used" modules can also include other modules on their own.
+<p>Of course, “used” modules can also include other modules on their own.
 There is a check implemented to prevent circular includes.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="confidence-argument-extension"><a class="header" href="#confidence-argument-extension">Confidence Argument Extension</a></h1>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="confidence-argument-extension"><a class="header" href="#confidence-argument-extension">Confidence Argument Extension</a></h1>
 <p>The Confidence Argument Extension is supported. It defines so called Assurance Claim Points (ACPs).</p>
 <p>They can be defined either for an element or for the relation between elements.</p>
 <p>The following YAML shows an example of their usage:</p>
@@ -845,12 +895,13 @@ The name of the ACP is followed by:</p>
 <li>a reference or a list of references to elements that are directly related (<code>supportedBy</code> or <code>inContextOf</code>).</li>
 </ul>
 <p>There can be multiple ACPs per element.</p>
-<p><img src="examples/confidence.gsn.svg" alt="Rendered Example" /></p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="dialectic-extension"><a class="header" href="#dialectic-extension">Dialectic Extension</a></h1>
+<p><img src="examples/confidence.gsn.svg" alt="Rendered Example"></p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="dialectic-extension"><a class="header" href="#dialectic-extension">Dialectic Extension</a></h1>
 <p>The Dialectic Extension introduces two new elements: the <code>Counter Goal</code> and the <code>Counter Solution</code>.</p>
 <p>A Counter Goals or Counter Solutions <code>challenges</code> other elements.</p>
 <p>If that leads to a defeat, those elements can be marked as <code>defeated: true</code>.
-If this also affects a relation, a node can mark one of its relation as defeated using: <code>defeatedRelation: G1</code>.</p>
+If this also affects a relation, an element can mark one of its relation as defeated using: <code>defeatedRelation: G1</code>.</p>
 <h2 id="example-source"><a class="header" href="#example-source">Example Source</a></h2>
 <p>The following YAML shows an example of their usage from the GSN standard:</p>
 <pre><code class="language-yaml">
@@ -942,8 +993,8 @@ CG4:
 
 CSn4: {}
 </code></pre>
-<h2 id="rendered-example"><a class="header" href="#rendered-example">Rendered Example</a></h2>
-<p><img src="examples/dialectic/first.gsn.svg" alt="Rendered Example" /></p>
+<h2 id="rendered-first-example"><a class="header" href="#rendered-first-example">Rendered First Example</a></h2>
+<p><img src="examples/dialectic/first.gsn.svg" alt="Rendered First Example"></p>
 <pre><code class="language-yaml">
 G1:
   supportedBy: S1
@@ -1059,19 +1110,28 @@ CCSn3:
   horizontalIndex:
     relative: +1
 </code></pre>
-<h2 id="rendered-example-1"><a class="header" href="#rendered-example-1">Rendered Example</a></h2>
-<p><img src="examples/dialectic/second.gsn.svg" alt="Rendered Example" /></p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="standard-support"><a class="header" href="#standard-support">Standard support</a></h1>
+<h2 id="rendered-second-example"><a class="header" href="#rendered-second-example">Rendered Second Example</a></h2>
+<p><img src="examples/dialectic/second.gsn.svg" alt="Rendered Second Example"></p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="standard-support"><a class="header" href="#standard-support">Standard support</a></h1>
 <p>This tool is based on the <a href="https://scsc.uk/r141C:1">Goal Structuring Notation Community Standard Version 3</a>.</p>
 <p>This table shows the support of <code>gsn2x</code> for the different parts of the standard.</p>
-<div class="table-wrapper"><table><thead><tr><th>Standard</th><th>Support</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Standard</th><th>Support</th></tr>
+</thead>
+<tbody>
 <tr><td>Core GSN</td><td>✅ full</td></tr>
 <tr><td>Argument Pattern Extension</td><td>❌ see <a href="https://github.com/jonasthewolf/gsn2x/issues/493">#493</a></td></tr>
-<tr><td>Modular Extension</td><td>🟡 partially, see <a href="./ext_mod.html">Modular Extension</a>; Module Interfaces (Section 1:4.6) and Inter-Module Contracts (Section 1:4.7) are not supported (this includes public decorators and module interface connectors).</td></tr>
-<tr><td>Confidence Argument Extension</td><td>✅ full, see <a href="./ext_confidence.html">Confidence Argument Extension</a></td></tr>
-<tr><td>Dialectic Extension</td><td>🟡 partially, see <a href="./ext_dialectic.html">Dialectic Extension</a></td></tr>
-</tbody></table>
-</div><div style="break-before: page; page-break-before: always;"></div><h1 id="troubleshooting-1"><a class="header" href="#troubleshooting-1">Troubleshooting</a></h1>
+<tr><td>Modular Extension</td><td>🟡 partially, see <a href="#modular-extension">Modular Extension</a>; Module Interfaces (Section 1:4.6) and Inter-Module Contracts (Section 1:4.7) are not supported (this includes public decorators and module interface connectors).</td></tr>
+<tr><td>Confidence Argument Extension</td><td>✅ full, see <a href="#confidence-argument-extension">Confidence Argument Extension</a></td></tr>
+<tr><td>Dialectic Extension</td><td>🟡 partially, see <a href="#dialectic-extension">Dialectic Extension</a></td></tr>
+</tbody>
+</table>
+</div>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="troubleshooting-1"><a class="header" href="#troubleshooting-1">Troubleshooting</a></h1>
 <h2 id="yaml-error-messages"><a class="header" href="#yaml-error-messages">YAML error messages</a></h2>
 <p>If you encounter an error message like this,
 please use a YAML editor or online validator to check for the well-formedness
@@ -1085,8 +1145,9 @@ Caused by:
     Please see the documentation for details (https://jonasthewolf.github.io/gsn2x/troubleshooting.html).
     Original error message: data did not match any variant of untagged enum GsnDocument.
 </code></pre>
-<p>Please see the <a href="./yaml_syntax.html">YAML Syntax</a> what is expected by the programs.</p>
-<p>A good strategy to find out which element is causing the problem is to remove all but the first element from the input YAML file.
+<p>Please see the <a href="#syntax-in-yaml">YAML Syntax</a> what is expected by the programs.</p>
+<p>A good strategy to find out which element is causing the problem is to remove all
+but the first element from the input YAML file.
 Then running gsn2x again and incrementally adding the elements one by one again, until you hit the error message again.</p>
 <p>Unfortunately, it is currently not possible to improve on the location of the error messages in this case.</p>
 <h2 id="sanitizing-files-for-eg-support-requests"><a class="header" href="#sanitizing-files-for-eg-support-requests">Sanitizing files for e.g. support requests</a></h2>
@@ -1094,8 +1155,9 @@ Then running gsn2x again and incrementally adding the elements one by one again,
 <p>This statement replaces all text with <code>x</code>es while keeping the number of characters:</p>
 <pre><code class="language-console"> yq "(.[] | select(. | has(\"text\"))) .text |=sub(\"[a-zA-Z0-9]\",\"x\"), ... comments=\"\""  inputfile.yaml &gt; outputfile.yaml
 </code></pre>
-<p><strong>Please note that element identifiers and <a href="./adv_layers.html">additional layers</a> are not sanitizied.</strong></p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="design-goals"><a class="header" href="#design-goals">Design goals</a></h1>
+<p><strong>Please note that element identifiers and <a href="#additional-layers">additional layers</a> are not sanitizied.</strong></p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="design-goals"><a class="header" href="#design-goals">Design goals</a></h1>
 <p>I noticed that it might make sense to add some information about the goals I have set for myself for this project:</p>
 <ul>
 <li>
@@ -1117,7 +1179,7 @@ is still negligible to, e.g. a compiler installation.</p>
 <li>
 <p>Standard conformance</p>
 <p>I would like the program output to be very close to the GSN standard.</p>
-<p>I don't want to redefine the semantics or add additional ones.
+<p>I don’t want to redefine the semantics or add additional ones.
 The standard was created so that as many people as possible have some common grounds.
 If I added new fancy stuff, everyone might have a different interpretation of that again.</p>
 <p>Standards conformance is also a goal for the generated SVG files and Markdown files.</p>
@@ -1136,14 +1198,15 @@ I failed in creating an algorithm that would allow for that.
 When trying I recognized that it is anyhow preferable to give the user full control over how the diagram should look like.</p>
 </li>
 </ul>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="history"><a class="header" href="#history">History</a></h1>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="history"><a class="header" href="#history">History</a></h1>
 <p>I also noticed that (also for myself) it is good to note down some history of the project:</p>
 <ul>
 <li>
 <p>It all started out in 2017 with the need for graphically representing some argumentation at work.
 I wrote a tiny Python script that used a jinja template to transform the YAML syntax
 into something Graphviz could understand.</p>
-<p>From there Graphviz could generate different output formats. That's where the <code>x</code> in <code>gsn2x</code> is from.</p>
+<p>From there Graphviz could generate different output formats. That’s where the <code>x</code> in <code>gsn2x</code> is from.</p>
 </li>
 <li>
 <p>It got obvious that some validation, especially on the uniqueness and reference resolution is needed
@@ -1175,22 +1238,24 @@ Assurance Cases. THis lead to a new major version 4.0.</p>
 </li>
 </ul>
 <p>Any feedback, especially the use-case in your company is very much appreciated.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="migrating-from-version-2x-to-version-3x"><a class="header" href="#migrating-from-version-2x-to-version-3x">Migrating from Version 2.x to Version 3.x</a></h1>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="migration-hints"><a class="header" href="#migration-hints">Migration hints</a></h1>
+<h2 id="migrating-from-version-2x-to-version-3x"><a class="header" href="#migrating-from-version-2x-to-version-3x">Migrating from Version 2.x to Version 3.x</a></h2>
 <p>Version 2 of gsn2x tried to fully automate the layout of diagrams.
 Version 3 intentionally changed this approach.</p>
 <p>To get similar or even better renderings, please follow the guidelines below.</p>
 <p><strong>Replace <code>level</code> with <code>rankIncrement</code></strong></p>
 <p><code>level</code> was deprecated. Instead, increment the rank of the elements that should be pushed further down.</p>
-<p>Please see <a href="./adv_layout.html">Layout</a> for more information on how to use <code>rankIncrement</code>.</p>
-<p><strong>Use strict lexicographical sorting and horizontal reordering to optimize the graph</strong></p>
+<p>Please see <a href="#layout-of-elements">Layout</a> for more information on how to use <code>rankIncrement</code>.</p>
+<p><strong>Use strict lexicographical sorting and horizontal reordering to optimize the graph.</strong></p>
 <p>If you find situations that are not rendered correctly by default,
 please check if your IDs are sensibly defined (i.e. lexicographically increasing).
-Use <code>horizontalIndex</code> as described <a href="./adv_layout.html">here</a> to fix e.g., crossing edges.</p>
-<h1 id="migration-from-version-3x-to-version-4x"><a class="header" href="#migration-from-version-3x-to-version-4x">Migration from Version 3.x to Version 4.x</a></h1>
+Use <code>horizontalIndex</code> as described in the <a href="#layout-of-elements">layout section</a> to fix e.g., crossing edges.</p>
+<h2 id="migration-from-version-3x-to-version-4x"><a class="header" href="#migration-from-version-3x-to-version-4x">Migration from Version 3.x to Version 4.x</a></h2>
 <p>Remove all <code>horizontalIndex</code> again and try to render the diagrams. The ranking algorithm was improved.
 Thus, problems should be minimized. Introduce the <code>horizontalIndex</code> again, where necessary to achieve the desired diagram.</p>
 <p>I change the options are parsed. Since the input files are handed over using positional arguments, all options now require a <code>=</code> to assign the values.</p>
-<p>When drafting a new assurance case you can now have "empty" nodes with just an identifier.
+<p>When drafting a new assurance case you can now have “empty” elements with just an identifier.
 To do so, use the empty dictionary syntax of YAML:</p>
 <pre><code class="language-yaml">G1: {}
 </code></pre>
@@ -1212,6 +1277,11 @@ To do so, use the empty dictionary syntax of YAML:</p>
 
         </div>
 
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
 
 
 
@@ -1220,13 +1290,13 @@ To do so, use the empty dictionary syntax of YAML:</p>
         </script>
 
 
-        <script src="elasticlunr.min.js"></script>
-        <script src="mark.min.js"></script>
-        <script src="searcher.js"></script>
+        <script src="elasticlunr-ef4e11c1.min.js"></script>
+        <script src="mark-09e88c2c.min.js"></script>
+        <script src="searcher-c2a407aa.js"></script>
 
-        <script src="clipboard.min.js"></script>
-        <script src="highlight.js"></script>
-        <script src="book.js"></script>
+        <script src="clipboard-1626706a.min.js"></script>
+        <script src="highlight-abc7f01d.js"></script>
+        <script src="book-a0b12cfe.js"></script>
 
         <!-- Custom JS scripts -->
 

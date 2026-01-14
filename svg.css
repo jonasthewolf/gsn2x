@@ -1,5 +1,0 @@
-@media (prefers-color-scheme: dark) { 
-    img:not([alt="Styled Example"]) {
-        filter: invert(100%); 
-    }
-} 
