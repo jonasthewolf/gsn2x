@@ -520,6 +520,18 @@ mod test {
     }
 
     #[test]
+    fn bold_bullet() {
+        let res = parse_markdown_text("* *This is a bold bullet.*");
+        assert_eq!(
+            res,
+            vec![
+                TextType::Normal("* ".to_owned()),
+                TextType::Bold("This is a bold bullet.".to_owned())
+            ]
+        );
+    }
+
+    #[test]
     fn lines_empty() {
         let m = MarkdownText::from("");
         assert_eq!(m.lines().next(), None);

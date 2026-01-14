@@ -141,3 +141,9 @@ fn issue472() -> Result<()> {
     ));
     Ok(())
 }
+
+#[test]
+fn issue561() -> Result<()> {
+    regression_renderings(&["tests/issue561.yaml"], &[], None)?;
+    Ok(())
+}

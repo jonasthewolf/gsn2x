@@ -835,8 +835,8 @@ fn node_classes_from_node(identifier: &str, gsn_node: &GsnNode, masked: bool) ->
 fn replace_bullet_symbol(s: String) -> String {
     s.lines()
         .map(|l| {
-            if let Some(rest) = l.strip_prefix('*') {
-                format!("{BULLET_CHAR}{}", rest)
+            if let Some(rest) = l.strip_prefix("* ") {
+                format!("{BULLET_CHAR} {}", rest)
             } else {
                 l.to_owned()
             }
