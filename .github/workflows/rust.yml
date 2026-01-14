@@ -155,9 +155,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v5
-    - name: Get the version
-      id: get_version
-      run: echo "name=VERSION::${GITHUB_REF/refs\/tags\//}" >> $GITHUB_OUTPUT
     - name: Download MacOS artifacts
       uses: actions/download-artifact@v4
       with:
@@ -174,9 +171,9 @@ jobs:
       run: echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
     - name: Deploy release to github.com
       run: |
-        gh release create ${{ steps.get_version.outputs.VERSION }} \
+        gh release create ${{ github.ref_name }} \
             gsn2x-* \
-            --title ${{ steps.get_version.outputs.VERSION }} \
+            --title ${{ github.ref_name }} \
             --generate-notes
 
   coverage:
