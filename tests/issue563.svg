@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg class="gsndiagram" viewBox="0 0 308 85" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<marker id="incontextof_arrow" markerHeight="9" markerUnits="userSpaceOnUse" markerWidth="10" orient="auto-start-reverse" refX="0" refY="4.5">
+<polyline fill-opacity="0" points="0 0, 10 4.5, 0 9, 0 0" stroke="black" stroke-width="1"/>
+</marker>
+<symbol id="acp">
+<rect fill="black" height="10" stroke="black" stroke-width="1" width="10" x="0" y="0"/>
+</symbol>
+</defs>
+<g class="gsn_module_tests_issue563_yaml gsnelem gsngoal" id="node_g01">
+<title>G01</title>
+<path class="border" d="M20,20 L124,20 L124,64 L20,64 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="27" y="40">G01</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="27" y="58">Text</text>
+</g>
+<g class="gsn_module_tests_issue563_yaml gsnelem gsnctxt" id="node_c01">
+<title>C01</title>
+<path class="border" d="M174,20 L278,20 C288,20,288,64,278,64 L174,64 C164,64,164,20,174,20" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="181" y="40">C01</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="181" y="58">Text</text>
+</g>
+<path class="gsnedge gsninctxt" d="M124,42 C154,42,134,42,154,42" fill-opacity="0" marker-end="url(#incontextof_arrow)" stroke="black" stroke-width="1"/>
+<g class="gsnacp" id="acp_g01_c01_acp1">
+<use href="#acp" x="138" y="37"/>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="128" y="62">ACP1</text>
+</g>
+</svg>

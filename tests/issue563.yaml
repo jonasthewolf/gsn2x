@@ -1,0 +1,8 @@
+G01:
+  text: Text
+  inContextOf: [C01]
+  acp:
+    ACP1: C01
+
+C01:
+  text: Text

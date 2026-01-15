@@ -10,7 +10,7 @@ use svg::{
     },
 };
 
-use crate::dirgraph::DirectedGraph;
+use crate::dirgraph::{DirectedGraph, EdgeDecorator};
 
 use super::{
     DirGraph,
@@ -75,6 +75,14 @@ pub(super) fn render_graph(
         }
         if n.is_away_node() {
             ms.module = true;
+        }
+    }
+    // Add ACP marker if any edge has ACP decorator
+    for (source, targets) in graph.get_edges() {
+        for (target, _) in targets {
+            if let Some(EdgeDecorator::Acps(_)) = graph.get_edge_decorator(source, target) {
+                ms.acp = true;
+            }
         }
     }
 
