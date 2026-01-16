@@ -627,14 +627,10 @@ where
 mod test {
     use std::collections::BTreeMap;
 
-    use crate::{
-        dirgraph::{DirectedGraphEdgeType, DirectedGraphNodeType},
-        dirgraphsvg::edges::{self, EdgeType},
-    };
-
-    use super::DirectedGraph;
+    use super::{DirectedGraph, DirectedGraphEdgeType, DirectedGraphNodeType};
 
     struct NT;
+    #[derive(Copy, Clone, Debug)]
     struct ET;
     impl DirectedGraphNodeType<'_> for NT {
         fn get_forced_level(&self) -> Option<usize> {
@@ -667,13 +663,7 @@ mod test {
     #[test]
     fn debug_dirgraph() {
         let nodes = BTreeMap::from([("a".to_owned(), NT {}), ("b".to_owned(), NT {})]);
-        let edges = BTreeMap::from([(
-            "a".to_owned(),
-            vec![(
-                "b".to_owned(),
-                EdgeType::OneWay(edges::SingleEdge::SupportedBy),
-            )],
-        )]);
+        let edges = BTreeMap::from([("a".to_owned(), vec![("b".to_owned(), ET {})])]);
         let dg = DirectedGraph::new(&nodes, &edges);
         let dbg = format!("{dg:?}");
         assert_eq!(dbg, "a\nb\n");
@@ -683,20 +673,8 @@ mod test {
     fn no_roots() {
         let nodes = BTreeMap::from([("a".to_owned(), NT {}), ("b".to_owned(), NT {})]);
         let edges = BTreeMap::from([
-            (
-                "a".to_owned(),
-                vec![(
-                    "b".to_owned(),
-                    EdgeType::OneWay(edges::SingleEdge::SupportedBy),
-                )],
-            ),
-            (
-                "b".to_owned(),
-                vec![(
-                    "a".to_owned(),
-                    EdgeType::OneWay(edges::SingleEdge::SupportedBy),
-                )],
-            ),
+            ("a".to_owned(), vec![("b".to_owned(), ET {})]),
+            ("b".to_owned(), vec![("a".to_owned(), ET {})]),
         ]);
         let dg = DirectedGraph::new(&nodes, &edges);
         let dbg = format!("{dg:?}");
