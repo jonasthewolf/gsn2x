@@ -82,6 +82,7 @@ pub(super) fn render_graph(
         for (target, _) in targets {
             if let Some(EdgeDecorator::Acps(_)) = graph.get_edge_decorator(source, target) {
                 ms.acp = true;
+                break;
             }
         }
     }
