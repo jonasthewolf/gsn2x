@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-a04bde48.js";
+            window.path_to_searchindex_js = "searchindex-fd2e927c.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-52b9f6d3.js"></script>
@@ -176,24 +176,6 @@
                 <div id="mdbook-content" class="content">
                     <main>
                         <h1 id="troubleshooting"><a class="header" href="#troubleshooting">Troubleshooting</a></h1>
-<h2 id="yaml-error-messages"><a class="header" href="#yaml-error-messages">YAML error messages</a></h2>
-<p>If you encounter an error message like this,
-please use a YAML editor or online validator to check for the well-formedness
-of the input file:</p>
-<pre><code class="language-console">Error: Failed to parse YAML from file &lt;filename&gt;
-
-Caused by:
-    No valid GSN element can be found starting from line &lt;n&gt;.
-    This typically means that the YAML is completely invalid, or 
-    the `text:` attribute is missing for an element.
-    Please see the documentation for details (https://jonasthewolf.github.io/gsn2x/troubleshooting.html).
-    Original error message: data did not match any variant of untagged enum GsnDocument.
-</code></pre>
-<p>Please see the <a href="./yaml_syntax.html">YAML Syntax</a> what is expected by the programs.</p>
-<p>A good strategy to find out which element is causing the problem is to remove all
-but the first element from the input YAML file.
-Then running gsn2x again and incrementally adding the elements one by one again, until you hit the error message again.</p>
-<p>Unfortunately, it is currently not possible to improve on the location of the error messages in this case.</p>
 <h2 id="sanitizing-files-for-eg-support-requests"><a class="header" href="#sanitizing-files-for-eg-support-requests">Sanitizing files for e.g. support requests</a></h2>
 <p>You can sanitize your files from your intellectual property using, e.g. <a href="https://mikefarah.gitbook.io/yq/">https://mikefarah.gitbook.io/yq/</a>.</p>
 <p>This statement replaces all text with <code>x</code>es while keeping the number of characters:</p>
