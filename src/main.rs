@@ -3,6 +3,7 @@ use clap::parser::ValueSource;
 use clap::{Arg, ArgAction, Command, value_parser};
 use file_utils::{create_file_incl_parent, translate_to_output_path};
 use render::RenderOptions;
+use serde_saphyr::{Options, RequireIndent};
 use std::collections::BTreeMap;
 use std::error::Error;
 use std::fmt::Display;
@@ -17,7 +18,6 @@ mod file_utils;
 mod gsn;
 mod outputs;
 mod render;
-mod yaml_fix;
 
 use diagnostics::Diagnostics;
 use dirgraphsvg::escape_text;
@@ -439,21 +439,14 @@ fn read_inputs(
             let reader =
                 BufReader::new(File::open(input).context(format!("Failed to open file {input}"))?);
 
-            let mut n: BTreeMap<String, GsnDocument> = serde_yaml_ng::from_reader(reader)
-            .map(|n: yaml_fix::YamlFixMap<String, GsnDocument>| n.into_inner())
-            .map_err(|e| {
-                anyhow!(format!(
-                    "No valid GSN element can be found starting from line {}.\n\
-                     This typically means that the YAML is completely invalid or \n\
-                     the `text:` attribute is missing for an element.\n\
-                     Please see the documentation for details (https://jonasthewolf.github.io/gsn2x/troubleshooting.html).\n\
-                     Original error message: {}.",
-                    e.location()
-                        .map(|e| e.line().to_string())
-                        .unwrap_or_else(|| "unknown".to_owned()),
-                    e
-                ))
-            })
+            let mut n: BTreeMap<String, GsnDocument> = serde_saphyr::from_reader_with_options(
+                reader,
+                Options {
+                    duplicate_keys: serde_saphyr::DuplicateKeyPolicy::Error,
+                    require_indent: RequireIndent::Uniform(None),
+                    ..Default::default()
+                },
+            )
             .context(format!("Failed to parse YAML from file {input}"))?;
             let meta: ModuleInformation = match n.remove_entry(MODULE_INFORMATION_NODE) {
                 Some((_, GsnDocument::ModuleInformation(x))) => x,

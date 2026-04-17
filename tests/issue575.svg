@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg class="gsndiagram" viewBox="0 0 144 90" xmlns="http://www.w3.org/2000/svg">
+<defs/>
+<g class="gsn_module_tests_issue575_yaml gsnelem gsngoal gsn_undeveloped" id="node_g1">
+<title>G1</title>
+<path class="border" d="M20,20 L124,20 L124,70 L20,70 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" font-weight="bold" x="27" y="40">G1</text>
+<text font-family="Liberation Sans, Arial, sans-serif" font-size="12px" x="27" y="58">
+<a href="https://www.google.com/">XYZ 1892 Paper</a>
+</text>
+<path d="M72,70 l5,5 l-5,5 l-5,-5 z" fill-opacity="0" stroke="black" stroke-width="1"/>
+</g>
+</svg>
