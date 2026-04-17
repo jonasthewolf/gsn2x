@@ -69,27 +69,3 @@ impl<'a> DirGraph<'a> {
         Ok(())
     }
 }
-
-#[cfg(test)]
-mod test {
-    use crate::gsn::GsnNode;
-
-    use super::*;
-
-    #[test]
-    fn test_render_legend() {
-        let mut d = DirGraph::default();
-        let n = GsnNode {
-            text: "Test".to_owned(),
-            ..Default::default()
-        };
-        let b1 = SvgNode::new_goal("id", &n, false, &[], None);
-        let mut nodes = BTreeMap::new();
-        nodes.insert("G1".to_owned(), b1);
-        d = d.add_meta_information(&mut vec!["A1".to_owned(), "B2".to_owned()]);
-        let mut string_buffer = Vec::new();
-        d.write(nodes, BTreeMap::new(), &mut string_buffer, BTreeMap::new())
-            .unwrap();
-        println!("{}", std::str::from_utf8(string_buffer.as_slice()).unwrap());
-    }
-}

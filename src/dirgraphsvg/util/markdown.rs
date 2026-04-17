@@ -369,6 +369,18 @@ mod test {
     }
 
     #[test]
+    fn simple_link_with_space() {
+        let res = parse_markdown_line("[My Website](https://www.google.com)");
+        assert_eq!(
+            res,
+            vec![Text::Link(Link {
+                href: "https://www.google.com".to_owned(),
+                text: vec![TextType::Normal("My Website".to_owned())]
+            })]
+        );
+    }
+
+    #[test]
     fn nested_link() {
         let res = parse_markdown_line("[[Yahoo](https://www.yahoo.com)](https://www.google.com)");
         assert_eq!(
