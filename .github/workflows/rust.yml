@@ -19,7 +19,7 @@ jobs:
       contents: read
 
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
     - uses: dtolnay/rust-toolchain@stable
       with:
         toolchain: stable
@@ -52,7 +52,7 @@ jobs:
         pages: write
 
       steps:
-        - uses: actions/checkout@v5
+        - uses: actions/checkout@v6
         - uses: dtolnay/rust-toolchain@stable
           with:
             toolchain: stable
@@ -77,7 +77,7 @@ jobs:
       contents: read
 
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
     - uses: dtolnay/rust-toolchain@stable
       with:
         toolchain: stable
@@ -106,7 +106,7 @@ jobs:
       run: |
         copy target/release/gsn2x.exe gsn2x-${{ runner.os }}.exe
     - name: Upload artifact
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: gsn2x-${{ runner.os }}
         path: gsn2x-${{ runner.os }}*
@@ -119,17 +119,17 @@ jobs:
       contents: write
 
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
     - name: Download MacOS artifacts
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v7
       with:
         name: gsn2x-macOS
     - name: Download Linux artifacts
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v7
       with:
         name: gsn2x-Linux
     - name: Download Windows artifacts
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v7
       with:
         name: gsn2x-Windows
     - name: Login to github.com
@@ -154,17 +154,17 @@ jobs:
       contents: write
 
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
     - name: Download MacOS artifacts
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v7
       with:
         name: gsn2x-macOS
     - name: Download Linux artifacts
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v7
       with:
         name: gsn2x-Linux
     - name: Download Windows artifacts
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v7
       with:
         name: gsn2x-Windows
     - name: Login to github.com
@@ -183,7 +183,7 @@ jobs:
       contents: read
     
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
     - uses: dtolnay/rust-toolchain@stable
       with:
         toolchain: stable
@@ -199,7 +199,7 @@ jobs:
          cargo install cargo-llvm-cov
          cargo llvm-cov --tests --lcov --output-path=coverage/coverage.lcov
     - name: Upload to codecov
-      uses: codecov/codecov-action@v5
+      uses: codecov/codecov-action@v6
       with:
         directory: coverage
         token: ${{ secrets.CODECOV_TOKEN }}
