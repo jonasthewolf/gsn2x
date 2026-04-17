@@ -70,3 +70,4 @@ cp examples/example.gsn.svg examples/example.gsn_dark.svg
 ./target/release/gsn2x -G -E tests/multi_children_min.yaml
 ./target/release/gsn2x -G -E tests/issue561.yaml
 ./target/release/gsn2x -G -E tests/issue563.yaml
+./target/release/gsn2x -G -E tests/issue575.yaml
