@@ -60,9 +60,9 @@ fn some_evidence() -> Result<()> {
 }
 
 const STATISTICS_OUTPUT: &str = r#"Statistics
-==========
+
 Number of modules:   3
-Number of nodes:     8
+Number of elements:  8
   Goals:             3
   Strategies:        1
   Solutions:         1

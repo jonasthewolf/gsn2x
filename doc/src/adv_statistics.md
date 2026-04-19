@@ -10,9 +10,9 @@ If you run, e.g. `gsn2x -c --statistics examples/example.gsn.yaml`, you get the 
 
 ```markdown
 Statistics
-==========
+
 Number of modules:   1
-Number of nodes:     20
+Number of elements:  20
   Goals:             7
   Strategies:        2
   Solutions:         5

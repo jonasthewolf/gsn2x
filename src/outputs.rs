@@ -88,9 +88,9 @@ pub(crate) fn render_statistics(
     modules: &BTreeMap<String, Module>,
 ) -> Result<()> {
     writeln!(output, "Statistics")?;
-    writeln!(output, "==========")?;
+    writeln!(output)?;
     writeln!(output, "Number of modules:   {}", modules.len())?;
-    writeln!(output, "Number of nodes:     {}", nodes.len())?;
+    writeln!(output, "Number of elements:  {}", nodes.len())?;
     writeln!(
         output,
         "  Goals:             {}",
