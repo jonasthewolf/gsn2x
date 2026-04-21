@@ -3,7 +3,7 @@ use clap::parser::ValueSource;
 use clap::{Arg, ArgAction, Command, value_parser};
 use file_utils::{create_file_incl_parent, translate_to_output_path};
 use render::RenderOptions;
-use serde_saphyr::{Options, RequireIndent};
+use serde_saphyr::{DuplicateKeyPolicy, RequireIndent};
 use std::collections::BTreeMap;
 use std::error::Error;
 use std::fmt::Display;
@@ -439,15 +439,14 @@ fn read_inputs(
             let reader =
                 BufReader::new(File::open(input).context(format!("Failed to open file {input}"))?);
 
-            let mut n: BTreeMap<String, GsnDocument> = serde_saphyr::from_reader_with_options(
-                reader,
-                Options {
-                    duplicate_keys: serde_saphyr::DuplicateKeyPolicy::Error,
-                    require_indent: RequireIndent::Uniform(None),
-                    ..Default::default()
-                },
-            )
-            .context(format!("Failed to parse YAML from file {input}"))?;
+            let options = serde_saphyr::options! {
+                duplicate_keys: DuplicateKeyPolicy::Error,
+                require_indent: RequireIndent::Uniform(None),
+            };
+
+            let mut n: BTreeMap<String, GsnDocument> =
+                serde_saphyr::from_reader_with_options(reader, options)
+                    .context(format!("Failed to parse YAML from file {input}"))?;
             let meta: ModuleInformation = match n.remove_entry(MODULE_INFORMATION_NODE) {
                 Some((_, GsnDocument::ModuleInformation(x))) => x,
                 _ => {
