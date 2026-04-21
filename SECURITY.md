@@ -1,4 +1,6 @@
 
+# Security
+
 This software assumes only trusted input.
 Thus, no security issues are expected.
 
