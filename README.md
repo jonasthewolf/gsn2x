@@ -32,3 +32,10 @@ The output is an argument view in SVG format and automatically written to `<your
 ## Documentation
 
 For further information see the [documentation](https://jonasthewolf.github.io/gsn2x).
+
+## VS Code Preview
+
+If you use Visual Studio Code, you can use my extension [gsn2x Preview](https://marketplace.visualstudio.com/items?itemName=jonaswolf-org.gsn-preview) to automatically preview the YAML files. 
+
+It even downloads the latest version for you.
+
