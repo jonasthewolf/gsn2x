@@ -23,7 +23,7 @@ clap = { version = "4.6", default-features = false, features = [
     "color",
 ] }
 serde = { version = "1.0", default-features = false, features = ["derive"] }
-serde-saphyr = "0.0.24"
+serde-saphyr = "0.0.25"
 serde_json = "1.0"
 svg = "0.18" # No features
 time = { version = "0.3", default-features = false, features = ["formatting"] }
